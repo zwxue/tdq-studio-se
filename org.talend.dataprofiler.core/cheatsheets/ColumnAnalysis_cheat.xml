@@ -2,44 +2,47 @@
 <cheatsheet title="Create a new column analysis">
    <intro>
       <description>
-         <b>This tutorial guides you through the creation of an analysis of the content of a set of columns.</b>
+         This tutorial guides you through the creation of an analysis of the content of a set of columns.
       </description>
    </intro>
    <item title="Set the analysis metadata." dialog="true" skip="false">
       <description>
-         This step opens the analysis creation wizard. It can be open with a <b> right click on the &quot;Analysis&quot; folder or on a column</b>. This wizard helps you to fill the analysis metadata (name, purpose, description....) and then opens an editor in which the settings of the analysis can be filled in.
+         This step opens the analysis creation wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a column</b> or click the link below. This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens an editor in which you will define the settings of the analysis.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
    <item title="Select the columns to analyze." dialog="true" skip="false">
       <description>
-         Choose the columns that you want to analyze. If you know the content of a column, set its type to either &quot;Nominal&quot;, or &quot;Interval&quot;. &quot;Nominal&quot; means that the column contains textual values (no order, no mathematical function applicable). On the other hand, &quot;Interval&quot; means that mathematical functions (such as the average) can be used. This type is to be set in the editor.
-This window is open when clicking on the<b> &quot;Add columns&quot; button </b>.
+         Click on the<b> &quot;Add columns&quot; button</b> or the link below.
+
+If you know the content of a column, set its type to either &quot;Nominal&quot;, or &quot;Interval&quot;. &quot;Nominal&quot; means that the column contains textual values (no order, no mathematical function applicable). On the other hand, &quot;Interval&quot; means that mathematical functions (such as the average) can be used. This type is to be set in the editor.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
    <item title="Choose the indicators to compute." dialog="true" skip="false">
       <description>
-         For each column, a set of indicators can be selected. These are the indicators to be computed. This window is open when clicking on the <b> &quot;Add indicators&quot; button </b> for a column.
+         Click on the <b> &quot;Add indicators&quot; button </b> to select a set of indicators to be computed for each column. Or click the link below.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenIndicatorSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
-   <item title="Set the parameters of the indicators." dialog="true" skip="false">
+   <item title="Set the indicators&apos; options." dialog="true" skip="true">
       <description>
-         Indicators may need some parameters. You can set these parameters by clicking the <b> &quot;options&quot; button </b> for each indicator. By default, reasonable parameters are chosen.
+         Click on the <b> &quot;options&quot; button </b> for each indicator you want to set the options. By default, reasonable options are chosen.
       </description>
    </item>
-   <item title="Filter data to analyze." dialog="true" skip="false">
+   <item title="Filter data to analyze." dialog="true" skip="true">
       <description>
-         Now it&apos;s time to set some filters on the data that you want to analyze. This step is optional. By default, all the data are analyzed. Filters can be written by hand.
+         This step is optional. By default, all the data are analyzed. 
+To filter data, you must write a SQL where clause in the data filter text area.
       </description>
    </item>
    <item title="Analyze." dialog="true" skip="false">
       <description>
-         The analysis can now be executed. Just click on the  <b>&quot;run analysis&quot; button</b>.
+         To execute the analysis, click on the  <b>&quot;run analysis&quot; button</b>.
+This action can be performed with a context menu on the &quot;Analysis&quot; objects in the &quot;DQ Repository&quot; view
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
