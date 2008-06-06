@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http:///org/talend/cwm/resource.relational" 
+       class = "org.talend.cwm.relational.RelationalPackage"
+       genModel = "model/org.talend.cwm.ext.genmodel" /> 
+  </extension>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http:///org.talend/cwm/foundation/softwaredeployment.ecore" 
+       class = "org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage"
+       genModel = "model/org.talend.cwm.ext.genmodel" /> 
+  </extension>
+
+</plugin>

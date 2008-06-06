@@ -1,0 +1,176 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2007 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dataprofiler.core.model.dburl;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import org.talend.dataprofiler.core.PluginConstant;
+
+/**
+ * This class store the all the support database connection url.
+ * 
+ */
+public final class SupportDBUrlStore {
+
+    private static final Properties PROP = new Properties();
+
+    private static Map<String, SupportDBUrlType> supportDBUrlMap = new HashMap<String, SupportDBUrlType>();
+
+    private static SupportDBUrlStore dbUrlStore = new SupportDBUrlStore();
+
+    public static SupportDBUrlStore getInstance() {
+        return dbUrlStore;
+    }
+
+    private SupportDBUrlStore() {
+        loadProperties();
+        fillDbUrlMap();
+    }
+
+    private void loadProperties() {
+        InputStream in = SupportDBUrlStore.class.getResourceAsStream("dburl.properties"); //$NON-NLS-1$
+        try {
+            PROP.load(in);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fillDbUrlMap() {
+        // PTODO scorreia choose here which Database types to enable
+        // supportDBUrlMap.put(SupportDBUrlType.ODBCDEFAULTURL.getDBKey(), SupportDBUrlType.ODBCDEFAULTURL);
+        supportDBUrlMap.put(SupportDBUrlType.MYSQLDEFAULTURL.getDBKey(), SupportDBUrlType.MYSQLDEFAULTURL);
+        supportDBUrlMap.put(SupportDBUrlType.ORACLEDEFAULTURL.getDBKey(), SupportDBUrlType.ORACLEDEFAULTURL);
+        // supportDBUrlMap.put(SupportDBUrlType.MSSQLDEFAULTURL.getDBKey(), SupportDBUrlType.MSSQLDEFAULTURL);
+        // supportDBUrlMap.put(SupportDBUrlType.DB2DEFAULTURL.getDBKey(), SupportDBUrlType.DB2DEFAULTURL);
+        // supportDBUrlMap.put(SupportDBUrlType.POSTGRESQLEFAULTURL.getDBKey(), SupportDBUrlType.POSTGRESQLEFAULTURL);
+        // supportDBUrlMap.put(SupportDBUrlType.INTERBASEDEFAULTURL.getDBKey(), SupportDBUrlType.INTERBASEDEFAULTURL);
+        // supportDBUrlMap.put(SupportDBUrlType.SYBASEDEFAULTURL.getDBKey(), SupportDBUrlType.SYBASEDEFAULTURL);
+        // supportDBUrlMap.put(SupportDBUrlType.INFORMIXDEFAULTURL.getDBKey(), SupportDBUrlType.INFORMIXDEFAULTURL);
+        // supportDBUrlMap.put(SupportDBUrlType.FIREBIRDDEFAULTURL.getDBKey(), SupportDBUrlType.FIREBIRDDEFAULTURL);
+    }
+
+    public void changeAllDBNmae(String dbName) {
+        Iterator<String> it = supportDBUrlMap.keySet().iterator();
+        while (it.hasNext()) {
+            SupportDBUrlType dbType = supportDBUrlMap.get(it.next());
+            if (dbType.getDBName() != null) {
+                dbType.setDBName(dbName);
+            }
+        }
+    }
+
+    public String[] getDBTypes() {
+        String[] dbTypeItems = new String[supportDBUrlMap.size()];
+        supportDBUrlMap.keySet().toArray(dbTypeItems);
+        return dbTypeItems;
+    }
+
+    public String getDBUrl(SupportDBUrlType dbType) {
+        return getDBUrl(dbType.getDBKey(), dbType.getHostName(), dbType.getPort(), dbType.getDBName(), dbType.getDataSource());
+    }
+
+    public String getDBUrl(String dbType, String host, String port, String dbName, String dataSource) {
+        return getDBUrl(dbType, host, port, dbName, dataSource, PluginConstant.EMPTY_STRING);
+    }
+
+    /**
+     * Get dburl which content are replaced by parameter value.
+     * 
+     * @param dbType
+     * @param host
+     * @param port
+     * @param dbName
+     * @param dataSource
+     * @param paramString TODO
+     * @return
+     */
+    public String getDBUrl(String dbType, String host, String port, String dbName, String dataSource, String paramString) {
+        String propUrlValue = PROP.getProperty(dbType);
+        SupportDBUrlType defaultUrlType = supportDBUrlMap.get(dbType);
+        defaultUrlType = defaultUrlType == null ? SupportDBUrlType.ODBCDEFAULTURL : defaultUrlType;
+        if (propUrlValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+
+        String argHost = (host == null) ? PluginConstant.EMPTY_STRING : host;
+        String argPort = (port == null) ? PluginConstant.EMPTY_STRING : port;
+        String argDBName = (dbName == null) ? PluginConstant.EMPTY_STRING : dbName;
+        String argDataSource = (dataSource == null) ? PluginConstant.EMPTY_STRING : dataSource;
+        Object[] argsUrl = { argHost, argPort, argDBName, argDataSource };
+        if (paramString.equals(PluginConstant.EMPTY_STRING)) {
+            return MessageFormat.format(propUrlValue, argsUrl);
+        } else {
+            return MessageFormat.format(propUrlValue, argsUrl) + defaultUrlType.getParamSeprator() + paramString;
+        }
+    }
+
+    /**
+     * Get the dburl via the dbType, and the dburl content come from the default value of SupportDBUrlType.
+     * 
+     * @param dbType
+     * @return
+     */
+    public String getDefaultDBUrl(String dbType) {
+        String propUrlValue = PROP.getProperty(dbType);
+        SupportDBUrlType defaultUrlType = supportDBUrlMap.get(dbType);
+        defaultUrlType = defaultUrlType == null ? SupportDBUrlType.ODBCDEFAULTURL : defaultUrlType;
+        if (propUrlValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        Object[] args = { defaultUrlType.getHostName(), defaultUrlType.getPort(), defaultUrlType.getDBName(),
+                defaultUrlType.getDataSource() };
+        return MessageFormat.format(propUrlValue, args);
+    }
+
+    public SupportDBUrlType getDBUrlType(String dbType) {
+        SupportDBUrlType dbUrlDefaultType = supportDBUrlMap.get(dbType);
+        return dbUrlDefaultType == null ? SupportDBUrlType.ODBCDEFAULTURL : dbUrlDefaultType;
+    }
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+
+        try {
+            InputStream in = SupportDBUrlStore.class.getResourceAsStream("dburl.properties"); //$NON-NLS-1$
+            PROP.load(in);
+            in.close();
+            Set s = PROP.keySet();
+            // System.out.println(s.toString());
+            Iterator it = s.iterator();
+            while (it.hasNext()) {
+                String id = (String) it.next();
+                String value = PROP.getProperty(id);
+                System.out.println("\n" + id + "-------" + value); //$NON-NLS-1$ //$NON-NLS-2$
+
+                // Object[] arguments = { "10.78.23.23", "33456", "testDB" };
+                Object[] arguments = { "{hostname}", "{port}", "{dbname}", "" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                System.out.println(MessageFormat.format(value, arguments));
+            }
+            // System.out.println(p.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}

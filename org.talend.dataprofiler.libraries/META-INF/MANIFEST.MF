@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Libraries Plug-in
+Bundle-SymbolicName: org.talend.dataprofiler.libraries; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.talend.dataprofiler.libraries.LibrariesPlugin
+Bundle-Vendor: .Talend SA.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-LazyStart: true
+Export-Package: 
+ org.talend.dataprofiler.libraries

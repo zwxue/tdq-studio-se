@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="HelpContext.xml"
+            plugin="org.talend.dataprofiler.help">
+      </contexts>
+      <contexts
+            file="HelpIndicator.xml"
+            plugin="org.talend.dataprofiler.help">
+      </contexts>
+   </extension>
+
+</plugin>

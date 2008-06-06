@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="dataprofilerperspectives" name="Dataprofiler Perspectives" schema="schema/Dataprofilerperspectives.exsd"/>
+   <extension-point id="service" name="Dataprofiler Service" schema="schema/service.exsd"/>
+     
+     <extension
+         point="org.eclipse.ui.views">
+         <category
+            id="org.talend.dataprofiler.view.category"
+            name="Dataprofiler"/>   
+      <view
+            allowMultiple="false"
+            category="org.talend.dataprofiler.view.category"
+            class="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
+            icon="icons/TdTable.gif"
+            id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
+            name="DQ Repository">
+      </view>
+      <view
+            category="org.talend.dataprofiler.view.category"
+            class="org.talend.dataprofiler.core.ui.views.GraphsView"
+            icon="icons/TdTable.gif"
+            id="org.talend.dataprofiler.core.ui.views.GraphsView"
+            name="Graphs"/>
+      <view
+            allowMultiple="false"
+            category="org.talend.dataprofiler.view.category"
+            class="org.talend.dataprofiler.core.ui.views.QuanlityView"
+            icon="icons/TdTable.gif"
+            id="org.talend.dataprofiler.core.ui.views.QuanlityView"
+            name="Quality Indicator">
+      </view>
+      
+    </extension> 
+    
+    <extension
+         point="org.eclipse.ui.navigator.viewer">
+       <viewerContentBinding 
+             viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
+          <includes>
+       	      <contentExtension pattern="org.eclipse.ui.navigator.DQresourceContent" />		       	      
+	         <contentExtension pattern="org.talend.dataprofiler.core.emfContent"/>
+	         <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.startsWithDot"/>
+          </includes>
+       </viewerContentBinding>
+       <viewerActionBinding
+             viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
+          <includes>
+             <actionExtension pattern="org.talend.dataprofiler.core.ui.action.provider.*" />
+             <actionExtension pattern="org.talend.dataprofiler.ui.OpenActionProvider" />
+          </includes>
+       </viewerActionBinding>  
+        <dragAssistant
+             class="org.talend.dataprofiler.core.ui.views.resources.ResourceDragAdapterAssistant"
+             viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView"/>
+   </extension>
+   
+<!-- Resource Content--> 
+   <extension  
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <actionProvider
+            	class="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"
+            	id="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"> 
+        	<enablement> 
+        			<or>
+						<adapt type="org.eclipse.core.resources.IResource" />	 
+						<adapt type="java.util.Collection"> 
+							<count value="0" />
+						</adapt>
+					</or>
+	         </enablement>
+		</actionProvider>
+      <navigatorContent
+            activeByDefault="true"
+            contentProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider"
+            id="org.talend.dataprofiler.core.emfContent"
+            labelProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider"
+            name="DQ EMF Content"
+            priority="normal">
+           <triggerPoints> 
+             <or>
+                <and> 
+                   <instanceof value="org.eclipse.core.resources.IResource"/> 
+                   <or>
+                       <test 
+                         forcePluginActivation="true" 
+                         property="org.eclipse.core.resources.extension" 
+                         value="prv"/> 
+                        <test 
+                          forcePluginActivation="true" 
+                          property="org.eclipse.core.resources.extension" 
+                          value="rep"/> 
+                   </or>
+                </and> 
+             </or>
+           </triggerPoints> 
+           <possibleChildren> 
+              <or> 
+                <instanceof value="org.eclipse.emf.ecore.resource.Resource"/>
+                <instanceof value="org.eclipse.emf.ecore.EObject"/>  
+              </or> 
+           </possibleChildren>   
+      </navigatorContent>    
+      
+      <navigatorContent
+            name="DQ Resource"
+            priority="low"
+            activeByDefault="true"
+			            contentProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider"
+            			labelProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider"			
+            id="org.eclipse.ui.navigator.DQresourceContent">         
+         <enablement>
+		         <or>         
+		            <adapt type="org.eclipse.core.resources.IProject" /> 
+		            <instanceof 
+		                  	value="org.eclipse.core.resources.IResource" /> 
+		         </or>
+         </enablement>          
+        <dropAssistant
+              class="org.talend.dataprofiler.core.ui.views.resources.ResourceDropAdapterAssistant"
+              id="org.talend.dataprofiler.core.ui.views.resources.ResourceDropAdapterAssistant">
+           <possibleDropTargets> 
+            <and>
+	            <instanceof value="org.eclipse.core.resources.IFile"/>            
+                <test property="org.eclipse.core.resources.name" value="*.rep"/>
+            </and>
+           </possibleDropTargets>
+        </dropAssistant>   
+     </navigatorContent>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.NewAnalysisActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.NewAnalysisActionProvider">
+            <enablement> 
+        			<or>
+						<adapt type="org.eclipse.core.resources.IResource" />	 
+						<adapt type="java.util.Collection"> 
+							<count value="0" />
+						</adapt>
+					</or>
+	         </enablement>
+      </actionProvider>
+      <actionProvider 
+      			id="org.talend.dataprofiler.ui.OpenActionProvider"
+				class="org.eclipse.ui.internal.navigator.resources.actions.OpenActionProvider">
+			<enablement>
+				<and>
+	            <instanceof value="org.eclipse.core.resources.IFile"/>
+	            <or>
+            	    <test property="org.eclipse.core.resources.name" value="*.ana"/>
+            	    <test property="org.eclipse.core.resources.name" value="*.sql"/>
+            	    <test property="org.eclipse.core.resources.name" value="*.prv"/>
+                </or>            
+	        </and>
+			</enablement>
+		</actionProvider>      
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.RunAnalysisActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.RunAnalysisActionProvider">
+         <enablement>
+            <and>
+	            <instanceof value="org.eclipse.core.resources.IFile"/>
+            	<test property="org.eclipse.core.resources.name" value="*.ana"/>	            
+	        </and>
+         </enablement>
+      </actionProvider> 
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.DeleteCWMResourceProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.DeleteResourceProvider">
+         <enablement>
+            <and>
+	            <instanceof value="org.eclipse.core.resources.IFile"/>
+	            <or>
+            	   <test property="org.eclipse.core.resources.name" value="*.ana"/>	            
+            	   <test property="org.eclipse.core.resources.name" value="*.prv"/>	
+            	   <test property="org.eclipse.core.resources.name" value="*.rep"/>	
+            	</or>            
+	        </and>
+         </enablement>
+      </actionProvider>        
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnProvider">
+         <enablement>
+            <and>
+	            <instanceof value="org.talend.cwm.relational.TdColumn"/>           
+	        </and>
+         </enablement>
+      </actionProvider>        
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.EditConnectionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.EditConnectionProvider">
+         <enablement>
+            <and>
+	            <instanceof value="org.eclipse.core.resources.IFile"/>
+            	<test property="org.eclipse.core.resources.name" value="*.prv"/>	
+	        </and>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.RemoveAnalysisActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.RemoveAnalysisActionProvider">
+         <enablement>
+            <and>
+	            <instanceof value="org.talend.dataquality.analysis.Analysis"/>
+	        </and>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.NewSourceFileActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.NewSourceFileActionProvider">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.eclipse.core.resources.IResource">
+               </adapt>
+               <adapt
+                     type="java.util.Collection">
+                  <count
+                        value="0">
+                  </count>
+               </adapt>
+            </or>
+         </enablement>
+      </actionProvider>        
+  </extension>
+    
+      
+     
+     
+  <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.talend.dataprofiler.core.ui.perspective.DataProfilingPerspective"
+            id="org.talend.dataprofiler.DataProfilingPerspective"
+            name="Data Profiling">
+      </perspective>
+   </extension>   
+   
+ <extension point="org.eclipse.ui.perspectiveExtensions">
+  <perspectiveExtension
+	targetID="org.talend.dataprofiler.DataProfilingPerspective">
+    	<view id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
+        	relative="org.eclipse.ui.editorss"
+    		relationship="left"
+    		ratio="0.25"
+    		/>	
+       <!-- <view id="org.talend.dataprofiler.core.ui.views.GraphsView"
+             relative="org.eclipse.ui.editorss"
+             relationship="bottom"
+             ratio="0.4"
+             />-->
+        <view id="org.eclipse.ui.cheatsheets.views.CheatSheetView"
+              relative="org.eclipse.ui.editorss"
+              relationship="right"
+              ratio="0.6"
+              />
+        <view
+              closeable="true"
+              id="org.eclipse.ui.navigator.ProjectExplorer"
+              relationship="bottom"
+              relative="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
+              visible="false">
+        </view>
+      <!--  <view id="org.talend.dataprofiler.core.ui.views.QuanlityView"
+              relative="org.talend.dataprofiler.core.ui.views.CheatSheetView"
+              relationship="bottom"
+              /> -->
+  </perspectiveExtension>
+  <perspectiveExtension
+        targetID="net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective">
+     <view
+           id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
+           ratio="0.25"
+           relationship="stack"
+           relative="net.sourceforge.sqlexplorer.connections.ConnectionsView">
+     </view>
+  </perspectiveExtension>  
+</extension>
+  
+   
+   <extension
+      point="org.talend.dataprofiler.core.dataprofilerperspectives">
+        <DataprofilerPerspective
+         refPerspectiveId="org.talend.dataprofiler.DataProfilingPerspective"
+         dataprofilerPerspectiveName="Data Profiling"/>
+        <DataprofilerPerspective
+         refPerspectiveId="net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"
+         dataprofilerPerspectiveName="Data Discovery"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.talend.dataprofiler.core.ui.editor.AnalysisEditor"
+            contributorClass="org.talend.dataprofiler.core.ui.editor.AnalysisFormEditorContributor"
+            extensions="ana"
+            icon="icons/chart_bar.png"
+            id="org.talend.dataprofiler.core.ui.editor.AnalysisEditor"
+            name="AnalysisEditor">
+      </editor>
+      <editor
+            class="org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"
+            extensions="prv"
+            icon="icons/TdDataProvider.gif"
+            id="org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"
+            name="ConnectionEditor">
+      </editor>
+   </extension>
+  <extension
+        point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+     <category
+           id="org.talend.dataprofiler.core.category1"
+           name="Talend - Cheat Sheets">
+     </category>
+     <cheatsheet
+           category="org.talend.dataprofiler.core.category1"
+           contentFile="cheatsheets/ColumnAnalysis_cheat.xml"
+           id="org.talend.dataprofiler.core.cheatsheet1"
+           name="Multiple Column Analysis Creation">
+     </cheatsheet>
+     <cheatsheet
+           category="org.talend.dataprofiler.core.category1"
+           contentFile="cheatsheets/DBconnection_cheat.xml"
+           id="org.talend.dataprofiler.core.cheatsheet2"
+           name="Database Connection Creation">
+     </cheatsheet>
+  </extension>
+  
+  <!--<extension point = "org.eclipse.ui.actionSets">
+	   <actionSet id="org.talend.dataprofiler.core..actionSet"
+		   label="Actions"
+		   visible="false">
+		   <action
+           class="org.talend.dataprofiler.core.ui.action.actions.RemoveAnalysisAction"
+           definitionId="org.talend.dataprofiler.core.removeAnalysis"
+           icon="icons/cross.png"
+           id="org.talend.dataprofiler.core.ui.action.actions.RemoveAnalysisAction"
+           label="Remove Analysis"
+           menubarPath="additions">
+		   </action>
+	   </actionSet>
+   </extension>-->
+   
+   <extension
+	point="org.eclipse.ui.contexts">
+	<context
+		name="DQ ViewScope"
+		description="The context of DQRespositoryView"
+		id="org.talend.dataprofiler.core.ui.views.DQRespositoryView.viewScope"
+		parentId="org.eclipse.ui.contexts.window">
+	</context>
+  </extension>  
+  
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           id="org.talend.dataprofiler.core.removeAnalysis"
+           name="removeAnalysis">
+     </command>
+  </extension>
+  <extension
+        point="org.eclipse.ui.bindings">
+     <key
+           commandId="org.talend.dataprofiler.core.removeAnalysis"
+           contextId="org.talend.dataprofiler.core.ui.views.DQRespositoryView.viewScope"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="DEL">
+     </key>
+  </extension>
+
+</plugin>

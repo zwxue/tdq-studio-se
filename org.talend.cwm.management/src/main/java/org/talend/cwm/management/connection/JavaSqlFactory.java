@@ -1,0 +1,141 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2007 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.cwm.management.connection;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.utils.sql.ConnectionUtils;
+import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
+
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
+
+/**
+ * @author scorreia
+ * 
+ * This utility class provides methods that convert CWM object into java.sql object. It is a kind of inverse of the
+ * DatabaseContentRetriever class.
+ */
+public final class JavaSqlFactory {
+
+    // TODO scorreia create a utility class for checking various database url patterns.
+    private static final String MYSQL_PATTERN = "jdbc:mysql://\\p{Alnum}*\\:\\p{Digit}*.*";
+
+    private static Logger log = Logger.getLogger(JavaSqlFactory.class);
+
+    private JavaSqlFactory() {
+    }
+
+    /**
+     * Method "createConnection".
+     * 
+     * @see JavaSqlFactory#createConnection(TdProviderConnection).
+     * @param dataProvider to get the provider connection and create the connection
+     * @return the created connection.
+     */
+    public static TypedReturnCode<Connection> createConnection(TdDataProvider dataProvider) {
+        assert dataProvider != null;
+        TypedReturnCode<TdProviderConnection> rc = DataProviderHelper.getTdProviderConnection(dataProvider);
+        if (!rc.isOk()) {
+            log.error(rc.getMessage());
+            TypedReturnCode<Connection> rcConn = new TypedReturnCode<Connection>();
+            rcConn.setReturnCode(rc.getMessage(), false);
+            return rcConn;
+        }
+
+        return JavaSqlFactory.createConnection(rc.getObject());
+    }
+
+    /**
+     * Method "createConnection" returns the connection with {@link ReturnCode#getObject()} if {@link ReturnCode#isOk()}
+     * is true. This is the behaviour when everything goes ok.
+     * <p>
+     * When something goes wrong, {@link ReturnCode#isOk()} is false and {@link ReturnCode#getMessage()} gives the error
+     * message.
+     * <p>
+     * The created connection must be closed by the caller. (use {@link ConnectionUtils#closeConnection(Connection)})
+     * 
+     * @param providerConnection the provider connection
+     * @return a ReturnCode (never null)
+     */
+    public static TypedReturnCode<Connection> createConnection(TdProviderConnection providerConnection) {
+        TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>(false);
+        String url = providerConnection.getConnectionString();
+        if (url == null) {
+            rc.setMessage("Database connection string is null");
+            rc.setOk(false);
+        }
+        String driverClassName = providerConnection.getDriverClassName();
+        Collection<TaggedValue> taggedValues = providerConnection.getTaggedValue();
+        Properties props = TaggedValueHelper.createProperties(taggedValues);
+        try {
+            Connection connection = ConnectionUtils.createConnection(url, driverClassName, props);
+            rc.setObject(connection);
+            rc.setOk(true);
+        } catch (SQLException e) {
+            rc.setReturnCode(e.getMessage(), false);
+        } catch (InstantiationException e) {
+            rc.setReturnCode(e.getMessage(), false);
+        } catch (IllegalAccessException e) {
+            rc.setReturnCode(e.getMessage(), false);
+        } catch (ClassNotFoundException e) {
+            rc.setReturnCode(e.getMessage(), false);
+        }
+        return rc;
+    }
+
+    /**
+     * Method "createConnection" checks that the connection provider gives a url with the database name. If not, the
+     * database name is added to the url.
+     * 
+     * @param databaseConnection the connection informations
+     * @param schema the database to which the connection must be created
+     * @return the connection or error message
+     * @deprecated use this{@link #createConnection(TdProviderConnection)} instead and then use
+     * {@link Connection#setCatalog(String)}
+     */
+    public static TypedReturnCode<Connection> createConnection(TdProviderConnection databaseConnection, Package schema) {
+        String connectionString = databaseConnection.getConnectionString();
+        String oldConnectionString = connectionString;
+        if (connectionString.matches(MYSQL_PATTERN)) {
+            if (!connectionString.matches(MYSQL_PATTERN + "/(\\p{Alnum})+")) {
+                if (log.isDebugEnabled()) {
+                    log.debug("INVALID Mysql connection string: " + connectionString);
+                }
+
+                connectionString += (connectionString.matches(MYSQL_PATTERN + "/")) ? schema.getName() : "/"
+                        + schema.getName();
+                databaseConnection.setConnectionString(connectionString);
+                TypedReturnCode<Connection> rc = createConnection(databaseConnection);
+                // reset connection string to previous value
+                databaseConnection.setConnectionString(oldConnectionString);
+                return rc;
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Valid Mysql connection string: " + connectionString);
+                }
+            }
+        }
+
+        return createConnection(databaseConnection);
+    }
+}

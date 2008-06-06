@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Management Plug-in
+Bundle-SymbolicName: org.talend.cwm.management;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.talend.libraries.apache,
+ org.talend.libraries.jdbc.mysql;resolution:=optional,
+ org.talend.utils,
+ org.eclipse.emf.ecore.xmi,
+ org.junit4;resolution:=optional,
+ org.talend.dataquality;visibility:=reexport,
+ org.talend.libraries.logging,
+ org.talend.sqltools,
+ org.talend.libraries.jdbc.jtds;resolution:=optional,
+ org.talend.libraries.jdbc.oracle;resolution:=optional,
+ org.talend.libraries.jdbc.db2;resolution:=optional,
+ org.talend.libraries.jdbc.postgresql;resolution:=optional,
+ org.talend.libraries.jdbc.sybase;resolution:=optional,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.talend.cwm.ext;visibility:=reexport
+Bundle-Vendor: .Talend SA.
+Export-Package: org.talend.commons.emf,
+ org.talend.cwm.dependencies,
+ org.talend.cwm.exception,
+ org.talend.cwm.management.api,
+ org.talend.cwm.management.connection,
+ org.talend.dq.analysis,
+ org.talend.dq.analysis.category,
+ org.talend.dq.analysis.parameters,
+ org.talend.dq.indicators.definitions
+Bundle-ClassPath: .
+Eclipse-RegisterBuddy: org.talend.utils

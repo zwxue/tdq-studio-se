@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.talend.cwm.ext/src"
+    modelPluginID="org.talend.cwm.ext" modelName="Org.talend.cwm" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false" usedGenPackages="../../org.talend.cwm.mip/model/cwm_mip.genmodel#//orgomg">
+  <foreignModel>org.talend.cwm.ext.ecore</foreignModel>
+  <genPackages prefix="Cwm" basePackage="org.talend" disposableProviderFactory="true"
+      ecorePackage="org.talend.cwm.ext.ecore#/">
+    <nestedGenPackages prefix="Relational" basePackage="org.talend.cwm" disposableProviderFactory="true"
+        ecorePackage="org.talend.cwm.ext.ecore#//relational">
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//relational/TdTable"/>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//relational/TdView"/>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//relational/TdCatalog">
+        <genOperations ecoreOperation="org.talend.cwm.ext.ecore#//relational/TdCatalog/addSchema">
+          <genParameters ecoreParameter="org.talend.cwm.ext.ecore#//relational/TdCatalog/addSchema/schema"/>
+        </genOperations>
+      </genClasses>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//relational/TdSchema"/>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//relational/TdColumn">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//relational/TdColumn/javaType"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference org.talend.cwm.ext.ecore#//relational/TdColumn/sqlDataType"/>
+        <genOperations ecoreOperation="org.talend.cwm.ext.ecore#//relational/TdColumn/setContentType">
+          <genParameters ecoreParameter="org.talend.cwm.ext.ecore#//relational/TdColumn/setContentType/contentType"/>
+        </genOperations>
+        <genOperations ecoreOperation="org.talend.cwm.ext.ecore#//relational/TdColumn/getContentType"/>
+      </genClasses>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//relational/TdSqlDataType">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//relational/TdSqlDataType/javaDataType"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//relational/TdSqlDataType/nullable"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//relational/TdSqlDataType/unsignedAttribute"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//relational/TdSqlDataType/caseSensitive"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//relational/TdSqlDataType/autoIncrement"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//relational/TdSqlDataType/localTypeName"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//relational/TdSqlDataType/searchable"/>
+      </genClasses>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//relational/TdTrigger"/>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//relational/TdProcedure"/>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Softwaredeployment" basePackage="org.talend.cwm" disposableProviderFactory="true"
+        ecorePackage="org.talend.cwm.ext.ecore#//softwaredeployment">
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection/login"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection/password"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection/connectionString"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection/driverClassName"/>
+      </genClasses>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//softwaredeployment/TdDataManager"/>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//softwaredeployment/TdDataProvider"/>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//softwaredeployment/TdSoftwareSystem"/>
+      <genClasses ecoreClass="org.talend.cwm.ext.ecore#//softwaredeployment/TdMachine"/>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Constants" basePackage="org.talend.cwm" disposableProviderFactory="true"
+        ecorePackage="org.talend.cwm.ext.ecore#//constants">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="org.talend.cwm.ext.ecore#//constants/DevelopmentStatus">
+        <genEnumLiterals ecoreEnumLiteral="org.talend.cwm.ext.ecore#//constants/DevelopmentStatus/DRAFT"/>
+        <genEnumLiterals ecoreEnumLiteral="org.talend.cwm.ext.ecore#//constants/DevelopmentStatus/PROD"/>
+      </genEnums>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>
