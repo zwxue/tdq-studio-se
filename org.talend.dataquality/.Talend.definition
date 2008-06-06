@@ -147,6 +147,13 @@
     <taggedValue tag="Description" value="contains several count indicators"/>
     <taggedValue tag="Purpose" value="Analyze some quantities of data"/>
   </indicatorDefinitions>
+  <indicatorDefinitions name="Pattern Matching Indicator" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Pattern Matching Indicator">
+    <taggedValue tag="Description" value="Indicator for matching a pattern"/>
+    <taggedValue tag="Purpose" value="Evaluate the number of data that match a pattern"/>
+    <sqlGenericExpression body="SELECT SUM(CASE WHEN {0} LIKE {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="SQL"/>
+    <sqlGenericExpression body="SELECT SUM(CASE WHEN {0} REGEXP {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression body="SELECT SUM(CASE WHEN {0} REGEXP_LIKE({0},{2}) THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="Oracle"/>
+  </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue tag="Description" value="Simple Statistics"/>
     <taggedValue tag="Purpose" value="Simple Statistics"/>

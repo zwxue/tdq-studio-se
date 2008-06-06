@@ -15,6 +15,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -22,8 +23,11 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
+import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
@@ -61,8 +65,54 @@ public class PatternMatchingIndicatorItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
+            addMatchingValueCountPropertyDescriptor(object);
+            addNotMatchingValueCountPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
+    }
+
+    /**
+     * This adds a property descriptor for the Matching Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addMatchingValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_PatternMatchingIndicator_matchingValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_PatternMatchingIndicator_matchingValueCount_feature", "_UI_PatternMatchingIndicator_type"),
+                 IndicatorsPackage.Literals.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Not Matching Value Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addNotMatchingValueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_PatternMatchingIndicator_notMatchingValueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_PatternMatchingIndicator_notMatchingValueCount_feature", "_UI_PatternMatchingIndicator_type"),
+                 IndicatorsPackage.Literals.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
     }
 
     /**
@@ -100,6 +150,13 @@ public class PatternMatchingIndicatorItemProvider
     @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
+
+        switch (notification.getFeatureID(PatternMatchingIndicator.class)) {
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
         super.notifyChanged(notification);
     }
 

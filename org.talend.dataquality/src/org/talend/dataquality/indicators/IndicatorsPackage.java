@@ -7773,13 +7773,31 @@ public interface IndicatorsPackage extends EPackage {
     int PATTERN_MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
      * The number of structural features of the '<em>Pattern Matching Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 0;
+    int PATTERN_MATCHING_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 2;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.
@@ -8775,6 +8793,28 @@ public interface IndicatorsPackage extends EPackage {
     EClass getPatternMatchingIndicator();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.PatternMatchingIndicator#getMatchingValueCount <em>Matching Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Matching Value Count</em>'.
+     * @see org.talend.dataquality.indicators.PatternMatchingIndicator#getMatchingValueCount()
+     * @see #getPatternMatchingIndicator()
+     * @generated
+     */
+    EAttribute getPatternMatchingIndicator_MatchingValueCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.PatternMatchingIndicator#getNotMatchingValueCount <em>Not Matching Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Not Matching Value Count</em>'.
+     * @see org.talend.dataquality.indicators.PatternMatchingIndicator#getNotMatchingValueCount()
+     * @see #getPatternMatchingIndicator()
+     * @generated
+     */
+    EAttribute getPatternMatchingIndicator_NotMatchingValueCount();
+
+    /**
      * Returns the meta object for enum '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -9630,6 +9670,22 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass PATTERN_MATCHING_INDICATOR = eINSTANCE.getPatternMatchingIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Matching Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT = eINSTANCE.getPatternMatchingIndicator_MatchingValueCount();
+
+        /**
+         * The meta object literal for the '<em><b>Not Matching Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = eINSTANCE.getPatternMatchingIndicator_NotMatchingValueCount();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

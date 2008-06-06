@@ -467,7 +467,11 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateAggregationType"
           eType="#//indicators/DateGrain" defaultValueLiteral="year"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="PatternMatchingIndicator" eSuperTypes="#//indicators/Indicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PatternMatchingIndicator" eSuperTypes="#//indicators/Indicator">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="matchingValueCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="notMatchingValueCount"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+    </eClassifiers>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eOperations name="addTableIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">

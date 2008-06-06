@@ -1183,6 +1183,24 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getPatternMatchingIndicator_MatchingValueCount() {
+        return (EAttribute)patternMatchingIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getPatternMatchingIndicator_NotMatchingValueCount() {
+        return (EAttribute)patternMatchingIndicatorEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1394,6 +1412,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(dateParametersEClass, DATE_PARAMETERS__DATE_AGGREGATION_TYPE);
 
         patternMatchingIndicatorEClass = createEClass(PATTERN_MATCHING_INDICATOR);
+        createEAttribute(patternMatchingIndicatorEClass, PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT);
+        createEAttribute(patternMatchingIndicatorEClass, PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT);
 
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
@@ -1651,6 +1671,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getDateParameters_DateAggregationType(), this.getDateGrain(), "dateAggregationType", "year", 0, 1, DateParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(patternMatchingIndicatorEClass, PatternMatchingIndicator.class, "PatternMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getPatternMatchingIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1, PatternMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getPatternMatchingIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null, 0, 1, PatternMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

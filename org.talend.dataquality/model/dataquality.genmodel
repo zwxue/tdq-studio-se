@@ -290,7 +290,10 @@
       <genClasses ecoreClass="dataquality.ecore#//indicators/DateParameters">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/DateParameters/dateAggregationType"/>
       </genClasses>
-      <genClasses ecoreClass="dataquality.ecore#//indicators/PatternMatchingIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/PatternMatchingIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/PatternMatchingIndicator/matchingValueCount"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/PatternMatchingIndicator/notMatchingValueCount"/>
+      </genClasses>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">
