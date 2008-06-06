@@ -607,13 +607,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.talend.dataprofiler.libraries"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.talend.dataprofiler.rcp"
          download-size="0"
          install-size="0"
@@ -720,6 +713,20 @@
 
    <plugin
          id="org.eclipse.ui.cheatsheets"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataprofiler.rcp.branding.top"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataquality.edit"
          download-size="0"
          install-size="0"
          version="0.0.0"

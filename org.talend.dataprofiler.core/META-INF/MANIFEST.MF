@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.talend.dataprofiler.core; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.core.CorePlugin
 Bundle-Vendor: .Talend SA.
-Require-Bundle: org.talend.dataprofiler.libraries,
- org.eclipse.ui,
+Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  net.sourceforge.sqlexplorer;resolution:=optional,
  org.eclipse.core.resources,

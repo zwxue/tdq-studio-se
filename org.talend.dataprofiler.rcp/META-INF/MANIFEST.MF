@@ -10,7 +10,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.eclipse.swt,
  org.talend.dataprofiler.core,
- org.talend.dataprofiler.libraries,
  org.eclipse.ui.ide.application,
  org.talend.libraries.logging,
  org.apache.xerces
