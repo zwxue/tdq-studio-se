@@ -124,6 +124,7 @@ public final class FactoriesUtil {
         extensions.add(ReportsPackage.eNAME);
         extensions.add(DefinitionPackage.eNAME);
         extensions.add(IndicatorSqlPackage.eNAME);
+        extensions.add(PatternPackage.eNAME);
 
         // --- add specific extensions
         extensions.add(PROV);

@@ -38,6 +38,10 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
+import org.talend.dataquality.domain.pattern.PatternPackage;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -281,7 +285,15 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // completedSqlString = dbms().sumRowInSubquery("mycount", completedSqlString, "myquery");
             // scorreia hard coded "mycount" string must be the same as the alias in the TalendDefinition file!
             // PTODO scorreia avoid hard coded "mycount" string
+        } else
+
+        // --- handle case of matching pattern count
+        if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator())) {
+            List<String> patterns = getPatterns(indicator);
+            completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table, patterns);
+            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
         } else {
+
             // --- default case
             completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
@@ -297,6 +309,58 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Expression instantiateSqlExpression = instantiateSqlExpression(language, finalQuery);
         indicator.setInstantiatedExpression(instantiateSqlExpression);
         return true;
+    }
+
+    /**
+     * DOC scorreia Comment method "replaceVariables".
+     * 
+     * @param sqlGenericString
+     * @param colName
+     * @param table
+     * @param patterns
+     * @return
+     */
+    private String replaceVariables(String sqlGenericString, String colName, String table, List<String> patterns) {     
+        Object[] arguments = new Object[patterns.size() + 2];
+        arguments[0] = colName;
+        arguments[1] = table;
+        int i = 2;
+        for (String string : patterns) {
+            arguments[i++] = string;
+        }
+
+        String toFormat = surroundSingleQuotes(sqlGenericString);
+        return MessageFormat.format(toFormat, arguments);
+    }
+
+    /**
+     * DOC scorreia Comment method "getPatterns".
+     * 
+     * @param indicator
+     * @return the patterns or null if none has been found
+     */
+    private List<String> getPatterns(Indicator indicator) {
+        List<String> patternStrings = new ArrayList<String>();
+        Domain dataValidDomain = indicator.getParameters().getDataValidDomain();
+        if (dataValidDomain == null) {
+            return patternStrings;
+        }
+        EList<Pattern> patterns = dataValidDomain.getPatterns();
+        for (Pattern pattern : patterns) {
+            EList<PatternComponent> components = pattern.getComponents();
+            for (PatternComponent patternComponent : components) {
+                if (patternComponent != null && patternComponent.eClass().equals(PatternPackage.eINSTANCE.getRegularExpression())) {
+                    RegularExpression regExp = (RegularExpression) patternComponent;
+                    Expression expression = regExp.getExpression();
+                    if (expression != null) {
+                        // TODO scorreia probably need to handle SQL specific language patterns
+                        String body = expression.getBody();
+                        patternStrings.add(body);
+                    }
+                }
+            }
+        }
+        return patternStrings;
     }
 
     /**

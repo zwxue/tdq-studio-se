@@ -47,7 +47,7 @@ public class ConnectionIndicEvalMain {
             // create connection
             Connection connection = ConnectionUtils.createConnection(dbUrl, driverClassName, connectionParams);
 
-            TdDataProvider dataProvider = TestAnalysisCreation.getDataManager();
+            TdDataProvider dataProvider = new TestAnalysisCreation().getDataManager();
 
             // --- test connection evaluator
             String catalog = "test";

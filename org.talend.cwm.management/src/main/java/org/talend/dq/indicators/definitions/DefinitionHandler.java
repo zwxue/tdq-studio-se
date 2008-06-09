@@ -39,6 +39,7 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.SumIndicator;
@@ -118,7 +119,7 @@ public final class DefinitionHandler {
             }
         } catch (RuntimeException e) {
             if (log.isDebugEnabled()) {
-                log.error(e.getMessage(), e);
+                log.debug("ERROR: " + e.getMessage(), e);
             }
         }
         if (definitionsFile == null) {
@@ -130,7 +131,9 @@ public final class DefinitionHandler {
                     log.debug("Definition of indicators loaded from " + uri);
                 }
             } catch (RuntimeException e) {
-                log.error(e.getMessage(), e);
+                if (log.isDebugEnabled()) {
+                    log.debug("ERROR: " + e.getMessage(), e);
+                }
             }
         }
 
@@ -240,6 +243,16 @@ public final class DefinitionHandler {
         @Override
         public Boolean defaultCase(EObject object) {
             return false;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#casePatternMatchingIndicator(org.talend.dataquality.indicators.PatternMatchingIndicator)
+         */
+        @Override
+        public Boolean casePatternMatchingIndicator(PatternMatchingIndicator object) {
+            return setIndicatorDefinition(object, "Pattern Matching Indicator");
         }
 
         @Override
