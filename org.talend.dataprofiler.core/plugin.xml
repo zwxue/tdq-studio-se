@@ -315,10 +315,32 @@
      <cheatsheet
            category="org.talend.dataprofiler.core.category"
            composite="true"
-           contentFile="cheatsheets/Talend Data Profiler.xml"
+           contentFile="cheatsheets/Getting_started.xml"
            id="org.talend.dataprofiler.core.talenddataprofiler"
            name="Getting started">
      </cheatsheet>
+     <cheatsheet
+           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           contentFile="cheatsheets/ColumnAnalysis_cheat.xml"
+           id="org.talend.dataprofiler.core.cheatsheet1"
+           name="Multiple Column Analysis Creation">
+     </cheatsheet>
+     <cheatsheet
+           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.database"
+           contentFile="cheatsheets/DBconnection_cheat.xml"
+           id="org.talend.dataprofiler.core.cheatsheet2"
+           name="Database Connection Creation">
+     </cheatsheet>
+     <category
+           id="org.talend.dataprofiler.core.category.database"
+           name="Database"
+           parentCategory="org.talend.dataprofiler.core.category">
+     </category>
+     <category
+           id="org.talend.dataprofiler.core.category.analysis"
+           name="Analysis"
+           parentCategory="org.talend.dataprofiler.core.category">
+     </category>
   </extension>
   
   <!--<extension point = "org.eclipse.ui.actionSets">
