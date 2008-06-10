@@ -248,109 +248,109 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
             indicatorItem.setText(0, indicatorMapping.getType().getLabel());
 
             TreeEditor editor;
-            if (indicatorEnum.hasChildren()) {
-                editor = new TreeEditor(tree);
-                Label optionLabel = new Label(tree, SWT.NONE);
-                optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-                optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
-                optionLabel.setToolTipText("Options");
-                optionLabel.pack();
-                optionLabel.setData(indicatorMapping);
-                optionLabel.addMouseListener(new MouseAdapter() {
+            // if (indicatorEnum.hasChildren()) {
+            editor = new TreeEditor(tree);
+            Label optionLabel = new Label(tree, SWT.NONE);
+            optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+            optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
+            optionLabel.setToolTipText("Options");
+            optionLabel.pack();
+            optionLabel.setData(indicatorMapping);
+            optionLabel.addMouseListener(new MouseAdapter() {
 
-                    /*
-                     * (non-Javadoc)
-                     * 
-                     * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-                     */
-                    @Override
-                    public void mouseDown(MouseEvent e) {
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+                 */
+                @Override
+                public void mouseDown(MouseEvent e) {
 
-                        final IndicatorUnit indicator = (IndicatorUnit) ((Label) e.getSource()).getData();
-                        final IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicator, analysis) {
+                    final IndicatorUnit indicator = (IndicatorUnit) ((Label) e.getSource()).getData();
+                    final IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicator, analysis) {
+
+                        /*
+                         * (non-Javadoc)
+                         * 
+                         * @see org.eclipse.jface.wizard.Wizard#dispose()
+                         */
+                        @Override
+                        public void dispose() {
+                            activeCount = 0;
+                            super.dispose();
+                        }
+                    };
+
+                    try {
+                        // open the dialog
+                        WizardDialog dialog = new WizardDialog(null, wizard) {
 
                             /*
                              * (non-Javadoc)
                              * 
-                             * @see org.eclipse.jface.wizard.Wizard#dispose()
+                             * @see org.eclipse.jface.dialogs.TrayDialog#openTray(org.eclipse.jface.dialogs.DialogTray)
                              */
                             @Override
-                            public void dispose() {
-                                activeCount = 0;
-                                super.dispose();
+                            public void openTray(DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
+                                super.openTray(tray);
+                                if (tray instanceof HelpTray) {
+                                    HelpTray helpTray = (HelpTray) tray;
+                                    ReusableHelpPart helpPart = helpTray.getHelpPart();
+                                    helpPart.getForm().getForm().notifyListeners(SWT.Activate, new Event());
+                                }
                             }
+
                         };
+                        dialog.setPageSize(300, 400);
+                        dialog.create();
+                        dialog.getShell().addShellListener(new ShellAdapter() {
 
-                        try {
-                            // open the dialog
-                            WizardDialog dialog = new WizardDialog(null, wizard) {
-
-                                /*
-                                 * (non-Javadoc)
-                                 * 
-                                 * @see org.eclipse.jface.dialogs.TrayDialog#openTray(org.eclipse.jface.dialogs.DialogTray)
-                                 */
-                                @Override
-                                public void openTray(DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
-                                    super.openTray(tray);
-                                    if (tray instanceof HelpTray) {
-                                        HelpTray helpTray = (HelpTray) tray;
-                                        ReusableHelpPart helpPart = helpTray.getHelpPart();
-                                        helpPart.getForm().getForm().notifyListeners(SWT.Activate, new Event());
+                            /*
+                             * (non-Javadoc)
+                             * 
+                             * @see org.eclipse.swt.events.ShellAdapter#shellActivated(org.eclipse.swt.events.ShellEvent)
+                             */
+                            @Override
+                            public void shellActivated(ShellEvent e) {
+                                String string = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
+                                if (activeCount < 2) {
+                                    Point point = e.widget.getDisplay().getCursorLocation();
+                                    IContext context = HelpSystem.getContext(string);
+                                    IHelpResource[] relatedTopics = context.getRelatedTopics();
+                                    for (IHelpResource topic : relatedTopics) {
+                                        topic.getLabel();
+                                        topic.getHref();
                                     }
-                                }
-
-                            };
-                            dialog.setPageSize(300, 400);
-                            dialog.create();
-                            dialog.getShell().addShellListener(new ShellAdapter() {
-
-                                /*
-                                 * (non-Javadoc)
-                                 * 
-                                 * @see org.eclipse.swt.events.ShellAdapter#shellActivated(org.eclipse.swt.events.ShellEvent)
-                                 */
-                                @Override
-                                public void shellActivated(ShellEvent e) {
-                                    String string = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
-                                    if (activeCount < 2) {
-                                        Point point = e.widget.getDisplay().getCursorLocation();
-                                        IContext context = HelpSystem.getContext(string);
-                                        IHelpResource[] relatedTopics = context.getRelatedTopics();
-                                        for (IHelpResource topic : relatedTopics) {
-                                            topic.getLabel();
-                                            topic.getHref();
-                                        }
-                                        IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-                                        helpSystem.displayContext(context, point.x + 15, point.y);
-                                        activeCount++;
-                                        ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
-                                        if (lastActiveInstance != null) {
-                                            String href = IndicatorParameterTypes.getHref(indicator);
-                                            if (href != null) {
-                                                lastActiveInstance.showURL(href);
-                                            }
+                                    IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+                                    helpSystem.displayContext(context, point.x + 15, point.y);
+                                    activeCount++;
+                                    ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
+                                    if (lastActiveInstance != null) {
+                                        String href = IndicatorParameterTypes.getHref(indicator);
+                                        if (href != null) {
+                                            lastActiveInstance.showURL(href);
                                         }
                                     }
                                 }
-
-                            });
-                            int open = dialog.open();
-                            if (Window.OK == open) {
-                                setDirty(wizard.isDirty());
                             }
-                        } catch (AssertionFailedException ex) {
-                            MessageDialogWithToggle.openInformation(null, "Indicator Option", "No options to set!");
+
+                        });
+                        int open = dialog.open();
+                        if (Window.OK == open) {
+                            setDirty(wizard.isDirty());
                         }
+                    } catch (AssertionFailedException ex) {
+                        MessageDialogWithToggle.openInformation(null, "Indicator Option", "No options to set!");
                     }
+                }
 
-                });
+            });
 
-                editor.minimumWidth = WIDTH1_CELL;
-                editor.horizontalAlignment = SWT.CENTER;
-                editor.setEditor(optionLabel, indicatorItem, 1);
+            editor.minimumWidth = WIDTH1_CELL;
+            editor.horizontalAlignment = SWT.CENTER;
+            editor.setEditor(optionLabel, indicatorItem, 1);
 
-            }
+            // }
 
             editor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
