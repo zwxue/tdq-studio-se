@@ -22,10 +22,6 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.rcp.patch1"
-         version="0.0.0"/>
-
-   <includes
          id="org.talend.top.libraries_feature"
          version="0.0.0"/>
 
