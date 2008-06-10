@@ -309,20 +309,15 @@
   <extension
         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
      <category
-           id="org.talend.dataprofiler.core.category1"
+           id="org.talend.dataprofiler.core.category"
            name="Talend - Cheat Sheets">
      </category>
      <cheatsheet
-           category="org.talend.dataprofiler.core.category1"
-           contentFile="cheatsheets/ColumnAnalysis_cheat.xml"
-           id="org.talend.dataprofiler.core.cheatsheet1"
-           name="Multiple Column Analysis Creation">
-     </cheatsheet>
-     <cheatsheet
-           category="org.talend.dataprofiler.core.category1"
-           contentFile="cheatsheets/DBconnection_cheat.xml"
-           id="org.talend.dataprofiler.core.cheatsheet2"
-           name="Database Connection Creation">
+           category="org.talend.dataprofiler.core.category"
+           composite="true"
+           contentFile="cheatsheets/Talend Data Profiler.xml"
+           id="org.talend.dataprofiler.core.talenddataprofiler"
+           name="Getting started">
      </cheatsheet>
   </extension>
   

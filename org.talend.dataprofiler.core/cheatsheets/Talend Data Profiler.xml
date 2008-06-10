@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<compositeCheatsheet name="Talend Data Profiler">
+   <taskGroup kind="set" name="Talend Data Profiler" skip="false">
+      <intro>
+         This cheat sheet guides you through the creation of your first analysis.
+      </intro>
+      <onCompletion>
+         <b>Conclusion</b>
+      </onCompletion>
+      <task kind="cheatsheet" name="DBconnection" skip="false">
+         <intro>
+            This tutorial guides you through the creation of a database connection.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="DBconnection_cheat.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="ColumnAnalysis" skip="false">
+         <intro>
+            This tutorial guides you through the creation of an analysis of the content of a set of columns.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="ColumnAnalysis_cheat.xml">
+         </param>
+      </task>
+   </taskGroup>
+</compositeCheatsheet>
