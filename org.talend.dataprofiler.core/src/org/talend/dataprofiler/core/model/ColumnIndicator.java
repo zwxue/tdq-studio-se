@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -62,6 +63,14 @@ public class ColumnIndicator {
     private Map<IndicatorEnum, IndicatorUnit> indicatorUnitMap = new HashMap<IndicatorEnum, IndicatorUnit>();
 
     private IndicatorUnit[] currentindicatorUnits;
+
+    private final List<IndicatorEnum> countsEnumChildren = Arrays.asList(IndicatorEnum.CountsIndicatorEnum.getChildren());
+
+    // static{
+    // for(IndicatorEnum.CountsIndicatorEnum.getChildren()){
+    //            
+    // }
+    // }
 
     public ColumnIndicator(TdColumn tdColumn) {
         this.tdColumn = tdColumn;
@@ -310,14 +319,24 @@ public class ColumnIndicator {
         List<IndicatorEnum> categoryEnumList = new ArrayList<IndicatorEnum>();
         listCopy(categoryEnumList, flatIndicatorEnumList);
         Iterator<IndicatorEnum> iterator = flatIndicatorEnumList.iterator();
+        List<IndicatorEnum> currentCountsChildren = new ArrayList<IndicatorEnum>();
         while (iterator.hasNext()) {
             IndicatorEnum indEnum = iterator.next();
-            if (indEnum.hasChildren()) {
+            if (countsEnumChildren.contains(indEnum)) {
+                currentCountsChildren.add(indEnum);
+                continue;
+            }
+            if ((indEnum != IndicatorEnum.CountsIndicatorEnum) && indEnum.hasChildren()) {
                 for (IndicatorEnum childrenEnum : indEnum.getChildren()) {
                     categoryEnumList.remove(childrenEnum);
                 }
             }
 
+        }
+        if (currentCountsChildren.size() == countsEnumChildren.size()) {
+            categoryEnumList.removeAll(currentCountsChildren);
+        } else {
+            categoryEnumList.remove(IndicatorEnum.CountsIndicatorEnum);
         }
         currentindicatorUnits = createCategoryIndicatorUnits(categoryEnumList.toArray(new IndicatorEnum[categoryEnumList.size()]));
     }
