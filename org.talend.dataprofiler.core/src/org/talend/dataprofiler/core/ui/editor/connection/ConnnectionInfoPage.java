@@ -12,14 +12,21 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.connection;
 
+import java.util.Properties;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -32,6 +39,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
@@ -59,6 +67,8 @@ public class ConnnectionInfoPage extends AbstractFormPage {
     private Text loginText;
 
     private Text passwordText;
+
+    private Text urlText;
 
     public ConnnectionInfoPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -104,19 +114,42 @@ public class ConnnectionInfoPage extends AbstractFormPage {
         passwordText = new Text(sectionClient, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
-        String loginValue = TaggedValueHelper.getValue(USER_TAG, tdDataProvider);
+        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+        String loginValue = TaggedValueHelper.getValue(USER_TAG, connection);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
-        String passwordValue = TaggedValueHelper.getValue(PASSWORD_TAG, tdDataProvider);
+
+        String passwordValue = TaggedValueHelper.getValue(PASSWORD_TAG, connection);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
         urlLabel.setText("Url:");
-        Text urlText = new Text(sectionClient, SWT.BORDER);
+        urlText = new Text(sectionClient, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(urlText);
         TypedReturnCode<TdProviderConnection> trc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
         String urlValue = (trc.isOk()) ? trc.getObject().getConnectionString() : PluginConstant.EMPTY_STRING;
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
         urlText.setEnabled(false);
+
+        Button checkBtn = toolkit.createButton(sectionClient, " CHECK ", SWT.NONE);
+        GridData gd = new GridData();
+        gd.horizontalSpan = 2;
+        gd.verticalSpan = 20;
+        gd.horizontalAlignment = SWT.CENTER;
+        checkBtn.setLayoutData(gd);
+
+        checkBtn.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                ReturnCode code = checkDBConnection();
+                if (code.isOk()) {
+                    MessageDialog.openInformation(null, "check connections", "Check connection successful.");
+                } else {
+                    MessageDialog.openInformation(null, "check connections", "Check connection failure:" + code.getMessage());
+                }
+            }
+
+        });
 
         ModifyListener listener = new ModifyListener() {
 
@@ -131,6 +164,15 @@ public class ConnnectionInfoPage extends AbstractFormPage {
         section.setClient(sectionClient);
     }
 
+    private ReturnCode checkDBConnection() {
+        Properties props = new Properties();
+        props.put("user", loginText.getText());
+        props.put("password", passwordText.getText());
+        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+        ReturnCode returnCode = ConnectionService.checkConnection(this.urlText.getText(), connection.getDriverClassName(), props);
+        return returnCode;
+    }
+
     @Override
     protected void fireTextChange() {
         this.tdDataProvider.setName(nameText.getText());
@@ -138,9 +180,10 @@ public class ConnnectionInfoPage extends AbstractFormPage {
         TaggedValueHelper.setDescription(descriptionText.getText(), this.tdDataProvider);
         TaggedValueHelper.setAuthor(this.tdDataProvider, authorText.getText());
         TaggedValueHelper.setDevStatus(this.tdDataProvider, DevelopmentStatus.get(statusCombo.getText()));
-        TaggedValueHelper.setTaggedValue(tdDataProvider, USER_TAG, loginText.getText());
-        TaggedValueHelper.setTaggedValue(tdDataProvider, PASSWORD_TAG, passwordText.getText());
 
+        TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
+        TaggedValueHelper.setTaggedValue(connection, USER_TAG, loginText.getText());
+        TaggedValueHelper.setTaggedValue(connection, PASSWORD_TAG, passwordText.getText());
     }
 
     @Override
