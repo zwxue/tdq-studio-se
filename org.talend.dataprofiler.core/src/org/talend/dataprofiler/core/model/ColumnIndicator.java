@@ -333,7 +333,8 @@ public class ColumnIndicator {
             }
 
         }
-        if (currentCountsChildren.size() == countsEnumChildren.size()) {
+        if (currentCountsChildren.size() == countsEnumChildren.size()
+                && flatIndicatorEnumList.contains(IndicatorEnum.CountsIndicatorEnum)) {
             categoryEnumList.removeAll(currentCountsChildren);
         } else {
             categoryEnumList.remove(IndicatorEnum.CountsIndicatorEnum);

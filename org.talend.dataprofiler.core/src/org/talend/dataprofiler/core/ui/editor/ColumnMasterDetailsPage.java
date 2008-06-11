@@ -214,7 +214,6 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
 
-
         final Composite composite = toolkit.createComposite(sectionClient);
         composite.setLayout(new GridLayout());
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -228,14 +227,14 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
                 for (Control control : composite.getChildren()) {
                     control.dispose();
                 }
-                
-                boolean analysisStatue = analysis.getResults().getResultMetadata() != null 
-                    && analysis.getResults().getResultMetadata().getExecutionDate() != null;
-                
+
+                boolean analysisStatue = analysis.getResults().getResultMetadata() != null
+                        && analysis.getResults().getResultMetadata().getExecutionDate() != null;
+
                 if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null, "Preview the result of analyis", 
-                    "Do you want to run the analysis or simply see sample data?");
-                    
+                    boolean returnCode = MessageDialog.openConfirm(null, "Preview the result of analyis",
+                            "Do you want to run the analysis or simply see sample data?");
+
                     if (returnCode) {
                         RunAnalysisAction runAction = new RunAnalysisAction();
                         runAction.run();
@@ -265,10 +264,10 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         for (ModelElement modelElement : analysisHandler.getAnalyzedColumns()) {
 
             final TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
-            final Collection<Indicator> indicators = analysisHandler.getIndicatorLeaves(column);
+            final Collection<Indicator> indicators = analysisHandler.getIndicators(column);
             final ColumnIndicator columnIndicator = new ColumnIndicator(column);
             columnIndicator.setIndicators(indicators.toArray(new Indicator[indicators.size()]));
-            
+
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
 
