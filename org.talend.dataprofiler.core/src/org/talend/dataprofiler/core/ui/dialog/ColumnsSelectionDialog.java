@@ -52,6 +52,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -465,8 +466,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             // store tables in catalog
                             ColumnSetHelper.addColumns(columnSet, columnList);
                         } catch (TalendException e) {
-                            // FIXME rli display exception message to the user
-                            e.printStackTrace();
+                            MessageBoxExceptionHandler.process(e);
                         }
                         NeedSaveDataProviderHelper.register(provider.getName(), provider);
                     }

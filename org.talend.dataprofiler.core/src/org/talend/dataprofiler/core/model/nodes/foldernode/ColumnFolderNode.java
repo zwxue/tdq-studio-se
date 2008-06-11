@@ -21,6 +21,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -65,8 +66,7 @@ public class ColumnFolderNode extends AbstractFolderNode {
             try {
                 columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
             } catch (TalendException e) {
-                // FIXME rli display exception message to the user
-                e.printStackTrace();
+                MessageBoxExceptionHandler.process(e);
             }
             // store tables in catalog
             ColumnSetHelper.addColumns(columnSet, columnList);

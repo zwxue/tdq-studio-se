@@ -50,10 +50,10 @@ public final class MessageBoxExceptionHandler {
             try {
                 shell = new Shell();
             } catch (Exception e) {
-                //ignore me
+                // ignore me
             }
         }
-        
+
         if (shell != null) {
             showMessage(ex, shell);
         }
@@ -69,9 +69,9 @@ public final class MessageBoxExceptionHandler {
             return;
         }
         lastShowedAction = ex;
-        
-        String title = "The key is missing!"; //$NON-NLS-1$
-        String msg = DefaultMessagesImpl.getString("exception.errorOccured", ex.getMessage()); 
+
+        String title = DefaultMessagesImpl.getString("MessageBoxExceptionHandler.common.error"); //$NON-NLS-1$
+        String msg = DefaultMessagesImpl.getString("MessageBoxExceptionHandler.exception.errorOcured", ex.getMessage()); //$NON-NLS-1$
         Priority priority = Level.ERROR;
 
         if (priority == Level.FATAL || priority == Level.ERROR) {

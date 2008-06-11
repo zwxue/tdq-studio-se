@@ -16,12 +16,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
-
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
@@ -54,8 +52,6 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
             log.warn(pack.getName());
             return;
         }
-
-        // FIXME rli do not allow to pass null argument to method. Instead throw an exception if needed
         // load from database
         loadColumnSets(catalog, schema, provider, columnSets);
         // store views in catalog or schema

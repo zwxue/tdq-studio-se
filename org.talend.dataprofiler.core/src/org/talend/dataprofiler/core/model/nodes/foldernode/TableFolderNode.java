@@ -25,6 +25,7 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 
 /**
  * @author rli
@@ -94,8 +95,7 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
             }
             return ok;
         } catch (TalendException e) {
-            // FIXME rli handle exception and display error message to the user
-            e.printStackTrace();
+            MessageBoxExceptionHandler.process(e);
             return false;
         }
     }
