@@ -130,7 +130,7 @@ public class ConnnectionInfoPage extends AbstractFormPage {
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
         urlText.setEnabled(false);
 
-        Button checkBtn = toolkit.createButton(sectionClient, " CHECK ", SWT.NONE);
+        Button checkBtn = toolkit.createButton(sectionClient, " Check ", SWT.NONE);
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
         gd.verticalSpan = 20;

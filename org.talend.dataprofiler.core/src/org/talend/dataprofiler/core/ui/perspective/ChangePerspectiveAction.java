@@ -29,6 +29,7 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -59,6 +60,8 @@ import org.talend.utils.sugars.TypedReturnCode;
  * 
  */
 public class ChangePerspectiveAction extends Action {
+
+    private static Logger log = Logger.getLogger(ChangePerspectiveAction.class);
 
     private static final String SWITCH_TO_DATA_PROFILING = "Switch to Data Profiling";
 
@@ -156,7 +159,7 @@ public class ChangePerspectiveAction extends Action {
             try {
                 aliasManager.closeAllConnections();
             } catch (ExplorerException e1) {
-                e1.printStackTrace();
+                log.error(e1, e1);
             }
             for (TdDataProvider tdDataProvider : listTdDataProviders) {
                 TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
@@ -176,7 +179,7 @@ public class ChangePerspectiveAction extends Action {
                 try {
                     aliasManager.addAlias(alias);
                 } catch (ExplorerException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
                 users.add(previousUser);
             }
