@@ -238,7 +238,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // TODO scorreia test type of column and cast when needed
             // with ranges (frequencies of numerical intervals)
 
-            int topN = indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getModeIndicator()) ? 1 : TOP_N;
+            int topN = indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getModeIndicator()) ? 1 : getTopN(indicator);
+            if (topN <= 0) {
+                topN = TOP_N;
+            }
 
             if (rangeStrings != null) {
                 completedSqlString = getUnionCompletedString(indicator, sqlGenericExpression, colName, table, whereExpression,
@@ -312,6 +315,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
+     * DOC scorreia Comment method "getTopN".
+     * 
+     * @param indicator
+     * @return
+     */
+    private int getTopN(Indicator indicator) {
+        IndicatorParameters parameters = indicator.getParameters();
+        return (parameters == null) ? -1 : parameters.getTopN();
+    }
+
+    /**
      * DOC scorreia Comment method "replaceVariables".
      * 
      * @param sqlGenericString
@@ -320,7 +334,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param patterns
      * @return
      */
-    private String replaceVariables(String sqlGenericString, String colName, String table, List<String> patterns) {     
+    private String replaceVariables(String sqlGenericString, String colName, String table, List<String> patterns) {
         Object[] arguments = new Object[patterns.size() + 2];
         arguments[0] = colName;
         arguments[1] = table;
