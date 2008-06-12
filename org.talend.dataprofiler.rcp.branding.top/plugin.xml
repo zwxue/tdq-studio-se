@@ -16,10 +16,14 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.talend.dataprofiler.rcp.branding.top.application"
-            name="RCP Product">
+            name="Talend Open Profiler">
          <property
                name="windowImages"
                value="icons/alt_window_16.gif,icons/alt_window_32.gif">
+         </property>
+         <property
+               name="appName"
+               value="Talend Open Profiler">
          </property>
       </product>
    </extension>
