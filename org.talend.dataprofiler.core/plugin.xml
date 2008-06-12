@@ -42,6 +42,7 @@
        	      <contentExtension pattern="org.eclipse.ui.navigator.DQresourceContent" />		       	      
 	         <contentExtension pattern="org.talend.dataprofiler.core.emfContent"/>
 	         <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.startsWithDot"/>
+	          <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper" />
           </includes>
        </viewerContentBinding>
        <viewerActionBinding
