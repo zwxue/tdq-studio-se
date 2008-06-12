@@ -30,8 +30,11 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -128,6 +131,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         metadataSection.setDescription("Set the properties of analysis.");
         createAnalysisColumnsSection(form, topComp);
         createDataFilterSection(form, topComp);
+
         Composite body = form.getBody();
         Composite previewComp = toolkit.createComposite(body);
         GridData previewData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
@@ -135,6 +139,24 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         previewComp.setLayoutData(previewData);
         previewComp.setLayout(new GridLayout());
         createPreviewSection(form, previewComp);
+
+        GridData gdBtn = new GridData();
+        gdBtn.horizontalAlignment = SWT.CENTER;
+        gdBtn.horizontalSpan = 2;
+        gdBtn.widthHint = 120;
+        Button runBtn = toolkit.createButton(form.getBody(), " Run ", SWT.NONE);
+        runBtn.setLayoutData(gdBtn);
+
+        runBtn.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+
+                RunAnalysisAction runAction = new RunAnalysisAction();
+                runAction.run();
+            }
+
+        });
     }
 
     protected void fireTextChange() {
