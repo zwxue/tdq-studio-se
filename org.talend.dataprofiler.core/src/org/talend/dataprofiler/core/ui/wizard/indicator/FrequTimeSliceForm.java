@@ -66,7 +66,7 @@ public class FrequTimeSliceForm extends TimeSlicesForm {
 
         numberTxt.addModifyListener(new ModifyListener() {
 
-            @Override
+            // MOD scorreia annotation commented out for Java 5 compilation @Override
             public void modifyText(ModifyEvent e) {
 
                 parameter.setNumOfShown(Integer.parseInt(numberTxt.getText()));
