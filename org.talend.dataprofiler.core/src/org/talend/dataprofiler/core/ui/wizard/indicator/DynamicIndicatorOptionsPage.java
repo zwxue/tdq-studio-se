@@ -70,7 +70,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
         tabFolder = new TabFolder(container, SWT.FLAT);
         tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
-        String url = "";
+
         if (indicator != null) {
 
             int sqlType = parentColumn.getTdColumn().getJavaType();
@@ -98,16 +98,16 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
                 if (parentColumn.getDataminingType() == DataminingType.INTERVAL) {
                     if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                        setControl(createView(new BinsDesignerForm(tabFolder, SWT.NONE)));
+                        setControl(createView(new FrequBinsDesignerForm(tabFolder, SWT.NONE)));
                     }
 
                     if (Java2SqlType.isDateInSQL(sqlType)) {
 
-                        setControl(createView(new TimeSlicesForm(tabFolder, SWT.NONE)));
+                        setControl(createView(new FrequTimeSliceForm(tabFolder, SWT.NONE)));
                     }
                 } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                    setControl(createView(new TextParametersForm(tabFolder, SWT.NONE)));
+                    setControl(createView(new FrequTextParametersForm(tabFolder, SWT.NONE)));
                 }
 
                 break;

@@ -24,37 +24,41 @@ import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
+ * DOC zqin class global comment. Detailled comment
  */
 public class TextParametersForm extends AbstractIndicatorForm {
-    
+
     private Button caseBtn;
-    
-    private TextParameter parameter;
-    
+
+    protected TextParameter parameter;
+
     /**
      * DOC zqin TextParametersForm constructor comment.
+     * 
      * @param parent
      * @param style
      */
     public TextParametersForm(Composite parent, int style) {
         super(parent, style);
-        
+
         setupForm();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormName()
      */
     @Override
     public String getFormName() {
-        
+
         return AbstractIndicatorForm.TEXT_PARAMETERS_FORM;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -63,44 +67,52 @@ public class TextParametersForm extends AbstractIndicatorForm {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFields()
      */
     @Override
     protected void addFields() {
         this.setLayout(new GridLayout());
-        
+
         Group group = new Group(this, SWT.NONE);
         group.setLayout(new GridLayout());
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         group.setText("Options");
-        
+
         caseBtn = new Button(group, SWT.CHECK);
         caseBtn.setText("ignore case");
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFieldsListeners()
      */
     @Override
     protected void addFieldsListeners() {
-        
+
         caseBtn.addSelectionListener(new SelectionAdapter() {
 
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
+             * 
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                
+
                 parameter.setIngoreCase(caseBtn.getSelection());
             }
-            
+
         });
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
      */
     @Override
@@ -109,7 +121,9 @@ public class TextParametersForm extends AbstractIndicatorForm {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#checkFieldsValue()
      */
     @Override
@@ -118,22 +132,26 @@ public class TextParametersForm extends AbstractIndicatorForm {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
      */
     @Override
     protected void initialize() {
 
         if (parameter == null) {
-            
+
             parameter = new TextParameter();
         } else {
-            
+
             caseBtn.setSelection(parameter.isIngoreCase());
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getParameter()
      */
     @Override
@@ -142,7 +160,9 @@ public class TextParametersForm extends AbstractIndicatorForm {
         return this.parameter;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#setParameter
      * (org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter)
      */
@@ -150,7 +170,7 @@ public class TextParametersForm extends AbstractIndicatorForm {
     public void setParameter(AbstractIndicatorParameter parameter) {
 
         this.parameter = (TextParameter) parameter;
-        
+
         this.initialize();
     }
 

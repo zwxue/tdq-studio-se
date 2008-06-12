@@ -12,33 +12,41 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class TimeSlicesParameter extends AbstractIndicatorParameter {
 
     private String dataUnit;
 
-    
+    private int numOfShown;
+
     /**
      * Getter for dataUnit.
+     * 
      * @return the dataUnit
      */
     public String getDataUnit() {
         return this.dataUnit;
     }
 
-    
     /**
      * Sets the dataUnit.
+     * 
      * @param dataUnit the dataUnit to set
      */
     public void setDataUnit(String dataUnit) {
         this.dataUnit = dataUnit;
+    }
+
+    public int getNumOfShown() {
+        return numOfShown;
+    }
+
+    public void setNumOfShown(int numOfShown) {
+        this.numOfShown = numOfShown;
     }
 }

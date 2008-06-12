@@ -84,6 +84,7 @@ public class IndicatorOptionsWizard extends Wizard {
 
                 TextParameter textParam = new TextParameter();
                 textParam.setIngoreCase(textParameters.isIgnoreCase());
+                textParam.setNumOfShown(indicatorParam.getTopN());
 
                 TextLengthParameter textLengthParam = new TextLengthParameter();
                 textLengthParam.setUseBlank(textParameters.isUseBlank());
@@ -108,12 +109,14 @@ public class IndicatorOptionsWizard extends Wizard {
                 binsParam.setMaxValue(DomainHelper.getMaxBinValue(indicatorParam.getBins()));
                 binsParam.setMinValue(DomainHelper.getMinBinValue(indicatorParam.getBins()));
                 binsParam.setNumOfBins(DomainHelper.getNumberOfBins(indicatorParam.getBins()));
+                binsParam.setNumOfShown(indicatorParam.getTopN());
 
                 paramMap.put(AbstractIndicatorForm.BINS_DESIGNER_FORM, binsParam);
             }
             if (indicatorParam.getDateParameters() != null) {
                 TimeSlicesParameter timeParam = new TimeSlicesParameter();
                 timeParam.setDataUnit(indicatorParam.getDateParameters().getDateAggregationType().getLiteral());
+                timeParam.setNumOfShown(indicatorParam.getTopN());
 
                 paramMap.put(AbstractIndicatorForm.TIME_SLICES_FROM, timeParam);
             }
@@ -152,6 +155,7 @@ public class IndicatorOptionsWizard extends Wizard {
 
                     BinsDesignerParameter tempParam = (BinsDesignerParameter) parameter;
                     int numOfBin = tempParam.getNumOfBins();
+                    int numOfShown = tempParam.getNumOfShown();
                     double min = tempParam.getMinValue();
                     double max = tempParam.getMaxValue();
                     Domain domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numOfBin, min, max);
@@ -183,22 +187,30 @@ public class IndicatorOptionsWizard extends Wizard {
                                 break;
                             }
                         }
-                    } else {
+                    } else if (!domain.getRanges().isEmpty()) {
                         same = false;
                     }
+
+                    if (paramters.getTopN() != tempParam.getNumOfShown()) {
+                        same = false;
+                    }
+
                     if (!same) {
                         isDirty = true;
                         paramters.setBins(domain);
+                        paramters.setTopN(numOfShown);
                     }
                 }
 
                 if (parameter instanceof TextParameter) {
 
                     TextParameter tempParam = (TextParameter) parameter;
+                    int numOfShown = paramters.getTopN();
                     // PTODO qzhang for bug 3491.
-                    if (textParameters.isIgnoreCase() != tempParam.isIngoreCase()) {
+                    if (textParameters.isIgnoreCase() != tempParam.isIngoreCase() || numOfShown != tempParam.getNumOfShown()) {
                         isDirty = true;
                         textParameters.setIgnoreCase(tempParam.isIngoreCase());
+                        paramters.setTopN(tempParam.getNumOfShown());
                     }
                 }
 
@@ -256,10 +268,14 @@ public class IndicatorOptionsWizard extends Wizard {
                     }
                     TimeSlicesParameter tempParam = (TimeSlicesParameter) parameter;
                     DateGrain dateGrain = DateGrain.get(tempParam.getDataUnit());
+                    int numOfShown = paramters.getTopN();
                     // PTODO qzhang for bug 3491.
-                    if (dateGrain.compareTo(dateParameters.getDateAggregationType()) != 0) {
+                    if (dateGrain.compareTo(dateParameters.getDateAggregationType()) != 0
+                            || numOfShown != tempParam.getNumOfShown()) {
                         isDirty = true;
+                        numOfShown = tempParam.getNumOfShown();
                         dateParameters.setDateAggregationType(dateGrain);
+                        paramters.setTopN(numOfShown);
                     }
                 }
             }

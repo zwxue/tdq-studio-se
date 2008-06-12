@@ -12,33 +12,41 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class TextParameter extends AbstractIndicatorParameter {
 
     private boolean isIngoreCase;
 
-    
+    private int numOfShown;
+
     /**
      * Getter for isIngoreCase.
+     * 
      * @return the isIngoreCase
      */
     public boolean isIngoreCase() {
         return this.isIngoreCase;
     }
 
-    
     /**
      * Sets the isIngoreCase.
+     * 
      * @param isIngoreCase the isIngoreCase to set
      */
     public void setIngoreCase(boolean isIngoreCase) {
         this.isIngoreCase = isIngoreCase;
+    }
+
+    public int getNumOfShown() {
+        return numOfShown;
+    }
+
+    public void setNumOfShown(int numOfShown) {
+        this.numOfShown = numOfShown;
     }
 }
