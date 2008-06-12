@@ -274,6 +274,11 @@ public class ColumnIndicator {
         MetadataHelper.setDataminingType(dataminingType, tdColumn);
     }
 
+    public void addIndicator(IndicatorEnum indicatorEnum, Indicator indicator) {
+        this.flatIndicatorEnumList.add(indicatorEnum);
+        this.createIndicatorUnit(indicatorEnum, indicator);
+    }
+
     public void addTempIndicatorEnum(IndicatorEnum indicatorEnum) {
         if (!tempIndicatorEnums.contains(indicatorEnum)) {
             tempIndicatorEnums.add(indicatorEnum);

@@ -54,13 +54,13 @@ import org.talend.utils.sugars.TypedReturnCode;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class ConnnectionInfoPage extends AbstractFormPage {
+public class ConnectionInfoPage extends AbstractFormPage {
 
     private static final String PASSWORD_TAG = "password";
 
     private static final String USER_TAG = "user";
 
-    private static Logger log = Logger.getLogger(ConnnectionInfoPage.class);
+    private static Logger log = Logger.getLogger(ConnectionInfoPage.class);
 
     private TdDataProvider tdDataProvider;
 
@@ -70,7 +70,7 @@ public class ConnnectionInfoPage extends AbstractFormPage {
 
     private Text urlText;
 
-    public ConnnectionInfoPage(FormEditor editor, String id, String title) {
+    public ConnectionInfoPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 

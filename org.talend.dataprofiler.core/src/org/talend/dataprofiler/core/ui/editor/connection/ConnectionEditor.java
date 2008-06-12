@@ -37,7 +37,7 @@ public class ConnectionEditor extends FormEditor {
     }
 
     protected void addPages() {
-        masterPage = new ConnnectionInfoPage(this, "MasterPage", "Connection Settings");
+        masterPage = new ConnectionInfoPage(this, "MasterPage", "Connection Settings");
         try {
             addPage(masterPage);
         } catch (PartInitException e) {

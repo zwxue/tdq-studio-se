@@ -20,6 +20,11 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * 
  */
 public enum IndicatorEnum {
+    PatternMatchingIndicatorEnum(
+                                 IndicatorsPackage.PATTERN_MATCHING_INDICATOR,
+                                 IndicatorsPackage.Literals.PATTERN_MATCHING_INDICATOR,
+                                 "pattern matching",
+                                 null),
     RowCountIndicatorEnum(
                           IndicatorsPackage.ROW_COUNT_INDICATOR,
                           IndicatorsPackage.Literals.ROW_COUNT_INDICATOR,
@@ -253,6 +258,8 @@ public enum IndicatorEnum {
             returnEnum = BoxIIndicatorEnum;
         } else if (indicatorType == CountsIndicatorEnum.getIndicatorType()) {
             returnEnum = CountsIndicatorEnum;
+        } else if (indicatorType == PatternMatchingIndicatorEnum.getIndicatorType()) {
+            returnEnum = PatternMatchingIndicatorEnum;
         }
 
         return returnEnum;

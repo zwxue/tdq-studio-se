@@ -48,15 +48,15 @@ public class AnalysisEditor extends FormEditor {
     protected void addPages() {
         switch (analysisType) {
         case COLUMN:
-            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "analysis settings");
+            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "Analysis Settings");
             setPartName("Column Analysis Editor");
             break;
         case CONNECTION:
-            masterPage = new ConnectionMasterDetailsPage(this, "MasterPage", "analysis settings");
+            masterPage = new ConnectionMasterDetailsPage(this, "MasterPage", "Analysis Settings");
             setPartName("Connection Analysis Editor");
             break;
         default:
-            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "analysis settings");
+            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "Analysis Settings");
             setPartName("Column Analysis Editor");
             break;
         }
