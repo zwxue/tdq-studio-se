@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.connection;
 
-import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -20,7 +19,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -38,11 +37,11 @@ public class ConnectionEditor extends FormEditor {
     }
 
     protected void addPages() {
-        masterPage = new ConnnectionInfoPage(this, "MasterPage", "analysis settings");
+        masterPage = new ConnnectionInfoPage(this, "MasterPage", "Connection Settings");
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
-            ExceptionHandler.process(e, Level.ERROR);
+            MessageBoxExceptionHandler.process(e);
         }
     }
 
