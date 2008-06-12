@@ -79,5 +79,23 @@
        class = "org.talend.dataquality.domain.sql.SQLPackage"
        genModel = "model/dataquality.genmodel" /> 
   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            class="org.talend.commons.emf.CwmResourceFactory"
+            type="prv">
+      </parser>
+      <parser
+            class="org.talend.commons.emf.CwmResourceFactory"
+            type="definition">
+      </parser>
+   </extension>
+   <extension
+         point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            class="org.talend.commons.emf.CwmResourceFactory"
+            type="ana">
+      </parser>
+   </extension>
 
 </plugin>

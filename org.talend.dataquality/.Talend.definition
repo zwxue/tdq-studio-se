@@ -1,185 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataquality.indicators.definition:IndicatorsDefinitions xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_cb-g4BF2Ed2PKb6nEJEvhw" name="Talend's default indicators' definitions">
   <indicatorDefinitions xmi:id="_ccFOkBF2Ed2PKb6nEJEvhw" name="Row Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Row Count">
-    <taggedValue tag="Description" value="counts the number of rows"/>
-    <taggedValue tag="Purpose" value="evaluate the number of records"/>
+    <taggedValue xmi:id="_yboaoDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of rows"/>
+    <taggedValue xmi:id="_yboaoTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records"/>
     <sqlGenericExpression xmi:id="_ccHDwBF2Ed2PKb6nEJEvhw" body="SELECT COUNT({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT COUNT({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT COUNT({0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_ybpBsDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybpBsTh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0BF2Ed2PKb6nEJEvhw" name="Distinct Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Distinct Count">
-    <taggedValue tag="Description" value="counts the number of distinct rows"/>
-    <taggedValue tag="Purpose" value="evaluate the number of distinct records"/>
-    <sqlGenericExpression body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_ybpowDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of distinct rows"/>
+    <taggedValue xmi:id="_ybqP0Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of distinct records"/>
+    <sqlGenericExpression xmi:id="_ybqP0Th8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybqP0zh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0RF2Ed2PKb6nEJEvhw" name="Unique Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Unique Count">
-    <taggedValue tag="Description" value="counts the number of unique rows (i.e. rows that are not duplicated)"/>
-    <taggedValue tag="Purpose" value="evaluate the number of unique records"/>
-    <sqlGenericExpression body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="SQL"/>
-    <sqlGenericExpression body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="MySQL"/>
-    <sqlGenericExpression body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="Oracle"/>
+    <taggedValue xmi:id="_ybq24Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of unique rows (i.e. rows that are not duplicated)"/>
+    <taggedValue xmi:id="_ybq24Th8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of unique records"/>
+    <sqlGenericExpression xmi:id="_ybq24jh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybq24zh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybq25Dh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Duplicate Count">
-    <taggedValue tag="Description" value="counts the number of duplicate rows. this number and the number of unique data equals the number of distinct rows"/>
-    <taggedValue tag="Purpose" value="evaluate the number of duplicated records"/>
-    <sqlGenericExpression body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="SQL"/>
-    <sqlGenericExpression body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="MySQL"/>
-    <sqlGenericExpression body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="Oracle"/>
+    <taggedValue xmi:id="_ybrd8Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of duplicate rows. this number and the number of unique data equals the number of distinct rows"/>
+    <taggedValue xmi:id="_ybrd8Th8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of duplicated records"/>
+    <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybrd8zh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0xF2Ed2PKb6nEJEvhw" name="Blank Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Blank Count">
-    <taggedValue tag="Description" value="counts the number of blank rows. A blank is a non null textual data that contains only white spaces (or nothing)"/>
-    <taggedValue tag="Purpose" value="evaluate the number of blank records"/>
-    <sqlGenericExpression body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="SQL"/>
-    <sqlGenericExpression body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="MySQL"/>
-    <sqlGenericExpression body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="Oracle"/>
+    <taggedValue xmi:id="_ybsFADh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of blank rows. A blank is a non null textual data that contains only white spaces (or nothing)"/>
+    <taggedValue xmi:id="_ybsFATh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of blank records"/>
+    <sqlGenericExpression xmi:id="_ybsFAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybsFAzh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybsFBDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1BF2Ed2PKb6nEJEvhw" name="Minimal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Minimal Length">
-    <taggedValue tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
-    <taggedValue tag="Purpose" value="evaluate the length of the smallest textual record"/>
-    <sqlGenericExpression body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT MIN(LENGTH({0})) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_ybssEDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
+    <taggedValue xmi:id="_ybssETh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the length of the smallest textual record"/>
+    <sqlGenericExpression xmi:id="_ybssEjh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybssEzh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybtTIDh8Ed2XmO7pl5Yuyg" body="SELECT MIN(LENGTH({0})) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1RF2Ed2PKb6nEJEvhw" name="Maximal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Maximal Length">
-    <taggedValue tag="Description" value="computes the maximal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
-    <taggedValue tag="Purpose" value="evaluate the length of the longest textual record"/>
-    <sqlGenericExpression body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT MAX(LENGTH({0})) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_ybtTITh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the maximal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
+    <taggedValue xmi:id="_ybtTIjh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the length of the longest textual record"/>
+    <sqlGenericExpression xmi:id="_ybt6MDh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybt6MTh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybt6Mjh8Ed2XmO7pl5Yuyg" body="SELECT MAX(LENGTH({0})) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4BF2Ed2PKb6nEJEvhw" name="Average Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Average Length">
-    <taggedValue tag="Description" value="computes the average length of the field. Parameters can be set to avoid counting blank data or null data."/>
-    <taggedValue tag="Purpose" value="evaluate the average length of the textual record"/>
-    <sqlGenericExpression body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT SUM(LENGTH({0})), COUNT({0}) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_ybt6Mzh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average length of the field. Parameters can be set to avoid counting blank data or null data."/>
+    <taggedValue xmi:id="_ybuhQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the average length of the textual record"/>
+    <sqlGenericExpression xmi:id="_ybuhQTh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybuhQjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybuhQzh8Ed2XmO7pl5Yuyg" body="SELECT SUM(LENGTH({0})), COUNT({0}) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4RF2Ed2PKb6nEJEvhw" name="Mode" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Mode">
-    <taggedValue tag="Description" value="computes the mode (most probable value). For numerical data or continuous data, bins can be set in the parameters of this indicator. It is different from the average and from the median. Generalization of it is an histogram. It is good for addressing categorical attributes."/>
-    <taggedValue tag="Purpose" value="evaluate the most frequent value"/>
-    <sqlGenericExpression body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY 1 ORDER BY 2 DESC " language="SQL"/>
-    <sqlGenericExpression body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY 1 ORDER BY 2 DESC " language="MySQL"/>
-    <sqlGenericExpression body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="Oracle"/>
+    <taggedValue xmi:id="_ybvIUDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the mode (most probable value). For numerical data or continuous data, bins can be set in the parameters of this indicator. It is different from the average and from the median. Generalization of it is an histogram. It is good for addressing categorical attributes."/>
+    <taggedValue xmi:id="_ybvIUTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the most frequent value"/>
+    <sqlGenericExpression xmi:id="_ybvIUjh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY 1 ORDER BY 2 DESC " language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybvIUzh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY 1 ORDER BY 2 DESC " language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybvIVDh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4hF2Ed2PKb6nEJEvhw" name="Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Frequency Table">
-    <taggedValue tag="Description" value="for each distinct record, counts the number of records."/>
-    <taggedValue tag="Purpose" value="evaluate the most frequent records"/>
-    <sqlGenericExpression body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="SQL"/>
-    <sqlGenericExpression body="SELECT {0} val, COUNT(*) c FROM {1} t GROUP BY val ORDER BY c DESC" language="MySQL"/>
-    <sqlGenericExpression body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY COUNT(*) DESC" language="Oracle"/>
+    <taggedValue xmi:id="_ybvvYDh8Ed2XmO7pl5Yuyg" tag="Description" value="for each distinct record, counts the number of records."/>
+    <taggedValue xmi:id="_ybvvYTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the most frequent records"/>
+    <sqlGenericExpression xmi:id="_ybwWcDh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT {0} val, COUNT(*) c FROM {1} t GROUP BY val ORDER BY c DESC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY COUNT(*) DESC" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48BF2Ed2PKb6nEJEvhw" name="Summary Statistics" categories="_ccKuIRF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI48xF2Ed2PKb6nEJEvhw _ccI48RF2Ed2PKb6nEJEvhw _ccI48hF2Ed2PKb6nEJEvhw _ccI49hF2Ed2PKb6nEJEvhw" label="Summary Statistics">
-    <taggedValue tag="Description" value="computes the average, the median and the extent of the data (range, interquartile range)"/>
-    <taggedValue tag="Purpose" value="give a simple overview of the distribution of the data"/>
+    <taggedValue xmi:id="_ybyLoDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average, the median and the extent of the data (range, interquartile range)"/>
+    <taggedValue xmi:id="_ybyLoTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="give a simple overview of the distribution of the data"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48RF2Ed2PKb6nEJEvhw" name="Mean" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccFOkBF2Ed2PKb6nEJEvhw _ccJgAhF2Ed2PKb6nEJEvhw" label="Mean">
-    <taggedValue tag="Description" value="computes the mean (average) of the records"/>
-    <taggedValue tag="Purpose" value="evaluate the mean value of numerical records"/>
-    <sqlGenericExpression body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_ybzZwDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the mean (average) of the records"/>
+    <taggedValue xmi:id="_ybzZwTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the mean value of numerical records"/>
+    <sqlGenericExpression xmi:id="_ybzZwjh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybzZwzh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb0A0Dh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48hF2Ed2PKb6nEJEvhw" name="Median" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Median">
-    <taggedValue tag="Description" value="The median is the value separating the higher half of a sample, a population, or a probability distribution, from the lower half. "/>
-    <taggedValue tag="Purpose" value="evaluate the median of the records"/>
-    <sqlGenericExpression body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
-    <sqlGenericExpression body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT AVG({0}) FROM ( SELECT {0}, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY {0}) rn FROM {1} ) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="Oracle"/>
-    <sqlGenericExpression body="SELECT MEDIAN({0}) FROM {1}" language="Oracle 10g"/>
-    <sqlGenericExpression body=" SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle 9i"/>
+    <taggedValue xmi:id="_yb0A0Th8Ed2XmO7pl5Yuyg" tag="Description" value="The median is the value separating the higher half of a sample, a population, or a probability distribution, from the lower half. "/>
+    <taggedValue xmi:id="_yb0n4Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the median of the records"/>
+    <sqlGenericExpression xmi:id="_yb0n4Th8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_yb0n4jh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb0n4zh8Ed2XmO7pl5Yuyg" body="SELECT AVG({0}) FROM ( SELECT {0}, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY {0}) rn FROM {1} ) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_yb0n5Dh8Ed2XmO7pl5Yuyg" body="SELECT MEDIAN({0}) FROM {1}" language="Oracle 10g"/>
+    <sqlGenericExpression xmi:id="_yb0n5Th8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle 9i"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48xF2Ed2PKb6nEJEvhw" name="Inter Quartile Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI49BF2Ed2PKb6nEJEvhw _ccI49RF2Ed2PKb6nEJEvhw" label="IQR">
-    <taggedValue tag="Description" value="gives the spread of the main half data. This measure is more stable than the range."/>
-    <taggedValue tag="Purpose" value="measure the dispersion of the main half of the records"/>
+    <taggedValue xmi:id="_yb2dEDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the spread of the main half data. This measure is more stable than the range."/>
+    <taggedValue xmi:id="_yb2dETh8Ed2XmO7pl5Yuyg" tag="Purpose" value="measure the dispersion of the main half of the records"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49BF2Ed2PKb6nEJEvhw" name="Lower Quartile" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Lower Quartile">
-    <taggedValue tag="Description" value="1/4th of the records are below this value and 3/4th are above. "/>
-    <taggedValue tag="Purpose" value="indiquate the threshold of the lowest 1/4th records"/>
-    <sqlGenericExpression body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
-    <sqlGenericExpression body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
-    <sqlGenericExpression body=" SELECT PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_yb3EIDh8Ed2XmO7pl5Yuyg" tag="Description" value="1/4th of the records are below this value and 3/4th are above. "/>
+    <taggedValue xmi:id="_yb3EITh8Ed2XmO7pl5Yuyg" tag="Purpose" value="indiquate the threshold of the lowest 1/4th records"/>
+    <sqlGenericExpression xmi:id="_yb3EIjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_yb3EIzh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb3EJDh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49RF2Ed2PKb6nEJEvhw" name="Upper Quartile" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Upper Quartile">
-    <taggedValue tag="Description" value="1/4th of the records are above this value and 3/4th are below. "/>
-    <taggedValue tag="Purpose" value="indiquate the threshold of the highest 1/4th records"/>
-    <sqlGenericExpression body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
-    <sqlGenericExpression body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
-    <sqlGenericExpression body=" SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_yb3rMDh8Ed2XmO7pl5Yuyg" tag="Description" value="1/4th of the records are above this value and 3/4th are below. "/>
+    <taggedValue xmi:id="_yb4SQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="indiquate the threshold of the highest 1/4th records"/>
+    <sqlGenericExpression xmi:id="_yb4SQTh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_yb4SQjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb4SQzh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49hF2Ed2PKb6nEJEvhw" name="Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccJgABF2Ed2PKb6nEJEvhw _ccJgARF2Ed2PKb6nEJEvhw" label="Range">
-    <taggedValue tag="Description" value="is the difference between the highest record and the lowest record"/>
-    <taggedValue tag="Purpose" value="measure the extent of the records"/>
+    <taggedValue xmi:id="_yb6HcDh8Ed2XmO7pl5Yuyg" tag="Description" value="is the difference between the highest record and the lowest record"/>
+    <taggedValue xmi:id="_yb6HcTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="measure the extent of the records"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccJgABF2Ed2PKb6nEJEvhw" name="Minimum" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Minimum">
-    <taggedValue tag="Description" value="gives the minimal record"/>
-    <taggedValue tag="Purpose" value="evaluate the minimal record"/>
-    <sqlGenericExpression body="SELECT MIN({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT MIN({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT MIN({0}) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_yb6ugDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the minimal record"/>
+    <taggedValue xmi:id="_yb6ugTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the minimal record"/>
+    <sqlGenericExpression xmi:id="_yb6ugjh8Ed2XmO7pl5Yuyg" body="SELECT MIN({0}) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_yb6ugzh8Ed2XmO7pl5Yuyg" body="SELECT MIN({0}) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb7VkDh8Ed2XmO7pl5Yuyg" body="SELECT MIN({0}) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccJgARF2Ed2PKb6nEJEvhw" name="Maximum" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Maximum">
-    <taggedValue tag="Description" value="gives the maximal record"/>
-    <taggedValue tag="Purpose" value="evaluate the maximal record"/>
-    <sqlGenericExpression body="SELECT MAX({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT MAX({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT MAX({0}) FROM {1}" language="Oracle"/>
+    <taggedValue xmi:id="_yb78oDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the maximal record"/>
+    <taggedValue xmi:id="_yb78oTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the maximal record"/>
+    <sqlGenericExpression xmi:id="_yb78ojh8Ed2XmO7pl5Yuyg" body="SELECT MAX({0}) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_yb78ozh8Ed2XmO7pl5Yuyg" body="SELECT MAX({0}) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb78pDh8Ed2XmO7pl5Yuyg" body="SELECT MAX({0}) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccJgAhF2Ed2PKb6nEJEvhw" name="Sum" label="Sum">
-    <taggedValue tag="Description" value="sums all the records"/>
-    <taggedValue tag="Purpose" value="evaluate the sum of the records"/>
-    <sqlGenericExpression body="SELECT SUM({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT SUM({0}) FROM {1}" language="MySQL"/>
+    <taggedValue xmi:id="_yb8jsDh8Ed2XmO7pl5Yuyg" tag="Description" value="sums all the records"/>
+    <taggedValue xmi:id="_yb8jsTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the sum of the records"/>
+    <sqlGenericExpression xmi:id="_yb8jsjh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_yb8jszh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}) FROM {1}" language="MySQL"/>
   </indicatorDefinitions>
-  <indicatorDefinitions xmi:id="_ccFOkBF2Ed2PKb6nEJEvhw" name="Null Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Null Count">
-    <taggedValue tag="Purpose" value="evaluate the number of missing data (null records)"/>
-    <taggedValue tag="Description" value="counts the number of null rows"/>
-    <sqlGenericExpression body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="SQL"/>
-    <sqlGenericExpression body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="MySQL"/>
-    <sqlGenericExpression body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="Oracle"/>
+  <indicatorDefinitions xmi:id="_yb9x0zh8Ed2XmO7pl5Yuyg" name="Text Statistics" aggregatedDefinitions="_ccIR4BF2Ed2PKb6nEJEvhw _ccHq1RF2Ed2PKb6nEJEvhw _ccHq1BF2Ed2PKb6nEJEvhw" label="Text Statistics">
+    <taggedValue xmi:id="_yb9x1Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze textual fields"/>
+    <taggedValue xmi:id="_yb9x1Th8Ed2XmO7pl5Yuyg" tag="Description" value="contains indicators for analyzing textual fields"/>
   </indicatorDefinitions>
-  <indicatorDefinitions name="Text Statistics" aggregatedDefinitions="_ccIR4BF2Ed2PKb6nEJEvhw _ccHq1RF2Ed2PKb6nEJEvhw _ccHq1BF2Ed2PKb6nEJEvhw" label="Text Statistics">
-    <taggedValue tag="Purpose" value="analyze textual fields"/>
-    <taggedValue tag="Description" value="contains indicators for analyzing textual fields"/>
+  <indicatorDefinitions xmi:id="_yb-Y4Dh8Ed2XmO7pl5Yuyg" name="Simple Statistics" aggregatedDefinitions="_ccHq0xF2Ed2PKb6nEJEvhw _ccHq0BF2Ed2PKb6nEJEvhw _ccHq0hF2Ed2PKb6nEJEvhw _ccHq0RF2Ed2PKb6nEJEvhw _GrAeADh9Ed2XmO7pl5Yuyg" label="Simple Statistics">
+    <taggedValue xmi:id="_yb-Y4Th8Ed2XmO7pl5Yuyg" tag="Description" value="contains several count indicators"/>
+    <taggedValue xmi:id="_yb-Y4jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze the quantity of records"/>
   </indicatorDefinitions>
-  <indicatorDefinitions name="Simple Statistics" aggregatedDefinitions="_ccHq0xF2Ed2PKb6nEJEvhw _ccHq0BF2Ed2PKb6nEJEvhw _ccHq0hF2Ed2PKb6nEJEvhw _ccFOkBF2Ed2PKb6nEJEvhw _ccFOkBF2Ed2PKb6nEJEvhw _ccHq0RF2Ed2PKb6nEJEvhw" label="Simple Statistics">
-    <taggedValue tag="Description" value="contains several count indicators"/>
-    <taggedValue tag="Purpose" value="analyze the quantity of records"/>
+  <indicatorDefinitions xmi:id="_yb-_8Dh8Ed2XmO7pl5Yuyg" name="Pattern Matching Indicator" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Pattern Matching Indicator">
+    <taggedValue xmi:id="_yb-_8Th8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of records matching the given pattern against the number of records that do not match the given pattern"/>
+    <taggedValue xmi:id="_yb-_8jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records that match a regular pattern"/>
+    <sqlGenericExpression xmi:id="_yb_nADh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} LIKE {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} REGEXP {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} REGEXP_LIKE({0},{2}) THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="Oracle"/>
   </indicatorDefinitions>
-  <indicatorDefinitions name="Pattern Matching Indicator" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Pattern Matching Indicator">
-    <taggedValue tag="Description" value="counts the number of records matching the given pattern against the number of records that do not match the given pattern"/>
-    <taggedValue tag="Purpose" value="evaluate the number of records that match a regular pattern"/>
-    <sqlGenericExpression body="SELECT SUM(CASE WHEN {0} LIKE {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="SQL"/>
-    <sqlGenericExpression body="SELECT SUM(CASE WHEN {0} REGEXP {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression body="SELECT SUM(CASE WHEN {0} REGEXP_LIKE({0},{2}) THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="Oracle"/>
+  <indicatorDefinitions xmi:id="_GrAeADh9Ed2XmO7pl5Yuyg" name="Null Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Null Count">
+    <taggedValue xmi:id="_GrBFEDh9Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of missing data (null records)"/>
+    <taggedValue xmi:id="_GrBFETh9Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of null rows"/>
+    <sqlGenericExpression xmi:id="_GrBFEjh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="SQL"/>
+    <sqlGenericExpression xmi:id="_GrBFEzh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_GrBFFDh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="Oracle"/>
   </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
-    <taggedValue tag="Description" value="do some simple statistics by several counting methods"/>
-    <taggedValue tag="Purpose" value="evaluate different numbers of records"/>
+    <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
+    <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>
   </categories>
   <categories xmi:id="_ccKHERF2Ed2PKb6nEJEvhw" name="Text Statistics" label="Text Statistics">
-    <taggedValue tag="Description" value="computes the length of the records"/>
-    <taggedValue tag="Purpose" value="evaluate the kind of textual records"/>
+    <taggedValue xmi:id="_ycA1ITh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the length of the records"/>
+    <taggedValue xmi:id="_ycA1Ijh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the kind of textual records"/>
   </categories>
   <categories xmi:id="_ccKuIBF2Ed2PKb6nEJEvhw" name="Summary Statistics" label="Summary Statistics">
-    <taggedValue tag="Description" value="computes the average, the median and the extent of the data (range, interquartile range)"/>
-    <taggedValue tag="Purpose" value="give a simple overview of the distribution of the data"/>
+    <taggedValue xmi:id="_ycA1Izh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average, the median and the extent of the data (range, interquartile range)"/>
+    <taggedValue xmi:id="_ycA1JDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="give a simple overview of the distribution of the data"/>
   </categories>
   <categories xmi:id="_ccKuIRF2Ed2PKb6nEJEvhw" name="Advanced Statistics" label="Advanced Statistics">
-    <taggedValue tag="Description" value="some advanced statistics"/>
-    <taggedValue tag="Purpose" value="Advanced Statistics"/>
+    <taggedValue xmi:id="_ycBcMDh8Ed2XmO7pl5Yuyg" tag="Description" value="some advanced statistics"/>
+    <taggedValue xmi:id="_ycBcMTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="Advanced Statistics"/>
   </categories>
   <categories xmi:id="_ccKuIhF2Ed2PKb6nEJEvhw" name="Mode" label="Mode">
-    <taggedValue tag="Description" value="Mode"/>
-    <taggedValue tag="Purpose" value="Mode"/>
+    <taggedValue xmi:id="_ycBcMjh8Ed2XmO7pl5Yuyg" tag="Description" value="Mode"/>
+    <taggedValue xmi:id="_ycBcMzh8Ed2XmO7pl5Yuyg" tag="Purpose" value="Mode"/>
   </categories>
   <categories xmi:id="_ccKuIxF2Ed2PKb6nEJEvhw" name="Frequency" label="Frequency">
-    <taggedValue tag="Description" value="for each distinct record, counts the number of records."/>
-    <taggedValue tag="Purpose" value="evaluate the most frequent records"/>
+    <taggedValue xmi:id="_ycBcNDh8Ed2XmO7pl5Yuyg" tag="Description" value="for each distinct record, counts the number of records."/>
+    <taggedValue xmi:id="_ycCDQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the most frequent records"/>
   </categories>
   <categories xmi:id="_ccKuJBF2Ed2PKb6nEJEvhw" name="Count" label="Count">
-    <taggedValue tag="Description" value="contains several count indicators"/>
-    <taggedValue tag="Purpose" value="analyze the quantity of records"/>
+    <taggedValue xmi:id="_ycCDQTh8Ed2XmO7pl5Yuyg" tag="Description" value="contains several count indicators"/>
+    <taggedValue xmi:id="_ycCDQjh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze the quantity of records"/>
   </categories>
 </dataquality.indicators.definition:IndicatorsDefinitions>

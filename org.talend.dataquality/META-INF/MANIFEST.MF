@@ -7,7 +7,8 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.talend.dataquality.analysis,
+Export-Package: org.talend.commons.emf,
+ org.talend.dataquality.analysis,
  org.talend.dataquality.analysis.category,
  org.talend.dataquality.analysis.category.impl,
  org.talend.dataquality.analysis.category.util,
@@ -44,5 +45,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.talend.cwm.mip;visibility:=reexport,
  org.talend.cwm.ext,
  org.talend.utils,
- org.talend.libraries.logging
+ org.talend.libraries.logging,
+ org.eclipse.emf.ecore.xmi
 Eclipse-LazyStart: true

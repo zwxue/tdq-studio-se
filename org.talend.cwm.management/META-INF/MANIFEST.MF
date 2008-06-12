@@ -20,8 +20,7 @@ Require-Bundle: org.talend.libraries.apache,
  org.eclipse.core.runtime,
  org.talend.cwm.ext;visibility:=reexport
 Bundle-Vendor: .Talend SA.
-Export-Package: org.talend.commons.emf,
- org.talend.cwm.dependencies,
+Export-Package: org.talend.cwm.dependencies,
  org.talend.cwm.exception,
  org.talend.cwm.management.api,
  org.talend.cwm.management.connection,
