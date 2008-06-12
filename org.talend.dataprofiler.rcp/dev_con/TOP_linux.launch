@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
+<booleanAttribute key="append.args" value="true"/>
+<booleanAttribute key="askclear" value="true"/>
+<booleanAttribute key="automaticAdd" value="false"/>
+<booleanAttribute key="automaticValidate" value="true"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="clearws" value="true"/>
+<booleanAttribute key="clearwslog" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/dataprofiler_linux"/>
+<booleanAttribute key="default" value="false"/>
+<booleanAttribute key="includeOptional" value="true"/>
+<stringAttribute key="location" value="${workspace_loc}/../data_profiler_runtime"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl}"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea -DUSE_CWM_LABELS=false"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<stringAttribute key="product" value="org.talend.dataprofiler.rcp.branding.top.product"/>
+<stringAttribute key="selected_target_plugins" value="com.ibm.icu,com.ibm.icu36.data.update,javax.servlet,javax.servlet.jsp,org.apache.ant,org.apache.commons.el,org.apache.commons.logging,org.apache.jasper,org.apache.lucene,org.apache.lucene.analysis,org.apache.xerces,org.apache.xml.resolver,org.eclipse.ant.core,org.eclipse.core.commands,org.eclipse.core.contenttype,org.eclipse.core.databinding,org.eclipse.core.expressions,org.eclipse.core.filebuffers,org.eclipse.core.filesystem,org.eclipse.core.filesystem.linux.x86,org.eclipse.core.jobs,org.eclipse.core.net,org.eclipse.core.resources,org.eclipse.core.resources.compatibility,org.eclipse.core.runtime,org.eclipse.core.runtime.compatibility.auth,org.eclipse.core.runtime.compatibility.registry,org.eclipse.core.variables,org.eclipse.emf.common,org.eclipse.emf.common.ui,org.eclipse.emf.ecore,org.eclipse.emf.ecore.change,org.eclipse.emf.ecore.xmi,org.eclipse.emf.edit,org.eclipse.emf.edit.ui,org.eclipse.equinox.app,org.eclipse.equinox.common,org.eclipse.equinox.http.jetty,org.eclipse.equinox.http.registry,org.eclipse.equinox.http.servlet,org.eclipse.equinox.jsp.jasper,org.eclipse.equinox.jsp.jasper.registry,org.eclipse.equinox.preferences,org.eclipse.equinox.registry,org.eclipse.help,org.eclipse.help.base,org.eclipse.help.ui,org.eclipse.help.webapp,org.eclipse.jface,org.eclipse.jface.databinding,org.eclipse.jface.text,org.eclipse.osgi,org.eclipse.osgi.services,org.eclipse.pde.runtime,org.eclipse.swt,org.eclipse.swt.gtk.linux.x86,org.eclipse.team.core,org.eclipse.text,org.eclipse.ui,org.eclipse.ui.cheatsheets,org.eclipse.ui.editors,org.eclipse.ui.forms,org.eclipse.ui.ide,org.eclipse.ui.ide.application,org.eclipse.ui.intro,org.eclipse.ui.navigator,org.eclipse.ui.navigator.resources,org.eclipse.ui.views,org.eclipse.ui.views.properties.tabbed,org.eclipse.ui.workbench,org.eclipse.ui.workbench.texteditor,org.eclipse.update.configurator,org.eclipse.update.core,org.eclipse.update.core.linux,org.eclipse.update.ui,org.junit4,org.mortbay.jetty"/>
+<stringAttribute key="selected_workspace_plugins" value="org.talend.sqltools,org.talend.dataprofiler.core,org.talend.libraries.jdbc.sybase,org.talend.dataprofiler.rcp.branding.top,org.talend.utils,org.talend.libraries.jdbc.jtds,net.sourceforge.sqlexplorer,org.talend.libraries.hibernate,org.talend.libraries.logging,org.talend.libraries.jdbc.postgresql,org.talend.dataquality.edit,org.talend.libraries.jdbc.oracle,org.talend.libraries.apache,org.talend.cwm.mip.edit,org.talend.libraries.jdbc.db2,org.talend.libraries.jdbc.mysql,org.talend.cwm.ext,org.talend.platform.logging,org.talend.cwm.management,org.talend.cwm.mip,org.talend.dataprofiler.rcp,org.talend.libraries.jfreechart,org.talend.dataprofiler.help,org.talend.dataquality,org.talend.cwm.ext.edit"/>
+<stringAttribute key="templateConfig" value="${target_home}\configuration\config.ini"/>
+<stringAttribute key="timestamp" value="1213191684712"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<booleanAttribute key="useProduct" value="true"/>
+<booleanAttribute key="usefeatures" value="false"/>
+</launchConfiguration>

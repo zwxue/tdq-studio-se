@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.1"?>
 
-<product name="TopPro" id="org.talend.dataprofiler.rcp.branding.top.product" application="org.talend.dataprofiler.rcp.branding.top.application" useFeatures="true">
+<product name="Talend Open Profiler" id="org.talend.dataprofiler.rcp.branding.top.product" application="org.talend.dataprofiler.rcp.branding.top.application" useFeatures="true">
 
    <configIni use="default"/>
 
