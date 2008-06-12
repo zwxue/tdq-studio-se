@@ -14,16 +14,16 @@ package org.talend.dataprofiler.core.ui.views.provider;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author rli
@@ -73,8 +73,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             ColumnFolderNode node = (ColumnFolderNode) element;
 
             if (node.isLoaded()) {
-                TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(node.getParent());
-                return ((IFolderNode) element).getName() + "(" + TableHelper.getColumns(table).size() + ")";
+                ColumnSet table = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(node.getParent());
+                return ((IFolderNode) element).getName() + "(" + ColumnSetHelper.getColumns(table).size() + ")";
             } else {
                 return ((IFolderNode) element).getName();
             }
