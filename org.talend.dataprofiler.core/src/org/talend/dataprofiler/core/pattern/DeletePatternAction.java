@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.sql;
+package org.talend.dataprofiler.core.pattern;
 
 import java.util.List;
 
@@ -22,28 +22,27 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
  * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
+ * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
-public class DeleteSqlFileAction extends Action {
+public class DeletePatternAction extends Action {
 
-    private List<IFile> folder;
+    private List<IFile> selectedFiles;
 
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
      * 
-     * @param selectedFiles
+     * @param folder
      */
-    public DeleteSqlFileAction(List<IFile> selectedFiles) {
-        setText("Delete SQL File");
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
-        this.folder = selectedFiles;
+    public DeletePatternAction(List<IFile> selectedFiles) {
+        setText("Delete regular pattern");
+        // setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
+        this.selectedFiles = selectedFiles;
     }
 
     /*
@@ -54,9 +53,10 @@ public class DeleteSqlFileAction extends Action {
     @Override
     public void run() {
         IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.SOURCE_FILES);
-        for (IFile file : folder) {
-            if (MessageDialog.openConfirm(new Shell(), "Delete Sql File", "Are you sure delete sql file : " + file.getName())) {
+                DQStructureManager.PATTERNS);
+        for (IFile file : selectedFiles) {
+            if (MessageDialog.openConfirm(new Shell(), "Delete regular pattern File",
+                    "Are you sure delete regular pattern file : " + file.getName())) {
                 try {
                     if (file.exists()) {
                         file.delete(true, null);

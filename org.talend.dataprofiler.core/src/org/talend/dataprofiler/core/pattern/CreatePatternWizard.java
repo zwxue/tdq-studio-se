@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -29,7 +30,7 @@ import orgomg.cwm.objectmodel.core.Expression;
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
  * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
+ * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
 public class CreatePatternWizard extends Wizard {
@@ -88,15 +89,12 @@ public class CreatePatternWizard extends Wizard {
         expression.setLanguage("SQL");
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
-        System.out.println("Name:" + name + "   expression:" + expr);
         EMFUtil util = new EMFUtil();
         IPath location = folder.getLocation();
         location = location.append(name);
-        location = location.addFileExtension("pattern");
-        System.out.println(location);
+        location = location.addFileExtension(NewSourcePatternActionProvider.EXTENSION_PATTERN);
         util.addPoolToResourceSet(new File(location.toPortableString()), pattern);
         util.save();
-
         return true;
     }
 

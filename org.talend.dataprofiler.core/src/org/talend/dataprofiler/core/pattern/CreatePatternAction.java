@@ -18,8 +18,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -49,7 +47,6 @@ public class CreatePatternAction extends Action {
      */
     @Override
     public void run() {
-        IWorkbenchWindow aww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         CreatePatternWizard fileWizard = new CreatePatternWizard(folder);
         WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), fileWizard);
         fileWizard.setWindowTitle(getText());

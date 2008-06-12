@@ -23,9 +23,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.CreatePatternAction;
-import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
-import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
-import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
+import org.talend.dataprofiler.core.pattern.DeletePatternAction;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -34,6 +32,8 @@ import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
  * 
  */
 public class NewSourcePatternActionProvider extends CommonActionProvider {
+
+    public static final String EXTENSION_PATTERN = "pattern";
 
     private String selectedFolderName;
 
@@ -52,15 +52,15 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
                 }
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
-                if (file.getFileExtension().equalsIgnoreCase("sql")) {
-                    menu.add(new RenameSqlFileAction((IFile) obj));
+                if (file.getFileExtension().equalsIgnoreCase(EXTENSION_PATTERN)) {
+                    // menu.add(new RenameSqlFileAction((IFile) obj));
                 }
             }
         }
         boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
         if (!isSelectFile && !selectedFiles.isEmpty()) {
-            menu.add(new OpenSqlFileAction(selectedFiles));
-            menu.add(new DeleteSqlFileAction(selectedFiles));
+            // menu.add(new OpenSqlFileAction(selectedFiles));
+            menu.add(new DeletePatternAction(selectedFiles));
         }
     }
 
@@ -78,7 +78,7 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
             Object obj = iterator.next();
             if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
-                if (file.getFileExtension().equalsIgnoreCase("sql")) {
+                if (file.getFileExtension().equalsIgnoreCase(EXTENSION_PATTERN)) {
                     selectedFiles.add(file);
                 }
             } else {

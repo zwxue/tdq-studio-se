@@ -180,7 +180,6 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         treeViewer = new AnasisColumnTreeViewer(tree, currentColumnIndicators, analysisHandler.getAnalysis());
         treeViewer.setDirty(false);
         treeViewer.addPropertyChangeListener(this);
-
         section.setClient(topComp);
 
     }
