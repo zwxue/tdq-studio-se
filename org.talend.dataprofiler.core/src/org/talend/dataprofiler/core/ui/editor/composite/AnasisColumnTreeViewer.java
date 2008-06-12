@@ -69,9 +69,11 @@ import org.talend.dataquality.indicators.DataminingType;
  */
 public class AnasisColumnTreeViewer extends AbstractPagePart {
 
-    private static final String INDICATOR_UNIT_VALUE = "INDICATOR_VALUE";
+    private static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY";
 
-    private static final String COLUMN_INDICATOR_VALUE = "COLUMN_INDICATOR";
+    private static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY";
+
+    private static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY";
 
     private static final int WIDTH1_CELL = 75;
 
@@ -179,7 +181,7 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
             String columnName = columnIndicator.getTdColumn().getName();
             treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
                     + columnIndicator.getTdColumn().getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null");
-            treeItem.setData(COLUMN_INDICATOR_VALUE, columnIndicator);
+            treeItem.setData(COLUMN_INDICATOR_KEY, columnIndicator);
 
             TreeEditor editor = new TreeEditor(tree);
             final CCombo combo = new CCombo(tree, SWT.BORDER);
@@ -220,7 +222,11 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
                 @Override
                 public void mouseDown(MouseEvent e) {
                     deleteColumnItems(columnIndicator);
-                    setElements(columnIndicators);
+                    if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
+                        setElements(columnIndicators);
+                    } else {
+                        removeItemBranch(treeItem);
+                    }
                 }
 
             });
@@ -228,6 +234,7 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
             editor.minimumWidth = WIDTH1_CELL;
             editor.horizontalAlignment = SWT.CENTER;
             editor.setEditor(delLabel, treeItem, 2);
+            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { editor });
             if (columnIndicator.hasIndicators()) {
                 createIndicatorItems(treeItem, columnIndicator.getIndicatorUnits());
             }
@@ -238,24 +245,24 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
 
     private static int activeCount = 0;
 
-    private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorTypeMappings) {
-        for (IndicatorUnit indicatorMapping : indicatorTypeMappings) {
+    private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
+        for (IndicatorUnit indicatorUnit : indicatorUnits) {
             final TreeItem indicatorItem = new TreeItem(treeItem, SWT.NONE);
-            final IndicatorUnit typeMapping = indicatorMapping;
-            final IndicatorEnum indicatorEnum = indicatorMapping.getType();
-            indicatorItem.setData(COLUMN_INDICATOR_VALUE, treeItem.getData(COLUMN_INDICATOR_VALUE));
-            indicatorItem.setData(INDICATOR_UNIT_VALUE, typeMapping);
-            indicatorItem.setText(0, indicatorMapping.getType().getLabel());
+            final IndicatorUnit unit = indicatorUnit;
+            final IndicatorEnum indicatorEnum = indicatorUnit.getType();
+            indicatorItem.setData(COLUMN_INDICATOR_KEY, treeItem.getData(COLUMN_INDICATOR_KEY));
+            indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
+            indicatorItem.setText(0, indicatorUnit.getType().getLabel());
 
-            TreeEditor editor;
+            TreeEditor optionEditor;
             // if (indicatorEnum.hasChildren()) {
-            editor = new TreeEditor(tree);
+            optionEditor = new TreeEditor(tree);
             Label optionLabel = new Label(tree, SWT.NONE);
             optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
             optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
             optionLabel.setToolTipText("Options");
             optionLabel.pack();
-            optionLabel.setData(indicatorMapping);
+            optionLabel.setData(indicatorUnit);
             optionLabel.addMouseListener(new MouseAdapter() {
 
                 /*
@@ -346,13 +353,13 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
 
             });
 
-            editor.minimumWidth = WIDTH1_CELL;
-            editor.horizontalAlignment = SWT.CENTER;
-            editor.setEditor(optionLabel, indicatorItem, 1);
+            optionEditor.minimumWidth = WIDTH1_CELL;
+            optionEditor.horizontalAlignment = SWT.CENTER;
+            optionEditor.setEditor(optionLabel, indicatorItem, 1);
 
             // }
 
-            editor = new TreeEditor(tree);
+            TreeEditor delEditor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
             delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
             delLabel.setImage(ImageLib.getImage(ImageLib.ACTION_DELETE));
@@ -367,19 +374,25 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
                  */
                 @Override
                 public void mouseDown(MouseEvent e) {
-                    ColumnIndicator columnIndicator = (ColumnIndicator) treeItem.getData(COLUMN_INDICATOR_VALUE);
-                    deleteIndicatorItems(columnIndicator, typeMapping);
-                    setElements(columnIndicators);
+                    ColumnIndicator columnIndicator = (ColumnIndicator) treeItem.getData(COLUMN_INDICATOR_KEY);
+                    deleteIndicatorItems(columnIndicator, unit);
+                    if (indicatorItem.getParentItem() != null
+                            && indicatorItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
+                        setElements(columnIndicators);
+                    } else {
+                        removeItemBranch(indicatorItem);
+                    }
                 }
 
             });
 
-            editor.minimumWidth = WIDTH1_CELL;
-            editor.horizontalAlignment = SWT.CENTER;
-            editor.setEditor(delLabel, indicatorItem, 2);
+            delEditor.minimumWidth = WIDTH1_CELL;
+            delEditor.horizontalAlignment = SWT.CENTER;
+            delEditor.setEditor(delLabel, indicatorItem, 2);
+            indicatorItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { optionEditor, delEditor });
             if (indicatorEnum.hasChildren()) {
-                indicatorItem.setData(treeItem.getData(COLUMN_INDICATOR_VALUE));
-                createIndicatorItems(indicatorItem, indicatorMapping.getChildren());
+                indicatorItem.setData(treeItem.getData(COLUMN_INDICATOR_KEY));
+                createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
             }
 
         }
@@ -454,15 +467,49 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
      */
     private void removeSelectedElements(final Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
+        boolean branchIndicatorExist = false;
         for (TreeItem item : selection) {
-            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_VALUE);
+            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
             if (indicatorUnit != null) {
-                deleteIndicatorItems((ColumnIndicator) item.getData(COLUMN_INDICATOR_VALUE), indicatorUnit);
+                deleteIndicatorItems((ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY), indicatorUnit);
             } else {
-                deleteColumnItems((ColumnIndicator) item.getData(COLUMN_INDICATOR_VALUE));
+                deleteColumnItems((ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY));
+            }
+            // if the item's parent item is a indicator item, when current indicator item removed, it's parent item
+            // should be removed and recreate the tree;else,just need remove current item and it's branch.
+            if (item.getParentItem() != null && item.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
+                branchIndicatorExist = true;
+                continue;
+            } else {
+                removeItemBranch(item);
+            }
+
+        }
+        if (branchIndicatorExist) {
+            setElements(columnIndicators);
+        }
+    }
+
+    private void removeItemBranch(TreeItem item) {
+        TreeEditor[] editors = (TreeEditor[]) item.getData(ITEM_EDITOR_KEY);
+        if (editors != null) {
+            for (int j = 0; j < editors.length; j++) {
+                editors[j].getEditor().dispose();
+                editors[j].dispose();
             }
         }
-        setElements(columnIndicators);
+
+        if (item.getItemCount() == 0) {
+            item.dispose();
+            this.setDirty(true);
+            return;
+        }
+        TreeItem[] items = item.getItems();
+        for (int i = 0; i < items.length; i++) {
+            removeItemBranch(items[i]);
+        }
+        item.dispose();
+        this.setDirty(true);
     }
 
 }
