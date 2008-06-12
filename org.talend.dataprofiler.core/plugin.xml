@@ -222,6 +222,23 @@
                </adapt>
             </or>
          </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.eclipse.core.resources.IResource">
+               </adapt>
+               <adapt
+                     type="java.util.Collection">
+                  <count
+                        value="0">
+                  </count>
+               </adapt>
+            </or>
+         </enablement>
       </actionProvider>        
   </extension>
     
