@@ -8,5 +8,6 @@ Bundle-Vendor: .Talend SA.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.intro,
- org.talend.dataprofiler.rcp
+ org.talend.dataprofiler.rcp,
+ org.talend.dataprofiler.core
 Eclipse-LazyStart: true

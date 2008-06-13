@@ -53,5 +53,10 @@
          </presentation>
       </config>
    </extension>
+   <extension
+            point="org.talend.dataprofiler.core.service">
+       <Service class="org.talend.dataprofiler.rcp.branding.top.TOPBrandingService"
+               serviceId="org.talend.dataprofiler.core.service.IBrandingService"/>
+   </extension>
 
 </plugin>
