@@ -290,7 +290,7 @@ public final class DqRepositoryViewService {
      * @param folderProvider provides the path where to save the data provider and related elements.
      * @return
      */
-    public static boolean saveDataProviderAndStructure(TdDataProvider dataProvider, FolderProvider folderProvider) {
+    public static File saveDataProviderAndStructure(TdDataProvider dataProvider, FolderProvider folderProvider) {
         assert dataProvider != null;
         assert folderProvider != null;
 
@@ -298,22 +298,23 @@ public final class DqRepositoryViewService {
                 .getAbsolutePath() : null;
         if (folder == null) { // do not serialize data
             log.info("Data provider not serialized: no folder given.");
-            return false;
+            return null;
         }
 
         // --- add resources in resource set
         EMFUtil util = new EMFUtil();
         ResourceSet resourceSet = util.getResourceSet();
         String dataproviderFilename = createFilename(folder, dataProvider.getName(), FactoriesUtil.PROV);
-        if (new File(dataproviderFilename).exists()) {
+        File file = new File(dataproviderFilename);
+        if (file.exists()) {
             log.error("Cannot save data provider " + dataProvider.getName() + " into file " + dataproviderFilename
                     + ". File already exists!");
-            return false;
+            return file;
         }
         URI uri = URI.createFileURI(dataproviderFilename);
         final Resource resource = resourceSet.createResource(uri);
         if (resource == null) {
-            return false;
+            return null;
         }
         boolean ok = resource.getContents().add(dataProvider);
         if (log.isDebugEnabled()) {
@@ -347,7 +348,8 @@ public final class DqRepositoryViewService {
             log.debug("Schema added " + ok);
         }
 
-        return util.save();
+        util.save();
+        return file;
     }
 
     /**
