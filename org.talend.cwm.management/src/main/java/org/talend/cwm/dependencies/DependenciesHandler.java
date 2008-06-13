@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -186,6 +188,13 @@ public final class DependenciesHandler {
         return setUsageDependencyOn(analysis, dataManager);
     }
 
+    /**
+     * Method "setUsageDependencyOn".
+     * 
+     * @param client the element which depends on the supplier
+     * @param supplier the element needed by the client element
+     * @return the dependency object between the two given elements
+     */
     public TypedReturnCode<Dependency> setUsageDependencyOn(ModelElement client, ModelElement supplier) {
         // get the supplier's usage dependencies
         EList<Dependency> supplierDependencies = supplier.getSupplierDependency();
@@ -218,6 +227,10 @@ public final class DependenciesHandler {
      */
     public TypedReturnCode<Dependency> setDependencyOn(TdReport report, Analysis analysis) {
         return setUsageDependencyOn(report, analysis);
+    }
+
+    public TypedReturnCode<Dependency> setDependencyOn(Indicator indicator, Pattern pattern) {
+        return setUsageDependencyOn(indicator, pattern);
     }
 
     // /**
