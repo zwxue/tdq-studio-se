@@ -80,6 +80,9 @@ public class FrequTimeSliceForm extends TimeSlicesForm {
         super.initialize();
 
         if (this.parameter != null) {
+            if (this.parameter.getNumOfShown() == 0) {
+                this.parameter.setNumOfShown(10);
+            }
             numberTxt.setText(String.valueOf(this.parameter.getNumOfShown()));
         }
     }

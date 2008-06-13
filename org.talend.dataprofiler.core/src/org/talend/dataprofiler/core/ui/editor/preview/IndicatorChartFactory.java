@@ -41,10 +41,10 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
+ * DOC zqin class global comment. Detailled comment <br/>
  * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  * 
@@ -69,16 +69,8 @@ public class IndicatorChartFactory {
     // start to create kinds of chart
     public static ImageDescriptor create3DBarChart(String titile, CategoryDataset dataset, boolean showLegend) {
 
-        JFreeChart chart = ChartFactory.createBarChart3D(
-                null, 
-                titile, 
-                "Value", 
-                dataset, 
-                PlotOrientation.VERTICAL,
-                showLegend,  
-                false,  
-                false   
-                );
+        JFreeChart chart = ChartFactory.createBarChart3D(null, titile, "Value", dataset, PlotOrientation.VERTICAL, showLegend,
+                false, false);
 
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setRangeGridlinesVisible(true);
@@ -94,8 +86,7 @@ public class IndicatorChartFactory {
         plot.setForegroundAlpha(0.50f);
 
         CategoryAxis domainAxis = plot.getDomainAxis();
-        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(
-                Math.PI / 6.0));
+        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
 
         try {
 
@@ -110,16 +101,8 @@ public class IndicatorChartFactory {
 
     public static ImageDescriptor createBarChart(String titile, CategoryDataset dataset) {
 
-        JFreeChart chart = ChartFactory.createBarChart(
-                null,
-                titile,  
-                "Value", 
-                dataset, 
-                PlotOrientation.HORIZONTAL, 
-                false,   
-                false,  
-                false   
-                );
+        JFreeChart chart = ChartFactory.createBarChart(null, titile, "Value", dataset, PlotOrientation.HORIZONTAL, false, false,
+                false);
 
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setForegroundAlpha(0.50f);
@@ -137,13 +120,7 @@ public class IndicatorChartFactory {
 
     public static ImageDescriptor createBoxAndWhiskerChart(String title, BoxAndWhiskerCategoryDataset dataset) {
 
-        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(
-                null, 
-                null, 
-                "value",  
-                dataset, 
-                false
-                );
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, null, "value", dataset, false);
 
         try {
 
@@ -278,8 +255,8 @@ public class IndicatorChartFactory {
 
     private static BoxAndWhiskerItem createBoxAndWhiskerItem(Double mean, Double median, Double q1, Double q3,
             Double minRegularValue, Double maxRegularValue, List outliers) {
-            // MOD scorreia 2008-06-05 automatic computation of outliers limits
-            // see http://en.wikipedia.org/wiki/Box_plot
+        // MOD scorreia 2008-06-05 automatic computation of outliers limits
+        // see http://en.wikipedia.org/wiki/Box_plot
         Double xIQR = (q1 != null && q3 != null) ? OUTLIER_FACTOR * (q3 - q1) : null;
         Double minOutlier = xIQR != null ? q1 - xIQR : null;
         Double maxOutlier = xIQR != null ? q3 + xIQR : null;
@@ -300,11 +277,11 @@ public class IndicatorChartFactory {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        for (IndicatorUnit indicatorMap : indicatorTypeMapping) {
+        for (IndicatorUnit indicatorUnit : indicatorTypeMapping) {
             Object object = null;
             try {
-                IndicatorCommonUtil.compositeIndicatorMap(indicatorMap);
-                object = indicatorMap.getValue();
+                IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
+                object = indicatorUnit.getValue();
 
             } catch (UnsupportedOperationException ue) {
                 object = null;
@@ -315,8 +292,17 @@ public class IndicatorChartFactory {
                 Arrays.sort(frequencyExt);
 
                 if (isCreate) {
-                    for (FrequencyExt oneExt : frequencyExt) {
-                        dataset.addValue(oneExt.getValue(), "", String.valueOf(oneExt.getKey()));
+                    int numOfShown = frequencyExt.length;
+
+                    IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
+                    if (parameters != null) {
+                        if (parameters.getTopN() < frequencyExt.length) {
+                            numOfShown = parameters.getTopN();
+                        }
+                    }
+
+                    for (int i = 0; i < numOfShown; i++) {
+                        dataset.addValue(frequencyExt[i].getValue(), "", String.valueOf(frequencyExt[i].getKey()));
                     }
                 } else {
 
@@ -367,7 +353,8 @@ public class IndicatorChartFactory {
             CategoryDataset dataset = createSummaryDataset(separatedMap.get(CompositeIndicator.SUMMARY_STATISTICS), isCreate);
 
             if (dataset instanceof BoxAndWhiskerCategoryDataset) {
-                returnFiles.add(createBoxAndWhiskerChart(CompositeIndicator.SUMMARY_STATISTICS, (BoxAndWhiskerCategoryDataset) dataset));
+                returnFiles.add(createBoxAndWhiskerChart(CompositeIndicator.SUMMARY_STATISTICS,
+                        (BoxAndWhiskerCategoryDataset) dataset));
             } else {
                 returnFiles.add(create3DBarChart(CompositeIndicator.SUMMARY_STATISTICS, dataset, false));
             }
