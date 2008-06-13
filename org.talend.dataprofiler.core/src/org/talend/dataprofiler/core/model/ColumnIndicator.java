@@ -434,7 +434,7 @@ public class ColumnIndicator {
      * @param indicatorEnum
      * @return
      */
-    private IndicatorUnit getIndicatorUnit(IndicatorEnum indicatorEnum) {
+    public IndicatorUnit getIndicatorUnit(IndicatorEnum indicatorEnum) {
         IndicatorUnit indicatorUnit = this.indicatorUnitMap.get(indicatorEnum);
         if (indicatorUnit == null) {
             indicatorUnit = createIndicatorUnit(indicatorEnum, null);

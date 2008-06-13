@@ -33,7 +33,6 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
@@ -135,9 +134,8 @@ public class PatternDNDFactory {
 
                 IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
                 data.addIndicator(type, patternMatchingIndicator);
-                IndicatorUnit indicatorUnit = new IndicatorUnit(type, patternMatchingIndicator, data);
                 AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getData(AnalysisColumnTreeViewer.VIEWER_KEY);
-                viewer.createOneUnit(item, indicatorUnit);
+                viewer.createOneUnit(item, data.getIndicatorUnit(type));
                 viewer.setDirty(true);
             }
         });
