@@ -17,6 +17,8 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.talend.dataprofiler.core.service.GlobalServiceRegister;
+import org.talend.dataprofiler.core.service.IBrandingService;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
 /**
@@ -38,7 +40,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setInitialSize(new Point(1024, 768));
         configurer.setShowCoolBar(true);
         configurer.setShowStatusLine(false);
-        configurer.setTitle("DataProfiler RCP Product");
+
+        IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
+                IBrandingService.class);
+        configurer.setTitle(brandingService.getFullProductName());
     }
 
     /*
