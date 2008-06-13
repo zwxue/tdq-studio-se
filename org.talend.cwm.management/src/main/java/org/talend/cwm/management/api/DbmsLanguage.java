@@ -401,11 +401,17 @@ public class DbmsLanguage {
      * @return the select count(*) from aliased subquery
      */
     public String countRowInSubquery(String subquery, String alias) {
+        if (is(ORACLE)) { // does not support "AS"
+            return " SELECT COUNT(*) FROM (" + subquery + ") " + alias;
+        }
         // ANSI SQL, MySQL
         return " SELECT COUNT(*) FROM (" + subquery + ") AS " + alias;
     }
 
     public String sumRowInSubquery(String colToSum, String subquery, String alias) {
+        if (is(ORACLE)) { // does not support "AS"
+            return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") " + alias;
+        }
         // ANSI SQL, MySQL
         return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") AS " + alias;
     }

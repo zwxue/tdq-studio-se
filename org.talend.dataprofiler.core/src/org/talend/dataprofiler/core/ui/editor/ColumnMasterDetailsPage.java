@@ -368,10 +368,11 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
         // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
         TdDataProvider tdProvider = null;
+        Analysis analysis = analysisHandler.getAnalysis();
         if (columnIndicators != null) {
             if (columnIndicators.length != 0) {
                 tdProvider = EObjectHelper.getTdDataProvider(columnIndicators[0].getTdColumn());
-                analysisHandler.getAnalysis().getContext().setConnection(tdProvider);
+                analysis.getContext().setConnection(tdProvider);
             }
             for (ColumnIndicator columnIndicator : columnIndicators) {
                 analysisHandler.addIndicator(columnIndicator.getTdColumn(), columnIndicator.getIndicators());
@@ -388,7 +389,8 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         }
         // AnalysisWriter writer = new AnalysisWriter();
 
-        String urlString = PluginConstant.EMPTY_STRING;
+        String urlString = analysis.eResource() != null ? analysis.eResource().getURI().toFileString()
+                : PluginConstant.EMPTY_STRING;
         // try {
         // urlString = editorInput.getFile();
         // analysisHandler.getAnalysis().setUrl(urlString);
@@ -400,15 +402,18 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
         // File file = new File(editorInput.getFile().getParent() + File.separator + fileName);
         // ReturnCode saved = writer.save(analysisHandler.getAnalysis(), file);
-        ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysisHandler.getAnalysis());
+        ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
                 DqRepositoryViewService.saveOpenDataProvider(tdProvider);
             }
             AnaResourceFileHelper.getInstance().setResourceChanged(true);
-            log.info("Saved in  " + urlString + " successful");
+            if (log.isDebugEnabled()) {
+                log.debug("Saved in  " + urlString + " successful");
+            }
         } else {
-            throw new DataprofilerCoreException("Problem saving file: " + urlString + ": " + saved.getMessage());
+            throw new DataprofilerCoreException("Problem saving analysis " + analysis.getName() + " in file: " + urlString + ": "
+                    + saved.getMessage());
         }
 
         // TODO get the domain constraint, we will see later.
