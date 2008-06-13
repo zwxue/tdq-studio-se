@@ -92,6 +92,27 @@ public class ConnectionInfoPage extends AbstractFormPage {
         this.metadataSection.setText("Connection Metadata");
         this.metadataSection.setDescription("Set the properties of connnection.");
         createInformationSection(form, topComp);
+
+        Button checkBtn = toolkit.createButton(topComp, " Check ", SWT.NONE);
+        GridData gd = new GridData();
+        // gd.horizontalSpan = 2;
+        gd.verticalSpan = 20;
+        gd.horizontalAlignment = SWT.CENTER;
+        checkBtn.setLayoutData(gd);
+
+        checkBtn.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                ReturnCode code = checkDBConnection();
+                if (code.isOk()) {
+                    MessageDialog.openInformation(null, "check connections", "Check connection successful.");
+                } else {
+                    MessageDialog.openInformation(null, "check connections", "Check connection failure:" + code.getMessage());
+                }
+            }
+
+        });
     }
 
     /**
@@ -129,27 +150,6 @@ public class ConnectionInfoPage extends AbstractFormPage {
         String urlValue = (trc.isOk()) ? trc.getObject().getConnectionString() : PluginConstant.EMPTY_STRING;
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
         urlText.setEnabled(false);
-
-        Button checkBtn = toolkit.createButton(sectionClient, " Check ", SWT.NONE);
-        GridData gd = new GridData();
-        gd.horizontalSpan = 2;
-        gd.verticalSpan = 20;
-        gd.horizontalAlignment = SWT.CENTER;
-        checkBtn.setLayoutData(gd);
-
-        checkBtn.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                ReturnCode code = checkDBConnection();
-                if (code.isOk()) {
-                    MessageDialog.openInformation(null, "check connections", "Check connection successful.");
-                } else {
-                    MessageDialog.openInformation(null, "check connections", "Check connection failure:" + code.getMessage());
-                }
-            }
-
-        });
 
         ModifyListener listener = new ModifyListener() {
 
