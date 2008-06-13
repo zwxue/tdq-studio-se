@@ -32,7 +32,7 @@ import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
-import org.talend.dataprofiler.core.ui.editor.composite.AnasisColumnTreeViewer;
+import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.Domain;
@@ -125,7 +125,7 @@ public class PatternDNDFactory {
 
                 Pattern pattern = getPattern(fe);
                 TreeItem item = (TreeItem) event.item;
-                ColumnIndicator data = (ColumnIndicator) item.getData(AnasisColumnTreeViewer.COLUMN_INDICATOR_KEY);
+                ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
                 PatternMatchingIndicator patternMatchingIndicator = IndicatorsFactory.eINSTANCE.createPatternMatchingIndicator();
                 IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
                 Domain validData = DomainFactory.eINSTANCE.createDomain();
@@ -136,7 +136,7 @@ public class PatternDNDFactory {
                 IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
                 data.addIndicator(type, patternMatchingIndicator);
                 IndicatorUnit indicatorUnit = new IndicatorUnit(type, patternMatchingIndicator, data);
-                AnasisColumnTreeViewer viewer = (AnasisColumnTreeViewer) item.getData(AnasisColumnTreeViewer.VIEWER_KEY);
+                AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getData(AnalysisColumnTreeViewer.VIEWER_KEY);
                 viewer.createOneUnit(item, indicatorUnit);
                 viewer.setDirty(true);
             }
@@ -152,7 +152,7 @@ public class PatternDNDFactory {
         if (event.detail != DND.DROP_NONE) {
             lastValidOperation = event.detail;
         }
-        Object data = event.item.getData(AnasisColumnTreeViewer.INDICATOR_UNIT_KEY);
+        Object data = event.item.getData(AnalysisColumnTreeViewer.INDICATOR_UNIT_KEY);
         if (data != null) {
             event.detail = DND.DROP_NONE;
         } else {

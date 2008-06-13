@@ -68,7 +68,7 @@ import org.talend.dataquality.indicators.DataminingType;
  * @author rli
  * 
  */
-public class AnasisColumnTreeViewer extends AbstractPagePart {
+public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
     public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY";
 
@@ -88,12 +88,12 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
 
     private Analysis analysis;
 
-    public AnasisColumnTreeViewer(Composite parent) {
+    public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
     }
 
-    public AnasisColumnTreeViewer(Composite parent, ColumnIndicator[] columnIndicators, Analysis analysis) {
+    public AnalysisColumnTreeViewer(Composite parent, ColumnIndicator[] columnIndicators, Analysis analysis) {
         this(parent);
         this.analysis = analysis;
         this.setElements(columnIndicators);
@@ -188,7 +188,7 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
             treeItem.setData(COLUMN_INDICATOR_KEY, columnIndicator);
             treeItem.setData(VIEWER_KEY, this);
 
-            TreeEditor editor = new TreeEditor(tree);
+            TreeEditor comboEditor = new TreeEditor(tree);
             final CCombo combo = new CCombo(tree, SWT.BORDER);
             for (DataminingType type : DataminingType.values()) {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal for presentation
@@ -208,10 +208,10 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
             });
             combo.setEditable(false);
 
-            editor.minimumWidth = WIDTH1_CELL;
-            editor.setEditor(combo, treeItem, 1);
+            comboEditor.minimumWidth = WIDTH1_CELL;
+            comboEditor.setEditor(combo, treeItem, 1);
 
-            editor = new TreeEditor(tree);
+            TreeEditor delLabelEditor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
             delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
             delLabel.setImage(ImageLib.getImage(ImageLib.ACTION_DELETE));
@@ -236,10 +236,10 @@ public class AnasisColumnTreeViewer extends AbstractPagePart {
 
             });
 
-            editor.minimumWidth = WIDTH1_CELL;
-            editor.horizontalAlignment = SWT.CENTER;
-            editor.setEditor(delLabel, treeItem, 2);
-            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { editor });
+            delLabelEditor.minimumWidth = WIDTH1_CELL;
+            delLabelEditor.horizontalAlignment = SWT.CENTER;
+            delLabelEditor.setEditor(delLabel, treeItem, 2);
+            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor });
             if (columnIndicator.hasIndicators()) {
                 createIndicatorItems(treeItem, columnIndicator.getIndicatorUnits());
             }

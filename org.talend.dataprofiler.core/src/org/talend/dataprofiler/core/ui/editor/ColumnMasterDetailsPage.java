@@ -65,7 +65,7 @@ import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
-import org.talend.dataprofiler.core.ui.editor.composite.AnasisColumnTreeViewer;
+import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataquality.analysis.Analysis;
@@ -83,7 +83,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
 
-    AnasisColumnTreeViewer treeViewer;
+    AnalysisColumnTreeViewer treeViewer;
 
     DataFilterComp dataFilterComp;
 
@@ -199,7 +199,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         tree.setLayout(new GridLayout());
         ((GridData) tree.getLayoutData()).heightHint = TREE_MAX_LENGTH;
 
-        treeViewer = new AnasisColumnTreeViewer(tree, currentColumnIndicators, analysisHandler.getAnalysis());
+        treeViewer = new AnalysisColumnTreeViewer(tree, currentColumnIndicators, analysisHandler.getAnalysis());
         treeViewer.setDirty(false);
         treeViewer.addPropertyChangeListener(this);
         section.setClient(topComp);
@@ -481,7 +481,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
      * 
      * @return the treeViewer
      */
-    public AnasisColumnTreeViewer getTreeViewer() {
+    public AnalysisColumnTreeViewer getTreeViewer() {
         return this.treeViewer;
     }
 
