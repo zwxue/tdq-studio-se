@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.database;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -25,6 +26,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
+import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
@@ -114,11 +116,15 @@ public class DatabaseConnectionWizard extends Wizard implements INewWizard {
         TdDataProvider dataProvider = rc.getObject();
         NeedSaveDataProviderHelper.register(dataProvider.getName(), dataProvider);
         // MODSCA 2008-03-10 save the provider
-        if (DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionProperty.getFolderProvider())) {
+        File returnFile = DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionProperty
+                .getFolderProvider());
+        if (returnFile != null) {
             CorePlugin.getDefault().refreshWorkSpace();
             ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
+            CorePlugin.getDefault().openEditor(
+                    this.connectionProperty.getFolderProvider().getFolderResource().getFile(returnFile.getName()),
+                    ConnectionEditor.class.getName());
         }
         return true;
     }
-
 }

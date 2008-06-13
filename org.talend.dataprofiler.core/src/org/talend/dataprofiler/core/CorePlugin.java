@@ -27,7 +27,6 @@ import org.osgi.framework.BundleContext;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.ui.editor.AnalysisEditor;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -109,13 +108,12 @@ public class CorePlugin extends AbstractUIPlugin {
         }
     }
 
-    public IEditorPart openEditor(IFile file) {
+    public IEditorPart openEditor(IFile file, String editorId) {
         FileEditorInput input = new FileEditorInput(file);
         // input.setUser(alias.getDefaultUser());
         try {
 
-            return this.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,
-                    AnalysisEditor.class.getName());
+            return this.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input, editorId);
         } catch (PartInitException e) {
             ExceptionHandler.process(e);
             return null;
