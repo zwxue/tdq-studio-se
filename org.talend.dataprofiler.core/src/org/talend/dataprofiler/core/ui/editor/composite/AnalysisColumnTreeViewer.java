@@ -366,6 +366,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                 } catch (AssertionFailedException ex) {
                     MessageDialogWithToggle.openInformation(null, "Indicator Option", "No options to set!");
                 }
+
             }
 
         });
@@ -373,7 +374,6 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         optionEditor.minimumWidth = WIDTH1_CELL;
         optionEditor.horizontalAlignment = SWT.CENTER;
         optionEditor.setEditor(optionLabel, indicatorItem, 1);
-
         // }
 
         TreeEditor delEditor = new TreeEditor(tree);

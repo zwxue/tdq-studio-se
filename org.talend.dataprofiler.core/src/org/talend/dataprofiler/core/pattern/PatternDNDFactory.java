@@ -32,6 +32,7 @@ import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
+import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.Domain;
@@ -55,7 +56,7 @@ public class PatternDNDFactory {
     /**
      * DOC qzhang Comment method "installDND".
      */
-    public static void installDND(Tree targetControl) {
+    public static void installDND(final Tree targetControl) {
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         DQRespositoryView findView = (DQRespositoryView) activePage.findView(DQRespositoryView.ID);
         final CommonViewer commonViewer = findView.getCommonViewer();
@@ -75,7 +76,7 @@ public class PatternDNDFactory {
             public void dragEnter(DropTargetEvent event) {
                 super.dragEnter(event);
                 event.feedback = DND.FEEDBACK_EXPAND;
-                doDropValidation(event);
+                doDropValidation(event, commonViewer);
             }
 
             /*
@@ -87,7 +88,7 @@ public class PatternDNDFactory {
             public void dragOperationChanged(DropTargetEvent event) {
                 super.dragOperationChanged(event);
                 event.feedback = DND.FEEDBACK_EXPAND;
-                doDropValidation(event);
+                doDropValidation(event, commonViewer);
             }
 
             /*
@@ -98,7 +99,7 @@ public class PatternDNDFactory {
             @Override
             public void dragOver(DropTargetEvent event) {
                 super.dragOver(event);
-                doDropValidation(event);
+                doDropValidation(event, commonViewer);
             }
 
             /*
@@ -109,7 +110,7 @@ public class PatternDNDFactory {
             @Override
             public void dropAccept(DropTargetEvent event) {
                 super.dropAccept(event);
-                doDropValidation(event);
+                doDropValidation(event, commonViewer);
             }
 
             /*
@@ -133,7 +134,7 @@ public class PatternDNDFactory {
                 patternMatchingIndicator.setParameters(indicParams);
 
                 IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
-                data.addIndicator(type, patternMatchingIndicator);
+                data.addPatternIndicator(type, patternMatchingIndicator);
                 AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getData(AnalysisColumnTreeViewer.VIEWER_KEY);
                 viewer.createOneUnit(item, data.getIndicatorUnit(type));
                 viewer.setDirty(true);
@@ -145,16 +146,34 @@ public class PatternDNDFactory {
      * DOC qzhang Comment method "doDropValidation".
      * 
      * @param event
+     * @param commonViewer
      */
-    protected static void doDropValidation(DropTargetEvent event) {
+    protected static void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
         if (event.detail != DND.DROP_NONE) {
             lastValidOperation = event.detail;
         }
-        Object data = event.item.getData(AnalysisColumnTreeViewer.INDICATOR_UNIT_KEY);
-        if (data != null) {
+
+        boolean is = true;
+        Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
+        if (firstElement instanceof IFile) {
+            IFile fe = (IFile) firstElement;
+            if (NewSourcePatternActionProvider.EXTENSION_PATTERN.equals(fe.getFileExtension())) {
+                Pattern pattern = getPattern(fe);
+                if (pattern != null) {
+                    is = false;
+                }
+            }
+        }
+
+        if (event.item == null || is) {
             event.detail = DND.DROP_NONE;
         } else {
-            event.detail = lastValidOperation;
+            Object data = event.item.getData(AnalysisColumnTreeViewer.INDICATOR_UNIT_KEY);
+            if (data != null) {
+                event.detail = DND.DROP_NONE;
+            } else {
+                event.detail = lastValidOperation;
+            }
         }
     }
 
