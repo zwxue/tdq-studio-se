@@ -12,54 +12,61 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.ColumnMasterDetailsPage;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class AnalyzeColumnAction extends Action {
 
-    List<TdColumn> allColumns = new ArrayList<TdColumn>();
-    
+    TreeSelection selection;
+
     public AnalyzeColumnAction() {
         super("Analyze");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void run() {
-        
+
         new CreateNewAnalysisAction().run(null, null);
-        
-        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+
+        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor();
         if (editor != null) {
             ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
-            if (allColumns.size() != 0) {
-                page.getTreeViewer().setInput(allColumns.toArray());
-                this.allColumns.clear();
+            if (!this.selection.isEmpty()) {
+                TdColumn[] columns = new TdColumn[selection.size()];
+                Iterator it = this.selection.iterator();
+
+                int i = 0;
+                while (it.hasNext()) {
+                    columns[i] = (TdColumn) it.next();
+                    i++;
+                }
+                page.getTreeViewer().setInput(columns);
             }
         }
     }
 
-    public void addColumn(TdColumn column) {
-        
-        if (column != null) {
-            this.allColumns.add(column);
-        }
+    public void setColumnSelection(TreeSelection selection) {
+        this.selection = selection;
     }
 }

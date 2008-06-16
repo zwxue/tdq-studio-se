@@ -12,61 +12,53 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import java.util.Iterator;
-
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnAction;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class AnalyzeColumnProvider extends CommonActionProvider {
 
     private AnalyzeColumnAction analyzeColumnAction;
-    
+
     public AnalyzeColumnProvider() {
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.navigator.CommonActionProvider#init(org.eclipse.ui.navigator.ICommonActionExtensionSite)
      */
     @Override
     public void init(ICommonActionExtensionSite site) {
-        
+
         if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
             analyzeColumnAction = new AnalyzeColumnAction();
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.action.IMenuManager)
      */
     @SuppressWarnings("unchecked")
     @Override
     public void fillContextMenu(IMenuManager menu) {
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
-        
-        Iterator iterator = currentSelection.iterator();
-        
-        while (iterator.hasNext()) {
-            
-            TdColumn column = (TdColumn) iterator.next();
-            analyzeColumnAction.addColumn(column);
-        }
-        
+
+        analyzeColumnAction.setColumnSelection(currentSelection);
+
         menu.add(analyzeColumnAction);
     }
-    
-    
+
 }
