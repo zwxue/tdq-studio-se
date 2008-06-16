@@ -65,6 +65,8 @@ public class ImageLib {
 
     public static final String CREATE_SQL_ACTION = "new_sqlEditor.gif";
 
+    public static final String LICENSE_WIZ = "license_wiz.png";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 
