@@ -304,7 +304,7 @@
          dataprofilerPerspectiveName="Data Profiling"/>
         <DataprofilerPerspective
          refPerspectiveId="net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"
-         dataprofilerPerspectiveName="Data Discovery"/>
+         dataprofilerPerspectiveName="Data Explorer"/>
    </extension>
    <extension
          point="org.eclipse.ui.editors">

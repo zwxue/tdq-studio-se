@@ -65,7 +65,7 @@ public class ChangePerspectiveAction extends Action {
 
     private static final String SWITCH_TO_DATA_PROFILING = "Switch to Data Profiling";
 
-    private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to Data Discovery";
+    private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to Data Explorer";
 
     static ChangePerspectiveAction action;
 
