@@ -18,6 +18,9 @@ import java.util.Map;
 
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
@@ -45,6 +48,13 @@ public class DQRespositoryView extends CommonNavigator {
     public DQRespositoryView() {
         super();
         CorePlugin.getDefault().checkDQStructure();
+    }
+
+    public void init(IViewSite aSite, IMemento aMemento) throws PartInitException {
+        super.init(aSite, aMemento);
+        if (aMemento == null) {
+            setLinkingEnabled(true);
+        }
     }
 
     /*
