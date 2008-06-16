@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
@@ -40,6 +42,7 @@ import org.jfree.ui.TextAnchor;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
+import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.indicators.IndicatorParameters;
 
@@ -64,7 +67,7 @@ public class IndicatorChartFactory {
      */
     private static final double OUTLIER_FACTOR = 3;
 
-    private static BarRenderer3D renderer = new BarRenderer3D();
+    private static BarRenderer3D renderer3d = new BarRenderer3D();
 
     // start to create kinds of chart
     public static ImageDescriptor create3DBarChart(String titile, CategoryDataset dataset, boolean showLegend) {
@@ -75,14 +78,14 @@ public class IndicatorChartFactory {
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setRangeGridlinesVisible(true);
 
-        renderer.setBaseItemLabelsVisible(true);
-        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12));
-        renderer.setItemMargin(0.2);
+        renderer3d.setBaseItemLabelsVisible(true);
+        renderer3d.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        renderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12));
+        renderer3d.setItemMargin(0.2);
 
-        plot.setRenderer(renderer);
+        plot.setRenderer(renderer3d);
         plot.setForegroundAlpha(0.50f);
 
         CategoryAxis domainAxis = plot.getDomainAxis();
@@ -110,6 +113,29 @@ public class IndicatorChartFactory {
         try {
 
             return ChartUtils.convertToImage(chart, CHART_WIDTH, CHART_HEIGHT);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static ImageDescriptor createStackedBarChart(String titile, CategoryDataset dataset) {
+
+        JFreeChart chart = ChartFactory.createStackedBarChart(null, null, "Value", dataset, PlotOrientation.VERTICAL, true,
+                false, false);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        // plot.setForegroundAlpha(0.50f);
+        NumberAxis axis = (NumberAxis) plot.getRangeAxis();
+        axis.setNumberFormatOverride(NumberFormat.getPercentInstance());
+        axis.setUpperMargin(0.05f);
+        axis.setLowerMargin(0.01f);
+
+        try {
+
+            return ChartUtils.convertToImage(chart, CHART_WIDTH2, CHART_HEIGHT2);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,7 +180,7 @@ public class IndicatorChartFactory {
                     String valueStr = String.valueOf(object);
                     double value = Double.parseDouble(valueStr);
 
-                    renderer.setSeriesPaint(index, unit.getColor());
+                    renderer3d.setSeriesPaint(index, unit.getColor());
                     dataset.addValue(value, label, "");
                 }
             }
@@ -169,19 +195,19 @@ public class IndicatorChartFactory {
 
     }
 
-    private static CategoryDataset createTextedDataset(List<IndicatorUnit> indicatorTypeMapping, boolean isCreate) {
+    private static CategoryDataset createTextedDataset(List<IndicatorUnit> indicatorUnitList, boolean isCreate) {
 
-        return createSimpleDataset(indicatorTypeMapping, isCreate);
+        return createSimpleDataset(indicatorUnitList, isCreate);
     }
 
-    private static CategoryDataset createSummaryDataset(List<IndicatorUnit> indicatorUnits, boolean isCreate) {
+    private static CategoryDataset createSummaryDataset(List<IndicatorUnit> indicatorUnitList, boolean isCreate) {
 
         DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 
         if (isCreate) {
             Map<IndicatorEnum, Double> map = new HashMap<IndicatorEnum, Double>();
 
-            for (IndicatorUnit indicatorUnit : indicatorUnits) {
+            for (IndicatorUnit indicatorUnit : indicatorUnitList) {
 
                 Object object = null;
                 try {
@@ -233,7 +259,7 @@ public class IndicatorChartFactory {
                             .getLabel());
                 }
 
-                renderer.setSeriesPaint(0, Color.RED);
+                renderer3d.setSeriesPaint(0, Color.RED);
                 return barDataset;
             }
 
@@ -273,11 +299,11 @@ public class IndicatorChartFactory {
         return item;
     }
 
-    private static CategoryDataset createFrequenceDataset(List<IndicatorUnit> indicatorTypeMapping, boolean isCreate) {
+    private static CategoryDataset createFrequenceDataset(List<IndicatorUnit> indicatorUnitList, boolean isCreate) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        for (IndicatorUnit indicatorUnit : indicatorTypeMapping) {
+        for (IndicatorUnit indicatorUnit : indicatorUnitList) {
             Object object = null;
             try {
                 IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
@@ -318,6 +344,37 @@ public class IndicatorChartFactory {
         return dataset;
     }
 
+    private static CategoryDataset createPatternMatchDataset(List<IndicatorUnit> indicatorUnitList, boolean isCreate) {
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        if (isCreate) {
+
+            for (IndicatorUnit unit : indicatorUnitList) {
+                IndicatorCommonUtil.compositeIndicatorMap(unit);
+                String label = unit.getIndicatorName();
+
+                if (unit.getValue() != null) {
+                    PatternMatchingExt patternExt = (PatternMatchingExt) unit.getValue();
+                    double notMathCount = patternExt.getNotMatchingValueCount();
+                    double machCount = patternExt.getMatchingValueCount();
+
+                    dataset.addValue(notMathCount / (notMathCount + machCount), "not matching", label);
+                    dataset.addValue(machCount / (notMathCount + machCount), "matching", label);
+                } else {
+                    dataset.addValue(0, "not matching", "");
+                    dataset.addValue(0, "matching", "");
+                }
+            }
+        } else {
+            dataset.addValue(0.23, "1", "");
+            dataset.addValue(0.77, "2", "");
+        }
+
+        return dataset;
+
+    }
+
     // end create dataset with real value
 
     public static List<ImageDescriptor> createChart(ColumnIndicator column, boolean isCreate) {
@@ -353,12 +410,21 @@ public class IndicatorChartFactory {
             CategoryDataset dataset = createSummaryDataset(separatedMap.get(CompositeIndicator.SUMMARY_STATISTICS), isCreate);
 
             if (dataset instanceof BoxAndWhiskerCategoryDataset) {
+
                 returnFiles.add(createBoxAndWhiskerChart(CompositeIndicator.SUMMARY_STATISTICS,
                         (BoxAndWhiskerCategoryDataset) dataset));
             } else {
+
                 returnFiles.add(create3DBarChart(CompositeIndicator.SUMMARY_STATISTICS, dataset, false));
             }
 
+        }
+
+        if (separatedMap.get(CompositeIndicator.PATTERN_MATCHING).size() != 0) {
+
+            CategoryDataset dataset = createPatternMatchDataset(separatedMap.get(CompositeIndicator.PATTERN_MATCHING), isCreate);
+
+            returnFiles.add(createStackedBarChart(CompositeIndicator.PATTERN_MATCHING, dataset));
         }
 
         return returnFiles;

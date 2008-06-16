@@ -19,38 +19,38 @@ import java.util.Map;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class CompositeIndicator {
-    
+
     public static final String SIMPLE_STATISTICS = "Simple Statistics";
-    
+
     public static final String TEXT_STATISTICS = "Text Statistics";
-    
+
     public static final String FREQUENCE_STATISTICS = "Frequency Statistics";
-    
+
     public static final String SUMMARY_STATISTICS = "Summary Statistics";
-    
+
+    public static final String PATTERN_MATCHING = "Pattern Matching";
+
     private IndicatorUnit[] indicatorUnits;
-    
-    private Map<String, List<IndicatorUnit>> separatedMap; 
-    
+
+    private Map<String, List<IndicatorUnit>> separatedMap;
+
     private List<IndicatorUnit> tempList = new ArrayList<IndicatorUnit>();
-    
+
     public CompositeIndicator(ColumnIndicator columnIndicator) {
-        
+
         this.separatedMap = new HashMap<String, List<IndicatorUnit>>();
         this.indicatorUnits = initIndicatorUnits(columnIndicator.getIndicatorUnits());
     }
-    
+
     private IndicatorUnit[] initIndicatorUnits(IndicatorUnit[] indicatorUnits) {
-        
+
         for (IndicatorUnit unit : indicatorUnits) {
             if (unit.getChildren() != null) {
                 initIndicatorUnits(unit.getChildren());
@@ -58,19 +58,20 @@ public class CompositeIndicator {
                 tempList.add(unit);
             }
         }
-        
+
         return tempList.toArray(new IndicatorUnit[tempList.size()]);
     }
-    
+
     public Map<String, List<IndicatorUnit>> getIndicatorComposite() {
-        
+
         List<IndicatorUnit> simpleList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> textList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> frequencyList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> summaryList = new ArrayList<IndicatorUnit>();
-        
+        List<IndicatorUnit> patternList = new ArrayList<IndicatorUnit>();
+
         for (IndicatorUnit one : indicatorUnits) {
-            
+
             switch (one.getType()) {
             case RowCountIndicatorEnum:
             case NullCountIndicatorEnum:
@@ -96,17 +97,21 @@ public class CompositeIndicator {
             case UpperQuartileIndicatorEnum:
                 summaryList.add(one);
                 break;
-                
+            case PatternMatchingIndicatorEnum:
+                patternList.add(one);
+                break;
+
             default:
             }
         }
-        
+
         separatedMap.put(SIMPLE_STATISTICS, simpleList);
         separatedMap.put(TEXT_STATISTICS, textList);
         separatedMap.put(FREQUENCE_STATISTICS, frequencyList);
         separatedMap.put(SUMMARY_STATISTICS, summaryList);
-        
+        separatedMap.put(PATTERN_MATCHING, patternList);
+
         return separatedMap;
     }
-    
- }
+
+}
