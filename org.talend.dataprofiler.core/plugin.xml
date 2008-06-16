@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="dataprofilerperspectives" name="Dataprofiler Perspectives" schema="schema/Dataprofilerperspectives.exsd"/>
-   <extension-point id="service" name="Dataprofiler Service" schema="schema/service.exsd"/>
+   <extension-point id="dataprofilerperspectives" name="Data Profiler Perspectives" schema="schema/Dataprofilerperspectives.exsd"/>
+   <extension-point id="service" name="Data Profiler Service" schema="schema/service.exsd"/>
      
      <extension
          point="org.eclipse.ui.views">
          <category
             id="org.talend.dataprofiler.view.category"
-            name="Dataprofiler"/>   
+            name="Data Profiler"/>   
       <view
             allowMultiple="false"
             category="org.talend.dataprofiler.view.category"
@@ -17,7 +17,7 @@
             id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
             name="DQ Repository">
       </view>
-      <view
+      <!-- view
             category="org.talend.dataprofiler.view.category"
             class="org.talend.dataprofiler.core.ui.views.GraphsView"
             icon="icons/TdTable.gif"
@@ -30,7 +30,7 @@
             icon="icons/TdTable.gif"
             id="org.talend.dataprofiler.core.ui.views.QuanlityView"
             name="Quality Indicator">
-      </view>
+      </view -->
       
     </extension> 
     
@@ -251,7 +251,7 @@
       <perspective
             class="org.talend.dataprofiler.core.ui.perspective.DataProfilingPerspective"
             id="org.talend.dataprofiler.DataProfilingPerspective"
-            name="Data Profiling">
+            name="Data Profiler">
       </perspective>
    </extension>   
    
@@ -301,7 +301,7 @@
       point="org.talend.dataprofiler.core.dataprofilerperspectives">
         <DataprofilerPerspective
          refPerspectiveId="org.talend.dataprofiler.DataProfilingPerspective"
-         dataprofilerPerspectiveName="Data Profiling"/>
+         dataprofilerPerspectiveName="Data Profiler"/>
         <DataprofilerPerspective
          refPerspectiveId="net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"
          dataprofilerPerspectiveName="Data Explorer"/>

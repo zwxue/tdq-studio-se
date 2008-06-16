@@ -46,7 +46,7 @@ public final class DQStructureManager {
 
     public static final String METADATA = "Metadata";
 
-    public static final String DATA_PROFILING = "Data Profiling";
+    public static final String DATA_PROFILING = "Data Profiler";
 
     public static final String ANALYSIS = "Analysis";
 

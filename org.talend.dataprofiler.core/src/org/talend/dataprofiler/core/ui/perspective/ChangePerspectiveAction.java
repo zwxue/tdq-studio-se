@@ -63,7 +63,7 @@ public class ChangePerspectiveAction extends Action {
 
     private static Logger log = Logger.getLogger(ChangePerspectiveAction.class);
 
-    private static final String SWITCH_TO_DATA_PROFILING = "Switch to Data Profiling";
+    private static final String SWITCH_TO_DATA_PROFILING = "Switch to Data Profiler";
 
     private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to Data Explorer";
 
