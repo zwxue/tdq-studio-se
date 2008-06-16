@@ -19,7 +19,7 @@
             name="Talend Open Profiler">
          <property
                name="windowImages"
-               value="icons/alt_window_16.gif,icons/alt_window_32.gif">
+               value="platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_16x16.gif,platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_32x32.gif,platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_48x48.gif">
          </property>
          <property
                name="appName"
@@ -31,6 +31,7 @@
          point="org.eclipse.ui.intro">
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            icon="platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_16x16.gif"
             id="org.talend.dataprofiler.rcp.branding.top.intro">
       </intro>
       <introProductBinding
