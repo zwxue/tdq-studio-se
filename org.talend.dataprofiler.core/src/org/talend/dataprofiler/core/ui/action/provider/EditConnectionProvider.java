@@ -19,15 +19,17 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
-
+import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 
 /**
- * DOC rli  class global comment. Detailled comment
+ * DOC rli class global comment. Detailled comment
  */
 public class EditConnectionProvider extends CommonActionProvider {
 
     private EditConnectionAction editConnnectionAction;
+
     private IFile currentSelection;
 
     /**
@@ -35,7 +37,7 @@ public class EditConnectionProvider extends CommonActionProvider {
      */
     public EditConnectionProvider() {
     }
-    
+
     public void init(ICommonActionExtensionSite anExtensionSite) {
 
         if (anExtensionSite.getViewSite() instanceof ICommonViewerWorkbenchSite) {
@@ -53,7 +55,7 @@ public class EditConnectionProvider extends CommonActionProvider {
         }
         menu.add(editConnnectionAction);
     }
-    
+
     /**
      * @author rli
      * 
@@ -69,6 +71,7 @@ public class EditConnectionProvider extends CommonActionProvider {
          * (non-Javadoc) Method declared on IAction.
          */
         public void run() {
+            CorePlugin.getDefault().openEditor(currentSelection, ConnectionEditor.class.getName());
         }
     }
 
