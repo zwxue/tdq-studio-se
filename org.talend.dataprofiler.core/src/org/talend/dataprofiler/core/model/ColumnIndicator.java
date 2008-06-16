@@ -282,9 +282,14 @@ public class ColumnIndicator {
     public void addPatternIndicator(IndicatorEnum indicatorEnum, Indicator indicator) {
         this.flatIndicatorEnumList.add(indicatorEnum);
         IndicatorUnit createIndicatorUnit = this.createIndicatorUnit(indicatorEnum, indicator);
-        int size = currentindicatorUnits.length;
+        int size = 0;
+        if (currentindicatorUnits != null) {
+            size = currentindicatorUnits.length;
+        }
         IndicatorUnit[] newUnits = new IndicatorUnit[size + 1];
-        System.arraycopy(currentindicatorUnits, 0, newUnits, 0, size);
+        if (currentindicatorUnits != null) {
+            System.arraycopy(currentindicatorUnits, 0, newUnits, 0, size);
+        }
         newUnits[size] = createIndicatorUnit;
         this.currentindicatorUnits = newUnits;
     }
