@@ -12,11 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp.intro;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.license.LicenseManagement;
+import org.talend.dataprofiler.core.license.LicenseWizard;
+import org.talend.dataprofiler.core.license.LicenseWizardDialog;
 
 /**
  * This class controls all aspects of the application's execution.
@@ -30,6 +36,10 @@ public class Application implements IApplication {
      */
     public Object start(IApplicationContext context) {
         Display display = PlatformUI.createDisplay();
+        if (!licenceAccept(display.getActiveShell())) {
+            Platform.endSplash();
+            return EXIT_OK;
+        }
         try {
             int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
             if (returnCode == PlatformUI.RETURN_RESTART) {
@@ -38,6 +48,22 @@ public class Application implements IApplication {
             return IApplication.EXIT_OK;
         } finally {
             display.dispose();
+        }
+    }
+
+    public boolean licenceAccept(Shell shell) {
+        if (!LicenseManagement.isLicenseValidated()) {
+            LicenseWizard licenseWizard = new LicenseWizard();
+            LicenseWizardDialog dialog = new LicenseWizardDialog(shell, licenseWizard);
+            dialog.setTitle("License");
+            if (dialog.open() == WizardDialog.OK) {
+                LicenseManagement.acceptLicense();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 
