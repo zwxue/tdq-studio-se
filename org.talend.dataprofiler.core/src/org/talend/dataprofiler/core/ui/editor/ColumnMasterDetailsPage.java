@@ -221,14 +221,14 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
-        Section section = createSection(form, parent, "Preview", true, "");
+        Section section = createSection(form, parent, "Graphics", true, "");
 
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
-        refreshBtn.setText("Refresh the preview");
+        refreshBtn.setText("Refresh the graphics");
         refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
         final Label message = toolkit.createLabel(sectionClient, "");
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
@@ -253,7 +253,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
 
                 if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null, "Preview the result of analyis",
+                    boolean returnCode = MessageDialog.openConfirm(null, "View the result of analyis",
                             "Do you want to run the analysis or simply see sample data?");
 
                     if (returnCode) {
