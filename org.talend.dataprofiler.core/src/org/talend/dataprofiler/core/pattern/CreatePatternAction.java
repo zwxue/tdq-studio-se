@@ -91,22 +91,6 @@ public class CreatePatternAction extends Action {
                 }
             }
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.jface.wizard.WizardDialog#nextPressed()
-             */
-            @Override
-            protected void nextPressed() {
-                super.nextPressed();
-                ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
-                if (lastActiveInstance != null) {
-                    IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
-                    IHelpResource[] relatedTopics = context.getRelatedTopics();
-                    String href = relatedTopics[0].getHref();
-                    lastActiveInstance.showURL(href);
-                }
-            }
         };
         fileWizard.setWindowTitle(getText());
         dialog.create();
@@ -119,6 +103,12 @@ public class CreatePatternAction extends Action {
                     IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
                     helpSystem.displayContext(context, point.x + 15, point.y);
                     activeCount++;
+                    ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
+                    if (lastActiveInstance != null) {
+                        IHelpResource[] relatedTopics = context.getRelatedTopics();
+                        String href = relatedTopics[0].getHref();
+                        lastActiveInstance.showURL(href);
+                    }
                 }
             }
         });
