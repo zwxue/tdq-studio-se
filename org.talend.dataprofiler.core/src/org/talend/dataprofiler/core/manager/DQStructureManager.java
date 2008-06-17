@@ -46,7 +46,7 @@ public final class DQStructureManager {
 
     public static final String METADATA = "Metadata";
 
-    public static final String DATA_PROFILING = "Data Profiler";
+    public static final String DATA_PROFILING = "Data Profiling";
 
     public static final String ANALYSIS = "Analysis";
 
@@ -94,8 +94,7 @@ public final class DQStructureManager {
      * @throws InterruptedException
      * @throws InvocationTargetException
      */
-    private IProject createNewProject(String projectName, Shell shell) throws InvocationTargetException,
-            InterruptedException {
+    private IProject createNewProject(String projectName, Shell shell) throws InvocationTargetException, InterruptedException {
 
         final Shell currentShell = shell;
 
