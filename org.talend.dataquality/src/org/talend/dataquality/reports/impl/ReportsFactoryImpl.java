@@ -62,6 +62,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
         switch (eClass.getClassifierID()) {
             case ReportsPackage.TD_REPORT: return createTdReport();
             case ReportsPackage.PRESENTATION_PARAMETER: return createPresentationParameter();
+            case ReportsPackage.ANALYSIS_MAP: return createAnalysisMap();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -85,6 +86,16 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
     public PresentationParameter createPresentationParameter() {
         PresentationParameterImpl presentationParameter = new PresentationParameterImpl();
         return presentationParameter;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public AnalysisMap createAnalysisMap() {
+        AnalysisMapImpl analysisMap = new AnalysisMapImpl();
+        return analysisMap;
     }
 
     /**

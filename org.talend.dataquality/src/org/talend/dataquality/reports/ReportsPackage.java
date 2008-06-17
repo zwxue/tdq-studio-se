@@ -504,13 +504,31 @@ public interface ReportsPackage extends EPackage {
     int TD_REPORT__CREATION_DATE = InformationreportingPackage.REPORT_FEATURE_COUNT + 1;
 
     /**
+     * The feature id for the '<em><b>Last Execution Date</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TD_REPORT__LAST_EXECUTION_DATE = InformationreportingPackage.REPORT_FEATURE_COUNT + 2;
+
+    /**
+     * The feature id for the '<em><b>Analysis Map</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TD_REPORT__ANALYSIS_MAP = InformationreportingPackage.REPORT_FEATURE_COUNT + 3;
+
+    /**
      * The number of structural features of the '<em>Td Report</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 2;
+    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 4;
 
 
     /**
@@ -552,6 +570,44 @@ public interface ReportsPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.reports.impl.AnalysisMapImpl <em>Analysis Map</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.reports.impl.AnalysisMapImpl
+     * @see org.talend.dataquality.reports.impl.ReportsPackageImpl#getAnalysisMap()
+     * @generated
+     */
+    int ANALYSIS_MAP = 2;
+
+    /**
+     * The feature id for the '<em><b>Analysis</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_MAP__ANALYSIS = 0;
+
+    /**
+     * The feature id for the '<em><b>Must Refresh</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_MAP__MUST_REFRESH = 1;
+
+    /**
+     * The number of structural features of the '<em>Analysis Map</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_MAP_FEATURE_COUNT = 2;
+
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.reports.TdReport <em>Td Report</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -584,6 +640,28 @@ public interface ReportsPackage extends EPackage {
     EAttribute getTdReport_CreationDate();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getLastExecutionDate <em>Last Execution Date</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Last Execution Date</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getLastExecutionDate()
+     * @see #getTdReport()
+     * @generated
+     */
+    EAttribute getTdReport_LastExecutionDate();
+
+    /**
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.reports.TdReport#getAnalysisMap <em>Analysis Map</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Analysis Map</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getAnalysisMap()
+     * @see #getTdReport()
+     * @generated
+     */
+    EReference getTdReport_AnalysisMap();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.reports.PresentationParameter <em>Presentation Parameter</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -614,6 +692,38 @@ public interface ReportsPackage extends EPackage {
      * @generated
      */
     EReference getPresentationParameter_Indicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.reports.AnalysisMap <em>Analysis Map</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Analysis Map</em>'.
+     * @see org.talend.dataquality.reports.AnalysisMap
+     * @generated
+     */
+    EClass getAnalysisMap();
+
+    /**
+     * Returns the meta object for the reference '{@link org.talend.dataquality.reports.AnalysisMap#getAnalysis <em>Analysis</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Analysis</em>'.
+     * @see org.talend.dataquality.reports.AnalysisMap#getAnalysis()
+     * @see #getAnalysisMap()
+     * @generated
+     */
+    EReference getAnalysisMap_Analysis();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.AnalysisMap#isMustRefresh <em>Must Refresh</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Must Refresh</em>'.
+     * @see org.talend.dataquality.reports.AnalysisMap#isMustRefresh()
+     * @see #getAnalysisMap()
+     * @generated
+     */
+    EAttribute getAnalysisMap_MustRefresh();
 
     /**
      * Returns the factory that creates the instances of the model.
@@ -661,6 +771,20 @@ public interface ReportsPackage extends EPackage {
          */
         EAttribute TD_REPORT__CREATION_DATE = eINSTANCE.getTdReport_CreationDate();
         /**
+         * The meta object literal for the '<em><b>Last Execution Date</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TD_REPORT__LAST_EXECUTION_DATE = eINSTANCE.getTdReport_LastExecutionDate();
+        /**
+         * The meta object literal for the '<em><b>Analysis Map</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TD_REPORT__ANALYSIS_MAP = eINSTANCE.getTdReport_AnalysisMap();
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.reports.impl.PresentationParameterImpl <em>Presentation Parameter</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -683,6 +807,29 @@ public interface ReportsPackage extends EPackage {
          * @generated
          */
         EReference PRESENTATION_PARAMETER__INDICATOR = eINSTANCE.getPresentationParameter_Indicator();
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.reports.impl.AnalysisMapImpl <em>Analysis Map</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.reports.impl.AnalysisMapImpl
+         * @see org.talend.dataquality.reports.impl.ReportsPackageImpl#getAnalysisMap()
+         * @generated
+         */
+        EClass ANALYSIS_MAP = eINSTANCE.getAnalysisMap();
+        /**
+         * The meta object literal for the '<em><b>Analysis</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference ANALYSIS_MAP__ANALYSIS = eINSTANCE.getAnalysisMap_Analysis();
+        /**
+         * The meta object literal for the '<em><b>Must Refresh</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYSIS_MAP__MUST_REFRESH = eINSTANCE.getAnalysisMap_MustRefresh();
 
     }
 

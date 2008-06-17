@@ -89,6 +89,10 @@ public class ReportsAdapterFactory extends AdapterFactoryImpl {
                 return createPresentationParameterAdapter();
             }
             @Override
+            public Adapter caseAnalysisMap(AnalysisMap object) {
+                return createAnalysisMapAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -157,6 +161,20 @@ public class ReportsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createPresentationParameterAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.reports.AnalysisMap <em>Analysis Map</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.reports.AnalysisMap
+     * @generated
+     */
+    public Adapter createAnalysisMapAdapter() {
         return null;
     }
 

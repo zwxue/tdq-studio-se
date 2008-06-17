@@ -73,6 +73,7 @@ public class TdReportItemProvider
             super.getPropertyDescriptors(object);
 
             addCreationDatePropertyDescriptor(object);
+            addLastExecutionDatePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -100,6 +101,28 @@ public class TdReportItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Last Execution Date feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addLastExecutionDatePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_TdReport_lastExecutionDate_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_TdReport_lastExecutionDate_feature", "_UI_TdReport_type"),
+                 ReportsPackage.Literals.TD_REPORT__LAST_EXECUTION_DATE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -112,6 +135,7 @@ public class TdReportItemProvider
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
             childrenFeatures.add(ReportsPackage.Literals.TD_REPORT__PRESENTATION_PARAMS);
+            childrenFeatures.add(ReportsPackage.Literals.TD_REPORT__ANALYSIS_MAP);
         }
         return childrenFeatures;
     }
@@ -167,9 +191,11 @@ public class TdReportItemProvider
 
         switch (notification.getFeatureID(TdReport.class)) {
             case ReportsPackage.TD_REPORT__CREATION_DATE:
+            case ReportsPackage.TD_REPORT__LAST_EXECUTION_DATE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
+            case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -191,6 +217,11 @@ public class TdReportItemProvider
             (createChildParameter
                 (ReportsPackage.Literals.TD_REPORT__PRESENTATION_PARAMS,
                  ReportsFactory.eINSTANCE.createPresentationParameter()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (ReportsPackage.Literals.TD_REPORT__ANALYSIS_MAP,
+                 ReportsFactory.eINSTANCE.createAnalysisMap()));
     }
 
     /**

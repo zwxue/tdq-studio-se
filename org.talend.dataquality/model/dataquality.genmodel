@@ -71,6 +71,8 @@
       <genClasses ecoreClass="dataquality.ecore#//reports/TdReport">
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//reports/TdReport/presentationParams"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/creationDate"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/lastExecutionDate"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//reports/TdReport/analysisMap"/>
         <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/addAnalysis">
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis/analysis"/>
         </genOperations>
@@ -79,6 +81,11 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/PresentationParameter/plotType"/>
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
             ecoreFeature="ecore:EReference dataquality.ecore#//reports/PresentationParameter/indicator"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//reports/AnalysisMap">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference dataquality.ecore#//reports/AnalysisMap/analysis"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/AnalysisMap/mustRefresh"/>
       </genClasses>
     </nestedGenPackages>
     <nestedGenPackages prefix="Indicators" basePackage="org.talend.dataquality" disposableProviderFactory="true"

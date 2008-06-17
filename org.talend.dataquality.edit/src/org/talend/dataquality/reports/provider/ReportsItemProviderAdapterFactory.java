@@ -122,6 +122,29 @@ public class ReportsItemProviderAdapterFactory extends ReportsAdapterFactory imp
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.reports.AnalysisMap} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AnalysisMapItemProvider analysisMapItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.reports.AnalysisMap}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAnalysisMapAdapter() {
+        if (analysisMapItemProvider == null) {
+            analysisMapItemProvider = new AnalysisMapItemProvider(this);
+        }
+
+        return analysisMapItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -222,6 +245,7 @@ public class ReportsItemProviderAdapterFactory extends ReportsAdapterFactory imp
     public void dispose() {
         if (tdReportItemProvider != null) tdReportItemProvider.dispose();
         if (presentationParameterItemProvider != null) presentationParameterItemProvider.dispose();
+        if (analysisMapItemProvider != null) analysisMapItemProvider.dispose();
     }
 
 }

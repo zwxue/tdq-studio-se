@@ -44,6 +44,15 @@ public interface ReportsFactory extends EFactory {
     PresentationParameter createPresentationParameter();
 
     /**
+     * Returns a new object of class '<em>Analysis Map</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Analysis Map</em>'.
+     * @generated
+     */
+    AnalysisMap createAnalysisMap();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

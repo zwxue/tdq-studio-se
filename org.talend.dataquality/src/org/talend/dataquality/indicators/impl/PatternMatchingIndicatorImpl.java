@@ -20,11 +20,11 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.impl.PatternMatchingIndicatorImpl#getMatchingValueCount <em>Matching Value Count</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.impl.PatternMatchingIndicatorImpl#getNotMatchingValueCount <em>Not Matching Value Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.PatternMatchingIndicatorImpl#getMatchingValueCount <em>Matching Value Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.PatternMatchingIndicatorImpl#getNotMatchingValueCount <em>Not Matching Value Count</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class PatternMatchingIndicatorImpl extends IndicatorImpl implements PatternMatchingIndicator {
@@ -52,7 +52,6 @@ public class PatternMatchingIndicatorImpl extends IndicatorImpl implements Patte
     /**
      * The default value of the '{@link #getNotMatchingValueCount() <em>Not Matching Value Count</em>}' attribute.
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @see #getNotMatchingValueCount()
      * @generated
      * @ordered
@@ -71,7 +70,6 @@ public class PatternMatchingIndicatorImpl extends IndicatorImpl implements Patte
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected PatternMatchingIndicatorImpl() {
@@ -80,7 +78,6 @@ public class PatternMatchingIndicatorImpl extends IndicatorImpl implements Patte
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -90,7 +87,6 @@ public class PatternMatchingIndicatorImpl extends IndicatorImpl implements Patte
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public Long getMatchingValueCount() {
@@ -99,20 +95,17 @@ public class PatternMatchingIndicatorImpl extends IndicatorImpl implements Patte
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setMatchingValueCount(Long newMatchingValueCount) {
         Long oldMatchingValueCount = matchingValueCount;
         matchingValueCount = newMatchingValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT, oldMatchingValueCount, matchingValueCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public Long getNotMatchingValueCount() {
@@ -121,84 +114,75 @@ public class PatternMatchingIndicatorImpl extends IndicatorImpl implements Patte
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setNotMatchingValueCount(Long newNotMatchingValueCount) {
         Long oldNotMatchingValueCount = notMatchingValueCount;
         notMatchingValueCount = newNotMatchingValueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount,
-                    notMatchingValueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT, oldNotMatchingValueCount, notMatchingValueCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
-            return getMatchingValueCount();
-        case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-            return getNotMatchingValueCount();
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
+                return getMatchingValueCount();
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                return getNotMatchingValueCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
-            setMatchingValueCount((Long) newValue);
-            return;
-        case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-            setNotMatchingValueCount((Long) newValue);
-            return;
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
+                setMatchingValueCount((Long)newValue);
+                return;
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                setNotMatchingValueCount((Long)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
-            setMatchingValueCount(MATCHING_VALUE_COUNT_EDEFAULT);
-            return;
-        case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-            setNotMatchingValueCount(NOT_MATCHING_VALUE_COUNT_EDEFAULT);
-            return;
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
+                setMatchingValueCount(MATCHING_VALUE_COUNT_EDEFAULT);
+                return;
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                setNotMatchingValueCount(NOT_MATCHING_VALUE_COUNT_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
-            return MATCHING_VALUE_COUNT_EDEFAULT == null ? matchingValueCount != null : !MATCHING_VALUE_COUNT_EDEFAULT
-                    .equals(matchingValueCount);
-        case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
-            return NOT_MATCHING_VALUE_COUNT_EDEFAULT == null ? notMatchingValueCount != null : !NOT_MATCHING_VALUE_COUNT_EDEFAULT
-                    .equals(notMatchingValueCount);
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT:
+                return MATCHING_VALUE_COUNT_EDEFAULT == null ? matchingValueCount != null : !MATCHING_VALUE_COUNT_EDEFAULT.equals(matchingValueCount);
+            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT:
+                return NOT_MATCHING_VALUE_COUNT_EDEFAULT == null ? notMatchingValueCount != null : !NOT_MATCHING_VALUE_COUNT_EDEFAULT.equals(notMatchingValueCount);
         }
         return super.eIsSet(featureID);
     }
@@ -231,13 +215,11 @@ public class PatternMatchingIndicatorImpl extends IndicatorImpl implements Patte
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy())
-            return super.toString();
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (matchingValueCount: ");

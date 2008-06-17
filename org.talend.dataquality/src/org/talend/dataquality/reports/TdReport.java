@@ -21,6 +21,8 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * <ul>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getPresentationParams <em>Presentation Params</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getCreationDate <em>Creation Date</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.TdReport#getLastExecutionDate <em>Last Execution Date</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.TdReport#getAnalysisMap <em>Analysis Map</em>}</li>
  * </ul>
  * </p>
  *
@@ -71,6 +73,47 @@ public interface TdReport extends Report {
      * @generated
      */
     void setCreationDate(Date value);
+
+    /**
+     * Returns the value of the '<em><b>Last Execution Date</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The date of the last computation of the report. 
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Last Execution Date</em>' attribute.
+     * @see #setLastExecutionDate(Date)
+     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_LastExecutionDate()
+     * @model
+     * @generated
+     */
+    Date getLastExecutionDate();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getLastExecutionDate <em>Last Execution Date</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Last Execution Date</em>' attribute.
+     * @see #getLastExecutionDate()
+     * @generated
+     */
+    void setLastExecutionDate(Date value);
+
+    /**
+     * Returns the value of the '<em><b>Analysis Map</b></em>' containment reference list.
+     * The list contents are of type {@link org.talend.dataquality.reports.AnalysisMap}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Analysis Map</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Analysis Map</em>' containment reference list.
+     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_AnalysisMap()
+     * @model containment="true"
+     * @generated
+     */
+    EList<AnalysisMap> getAnalysisMap();
 
     /**
      * <!-- begin-user-doc -->
