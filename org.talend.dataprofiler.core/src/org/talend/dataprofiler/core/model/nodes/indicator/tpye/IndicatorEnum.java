@@ -111,7 +111,7 @@ public enum IndicatorEnum {
     TextIndicatorEnum(
                       IndicatorsPackage.TEXT_INDICATOR,
                       IndicatorsPackage.Literals.TEXT_INDICATOR,
-                      "Text Statics",
+                      "Text Statistics",
                       new IndicatorEnum[] { MinLengthIndicatorEnum, MaxLengthIndicatorEnum, AverageLengthIndicatorEnum }),
     IQRIndicatorEnum(
                      IndicatorsPackage.IQR_INDICATOR,
@@ -126,7 +126,7 @@ public enum IndicatorEnum {
     BoxIIndicatorEnum(
                       IndicatorsPackage.BOX_INDICATOR,
                       IndicatorsPackage.Literals.BOX_INDICATOR,
-                      "Summary statistics",
+                      "Summary Statistics",
                       new IndicatorEnum[] { MeanIndicatorEnum, MedianIndicatorEnum, IQRIndicatorEnum, RangeIndicatorEnum });
 
     private EClass indicatorType;
