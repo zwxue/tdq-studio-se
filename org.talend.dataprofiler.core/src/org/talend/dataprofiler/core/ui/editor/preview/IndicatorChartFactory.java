@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,7 @@ import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -108,34 +110,11 @@ public class IndicatorChartFactory {
                 false);
 
         CategoryPlot plot = chart.getCategoryPlot();
-        plot.setForegroundAlpha(0.50f);
+        // plot.setForegroundAlpha(0.50f);
 
         try {
 
             return ChartUtils.convertToImage(chart, CHART_WIDTH, CHART_HEIGHT);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static ImageDescriptor createStackedBarChart(String titile, CategoryDataset dataset) {
-
-        JFreeChart chart = ChartFactory.createStackedBarChart(null, null, "Value", dataset, PlotOrientation.VERTICAL, true,
-                false, false);
-
-        CategoryPlot plot = chart.getCategoryPlot();
-        // plot.setForegroundAlpha(0.50f);
-        NumberAxis axis = (NumberAxis) plot.getRangeAxis();
-        axis.setNumberFormatOverride(NumberFormat.getPercentInstance());
-        axis.setUpperMargin(0.05f);
-        axis.setLowerMargin(0.01f);
-
-        try {
-
-            return ChartUtils.convertToImage(chart, CHART_WIDTH2, CHART_HEIGHT2);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,6 +130,36 @@ public class IndicatorChartFactory {
         try {
 
             return ChartUtils.convertToImage(chart, CHART_WIDTH2, CHART_HEIGHT2);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static ImageDescriptor createStacked3DBarChart(String titile, CategoryDataset dataset) {
+
+        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, "Value", dataset, PlotOrientation.VERTICAL, true,
+                false, false);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, Color.RED);
+        renderer.setSeriesPaint(1, Color.GREEN);
+        renderer.setBaseItemLabelsVisible(true);
+        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(),
+                new DecimalFormat("0.0%")));
+        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
+
+        NumberAxis axis = (NumberAxis) plot.getRangeAxis();
+        axis.setNumberFormatOverride(NumberFormat.getPercentInstance());
+        axis.setUpperMargin(0.05f);
+        axis.setLowerMargin(0.01f);
+
+        try {
+
+            return ChartUtils.convertToImage(chart, CHART_WIDTH, CHART_HEIGHT);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -350,6 +359,7 @@ public class IndicatorChartFactory {
 
         if (isCreate) {
 
+            int i = 0;
             for (IndicatorUnit unit : indicatorUnitList) {
                 IndicatorCommonUtil.compositeIndicatorMap(unit);
                 String label = unit.getIndicatorName();
@@ -359,12 +369,13 @@ public class IndicatorChartFactory {
                     double notMathCount = patternExt.getNotMatchingValueCount();
                     double machCount = patternExt.getMatchingValueCount();
 
-                    dataset.addValue(notMathCount / (notMathCount + machCount), "not matching", label);
-                    dataset.addValue(machCount / (notMathCount + machCount), "matching", label);
+                    dataset.addValue(notMathCount / (notMathCount + machCount), "not matching", String.valueOf(label + i));
+                    dataset.addValue(machCount / (notMathCount + machCount), "matching", String.valueOf(label + i));
                 } else {
                     dataset.addValue(0, "not matching", "");
                     dataset.addValue(0, "matching", "");
                 }
+                i++;
             }
         } else {
             dataset.addValue(0.23, "1", "");
@@ -424,7 +435,7 @@ public class IndicatorChartFactory {
 
             CategoryDataset dataset = createPatternMatchDataset(separatedMap.get(CompositeIndicator.PATTERN_MATCHING), isCreate);
 
-            returnFiles.add(createStackedBarChart(CompositeIndicator.PATTERN_MATCHING, dataset));
+            returnFiles.add(createStacked3DBarChart(CompositeIndicator.PATTERN_MATCHING, dataset));
         }
 
         return returnFiles;
