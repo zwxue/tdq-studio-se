@@ -15,9 +15,23 @@ package org.talend.dataprofiler.core.pattern;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.help.HelpSystem;
+import org.eclipse.help.IContext;
+import org.eclipse.help.IHelpResource;
+import org.eclipse.help.ui.internal.views.HelpTray;
+import org.eclipse.help.ui.internal.views.ReusableHelpPart;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -28,6 +42,8 @@ import org.eclipse.swt.widgets.Display;
 public class CreatePatternAction extends Action {
 
     private IFolder folder;
+
+    private static int activeCount = 0;
 
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
@@ -47,9 +63,65 @@ public class CreatePatternAction extends Action {
      */
     @Override
     public void run() {
-        CreatePatternWizard fileWizard = new CreatePatternWizard(folder);
-        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), fileWizard);
+        CreatePatternWizard fileWizard = new CreatePatternWizard(folder) {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.jface.wizard.Wizard#dispose()
+             */
+            public void dispose() {
+                activeCount = 0;
+                super.dispose();
+            }
+        };
+        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), fileWizard) {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.jface.dialogs.TrayDialog#openTray(org.eclipse.jface.dialogs.DialogTray)
+             */
+            public void openTray(DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
+                super.openTray(tray);
+                if (tray instanceof HelpTray) {
+                    HelpTray helpTray = (HelpTray) tray;
+                    ReusableHelpPart helpPart = helpTray.getHelpPart();
+                    helpPart.getForm().getForm().notifyListeners(SWT.Activate, new Event());
+                }
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.jface.wizard.WizardDialog#nextPressed()
+             */
+            @Override
+            protected void nextPressed() {
+                super.nextPressed();
+                ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
+                if (lastActiveInstance != null) {
+                    IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+                    IHelpResource[] relatedTopics = context.getRelatedTopics();
+                    String href = relatedTopics[0].getHref();
+                    lastActiveInstance.showURL(href);
+                }
+            }
+        };
         fileWizard.setWindowTitle(getText());
+        dialog.create();
+        dialog.getShell().addShellListener(new ShellAdapter() {
+
+            public void shellActivated(ShellEvent e) {
+                if (activeCount < 2) {
+                    Point point = e.widget.getDisplay().getCursorLocation();
+                    IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+                    IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+                    helpSystem.displayContext(context, point.x + 15, point.y);
+                    activeCount++;
+                }
+            }
+        });
         if (WizardDialog.OK == dialog.open()) {
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -58,5 +130,4 @@ public class CreatePatternAction extends Action {
             }
         }
     }
-
 }

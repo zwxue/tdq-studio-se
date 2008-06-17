@@ -27,9 +27,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
+import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dq.analysis.parameters.IParameterConstant;
 
 /**
@@ -119,6 +121,13 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
                 openFolderSelectionDialog(DQStructureManager.LIBRARIES, DQStructureManager.PATTERNS);
             }
         });
+        if (getControl() != null) {
+            try {
+                PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /*

@@ -22,7 +22,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
+import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -67,6 +69,13 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
                 setPageComplete(true);
             }
         });
+        if (getControl() != null) {
+            try {
+                PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /*
