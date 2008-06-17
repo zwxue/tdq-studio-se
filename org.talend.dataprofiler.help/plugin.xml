@@ -11,6 +11,10 @@
             file="HelpIndicator.xml"
             plugin="org.talend.dataprofiler.help">
       </contexts>
+      <contexts
+            file="HelpPatternContext.xml"
+            plugin="org.talend.dataprofiler.help">
+      </contexts>
    </extension>
 
 </plugin>

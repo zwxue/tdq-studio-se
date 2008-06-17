@@ -14,24 +14,24 @@ package org.talend.dataprofiler.help;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class HelpPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "org.talend.dataprofiler.help";
-    
+
     public static final String INDICATOR_OPTION_HELP_ID = ".mycontexthelpid";
-    
+
     public static final String INDICATOR_SELECTOR_HELP_ID = ".indicatorhelpcontext";
-    
+
+    public static final String PATTERN_CONTEXT_HELP_ID = PLUGIN_ID + ".helpPatternContext";
+
     private static HelpPlugin plugin;
-    
+
     /**
      * Returns the shared instance.
      * 
