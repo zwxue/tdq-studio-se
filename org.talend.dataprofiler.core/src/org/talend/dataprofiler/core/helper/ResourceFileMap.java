@@ -72,9 +72,8 @@ public class ResourceFileMap {
         if (res != null) {
             return res;
         }
-        EMFUtil util = new EMFUtil();
         URI uri = URI.createFileURI(absolutePath);
-        ResourceSet rs = util.getResourceSet();
+        ResourceSet rs = EMFUtil.getInstance().getResourceSet();
         Resource resource = rs.getResource(uri, true);
         this.registedResourceMap.put(absolutePath, resource);
         return resource;

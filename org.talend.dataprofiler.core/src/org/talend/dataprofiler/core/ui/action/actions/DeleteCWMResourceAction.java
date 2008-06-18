@@ -208,7 +208,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(elementToDelete);
 
                 // save now modified resources (that contain the Dependency objects)
-                EMFUtil util = new EMFUtil();
+                EMFUtil util = EMFUtil.getInstance();
                 util.getResourceSet().getResources().addAll(modifiedResources);
                 if (!util.save()) {
                     log.warn("Problem when saving resources " + util.getLastErrorMessage());

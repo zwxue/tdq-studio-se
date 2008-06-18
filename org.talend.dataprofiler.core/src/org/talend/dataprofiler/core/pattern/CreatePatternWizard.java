@@ -89,7 +89,7 @@ public class CreatePatternWizard extends Wizard {
         expression.setLanguage("SQL");
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         IPath location = folder.getLocation();
         location = location.append(name);
         location = location.addFileExtension(NewSourcePatternActionProvider.EXTENSION_PATTERN);

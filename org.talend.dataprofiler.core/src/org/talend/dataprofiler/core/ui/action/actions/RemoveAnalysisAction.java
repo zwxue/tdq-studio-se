@@ -99,7 +99,7 @@ public class RemoveAnalysisAction extends Action {
 
                 // save now modified resources (that contain the Dependency objects)
                 List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(report);
-                EMFUtil util = new EMFUtil();
+                EMFUtil util = EMFUtil.getInstance();
                 util.getResourceSet().getResources().addAll(modifiedResources);
                 if (!util.save()) {
                     log.warn("Problem when saving resources " + util.getLastErrorMessage());
