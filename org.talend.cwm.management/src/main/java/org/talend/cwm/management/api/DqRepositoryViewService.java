@@ -302,7 +302,7 @@ public final class DqRepositoryViewService {
         }
 
         // --- add resources in resource set
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         ResourceSet resourceSet = util.getResourceSet();
         String dataproviderFilename = createFilename(folder, dataProvider.getName(), FactoriesUtil.PROV);
         File file = new File(dataproviderFilename);
@@ -381,7 +381,7 @@ public final class DqRepositoryViewService {
             rc.setReturnCode("No resource in given Data provider " + dataProvider.getName()
                     + ". Data provider must be saved first.", false);
         } else {
-            rc.setOk(EMFUtil.saveResource(resource));
+            rc.setOk(EMFUtil.getInstance().saveResource(resource));
         }
         return rc;
     }
@@ -419,7 +419,7 @@ public final class DqRepositoryViewService {
     }
 
     private static boolean saveDomain(Domain domain, File file) {
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
         assert resource != null;
         EList<EObject> contents = resource.getContents();
@@ -612,7 +612,7 @@ public final class DqRepositoryViewService {
      */
     private static TypedReturnCode<TdDataProvider> readFromFile(File file) {
         TypedReturnCode<TdDataProvider> rc = new TypedReturnCode<TdDataProvider>();
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
 
         ResourceSet rs = util.getResourceSet();
         Resource r = rs.getResource(URI.createFileURI(file.getAbsolutePath()), true);

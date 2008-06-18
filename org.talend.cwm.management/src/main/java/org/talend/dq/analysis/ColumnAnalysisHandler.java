@@ -285,7 +285,7 @@ public class ColumnAnalysisHandler {
     }
 
     public boolean saveModifiedResources() {
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         util.getResourceSet().getResources().addAll(this.modifiedResources);
         return util.save();
     }

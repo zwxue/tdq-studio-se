@@ -69,7 +69,7 @@ public class ConnectionIndicEvalMain {
 
             // store in file
             File file = new File("out/myi." + IndicatorsPackage.eNAME);
-            EMFUtil util = new EMFUtil();
+            EMFUtil util = EMFUtil.getInstance();
             if (!util.addPoolToResourceSet(file.toURI().toString(), connectionIndicator)) {
                 System.err.println(util.getLastErrorMessage());
             }

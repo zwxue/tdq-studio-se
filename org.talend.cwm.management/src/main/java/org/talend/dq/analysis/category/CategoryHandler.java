@@ -39,7 +39,7 @@ public final class CategoryHandler {
     }
 
     private static AnalysisCategories loadFromFile() {
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         String pathName = "/org.talend.cwm.management/My.category";
         URI uri = URI.createPlatformPluginURI(pathName, false);
         Resource catFile = null;

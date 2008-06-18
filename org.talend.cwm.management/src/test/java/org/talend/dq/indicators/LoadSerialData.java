@@ -35,7 +35,7 @@ public class LoadSerialData {
      * @param args
      */
     public static void main(String[] args) {
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         File file = new File("out/myi." + IndicatorsPackage.eNAME);
         System.out.println("Loading file " + file.getAbsolutePath());
         ResourceSet rs = util.getResourceSet();

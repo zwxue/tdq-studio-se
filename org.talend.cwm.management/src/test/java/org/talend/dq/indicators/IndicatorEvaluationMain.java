@@ -105,7 +105,7 @@ public final class IndicatorEvaluationMain {
 
             // store in file
             File file = new File("out/myi." + IndicatorsPackage.eNAME);
-            EMFUtil util = new EMFUtil();
+            EMFUtil util = EMFUtil.getInstance();
             Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
             rContents = resource.getContents();
 

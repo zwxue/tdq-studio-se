@@ -108,7 +108,7 @@ public final class DefinitionHandler {
     }
 
     private Resource getResourceFromFile() {
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         Resource definitionsFile = null;
         URI uri = URI.createPlatformResourceURI(WORKSPACE_PATH + FILENAME, false);
         try { // load from workspace path
@@ -172,8 +172,8 @@ public final class DefinitionHandler {
     public Resource copyDefinitionsIntoFolder(File folder) {
         URI destinationUri = URI.createFileURI(folder.getAbsolutePath());
         Resource resource = getIndicatorsDefinitions().eResource();
-        EMFUtil.changeUri(resource, destinationUri);
-        if (EMFUtil.saveResource(resource)) {
+        EMFUtil.getInstance().changeUri(resource, destinationUri);
+        if (EMFUtil.getInstance().saveResource(resource)) {
             if (log.isInfoEnabled()) {
                 log.info("Indicator default definitions correctly saved in " + resource.getURI());
             } else {
@@ -185,8 +185,8 @@ public final class DefinitionHandler {
 
     public Resource copyDefinitionsIntoFolder(URI destinationUri) {
         Resource resource = getIndicatorsDefinitions().eResource();
-        EMFUtil.changeUri(resource, destinationUri);
-        if (EMFUtil.saveResource(resource)) {
+        EMFUtil.getInstance().changeUri(resource, destinationUri);
+        if (EMFUtil.getInstance().saveResource(resource)) {
             if (log.isInfoEnabled()) {
                 log.info("Indicator default definitions correctly saved in " + resource.getURI());
             }

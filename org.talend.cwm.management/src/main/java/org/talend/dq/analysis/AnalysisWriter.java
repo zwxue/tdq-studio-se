@@ -76,7 +76,7 @@ public class AnalysisWriter {
 
         // save the resource and related resources (when needed, for example when we change the data mining type of a
         // column)
-        boolean saved = EMFUtil.saveResource(resource);
+        boolean saved = EMFUtil.getInstance().saveResource(resource);
 
         if (!saved) {
             rc.setReturnCode("Problem while saving analysis " + analysis.getName() + ". ", saved);
@@ -102,7 +102,7 @@ public class AnalysisWriter {
             rc.setReturnCode("Bad file extension for " + file.getAbsolutePath() + ". Should be " + VALID_EXTENSION, false);
             return rc;
         }
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         // Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
         // resource.getContents().addAll(analysis.getResults().getIndicators());
 

@@ -50,7 +50,7 @@ public class DBConnect {
 
     private static Logger log = Logger.getLogger(THAT);
 
-    private final EMFUtil emfUtil = new EMFUtil();
+    private final EMFUtil emfUtil = EMFUtil.getInstance();
 
     private final String databaseUrl;
 
@@ -354,8 +354,7 @@ public class DBConnect {
             DriverManager.registerDriver(driver);
             connection = DriverManager.getConnection(dbUrl, props);
 
-            this.providerConnection = DatabaseContentRetriever.getProviderConnection(dbUrl, driverClassName, props,
-                    connection);
+            this.providerConnection = DatabaseContentRetriever.getProviderConnection(dbUrl, driverClassName, props, connection);
         } catch (InstantiationException e) {
             log.error(e);
             ok = false;

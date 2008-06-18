@@ -235,7 +235,7 @@ public class TestAnalysisCreation {
         patternMatchingIndicator.setParameters(indicParams);
 
         // save pattern in a file (only for test purpose)
-        EMFUtil util = new EMFUtil();
+        EMFUtil util = EMFUtil.getInstance();
         util.addPoolToResourceSet(new File("ANA/MyPattern.pattern"), pattern);
         util.save();
 

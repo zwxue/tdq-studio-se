@@ -316,7 +316,7 @@ public final class TalendCwmFactory {
 
             // --- save on disk
 
-            EMFUtil util = new EMFUtil();
+            EMFUtil util = EMFUtil.getInstance();
             ResourceSet resourceSet = providerConnection.eResource().getResourceSet();
             util.setResourceSet(resourceSet);
             util.save();
