@@ -518,41 +518,83 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
         if (nbFields == 3) { // year and quarter
             Object year = value2freq[0];
-            buf.append(year != null ? F4_DIGIT.format(year) : "0000");
+            buf.append(format4digit(year));
             Object quarter = value2freq[1];
             buf.append(String.valueOf(quarter));
             return buf.toString();
         }
 
         if (nbFields == 4) { // year, quarter and month
-            Object year = value2freq[0];
-            buf.append(year != null ? F4_DIGIT.format(year) : "0000");
-            Object month = String.valueOf(value2freq[2]);
-            buf.append(month != null ? F2_DIGIT.format(month) : "00");
+            buf.append(format4digit(value2freq[0]));
+            buf.append(format2digit(value2freq[2]));
             return buf.toString();
         }
 
         if (nbFields == 5) { // year, quarter, month, week
             Object year = value2freq[0];
-            buf.append(year != null ? F4_DIGIT.format(year) : "0000");
+            buf.append(format4digit(year));
             Object month = String.valueOf(value2freq[2]);
-            buf.append(month != null ? F2_DIGIT.format(month) : "00");
+            buf.append(format2digit(month));
             String week = String.valueOf(value2freq[3]);
-            buf.append(week != null ? week : "0");
+            buf.append(format1digit(week));
             return buf.toString();
         }
 
         if (nbFields == 6) { // year, quarter, month, week and day
             Object year = value2freq[0];
-            buf.append(year != null ? F4_DIGIT.format(year) : "0000");
+            buf.append(format4digit(year));
             Object month = String.valueOf(value2freq[2]);
-            buf.append(month != null ? F2_DIGIT.format(month) : "00");
+            buf.append(format2digit(month));
             String day = String.valueOf(value2freq[4]);
-            buf.append(day != null ? F2_DIGIT.format(day) : "00");
+            buf.append(format2digit(day));
             return buf.toString();
         }
 
         return null;
+    }
+
+    /**
+     * DOC scorreia Comment method "format1digit".
+     * 
+     * @param week
+     * @return
+     */
+    private String format1digit(String week) {
+        if (week != null) {
+            return "0";
+        }
+        // else
+        return String.valueOf(week);
+    }
+
+    /**
+     * DOC scorreia Comment method "format2digit".
+     * 
+     * @param month
+     * @return
+     */
+    private String format2digit(Object month) {
+        if (month == null) {
+            return "00";
+        }
+        // else
+        String str = String.valueOf(month);
+        return F2_DIGIT.format(Integer.valueOf(str));
+    }
+
+    /**
+     * DOC scorreia Comment method "format4digit".
+     * 
+     * @param year
+     * @return
+     */
+    private String format4digit(Object year) {
+        if (year == null) {
+            return "0000";
+        }
+        // else
+        String str = String.valueOf(year);
+        return F4_DIGIT.format(Integer.valueOf(str));
     }
 
 } // FrequencyIndicatorImpl
