@@ -41,21 +41,20 @@ public final class EMFUtil {
 
     /** the options needed for saving the resources. */
     private final Map<String, Object> options;
-    static {
-        initialize();
-    }
 
     private ResourceSet resourceSet;
 
     private String lastErrorMessage = null;
+
+    private static EMFUtil instance;
 
     /**
      * This CTOR initializes all packages and create a resource set.
      * 
      * @param fileExtensions the list of extensions (without the dot).
      */
-    public EMFUtil() {
-
+    private EMFUtil() {
+        initialize();
         // set the options
         options = new HashMap<String, Object>();
         options.put(XMIResource.OPTION_DECLARE_XML, Boolean.TRUE);
@@ -63,13 +62,21 @@ public final class EMFUtil {
 
         // Obtain a new resource set
         resourceSet = new ResourceSetImpl();
+    }
 
+    public static EMFUtil getInstance() {
+        if (instance == null) {
+            instance = new EMFUtil();
+            return instance;
+        } else {
+            return instance;
+        }
     }
 
     /**
      * Method "initialize" initializes EMF factories, packages and file extensions.
      */
-    private static void initialize() {
+    private void initialize() {
         // Initialize the enterprise factories
         FactoriesUtil.initializeAllFactories();
 
@@ -190,7 +197,7 @@ public final class EMFUtil {
      * @param destinationUri the destination directory
      * @return the new uri.
      */
-    public static URI changeUri(Resource res, URI destinationUri) {
+    public URI changeUri(Resource res, URI destinationUri) {
         URI uri = res.getURI();
         URI newUri = destinationUri.appendSegment(uri.lastSegment());
         res.setURI(newUri);
@@ -204,7 +211,7 @@ public final class EMFUtil {
      * @param resource the resource to save
      * @return true if no problem
      */
-    public static boolean saveResource(Resource resource) {
+    public boolean saveResource(Resource resource) {
         ResourceSet resourceSet = resource.getResourceSet();
         EMFUtil util = new EMFUtil();
         if (resourceSet != null) {
@@ -224,7 +231,7 @@ public final class EMFUtil {
      * @param resource the resource to save
      * @return true if no problem
      */
-    public static boolean saveSingleResource(Resource resource) {
+    public boolean saveSingleResource(Resource resource) {
         EMFUtil util = new EMFUtil();
         util.getResourceSet().getResources().add(resource);
         return util.save();
