@@ -16,11 +16,15 @@ import java.util.Iterator;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
+import org.talend.dataquality.analysis.AnalysisType;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -46,27 +50,36 @@ public class AnalyzeColumnAction extends Action {
     @Override
     public void run() {
 
-        new CreateNewAnalysisAction().run(null, null);
+        if (openStandardAnalysisDialog(true, AnalysisType.MULTIPLE_COLUMN) == Window.OK) {
+            AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
+            if (editor != null) {
+                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                if (!this.selection.isEmpty()) {
+                    TdColumn[] columns = new TdColumn[selection.size()];
+                    Iterator it = this.selection.iterator();
 
-        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-        if (editor != null) {
-            ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
-            if (!this.selection.isEmpty()) {
-                TdColumn[] columns = new TdColumn[selection.size()];
-                Iterator it = this.selection.iterator();
-
-                int i = 0;
-                while (it.hasNext()) {
-                    columns[i] = (TdColumn) it.next();
-                    i++;
+                    int i = 0;
+                    while (it.hasNext()) {
+                        columns[i] = (TdColumn) it.next();
+                        i++;
+                    }
+                    page.getTreeViewer().setInput(columns);
                 }
-                page.getTreeViewer().setInput(columns);
             }
         }
     }
 
     public void setColumnSelection(TreeSelection selection) {
         this.selection = selection;
+    }
+
+    private int openStandardAnalysisDialog(boolean creation, AnalysisType type) {
+        CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(creation, type);
+        wizard.setForcePreviousAndNextButtons(true);
+        WizardDialog dialog = new WizardDialog(null, wizard);
+        dialog.setPageSize(500, 340);
+
+        return dialog.open();
     }
 }
