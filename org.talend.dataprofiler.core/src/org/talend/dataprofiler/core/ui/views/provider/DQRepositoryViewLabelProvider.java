@@ -22,6 +22,9 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.RegularExpression;
+
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -80,6 +83,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             }
         }
 
+        // PTODO qzhang fixed bug 4176: Display expressions as children of the patterns
+        if (element instanceof Pattern) {
+            Pattern pattern = (Pattern) element;
+            RegularExpression patternComponent = (RegularExpression) pattern.getComponents().get(0);
+            return patternComponent.getExpression().getBody();
+        }
         return super.getText(element);
     }
 }

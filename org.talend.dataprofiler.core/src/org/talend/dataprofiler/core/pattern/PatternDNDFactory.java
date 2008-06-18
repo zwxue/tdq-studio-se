@@ -183,7 +183,7 @@ public class PatternDNDFactory {
      * @param fe
      * @return
      */
-    protected static Pattern getPattern(IFile file) {
+    public static Pattern getPattern(IFile file) {
         EMFUtil util = EMFUtil.getInstance();
         Resource resource = util.getResourceSet().getResource(URI.createPlatformResourceURI(file.getFullPath().toString()), true);
         Pattern pattern = (Pattern) EcoreUtil.getObjectByType(resource.getContents(), PatternPackage.eINSTANCE.getPattern());

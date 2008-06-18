@@ -24,7 +24,10 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.pattern.PatternDNDFactory;
+import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dataquality.domain.pattern.Pattern;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -54,6 +57,13 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      */
     @Override
     public Object[] getChildren(Object element) {
+        if (element instanceof IFile) {
+            IFile file = (IFile) element;
+            if (file.getName().endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
+                Pattern pattern = PatternDNDFactory.getPattern(file);
+                return new Object[] { pattern };
+            }
+        }
         if (needSortContainers.contains(element)) {
             return sort(super.getChildren(element));
         }
