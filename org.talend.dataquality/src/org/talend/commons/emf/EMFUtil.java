@@ -28,9 +28,11 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
- * @author scorreia This class creates the EMF resources and save them.
+ * @author scorreia This class creates the EMF resources and save them. All resources are stored in a ResourceSet (which
+ * can be changed with the setter and getter methods).
  * 
- * TODO scorreia this class should be in a commons project (org.talend.commons.emf)
+ * This class also offers some static methods to help handling resources.
+ * 
  */
 public final class EMFUtil {
 
@@ -42,6 +44,11 @@ public final class EMFUtil {
     /** the options needed for saving the resources. */
     private final Map<String, Object> options;
 
+    /** Static initialization of all EMF packages needed for the application. Done only once. */
+    static {
+        initialize();
+    }
+
     private ResourceSet resourceSet;
 
     private String lastErrorMessage = null;
@@ -52,7 +59,6 @@ public final class EMFUtil {
      * @param fileExtensions the list of extensions (without the dot).
      */
     public EMFUtil() {
-        initialize();
         // set the options
         options = new HashMap<String, Object>();
         options.put(XMIResource.OPTION_DECLARE_XML, Boolean.TRUE);
@@ -65,7 +71,7 @@ public final class EMFUtil {
     /**
      * Method "initialize" initializes EMF factories, packages and file extensions.
      */
-    private void initialize() {
+    private static void initialize() {
         // Initialize the enterprise factories
         FactoriesUtil.initializeAllFactories();
 
@@ -124,7 +130,9 @@ public final class EMFUtil {
     }
 
     /**
-     * saves each resource of the resource set.
+     * Saves each resource of the resource set.
+     * 
+     * @return true if ok
      */
     public boolean save() {
         boolean ok = true;
@@ -179,14 +187,16 @@ public final class EMFUtil {
     }
 
     /**
-     * Changes the uri of the given resource. The new uri is formed with the name of the input resource's uri appended
-     * to the path outputUri.
+     * Utility method.
+     * 
+     * Changes the uri of a given resource. The new uri is formed with the name of the input resource's uri appended to
+     * the path outputUri.
      * 
      * @param res the input resource
      * @param destinationUri the destination directory
      * @return the new uri.
      */
-    public URI changeUri(Resource res, URI destinationUri) {
+    public static URI changeUri(Resource res, URI destinationUri) {
         URI uri = res.getURI();
         URI newUri = destinationUri.appendSegment(uri.lastSegment());
         res.setURI(newUri);
@@ -194,13 +204,15 @@ public final class EMFUtil {
     }
 
     /**
+     * Utility method.
+     * 
      * Method "saveResource" saves the given resource. This method is a helper for saving quickly a given resource and
      * all its related resources (if any).
      * 
      * @param resource the resource to save
      * @return true if no problem
      */
-    public boolean saveResource(Resource resource) {
+    public static boolean saveResource(Resource resource) {
         // ResourceSet resourceSet = resource.getResourceSet();
         // EMFUtil util = new EMFUtil();
         // if (resourceSet != null) {
@@ -213,6 +225,8 @@ public final class EMFUtil {
     }
 
     /**
+     * Utility method.
+     * 
      * Method "saveSingleResource" saves the given resource only. This method is a helper for saving quickly a given
      * resource. It does not saved the related resources. This could result in an exception when other related resources
      * should be saved with this resource.
@@ -220,7 +234,7 @@ public final class EMFUtil {
      * @param resource the resource to save
      * @return true if no problem
      */
-    public boolean saveSingleResource(Resource resource) {
+    public static boolean saveSingleResource(Resource resource) {
         EMFUtil util = new EMFUtil();
         util.getResourceSet().getResources().add(resource);
         boolean save = util.save();
