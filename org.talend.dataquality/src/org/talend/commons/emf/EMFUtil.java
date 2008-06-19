@@ -212,15 +212,15 @@ public final class EMFUtil {
      * @return true if no problem
      */
     public boolean saveResource(Resource resource) {
-        ResourceSet resourceSet = resource.getResourceSet();
-        EMFUtil util = new EMFUtil();
-        if (resourceSet != null) {
-            util.setResourceSet(resourceSet);
-            return util.save();
-        }
-        // else
-        util.getResourceSet().getResources().add(resource);
-        return util.save();
+        // ResourceSet resourceSet = resource.getResourceSet();
+        // EMFUtil util = new EMFUtil();
+        // if (resourceSet != null) {
+        // util.setResourceSet(resourceSet);
+        // return util.save();
+        // }
+        // // else
+        // util.getResourceSet().getResources().add(resource);
+        return saveSingleResource(resource);
     }
 
     /**
@@ -234,7 +234,11 @@ public final class EMFUtil {
     public boolean saveSingleResource(Resource resource) {
         EMFUtil util = new EMFUtil();
         util.getResourceSet().getResources().add(resource);
-        return util.save();
+        boolean save = util.save();
+        if (!save) {
+            log.warn("Problem when saving resources " + util.getLastErrorMessage());
+        }
+        return save;
     }
 
 }
