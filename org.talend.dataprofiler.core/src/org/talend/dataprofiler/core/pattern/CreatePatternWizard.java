@@ -87,7 +87,7 @@ public class CreatePatternWizard extends Wizard {
         Expression expression = CoreFactory.eINSTANCE.createExpression();
         String expr = mPage2.getNameText().getText();
         expression.setBody(expr);
-        expression.setLanguage("SQL");
+        expression.setLanguage("SQL"); // TODO qzhang save language from selected db type
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
