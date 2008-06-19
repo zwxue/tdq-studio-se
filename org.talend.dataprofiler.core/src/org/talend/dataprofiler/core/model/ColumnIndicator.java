@@ -28,10 +28,13 @@ import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
@@ -469,6 +472,22 @@ public class ColumnIndicator {
         if (indicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+
+            // for 4225, the frequency indicator need be initialized
+            if (indicatorEnum == IndicatorEnum.FrequencyIndicatorEnum) {
+                IndicatorParameters parameters = indicator.getParameters();
+                if (parameters == null) {
+                    parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+                    indicator.setParameters(parameters);
+                }
+                DateParameters dateParameters = parameters.getDateParameters();
+                if (dateParameters == null) {
+                    dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
+                    parameters.setDateParameters(dateParameters);
+                }
+
+                dateParameters.setDateAggregationType(DateGrain.YEAR);
+            }
         }
         IndicatorUnit indicatorUnit = new IndicatorUnit(indicatorEnum, indicator, this);
         this.indicatorUnitMap.put(indicatorEnum, indicatorUnit);
