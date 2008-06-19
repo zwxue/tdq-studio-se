@@ -15,12 +15,10 @@ package org.talend.dq.analysis;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -285,16 +283,9 @@ public class ColumnAnalysisHandler {
         return AnalysisHelper.getStringDataFilter(analysis);
     }
 
-    public boolean saveModifiedResources() {
-        EMFUtil util = EMFUtil.getInstance();
-        boolean saveFlag = true;
-        Iterator<Resource> iterator = modifiedResources.iterator();
-        while (iterator.hasNext()) {
-            saveFlag = util.saveSingleResource(iterator.next());
-            if (!saveFlag) {
-                break;
-            }
-        }
-        return saveFlag;
-    }
+    // public boolean saveModifiedResources() {
+    // EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+    // util.getResourceSet().getResources().addAll(this.modifiedResources);
+    // return util.save();
+    // }
 }

@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.builders.AbstractTableBuilder;
@@ -302,7 +303,7 @@ public final class DqRepositoryViewService {
         }
 
         // --- add resources in resource set
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         ResourceSet resourceSet = util.getResourceSet();
         String dataproviderFilename = createFilename(folder, dataProvider.getName(), FactoriesUtil.PROV);
         File file = new File(dataproviderFilename);
@@ -381,7 +382,7 @@ public final class DqRepositoryViewService {
             rc.setReturnCode("No resource in given Data provider " + dataProvider.getName()
                     + ". Data provider must be saved first.", false);
         } else {
-            rc.setOk(EMFUtil.getInstance().saveResource(resource));
+            rc.setOk(EMFSharedResources.getSharedEmfUtil().saveResource(resource));
         }
         return rc;
     }
@@ -419,7 +420,7 @@ public final class DqRepositoryViewService {
     }
 
     private static boolean saveDomain(Domain domain, File file) {
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
         assert resource != null;
         EList<EObject> contents = resource.getContents();
@@ -612,7 +613,7 @@ public final class DqRepositoryViewService {
      */
     private static TypedReturnCode<TdDataProvider> readFromFile(File file) {
         TypedReturnCode<TdDataProvider> rc = new TypedReturnCode<TdDataProvider>();
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
 
         ResourceSet rs = util.getResourceSet();
         Resource r = rs.getResource(URI.createFileURI(file.getAbsolutePath()), true);

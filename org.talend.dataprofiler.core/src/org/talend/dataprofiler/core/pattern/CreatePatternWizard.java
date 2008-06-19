@@ -17,6 +17,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
@@ -89,7 +90,7 @@ public class CreatePatternWizard extends Wizard {
         expression.setLanguage("SQL");
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         IPath location = folder.getLocation();
         location = location.append(name);
         location = location.addFileExtension(NewSourcePatternActionProvider.EXTENSION_PATTERN);

@@ -24,6 +24,7 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.DataProviderBuilder;
@@ -50,7 +51,7 @@ public class DBConnect {
 
     private static Logger log = Logger.getLogger(THAT);
 
-    private final EMFUtil emfUtil = EMFUtil.getInstance();
+    private final EMFUtil emfUtil = EMFSharedResources.getSharedEmfUtil();
 
     private final String databaseUrl;
 

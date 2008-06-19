@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -235,7 +236,7 @@ public class TestAnalysisCreation {
         patternMatchingIndicator.setParameters(indicParams);
 
         // save pattern in a file (only for test purpose)
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         util.addPoolToResourceSet(new File("ANA/MyPattern.pattern"), pattern);
         util.save();
 

@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
@@ -184,7 +185,7 @@ public class PatternDNDFactory {
      * @return
      */
     public static Pattern getPattern(IFile file) {
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         Resource resource = util.getResourceSet().getResource(URI.createPlatformResourceURI(file.getFullPath().toString()), true);
         Pattern pattern = (Pattern) EcoreUtil.getObjectByType(resource.getContents(), PatternPackage.eINSTANCE.getPattern());
         return pattern;

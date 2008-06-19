@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.EMFSharedResources;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -73,7 +73,7 @@ public class ResourceFileMap {
             return res;
         }
         URI uri = URI.createFileURI(absolutePath);
-        ResourceSet rs = EMFUtil.getInstance().getResourceSet();
+        ResourceSet rs = EMFSharedResources.getSharedEmfUtil().getResourceSet();
         Resource resource = rs.getResource(uri, true);
         this.registedResourceMap.put(absolutePath, resource);
         return resource;

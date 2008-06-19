@@ -29,6 +29,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -99,7 +100,7 @@ public class RemoveAnalysisAction extends Action {
 
                 // save now modified resources (that contain the Dependency objects)
                 List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(report);
-                EMFUtil util = EMFUtil.getInstance();
+                EMFUtil util = EMFSharedResources.getSharedEmfUtil();
                 for (int i = 0; i < modifiedResources.size(); i++) {
                     util.saveSingleResource(modifiedResources.get(i));
                 }

@@ -35,6 +35,7 @@ import org.eclipse.ui.actions.DeleteResourceAction;
 import org.eclipse.ui.ide.undo.DeleteResourcesOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.progress.WorkbenchJob;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -208,7 +209,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(elementToDelete);
 
                 // save now modified resources (that contain the Dependency objects)
-                EMFUtil util = EMFUtil.getInstance();
+                EMFUtil util = EMFSharedResources.getSharedEmfUtil();
                 for (Resource resource : modifiedResources) {
                     util.saveSingleResource(resource);
                 }

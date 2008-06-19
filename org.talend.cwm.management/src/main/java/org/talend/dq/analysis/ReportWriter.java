@@ -17,6 +17,7 @@ import java.io.File;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -52,7 +53,7 @@ public class ReportWriter {
             rc.setReturnCode("Bad file extension for " + file.getAbsolutePath() + ". Should be " + VALID_EXTENSION, false);
             return rc;
         }
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         // Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
         // resource.getContents().addAll(report.getResults().getIndicators());
 
@@ -103,9 +104,9 @@ public class ReportWriter {
 
         // save the resource and related resources (when needed, for example when we change the data mining type of a
         // column)
-        boolean saved = EMFUtil.getInstance().saveResource(resource);
+        boolean saved = EMFSharedResources.getSharedEmfUtil().saveResource(resource);
 
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         addAnaResourceOfReport(report, util);
         if (!saved) {
             rc.setReturnCode("Problem while saving report " + report.getName() + ". ", saved);

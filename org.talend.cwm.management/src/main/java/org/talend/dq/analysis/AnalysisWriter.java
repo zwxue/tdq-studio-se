@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -76,7 +77,7 @@ public class AnalysisWriter {
 
         // save the resource and related resources (when needed, for example when we change the data mining type of a
         // column)
-        boolean saved = EMFUtil.getInstance().saveResource(resource);
+        boolean saved = EMFSharedResources.getSharedEmfUtil().saveResource(resource);
 
         if (!saved) {
             rc.setReturnCode("Problem while saving analysis " + analysis.getName() + ". ", saved);
@@ -102,7 +103,7 @@ public class AnalysisWriter {
             rc.setReturnCode("Bad file extension for " + file.getAbsolutePath() + ". Should be " + VALID_EXTENSION, false);
             return rc;
         }
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         // Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
         // resource.getContents().addAll(analysis.getResults().getIndicators());
 

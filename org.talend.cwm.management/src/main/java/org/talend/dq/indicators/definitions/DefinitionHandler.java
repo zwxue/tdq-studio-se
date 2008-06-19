@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
@@ -108,7 +109,7 @@ public final class DefinitionHandler {
     }
 
     private Resource getResourceFromFile() {
-        EMFUtil util = EMFUtil.getInstance();
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         Resource definitionsFile = null;
         URI uri = URI.createPlatformResourceURI(WORKSPACE_PATH + FILENAME, false);
         try { // load from workspace path
@@ -172,8 +173,8 @@ public final class DefinitionHandler {
     public Resource copyDefinitionsIntoFolder(File folder) {
         URI destinationUri = URI.createFileURI(folder.getAbsolutePath());
         Resource resource = getIndicatorsDefinitions().eResource();
-        EMFUtil.getInstance().changeUri(resource, destinationUri);
-        if (EMFUtil.getInstance().saveResource(resource)) {
+        EMFSharedResources.getSharedEmfUtil().changeUri(resource, destinationUri);
+        if (EMFSharedResources.getSharedEmfUtil().saveResource(resource)) {
             if (log.isInfoEnabled()) {
                 log.info("Indicator default definitions correctly saved in " + resource.getURI());
             } else {
@@ -185,8 +186,8 @@ public final class DefinitionHandler {
 
     public Resource copyDefinitionsIntoFolder(URI destinationUri) {
         Resource resource = getIndicatorsDefinitions().eResource();
-        EMFUtil.getInstance().changeUri(resource, destinationUri);
-        if (EMFUtil.getInstance().saveResource(resource)) {
+        EMFSharedResources.getSharedEmfUtil().changeUri(resource, destinationUri);
+        if (EMFSharedResources.getSharedEmfUtil().saveResource(resource)) {
             if (log.isInfoEnabled()) {
                 log.info("Indicator default definitions correctly saved in " + resource.getURI());
             }

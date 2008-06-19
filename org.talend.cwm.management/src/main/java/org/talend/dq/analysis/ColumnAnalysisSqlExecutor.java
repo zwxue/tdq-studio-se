@@ -333,6 +333,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param table
      * @param patterns
      * @return
+     * 
      */
     private String replaceVariables(String sqlGenericString, String colName, String table, List<String> patterns) {
         Object[] arguments = new Object[patterns.size() + 2];
@@ -344,6 +345,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         String toFormat = surroundSingleQuotes(sqlGenericString);
+        // No problem if pattern contains something like {1} because it is in the arguments
         return MessageFormat.format(toFormat, arguments);
     }
 

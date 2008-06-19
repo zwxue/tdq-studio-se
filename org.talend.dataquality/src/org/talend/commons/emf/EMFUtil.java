@@ -46,14 +46,12 @@ public final class EMFUtil {
 
     private String lastErrorMessage = null;
 
-    private static EMFUtil instance;
-
     /**
      * This CTOR initializes all packages and create a resource set.
      * 
      * @param fileExtensions the list of extensions (without the dot).
      */
-    private EMFUtil() {
+    public EMFUtil() {
         initialize();
         // set the options
         options = new HashMap<String, Object>();
@@ -62,15 +60,6 @@ public final class EMFUtil {
 
         // Obtain a new resource set
         resourceSet = new ResourceSetImpl();
-    }
-
-    public static EMFUtil getInstance() {
-        if (instance == null) {
-            instance = new EMFUtil();
-            return instance;
-        } else {
-            return instance;
-        }
     }
 
     /**
