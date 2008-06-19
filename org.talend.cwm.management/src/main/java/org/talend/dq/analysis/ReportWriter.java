@@ -68,7 +68,7 @@ public class ReportWriter {
         resourceContents.addAll(report.getDescription());
 
         addAnaResourceOfReport(report, util);
-        boolean saved = util.save();
+        boolean saved = util.saveSingleResource(report.eResource());
         if (!saved) {
             rc.setReturnCode("Problem while saving report " + report.getName() + ". " + util.getLastErrorMessage(), saved);
         }
@@ -86,7 +86,7 @@ public class ReportWriter {
             TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
             if (dependencyReturn.isOk()) {
                 // util.getResourceSet().getResources().add(DependenciesHandler.getInstance().getDependencyResource());
-                util.getResourceSet().getResources().add(ana.eResource());
+                util.saveSingleResource(ana.eResource());
             }
         }
     }
@@ -107,7 +107,7 @@ public class ReportWriter {
 
         EMFUtil util = EMFUtil.getInstance();
         addAnaResourceOfReport(report, util);
-        if (!saved || !util.save()) {
+        if (!saved) {
             rc.setReturnCode("Problem while saving report " + report.getName() + ". ", saved);
         }
         return rc;

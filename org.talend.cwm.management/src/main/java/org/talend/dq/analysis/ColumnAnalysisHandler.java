@@ -15,6 +15,7 @@ package org.talend.dq.analysis;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -286,7 +287,14 @@ public class ColumnAnalysisHandler {
 
     public boolean saveModifiedResources() {
         EMFUtil util = EMFUtil.getInstance();
-        util.getResourceSet().getResources().addAll(this.modifiedResources);
-        return util.save();
+        boolean saveFlag = true;
+        Iterator<Resource> iterator = modifiedResources.iterator();
+        while (iterator.hasNext()) {
+            saveFlag = util.saveSingleResource(iterator.next());
+            if (!saveFlag) {
+                break;
+            }
+        }
+        return saveFlag;
     }
 }
