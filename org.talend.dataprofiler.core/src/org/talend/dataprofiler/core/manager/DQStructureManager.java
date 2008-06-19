@@ -12,21 +12,30 @@
 // ============================================================================
 package org.talend.dataprofiler.core.manager;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.Enumeration;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
@@ -35,6 +44,8 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
  * 
  */
 public final class DQStructureManager {
+
+    private static final String PATTERN_PATH = "/patterns";
 
     public static final String REPORTS = "Reports";
 
@@ -75,7 +86,8 @@ public final class DQStructureManager {
             this.createNewFoler(project, REPORTS);
             // create "Libraries" project
             project = this.createNewProject(LIBRARIES, shell);
-            this.createNewFoler(project, PATTERNS);
+            IFolder patternFolder = this.createNewFoler(project, PATTERNS);
+            this.copyPatternFiles(patternFolder);
             this.createNewFoler(project, SOURCE_FILES);
             // create "Metadata" project
             project = this.createNewProject(METADATA, shell);
@@ -124,48 +136,11 @@ public final class DQStructureManager {
         // run the new project creation o`peration
         // try {
         ProgressUI.popProgressDialog(op, shell);
-        // } catch (InterruptedException e) {
-        // return null;
-        // } catch (InvocationTargetException e) {
-        // Throwable t = e.getTargetException();
-        // if (t instanceof ExecutionException
-        // && t.getCause() instanceof CoreException) {
-        // CoreException cause = (CoreException) t.getCause();
-        // StatusAdapter status;
-        // if (cause.getStatus().getCode() == IResourceStatus.CASE_VARIANT_EXISTS) {
-        // status = new StatusAdapter(
-        //
-        // new Status(
-        // IStatus.WARNING,
-        // CorePlugin.PLUGIN_ID,
-        // IStatus.WARNING,
-        // "The underlying file system is case insensitive. There is an existing project which conflicts with"
-        // + newProjectHandle.getName(), cause));
-        // } else {
-        // status = new StatusAdapter(new Status(cause.getStatus()
-        // .getSeverity(), CorePlugin.PLUGIN_ID,
-        // cause.getStatus().getSeverity(),
-        // "Creation Problems", cause));
-        // }
-        // status.setProperty(StatusAdapter.TITLE_PROPERTY,
-        // "Creation Problems");
-        // StatusManager.getManager().handle(status, StatusManager.BLOCK);
-        // } else {
-        // StatusAdapter status = new StatusAdapter(new Status(
-        // IStatus.WARNING, CorePlugin.PLUGIN_ID, 0,
-        // "Internal error:" + t.getMessage(), t));
-        // status.setProperty(StatusAdapter.TITLE_PROPERTY,
-        // "Creation Problems");
-        // StatusManager.getManager().handle(status,
-        // StatusManager.LOG | StatusManager.BLOCK);
-        // }
-        // return null;
-        // }
 
         return newProjectHandle;
     }
 
-    private void createNewFoler(IProject project, String folderName) throws CoreException {
+    private IFolder createNewFoler(IProject project, String folderName) throws CoreException {
         IFolder desFolder = project.getFolder(folderName);
         // ResourceAttributes attr = new ResourceAttributes();
         // attr.setReadOnly(true);
@@ -173,6 +148,44 @@ public final class DQStructureManager {
         if (!desFolder.exists()) {
             desFolder.create(false, true, null);
         }
+        return desFolder;
     }
 
+    /**
+     * Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
+     * 
+     * @param patternFolder
+     * @throws IOException
+     * @throws CoreException
+     */
+    @SuppressWarnings("unchecked")
+    private void copyPatternFiles(IFolder patternFolder) throws IOException, CoreException {
+        Enumeration patterns = null;
+        patterns = CorePlugin.getDefault().getBundle().findEntries(PATTERN_PATH, PluginConstant.PATTERN_SUFFIX, true);
+        while (patterns.hasMoreElements()) {
+            URL nextElement = (URL) patterns.nextElement();
+            URL fileURL = null;
+            try {
+                fileURL = FileLocator.toFileURL(nextElement);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String fileName = new Path(fileURL.getPath()).lastSegment();
+            InputStream openStream = null;
+            openStream = fileURL.openStream();
+            copyFileFromSrc(openStream, fileName, patternFolder);
+        }
+
+    }
+
+    private void copyFileFromSrc(InputStream inputStream, String fileName, IFolder folder) throws CoreException {
+        if (inputStream == null) {
+            return;
+        }
+        IFile file = folder.getFile(fileName);
+        if (file.exists()) {
+            return;
+        }
+        file.create(inputStream, false, null);
+    }
 }
