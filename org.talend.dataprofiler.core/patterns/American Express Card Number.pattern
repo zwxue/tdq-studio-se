@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.domain.pattern:Pattern xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmi:id="_FcDG0D17Ed2p44yVAaDvbQ" name="American Express Card Number">
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_FcDG0T17Ed2p44yVAaDvbQ">
+    <expression xmi:id="_FcDG0j17Ed2p44yVAaDvbQ" body="'^3[47][0-9]{13}$'" language="SQL"/>
+  </components>
+</dataquality.domain.pattern:Pattern>

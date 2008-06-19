@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.domain.pattern:Pattern xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmi:id="_uQpsUD18Ed2p44yVAaDvbQ" name="Week Day">
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_uQpsUT18Ed2p44yVAaDvbQ">
+    <expression xmi:id="_uQpsUj18Ed2p44yVAaDvbQ" body="'^(Sun|Mon|(T(ues|hurs))|Fri)(day|\.)?$|Wed(\.|nesday)?$|Sat(\.|urday)?$|T((ue?)|(hu?r?))\.?$'" language="SQL"/>
+  </components>
+</dataquality.domain.pattern:Pattern>
