@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.domain.pattern:Pattern xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmi:id="_u5bjUD4bEd24WPpU35gV1A" name="Integer">
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_u5bjUT4bEd24WPpU35gV1A">
+    <expression xmi:id="_u5bjUj4bEd24WPpU35gV1A" body="'^[-+]?[1-9][[:digit:]]*\\.?[0]*$'" language="MYSQL"/>
+  </components>
+</dataquality.domain.pattern:Pattern>

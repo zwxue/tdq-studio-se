@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.domain.pattern:Pattern xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmi:id="_NwUnsD4LEd20H7qFpzB9dg" name="BE Code postal">
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_NwUnsT4LEd20H7qFpzB9dg">
+    <expression xmi:id="_NwUnsj4LEd20H7qFpzB9dg" body="'^(F-[0-9]{4,5}|B-[0-9]{4})$'" language="SQL"/>
+  </components>
+</dataquality.domain.pattern:Pattern>
