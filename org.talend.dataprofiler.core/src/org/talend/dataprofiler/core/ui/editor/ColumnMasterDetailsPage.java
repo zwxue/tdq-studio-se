@@ -383,10 +383,10 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         //           
         // }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
-        boolean modifiedResourcesSaved = analysisHandler.saveModifiedResources();
-        if (!modifiedResourcesSaved) {
-            log.error("Problem when saving modified resource.");
-        }
+        // boolean modifiedResourcesSaved = analysisHandler.saveModifiedResources();
+        // if (!modifiedResourcesSaved) {
+        // log.error("Problem when saving modified resource.");
+        // }
         // AnalysisWriter writer = new AnalysisWriter();
 
         String urlString = analysis.eResource() != null ? analysis.eResource().getURI().toFileString()
