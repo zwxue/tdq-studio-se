@@ -1,7 +1,7 @@
 /**
  * <copyright>
  * </copyright>
- *
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.impl;
@@ -24,22 +24,23 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.DateParametersImpl#getDateAggregationType <em>Date Aggregation Type</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.DateParametersImpl#getDateAggregationType <em>Date Aggregation Type</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class DateParametersImpl extends EObjectImpl implements DateParameters {
+
     /**
      * The default value of the '{@link #getDateAggregationType() <em>Date Aggregation Type</em>}' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #getDateAggregationType()
-     * @generated
+     * @generated NOT code generation does not set the correct default!
      * @ordered
      */
-    protected static final DateGrain DATE_AGGREGATION_TYPE_EDEFAULT = DateGrain.DAY;
+    protected static final DateGrain DATE_AGGREGATION_TYPE_EDEFAULT = DateGrain.YEAR;
 
     /**
      * The cached value of the '{@link #getDateAggregationType() <em>Date Aggregation Type</em>}' attribute.
@@ -99,8 +100,8 @@ public class DateParametersImpl extends EObjectImpl implements DateParameters {
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.DATE_PARAMETERS__DATE_AGGREGATION_TYPE:
-                return getDateAggregationType();
+        case IndicatorsPackage.DATE_PARAMETERS__DATE_AGGREGATION_TYPE:
+            return getDateAggregationType();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -113,9 +114,9 @@ public class DateParametersImpl extends EObjectImpl implements DateParameters {
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.DATE_PARAMETERS__DATE_AGGREGATION_TYPE:
-                setDateAggregationType((DateGrain)newValue);
-                return;
+        case IndicatorsPackage.DATE_PARAMETERS__DATE_AGGREGATION_TYPE:
+            setDateAggregationType((DateGrain) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
@@ -128,9 +129,9 @@ public class DateParametersImpl extends EObjectImpl implements DateParameters {
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.DATE_PARAMETERS__DATE_AGGREGATION_TYPE:
-                setDateAggregationType(DATE_AGGREGATION_TYPE_EDEFAULT);
-                return;
+        case IndicatorsPackage.DATE_PARAMETERS__DATE_AGGREGATION_TYPE:
+            setDateAggregationType(DATE_AGGREGATION_TYPE_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
@@ -143,8 +144,8 @@ public class DateParametersImpl extends EObjectImpl implements DateParameters {
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.DATE_PARAMETERS__DATE_AGGREGATION_TYPE:
-                return dateAggregationType != DATE_AGGREGATION_TYPE_EDEFAULT;
+        case IndicatorsPackage.DATE_PARAMETERS__DATE_AGGREGATION_TYPE:
+            return dateAggregationType != DATE_AGGREGATION_TYPE_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -165,4 +166,4 @@ public class DateParametersImpl extends EObjectImpl implements DateParameters {
         return result.toString();
     }
 
-} //DateParametersImpl
+} // DateParametersImpl

@@ -28,7 +28,6 @@ import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -486,7 +485,8 @@ public class ColumnIndicator {
                     parameters.setDateParameters(dateParameters);
                 }
 
-                dateParameters.setDateAggregationType(DateGrain.YEAR);
+                // MOD scorreia 2008-06-19 default is already set in the model
+                // dateParameters.setDateAggregationType(DateGrain.YEAR);
             }
         }
         IndicatorUnit indicatorUnit = new IndicatorUnit(indicatorEnum, indicator, this);
