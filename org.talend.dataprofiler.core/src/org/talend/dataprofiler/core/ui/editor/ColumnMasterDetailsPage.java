@@ -93,7 +93,9 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
     private String stringDataFilter;
 
-    private static final int TREE_MAX_LENGTH = 500;
+    private Composite chartComposite;
+
+    private static final int TREE_MAX_LENGTH = 400;
 
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -152,11 +154,28 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                RunAnalysisAction runAction = new RunAnalysisAction();
-                runAction.run();
+                new RunAnalysisAction().run();
+                refreshChart(form);
             }
 
         });
+    }
+
+    protected void refreshChart(ScrolledForm form) {
+        if (chartComposite != null) {
+            try {
+                for (Control control : chartComposite.getChildren()) {
+                    control.dispose();
+                }
+
+                createPreviewCharts(form, chartComposite, true);
+                chartComposite.layout();
+                form.reflow(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+        }
     }
 
     protected void fireTextChange() {
@@ -235,9 +254,9 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
 
-        final Composite composite = toolkit.createComposite(sectionClient);
-        composite.setLayout(new GridLayout());
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        chartComposite = toolkit.createComposite(sectionClient);
+        chartComposite.setLayout(new GridLayout());
+        chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         final Analysis analysis = analysisHandler.getAnalysis();
 
@@ -245,7 +264,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
             public void linkActivated(HyperlinkEvent e) {
 
-                for (Control control : composite.getChildren()) {
+                for (Control control : chartComposite.getChildren()) {
                     control.dispose();
                 }
 
@@ -257,21 +276,20 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
                             "Do you want to run the analysis or simply see sample data?");
 
                     if (returnCode) {
-                        RunAnalysisAction runAction = new RunAnalysisAction();
-                        runAction.run();
-                        createPreviewCharts(form, composite, true);
+                        new RunAnalysisAction().run();
+                        createPreviewCharts(form, chartComposite, true);
                         message.setVisible(false);
                     } else {
-                        createPreviewCharts(form, composite, false);
+                        createPreviewCharts(form, chartComposite, false);
                         message.setText("Warning: currently displayed values are only sample values. "
                                 + "Run the analysis to get the real values");
                         message.setVisible(true);
                     }
                 } else {
-                    createPreviewCharts(form, composite, true);
+                    createPreviewCharts(form, chartComposite, true);
                 }
 
-                composite.layout();
+                chartComposite.layout();
                 form.reflow(true);
             }
 

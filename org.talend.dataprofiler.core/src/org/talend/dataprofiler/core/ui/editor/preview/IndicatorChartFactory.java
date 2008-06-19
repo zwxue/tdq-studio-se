@@ -109,9 +109,6 @@ public class IndicatorChartFactory {
         JFreeChart chart = ChartFactory.createBarChart(null, titile, "Value", dataset, PlotOrientation.HORIZONTAL, false, false,
                 false);
 
-        CategoryPlot plot = chart.getCategoryPlot();
-        // plot.setForegroundAlpha(0.50f);
-
         try {
 
             return ChartUtils.convertToImage(chart, CHART_WIDTH, CHART_HEIGHT);
