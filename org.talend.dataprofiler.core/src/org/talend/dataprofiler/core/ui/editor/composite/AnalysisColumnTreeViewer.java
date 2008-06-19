@@ -63,6 +63,8 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorParam
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
  * @author rli
@@ -265,11 +267,21 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     public void createOneUnit(final TreeItem treeItem, IndicatorUnit indicatorUnit) {
         final TreeItem indicatorItem = new TreeItem(treeItem, SWT.NONE);
         final IndicatorUnit unit = indicatorUnit;
-        final IndicatorEnum indicatorEnum = indicatorUnit.getType();
+        IndicatorEnum type = indicatorUnit.getType();
+        final IndicatorEnum indicatorEnum = type;
         indicatorItem.setData(COLUMN_INDICATOR_KEY, treeItem.getData(COLUMN_INDICATOR_KEY));
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
-        indicatorItem.setText(0, indicatorUnit.getType().getLabel());
+        String label = type.getLabel();
+        if (IndicatorEnum.PatternMatchingIndicatorEnum.compareTo(type) == 0) {
+            PatternMatchingIndicator pindicator = (PatternMatchingIndicator) unit.getIndicator();
+            IndicatorParameters parameters = pindicator.getParameters();
+            if (parameters != null) {
+                label = parameters.getDataValidDomain().getPatterns().get(0).getName();
+            }
+            indicatorItem.setImage(0, ImageLib.getImage(ImageLib.PATTERN_REG));
+        }
+        indicatorItem.setText(0, label);
 
         TreeEditor optionEditor;
         // if (indicatorEnum.hasChildren()) {
