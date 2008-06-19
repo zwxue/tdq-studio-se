@@ -19,7 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.dataquality.analysis.category.AnalysisCategories;
 import org.talend.dataquality.analysis.category.util.CategorySwitch;
 
@@ -39,18 +39,18 @@ public final class CategoryHandler {
     }
 
     private static AnalysisCategories loadFromFile() {
+        EMFUtil util = new EMFUtil();
         String pathName = "/org.talend.cwm.management/My.category";
         URI uri = URI.createPlatformPluginURI(pathName, false);
         Resource catFile = null;
-        ResourceSetImpl resourceSetImpl = new ResourceSetImpl();
         try {
-            catFile = resourceSetImpl.getResource(uri, true);
+            catFile = util.getResourceSet().getResource(uri, true);
         } catch (RuntimeException e) {
             log.error(e.getMessage());
         }
         if (catFile == null) {
             // try to load from a local file
-            catFile = resourceSetImpl.getResource(URI.createFileURI(".." + File.separator + pathName), true);
+            catFile = util.getResourceSet().getResource(URI.createFileURI(".." + File.separator + pathName), true);
         }
         if (catFile == null) {
             log.error("No resource found at " + pathName + " URI= " + uri);
