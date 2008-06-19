@@ -3,13 +3,28 @@
 
 <product name="Talend Open Profiler" id="org.talend.dataprofiler.rcp.branding.top.product" application="org.talend.dataprofiler.rcp.branding.top.application" useFeatures="true">
 
+   <aboutInfo>
+      <image path="icons/about.gif"/>
+   </aboutInfo>
+
    <configIni use="default"/>
 
    <launcherArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="icons/alt_window_16.gif" i32="icons/alt_window_32.gif"/>
+   <windowImages i16="/org.talend.dataprofiler.rcp/icons/appli_16x16.gif" i32="/org.talend.dataprofiler.rcp/icons/appli_32x32.gif" i48="/org.talend.dataprofiler.rcp/icons/appli_48x48.gif"/>
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+
+   <vm>
+   </vm>
 
    <plugins>
       <plugin id="com.ibm.icu"/>

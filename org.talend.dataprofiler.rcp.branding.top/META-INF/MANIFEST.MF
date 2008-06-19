@@ -11,3 +11,4 @@ Require-Bundle: org.eclipse.ui,
  org.talend.dataprofiler.rcp,
  org.talend.dataprofiler.core
 Eclipse-LazyStart: true
+Bundle-Localization: plugin

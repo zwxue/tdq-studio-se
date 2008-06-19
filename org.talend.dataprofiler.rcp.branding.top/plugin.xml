@@ -22,6 +22,12 @@
                value="platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_16x16.gif,platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_32x32.gif,platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_48x48.gif">
          </property>
          <property
+            name="aboutImage"
+            value="icons/about.gif"/>
+         <property
+            name="aboutText"
+            value="%aboutText"/>
+         <property
                name="appName"
                value="Talend Open Profiler">
          </property>
