@@ -14,13 +14,14 @@ import org.talend.dataquality.indicators.MaxLengthIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLengthIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MaxLengthIndicatorImpl() {
@@ -29,6 +30,7 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -46,7 +48,7 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
         boolean ok = super.handle(data);
         if (data != null) {
             String str = (String) data;
-            if (length.intValue() < str.length()) {
+            if (length == LENGTH_EDEFAULT || length.intValue() < str.length()) {
                 length = Long.valueOf(str.length());
             }
         }
