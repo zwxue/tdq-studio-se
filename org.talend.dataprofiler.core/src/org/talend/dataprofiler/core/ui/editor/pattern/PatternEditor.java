@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.editor.pattern;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -75,21 +74,6 @@ public class PatternEditor extends FormEditor {
     public void setDirty(boolean isDirty) {
         this.isDirty = isDirty;
         firePropertyChange(IEditorPart.PROP_DIRTY);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
-     */
-    protected void setInput(IEditorInput input) {
-        super.setInput(input);
-        // FileEditorInput fileEditorInput = (FileEditorInput) input;
-        // String name = fileEditorInput.getFile().getName();
-        // if (name.endsWith(PluginConstant.ANA_SUFFIX)) {
-        // Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(fileEditorInput.getFile());
-        // analysisType = findAnalysis.getParameters().getAnalysisType();
-        // }
     }
 
     /**

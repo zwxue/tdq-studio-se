@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -122,9 +123,10 @@ public class CreateNewReportWizard extends Wizard {
                 } else {
                     ReturnCode saved = writer.save(report, file);
                     if (saved.isOk()) {
+                        IFile resourceFile = reportParameter.getFolderProvider().getFolderResource().getFile(file.getName());
                         log.info("Saved in  " + file.getAbsolutePath());
                         Resource resource = report.eResource();
-                        RepResourceFileHelper.getInstance().register(resource.getURI().toFileString(), resource);
+                        RepResourceFileHelper.getInstance().register(resourceFile, resource);
                         // for (Analysis analysis : reportParameter.getAnalysises()) {
                         // TaggedValueHelper.setTaggedValue(analysis, reportParameter.getName() +
                         // PluginConstant.REP_SUFFIX,

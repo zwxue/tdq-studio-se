@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,18 +26,18 @@ import org.talend.commons.emf.EMFSharedResources;
  */
 public class ResourceFileMap {
 
-    private Map<String, Resource> registedResourceMap = new HashMap<String, Resource>();
+    private Map<IFile, Resource> registedResourceMap = new HashMap<IFile, Resource>();
 
     protected boolean resourceChanged = true;
 
     // private ResourceFileMapHelper instance = new ResourceFileMapHelper();
 
-    public void register(String fileString, Resource resource) {
+    public void register(IFile fileString, Resource resource) {
         registedResourceMap.put(fileString, resource);
     }
 
     public void remove(IFile file) {
-        this.registedResourceMap.remove(file.getLocation().toFile().getAbsolutePath());
+        this.registedResourceMap.remove(file);
     }
 
     public void clear() {
@@ -46,36 +45,20 @@ public class ResourceFileMap {
     }
 
     /**
-     * DOC zqin Comment method "getFileResource".
+     * DOC rli Comment method "createResource".
      * 
      * @param file
      * @return
      */
     public Resource getFileResource(IFile file) {
-        String absolutePath = file.getLocation().toFile().getAbsolutePath();
-        return getPathResource(absolutePath);
-    }
-
-    protected Resource getFileResource(File file) {
-        String absolutePath = file.getAbsolutePath();
-        return getPathResource(absolutePath);
-    }
-
-    /**
-     * DOC xy Comment method "createResource".
-     * 
-     * @param absolutePath
-     * @return
-     */
-    protected Resource getPathResource(String absolutePath) {
-        Resource res = registedResourceMap.get(absolutePath);
+        Resource res = registedResourceMap.get(file);
         if (res != null) {
             return res;
         }
-        URI uri = URI.createFileURI(absolutePath);
+        URI uri = URI.createFileURI(file.getLocation().toFile().getAbsolutePath());
         ResourceSet rs = EMFSharedResources.getSharedEmfUtil().getResourceSet();
         Resource resource = rs.getResource(uri, true);
-        this.registedResourceMap.put(absolutePath, resource);
+        this.registedResourceMap.put(file, resource);
         return resource;
     }
 

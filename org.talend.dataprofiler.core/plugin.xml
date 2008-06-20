@@ -313,7 +313,7 @@
             contributorClass="org.talend.dataprofiler.core.ui.editor.AnalysisFormEditorContributor"
             extensions="ana"
             icon="icons/chart_bar.png"
-            id="org.talend.dataprofiler.core.ui.editor.AnalysisEditor"
+            id="org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"
             name="AnalysisEditor">
       </editor>
       <editor
@@ -322,6 +322,13 @@
             icon="icons/TdDataProvider.gif"
             id="org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"
             name="ConnectionEditor">
+      </editor>
+      <editor
+            class="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
+            extensions="pattern"
+            icon="icons/sample.gif"
+            id="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
+            name="PatternEditor">
       </editor>
    </extension>
   <extension

@@ -106,10 +106,13 @@ public abstract class AbstractAnalysisWizard extends Wizard {
         // return null;
         // } else {
         TypedReturnCode<File> saved = writer.createAnalysisFile(analysis, folder);
+        IFile file;
         if (saved.isOk()) {
             log.info("Saved in  " + folder.getAbsolutePath());
+            File object = saved.getObject();
+            file = folderResource.getFile(object.getName());
             Resource anaResource = analysis.eResource();
-            AnaResourceFileHelper.getInstance().register(anaResource.getURI().toFileString(), anaResource);
+            AnaResourceFileHelper.getInstance().register(file, anaResource);
             AnaResourceFileHelper.getInstance().setResourceChanged(true);
         } else {
             throw new DataprofilerCoreException("Problem saving file: " + folder.getAbsolutePath() + ": " + saved.getMessage());
@@ -117,8 +120,8 @@ public abstract class AbstractAnalysisWizard extends Wizard {
 
         CorePlugin.getDefault().refreshWorkSpace();
         ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
-        File object = saved.getObject();
-        return folderResource.getFile(object.getName());
+
+        return file;
 
     }
 

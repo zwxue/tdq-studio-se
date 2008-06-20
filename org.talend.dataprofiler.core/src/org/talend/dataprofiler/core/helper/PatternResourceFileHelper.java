@@ -25,39 +25,38 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.EMFSharedResources;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.ui.wizard.report.provider.AnalysisEntity;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.util.AnalysisSwitch;
-import org.talend.dq.analysis.AnalysisWriter;
-import org.talend.utils.sugars.ReturnCode;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public final class AnaResourceFileHelper extends ResourceFileMap {
+public final class PatternResourceFileHelper extends ResourceFileMap {
 
-    private static Logger log = Logger.getLogger(AnaResourceFileHelper.class);
+    private static Logger log = Logger.getLogger(PatternResourceFileHelper.class);
 
-    private static AnaResourceFileHelper instance;
+    private static PatternResourceFileHelper instance;
 
-    private Map<IFile, AnalysisEntity> allAnalysisMap = new HashMap<IFile, AnalysisEntity>();
+    private Map<IFile, Pattern> patternsMap = new HashMap<IFile, Pattern>();
 
-    private AnaResourceFileHelper() {
+    private PatternResourceFileHelper() {
         super();
     }
 
-    public static AnaResourceFileHelper getInstance() {
+    public static PatternResourceFileHelper getInstance() {
         if (instance == null) {
-            instance = new AnaResourceFileHelper();
+            instance = new PatternResourceFileHelper();
         }
         return instance;
     }
 
-    public Collection<AnalysisEntity> getAllAnalysis() {
+    public Collection<Pattern> getAllAnalysis() {
         if (resourceChanged) {
-            allAnalysisMap.clear();
+            patternsMap.clear();
             IFolder defaultAnalysFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
                     PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
             try {
@@ -67,7 +66,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
             }
             resourceChanged = false;
         }
-        return allAnalysisMap.values();
+        return patternsMap.values();
     }
 
     private void searchAllAnalysis(IFolder folder) throws CoreException {
@@ -76,7 +75,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
                 searchAllAnalysis(folder.getFolder(resource.getName()));
             }
             IFile file = (IFile) resource;
-            findAnalysis(file);
+            findPattern(file);
 
         }
     }
@@ -87,18 +86,17 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
      * @param file
      * @return
      */
-    public Analysis findAnalysis(IFile file) {
-        AnalysisEntity analysisEntity = allAnalysisMap.get(file);
-        if (analysisEntity != null) {
-            return analysisEntity.getAnalysis();
+    public Pattern findPattern(IFile file) {
+        Pattern pattern = patternsMap.get(file);
+        if (pattern != null) {
+            return pattern;
         }
         Resource fileResource = getFileResource(file);
-        Analysis analysis = retireAnalysis(fileResource);
-        if (analysis != null) {
-            AnalysisEntity entity = new AnalysisEntity(analysis);
-            allAnalysisMap.put(file, entity);
+        pattern = retirePattern(fileResource);
+        if (pattern != null) {
+            patternsMap.put(file, pattern);
         }
-        return analysis;
+        return pattern;
     }
 
     /**
@@ -107,7 +105,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
      * @param fileResource
      * @return
      */
-    private Analysis retireAnalysis(Resource fileResource) {
+    private Pattern retirePattern(Resource fileResource) {
         EList<EObject> contents = fileResource.getContents();
         if (contents.isEmpty()) {
             log.error("No content in " + fileResource);
@@ -115,35 +113,34 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         if (log.isDebugEnabled()) {
             log.debug("Nb elements in contents " + contents.size());
         }
-        AnalysisSwitch<Analysis> mySwitch = new AnalysisSwitch<Analysis>() {
+        PatternSwitch<Pattern> mySwitch = new PatternSwitch<Pattern>() {
 
-            public Analysis caseAnalysis(Analysis object) {
+            public Pattern casePattern(Pattern object) {
                 return object;
             }
         };
-        Analysis analysis = null;
+        Pattern pattern = null;
         if (contents != null && contents.size() != 0) {
-            analysis = mySwitch.doSwitch(contents.get(0));
+            pattern = mySwitch.doSwitch(contents.get(0));
         }
-        return analysis;
+        return pattern;
     }
 
     public void remove(IFile file) {
         super.remove(file);
-        this.allAnalysisMap.remove(file);
+        this.patternsMap.remove(file);
     }
 
     public void clear() {
         super.clear();
-        this.allAnalysisMap.clear();
+        this.patternsMap.clear();
     }
 
-    public ReturnCode save(Analysis analysis) {
-        AnalysisWriter writer = new AnalysisWriter();
-        // MODSCA 20080425 do not overwrite existing file.
-        // File file = new File(analysis.getUrl());
-        ReturnCode saved = writer.save(analysis);
-        if (saved.isOk()) {
+    @SuppressWarnings("static-access")
+    public boolean save(Pattern pattern) {
+        EMFUtil sharedEmfUtil = EMFSharedResources.getSharedEmfUtil();
+        boolean saved = sharedEmfUtil.saveSingleResource(pattern.eResource());
+        if (saved) {
             setResourceChanged(true);
         }
         return saved;
