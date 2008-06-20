@@ -179,4 +179,14 @@ public class PatternDNDFactory {
         }
     }
 
+    /**
+     * DOC qzhang Comment method "getPattern".
+     * 
+     * @param fe
+     * @return
+     * @deprecated use directly PatternResourceFileHelper.getInstance().findPattern(file);
+     */
+    public static Pattern getPattern(IFile file) {
+        return PatternResourceFileHelper.getInstance().findPattern(file);
+    }
 }
