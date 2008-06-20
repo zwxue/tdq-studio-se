@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -92,8 +93,10 @@ public class CreatePatternWizard extends Wizard {
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         IPath location = folder.getLocation();
-        location = location.append(name);
-        location = location.addFileExtension(NewSourcePatternActionProvider.EXTENSION_PATTERN);
+        String fname = DqRepositoryViewService.createFilename(folder.getName(), name,
+                NewSourcePatternActionProvider.EXTENSION_PATTERN);
+        location = location.removeLastSegments(1);
+        location = location.append(fname);
         util.addPoolToResourceSet(new File(location.toPortableString()), pattern);
         util.save();
         return true;

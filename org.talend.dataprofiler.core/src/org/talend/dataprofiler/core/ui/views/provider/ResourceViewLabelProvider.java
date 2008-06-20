@@ -17,8 +17,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -31,8 +29,10 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.pattern.PatternDNDFactory;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.utils.DateFormatUtils;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -102,9 +102,9 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             TdReport findReport = RepResourceFileHelper.getInstance().findReport(fileElement);
             return findReport.getName();
         } else if (input.endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
-            IPath path = new Path(input);
-            path = path.removeFileExtension();
-            return path.toString();
+            IFile file = (IFile) element;
+            Pattern pattern = PatternDNDFactory.getPattern(file);
+            return pattern.getName();
         }
         return super.decorateText(input, element);
     }
