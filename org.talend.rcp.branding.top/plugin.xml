@@ -15,7 +15,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.talend.dataprofiler.rcp.branding.top.application"
+            application="org.talend.rcp.branding.top.application"
             name="Talend Open Profiler">
          <property
                name="windowImages"
@@ -38,19 +38,19 @@
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"
             icon="platform:/plugin/org.talend.dataprofiler.rcp/icons/appli_16x16.gif"
-            id="org.talend.dataprofiler.rcp.branding.top.intro">
+            id="org.talend.rcp.branding.top.intro">
       </intro>
       <introProductBinding
-            introId="org.talend.dataprofiler.rcp.branding.top.intro"
-            productId="org.talend.dataprofiler.rcp.branding.top.product">
+            introId="org.talend.rcp.branding.top.intro"
+            productId="org.talend.rcp.branding.top.product">
       </introProductBinding>
    </extension>
    <extension
          point="org.eclipse.ui.intro.config">
       <config
-            introId="org.talend.dataprofiler.rcp.branding.top.intro"
+            introId="org.talend.rcp.branding.top.intro"
             content="introContent.xml"
-            id="org.talend.dataprofiler.rcp.branding.top.configId">
+            id="org.talend.rcp.branding.top.configId">
          <presentation
                home-page-id="root">
             <implementation
@@ -62,7 +62,7 @@
    </extension>
    <extension
             point="org.talend.dataprofiler.core.service">
-       <Service class="org.talend.dataprofiler.rcp.branding.top.TOPBrandingService"
+       <Service class="org.talend.rcp.branding.top.TOPBrandingService"
                serviceId="org.talend.dataprofiler.core.service.IBrandingService"/>
    </extension>
 

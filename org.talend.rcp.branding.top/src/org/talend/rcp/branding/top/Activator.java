@@ -1,4 +1,4 @@
-package org.talend.dataprofiler.rcp.branding.top;
+package org.talend.rcp.branding.top;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.talend.dataprofiler.rcp.branding.top";
+	public static final String PLUGIN_ID = "org.talend.rcp.branding.top";
 
 	// The shared instance
 	private static Activator plugin;
