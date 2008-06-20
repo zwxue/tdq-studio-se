@@ -55,6 +55,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction helpAction;
 
+    private IWorkbenchAction welcomeAction;
+
     private IWorkbenchAction resetPerspectiveAction;
 
     private IWorkbenchAction colseAction;
@@ -77,11 +79,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         saveAllAction = ActionFactory.SAVE_ALL.create(window);
         register(saveAllAction);
-        
+
         register(ActionFactory.DELETE.create(window));
 
         preferenceAction = ActionFactory.PREFERENCES.create(window);
         register(preferenceAction);
+
+        welcomeAction = ActionFactory.INTRO.create(window);
+        register(welcomeAction);
 
         helpAction = ActionFactory.HELP_CONTENTS.create(window);
         register(helpAction);
@@ -123,6 +128,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         windowMenu.add(resetPerspectiveAction);
         windowMenu.add(new ShowViewAction());
         // Help
+        helpMenu.add(welcomeAction);
         helpMenu.add(helpAction);
         helpMenu.add(aboutAction);
     }
