@@ -45,6 +45,8 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
  */
 public final class DQStructureManager {
 
+    private static final String DEMO_PATH = "/demo";
+
     private static final String PATTERN_PATH = "/patterns";
 
     public static final String REPORTS = "Reports";
@@ -84,11 +86,16 @@ public final class DQStructureManager {
             IProject project = this.createNewProject(DATA_PROFILING, shell);
             this.createNewFoler(project, ANALYSIS);
             this.createNewFoler(project, REPORTS);
+
             // create "Libraries" project
             project = this.createNewProject(LIBRARIES, shell);
             IFolder patternFolder = this.createNewFoler(project, PATTERNS);
-            this.copyPatternFiles(patternFolder);
-            this.createNewFoler(project, SOURCE_FILES);
+            // Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
+            this.copyFilesToFolder(PATTERN_PATH, PluginConstant.PATTERN_SUFFIX, true, patternFolder);
+            IFolder sqlSourceFolder = this.createNewFoler(project, SOURCE_FILES);
+            // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to folder "Libraries/Source Files".
+            this.copyFilesToFolder(DEMO_PATH, PluginConstant.SQL_SUFFIX, true, sqlSourceFolder);
+
             // create "Metadata" project
             project = this.createNewProject(METADATA, shell);
             this.createNewFoler(project, DB_CONNECTIONS);
@@ -152,16 +159,25 @@ public final class DQStructureManager {
     }
 
     /**
-     * Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
+     * Copy the files from srcPath to destination folder.
      * 
-     * @param patternFolder
+     * @param srcPath The path name in which to look. The path is always relative to the root of this bundle and may
+     * begin with &quot;/&quot;. A path value of &quot;/&quot; indicates the root of this bundle.
+     * @param srcFilePattern The file name pattern for selecting entries in the specified path. The pattern is only
+     * matched against the last element of the entry path and it supports substring matching, as specified in the Filter
+     * specification, using the wildcard character (&quot;*&quot;). If null is specified, this is equivalent to
+     * &quot;*&quot; and matches all files.
+     * @param recurse If <code>true</code>, recurse into subdirectories. Otherwise only return entries from the
+     * specified path.
+     * @param desFolder The destination folder.
      * @throws IOException
      * @throws CoreException
      */
     @SuppressWarnings("unchecked")
-    private void copyPatternFiles(IFolder patternFolder) throws IOException, CoreException {
+    private void copyFilesToFolder(String srcPath, String srcFilePattern, boolean recurse, IFolder desFolder) throws IOException,
+            CoreException {
         Enumeration patterns = null;
-        patterns = CorePlugin.getDefault().getBundle().findEntries(PATTERN_PATH, PluginConstant.PATTERN_SUFFIX, true);
+        patterns = CorePlugin.getDefault().getBundle().findEntries(srcPath, srcFilePattern, recurse);
         while (patterns.hasMoreElements()) {
             URL nextElement = (URL) patterns.nextElement();
             URL fileURL = null;
@@ -173,12 +189,12 @@ public final class DQStructureManager {
             String fileName = new Path(fileURL.getPath()).lastSegment();
             InputStream openStream = null;
             openStream = fileURL.openStream();
-            copyFileFromSrc(openStream, fileName, patternFolder);
+            copyFileToFolder(openStream, fileName, desFolder);
         }
 
     }
 
-    private void copyFileFromSrc(InputStream inputStream, String fileName, IFolder folder) throws CoreException {
+    private void copyFileToFolder(InputStream inputStream, String fileName, IFolder folder) throws CoreException {
         if (inputStream == null) {
             return;
         }

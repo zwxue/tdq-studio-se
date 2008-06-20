@@ -45,6 +45,8 @@ public final class PluginConstant {
 
     public static final String PATTERN_SUFFIX = "*.pattern";
 
+    public static final String SQL_SUFFIX = "*.sql";
+
     public static final String METADATA_PROJECTNAME = DQStructureManager.METADATA;
 
     public static final String DATA_PROFILING_PROJECTNAME = DQStructureManager.DATA_PROFILING;
