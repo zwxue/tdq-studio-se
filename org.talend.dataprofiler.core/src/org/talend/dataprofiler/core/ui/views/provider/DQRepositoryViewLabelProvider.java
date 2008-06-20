@@ -50,37 +50,22 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         if (element instanceof TableFolderNode) {
             TableFolderNode node = (TableFolderNode) element;
 
-            if (node.isLoaded()) {
-                // MOD scorreia 2008-06-04 depending on the DBMS, it can be either a catalog or a schema.
-                // Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(node.getParent());
-                Package catalogOrSchema = PackageHelper.getCatalogOrSchema(node.getParent());
-                return ((IFolderNode) element).getName() + "(" + PackageHelper.getTables(catalogOrSchema).size() + ")";
-            } else {
-                return ((IFolderNode) element).getName();
-            }
+            Package catalogOrSchema = PackageHelper.getCatalogOrSchema(node.getParent());
+            return ((IFolderNode) element).getName() + "(" + PackageHelper.getTables(catalogOrSchema).size() + ")";
         }
 
         if (element instanceof ViewFolderNode) {
             ViewFolderNode node = (ViewFolderNode) element;
 
-            if (node.isLoaded()) {
-                // MOD scorreia 2008-06-04 depending on the DBMS, it can be either a catalog or a schema.
-                Package catalogOrSchema = PackageHelper.getCatalogOrSchema(node.getParent());
-                return ((IFolderNode) element).getName() + "(" + PackageHelper.getViews(catalogOrSchema).size() + ")";
-            } else {
-                return ((IFolderNode) element).getName();
-            }
+            Package catalogOrSchema = PackageHelper.getCatalogOrSchema(node.getParent());
+            return ((IFolderNode) element).getName() + "(" + PackageHelper.getViews(catalogOrSchema).size() + ")";
         }
 
         if (element instanceof ColumnFolderNode) {
             ColumnFolderNode node = (ColumnFolderNode) element;
 
-            if (node.isLoaded()) {
-                ColumnSet table = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(node.getParent());
-                return ((IFolderNode) element).getName() + "(" + ColumnSetHelper.getColumns(table).size() + ")";
-            } else {
-                return ((IFolderNode) element).getName();
-            }
+            ColumnSet table = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(node.getParent());
+            return ((IFolderNode) element).getName() + "(" + ColumnSetHelper.getColumns(table).size() + ")";
         }
 
         // PTODO qzhang fixed bug 4176: Display expressions as children of the patterns
