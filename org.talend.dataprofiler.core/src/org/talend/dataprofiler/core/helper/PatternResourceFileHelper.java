@@ -12,23 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
-import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 
@@ -52,32 +45,6 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             instance = new PatternResourceFileHelper();
         }
         return instance;
-    }
-
-    public Collection<Pattern> getAllAnalysis() {
-        if (resourceChanged) {
-            patternsMap.clear();
-            IFolder defaultAnalysFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                    PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
-            try {
-                searchAllAnalysis(defaultAnalysFolder);
-            } catch (CoreException e) {
-                e.printStackTrace();
-            }
-            resourceChanged = false;
-        }
-        return patternsMap.values();
-    }
-
-    private void searchAllAnalysis(IFolder folder) throws CoreException {
-        for (IResource resource : folder.members()) {
-            if (resource.getType() == IResource.FOLDER) {
-                searchAllAnalysis(folder.getFolder(resource.getName()));
-            }
-            IFile file = (IFile) resource;
-            findPattern(file);
-
-        }
     }
 
     /**

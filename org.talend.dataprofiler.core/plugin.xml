@@ -151,6 +151,7 @@
             	    <test property="org.eclipse.core.resources.name" value="*.ana"/>
             	    <test property="org.eclipse.core.resources.name" value="*.sql"/>
             	    <test property="org.eclipse.core.resources.name" value="*.prv"/>
+            	    <test property="org.eclipse.core.resources.name" value="*.pattern"/>
                 </or>            
 	        </and>
 			</enablement>

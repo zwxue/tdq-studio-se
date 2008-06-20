@@ -23,8 +23,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.pattern.PatternDNDFactory;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -60,7 +60,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         if (element instanceof IFile) {
             IFile file = (IFile) element;
             if (file.getName().endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
-                Pattern pattern = PatternDNDFactory.getPattern(file);
+                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 return new Object[] { pattern };
             }
         }

@@ -14,9 +14,6 @@
 package org.talend.dataprofiler.core.pattern;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
@@ -29,9 +26,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.talend.commons.emf.EMFSharedResources;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
@@ -40,7 +36,6 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
@@ -125,7 +120,7 @@ public class PatternDNDFactory {
                 super.drop(event);
                 IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
 
-                Pattern pattern = getPattern(fe);
+                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe);
                 TreeItem item = (TreeItem) event.item;
                 ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
                 PatternMatchingIndicator patternMatchingIndicator = IndicatorsFactory.eINSTANCE.createPatternMatchingIndicator();
@@ -165,7 +160,7 @@ public class PatternDNDFactory {
         if (firstElement instanceof IFile) {
             IFile fe = (IFile) firstElement;
             if (NewSourcePatternActionProvider.EXTENSION_PATTERN.equals(fe.getFileExtension())) {
-                Pattern pattern = getPattern(fe);
+                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe);
                 if (pattern != null) {
                     is = false;
                 }
@@ -184,16 +179,4 @@ public class PatternDNDFactory {
         }
     }
 
-    /**
-     * DOC qzhang Comment method "getPattern".
-     * 
-     * @param fe
-     * @return
-     */
-    public static Pattern getPattern(IFile file) {
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-        Resource resource = util.getResourceSet().getResource(URI.createPlatformResourceURI(file.getFullPath().toString()), true);
-        Pattern pattern = (Pattern) EcoreUtil.getObjectByType(resource.getContents(), PatternPackage.eINSTANCE.getPattern());
-        return pattern;
-    }
 }
