@@ -309,7 +309,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.talend.dataprofiler.core.ui.editor.AnalysisEditor"
+            class="org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"
             contributorClass="org.talend.dataprofiler.core.ui.editor.AnalysisFormEditorContributor"
             extensions="ana"
             icon="icons/chart_bar.png"
@@ -360,21 +360,6 @@
            parentCategory="org.talend.dataprofiler.core.category">
      </category>
   </extension>
-  
-  <!--<extension point = "org.eclipse.ui.actionSets">
-	   <actionSet id="org.talend.dataprofiler.core..actionSet"
-		   label="Actions"
-		   visible="false">
-		   <action
-           class="org.talend.dataprofiler.core.ui.action.actions.RemoveAnalysisAction"
-           definitionId="org.talend.dataprofiler.core.removeAnalysis"
-           icon="icons/cross.png"
-           id="org.talend.dataprofiler.core.ui.action.actions.RemoveAnalysisAction"
-           label="Remove Analysis"
-           menubarPath="additions">
-		   </action>
-	   </actionSet>
-   </extension>-->
    
    <extension
 	point="org.eclipse.ui.contexts">

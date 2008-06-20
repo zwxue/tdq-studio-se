@@ -16,8 +16,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
-import org.talend.dataprofiler.core.ui.editor.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 
 
 /**

@@ -21,8 +21,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.ui.editor.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 

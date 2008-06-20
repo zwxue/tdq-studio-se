@@ -25,6 +25,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 
 /**
  * DOC rli class global comment. Detailled comment

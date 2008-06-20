@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.editor;
+package org.talend.dataprofiler.core.ui.editor.pattern;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,47 +19,21 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisType;
 
 /**
- * @author rli
- * 
+ * DOC rli class global comment. Detailled comment
  */
-public class AnalysisEditor extends FormEditor {
+public class PatternEditor extends FormEditor {
 
     private IFormPage masterPage;
 
     private boolean isDirty = false;
 
-    private AnalysisType analysisType = AnalysisType.COLUMN;
-
-    /**
-     * 
-     */
-    public AnalysisEditor() {
-    }
-
     protected void addPages() {
-        switch (analysisType) {
-        case COLUMN:
-            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "Analysis Settings");
-            setPartName("Column Analysis Editor");
-            break;
-        case CONNECTION:
-            masterPage = new ConnectionMasterDetailsPage(this, "MasterPage", "Analysis Settings");
-            setPartName("Connection Analysis Editor");
-            break;
-        default:
-            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "Analysis Settings");
-            setPartName("Column Analysis Editor");
-            break;
-        }
+        masterPage = new PatternMasterDetailsPage(this, "MasterPage", "Pattern Settings");
+        setPartName("Pattern Editor");
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
@@ -110,12 +84,12 @@ public class AnalysisEditor extends FormEditor {
      */
     protected void setInput(IEditorInput input) {
         super.setInput(input);
-        FileEditorInput fileEditorInput = (FileEditorInput) input;
-        String name = fileEditorInput.getFile().getName();
-        if (name.endsWith(PluginConstant.ANA_SUFFIX)) {
-            Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(fileEditorInput.getFile());
-            analysisType = findAnalysis.getParameters().getAnalysisType();
-        }
+        // FileEditorInput fileEditorInput = (FileEditorInput) input;
+        // String name = fileEditorInput.getFile().getName();
+        // if (name.endsWith(PluginConstant.ANA_SUFFIX)) {
+        // Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(fileEditorInput.getFile());
+        // analysisType = findAnalysis.getParameters().getAnalysisType();
+        // }
     }
 
     /**
@@ -125,11 +99,5 @@ public class AnalysisEditor extends FormEditor {
      */
     public IFormPage getMasterPage() {
         return this.masterPage;
-    }
-
-    public void performGlobalAction(String id) {
-        if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
-            ((ColumnMasterDetailsPage) masterPage).performGlobalAction(id);
-        }
     }
 }

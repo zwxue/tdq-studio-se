@@ -26,7 +26,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.ui.editor.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;

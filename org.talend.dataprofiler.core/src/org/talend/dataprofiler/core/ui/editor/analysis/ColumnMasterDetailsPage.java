@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.editor;
+package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -65,6 +65,7 @@ import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
+import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
@@ -129,7 +130,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         final ScrolledForm form = managedForm.getForm();
-        metadataSection.setText("Analysis metadata");
+        metadataSection.setText("Analysis Metadata");
         metadataSection.setDescription("Set the properties of analysis.");
         createAnalysisColumnsSection(form, topComp);
         createDataFilterSection(form, topComp);
