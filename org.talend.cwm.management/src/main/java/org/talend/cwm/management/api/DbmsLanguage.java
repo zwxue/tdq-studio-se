@@ -20,9 +20,13 @@ import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.talend.dataquality.domain.pattern.PatternComponent;
+import org.talend.dataquality.domain.pattern.PatternPackage;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Expression;
 
 import Zql.ParseException;
 import Zql.ZExp;
@@ -650,5 +654,32 @@ public class DbmsLanguage {
 
     public String orderBy() {
         return " ORDER BY ";
+    }
+
+    /**
+     * Method "getExpression".
+     * 
+     * @param patternComponent
+     * @return the expression for the correct language
+     */
+    public Expression getExpression(PatternComponent patternComponent) {
+        if (patternComponent != null && patternComponent.eClass().equals(PatternPackage.eINSTANCE.getRegularExpression())) {
+            RegularExpression regExp = (RegularExpression) patternComponent;
+            Expression expression = regExp.getExpression();
+            if (expression != null) {
+                // handle database specific patterns
+                if (is(expression.getLanguage())) {
+                    return expression;
+                }
+                // try generic language
+                if (SQL.equals(expression.getLanguage())) {
+                    return expression;
+                }
+                // else no correct language found
+                return null;
+            }
+        }
+        // not a regular expression
+        return null;
     }
 }

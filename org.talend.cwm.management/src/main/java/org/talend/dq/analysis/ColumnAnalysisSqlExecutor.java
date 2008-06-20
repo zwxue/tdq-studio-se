@@ -40,8 +40,6 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
-import org.talend.dataquality.domain.pattern.PatternPackage;
-import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -105,7 +103,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
-                createSqlQuery(stringDataFilter, indicator);
+                if (!createSqlQuery(stringDataFilter, indicator)) {
+                    log.error("Error when creating query with indicator " + indicator.getName());
+                    return null;
+                }
             }
         } catch (ParseException e) {
             log.error(e, e);
@@ -293,6 +294,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // --- handle case of matching pattern count
         if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator())) {
             List<String> patterns = getPatterns(indicator);
+            if (patterns.isEmpty()) {
+                return traceError("No pattern found for database type: " + language + " for indicator " + indicator.getName());
+            }
             completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table, patterns);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
         } else {
@@ -365,14 +369,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         for (Pattern pattern : patterns) {
             EList<PatternComponent> components = pattern.getComponents();
             for (PatternComponent patternComponent : components) {
-                if (patternComponent != null && patternComponent.eClass().equals(PatternPackage.eINSTANCE.getRegularExpression())) {
-                    RegularExpression regExp = (RegularExpression) patternComponent;
-                    Expression expression = regExp.getExpression();
-                    if (expression != null) {
-                        // TODO scorreia probably need to handle SQL specific language patterns
-                        String body = expression.getBody();
-                        patternStrings.add(body);
-                    }
+                Expression expression = dbms().getExpression(patternComponent);
+                if (expression != null) {
+                    String body = expression.getBody();
+                    patternStrings.add(body);
                 }
             }
         }
