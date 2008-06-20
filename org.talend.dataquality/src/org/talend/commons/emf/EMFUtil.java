@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -127,6 +128,25 @@ public final class EMFUtil {
      */
     public boolean addPoolToResourceSet(File file, EObject eObject) {
         return addPoolToResourceSet(URI.createFileURI(file.getAbsolutePath()), eObject);
+    }
+
+    /**
+     * DOC qzhang Comment method "saveLastResource".
+     * 
+     * @return
+     */
+    public boolean saveLastResource() {
+        boolean ok = true;
+        EList<Resource> resources = resourceSet.getResources();
+        Resource ress = resources.get(resources.size() - 1);
+        try {
+            ress.save(options);
+        } catch (IOException e) {
+            log.error("Error during the saving of resource. Uri=" + ress.getURI().toString(), e);
+            // possible cause is a missing factory initialization and filename extension.
+            ok = false;
+        }
+        return ok;
     }
 
     /**

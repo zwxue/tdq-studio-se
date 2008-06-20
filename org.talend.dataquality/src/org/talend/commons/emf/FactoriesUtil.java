@@ -66,6 +66,11 @@ public final class FactoriesUtil {
      */
     public static final String REP = "rep";
 
+    /**
+     * Extension used for the files in which the pattern are serialized.
+     */
+    public static final String PATTERN = "pattern";
+
     private FactoriesUtil() {
     }
 
