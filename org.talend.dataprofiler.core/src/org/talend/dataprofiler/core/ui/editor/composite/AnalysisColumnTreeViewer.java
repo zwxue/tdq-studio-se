@@ -63,7 +63,6 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorParam
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
@@ -275,10 +274,12 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         String label = type.getLabel();
         if (IndicatorEnum.PatternMatchingIndicatorEnum.compareTo(type) == 0) {
             PatternMatchingIndicator pindicator = (PatternMatchingIndicator) unit.getIndicator();
-            IndicatorParameters parameters = pindicator.getParameters();
-            if (parameters != null) {
-                label = parameters.getDataValidDomain().getPatterns().get(0).getName();
-            }
+            // MOD scorreia 2008-06-20 get the name of the indicator
+            label = pindicator.getName();
+            // IndicatorParameters parameters = pindicator.getParameters();
+            // if (parameters != null) {
+            // label = parameters.getDataValidDomain().getPatterns().get(0).getName();
+            // }
             indicatorItem.setImage(0, ImageLib.getImage(ImageLib.PATTERN_REG));
         }
         indicatorItem.setText(0, label);

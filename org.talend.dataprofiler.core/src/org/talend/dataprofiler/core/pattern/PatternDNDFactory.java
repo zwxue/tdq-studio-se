@@ -134,6 +134,10 @@ public class PatternDNDFactory {
                 validData.getPatterns().add(pattern);
                 indicParams.setDataValidDomain(validData);
                 patternMatchingIndicator.setParameters(indicParams);
+
+                // MOD scorreia 2008-06-20 give the name of the pattern to the indicator
+                patternMatchingIndicator.setName(pattern.getName());
+
                 DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
 
                 IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
