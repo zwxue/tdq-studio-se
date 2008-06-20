@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
@@ -52,7 +53,7 @@ public class CreatePatternAction extends Action {
      */
     public CreatePatternAction(IFolder folder) {
         setText("Create a new regular pattern");
-        // setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
     }
 

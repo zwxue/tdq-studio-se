@@ -53,6 +53,8 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             IFile file = (IFile) element;
             if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
                 return ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
+            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+                return ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
             }
 
         }

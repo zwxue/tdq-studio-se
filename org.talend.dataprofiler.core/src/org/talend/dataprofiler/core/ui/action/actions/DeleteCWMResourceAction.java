@@ -45,8 +45,10 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.pattern.PatternDNDFactory;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -148,7 +150,8 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
         ModelElement modelElement;
         boolean otherFilesExistFlag = false;
         String otherFileName = null;
-        boolean anaMessageFlag = false, repMessageFlag = false;
+        boolean anaMessageFlag = false, repMessageFlag = false, patternMessageFlag = false;
+        String dialogMessage;
         for (IResource res : selectedResources) {
             if (!(res instanceof IFile)) {
                 continue;
@@ -164,6 +167,10 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
                 modelElementList.add(modelElement);
                 repMessageFlag = true;
+            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+                Pattern pattern = PatternDNDFactory.getPattern(file);
+                modelElementList.add(pattern);
+                patternMessageFlag = true;
             } else {
                 otherFilesExistFlag = true;
                 if (res.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
@@ -175,11 +182,13 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
             }
         }
         if (modelElementList.size() > 0 && !otherFilesExistFlag) {
-            String dialogMessage;
+
             if (anaMessageFlag && repMessageFlag) {
                 dialogMessage = "The following analyses and reporting will be unusable:";
             } else if (anaMessageFlag) {
                 dialogMessage = "The following analyses will be unusable:";
+            } else if (patternMessageFlag) {
+                dialogMessage = "The following pattern will be unusable:";
             } else {
                 dialogMessage = "The following reporting will be unusable:";
             }
@@ -204,6 +213,8 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 elementToDelete = AnaResourceFileHelper.getInstance().findAnalysis(file);
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
                 elementToDelete = RepResourceFileHelper.getInstance().findReport(file);
+            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+                elementToDelete = PatternDNDFactory.getPattern(file);
             }
             if (elementToDelete != null) {
                 List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(elementToDelete);

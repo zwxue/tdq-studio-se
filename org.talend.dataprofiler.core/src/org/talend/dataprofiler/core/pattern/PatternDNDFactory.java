@@ -31,6 +31,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
@@ -133,6 +134,7 @@ public class PatternDNDFactory {
                 validData.getPatterns().add(pattern);
                 indicParams.setDataValidDomain(validData);
                 patternMatchingIndicator.setParameters(indicParams);
+                DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
 
                 IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
                 data.addPatternIndicator(type, patternMatchingIndicator);

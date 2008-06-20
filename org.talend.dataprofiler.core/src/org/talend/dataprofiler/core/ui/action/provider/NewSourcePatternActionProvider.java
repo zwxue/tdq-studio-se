@@ -21,9 +21,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.CreatePatternAction;
-import org.talend.dataprofiler.core.pattern.DeletePatternAction;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -33,7 +33,7 @@ import org.talend.dataprofiler.core.pattern.DeletePatternAction;
  */
 public class NewSourcePatternActionProvider extends CommonActionProvider {
 
-    public static final String EXTENSION_PATTERN = "pattern";
+    public static final String EXTENSION_PATTERN = FactoriesUtil.PATTERN;
 
     private String selectedFolderName;
 
@@ -60,7 +60,7 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
         boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
         if (!isSelectFile && !selectedFiles.isEmpty()) {
             // menu.add(new OpenSqlFileAction(selectedFiles));
-            menu.add(new DeletePatternAction(selectedFiles));
+            // menu.add(new DeletePatternAction(selectedFiles));
         }
     }
 

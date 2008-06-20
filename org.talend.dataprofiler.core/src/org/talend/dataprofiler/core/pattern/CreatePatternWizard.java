@@ -98,7 +98,7 @@ public class CreatePatternWizard extends Wizard {
         location = location.removeLastSegments(1);
         location = location.append(fname);
         util.addPoolToResourceSet(new File(location.toPortableString()), pattern);
-        util.save();
+        util.saveLastResource();
         return true;
     }
 
