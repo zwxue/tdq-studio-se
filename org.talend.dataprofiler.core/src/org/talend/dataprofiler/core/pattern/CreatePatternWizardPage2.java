@@ -19,10 +19,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
 
@@ -37,6 +39,8 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
     private Text nameText;
 
     protected HashMap<String, String> metadata;
+
+    private Combo comboLang;
 
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
@@ -60,8 +64,8 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
         Label nameLab = new Label(container, SWT.NONE);
         nameLab.setText("Regular expression:");
 
-        nameText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-        nameText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        nameText = new Text(container, SWT.BORDER);
+        nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         setControl(container);
         nameText.addModifyListener(new ModifyListener() {
 
@@ -76,16 +80,15 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
                 e.printStackTrace();
             }
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-     */
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
+        nameLab = new Label(container, SWT.NONE);
+        nameLab.setText("Language Selection:");
+        String[] types = SupportDBUrlStore.getInstance().getDBTypes();
+        comboLang = new Combo(container, SWT.BORDER);
+        comboLang.setItems(types);
+        comboLang.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        if (types.length > 0) {
+            comboLang.select(0);
+        }
     }
 
     /*
@@ -105,6 +108,15 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
      */
     public Text getNameText() {
         return this.nameText;
+    }
+
+    /**
+     * Getter for comboLang.
+     * 
+     * @return the comboLang
+     */
+    public String getComboLang() {
+        return this.comboLang.getText();
     }
 
 }

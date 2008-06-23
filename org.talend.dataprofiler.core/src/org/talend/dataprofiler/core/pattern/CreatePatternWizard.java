@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
@@ -84,11 +86,17 @@ public class CreatePatternWizard extends Wizard {
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         String name = AbstractWizardPage.getConnectionParams().getName();
         pattern.setName(name);
+        TaggedValueHelper.setAuthor(pattern, AbstractWizardPage.getConnectionParams().getAuthor());
+        TaggedValueHelper.setDescription(AbstractWizardPage.getConnectionParams().getDescription(), pattern);
+        TaggedValueHelper.setPurpose(AbstractWizardPage.getConnectionParams().getPurpose(), pattern);
+        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(AbstractWizardPage.getConnectionParams().getStatus()));
+
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
         Expression expression = CoreFactory.eINSTANCE.createExpression();
         String expr = mPage2.getNameText().getText();
         expression.setBody(expr);
-        expression.setLanguage("SQL"); // TODO qzhang save language from selected db type
+        String cl = mPage2.getComboLang();
+        expression.setLanguage(cl); // PTODO qzhang fixed bug 4259.save language from selected db type
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
@@ -97,6 +105,7 @@ public class CreatePatternWizard extends Wizard {
                 NewSourcePatternActionProvider.EXTENSION_PATTERN);
         location = location.removeLastSegments(1);
         location = location.append(fname);
+
         util.addPoolToResourceSet(new File(location.toPortableString()), pattern);
         util.saveLastResource();
         return true;
