@@ -80,12 +80,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private List<ColumnSet> currentCheckedColumnSet = new ArrayList<ColumnSet>();
 
-    public ColumnsSelectionDialog(Shell parent, ColumnIndicator[] columnIndicators, String message) {
+    public ColumnsSelectionDialog(Shell parent, String title, ColumnIndicator[] columnIndicators, String message) {
         super(parent, message);
         addFirstPartFilters();
         this.setInput(ResourcesPlugin.getWorkspace().getRoot());
         columnSetCheckedMap = new HashMap<ColumnSetKey, ColumnCheckedMap>();
         initCheckedColumn(columnIndicators);
+        this.setTitle(title);
     }
 
     private void initCheckedColumn(ColumnIndicator[] columnIndicators) {

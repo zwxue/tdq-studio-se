@@ -63,13 +63,26 @@ public class IndicatorSelectDialog extends TrayDialog {
 
     private Label descriptionLabel;
 
+    private final String title;
+
     /**
      * @param parentShell
      */
     public IndicatorSelectDialog(Shell parentShell, String title, ColumnIndicator[] columnIndicators) {
         super(parentShell);
+        this.title = title;
         this.columnIndicators = columnIndicators;
         this.setShellStyle(SWT.MAX | SWT.RESIZE);
+    }
+
+    /*
+     * (non-Javadoc) Method declared in Window.
+     */
+    protected void configureShell(Shell shell) {
+        super.configureShell(shell);
+        if (title != null) {
+            shell.setText(title);
+        }
     }
 
     /**
@@ -354,20 +367,22 @@ public class IndicatorSelectDialog extends TrayDialog {
         return columnIndicators;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
     protected Control createContents(Composite parent) {
-        
+
         try {
-            PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_SELECTOR_HELP_ID);
+            PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+                    HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_SELECTOR_HELP_ID);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return super.createContents(parent);
     }
 
-    
 }

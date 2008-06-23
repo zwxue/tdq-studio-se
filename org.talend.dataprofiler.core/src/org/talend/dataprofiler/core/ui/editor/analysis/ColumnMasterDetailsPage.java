@@ -210,7 +210,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
             public void linkActivated(HyperlinkEvent e) {
 
-                treeViewer.openIndicatorSelectDialog(getSite().getShell());
+                treeViewer.openIndicatorSelectDialog(null);
             }
 
         });
@@ -232,7 +232,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
      */
     public void openColumnsSelectionDialog() {
         ColumnIndicator[] columnIndicator = treeViewer.getColumnIndicator();
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(getSite().getShell(), columnIndicator, "Column Selection");
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, "Column Selection", columnIndicator, "Column Selection");
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
