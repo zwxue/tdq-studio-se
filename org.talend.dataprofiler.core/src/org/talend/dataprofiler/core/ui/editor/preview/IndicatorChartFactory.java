@@ -368,8 +368,8 @@ public class IndicatorChartFactory {
                     double notMathCount = patternExt.getNotMatchingValueCount();
                     double machCount = patternExt.getMatchingValueCount();
 
-                    dataset.addValue(notMathCount / (notMathCount + machCount), "not matching", String.valueOf(label + i));
-                    dataset.addValue(machCount / (notMathCount + machCount), "matching", String.valueOf(label + i));
+                    dataset.addValue(notMathCount / (notMathCount + machCount), "not matching", label);
+                    dataset.addValue(machCount / (notMathCount + machCount), "matching", label);
                 } else {
                     dataset.addValue(0, "not matching", "");
                     dataset.addValue(0, "matching", "");
