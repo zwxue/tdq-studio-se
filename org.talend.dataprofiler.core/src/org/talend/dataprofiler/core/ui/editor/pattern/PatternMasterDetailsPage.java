@@ -94,7 +94,7 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
     protected void createFormContent(IManagedForm managedForm) {
         final ScrolledForm form = managedForm.getForm();
         Composite body = form.getBody();
-        form.setText("Connection Information");
+        form.setText("Pattern Settings");
 
         // TableWrapLayout layout = new TableWrapLayout();
         body.setLayout(new GridLayout());

@@ -69,7 +69,6 @@ public abstract class AbstractFormPage extends FormPage {
     protected void createFormContent(IManagedForm managedForm) {
         final ScrolledForm form = managedForm.getForm();
         Composite body = form.getBody();
-        form.setText("Connection Information");
 
         // TableWrapLayout layout = new TableWrapLayout();
         body.setLayout(new GridLayout(2, true));

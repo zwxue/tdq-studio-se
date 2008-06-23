@@ -130,6 +130,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         final ScrolledForm form = managedForm.getForm();
+        form.setText("Column Analysis");
         metadataSection.setText("Analysis Metadata");
         metadataSection.setDescription("Set the properties of analysis.");
         createAnalysisColumnsSection(form, topComp);

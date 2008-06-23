@@ -89,6 +89,7 @@ public class ConnectionInfoPage extends AbstractFormPage {
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         final ScrolledForm form = managedForm.getForm();
+        form.setText("Connection Settings");
         this.metadataSection.setText("Connection Metadata");
         this.metadataSection.setDescription("Set the properties of connnection.");
         createInformationSection(form, topComp);
