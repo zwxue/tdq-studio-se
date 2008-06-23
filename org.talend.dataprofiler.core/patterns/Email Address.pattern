@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataquality.domain.pattern:Pattern xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmi:id="_rC5TcD4XEd24WPpU35gV1A" name="Email Address">
   <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_rC5TcT4XEd24WPpU35gV1A">
-    <expression xmi:id="_rC5Tcj4XEd24WPpU35gV1A" body="'[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'" language="ORACLE"/>
+    <expression xmi:id="_rC5Tcj4XEd24WPpU35gV1A" body="'[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'" language="Oracle"/>
+  </components>
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_Bmv0QEEgEd2DZZM71qrVGg">
+    <expression xmi:id="_Bmv0QUEgEd2DZZM71qrVGg" body="'[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}'" language="Mysql"/>
   </components>
 </dataquality.domain.pattern:Pattern>
