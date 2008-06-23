@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.help.HelpPlugin;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.utils.sql.Java2SqlType;
 
@@ -71,6 +72,11 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         tabFolder = new TabFolder(container, SWT.FLAT);
         tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+        DataminingType dataminingType = MetadataHelper.getDataminingType(parentColumn.getTdColumn());
+        if (dataminingType == null) {
+            dataminingType = MetadataHelper.getDefaultDataminingType(parentColumn.getTdColumn().getJavaType());
+        }
+
         if (indicator != null) {
 
             int sqlType = parentColumn.getTdColumn().getJavaType();
@@ -95,7 +101,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
                 break;
             case FrequencyIndicatorEnum:
-                if (parentColumn.getDataminingType() == DataminingType.INTERVAL) {
+                if (dataminingType == DataminingType.INTERVAL) {
                     if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
                         setControl(createView(new FrequBinsDesignerForm(tabFolder, SWT.NONE)));
@@ -112,7 +118,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
                 break;
             case ModeIndicatorEnum:
-                if (parentColumn.getDataminingType() == DataminingType.INTERVAL) {
+                if (dataminingType == DataminingType.INTERVAL) {
                     if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
                         setControl(createView(new BinsDesignerForm(tabFolder, SWT.NONE)));

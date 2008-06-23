@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.utils.sql.Java2SqlType;
 
@@ -43,8 +44,12 @@ public enum IndicatorParameterTypes {
 
     public static String getHref(IndicatorUnit indicator) {
         String href = null;
-        ColumnIndicator parentColumn = indicator.getParentColumn();
-        int sqlType = parentColumn.getTdColumn().getJavaType();
+        ColumnIndicator columnIndicator = indicator.getParentColumn();
+        int sqlType = columnIndicator.getTdColumn().getJavaType();
+        DataminingType dataminingType = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
+        if (dataminingType == null) {
+            dataminingType = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
+        }
         switch (indicator.getType()) {
 
         case DistinctCountIndicatorEnum:
@@ -62,7 +67,7 @@ public enum IndicatorParameterTypes {
 
             break;
         case FrequencyIndicatorEnum:
-            if (parentColumn.getDataminingType() == DataminingType.INTERVAL) {
+            if (dataminingType == DataminingType.INTERVAL) {
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
                     href = IndicatorParameterTypes.TYPE_BINS_DESIGNER.href;
                 }
@@ -76,7 +81,7 @@ public enum IndicatorParameterTypes {
 
             break;
         case ModeIndicatorEnum:
-            if (parentColumn.getDataminingType() == DataminingType.INTERVAL) {
+            if (dataminingType == DataminingType.INTERVAL) {
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
                     href = IndicatorParameterTypes.TYPE_BINS_DESIGNER.href;
                 }

@@ -70,6 +70,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.ColumnAnalysisHandler;
@@ -118,7 +119,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
             }
             currentColumnIndicator = new ColumnIndicator(tdColumn);
             DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(tdColumn));
-            currentColumnIndicator.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType);
+            MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, tdColumn);
             Collection<Indicator> indicatorList = analysisHandler.getIndicators(tdColumn);
             currentColumnIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
             columnIndicatorList.add(currentColumnIndicator);
@@ -396,7 +397,11 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
             }
             for (ColumnIndicator columnIndicator : columnIndicators) {
                 analysisHandler.addIndicator(columnIndicator.getTdColumn(), columnIndicator.getIndicators());
-                analysisHandler.setDatamingType(columnIndicator.getDataminingType().getLiteral(), columnIndicator.getTdColumn());
+                DataminingType type = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
+                if (type == null) {
+                    type = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
+                }
+                analysisHandler.setDatamingType(type.getLiteral(), columnIndicator.getTdColumn());
             }
         }
         // if (providerList.size() != 0) {

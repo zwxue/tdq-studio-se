@@ -266,4 +266,8 @@ public enum IndicatorEnum {
 
     }
 
+    public static boolean isPlainIndicatorEnum(IndicatorEnum indicatorEnumn) {
+        return indicatorEnumn != PatternMatchingIndicatorEnum;
+    }
+
 }

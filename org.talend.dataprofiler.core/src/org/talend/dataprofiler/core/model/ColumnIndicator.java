@@ -22,12 +22,10 @@ import java.util.Map;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
-import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -55,6 +53,8 @@ import org.talend.dataquality.indicators.UpperQuartileIndicator;
  */
 public class ColumnIndicator {
 
+    private final List<IndicatorEnum> countsEnumChildren = Arrays.asList(IndicatorEnum.CountsIndicatorEnum.getChildren());
+
     private TdColumn tdColumn;
 
     private List<IndicatorEnum> tempIndicatorEnums = new ArrayList<IndicatorEnum>();
@@ -62,17 +62,11 @@ public class ColumnIndicator {
     // the indicatorEnums number equal plat IndicatorEnum(not hierrachy) numbers.
     private List<IndicatorEnum> flatIndicatorEnumList = new ArrayList<IndicatorEnum>();
 
-    private Map<IndicatorEnum, IndicatorUnit> indicatorUnitMap = new HashMap<IndicatorEnum, IndicatorUnit>();
+    private Map<IndicatorEnum, IndicatorUnit> plainIndicatorUnitMap = new HashMap<IndicatorEnum, IndicatorUnit>();
 
-    private IndicatorUnit[] currentindicatorUnits;
+    private IndicatorUnit[] plainIndicatorUnits;
 
-    private final List<IndicatorEnum> countsEnumChildren = Arrays.asList(IndicatorEnum.CountsIndicatorEnum.getChildren());
-
-    // static{
-    // for(IndicatorEnum.CountsIndicatorEnum.getChildren()){
-    //            
-    // }
-    // }
+    private List<IndicatorUnit> specialIndicatorUnitList;
 
     public ColumnIndicator(TdColumn tdColumn) {
         this.tdColumn = tdColumn;
@@ -83,15 +77,45 @@ public class ColumnIndicator {
     }
 
     /**
-     * Remove the indicator value from field 'flatIndicatorEnumList' and 'indicatorUnitMap', contains the parent and
-     * children of indicatorTypeMapping.getType().
+     * If the Indicator is a plain indicator, will remove the indicator value from field 'flatIndicatorEnumList' and
+     * 'indicatorUnitMap', contains the parent and children of indicatorTypeMapping.getType();Else, will remove it from
+     * specialIndicaortUnitList.
      * 
      * @param indicatorUnit
      */
     public void removeIndicatorUnit(IndicatorUnit indicatorUnit) {
         IndicatorEnum indicatorEnum = indicatorUnit.getType();
+        if (IndicatorEnum.isPlainIndicatorEnum(indicatorEnum)) {
+            removePlainIndicatorUnit(indicatorEnum);
+        } else {
+            removeSpecialIndicatorUnit(indicatorUnit);
+        }
+    }
+
+    /**
+     * Remove the specialIndicatorUnit from specialIndicatorList, if there exist more than one InicatorIndicator which
+     * has same IndicatorEnumn type, the type of IndicatorUnit will be not removed from flatIndicatorEnumList.
+     * 
+     * @param indicatorUnit
+     */
+    private void removeSpecialIndicatorUnit(IndicatorUnit indicatorUnit) {
+        IndicatorEnum indicatorEnumn = indicatorUnit.getType();
+        this.specialIndicatorUnitList.remove(indicatorUnit);
+        for (IndicatorUnit unit : specialIndicatorUnitList) {
+            if (unit.getType() == indicatorEnumn) {
+                return;
+            } else {
+                continue;
+            }
+        }
+        this.flatIndicatorEnumList.remove(indicatorEnumn);
+
+    }
+
+    private void removePlainIndicatorUnit(IndicatorEnum indicatorEnum) {
+
         this.flatIndicatorEnumList.remove(indicatorEnum);
-        indicatorUnitMap.remove(indicatorEnum);
+        plainIndicatorUnitMap.remove(indicatorEnum);
         this.removeChildrenEnumMap(indicatorEnum);
         this.removeParentEnumMap(indicatorEnum);
         this.processCategoryIndicator();
@@ -101,7 +125,7 @@ public class ColumnIndicator {
         if (indicatorEnum.hasChildren()) {
             for (IndicatorEnum childEnum : indicatorEnum.getChildren()) {
                 this.flatIndicatorEnumList.remove(childEnum);
-                indicatorUnitMap.remove(childEnum);
+                plainIndicatorUnitMap.remove(childEnum);
                 this.removeChildrenEnumMap(childEnum);
             }
         }
@@ -110,7 +134,7 @@ public class ColumnIndicator {
     private void removeParentEnumMap(IndicatorEnum indicatorEnum) {
         if (indicatorEnum.hasParent()) {
             this.flatIndicatorEnumList.remove(indicatorEnum.getParent());
-            indicatorUnitMap.remove(indicatorEnum.getParent());
+            plainIndicatorUnitMap.remove(indicatorEnum.getParent());
             this.removeParentEnumMap(indicatorEnum.getParent());
         }
     }
@@ -137,26 +161,39 @@ public class ColumnIndicator {
     }
 
     public IndicatorUnit[] getIndicatorUnits() {
-        if (currentindicatorUnits == null) {
+        if (plainIndicatorUnits == null && (this.specialIndicatorUnitList == null || this.specialIndicatorUnitList.size() == 0)) {
             return new IndicatorUnit[0];
         }
-        return currentindicatorUnits;
+        List<IndicatorUnit> unitList = new ArrayList<IndicatorUnit>();
+        if (plainIndicatorUnits != null && plainIndicatorUnits.length > 0) {
+            for (IndicatorUnit unit : plainIndicatorUnits) {
+                unitList.add(unit);
+            }
+        }
+        if (this.specialIndicatorUnitList != null && this.specialIndicatorUnitList.size() > 0) {
+            unitList.addAll(specialIndicatorUnitList);
+        }
+        return unitList.toArray(new IndicatorUnit[unitList.size()]);
     }
 
     public void setIndicators(Indicator[] indicators) {
         clear();
         for (Indicator oneIndicator : indicators) {
             IndicatorEnum findIndicatorEnum = IndicatorEnum.findIndicatorEnum(oneIndicator.eClass());
-            this.flatIndicatorEnumList.add(findIndicatorEnum);
-            fillCategoryIndicators(findIndicatorEnum, oneIndicator);
+            if (IndicatorEnum.isPlainIndicatorEnum(findIndicatorEnum)) {
+                this.flatIndicatorEnumList.add(findIndicatorEnum);
+                fillCategoryIndicators(findIndicatorEnum, oneIndicator);
+            } else {
+                this.addSpecialIndicator(findIndicatorEnum, oneIndicator);
+            }
         }
         processCategoryIndicator();
 
     }
 
     /**
-     * Fill the indicator value to the corresponding indicator's property, and fill the value to field
-     * 'flatIndicatorEnumList' and 'indicatorUnitMap'.
+     * Fill the plain indicator value to the corresponding indicator's property, and fill the value to field
+     * 'flatIndicatorEnumList' and 'plainIndicatorUnitMap'.
      * 
      * @param indicatorEnum
      * @param indicator
@@ -175,70 +212,70 @@ public class ColumnIndicator {
         switch (indicatorEnum) {
         case CountsIndicatorEnum:
             CountsIndicator countsIndicator = (CountsIndicator) indicator;
-            this.indicatorUnitMap.put(IndicatorEnum.CountsIndicatorEnum, createIndicatorUnit(IndicatorEnum.CountsIndicatorEnum,
-                    countsIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.CountsIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.CountsIndicatorEnum, countsIndicator));
 
             // add indicatorUnit to indicatorUnitMap
-            this.indicatorUnitMap.put(IndicatorEnum.BlankCountIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.BlankCountIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.BlankCountIndicatorEnum, countsIndicator.getBlankCountIndicator()));
-            this.indicatorUnitMap.put(IndicatorEnum.DistinctCountIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.DistinctCountIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.DistinctCountIndicatorEnum, countsIndicator.getDistinctCountIndicator()));
-            this.indicatorUnitMap.put(IndicatorEnum.DuplicateCountIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.DuplicateCountIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.DuplicateCountIndicatorEnum, countsIndicator.getDuplicateCountIndicator()));
-            this.indicatorUnitMap.put(IndicatorEnum.RowCountIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.RowCountIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.RowCountIndicatorEnum, countsIndicator.getRowCountIndicator()));
-            this.indicatorUnitMap.put(IndicatorEnum.NullCountIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.NullCountIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.NullCountIndicatorEnum, countsIndicator.getNullCountIndicator()));
-            this.indicatorUnitMap.put(IndicatorEnum.UniqueIndicatorEnum, createIndicatorUnit(IndicatorEnum.UniqueIndicatorEnum,
-                    countsIndicator.getUniqueCountIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.UniqueIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.UniqueIndicatorEnum, countsIndicator.getUniqueCountIndicator()));
             break;
         case TextIndicatorEnum:
             TextIndicator textIndicator = (TextIndicator) indicator;
-            this.indicatorUnitMap.put(IndicatorEnum.TextIndicatorEnum, createIndicatorUnit(IndicatorEnum.TextIndicatorEnum,
-                    textIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.TextIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.TextIndicatorEnum, textIndicator));
 
             // add indicatorUnit to indicatorUnitMap
-            this.indicatorUnitMap.put(IndicatorEnum.MinLengthIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.MinLengthIndicatorEnum, textIndicator.getMinLengthIndicator()));
-            this.indicatorUnitMap.put(IndicatorEnum.MaxLengthIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.MaxLengthIndicatorEnum, textIndicator.getMaxLengthIndicator()));
-            this.indicatorUnitMap.put(IndicatorEnum.AverageLengthIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.AverageLengthIndicatorEnum, textIndicator.getAverageLengthIndicator()));
             break;
         case BoxIIndicatorEnum:
             BoxIndicator boxtIndicator = (BoxIndicator) indicator;
-            this.indicatorUnitMap.put(IndicatorEnum.BoxIIndicatorEnum, createIndicatorUnit(IndicatorEnum.BoxIIndicatorEnum,
-                    boxtIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.BoxIIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.BoxIIndicatorEnum, boxtIndicator));
 
-            this.indicatorUnitMap.put(IndicatorEnum.MeanIndicatorEnum, createIndicatorUnit(IndicatorEnum.MeanIndicatorEnum,
-                    boxtIndicator.getMeanIndicator()));
-            this.indicatorUnitMap.put(IndicatorEnum.MedianIndicatorEnum, createIndicatorUnit(IndicatorEnum.MedianIndicatorEnum,
-                    boxtIndicator.getMedianIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MeanIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.MeanIndicatorEnum, boxtIndicator.getMeanIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MedianIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.MedianIndicatorEnum, boxtIndicator.getMedianIndicator()));
             this.fillCategoryIndicators(IndicatorEnum.RangeIndicatorEnum, boxtIndicator.getRangeIndicator());
             this.fillCategoryIndicators(IndicatorEnum.IQRIndicatorEnum, boxtIndicator.getIQR());
             break;
         case IQRIndicatorEnum:
             IQRIndicator iqrIndicator = (IQRIndicator) indicator;
-            this.indicatorUnitMap.put(IndicatorEnum.IQRIndicatorEnum, createIndicatorUnit(IndicatorEnum.IQRIndicatorEnum,
-                    iqrIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.IQRIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.IQRIndicatorEnum, iqrIndicator));
 
-            this.indicatorUnitMap.put(IndicatorEnum.LowerQuartileIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.LowerQuartileIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.LowerQuartileIndicatorEnum, iqrIndicator.getLowerValue()));
-            this.indicatorUnitMap.put(IndicatorEnum.UpperQuartileIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.UpperQuartileIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.UpperQuartileIndicatorEnum, iqrIndicator.getUpperValue()));
             break;
         case RangeIndicatorEnum:
             RangeIndicator rangeIndicator = (RangeIndicator) indicator;
-            this.indicatorUnitMap.put(IndicatorEnum.RangeIndicatorEnum, createIndicatorUnit(IndicatorEnum.RangeIndicatorEnum,
-                    rangeIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.RangeIndicatorEnum, createPlainIndicatorUnit(
+                    IndicatorEnum.RangeIndicatorEnum, rangeIndicator));
 
-            this.indicatorUnitMap.put(IndicatorEnum.MaxValueIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxValueIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.MaxValueIndicatorEnum, rangeIndicator.getUpperValue()));
-            this.indicatorUnitMap.put(IndicatorEnum.MinValueIndicatorEnum, createIndicatorUnit(
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MinValueIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.MinValueIndicatorEnum, rangeIndicator.getLowerValue()));
             break;
         default:
-            this.indicatorUnitMap.put(indicatorEnum, createIndicatorUnit(indicatorEnum, indicator));
+            this.plainIndicatorUnitMap.put(indicatorEnum, createPlainIndicatorUnit(indicatorEnum, indicator));
             break;
         }
 
@@ -249,51 +286,14 @@ public class ColumnIndicator {
      */
     private void clear() {
         flatIndicatorEnumList.clear();
-        indicatorUnitMap.clear();
-    }
-
-    /**
-     * Getter for detaminingType.
-     * 
-     * @return the detaminingType
-     */
-    public DataminingType getDataminingType() {
-        DataminingType type = MetadataHelper.getDataminingType(tdColumn);
-
-        if (type == null) {
-            return MetadataHelper.getDefaultDataminingType(tdColumn.getJavaType());
+        plainIndicatorUnitMap.clear();
+        if (specialIndicatorUnitList != null) {
+            specialIndicatorUnitList.clear();
         }
-
-        return type;
     }
 
-    /**
-     * Sets the detaminingType.
-     * 
-     * @param detaminingType the detaminingType to set
-     */
-    public void setDataminingType(DataminingType dataminingType) {
-        MetadataHelper.setDataminingType(dataminingType, tdColumn);
-    }
-
-    public void addIndicator(IndicatorEnum indicatorEnum, Indicator indicator) {
-        this.flatIndicatorEnumList.add(indicatorEnum);
-        this.createIndicatorUnit(indicatorEnum, indicator);
-    }
-
-    public void addPatternIndicator(IndicatorEnum indicatorEnum, Indicator indicator) {
-        this.flatIndicatorEnumList.add(indicatorEnum);
-        IndicatorUnit createIndicatorUnit = this.createIndicatorUnit(indicatorEnum, indicator);
-        int size = 0;
-        if (currentindicatorUnits != null) {
-            size = currentindicatorUnits.length;
-        }
-        IndicatorUnit[] newUnits = new IndicatorUnit[size + 1];
-        if (currentindicatorUnits != null) {
-            System.arraycopy(currentindicatorUnits, 0, newUnits, 0, size);
-        }
-        newUnits[size] = createIndicatorUnit;
-        this.currentindicatorUnits = newUnits;
+    public IndicatorUnit addSpecialIndicator(IndicatorEnum indicatorEnum, Indicator indicator) {
+        return createSpecialIndicatorUnit(indicatorEnum, indicator);
     }
 
     public void addTempIndicatorEnum(IndicatorEnum indicatorEnum) {
@@ -361,7 +361,7 @@ public class ColumnIndicator {
         } else {
             categoryEnumList.remove(IndicatorEnum.CountsIndicatorEnum);
         }
-        currentindicatorUnits = createCategoryIndicatorUnits(categoryEnumList.toArray(new IndicatorEnum[categoryEnumList.size()]));
+        plainIndicatorUnits = createCategoryIndicatorUnits(categoryEnumList.toArray(new IndicatorEnum[categoryEnumList.size()]));
     }
 
     /**
@@ -374,6 +374,9 @@ public class ColumnIndicator {
         List<IndicatorUnit> indicatorUnitList = new ArrayList<IndicatorUnit>();
         IndicatorUnit indicatorUnit;
         for (IndicatorEnum categoryEnum : categoryEnums) {
+            if (!IndicatorEnum.isPlainIndicatorEnum(categoryEnum)) {
+                continue;
+            }
             indicatorUnit = getIndicatorUnit(categoryEnum);
             switch (categoryEnum) {
             case CountsIndicatorEnum:
@@ -451,10 +454,10 @@ public class ColumnIndicator {
      * @param indicatorEnum
      * @return
      */
-    public IndicatorUnit getIndicatorUnit(IndicatorEnum indicatorEnum) {
-        IndicatorUnit indicatorUnit = this.indicatorUnitMap.get(indicatorEnum);
+    private IndicatorUnit getIndicatorUnit(IndicatorEnum indicatorEnum) {
+        IndicatorUnit indicatorUnit = this.plainIndicatorUnitMap.get(indicatorEnum);
         if (indicatorUnit == null) {
-            indicatorUnit = createIndicatorUnit(indicatorEnum, null);
+            indicatorUnit = createPlainIndicatorUnit(indicatorEnum, null);
         }
         return indicatorUnit;
     }
@@ -467,7 +470,7 @@ public class ColumnIndicator {
      * @param indicator
      * @return
      */
-    private IndicatorUnit createIndicatorUnit(IndicatorEnum indicatorEnum, Indicator indicator) {
+    private IndicatorUnit createPlainIndicatorUnit(IndicatorEnum indicatorEnum, Indicator indicator) {
         if (indicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
@@ -490,9 +493,25 @@ public class ColumnIndicator {
             }
         }
         IndicatorUnit indicatorUnit = new IndicatorUnit(indicatorEnum, indicator, this);
-        this.indicatorUnitMap.put(indicatorEnum, indicatorUnit);
+        this.plainIndicatorUnitMap.put(indicatorEnum, indicatorUnit);
         return indicatorUnit;
 
+    }
+
+    private IndicatorUnit createSpecialIndicatorUnit(IndicatorEnum indicatorEnum, Indicator indicator) {
+        if (indicator == null) {
+            IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
+            indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+        }
+        if (!flatIndicatorEnumList.contains(indicatorEnum)) {
+            this.flatIndicatorEnumList.add(indicatorEnum);
+        }
+        if (this.specialIndicatorUnitList == null) {
+            this.specialIndicatorUnitList = new ArrayList<IndicatorUnit>();
+        }
+        IndicatorUnit indicatorUnit = new IndicatorUnit(indicatorEnum, indicator, this);
+        specialIndicatorUnitList.add(indicatorUnit);
+        return indicatorUnit;
     }
 
     private void listCopy(List<IndicatorEnum> dest, List<IndicatorEnum> src) {

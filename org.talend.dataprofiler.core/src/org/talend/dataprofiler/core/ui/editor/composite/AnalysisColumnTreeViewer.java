@@ -62,8 +62,8 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorParameterTypes;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
  * @author rli
@@ -194,15 +194,20 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             for (DataminingType type : DataminingType.values()) {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal for presentation
             }
-            if (columnIndicator.getDataminingType() == null) {
+            DataminingType dataminingType = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
+            if (dataminingType == null) {
+                dataminingType = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
+            }
+
+            if (dataminingType == null) {
                 combo.select(0);
             } else {
-                combo.setText(columnIndicator.getDataminingType().getLiteral());
+                combo.setText(dataminingType.getLiteral());
             }
             combo.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
-                    columnIndicator.setDataminingType(DataminingType.get(combo.getText()));
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), columnIndicator.getTdColumn());
                     setDirty(true);
                 }
 
@@ -271,15 +276,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         indicatorItem.setData(COLUMN_INDICATOR_KEY, treeItem.getData(COLUMN_INDICATOR_KEY));
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
-        String label = type.getLabel();
+        String label = indicatorUnit.getIndicatorName();
         if (IndicatorEnum.PatternMatchingIndicatorEnum.compareTo(type) == 0) {
-            PatternMatchingIndicator pindicator = (PatternMatchingIndicator) unit.getIndicator();
-            // MOD scorreia 2008-06-20 get the name of the indicator
-            label = pindicator.getName();
-            // IndicatorParameters parameters = pindicator.getParameters();
-            // if (parameters != null) {
-            // label = parameters.getDataValidDomain().getPatterns().get(0).getName();
-            // }
             indicatorItem.setImage(0, ImageLib.getImage(ImageLib.PATTERN_REG));
         }
         indicatorItem.setText(0, label);
