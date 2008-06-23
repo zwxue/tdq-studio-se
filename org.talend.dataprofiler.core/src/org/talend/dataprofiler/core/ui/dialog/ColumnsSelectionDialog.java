@@ -527,7 +527,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
                 if (container.equals(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                         DQStructureManager.DB_CONNECTIONS))) {
-                    sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
+                    ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
                 return members;
             } else if (parentElement instanceof NamedColumnSet) {
@@ -550,7 +550,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         }
                     }
                 }
-                return sort(children, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+                return ComparatorsFactory.sort(children, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             }
             return super.getChildren(parentElement);
         }

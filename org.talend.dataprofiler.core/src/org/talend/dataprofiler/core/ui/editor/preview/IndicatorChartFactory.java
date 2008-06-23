@@ -46,6 +46,7 @@ import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
+import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
@@ -203,6 +204,7 @@ public class IndicatorChartFactory {
 
     private static CategoryDataset createTextedDataset(List<IndicatorUnit> indicatorUnitList, boolean isCreate) {
 
+        ComparatorsFactory.sort(indicatorUnitList, ComparatorsFactory.TEXT_STATISTICS_COMPARATOR_ID);
         return createSimpleDataset(indicatorUnitList, isCreate);
     }
 

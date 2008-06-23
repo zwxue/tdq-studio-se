@@ -12,14 +12,23 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.talend.dataprofiler.core.factory.ModelElementFileFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * The factory to build comparator.
+ */
+/**
+ * DOC zqin class global comment. Detailled comment
  */
 public final class ComparatorsFactory {
 
@@ -30,6 +39,40 @@ public final class ComparatorsFactory {
 
     public static final int MODELELEMENT_COMPARATOR_ID = 1;
 
+    public static final int TEXT_STATISTICS_COMPARATOR_ID = 2;
+
+    /**
+     * DOC zqin Comment method "sort".
+     * 
+     * @param objects
+     * @param comparatorId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static Object[] sort(Object[] objects, int comparatorId) {
+        if (objects == null || objects.length <= 1) {
+            return objects;
+        }
+        Arrays.sort(objects, ComparatorsFactory.buildComparator(comparatorId));
+        return objects;
+    }
+
+    /**
+     * DOC zqin Comment method "sort".
+     * 
+     * @param objects
+     * @param comparatorId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static Collection sort(List objects, int comparatorId) {
+        if (objects == null || objects.size() <= 1) {
+            return objects;
+        }
+        Collections.sort(objects, ComparatorsFactory.buildComparator(comparatorId));
+        return objects;
+    }
+
     @SuppressWarnings("unchecked")
     public static Comparator buildComparator(int comparatorId) {
         switch (comparatorId) {
@@ -37,6 +80,8 @@ public final class ComparatorsFactory {
             return new FileModelComparator();
         case MODELELEMENT_COMPARATOR_ID:
             return new ModelElementComparator();
+        case TEXT_STATISTICS_COMPARATOR_ID:
+            return new TextStatisticsComparator();
         default:
             return new ModelElementComparator();
         }
@@ -88,5 +133,27 @@ public final class ComparatorsFactory {
 
             return name0.compareTo(name1);
         }
+    }
+
+    /**
+     * DOC zqin ComparatorsFactory class global comment. Detailled comment
+     */
+    static class TextStatisticsComparator implements Comparator<IndicatorUnit> {
+
+        @Override
+        public int compare(IndicatorUnit o1, IndicatorUnit o2) {
+
+            IndicatorCommonUtil.compositeIndicatorMap(o1);
+            IndicatorCommonUtil.compositeIndicatorMap(o2);
+
+            double value1 = Double.parseDouble(String.valueOf(o1.getValue()));
+            double value2 = Double.parseDouble(String.valueOf(o2.getValue()));
+            if (value1 <= value2) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+
     }
 }

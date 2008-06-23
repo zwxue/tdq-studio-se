@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
-import java.util.Arrays;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
@@ -49,7 +47,7 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             if (file.getName().endsWith(PluginConstant.REP_SUFFIX)) {
                 TdReport findReport = RepResourceFileHelper.getInstance().findReport(file);
                 Object[] array = ReportHelper.getAnalyses(findReport).toArray();
-                return sort(array, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+                return ComparatorsFactory.sort(array, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             }
             parentElement = PrvResourceFileHelper.getInstance().getFileResource(file);
         } else if (parentElement instanceof IFolderNode) {
@@ -57,10 +55,10 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             if (!(folerNode.isLoaded())) {
                 folerNode.loadChildren();
             }
-            return sort(folerNode.getChildren(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+            return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
         } else if (SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement) != null) {
             if (CatalogHelper.getSchemas(SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement)).size() > 0) {
-                return sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+                return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             } else {
                 return FolderNodeHelper.getFolderNode((EObject) parentElement);
             }
@@ -68,7 +66,7 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
         } else {
             return FolderNodeHelper.getFolderNode((EObject) parentElement);
         }
-        return sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+        return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
     }
 
     @Override
@@ -85,22 +83,6 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
 
     public boolean hasChildren(Object element) {
         return !(element instanceof TdColumn);
-    }
-
-    /**
-     * Sort the parameter objects, and return the sorted array.
-     * 
-     * @param objects
-     * @param comparatorId the comparator id has been defined in the {@link ComparatorsFactory};
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    protected Object[] sort(Object[] objects, int comparatorId) {
-        if (objects == null || objects.length <= 1) {
-            return objects;
-        }
-        Arrays.sort(objects, ComparatorsFactory.buildComparator(comparatorId));
-        return objects;
     }
 
 }
