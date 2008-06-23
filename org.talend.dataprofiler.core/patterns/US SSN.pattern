@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataquality.domain.pattern:Pattern xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmi:id="_BpSRwD15Ed2p44yVAaDvbQ" name="US SSN">
+  <taggedValue xmi:id="_gaQ44EEtEd2095gIBp6gJQ" tag="Purpose" value="Check the validity of US Social Security Numbers"/>
+  <taggedValue xmi:id="_gaQ44UEtEd2095gIBp6gJQ" tag="Description" value="Matches a (hyphen-separated or not) Social Security Number (SSN). Ex.:  123-45-6789 or 123456789."/>
+  <taggedValue xmi:id="_gaQ44kEtEd2095gIBp6gJQ" tag="Author" value=""/>
+  <taggedValue xmi:id="_gaRf8EEtEd2095gIBp6gJQ" tag="Status" value="Draft"/>
   <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_BpSRwT15Ed2p44yVAaDvbQ">
     <expression xmi:id="_BpSRwj15Ed2p44yVAaDvbQ" body="'^([[:digit:]]{3}[ -][[:digit:]]{2}[ -][[:digit:]]{4}|[[:digit:]]{9})$'" language="SQL"/>
   </components>
