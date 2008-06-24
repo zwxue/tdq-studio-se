@@ -190,7 +190,8 @@ public class ColumnViewerDND {
 
             IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
             IndicatorUnit addIndicatorUnit = data.addSpecialIndicator(type, patternMatchingIndicator);
-            AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getData(AnalysisColumnTreeViewer.VIEWER_KEY);
+            AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getParent().getData(
+                    AnalysisColumnTreeViewer.VIEWER_KEY);
             viewer.createOneUnit(item, addIndicatorUnit);
             viewer.setDirty(true);
         }
