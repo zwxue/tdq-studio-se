@@ -12,18 +12,19 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
@@ -35,7 +36,6 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -90,7 +90,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     } catch (Exception e) {
                         ExceptionHandler.process(e);
                     }
-                    
+
                 }
                 IFile file = input.getFile();
                 if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
@@ -120,11 +120,21 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         final Analysis finalAnalysis = analysis;
         final AnalysisExecutor finalExec = exec;
-        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        IRunnableWithProgress op = new IRunnableWithProgress() {
 
-            public void run(IProgressMonitor monitor) throws InvocationTargetException {
+        final WorkspaceJob job = new WorkspaceJob("Run Analysis") {
+
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+
+                monitor.beginTask("Running the [" + analysis.getName() + "].....", IProgressMonitor.UNKNOWN);
+                try {
+                    Thread.sleep(5000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 final ReturnCode executed = finalExec.execute(finalAnalysis);
+                monitor.done();
                 if (executed.isOk()) {
                     if (log.isInfoEnabled()) {
                         int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
@@ -132,6 +142,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                 + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s.");
                     }
                     AnaResourceFileHelper.getInstance().save(finalAnalysis);
+
+                    return Status.OK_STATUS;
                 } else {
                     int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
                     log.warn("Analysis \"" + finalAnalysis.getName() + "\" execution code: " + executed + ". Duration: "
@@ -143,26 +155,24 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             MessageDialogWithToggle.openError(null, "Run analysis error", "Fail to run this analysis: \""
                                     + finalAnalysis.getName() + "\". Error message:" + executed.getMessage());
                         }
-
                     });
+                    return Status.CANCEL_STATUS;
                 }
+            }
 
-            }
         };
-        try {
-            ProgressUI.popProgressDialog(op, shell);
-            if (treeViewer == null) {
-                DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
-                view.getCommonViewer().refresh();
-            } else {
-                CorePlugin.getDefault().refreshWorkSpace();
-                treeViewer.refresh();
-            }
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        job.setUser(true);
+        job.schedule();
+
+        if (treeViewer == null) {
+            DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
+            view.getCommonViewer().refresh();
+        } else {
+            CorePlugin.getDefault().refreshWorkSpace();
+            treeViewer.refresh();
         }
+
     }
 
     /*
