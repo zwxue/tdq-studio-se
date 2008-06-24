@@ -27,9 +27,9 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
-import org.talend.dataprofiler.core.pattern.PatternDNDFactory;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -105,7 +105,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             return findReport.getName();
         } else if (input.endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
             IFile file = (IFile) element;
-            Pattern pattern = PatternDNDFactory.getPattern(file);
+            Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
             return pattern.getName();
         }
         return super.decorateText(input, element);

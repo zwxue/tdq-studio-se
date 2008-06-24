@@ -140,7 +140,6 @@ public final class ComparatorsFactory {
      */
     static class TextStatisticsComparator implements Comparator<IndicatorUnit> {
 
-        @Override
         public int compare(IndicatorUnit o1, IndicatorUnit o2) {
 
             IndicatorCommonUtil.compositeIndicatorMap(o1);

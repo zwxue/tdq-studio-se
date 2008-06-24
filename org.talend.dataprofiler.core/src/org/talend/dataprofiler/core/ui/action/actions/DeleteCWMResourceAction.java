@@ -43,9 +43,9 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
-import org.talend.dataprofiler.core.pattern.PatternDNDFactory;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -168,7 +168,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 modelElementList.add(modelElement);
                 repMessageFlag = true;
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
-                Pattern pattern = PatternDNDFactory.getPattern(file);
+                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 modelElementList.add(pattern);
                 patternMessageFlag = true;
             } else {
@@ -214,7 +214,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
                 elementToDelete = RepResourceFileHelper.getInstance().findReport(file);
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
-                elementToDelete = PatternDNDFactory.getPattern(file);
+                elementToDelete = PatternResourceFileHelper.getInstance().findPattern(file);
             }
             if (elementToDelete != null) {
                 List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(elementToDelete);
