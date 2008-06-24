@@ -127,11 +127,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
                 monitor.beginTask("Running the [" + analysis.getName() + "].....", IProgressMonitor.UNKNOWN);
-                try {
-                    Thread.sleep(5000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
                 final ReturnCode executed = finalExec.execute(finalAnalysis);
                 monitor.done();
