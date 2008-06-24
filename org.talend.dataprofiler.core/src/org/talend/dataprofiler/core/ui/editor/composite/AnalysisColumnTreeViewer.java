@@ -540,7 +540,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     }
 
     public void openIndicatorSelectDialog(Shell shell) {
-        IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, "Indicator Selector", columnIndicators);
+        IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, "Indicator Selection", columnIndicators);
         dialog.create();
         dialog.getShell().addShellListener(new ShellAdapter() {
 
