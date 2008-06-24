@@ -63,11 +63,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction colseAllAction;
 
+    private IWorkbenchWindow window;
+
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
     }
 
     protected void makeActions(IWorkbenchWindow window) {
+        this.window = window;
         exitAction = ActionFactory.QUIT.create(window);
         register(exitAction);
 
@@ -172,6 +175,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void fillCoolBar(ICoolBarManager coolBar) {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "switch_persp")); //$NON-NLS-1$
+        toolbar.add(ActionFactory.SAVE.create(window));
         toolbar.add(new ChangePerspectiveAction(true));
     }
 }
