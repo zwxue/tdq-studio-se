@@ -139,7 +139,7 @@ public class ColumnViewerDND {
      */
     static class PatternReceiver implements ISelectionReceiver {
 
-        @Override
+        // @Override
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
             if (event.detail != DND.DROP_NONE) {
                 lastValidOperation = event.detail;
@@ -169,7 +169,7 @@ public class ColumnViewerDND {
             }
         }
 
-        @Override
+        // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer) {
             IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
 
@@ -204,7 +204,7 @@ public class ColumnViewerDND {
      */
     static class ColumnReceiver implements ISelectionReceiver {
 
-        @Override
+        // @Override
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
 
             event.detail = DND.DROP_NONE;
@@ -229,7 +229,7 @@ public class ColumnViewerDND {
         }
 
         @SuppressWarnings("unchecked")
-        @Override
+        // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer) {
             Tree tree = (Tree) ((DropTarget) event.widget).getControl();
             AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) tree.getData(AnalysisColumnTreeViewer.VIEWER_KEY);
