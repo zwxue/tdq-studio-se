@@ -259,9 +259,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     // and get the best row
                     completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
                 }
-            } else if (dateAggregationType != null) { // frequencies
-                // with date
-                // aggregation
+            } else if ((dateAggregationType != null)
+            // MOD scorreia 2008-06-23 check column type (robustness against bug 4287)
+                    && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                // frequencies with date aggregation
                 completedSqlString = getDateAggregatedCompletedString(sqlGenericExpression, colName, table, dateAggregationType);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
@@ -517,21 +518,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         return buf.toString();
-    }
-
-    /**
-     * DOC scorreia Comment method "check".
-     * 
-     * @param orderByClause
-     * @param string
-     * @param string2
-     * @return
-     */
-    private String check(String orderByClause, String string, String string2) {
-        if (orderByClause == null || orderByClause.contains(string) || orderByClause.contains(string2)) {
-            return null;
-        }
-        return orderByClause;
     }
 
     /**

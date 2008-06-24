@@ -22,9 +22,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZQuery;
@@ -42,9 +46,24 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
+    private TdDataProvider dataprovider;
+
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
 
     protected Map<ModelElement, orgomg.cwm.objectmodel.core.Package> schemata = new HashMap<ModelElement, orgomg.cwm.objectmodel.core.Package>();
+
+    protected boolean isAccessWith(TdDataProvider dp) {
+        if (dataprovider == null) {
+            dataprovider = dp;
+            return true;
+        }
+        // else compare
+        if (dataprovider.equals(dp) || ResourceHelper.getUUID(dataprovider) == ResourceHelper.getUUID(dp)) {
+            return true;
+        }
+        // else
+        return false;
+    }
 
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         IndicatorEvaluator eval = new IndicatorEvaluator();
@@ -58,6 +77,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             }
             // --- get the schema owner
             if (!belongToSameSchemata(tdColumn)) {
+                this.errorMessage = "Given column (" + tdColumn.getName() + ") belongs to a different shema or catalog!";
                 return false;
             }
             String columnName = ColumnHelper.getFullName(tdColumn);
@@ -169,34 +189,58 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     }
 
     @Override
-    protected boolean check(Analysis analysis) {
+    protected boolean check(final Analysis analysis) {
+        if (analysis == null) {
+            this.errorMessage = "Analysis is null!!??";
+            return false;
+        }
+        if (!super.check(analysis)) {
+            // error message already set in super method.
+            return false;
+        }
 
-        if (analysis.getContext().getAnalysedElements().size() == 0) {
+        // --- check existence of context
+        AnalysisContext context = analysis.getContext();
+        if (context == null) {
+            this.errorMessage = "No context has been set for this analysis " + analysis.getName();
+            return false;
+        }
 
-            if (analysis.getContext().getConnection() == null) {
-                this.errorMessage = "No connection has been set for this analysis, please select some column(s) to analyze!";
-                return false;
-            }
+        // --- check that there exists at least on element to analyze
+        if (context.getAnalysedElements().size() == 0) {
             this.errorMessage = "An analysis must have at least one column, please select some column(s) to analyze!";
             return false;
         }
 
-        if (analysis != null) {
-            ColumnAnalysisHandler analysisHandler = new ColumnAnalysisHandler();
-            analysisHandler.setAnalysis(analysis);
+        // --- check that the connection has been set
+        if (context.getConnection() == null) {
+            this.errorMessage = "No connection has been set for this analysis, please select some column(s) to analyze!";
+            return false;
+        }
 
-            for (ModelElement node : analysis.getContext().getAnalysedElements()) {
-                TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
+        ColumnAnalysisHandler analysisHandler = new ColumnAnalysisHandler();
+        analysisHandler.setAnalysis(analysis);
 
-                if (analysisHandler.getIndicators(column).size() == 0) {
-                    this.errorMessage = "Each column must have at least one indicator, "
-                            + "please select some indicator(s) to compute on each column!";
-                    return false;
-                }
+        for (ModelElement node : context.getAnalysedElements()) {
+            TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
+
+            // --- Check that each analyzed element has at least one indicator
+            if (analysisHandler.getIndicators(column).size() == 0) {
+                this.errorMessage = "Each column must have at least one indicator, "
+                        + "please select some indicator(s) to compute on each column!";
+                return false;
+            }
+
+            // --- get the data provider
+            TdDataProvider dp = DataProviderHelper.getTdDataProvider(column);
+            if (!isAccessWith(dp)) {
+                this.errorMessage = "All columns must belong to the same connection! Remove column " + column.getName()
+                        + " from this analysis! It does not belong to \"" + dataprovider.getName() + "\"";
+                return false;
             }
         }
 
-        return super.check(analysis);
+        return true;
     }
 
 }
