@@ -119,7 +119,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         Menu menu = new Menu(newTree);
         MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
         deleteMenuItem.setText("Remove elements");
-        deleteMenuItem.setImage(ImageLib.getImage(ImageLib.ACTION_DELETE));
+        deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 
             /*
@@ -220,7 +220,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             TreeEditor delLabelEditor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
             delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            delLabel.setImage(ImageLib.getImage(ImageLib.ACTION_DELETE));
+            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
             delLabel.setToolTipText("delete");
             delLabel.pack();
             delLabel.addMouseListener(new MouseAdapter() {
@@ -390,7 +390,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         TreeEditor delEditor = new TreeEditor(tree);
         Label delLabel = new Label(tree, SWT.NONE);
         delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        delLabel.setImage(ImageLib.getImage(ImageLib.ACTION_DELETE));
+        delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delLabel.setToolTipText("delete");
         delLabel.pack();
         delLabel.addMouseListener(new MouseAdapter() {

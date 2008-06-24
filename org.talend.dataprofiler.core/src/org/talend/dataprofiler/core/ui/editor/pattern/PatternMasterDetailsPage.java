@@ -40,6 +40,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
@@ -120,7 +121,7 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
         EList<PatternComponent> components = this.pattern.getComponents();
         for (int i = 0; i < components.size(); i++) {
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
-            creatNewExpressLine(regularExpress);
+            creatNewExpressLine(form, regularExpress);
         }
         createAddButton(form);
 
@@ -130,12 +131,12 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
 
     private void createAddButton(final ScrolledForm form) {
         final Button addButton = new Button(sectionComp, SWT.NONE);
-        addButton.setText("ADD");
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
         addButton.setToolTipText("Add");
-        GridData gdButton = new GridData();
-        gdButton.horizontalAlignment = SWT.CENTER;
-        gdButton.widthHint = 65;
-        addButton.setLayoutData(gdButton);
+        GridData labelGd = new GridData();
+        labelGd.horizontalAlignment = SWT.CENTER;
+        labelGd.widthHint = 65;
+        addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -144,7 +145,7 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
                 RegularExpressionImpl newRegularExpress = (RegularExpressionImpl) PatternFactory.eINSTANCE
                         .createRegularExpression();
                 newRegularExpress.setExpression(expression);
-                creatNewExpressLine(newRegularExpress);
+                creatNewExpressLine(form, newRegularExpress);
                 tempPatternComponents.add(newRegularExpress);
                 form.reflow(true);
                 setDirty(true);
@@ -152,7 +153,7 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
         });
     }
 
-    private void creatNewExpressLine(RegularExpressionImpl regularExpress) {
+    private void creatNewExpressLine(final ScrolledForm form, RegularExpressionImpl regularExpress) {
         final Composite expressComp = new Composite(componentsComp, SWT.NONE);
         expressComp.setLayout(new GridLayout(10, true));
         final CCombo combo = new CCombo(expressComp, SWT.BORDER);
@@ -165,9 +166,6 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
         } else {
             combo.setText(language.equalsIgnoreCase(SQL) ? ALL_DATABASE_TYPE : language);
         }
-        // GridData gd = new GridData();
-        // gd.widthHint = 120;
-        // combo.setLayoutData(gd);
         GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(combo);
         combo.addSelectionListener(new SelectionAdapter() {
 
@@ -180,9 +178,6 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
         final Text patternText = new Text(expressComp, SWT.BORDER);
         patternText.setText(regularExpress.getExpression().getBody() == null ? PluginConstant.EMPTY_STRING : regularExpress
                 .getExpression().getBody());
-        // gd = new GridData();
-        // gd.widthHint = 350;
-        // patternText.setLayoutData(gd);
         GridDataFactory.fillDefaults().span(7, 1).grab(true, false).applyTo(patternText);
         patternText.addModifyListener(new ModifyListener() {
 
@@ -193,11 +188,8 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
 
         });
         Button delButton = new Button(expressComp, SWT.NONE);
-        delButton.setText("DEL");
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setToolTipText("Delete");
-        // gd = new GridData();
-        // gd.widthHint = 40;
-        // delButton.setLayoutData(gd);
         GridDataFactory.fillDefaults().span(1, 1).grab(true, false).applyTo(delButton);
         delButton.addSelectionListener(new SelectionAdapter() {
 
@@ -205,6 +197,7 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
                 tempPatternComponents.remove(finalRegExpress);
                 expressComp.dispose();
                 sectionComp.layout();
+                form.reflow(true);
                 setDirty(true);
             }
         });

@@ -43,7 +43,9 @@ public class ImageLib {
 
     public static final String NEW_CONNECTION = "new_alias.gif"; //$NON-NLS-1$
 
-    public static final String ACTION_DELETE = "cross.png"; //$NON-NLS-1$
+    public static final String DELETE_ACTION = "cross.png"; //$NON-NLS-1$
+
+    public static final String ADD_ACTION = "add.gif"; //$NON-NLS-1$
 
     public static final String SECTION_PREVIEW = "eye.png"; //$NON-NLS-1$
 

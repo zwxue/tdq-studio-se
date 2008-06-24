@@ -50,7 +50,7 @@ public class RemoveAnalysisAction extends Action {
 
     public RemoveAnalysisAction() {
         super("Remove Analysis");
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_DELETE));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
     }
 
     /*

@@ -67,7 +67,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
     public DeleteCWMResourceAction() {
         super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
         this.shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_DELETE));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
     }
 
     /*
