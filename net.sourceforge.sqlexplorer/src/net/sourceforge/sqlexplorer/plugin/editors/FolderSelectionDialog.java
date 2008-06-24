@@ -12,6 +12,13 @@
 // ============================================================================
 package net.sourceforge.sqlexplorer.plugin.editors;
 
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -20,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
 /**
@@ -41,6 +49,26 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
     public FolderSelectionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
         super(parent, labelProvider, contentProvider);
         setComparator(new ResourceComparator(ResourceComparator.NAME));
+        setValidator(new ISelectionStatusValidator() {
+
+            public IStatus validate(Object[] selection) {
+                if (selection.length == 1) {
+                    if (selection[0] instanceof IFolder) {
+                        IFolder folder = (IFolder) selection[0];
+                        IPath projectRelativePath = folder.getProjectRelativePath();
+                        if ("Libraries".equals(folder.getProject().getName())) {
+                            IPath path = new Path("Source Files");
+                            if (path.isPrefixOf(projectRelativePath)) {
+                                return Status.OK_STATUS;
+                            }
+                        }
+                    }
+                }
+                return new Status(IStatus.ERROR, SQLExplorerPlugin.PLUGIN_ID,
+                        "select the 'Source Files' folder or a folder below this.");
+            }
+
+        });
     }
 
     /*
@@ -63,6 +91,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent event) {
+
     }
 
 }

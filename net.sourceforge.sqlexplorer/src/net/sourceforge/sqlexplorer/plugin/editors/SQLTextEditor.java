@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -177,7 +178,9 @@ public class SQLTextEditor extends TextEditor {
                 if (IProject.class.isInstance(element)) {
                     return "Libraries".equals(((IProject) element).getName());
                 } else if (IFolder.class.isInstance(element)) {
-                    return "Source Files".equals(((IFolder) element).getName());
+                    IPath path = new Path("Source Files");
+                    IPath projectRelativePath = ((IFolder) element).getProjectRelativePath();
+                    return path.isPrefixOf(projectRelativePath);
                 }
                 return false;
             }
