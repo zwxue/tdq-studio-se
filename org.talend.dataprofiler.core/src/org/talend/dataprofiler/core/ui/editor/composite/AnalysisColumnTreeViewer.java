@@ -53,11 +53,11 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
-import org.talend.dataprofiler.core.pattern.PatternDNDFactory;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorParameterTypes;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -143,8 +143,9 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             }
 
         };
+
         parent.setData(AbstractFormPage.ACTION_HANDLER, actionHandler);
-        PatternDNDFactory.installDND(newTree);
+        ColumnViewerDND.installDND(newTree);
         return newTree;
     }
 
@@ -176,6 +177,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     public void setElements(final ColumnIndicator[] elements) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
+        tree.setData(VIEWER_KEY, this);
         this.columnIndicators = elements;
         for (int i = 0; i < elements.length; i++) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
@@ -187,7 +189,6 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
                     + columnIndicator.getTdColumn().getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null");
             treeItem.setData(COLUMN_INDICATOR_KEY, columnIndicator);
-            treeItem.setData(VIEWER_KEY, this);
 
             TreeEditor comboEditor = new TreeEditor(tree);
             final CCombo combo = new CCombo(tree, SWT.BORDER);
@@ -251,6 +252,90 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             }
             treeItem.setExpanded(true);
         }
+        this.setDirty(true);
+    }
+
+    public void addElements(final ColumnIndicator[] elements) {
+
+        ColumnIndicator[] newsArray = new ColumnIndicator[this.columnIndicators.length + elements.length];
+        System.arraycopy(this.columnIndicators, 0, newsArray, 0, this.columnIndicators.length);
+
+        for (int i = 0; i < elements.length; i++) {
+
+            final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
+
+            final ColumnIndicator columnIndicator = (ColumnIndicator) elements[i];
+            newsArray[this.columnIndicators.length + i] = columnIndicator;
+
+            treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
+            String columnName = columnIndicator.getTdColumn().getName();
+            treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
+                    + columnIndicator.getTdColumn().getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null");
+            treeItem.setData(COLUMN_INDICATOR_KEY, columnIndicator);
+
+            TreeEditor comboEditor = new TreeEditor(tree);
+            final CCombo combo = new CCombo(tree, SWT.BORDER);
+            for (DataminingType type : DataminingType.values()) {
+                combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal for presentation
+            }
+            DataminingType dataminingType = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
+            if (dataminingType == null) {
+                dataminingType = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
+            }
+
+            if (dataminingType == null) {
+                combo.select(0);
+            } else {
+                combo.setText(dataminingType.getLiteral());
+            }
+            combo.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), columnIndicator.getTdColumn());
+                    setDirty(true);
+                }
+
+            });
+            combo.setEditable(false);
+
+            comboEditor.minimumWidth = WIDTH1_CELL;
+            comboEditor.setEditor(combo, treeItem, 1);
+
+            TreeEditor delLabelEditor = new TreeEditor(tree);
+            Label delLabel = new Label(tree, SWT.NONE);
+            delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+            delLabel.setToolTipText("delete");
+            delLabel.pack();
+            delLabel.addMouseListener(new MouseAdapter() {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+                 */
+                @Override
+                public void mouseDown(MouseEvent e) {
+                    deleteColumnItems(columnIndicator);
+                    if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
+                        setElements(columnIndicators);
+                    } else {
+                        removeItemBranch(treeItem);
+                    }
+                }
+
+            });
+
+            delLabelEditor.minimumWidth = WIDTH1_CELL;
+            delLabelEditor.horizontalAlignment = SWT.CENTER;
+            delLabelEditor.setEditor(delLabel, treeItem, 2);
+            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor });
+            if (columnIndicator.hasIndicators()) {
+                createIndicatorItems(treeItem, columnIndicator.getIndicatorUnits());
+            }
+            treeItem.setExpanded(true);
+        }
+        this.columnIndicators = newsArray;
         this.setDirty(true);
     }
 
@@ -325,6 +410,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                          * 
                          * @see org.eclipse.jface.dialogs.TrayDialog#openTray(org.eclipse.jface.dialogs.DialogTray)
                          */
+                        @SuppressWarnings("restriction")
                         @Override
                         public void openTray(DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
                             super.openTray(tray);
