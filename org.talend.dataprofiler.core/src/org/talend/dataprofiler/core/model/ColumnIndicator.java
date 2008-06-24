@@ -46,6 +46,7 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.utils.sql.Java2SqlType;
 
 /**
  * This class can store the all the Indicators of one TdColumn, and provide the method to access all indicator.
@@ -476,7 +477,8 @@ public class ColumnIndicator {
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
 
             // for 4225, the frequency indicator need be initialized
-            if (indicatorEnum == IndicatorEnum.FrequencyIndicatorEnum) {
+            int sqlType = this.tdColumn.getJavaType();
+            if (indicatorEnum == IndicatorEnum.FrequencyIndicatorEnum && Java2SqlType.isDateInSQL(sqlType)) {
                 IndicatorParameters parameters = indicator.getParameters();
                 if (parameters == null) {
                     parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
