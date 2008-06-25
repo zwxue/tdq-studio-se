@@ -57,7 +57,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         // store views in catalog or schema
         pack.getOwnedElement().addAll(columnSets);
         this.setChildren(columnSets.toArray());
-        NeedSaveDataProviderHelper.register(provider.getName(), provider);
+        NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
         this.setLoaded(true);
     }
 

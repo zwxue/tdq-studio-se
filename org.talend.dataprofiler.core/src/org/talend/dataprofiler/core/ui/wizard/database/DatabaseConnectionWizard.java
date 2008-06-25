@@ -25,7 +25,6 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
@@ -114,7 +113,6 @@ public class DatabaseConnectionWizard extends Wizard implements INewWizard {
             return false;
         }
         TdDataProvider dataProvider = rc.getObject();
-        NeedSaveDataProviderHelper.register(dataProvider.getName(), dataProvider);
         // MODSCA 2008-03-10 save the provider
         File returnFile = DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionProperty
                 .getFolderProvider());

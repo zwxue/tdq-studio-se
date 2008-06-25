@@ -71,7 +71,7 @@ public class ColumnFolderNode extends AbstractFolderNode {
             // store tables in catalog
             ColumnSetHelper.addColumns(columnSet, columnList);
             this.setChildren(columnList.toArray());
-            NeedSaveDataProviderHelper.register(provider.getName(), provider);
+            NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
             this.setLoaded(true);
         }
     }

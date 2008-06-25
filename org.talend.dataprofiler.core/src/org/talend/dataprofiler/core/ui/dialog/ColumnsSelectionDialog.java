@@ -479,7 +479,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         } catch (TalendException e) {
                             MessageBoxExceptionHandler.process(e);
                         }
-                        NeedSaveDataProviderHelper.register(provider.getName(), provider);
+                        NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
                     }
                     return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                 }

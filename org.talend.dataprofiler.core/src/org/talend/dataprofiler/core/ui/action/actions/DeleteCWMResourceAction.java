@@ -43,6 +43,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
@@ -209,6 +210,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
             if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
                 TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().readFromFile(file);
                 elementToDelete = returnValue.getObject();
+                NeedSaveDataProviderHelper.remove(elementToDelete.eResource().getURI().path());
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.ANA)) {
                 elementToDelete = AnaResourceFileHelper.getInstance().findAnalysis(file);
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
