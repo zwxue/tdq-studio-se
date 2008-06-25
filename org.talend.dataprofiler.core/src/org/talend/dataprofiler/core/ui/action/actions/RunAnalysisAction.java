@@ -68,6 +68,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         super("Run");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
+        setDisabledImageDescriptor(ImageLib.getImageDescriptor(ImageLib.RUN_DISABLE));
+
     }
 
     /*

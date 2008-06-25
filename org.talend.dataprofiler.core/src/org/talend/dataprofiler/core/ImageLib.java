@@ -71,6 +71,8 @@ public class ImageLib {
 
     public static final String PATTERN_REG = "regexp_16x32.png";
 
+    public static final String RUN_DISABLE = "run_disable.gif";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 
