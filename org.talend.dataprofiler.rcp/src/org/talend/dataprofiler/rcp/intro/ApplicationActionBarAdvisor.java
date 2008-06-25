@@ -25,7 +25,11 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -34,6 +38,8 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
+import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.perspective.PerspectiveMenuManager;
 
@@ -64,6 +70,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction colseAllAction;
 
     private IWorkbenchWindow window;
+
+    private RunAnalysisAction runAnalysisAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -177,5 +185,49 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         coolBar.add(new ToolBarContributionItem(toolbar, "switch_persp")); //$NON-NLS-1$
         toolbar.add(ActionFactory.SAVE.create(window));
         toolbar.add(new ChangePerspectiveAction(true));
+        runAnalysisAction = new RunAnalysisAction();
+        toolbar.add(runAnalysisAction);
+        final IWorkbenchWindow activeWorkbenchWindow = getActionBarConfigurer().getWindowConfigurer().getWindow();
+        if (activeWorkbenchWindow != null) {
+            activeWorkbenchWindow.getPartService().addPartListener(new IPartListener() {
+
+                public void partActivated(IWorkbenchPart part) {
+                    boolean isEnable = false;
+                    if (part instanceof AnalysisEditor) {
+                        isEnable = true;
+                    } else {
+                        IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+                        if (activePage != null) {
+                            IEditorPart activeEditor = activePage.getActiveEditor();
+                            if (activeEditor instanceof AnalysisEditor) {
+                                isEnable = true;
+                            }
+                        }
+                    }
+                    runAnalysisAction.setEnabled(isEnable);
+                }
+
+                public void partBroughtToTop(IWorkbenchPart part) {
+                    if (part instanceof AnalysisEditor) {
+                        runAnalysisAction.setEnabled(true);
+                    } else {
+                        runAnalysisAction.setEnabled(false);
+                    }
+                }
+
+                public void partClosed(IWorkbenchPart part) {
+
+                }
+
+                public void partDeactivated(IWorkbenchPart part) {
+
+                }
+
+                public void partOpened(IWorkbenchPart part) {
+
+                }
+
+            });
+        }
     }
 }
