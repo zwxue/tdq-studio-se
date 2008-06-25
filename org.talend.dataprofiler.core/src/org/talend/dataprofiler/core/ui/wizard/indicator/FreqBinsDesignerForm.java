@@ -25,17 +25,11 @@ import org.eclipse.swt.widgets.Text;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class FrequTimeSliceForm extends TimeSlicesForm {
+public class FreqBinsDesignerForm extends BinsDesignerForm {
 
     private Text numberTxt;
 
-    /**
-     * DOC zqin FrequTimeSliceForm constructor comment.
-     * 
-     * @param parent
-     * @param style
-     */
-    public FrequTimeSliceForm(Composite parent, int style) {
+    public FreqBinsDesignerForm(Composite parent, int style) {
         super(parent, style);
     }
 
@@ -86,4 +80,5 @@ public class FrequTimeSliceForm extends TimeSlicesForm {
             numberTxt.setText(String.valueOf(this.parameter.getNumOfShown()));
         }
     }
+
 }

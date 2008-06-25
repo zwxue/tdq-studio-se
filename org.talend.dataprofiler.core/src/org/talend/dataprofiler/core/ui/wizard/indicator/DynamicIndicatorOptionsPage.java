@@ -104,16 +104,16 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
                 if (dataminingType == DataminingType.INTERVAL) {
                     if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                        setControl(createView(new FrequBinsDesignerForm(tabFolder, SWT.NONE)));
+                        setControl(createView(new FreqBinsDesignerForm(tabFolder, SWT.NONE)));
                     }
 
                     if (Java2SqlType.isDateInSQL(sqlType)) {
 
-                        setControl(createView(new FrequTimeSliceForm(tabFolder, SWT.NONE)));
+                        setControl(createView(new FreqTimeSliceForm(tabFolder, SWT.NONE)));
                     }
                 } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                    setControl(createView(new FrequTextParametersForm(tabFolder, SWT.NONE)));
+                    setControl(createView(new FreqTextParametersForm(tabFolder, SWT.NONE)));
                 }
 
                 break;

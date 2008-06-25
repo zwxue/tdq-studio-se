@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class FrequTextParametersForm extends TextParametersForm {
+public class FreqTextParametersForm extends TextParametersForm {
 
     private Text numberTxt;
 
@@ -35,7 +35,7 @@ public class FrequTextParametersForm extends TextParametersForm {
      * @param parent
      * @param style
      */
-    public FrequTextParametersForm(Composite parent, int style) {
+    public FreqTextParametersForm(Composite parent, int style) {
         super(parent, style);
         // TODO Auto-generated constructor stub
     }
