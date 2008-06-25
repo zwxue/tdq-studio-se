@@ -17,10 +17,12 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author rli
@@ -38,11 +40,11 @@ public final class FolderNodeHelper {
     // catalogFolderNodeMap.put(catalog, folderNodes);
     // }
 
-//    public static IFolderNode[] get(Catalog catalog) {
-//        return catalogFolderNodeMap.get(catalog);
-//    }
+    // public static IFolderNode[] get(Catalog catalog) {
+    // return catalogFolderNodeMap.get(catalog);
+    // }
 
-    public static IFolderNode[] getFolderNode(EObject eObject) {
+    public static IFolderNode[] getFolderNodes(EObject eObject) {
         IFolderNode[] folderNodes = catalogFolderNodeMap.get(eObject);
         if (folderNodes != null) {
             return folderNodes;
@@ -54,8 +56,21 @@ public final class FolderNodeHelper {
             return createColumFolderNodes(eObject);
         } else if (SwitchHelpers.VIEW_SWITCH.doSwitch(eObject) != null) {
             return createColumFolderNodes(eObject);
-        } 
+        }
         return folderNodes;
+    }
+
+    public static IFolderNode getFolderNode(EObject eObject, ColumnSet columnSet) {
+        IFolderNode[] folderNodes = catalogFolderNodeMap.get(eObject);
+        if (folderNodes == null) {
+            folderNodes = createTableViewNodes(eObject);
+        }
+        TdTable doSwitch = SwitchHelpers.TABLE_SWITCH.doSwitch(columnSet);
+        if (doSwitch != null) {
+            return folderNodes[0];
+        } else {
+            return folderNodes[1];
+        }
     }
 
     /**
@@ -71,14 +86,13 @@ public final class FolderNodeHelper {
         folderNodes = new IFolderNode[] { tabbleFolderNode, viewFolderNode };
         catalogFolderNodeMap.put(eObject, folderNodes);
         return folderNodes;
-    }    
-
+    }
 
     private static IFolderNode[] createColumFolderNodes(org.eclipse.emf.ecore.EObject eObject) {
         IFolderNode[] folderNodes;
         IFolderNode columnFolderNode = new ColumnFolderNode();
         columnFolderNode.setParent(eObject);
-        folderNodes = new IFolderNode[] { columnFolderNode};
+        folderNodes = new IFolderNode[] { columnFolderNode };
         catalogFolderNodeMap.put(eObject, folderNodes);
         return folderNodes;
     }

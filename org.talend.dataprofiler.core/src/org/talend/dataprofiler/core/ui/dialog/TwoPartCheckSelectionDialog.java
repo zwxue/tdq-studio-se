@@ -103,7 +103,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         super(parent);
         setResult(new ArrayList(0));
         setStatusLineAboveButtons(true);
-        fContainerMode = false;
+        fContainerMode = true;
         fExpandedElements = null;
         int shellStyle = getShellStyle();
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
@@ -123,15 +123,6 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      */
     public void setContainerMode(boolean containerMode) {
         fContainerMode = containerMode;
-    }
-
-    /**
-     * Sets the initial selection. Convenience method.
-     * 
-     * @param selection the initial selection.
-     */
-    public void setInitialSelection(Object selection) {
-        setInitialSelections(new Object[] { selection });
     }
 
     /**
@@ -278,9 +269,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
             public void run() {
                 parentCreate();
                 fViewer.setCheckedElements(getInitialElementSelections().toArray());
-                if (fExpandedElements != null) {
-                    fViewer.setExpandedElements(fExpandedElements);
-                }
+                // if (fExpandedElements != null) {
+                // fViewer.setExpandedElements(fExpandedElements);
+                // }
                 updateOKStatus();
             }
         });
@@ -328,18 +319,18 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     protected void addCheckedListener() {
 
         // When user checks a checkbox in the tree, check all its children
-        fViewer.addCheckStateListener(new ICheckStateListener() {
-
-            public void checkStateChanged(CheckStateChangedEvent event) {
-                // If the item is checked . . .
-                if (event.getChecked()) {
-                    // . . . check all its children
-                    fViewer.setSubtreeChecked(event.getElement(), true);
-                } else {
-                    fViewer.setSubtreeChecked(event.getElement(), false);
-                }
-            }
-        });
+        // fViewer.addCheckStateListener(new ICheckStateListener() {
+        //
+        // public void checkStateChanged(CheckStateChangedEvent event) {
+        // // If the item is checked . . .
+        // if (event.getChecked()) {
+        // // . . . check all its children
+        // fViewer.setSubtreeChecked(event.getElement(), true);
+        // } else {
+        // fViewer.setSubtreeChecked(event.getElement(), false);
+        // }
+        // }
+        // });
     }
 
     /**
@@ -350,19 +341,20 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      */
     protected CheckboxTreeViewer createFirstPart(Composite parent) {
         if (fContainerMode) {
-            fViewer = new ContainerCheckedTreeViewer(parent, SWT.BORDER) {
-
-                protected void handleTreeExpand(TreeEvent event) {
-                    super.handleTreeExpand(event);
-                    checkElementChecked();
-                }
-            };
+            fViewer = new ContainerCheckedTreeViewer(parent, SWT.BORDER);
+            // {
+            //
+            // protected void handleTreeExpand(TreeEvent event) {
+            // super.handleTreeExpand(event);
+            // checkElementChecked();
+            // }
+            // };
         } else {
             fViewer = new CheckboxTreeViewer(parent, SWT.BORDER) {
 
                 protected void handleTreeExpand(TreeEvent event) {
                     super.handleTreeExpand(event);
-                    checkElementChecked();
+                    // checkElementChecked();
                 }
 
             };
@@ -387,13 +379,13 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
             }
         }
         fViewer.setInput(fInput);
+        // fViewer.
         fViewer.addSelectionChangedListener(this);
         return fViewer;
     }
 
-
-    protected void checkElementChecked() {
-    }
+    // protected void checkElementChecked() {
+    // }
 
     protected CheckboxTableViewer createSecondPart(Composite parent) {
         CheckboxTableViewer viewer = CheckboxTableViewer.newCheckList(parent, SWT.MULTI | SWT.BORDER);

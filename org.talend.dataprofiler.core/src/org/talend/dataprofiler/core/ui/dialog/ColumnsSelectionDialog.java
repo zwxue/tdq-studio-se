@@ -20,11 +20,15 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -54,6 +58,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.EObjectHelper;
+import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -90,10 +95,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     private void initCheckedColumn(ColumnIndicator[] columnIndicators) {
-
+        List<ColumnSet> columnSetList = new ArrayList<ColumnSet>();
         for (int i = 0; i < columnIndicators.length; i++) {
             columnIndicators[i].getTdColumn().eContainer();
             ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(columnIndicators[i].getTdColumn());
+            if (!columnSetList.contains(columnSetOwner)) {
+                columnSetList.add(columnSetOwner);
+            }
             ColumnSetKey columnSetKey = new ColumnSetKey(columnSetOwner);
             ColumnCheckedMap columnCheckedMap = columnSetCheckedMap.get(columnSetKey);
             if (columnCheckedMap == null) {
@@ -102,14 +110,16 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             }
             columnCheckedMap.putColumnChecked(columnIndicators[i].getTdColumn(), Boolean.TRUE);
         }
+        // this.setExpandedElements(columnSetList.toArray());
+        this.setInitialElementSelections(columnSetList);
     }
 
-    protected void checkElementChecked() {
-        for (int i = 0; i < currentCheckedColumnSet.size(); i++) {
-            this.getTreeViewer().setChecked(this.currentCheckedColumnSet.get(i), true);
-        }
-        this.currentCheckedColumnSet.clear();
-    }
+    // protected void checkElementChecked() {
+    // for (int i = 0; i < currentCheckedColumnSet.size(); i++) {
+    // this.getTreeViewer().setChecked(this.currentCheckedColumnSet.get(i), true);
+    // }
+    // this.currentCheckedColumnSet.clear();
+    // }
 
     protected void initProvider() {
         fLabelProvider = new DBTablesViewLabelProvider();
@@ -553,6 +563,32 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 return ComparatorsFactory.sort(children, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             }
             return super.getChildren(parentElement);
+        }
+
+        public Object getParent(Object element) {
+            if (element instanceof EObject) {
+                EObject eObj = (EObject) element;
+                ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObj);
+                if (columnSet != null) {
+                    IFolderNode folderNode = FolderNodeHelper.getFolderNode(EObjectHelper.getParent((ColumnSet) element),
+                            columnSet);
+                    return folderNode;
+                }
+                URI uri = eObj.eResource().getURI();
+
+                Path path = new Path(uri.path());
+                String fileName = path.lastSegment();
+                IFolder connectionsFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA)
+                        .getFolder(DQStructureManager.DB_CONNECTIONS);
+                IFile resourceFile = connectionsFolder.getFile(fileName);
+                return resourceFile;
+            } else if (element instanceof IFolderNode) {
+
+                return ((IFolderNode) element).getParent();
+            } else if (element instanceof IResource) {
+                return ((IResource) element).getParent();
+            }
+            return super.getParent(element);
         }
 
         public boolean hasChildren(Object element) {

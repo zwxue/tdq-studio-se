@@ -60,11 +60,11 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             if (CatalogHelper.getSchemas(SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement)).size() > 0) {
                 return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             } else {
-                return FolderNodeHelper.getFolderNode((EObject) parentElement);
+                return FolderNodeHelper.getFolderNodes((EObject) parentElement);
             }
 
         } else {
-            return FolderNodeHelper.getFolderNode((EObject) parentElement);
+            return FolderNodeHelper.getFolderNodes((EObject) parentElement);
         }
         return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
     }
