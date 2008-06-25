@@ -143,8 +143,8 @@ public class IndicatorChartFactory {
 
         CategoryPlot plot = chart.getCategoryPlot();
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
-        renderer.setSeriesPaint(0, Color.RED);
-        renderer.setSeriesPaint(1, Color.GREEN);
+        renderer.setSeriesPaint(0, Color.GREEN);
+        renderer.setSeriesPaint(1, Color.RED);
         renderer.setBaseItemLabelsVisible(true);
         renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(),
                 new DecimalFormat("0.0%")));
@@ -368,8 +368,8 @@ public class IndicatorChartFactory {
                     double notMathCount = patternExt.getNotMatchingValueCount();
                     double machCount = patternExt.getMatchingValueCount();
 
-                    dataset.addValue(notMathCount / (notMathCount + machCount), "not matching", label);
                     dataset.addValue(machCount / (notMathCount + machCount), "matching", label);
+                    dataset.addValue(notMathCount / (notMathCount + machCount), "not matching", label);
                 } else {
                     dataset.addValue(0, "not matching", "");
                     dataset.addValue(0, "matching", "");
