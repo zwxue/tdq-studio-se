@@ -341,15 +341,15 @@ public final class DqRepositoryViewService {
         Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(dataProvider);
         if (CAT_WITH_PRV) {
             ok = resource.getContents().addAll(schemata);
+            util.saveSingleResource(resource);
         } else {
             ok = addElementsToOwnResources(schemata, folder, util);
+            util.save();
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Schema added " + ok);
         }
-
-        util.save();
         return file;
     }
 
