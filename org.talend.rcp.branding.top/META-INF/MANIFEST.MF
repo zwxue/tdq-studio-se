@@ -9,6 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.intro,
  org.talend.dataprofiler.rcp,
- org.talend.dataprofiler.core
+ org.talend.dataprofiler.core,
+ org.eclipse.ui.cheatsheets,
+ org.eclipse.ui.forms
 Eclipse-LazyStart: true
 Bundle-Localization: plugin

@@ -65,5 +65,13 @@
        <Service class="org.talend.rcp.branding.top.TOPBrandingService"
                serviceId="org.talend.dataprofiler.core.service.IBrandingService"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <standbyContentPart
+            class="org.talend.rcp.branding.top.StandbyContentPart"
+            id="org.talend.rcp.branding.top.standbyContentPart"
+            pluginId="org.talend.rcp.branding.top">
+      </standbyContentPart>
+   </extension>
 
 </plugin>
