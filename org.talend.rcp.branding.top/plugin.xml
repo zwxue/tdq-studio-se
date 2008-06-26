@@ -68,9 +68,9 @@
    <extension
          point="org.eclipse.ui.intro.configExtension">
       <standbyContentPart
-            class="org.talend.rcp.branding.top.StandbyContentPart"
-            id="org.talend.rcp.branding.top.standbyContentPart"
-            pluginId="org.talend.rcp.branding.top">
+            class="org.talend.dataprofiler.rcp.StandbyContentPart"
+            id="org.talend.dataprofiler.rcp.StandbyContentPart"
+            pluginId="org.talend.dataprofiler.rcp">
       </standbyContentPart>
    </extension>
 
