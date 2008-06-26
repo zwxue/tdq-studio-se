@@ -45,6 +45,8 @@ public class CreatePatternWizard extends Wizard {
 
     private CreatePatternWizardPage2 mPage2;
 
+    private IPath location;
+
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
      * 
@@ -100,7 +102,7 @@ public class CreatePatternWizard extends Wizard {
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-        IPath location = folder.getLocation();
+        location = folder.getLocation();
         String fname = DqRepositoryViewService.createFilename(folder.getName(), name,
                 NewSourcePatternActionProvider.EXTENSION_PATTERN);
         location = location.removeLastSegments(1);
@@ -109,6 +111,15 @@ public class CreatePatternWizard extends Wizard {
         util.addPoolToResourceSet(new File(location.toPortableString()), pattern);
         util.saveLastResource();
         return true;
+    }
+
+    /**
+     * Getter for location.
+     * 
+     * @return the location
+     */
+    public IPath getLocation() {
+        return this.location;
     }
 
 }

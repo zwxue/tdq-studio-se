@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -31,7 +32,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
@@ -116,6 +119,9 @@ public class CreatePatternAction extends Action {
         if (WizardDialog.OK == dialog.open()) {
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
+                IFile file = folder.getFile(fileWizard.getLocation().lastSegment());
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file),
+                        PluginConstant.PATTERN_EDITOR);
             } catch (CoreException e) {
                 e.printStackTrace();
             }

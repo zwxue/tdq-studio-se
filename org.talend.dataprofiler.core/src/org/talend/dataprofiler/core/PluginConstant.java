@@ -64,4 +64,6 @@ public final class PluginConstant {
     public static final String PARENTHESIS_LEFT = "(";
 
     public static final String PARENTHESIS_RIGHT = ")";
+
+    public static final String PATTERN_EDITOR = "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor";
 }
