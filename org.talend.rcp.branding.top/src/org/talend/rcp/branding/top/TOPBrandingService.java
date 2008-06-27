@@ -36,4 +36,22 @@ public class TOPBrandingService implements IBrandingService {
         return url;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.service.IBrandingService#getCorporationName()
+     */
+    public String getCorporationName() {
+        return "Talend";
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.service.IBrandingService#getShortProductName()
+     */
+    public String getShortProductName() {
+        return "T.O.P";
+    }
+
 }
