@@ -12,16 +12,22 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 
@@ -64,6 +70,43 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             patternsMap.put(file, pattern);
         }
         return pattern;
+    }
+
+    /**
+     * DOC zqin Comment method "getAllAnalysis".
+     * 
+     * @return
+     */
+    public Collection<Pattern> getAllPatternes() {
+        if (resourceChanged) {
+            patternsMap.clear();
+            IFolder defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
+                    .getFolder(DQStructureManager.PATTERNS);
+            try {
+                searchAllPatternes(defaultPatternFolder);
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+            resourceChanged = false;
+        }
+        return patternsMap.values();
+    }
+
+    /**
+     * DOC zqin Comment method "searchAllPatternes".
+     * 
+     * @param folder
+     * @throws CoreException
+     */
+    private void searchAllPatternes(IFolder folder) throws CoreException {
+        for (IResource resource : folder.members()) {
+            if (resource.getType() == IResource.FOLDER) {
+                searchAllPatternes(folder.getFolder(resource.getName()));
+            }
+            IFile file = (IFile) resource;
+            findPattern(file);
+
+        }
     }
 
     /**

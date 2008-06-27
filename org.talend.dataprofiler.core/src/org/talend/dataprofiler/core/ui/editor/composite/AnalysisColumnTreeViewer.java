@@ -24,6 +24,7 @@ import org.eclipse.help.ui.internal.views.ReusableHelpPart;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -35,7 +36,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -47,10 +50,13 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
@@ -62,8 +68,14 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorParameterTypes;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.DomainFactory;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
  * @author rli
@@ -115,6 +127,9 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         column2.setWidth(80);
         TreeColumn column3 = new TreeColumn(newTree, SWT.CENTER);
         column3.setWidth(120);
+        TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
+        column4.setWidth(120);
+
         parent.layout();
         Menu menu = new Menu(newTree);
         MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
@@ -218,6 +233,48 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             comboEditor.minimumWidth = WIDTH1_CELL;
             comboEditor.setEditor(combo, treeItem, 1);
 
+            TreeEditor addPatternEditor = new TreeEditor(tree);
+            Button addPatternBtn = new Button(tree, SWT.NONE);
+            addPatternBtn.setText("add pattern");
+            addPatternBtn.pack();
+            addPatternBtn.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    ElementListSelectionDialog dialog = new ElementListSelectionDialog(((Button) e.getSource()).getShell(),
+                            new PatternLabelProvider());
+                    dialog.setElements(PatternResourceFileHelper.getInstance().getAllPatternes().toArray());
+                    dialog.setTitle("Pattern Selector");
+                    dialog.setMessage("Pattern:");
+                    dialog.setMultipleSelection(true);
+                    dialog.setSize(80, 30);
+                    dialog.create();
+                    if (dialog.open() == Window.OK) {
+
+                        for (Object obj : dialog.getResult()) {
+                            Pattern pattern = (Pattern) obj;
+                            PatternMatchingIndicator patternMatchingIndicator = IndicatorsFactory.eINSTANCE
+                                    .createPatternMatchingIndicator();
+                            IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+                            Domain validData = DomainFactory.eINSTANCE.createDomain();
+                            validData.getPatterns().add(pattern);
+                            indicParams.setDataValidDomain(validData);
+                            patternMatchingIndicator.setParameters(indicParams);
+
+                            patternMatchingIndicator.setName(pattern.getName());
+                            DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
+                            IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
+                            IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
+                            createOneUnit(treeItem, addIndicatorUnit);
+                            setDirty(true);
+                        }
+                    }
+                }
+
+            });
+            addPatternEditor.minimumWidth = WIDTH1_CELL;
+            addPatternEditor.setEditor(addPatternBtn, treeItem, 2);
+
             TreeEditor delLabelEditor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
             delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
@@ -226,11 +283,6 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             delLabel.pack();
             delLabel.addMouseListener(new MouseAdapter() {
 
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-                 */
                 @Override
                 public void mouseDown(MouseEvent e) {
                     deleteColumnItems(columnIndicator);
@@ -245,8 +297,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
             delLabelEditor.minimumWidth = WIDTH1_CELL;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
-            delLabelEditor.setEditor(delLabel, treeItem, 2);
-            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor });
+            delLabelEditor.setEditor(delLabel, treeItem, 3);
+            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor, addPatternEditor });
             if (columnIndicator.hasIndicators()) {
                 createIndicatorItems(treeItem, columnIndicator.getIndicatorUnits());
             }
@@ -259,84 +311,11 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         ColumnIndicator[] newsArray = new ColumnIndicator[this.columnIndicators.length + elements.length];
         System.arraycopy(this.columnIndicators, 0, newsArray, 0, this.columnIndicators.length);
-
         for (int i = 0; i < elements.length; i++) {
-
-            final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
-
-            final ColumnIndicator columnIndicator = (ColumnIndicator) elements[i];
-            newsArray[this.columnIndicators.length + i] = columnIndicator;
-
-            treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
-            String columnName = columnIndicator.getTdColumn().getName();
-            treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
-                    + columnIndicator.getTdColumn().getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null");
-            treeItem.setData(COLUMN_INDICATOR_KEY, columnIndicator);
-
-            TreeEditor comboEditor = new TreeEditor(tree);
-            final CCombo combo = new CCombo(tree, SWT.BORDER);
-            for (DataminingType type : DataminingType.values()) {
-                combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal for presentation
-            }
-            DataminingType dataminingType = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
-            if (dataminingType == null) {
-                dataminingType = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
-            }
-
-            if (dataminingType == null) {
-                combo.select(0);
-            } else {
-                combo.setText(dataminingType.getLiteral());
-            }
-            combo.addSelectionListener(new SelectionAdapter() {
-
-                public void widgetSelected(SelectionEvent e) {
-                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), columnIndicator.getTdColumn());
-                    setDirty(true);
-                }
-
-            });
-            combo.setEditable(false);
-
-            comboEditor.minimumWidth = WIDTH1_CELL;
-            comboEditor.setEditor(combo, treeItem, 1);
-
-            TreeEditor delLabelEditor = new TreeEditor(tree);
-            Label delLabel = new Label(tree, SWT.NONE);
-            delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            delLabel.setToolTipText("delete");
-            delLabel.pack();
-            delLabel.addMouseListener(new MouseAdapter() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-                 */
-                @Override
-                public void mouseDown(MouseEvent e) {
-                    deleteColumnItems(columnIndicator);
-                    if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
-                        setElements(columnIndicators);
-                    } else {
-                        removeItemBranch(treeItem);
-                    }
-                }
-
-            });
-
-            delLabelEditor.minimumWidth = WIDTH1_CELL;
-            delLabelEditor.horizontalAlignment = SWT.CENTER;
-            delLabelEditor.setEditor(delLabel, treeItem, 2);
-            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor });
-            if (columnIndicator.hasIndicators()) {
-                createIndicatorItems(treeItem, columnIndicator.getIndicatorUnits());
-            }
-            treeItem.setExpanded(true);
+            newsArray[this.columnIndicators.length + i] = elements[i];
         }
-        this.columnIndicators = newsArray;
-        this.setDirty(true);
+
+        this.setElements(newsArray);
     }
 
     private static int activeCount = 0;
@@ -501,7 +480,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         delEditor.minimumWidth = WIDTH1_CELL;
         delEditor.horizontalAlignment = SWT.CENTER;
-        delEditor.setEditor(delLabel, indicatorItem, 2);
+        delEditor.setEditor(delLabel, indicatorItem, 3);
         indicatorItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { optionEditor, delEditor });
         if (indicatorEnum.hasChildren()) {
             indicatorItem.setData(treeItem.getData(COLUMN_INDICATOR_KEY));
@@ -623,4 +602,20 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         this.setDirty(true);
     }
 
+    /**
+     * DOC zqin AnalysisColumnTreeViewer class global comment. Detailled comment
+     */
+    class PatternLabelProvider extends LabelProvider {
+
+        @Override
+        public Image getImage(Object element) {
+            return ImageLib.getImage(ImageLib.PATTERN_REG);
+        }
+
+        @Override
+        public String getText(Object element) {
+            Pattern pattern = (Pattern) element;
+            return pattern.getName();
+        }
+    }
 }
