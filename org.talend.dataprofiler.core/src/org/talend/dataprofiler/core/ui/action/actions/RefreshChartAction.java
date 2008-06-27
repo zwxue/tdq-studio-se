@@ -16,6 +16,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 
@@ -26,16 +27,9 @@ public class RefreshChartAction extends Action implements ICheatSheetAction {
 
     private ColumnMasterDetailsPage page;
 
-    public RefreshChartAction() throws Exception {
+    public RefreshChartAction() {
         super("Refresh Chart");
-
-        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-        if (editor != null) {
-            page = (ColumnMasterDetailsPage) editor.getMasterPage();
-        } else {
-            throw new Exception("Editor is null, please create it at first!");
-        }
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.SECTION_PREVIEW));
 
     }
 
@@ -45,13 +39,19 @@ public class RefreshChartAction extends Action implements ICheatSheetAction {
      * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
-    @Override
     public void run(String[] params, ICheatSheetManager manager) {
         run();
     }
 
     @Override
     public void run() {
+        if (page == null) {
+            AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
+            if (editor != null) {
+                page = (ColumnMasterDetailsPage) editor.getMasterPage();
+            }
+        }
         if (page.isDirty()) {
             try {
                 page.saveAnalysis();

@@ -64,12 +64,16 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private Analysis analysis = null;
 
-    public RunAnalysisAction() {
+    private boolean toolbar;
 
+    public RunAnalysisAction() {
         super("Run");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
-        setDisabledImageDescriptor(ImageLib.getImageDescriptor(ImageLib.RUN_DISABLE));
+    }
 
+    public RunAnalysisAction(boolean toolbar) {
+        this();
+        this.toolbar = toolbar;
     }
 
     /*
@@ -169,7 +173,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             CorePlugin.getDefault().refreshWorkSpace();
             treeViewer.refresh();
         }
-
+        if (toolbar) {
+            new RefreshChartAction().run();
+        }
     }
 
     /*
