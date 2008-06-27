@@ -164,7 +164,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         });
     }
 
-    protected void refreshChart(ScrolledForm form) {
+    public void refreshChart(ScrolledForm form) {
         if (chartComposite != null) {
             try {
                 for (Control control : chartComposite.getChildren()) {
@@ -301,7 +301,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
         section.setClient(sectionClient);
     }
 
-    private void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
+    public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
 
         for (ModelElement modelElement : analysisHandler.getAnalyzedColumns()) {
 
