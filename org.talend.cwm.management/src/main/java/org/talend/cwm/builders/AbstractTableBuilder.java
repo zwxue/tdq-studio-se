@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.sql.metadata.constants.GetTable;
 import org.talend.utils.sql.metadata.constants.TableType;
@@ -44,8 +45,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
     public AbstractTableBuilder(Connection conn, TableType type) {
         super(conn);
         if (type == null) {
-            throw new IllegalArgumentException(
-                    "No type given. Type must be set to either tables, views, system tables...");
+            throw new IllegalArgumentException("No type given. Type must be set to either tables, views, system tables...");
         }
         this.tableType = new String[] { type.toString() };
     }
@@ -105,9 +105,12 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
      */
     private T createTable(String catalogName, String schemaPattern, ResultSet tablesSet) throws SQLException {
         String tableName = tablesSet.getString(GetTable.TABLE_NAME.name());
+        String tableComment = tablesSet.getString(GetTable.REMARKS.name());
+
         // --- create a table and add columns
         T table = createTable();
         table.setName(tableName);
+        TaggedValueHelper.setComment(tableComment, table);
         if (columnsRequested) {
             ColumnBuilder colBuild = new ColumnBuilder(connection);
             List<TdColumn> columns = colBuild.getColumns(catalogName, schemaPattern, tableName, null);

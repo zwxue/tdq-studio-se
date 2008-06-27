@@ -52,6 +52,29 @@ public final class TaggedValueHelper {
 
     public static final String PURPOSE = "Purpose";
 
+    public static final String COMMENT = "Comment";
+
+    /**
+     * Method "setComment" sets a comment on the given element.
+     * 
+     * @param comment the comment to set
+     * @param element the element
+     * @return true if the value was not set before.
+     */
+    public static boolean setComment(String comment, ModelElement element) {
+        return setTaggedValue(element, COMMENT, comment);
+    }
+
+    /**
+     * Method "getComment".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getComment(ModelElement element) {
+        return getValue(COMMENT, element);
+    }
+
     /**
      * Method "getDescription".
      * 
@@ -250,7 +273,7 @@ public final class TaggedValueHelper {
      * 
      * @param tag the key to find the value
      * @param element the element
-     * @return the value of the tagged valued of the element
+     * @return the value of the tagged valued of the element or the empty string
      */
     public static String getValue(String tag, ModelElement element) {
         TaggedValue tv = getTaggedValue(tag, element.getTaggedValue());
