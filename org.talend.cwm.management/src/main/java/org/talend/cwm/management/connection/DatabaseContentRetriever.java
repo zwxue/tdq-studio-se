@@ -113,17 +113,27 @@ public final class DatabaseContentRetriever {
             final int columnCount = schemas.getMetaData().getColumnCount();
 
             while (schemas.next()) {
-                // create the schemata
-                String schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
-                TdSchema schema = createSchema(schemaName);
 
-                // set link Catalog -> Schema if exists
+                // set link Catalog -> Schema if exists (e.g. MSSQL)
                 if (columnCount > 1) {
                     // TODO scorreia handle sybase case: no catalog name, only one column in this result set.
 
                     String catName = schemas.getString(MetaDataConstants.TABLE_CATALOG.name());
-                    MultiMapHelper.addUniqueObjectToListMap(catName, schema, catalogName2schemas);
+                    if (catName == null) {
+                        // happens for MSSQL where schemata (called "owners") must be added to all catalogs
+                        // TODO scorreia handle MSSQL case:
+                        // TODO loop on all existing catalogs and create a new Schema for each existing catalog
+                    } else {
+                        // create the schemata
+                        String schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+                        TdSchema schema = createSchema(schemaName);
+                        MultiMapHelper.addUniqueObjectToListMap(catName, schema, catalogName2schemas);
+                    }
                 } else { // store schemata with a null key (meaning no catalog)
+                    // create the schemata
+                    String schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+                    TdSchema schema = createSchema(schemaName);
+
                     MultiMapHelper.addUniqueObjectToListMap(null, schema, catalogName2schemas);
                 }
             }

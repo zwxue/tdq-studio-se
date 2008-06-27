@@ -235,6 +235,7 @@ public class CatalogBuilder extends CwmBuilder {
                         CatalogHelper.addSchemas(schemas, cat);
                     }
                 }
+                // PTODO scorreia handle MS SQL schemata (dbo, root, guest) not related to catalogs.
             }
         }
 

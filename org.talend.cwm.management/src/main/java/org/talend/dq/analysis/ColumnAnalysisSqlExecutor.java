@@ -30,10 +30,8 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DbmsLanguage;
-import org.talend.cwm.management.api.SoftwareSystemManager;
+import org.talend.cwm.management.api.DbmsLanguageFactory;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
@@ -293,7 +291,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } else
 
         // --- handle case of matching pattern count
-        if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator())) {
+        if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicator.eClass())) {
             List<String> patterns = getPatterns(indicator);
             if (patterns.isEmpty()) {
                 return traceError("No pattern found for database type: " + language + " for indicator " + indicator.getName());
@@ -679,28 +677,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return Long.valueOf(String.valueOf(myResultSet.get(0)[0]));
     }
 
-    /**
-     * DOC scorreia Comment method "getLanguage".
-     * 
-     * @return
-     */
     private DbmsLanguage createDbmsLanguage() {
         DataManager connection = this.cachedAnalysis.getContext().getConnection();
-        if (connection == null) {
-            return new DbmsLanguage();
-        }
-        TdDataProvider dataprovider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(connection);
-        if (dataprovider == null) {
-            return new DbmsLanguage();
-        }
-
-        TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
-        if (softwareSystem == null) {
-            return new DbmsLanguage();
-        }
-        DbmsLanguage dbms = new DbmsLanguage(softwareSystem.getSubtype());
-        dbms.setDbQuoteString(this.getDbQuoteString(cachedAnalysis));
-        return dbms;
+        return DbmsLanguageFactory.createDbmsLanguage(connection);
     }
 
     /**
@@ -835,7 +814,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 // set the connection's catalog
                 String catalogName = getCatalogName(indicator.getAnalyzedElement());
                 if (catalogName != null) { // check whether null argument can be given
-                    connection.setCatalog(catalogName);
+                    changeCatalog(catalogName, connection);
                 }
 
                 Expression query = indicator.getInstantiatedExpressions(dbms().getDbmsName());
@@ -855,6 +834,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             connection.close();
         } catch (SQLException e) {
             log.error(e, e);
+            this.errorMessage = e.getMessage();
+            ok = false;
         }
         return ok;
     }
@@ -906,7 +887,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
 
         if (catalogName != null) { // check whether null argument can be given
-            connection.setCatalog(catalogName);
+            changeCatalog(catalogName, connection);
         }
         // create query statement
         // Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY,
@@ -940,4 +921,23 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return myResultSet;
     }
 
+    /**
+     * DOC scorreia Comment method "changeCatalog".
+     * 
+     * @param catalogName
+     * @param connection
+     * @throws SQLException
+     */
+    private boolean changeCatalog(String catalogName, Connection connection) {
+        try {
+            connection.setCatalog(catalogName);
+            return true;
+        } catch (RuntimeException e) {
+            traceError("Problem when changing catalog on connection " + e.getMessage());
+            return false;
+        } catch (SQLException e) {
+            traceError("Problem when changing catalog on connection " + e.getMessage());
+            return false;
+        }
+    }
 }

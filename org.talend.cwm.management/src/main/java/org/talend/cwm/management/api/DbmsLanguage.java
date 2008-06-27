@@ -86,7 +86,7 @@ public class DbmsLanguage {
     /**
      * DbmsLanguage constructor for generic ANSI SQL (independent of any DBMS).
      */
-    public DbmsLanguage() {
+    DbmsLanguage() {
         this.dbmsName = SQL;
         this.dbmsFunctions = initDbmsFunctions(dbmsName);
     }
@@ -96,7 +96,7 @@ public class DbmsLanguage {
      * 
      * @param dbmsType the name of the DBMS (MySQL, Oracle,...)
      */
-    public DbmsLanguage(String dbmsType) {
+    DbmsLanguage(String dbmsType) {
         this.dbmsName = dbmsType;
         this.dbmsFunctions = initDbmsFunctions(dbmsName);
     }
@@ -108,7 +108,7 @@ public class DbmsLanguage {
      * @param majorVersion the major version number
      * @param minorVersion the minor version number
      */
-    public DbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
+    DbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         this.dbmsName = dbmsType;
         // PTODO scorreia handle dbms versions if needed
         this.dbmsFunctions = initDbmsFunctions(dbmsName);
@@ -660,26 +660,63 @@ public class DbmsLanguage {
      * Method "getExpression".
      * 
      * @param patternComponent
-     * @return the expression for the correct language
+     * @return the expression for the correct language or null
      */
     public Expression getExpression(PatternComponent patternComponent) {
         if (patternComponent != null && patternComponent.eClass().equals(PatternPackage.eINSTANCE.getRegularExpression())) {
             RegularExpression regExp = (RegularExpression) patternComponent;
             Expression expression = regExp.getExpression();
             if (expression != null) {
-                // handle database specific patterns
-                if (is(expression.getLanguage())) {
-                    return expression;
-                }
-                // try generic language
-                if (SQL.equals(expression.getLanguage())) {
-                    return expression;
-                }
-                // else no correct language found
-                return null;
+                return getApplicable(expression);
             }
         }
         // not a regular expression
+        return null;
+    }
+
+    private Expression getApplicable(Expression expression) {
+        return isApplicable(expression) ? expression : null;
+    }
+
+    /**
+     * Method "getApplicableExpression".
+     * 
+     * @param expression an expression (not null)
+     * @return
+     */
+    public boolean isApplicable(Expression expression) {
+        // handle database specific patterns
+        if (is(expression.getLanguage())) {
+            return true;
+        }
+        // try generic language
+        if (SQL.equals(expression.getLanguage())) {
+            return true;
+        }
+        // else no correct language found
+        return false;
+    }
+
+    /**
+     * DOC scorreia Comment method "getRegexpTestString".
+     * 
+     * @param stringToCheck
+     * @param regularExpression
+     * @return
+     */
+    public String getRegexpTestString(String stringToCheck, Expression regularExpression) {
+        if (!isApplicable(regularExpression)) {
+            return null;
+        }
+        // else
+        if (is(MYSQL)) {
+            return "SELECT " + surroundWith('\'', stringToCheck, '\'') + " REGEXP " + regularExpression.getBody() + EOS;
+        }
+
+        if (is(ORACLE)) {
+            return "SELECT REGEXP_LIKE(" + surroundWith('\'', stringToCheck, '\'') + " , " + regularExpression.getBody() + ")"
+                    + EOS;
+        }
         return null;
     }
 }
