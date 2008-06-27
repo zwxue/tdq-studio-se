@@ -14,6 +14,7 @@ package org.talend.dataprofiler.rcp.intro;
 
 import java.lang.management.ManagementFactory;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -34,6 +35,8 @@ import org.talend.dataprofiler.rcp.register.RegisterWizardDialog;
  * 
  */
 public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
+
+    private static Logger log = Logger.getLogger(ApplicationWorkbenchAdvisor.class);
 
     private static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective";
 
@@ -98,7 +101,7 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Problem during the registration wizard: " + e.getLocalizedMessage(), e);
         }
     }
 }
