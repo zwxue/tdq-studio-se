@@ -38,6 +38,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
+import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
@@ -72,6 +73,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchWindow window;
 
     private RunAnalysisAction runAnalysisAction;
+
+    private RefreshChartAction refreshChartAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -183,10 +186,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void fillCoolBar(ICoolBarManager coolBar) {
         IToolBarManager toolbar = new ToolBarManager(SWT.FLAT | SWT.RIGHT);
         coolBar.add(new ToolBarContributionItem(toolbar, "switch_persp")); //$NON-NLS-1$
-        toolbar.add(ActionFactory.SAVE.create(window));
         toolbar.add(new ChangePerspectiveAction(true));
-        runAnalysisAction = new RunAnalysisAction();
+        toolbar.add(ActionFactory.SAVE.create(window));
+        runAnalysisAction = new RunAnalysisAction(true);
         toolbar.add(runAnalysisAction);
+        refreshChartAction = new RefreshChartAction();
+        toolbar.add(refreshChartAction);
         final IWorkbenchWindow activeWorkbenchWindow = getActionBarConfigurer().getWindowConfigurer().getWindow();
         if (activeWorkbenchWindow != null) {
             activeWorkbenchWindow.getPartService().addPartListener(new IPartListener() {
@@ -205,13 +210,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                         }
                     }
                     runAnalysisAction.setEnabled(isEnable);
+                    refreshChartAction.setEnabled(isEnable);
                 }
 
                 public void partBroughtToTop(IWorkbenchPart part) {
                     if (part instanceof AnalysisEditor) {
                         runAnalysisAction.setEnabled(true);
+                        refreshChartAction.setEnabled(true);
                     } else {
                         runAnalysisAction.setEnabled(false);
+                        refreshChartAction.setEnabled(false);
                     }
                 }
 
