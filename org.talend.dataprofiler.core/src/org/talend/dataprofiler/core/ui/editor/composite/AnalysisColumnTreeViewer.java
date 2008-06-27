@@ -68,13 +68,10 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorParameterTypes;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.domain.Domain;
-import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
@@ -253,15 +250,9 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
                         for (Object obj : dialog.getResult()) {
                             Pattern pattern = (Pattern) obj;
-                            PatternMatchingIndicator patternMatchingIndicator = IndicatorsFactory.eINSTANCE
-                                    .createPatternMatchingIndicator();
-                            IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-                            Domain validData = DomainFactory.eINSTANCE.createDomain();
-                            validData.getPatterns().add(pattern);
-                            indicParams.setDataValidDomain(validData);
-                            patternMatchingIndicator.setParameters(indicParams);
+                            PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory
+                                    .createRegexpMatchingIndicator(pattern);
 
-                            patternMatchingIndicator.setName(pattern.getName());
                             DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
                             IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
                             IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
@@ -341,7 +332,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
         String label = indicatorUnit.getIndicatorName();
-        if (IndicatorEnum.PatternMatchingIndicatorEnum.compareTo(type) == 0) {
+        if (IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0) {
             indicatorItem.setImage(0, ImageLib.getImage(ImageLib.PATTERN_REG));
         }
         indicatorItem.setText(0, label);

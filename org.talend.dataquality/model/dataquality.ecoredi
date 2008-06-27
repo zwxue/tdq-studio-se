@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_pM5tccRNEdybWP_3i664pg" activeDiagram="_Lj26wMgYEdyQB43bWInoVA">
+<diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_pM5tccRNEdybWP_3i664pg" activeDiagram="_eBrQkDF5Ed2f4KoAHMHuPA">
   <model href="dataquality.ecore#/"/>
   <subdiagrams xmi:id="_NJJ5YMROEdybWP_3i664pg">
     <model href="dataquality.ecore#//indicators"/>
@@ -2857,7 +2857,7 @@
         <waypoints>[-320, -44, 0, -114]</waypoints>
       </contained>
     </diagrams>
-    <diagrams xmi:id="_eBrQkDF5Ed2f4KoAHMHuPA" position="0,0" size="100,100" name="pattern matching indicator" viewport="0,80">
+    <diagrams xmi:id="_eBrQkDF5Ed2f4KoAHMHuPA" position="0,0" size="100,100" name="pattern matching indicator" viewport="0,390">
       <property xmi:id="_eDDJkDF5Ed2f4KoAHMHuPA" key="pageFormatName" value="A4"/>
       <property xmi:id="_eDDJkTF5Ed2f4KoAHMHuPA" key="diagramWidth" value="840"/>
       <property xmi:id="_eDDJkjF5Ed2f4KoAHMHuPA" key="diagramHeight" value="1188"/>
@@ -2969,7 +2969,7 @@
         </contained>
       </contained>
       <contained xsi:type="di:GraphNode" xmi:id="_jx7X8DF5Ed2f4KoAHMHuPA" position="176,426" size="334,-1">
-        <anchorage xmi:id="_xNhaYDF5Ed2f4KoAHMHuPA" graphEdge="_xNiogDF5Ed2f4KoAHMHuPA"/>
+        <anchorage xmi:id="_xNhaYDF5Ed2f4KoAHMHuPA" graphEdge="_xNiogDF5Ed2f4KoAHMHuPA _HKfvoERgEd2VQqgaFdNqMA _NQjVoERlEd2VQqgaFdNqMA"/>
         <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_jx7X8TF5Ed2f4KoAHMHuPA" presentation="default">
           <element href="dataquality.ecore#//indicators/PatternMatchingIndicator"/>
         </semanticModel>
@@ -2998,6 +2998,48 @@
       </contained>
       <contained xsi:type="di:GraphEdge" xmi:id="_xNiogDF5Ed2f4KoAHMHuPA" anchor="_xNhaYDF5Ed2f4KoAHMHuPA _xNhaYTF5Ed2f4KoAHMHuPA">
         <semanticModel xsi:type="di:SimpleSemanticModelElement" xmi:id="_xNiogTF5Ed2f4KoAHMHuPA" presentation="default" typeInfo="Inheritance"/>
+      </contained>
+      <contained xsi:type="di:GraphNode" xmi:id="_BOUFEERgEd2VQqgaFdNqMA" position="482,582" size="241,-1">
+        <anchorage xmi:id="_HKehgERgEd2VQqgaFdNqMA" graphEdge="_HKfvoERgEd2VQqgaFdNqMA"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_BOUFEURgEd2VQqgaFdNqMA" presentation="default">
+          <element href="dataquality.ecore#//indicators/SqlPatternMatchingIndicator"/>
+        </semanticModel>
+        <contained xsi:type="di:GraphNode" xmi:id="_BOUFEkRgEd2VQqgaFdNqMA">
+          <property xmi:id="_BOUFE0RgEd2VQqgaFdNqMA" key="eStructuralFeatureID" value="21"/>
+          <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_BOUFFERgEd2VQqgaFdNqMA" presentation="default">
+            <element href="dataquality.ecore#//indicators/SqlPatternMatchingIndicator"/>
+          </semanticModel>
+        </contained>
+        <contained xsi:type="di:GraphNode" xmi:id="_BOUFFURgEd2VQqgaFdNqMA">
+          <property xmi:id="_BOUFFkRgEd2VQqgaFdNqMA" key="eStructuralFeatureID" value="11"/>
+          <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_BOUFF0RgEd2VQqgaFdNqMA" presentation="default">
+            <element href="dataquality.ecore#//indicators/SqlPatternMatchingIndicator"/>
+          </semanticModel>
+        </contained>
+      </contained>
+      <contained xsi:type="di:GraphEdge" xmi:id="_HKfvoERgEd2VQqgaFdNqMA" anchor="_HKehgERgEd2VQqgaFdNqMA _xNhaYDF5Ed2f4KoAHMHuPA">
+        <semanticModel xsi:type="di:SimpleSemanticModelElement" xmi:id="_HKfvoURgEd2VQqgaFdNqMA" presentation="default" typeInfo="Inheritance"/>
+      </contained>
+      <contained xsi:type="di:GraphNode" xmi:id="_JYvWkERlEd2VQqgaFdNqMA" position="69,578" size="275,-1">
+        <anchorage xmi:id="_NQiHgERlEd2VQqgaFdNqMA" graphEdge="_NQjVoERlEd2VQqgaFdNqMA"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_JYv9oERlEd2VQqgaFdNqMA" presentation="default">
+          <element href="dataquality.ecore#//indicators/RegexpMatchingIndicator"/>
+        </semanticModel>
+        <contained xsi:type="di:GraphNode" xmi:id="_JYv9oURlEd2VQqgaFdNqMA">
+          <property xmi:id="_JYv9okRlEd2VQqgaFdNqMA" key="eStructuralFeatureID" value="21"/>
+          <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_JYv9o0RlEd2VQqgaFdNqMA" presentation="default">
+            <element href="dataquality.ecore#//indicators/RegexpMatchingIndicator"/>
+          </semanticModel>
+        </contained>
+        <contained xsi:type="di:GraphNode" xmi:id="_JYv9pERlEd2VQqgaFdNqMA">
+          <property xmi:id="_JYv9pURlEd2VQqgaFdNqMA" key="eStructuralFeatureID" value="11"/>
+          <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_JYv9pkRlEd2VQqgaFdNqMA" presentation="default">
+            <element href="dataquality.ecore#//indicators/RegexpMatchingIndicator"/>
+          </semanticModel>
+        </contained>
+      </contained>
+      <contained xsi:type="di:GraphEdge" xmi:id="_NQjVoERlEd2VQqgaFdNqMA" anchor="_NQiHgERlEd2VQqgaFdNqMA _xNhaYDF5Ed2f4KoAHMHuPA">
+        <semanticModel xsi:type="di:SimpleSemanticModelElement" xmi:id="_NQjVoURlEd2VQqgaFdNqMA" presentation="default" typeInfo="Inheritance"/>
       </contained>
     </diagrams>
     <diagrams xmi:id="__0LfUDIJEd2-mPVj8n7c7Q" position="0,0" size="100,100" name="composite indicator" viewport="0,0">
@@ -4701,7 +4743,7 @@
   </subdiagrams>
   <subdiagrams xmi:id="_Ljtw0MgYEdyQB43bWInoVA">
     <model href="dataquality.ecore#//reports"/>
-    <diagrams xmi:id="_Lj26wMgYEdyQB43bWInoVA" position="0,0" size="100,100" name="Reports" viewport="0,189">
+    <diagrams xmi:id="_Lj26wMgYEdyQB43bWInoVA" position="0,0" size="100,100" name="Reports" viewport="0,55">
       <property xmi:id="_Lkz9AMgYEdyQB43bWInoVA" key="pageFormatName" value="A4"/>
       <property xmi:id="_Lkz9AcgYEdyQB43bWInoVA" key="diagramWidth" value="840"/>
       <property xmi:id="_Lkz9AsgYEdyQB43bWInoVA" key="diagramHeight" value="1188"/>
@@ -4732,6 +4774,21 @@
           <contained xsi:type="di:GraphNode" xmi:id="_vzBYkDu8Ed2m5s2NaIYxtw" position="0,0" size="-1,-1">
             <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_vzBYkTu8Ed2m5s2NaIYxtw" presentation="default">
               <element href="dataquality.ecore#//reports/TdReport/lastExecutionDate"/>
+            </semanticModel>
+          </contained>
+          <contained xsi:type="di:GraphNode" xmi:id="_JWu6kEOYEd2LtqYqtdIw4w" position="0,0" size="-1,-1">
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_JWu6kUOYEd2LtqYqtdIw4w" presentation="default">
+              <element href="dataquality.ecore#//reports/TdReport/inputJrxml"/>
+            </semanticModel>
+          </contained>
+          <contained xsi:type="di:GraphNode" xmi:id="_QOSBMEOYEd2LtqYqtdIw4w" position="0,0" size="-1,-1">
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_QOSBMUOYEd2LtqYqtdIw4w" presentation="default">
+              <element href="dataquality.ecore#//reports/TdReport/outputReportFolder"/>
+            </semanticModel>
+          </contained>
+          <contained xsi:type="di:GraphNode" xmi:id="_Nr88cEOaEd2LtqYqtdIw4w" position="0,0" size="-1,-1">
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_Nr88cUOaEd2LtqYqtdIw4w" presentation="default">
+              <element href="dataquality.ecore#//reports/TdReport/reportType"/>
             </semanticModel>
           </contained>
         </contained>
@@ -5421,7 +5478,7 @@
     </diagrams>
     <subdiagrams xmi:id="_hhgeAMg9EdyQB43bWInoVA">
       <model href="dataquality.ecore#//domain/pattern"/>
-      <diagrams xmi:id="_hhoZ0Mg9EdyQB43bWInoVA" position="0,0" size="100,100" name="Pattern" viewport="0,0">
+      <diagrams xmi:id="_hhoZ0Mg9EdyQB43bWInoVA" position="0,0" size="100,100" name="Pattern" viewport="0,299">
         <property xmi:id="_hh44gMg9EdyQB43bWInoVA" key="pageFormatName" value="A4"/>
         <property xmi:id="_hh44gcg9EdyQB43bWInoVA" key="diagramWidth" value="840"/>
         <property xmi:id="_hh44gsg9EdyQB43bWInoVA" key="diagramHeight" value="1188"/>
@@ -5512,6 +5569,11 @@
             <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_vi245Mg9EdyQB43bWInoVA" presentation="default">
               <element href="dataquality.ecore#//domain/pattern/RegularExpression"/>
             </semanticModel>
+            <contained xsi:type="di:GraphNode" xmi:id="_8BM1EERhEd2VQqgaFdNqMA" position="0,0" size="-1,-1">
+              <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_8BM1EURhEd2VQqgaFdNqMA" presentation="default">
+                <element href="dataquality.ecore#//domain/pattern/RegularExpression/expressionType"/>
+              </semanticModel>
+            </contained>
           </contained>
           <contained xsi:type="di:GraphNode" xmi:id="_vi245cg9EdyQB43bWInoVA">
             <property xmi:id="_vi245sg9EdyQB43bWInoVA" key="eStructuralFeatureID" value="11"/>
@@ -5642,6 +5704,27 @@
           </semanticModel>
           <contained xsi:type="di:EdgeObjectUV" xmi:id="_B2304sqFEdy9lOcjbPV0xw" id="nameLabel" uDistance="20" vDistance="20"/>
           <contained xsi:type="di:EdgeObjectUV" xmi:id="_B23048qFEdy9lOcjbPV0xw" id="cardinalityLabel" uDistance="20" vDistance="-20"/>
+        </contained>
+        <contained xsi:type="di:GraphNode" xmi:id="_BukyIERjEd2VQqgaFdNqMA" position="37,299" size="150,-1">
+          <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_BukyIURjEd2VQqgaFdNqMA" presentation="default">
+            <element href="dataquality.ecore#//domain/pattern/ExpressionType"/>
+          </semanticModel>
+          <contained xsi:type="di:GraphNode" xmi:id="_BukyIkRjEd2VQqgaFdNqMA">
+            <property xmi:id="_BukyI0RjEd2VQqgaFdNqMA" key="eStructuralFeatureID" value="9"/>
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_BukyJERjEd2VQqgaFdNqMA" presentation="default">
+              <element href="dataquality.ecore#//domain/pattern/ExpressionType"/>
+            </semanticModel>
+            <contained xsi:type="di:GraphNode" xmi:id="_EUYWwERjEd2VQqgaFdNqMA" position="0,0" size="-1,-1">
+              <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_EUYWwURjEd2VQqgaFdNqMA" presentation="default">
+                <element href="dataquality.ecore#//domain/pattern/ExpressionType/REGEXP"/>
+              </semanticModel>
+            </contained>
+            <contained xsi:type="di:GraphNode" xmi:id="_GvGFsURjEd2VQqgaFdNqMA" position="0,0" size="-1,-1">
+              <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_GvGFskRjEd2VQqgaFdNqMA" presentation="default">
+                <element href="dataquality.ecore#//domain/pattern/ExpressionType/SQL_LIKE"/>
+              </semanticModel>
+            </contained>
+          </contained>
         </contained>
       </diagrams>
     </subdiagrams>

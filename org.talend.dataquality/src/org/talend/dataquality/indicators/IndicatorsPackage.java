@@ -7800,6 +7800,548 @@ public interface IndicatorsPackage extends EPackage {
     int PATTERN_MATCHING_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 2;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.SqlPatternMatchingIndicatorImpl <em>Sql Pattern Matching Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.SqlPatternMatchingIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getSqlPatternMatchingIndicator()
+     * @generated
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR = 31;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__NAME = PATTERN_MATCHING_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__VISIBILITY = PATTERN_MATCHING_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__CLIENT_DEPENDENCY = PATTERN_MATCHING_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__SUPPLIER_DEPENDENCY = PATTERN_MATCHING_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__CONSTRAINT = PATTERN_MATCHING_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__NAMESPACE = PATTERN_MATCHING_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__IMPORTER = PATTERN_MATCHING_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__STEREOTYPE = PATTERN_MATCHING_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__TAGGED_VALUE = PATTERN_MATCHING_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__DOCUMENT = PATTERN_MATCHING_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__DESCRIPTION = PATTERN_MATCHING_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__RESPONSIBLE_PARTY = PATTERN_MATCHING_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__ELEMENT_NODE = PATTERN_MATCHING_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__SET = PATTERN_MATCHING_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__RENDERED_OBJECT = PATTERN_MATCHING_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__VOCABULARY_ELEMENT = PATTERN_MATCHING_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__MEASUREMENT = PATTERN_MATCHING_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__CHANGE_REQUEST = PATTERN_MATCHING_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__DASDL_PROPERTY = PATTERN_MATCHING_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__COUNT = PATTERN_MATCHING_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__NULL_COUNT = PATTERN_MATCHING_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__PARAMETERS = PATTERN_MATCHING_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__ANALYZED_ELEMENT = PATTERN_MATCHING_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__DATAMINING_TYPE = PATTERN_MATCHING_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__INDICATOR_DEFINITION = PATTERN_MATCHING_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS = PATTERN_MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT = PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT;
+
+    /**
+     * The number of structural features of the '<em>Sql Pattern Matching Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR_FEATURE_COUNT = PATTERN_MATCHING_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl <em>Regexp Matching Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getRegexpMatchingIndicator()
+     * @generated
+     */
+    int REGEXP_MATCHING_INDICATOR = 32;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__NAME = PATTERN_MATCHING_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__VISIBILITY = PATTERN_MATCHING_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__CLIENT_DEPENDENCY = PATTERN_MATCHING_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__SUPPLIER_DEPENDENCY = PATTERN_MATCHING_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__CONSTRAINT = PATTERN_MATCHING_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__NAMESPACE = PATTERN_MATCHING_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__IMPORTER = PATTERN_MATCHING_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__STEREOTYPE = PATTERN_MATCHING_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__TAGGED_VALUE = PATTERN_MATCHING_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__DOCUMENT = PATTERN_MATCHING_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__DESCRIPTION = PATTERN_MATCHING_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__RESPONSIBLE_PARTY = PATTERN_MATCHING_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__ELEMENT_NODE = PATTERN_MATCHING_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__SET = PATTERN_MATCHING_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__RENDERED_OBJECT = PATTERN_MATCHING_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__VOCABULARY_ELEMENT = PATTERN_MATCHING_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__MEASUREMENT = PATTERN_MATCHING_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__CHANGE_REQUEST = PATTERN_MATCHING_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__DASDL_PROPERTY = PATTERN_MATCHING_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__COUNT = PATTERN_MATCHING_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__NULL_COUNT = PATTERN_MATCHING_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__PARAMETERS = PATTERN_MATCHING_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__ANALYZED_ELEMENT = PATTERN_MATCHING_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__DATAMINING_TYPE = PATTERN_MATCHING_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__INDICATOR_DEFINITION = PATTERN_MATCHING_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS = PATTERN_MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__MATCHING_VALUE_COUNT = PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT;
+
+    /**
+     * The number of structural features of the '<em>Regexp Matching Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR_FEATURE_COUNT = PATTERN_MATCHING_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7807,7 +8349,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getEnumStatistics()
      * @generated
      */
-    int ENUM_STATISTICS = 31;
+    int ENUM_STATISTICS = 33;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DataminingType <em>Datamining Type</em>}' enum.
@@ -7817,7 +8359,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDataminingType()
      * @generated
      */
-    int DATAMINING_TYPE = 32;
+    int DATAMINING_TYPE = 34;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DateGrain <em>Date Grain</em>}' enum.
@@ -7827,7 +8369,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateGrain()
      * @generated
      */
-    int DATE_GRAIN = 33;
+    int DATE_GRAIN = 35;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.MatchingAlgorithm <em>Matching Algorithm</em>}' enum.
@@ -7837,7 +8379,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingAlgorithm()
      * @generated
      */
-    int MATCHING_ALGORITHM = 34;
+    int MATCHING_ALGORITHM = 36;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.IndicatorValueType <em>Indicator Value Type</em>}' enum.
@@ -7847,7 +8389,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getIndicatorValueType()
      * @generated
      */
-    int INDICATOR_VALUE_TYPE = 35;
+    int INDICATOR_VALUE_TYPE = 37;
 
     /**
      * The meta object id for the '<em>Java Set</em>' data type.
@@ -7857,7 +8399,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaSet()
      * @generated
      */
-    int JAVA_SET = 36;
+    int JAVA_SET = 38;
 
     /**
      * The meta object id for the '<em>Java Hash Map</em>' data type.
@@ -7867,7 +8409,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaHashMap()
      * @generated
      */
-    int JAVA_HASH_MAP = 37;
+    int JAVA_HASH_MAP = 39;
 
     /**
      * The meta object id for the '<em>Java Tree Map</em>' data type.
@@ -7877,7 +8419,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaTreeMap()
      * @generated
      */
-    int JAVA_TREE_MAP = 38;
+    int JAVA_TREE_MAP = 40;
 
     /**
      * The meta object id for the '<em>Object Array</em>' data type.
@@ -7886,7 +8428,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getObjectArray()
      * @generated
      */
-    int OBJECT_ARRAY = 39;
+    int OBJECT_ARRAY = 41;
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
@@ -8815,6 +9357,26 @@ public interface IndicatorsPackage extends EPackage {
     EAttribute getPatternMatchingIndicator_NotMatchingValueCount();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.SqlPatternMatchingIndicator <em>Sql Pattern Matching Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Sql Pattern Matching Indicator</em>'.
+     * @see org.talend.dataquality.indicators.SqlPatternMatchingIndicator
+     * @generated
+     */
+    EClass getSqlPatternMatchingIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.RegexpMatchingIndicator <em>Regexp Matching Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Regexp Matching Indicator</em>'.
+     * @see org.talend.dataquality.indicators.RegexpMatchingIndicator
+     * @generated
+     */
+    EClass getRegexpMatchingIndicator();
+
+    /**
      * Returns the meta object for enum '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -9686,6 +10248,26 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EAttribute PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = eINSTANCE.getPatternMatchingIndicator_NotMatchingValueCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.SqlPatternMatchingIndicatorImpl <em>Sql Pattern Matching Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.SqlPatternMatchingIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getSqlPatternMatchingIndicator()
+         * @generated
+         */
+        EClass SQL_PATTERN_MATCHING_INDICATOR = eINSTANCE.getSqlPatternMatchingIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl <em>Regexp Matching Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getRegexpMatchingIndicator()
+         * @generated
+         */
+        EClass REGEXP_MATCHING_INDICATOR = eINSTANCE.getRegexpMatchingIndicator();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

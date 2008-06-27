@@ -766,26 +766,49 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
-     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.PatternMatchingIndicator} instances.
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.SqlPatternMatchingIndicator} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected PatternMatchingIndicatorItemProvider patternMatchingIndicatorItemProvider;
+    protected SqlPatternMatchingIndicatorItemProvider sqlPatternMatchingIndicatorItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.talend.dataquality.indicators.PatternMatchingIndicator}.
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.SqlPatternMatchingIndicator}.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
-    public Adapter createPatternMatchingIndicatorAdapter() {
-        if (patternMatchingIndicatorItemProvider == null) {
-            patternMatchingIndicatorItemProvider = new PatternMatchingIndicatorItemProvider(this);
+    public Adapter createSqlPatternMatchingIndicatorAdapter() {
+        if (sqlPatternMatchingIndicatorItemProvider == null) {
+            sqlPatternMatchingIndicatorItemProvider = new SqlPatternMatchingIndicatorItemProvider(this);
         }
 
-        return patternMatchingIndicatorItemProvider;
+        return sqlPatternMatchingIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.RegexpMatchingIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected RegexpMatchingIndicatorItemProvider regexpMatchingIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.RegexpMatchingIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createRegexpMatchingIndicatorAdapter() {
+        if (regexpMatchingIndicatorItemProvider == null) {
+            regexpMatchingIndicatorItemProvider = new RegexpMatchingIndicatorItemProvider(this);
+        }
+
+        return regexpMatchingIndicatorItemProvider;
     }
 
     /**
@@ -917,7 +940,8 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (upperQuartileIndicatorItemProvider != null) upperQuartileIndicatorItemProvider.dispose();
         if (countsIndicatorItemProvider != null) countsIndicatorItemProvider.dispose();
         if (dateParametersItemProvider != null) dateParametersItemProvider.dispose();
-        if (patternMatchingIndicatorItemProvider != null) patternMatchingIndicatorItemProvider.dispose();
+        if (sqlPatternMatchingIndicatorItemProvider != null) sqlPatternMatchingIndicatorItemProvider.dispose();
+        if (regexpMatchingIndicatorItemProvider != null) regexpMatchingIndicatorItemProvider.dispose();
     }
 
 }

@@ -32,6 +32,9 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportImpl;
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getCreationDate <em>Creation Date</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getLastExecutionDate <em>Last Execution Date</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getAnalysisMap <em>Analysis Map</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getInputJrxml <em>Input Jrxml</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getOutputReportFolder <em>Output Report Folder</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getReportType <em>Report Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -96,6 +99,66 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @ordered
      */
     protected EList<AnalysisMap> analysisMap;
+
+    /**
+     * The default value of the '{@link #getInputJrxml() <em>Input Jrxml</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getInputJrxml()
+     * @generated
+     * @ordered
+     */
+    protected static final String INPUT_JRXML_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getInputJrxml() <em>Input Jrxml</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getInputJrxml()
+     * @generated
+     * @ordered
+     */
+    protected String inputJrxml = INPUT_JRXML_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getOutputReportFolder() <em>Output Report Folder</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getOutputReportFolder()
+     * @generated
+     * @ordered
+     */
+    protected static final String OUTPUT_REPORT_FOLDER_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getOutputReportFolder() <em>Output Report Folder</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getOutputReportFolder()
+     * @generated
+     * @ordered
+     */
+    protected String outputReportFolder = OUTPUT_REPORT_FOLDER_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getReportType()
+     * @generated
+     * @ordered
+     */
+    protected static final String REPORT_TYPE_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getReportType()
+     * @generated
+     * @ordered
+     */
+    protected String reportType = REPORT_TYPE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -180,6 +243,69 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getInputJrxml() {
+        return inputJrxml;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setInputJrxml(String newInputJrxml) {
+        String oldInputJrxml = inputJrxml;
+        inputJrxml = newInputJrxml;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__INPUT_JRXML, oldInputJrxml, inputJrxml));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getOutputReportFolder() {
+        return outputReportFolder;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setOutputReportFolder(String newOutputReportFolder) {
+        String oldOutputReportFolder = outputReportFolder;
+        outputReportFolder = newOutputReportFolder;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER, oldOutputReportFolder, outputReportFolder));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getReportType() {
+        return reportType;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setReportType(String newReportType) {
+        String oldReportType = reportType;
+        reportType = newReportType;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__REPORT_TYPE, oldReportType, reportType));
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated NOT
@@ -218,6 +344,12 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return getLastExecutionDate();
             case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 return getAnalysisMap();
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+                return getInputJrxml();
+            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+                return getOutputReportFolder();
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
+                return getReportType();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -244,6 +376,15 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 getAnalysisMap().clear();
                 getAnalysisMap().addAll((Collection<? extends AnalysisMap>)newValue);
                 return;
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+                setInputJrxml((String)newValue);
+                return;
+            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+                setOutputReportFolder((String)newValue);
+                return;
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
+                setReportType((String)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -267,6 +408,15 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 getAnalysisMap().clear();
                 return;
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+                setInputJrxml(INPUT_JRXML_EDEFAULT);
+                return;
+            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+                setOutputReportFolder(OUTPUT_REPORT_FOLDER_EDEFAULT);
+                return;
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
+                setReportType(REPORT_TYPE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -286,6 +436,12 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return LAST_EXECUTION_DATE_EDEFAULT == null ? lastExecutionDate != null : !LAST_EXECUTION_DATE_EDEFAULT.equals(lastExecutionDate);
             case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 return analysisMap != null && !analysisMap.isEmpty();
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+                return INPUT_JRXML_EDEFAULT == null ? inputJrxml != null : !INPUT_JRXML_EDEFAULT.equals(inputJrxml);
+            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+                return OUTPUT_REPORT_FOLDER_EDEFAULT == null ? outputReportFolder != null : !OUTPUT_REPORT_FOLDER_EDEFAULT.equals(outputReportFolder);
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
+                return REPORT_TYPE_EDEFAULT == null ? reportType != null : !REPORT_TYPE_EDEFAULT.equals(reportType);
         }
         return super.eIsSet(featureID);
     }
@@ -304,6 +460,12 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         result.append(creationDate);
         result.append(", lastExecutionDate: ");
         result.append(lastExecutionDate);
+        result.append(", inputJrxml: ");
+        result.append(inputJrxml);
+        result.append(", outputReportFolder: ");
+        result.append(outputReportFolder);
+        result.append(", reportType: ");
+        result.append(reportType);
         result.append(')');
         return result.toString();
     }

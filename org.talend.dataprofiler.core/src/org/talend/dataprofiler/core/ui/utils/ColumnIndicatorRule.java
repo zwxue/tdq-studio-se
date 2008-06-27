@@ -26,7 +26,10 @@ import org.talend.utils.sql.Java2SqlType;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  * 
  */
-public class ColumnIndicatorRule {
+public final class ColumnIndicatorRule {
+
+    private ColumnIndicatorRule() {
+    }
 
     public static boolean match(IIndicatorNode node, ColumnIndicator columnIndicator) {
 

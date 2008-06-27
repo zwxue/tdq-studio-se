@@ -321,6 +321,33 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getTdReport_InputJrxml() {
+        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTdReport_OutputReportFolder() {
+        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTdReport_ReportType() {
+        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getPresentationParameter() {
         return presentationParameterEClass;
     }
@@ -403,6 +430,9 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         createEAttribute(tdReportEClass, TD_REPORT__CREATION_DATE);
         createEAttribute(tdReportEClass, TD_REPORT__LAST_EXECUTION_DATE);
         createEReference(tdReportEClass, TD_REPORT__ANALYSIS_MAP);
+        createEAttribute(tdReportEClass, TD_REPORT__INPUT_JRXML);
+        createEAttribute(tdReportEClass, TD_REPORT__OUTPUT_REPORT_FOLDER);
+        createEAttribute(tdReportEClass, TD_REPORT__REPORT_TYPE);
 
         presentationParameterEClass = createEClass(PRESENTATION_PARAMETER);
         createEAttribute(presentationParameterEClass, PRESENTATION_PARAMETER__PLOT_TYPE);
@@ -454,6 +484,9 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         initEAttribute(getTdReport_CreationDate(), ecorePackage.getEDate(), "creationDate", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_LastExecutionDate(), ecorePackage.getEDate(), "lastExecutionDate", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getTdReport_AnalysisMap(), this.getAnalysisMap(), null, "analysisMap", null, 0, -1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTdReport_InputJrxml(), ecorePackage.getEString(), "inputJrxml", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTdReport_OutputReportFolder(), ecorePackage.getEString(), "outputReportFolder", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTdReport_ReportType(), ecorePackage.getEString(), "reportType", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(tdReportEClass, ecorePackage.getEBoolean(), "addAnalysis", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);

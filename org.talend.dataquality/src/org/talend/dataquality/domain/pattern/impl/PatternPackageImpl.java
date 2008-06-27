@@ -6,7 +6,9 @@
  */
 package org.talend.dataquality.domain.pattern.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -24,6 +26,7 @@ import org.talend.dataquality.domain.impl.DomainPackageImpl;
 
 import org.talend.dataquality.domain.pattern.AttributeReference;
 import org.talend.dataquality.domain.pattern.ComponentReference;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -151,6 +154,13 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * @generated
      */
     private EClass componentReferenceEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EEnum expressionTypeEEnum = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -335,6 +345,15 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getRegularExpression_ExpressionType() {
+        return (EAttribute)regularExpressionEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getAttributeReference() {
         return attributeReferenceEClass;
     }
@@ -364,6 +383,15 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      */
     public EReference getComponentReference_ReferencedComponent() {
         return (EReference)componentReferenceEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EEnum getExpressionType() {
+        return expressionTypeEEnum;
     }
 
     /**
@@ -401,12 +429,16 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
 
         regularExpressionEClass = createEClass(REGULAR_EXPRESSION);
         createEReference(regularExpressionEClass, REGULAR_EXPRESSION__EXPRESSION);
+        createEAttribute(regularExpressionEClass, REGULAR_EXPRESSION__EXPRESSION_TYPE);
 
         attributeReferenceEClass = createEClass(ATTRIBUTE_REFERENCE);
         createEReference(attributeReferenceEClass, ATTRIBUTE_REFERENCE__REFERENCED_ATTRIBUTE);
 
         componentReferenceEClass = createEClass(COMPONENT_REFERENCE);
         createEReference(componentReferenceEClass, COMPONENT_REFERENCE__REFERENCED_COMPONENT);
+
+        // Create enums
+        expressionTypeEEnum = createEEnum(EXPRESSION_TYPE);
     }
 
     /**
@@ -453,12 +485,18 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
 
         initEClass(regularExpressionEClass, RegularExpression.class, "RegularExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getRegularExpression_Expression(), theCorePackage.getExpression(), null, "expression", null, 0, 1, RegularExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getRegularExpression_ExpressionType(), ecorePackage.getEString(), "expressionType", null, 0, 1, RegularExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(attributeReferenceEClass, AttributeReference.class, "AttributeReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getAttributeReference_ReferencedAttribute(), theCorePackage.getAttribute(), null, "referencedAttribute", null, 0, 1, AttributeReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(componentReferenceEClass, ComponentReference.class, "ComponentReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getComponentReference_ReferencedComponent(), this.getPatternComponent(), null, "referencedComponent", null, 0, 1, ComponentReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        // Initialize enums and add enum literals
+        initEEnum(expressionTypeEEnum, ExpressionType.class, "ExpressionType");
+        addEEnumLiteral(expressionTypeEEnum, ExpressionType.REGEXP);
+        addEEnumLiteral(expressionTypeEEnum, ExpressionType.SQL_LIKE);
     }
 
 } //PatternPackageImpl

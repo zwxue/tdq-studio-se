@@ -27,7 +27,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
  *
  * @generated
  */
-public class PatternMatchingIndicatorImpl extends IndicatorImpl implements PatternMatchingIndicator {
+public abstract class PatternMatchingIndicatorImpl extends IndicatorImpl implements PatternMatchingIndicator {
 
     /**
      * The default value of the '{@link #getMatchingValueCount() <em>Matching Value Count</em>}' attribute. <!--

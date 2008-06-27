@@ -24,6 +24,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl#getExpression <em>Expression</em>}</li>
+ *   <li>{@link org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl#getExpressionType <em>Expression Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -39,6 +40,25 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
      * @ordered
      */
     protected Expression expression;
+
+    /**
+     * The default value of the '{@link #getExpressionType() <em>Expression Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getExpressionType()
+     * @generated
+     * @ordered
+     */
+    protected static final String EXPRESSION_TYPE_EDEFAULT = null;
+    /**
+     * The cached value of the '{@link #getExpressionType() <em>Expression Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getExpressionType()
+     * @generated
+     * @ordered
+     */
+    protected String expressionType = EXPRESSION_TYPE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -107,6 +127,27 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getExpressionType() {
+        return expressionType;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setExpressionType(String newExpressionType) {
+        String oldExpressionType = expressionType;
+        expressionType = newExpressionType;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, PatternPackage.REGULAR_EXPRESSION__EXPRESSION_TYPE, oldExpressionType, expressionType));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -126,6 +167,8 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
         switch (featureID) {
             case PatternPackage.REGULAR_EXPRESSION__EXPRESSION:
                 return getExpression();
+            case PatternPackage.REGULAR_EXPRESSION__EXPRESSION_TYPE:
+                return getExpressionType();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -140,6 +183,9 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
         switch (featureID) {
             case PatternPackage.REGULAR_EXPRESSION__EXPRESSION:
                 setExpression((Expression)newValue);
+                return;
+            case PatternPackage.REGULAR_EXPRESSION__EXPRESSION_TYPE:
+                setExpressionType((String)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -156,6 +202,9 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
             case PatternPackage.REGULAR_EXPRESSION__EXPRESSION:
                 setExpression((Expression)null);
                 return;
+            case PatternPackage.REGULAR_EXPRESSION__EXPRESSION_TYPE:
+                setExpressionType(EXPRESSION_TYPE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -170,8 +219,26 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
         switch (featureID) {
             case PatternPackage.REGULAR_EXPRESSION__EXPRESSION:
                 return expression != null;
+            case PatternPackage.REGULAR_EXPRESSION__EXPRESSION_TYPE:
+                return EXPRESSION_TYPE_EDEFAULT == null ? expressionType != null : !EXPRESSION_TYPE_EDEFAULT.equals(expressionType);
         }
         return super.eIsSet(featureID);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String toString() {
+        if (eIsProxy()) return super.toString();
+
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (expressionType: ");
+        result.append(expressionType);
+        result.append(')');
+        return result.toString();
     }
 
 } //RegularExpressionImpl

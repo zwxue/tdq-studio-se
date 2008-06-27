@@ -96,7 +96,8 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.UPPER_QUARTILE_INDICATOR: return createUpperQuartileIndicator();
             case IndicatorsPackage.COUNTS_INDICATOR: return createCountsIndicator();
             case IndicatorsPackage.DATE_PARAMETERS: return createDateParameters();
-            case IndicatorsPackage.PATTERN_MATCHING_INDICATOR: return createPatternMatchingIndicator();
+            case IndicatorsPackage.SQL_PATTERN_MATCHING_INDICATOR: return createSqlPatternMatchingIndicator();
+            case IndicatorsPackage.REGEXP_MATCHING_INDICATOR: return createRegexpMatchingIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -469,9 +470,19 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      * <!-- end-user-doc -->
      * @generated
      */
-    public PatternMatchingIndicator createPatternMatchingIndicator() {
-        PatternMatchingIndicatorImpl patternMatchingIndicator = new PatternMatchingIndicatorImpl();
-        return patternMatchingIndicator;
+    public SqlPatternMatchingIndicator createSqlPatternMatchingIndicator() {
+        SqlPatternMatchingIndicatorImpl sqlPatternMatchingIndicator = new SqlPatternMatchingIndicatorImpl();
+        return sqlPatternMatchingIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public RegexpMatchingIndicator createRegexpMatchingIndicator() {
+        RegexpMatchingIndicatorImpl regexpMatchingIndicator = new RegexpMatchingIndicatorImpl();
+        return regexpMatchingIndicator;
     }
 
     /**

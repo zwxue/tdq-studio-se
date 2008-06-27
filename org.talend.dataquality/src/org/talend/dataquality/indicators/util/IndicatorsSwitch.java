@@ -381,6 +381,26 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.SQL_PATTERN_MATCHING_INDICATOR: {
+                SqlPatternMatchingIndicator sqlPatternMatchingIndicator = (SqlPatternMatchingIndicator)theEObject;
+                T result = caseSqlPatternMatchingIndicator(sqlPatternMatchingIndicator);
+                if (result == null) result = casePatternMatchingIndicator(sqlPatternMatchingIndicator);
+                if (result == null) result = caseIndicator(sqlPatternMatchingIndicator);
+                if (result == null) result = caseModelElement(sqlPatternMatchingIndicator);
+                if (result == null) result = caseElement(sqlPatternMatchingIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.REGEXP_MATCHING_INDICATOR: {
+                RegexpMatchingIndicator regexpMatchingIndicator = (RegexpMatchingIndicator)theEObject;
+                T result = caseRegexpMatchingIndicator(regexpMatchingIndicator);
+                if (result == null) result = casePatternMatchingIndicator(regexpMatchingIndicator);
+                if (result == null) result = caseIndicator(regexpMatchingIndicator);
+                if (result == null) result = caseModelElement(regexpMatchingIndicator);
+                if (result == null) result = caseElement(regexpMatchingIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -755,6 +775,36 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T casePatternMatchingIndicator(PatternMatchingIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Sql Pattern Matching Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Sql Pattern Matching Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseSqlPatternMatchingIndicator(SqlPatternMatchingIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Regexp Matching Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Regexp Matching Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseRegexpMatchingIndicator(RegexpMatchingIndicator object) {
         return null;
     }
 

@@ -6,7 +6,9 @@
  */
 package org.talend.dataquality.domain.pattern;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import orgomg.cwm.objectmodel.core.CorePackage;
@@ -297,13 +299,22 @@ public interface PatternPackage extends EPackage {
     int REGULAR_EXPRESSION__EXPRESSION = PATTERN_COMPONENT_FEATURE_COUNT + 0;
 
     /**
+     * The feature id for the '<em><b>Expression Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGULAR_EXPRESSION__EXPRESSION_TYPE = PATTERN_COMPONENT_FEATURE_COUNT + 1;
+
+    /**
      * The number of structural features of the '<em>Regular Expression</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REGULAR_EXPRESSION_FEATURE_COUNT = PATTERN_COMPONENT_FEATURE_COUNT + 1;
+    int REGULAR_EXPRESSION_FEATURE_COUNT = PATTERN_COMPONENT_FEATURE_COUNT + 2;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.domain.pattern.impl.AttributeReferenceImpl <em>Attribute Reference</em>}' class.
@@ -363,6 +374,17 @@ public interface PatternPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.domain.pattern.ExpressionType <em>Expression Type</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.domain.pattern.ExpressionType
+     * @see org.talend.dataquality.domain.pattern.impl.PatternPackageImpl#getExpressionType()
+     * @generated
+     */
+    int EXPRESSION_TYPE = 5;
+
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.domain.pattern.Pattern <em>Pattern</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -415,6 +437,17 @@ public interface PatternPackage extends EPackage {
     EReference getRegularExpression_Expression();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpressionType <em>Expression Type</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Expression Type</em>'.
+     * @see org.talend.dataquality.domain.pattern.RegularExpression#getExpressionType()
+     * @see #getRegularExpression()
+     * @generated
+     */
+    EAttribute getRegularExpression_ExpressionType();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.domain.pattern.AttributeReference <em>Attribute Reference</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -455,6 +488,16 @@ public interface PatternPackage extends EPackage {
      * @generated
      */
     EReference getComponentReference_ReferencedComponent();
+
+    /**
+     * Returns the meta object for enum '{@link org.talend.dataquality.domain.pattern.ExpressionType <em>Expression Type</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for enum '<em>Expression Type</em>'.
+     * @see org.talend.dataquality.domain.pattern.ExpressionType
+     * @generated
+     */
+    EEnum getExpressionType();
 
     /**
      * Returns the factory that creates the instances of the model.
@@ -525,6 +568,14 @@ public interface PatternPackage extends EPackage {
         EReference REGULAR_EXPRESSION__EXPRESSION = eINSTANCE.getRegularExpression_Expression();
 
         /**
+         * The meta object literal for the '<em><b>Expression Type</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute REGULAR_EXPRESSION__EXPRESSION_TYPE = eINSTANCE.getRegularExpression_ExpressionType();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.domain.pattern.impl.AttributeReferenceImpl <em>Attribute Reference</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -559,6 +610,16 @@ public interface PatternPackage extends EPackage {
          * @generated
          */
         EReference COMPONENT_REFERENCE__REFERENCED_COMPONENT = eINSTANCE.getComponentReference_ReferencedComponent();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.domain.pattern.ExpressionType <em>Expression Type</em>}' enum.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.domain.pattern.ExpressionType
+         * @see org.talend.dataquality.domain.pattern.impl.PatternPackageImpl#getExpressionType()
+         * @generated
+         */
+        EEnum EXPRESSION_TYPE = eINSTANCE.getExpressionType();
 
     }
 

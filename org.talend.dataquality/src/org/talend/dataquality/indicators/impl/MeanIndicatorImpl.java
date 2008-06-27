@@ -42,6 +42,8 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
         Long c = getCount();
         // if (super.genericSum == null) {// TODO scorreia check that this work
         if (c.compareTo(0L) == 0) {
+            // FIXME scorreia this error should send a warning to the user that he does not have a mean instead of
+            // displaying a chart with 0.
             throw new RuntimeException("Invalid mean!!");
         }
         Double sum = Double.valueOf(getSumStr());

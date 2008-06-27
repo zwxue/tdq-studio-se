@@ -20,11 +20,16 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * 
  */
 public enum IndicatorEnum {
-    PatternMatchingIndicatorEnum(
-                                 IndicatorsPackage.PATTERN_MATCHING_INDICATOR,
-                                 IndicatorsPackage.Literals.PATTERN_MATCHING_INDICATOR,
-                                 "pattern matching",
-                                 null),
+    SqlPatternMatchingIndicatorEnum(
+                                    IndicatorsPackage.SQL_PATTERN_MATCHING_INDICATOR,
+                                    IndicatorsPackage.Literals.SQL_PATTERN_MATCHING_INDICATOR,
+                                    "sql like matching",
+                                    null),
+    RegexpMatchingIndicatorEnum(
+                                IndicatorsPackage.REGEXP_MATCHING_INDICATOR,
+                                IndicatorsPackage.Literals.REGEXP_MATCHING_INDICATOR,
+                                "regexp matching",
+                                null),
     RowCountIndicatorEnum(
                           IndicatorsPackage.ROW_COUNT_INDICATOR,
                           IndicatorsPackage.Literals.ROW_COUNT_INDICATOR,
@@ -258,8 +263,8 @@ public enum IndicatorEnum {
             returnEnum = BoxIIndicatorEnum;
         } else if (indicatorType == CountsIndicatorEnum.getIndicatorType()) {
             returnEnum = CountsIndicatorEnum;
-        } else if (indicatorType == PatternMatchingIndicatorEnum.getIndicatorType()) {
-            returnEnum = PatternMatchingIndicatorEnum;
+        } else if (indicatorType == RegexpMatchingIndicatorEnum.getIndicatorType()) {
+            returnEnum = RegexpMatchingIndicatorEnum;
         }
 
         return returnEnum;
@@ -267,7 +272,7 @@ public enum IndicatorEnum {
     }
 
     public static boolean isPlainIndicatorEnum(IndicatorEnum indicatorEnumn) {
-        return indicatorEnumn != PatternMatchingIndicatorEnum;
+        return indicatorEnumn != RegexpMatchingIndicatorEnum && indicatorEnumn != SqlPatternMatchingIndicatorEnum;
     }
 
 }

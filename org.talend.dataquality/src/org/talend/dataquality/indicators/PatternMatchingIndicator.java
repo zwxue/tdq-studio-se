@@ -21,7 +21,7 @@ package org.talend.dataquality.indicators;
  * </p>
  *
  * @see org.talend.dataquality.indicators.IndicatorsPackage#getPatternMatchingIndicator()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface PatternMatchingIndicator extends Indicator {

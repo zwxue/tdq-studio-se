@@ -140,12 +140,16 @@
     <taggedValue xmi:id="_yb-Y4Th8Ed2XmO7pl5Yuyg" tag="Description" value="contains several count indicators"/>
     <taggedValue xmi:id="_yb-Y4jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze the quantity of records"/>
   </indicatorDefinitions>
-  <indicatorDefinitions xmi:id="_yb-_8Dh8Ed2XmO7pl5Yuyg" name="Pattern Matching Indicator" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Pattern Matching Indicator">
+  <indicatorDefinitions xmi:id="_yb-_8Dh8Ed2XmO7pl5Yuyg" name="Regexp Matching Indicator" categories="_BvUq8ERhEd2RSqFSgXiIfA" label="Regexp Matching Indicator">
     <taggedValue xmi:id="_yb-_8Th8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of records matching the given pattern against the number of records that do not match the given pattern"/>
     <taggedValue xmi:id="_yb-_8jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records that match a regular pattern"/>
-    <sqlGenericExpression xmi:id="_yb_nADh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} LIKE {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="SQL"/>
     <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} REGEXP {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} REGEXP_LIKE({0},{2}) THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="Oracle"/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_Z4vXcERgEd2RSqFSgXiIfA" name="SQL Pattern Matching Indicator" categories="_BvUq8ERhEd2RSqFSgXiIfA" label="SQL Pattern Matching Indicator">
+    <taggedValue xmi:id="_hzXEoERgEd2RSqFSgXiIfA" tag="Description" value="counts the number of records matching the given SQL pattern against the number of records that do not match the given SQL pattern"/>
+    <taggedValue xmi:id="_hzXEoURgEd2RSqFSgXiIfA" tag="Purpose" value="evaluate the number of records that match a SQL pattern (entering in LIKE clause)"/>
+    <sqlGenericExpression xmi:id="_vIt8MERgEd2RSqFSgXiIfA" body="SELECT SUM(CASE WHEN {0} LIKE {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_GrAeADh9Ed2XmO7pl5Yuyg" name="Null Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Null Count">
     <taggedValue xmi:id="_GrBFEDh9Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of missing data (null records)"/>
@@ -157,6 +161,10 @@
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>
+  </categories>
+  <categories xmi:id="_BvUq8ERhEd2RSqFSgXiIfA" name="Quality" label="Quality">
+    <taggedValue xmi:id="_II4OAERhEd2RSqFSgXiIfA" tag="Description" value="contains quality indicators"/>
+    <taggedValue xmi:id="_II4OAURhEd2RSqFSgXiIfA" tag="Purpose" value="evaluate the quality of the data"/>
   </categories>
   <categories xmi:id="_ccKHERF2Ed2PKb6nEJEvhw" name="Text Statistics" label="Text Statistics">
     <taggedValue xmi:id="_ycA1ITh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the length of the records"/>

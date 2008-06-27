@@ -73,6 +73,9 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/creationDate"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/lastExecutionDate"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//reports/TdReport/analysisMap"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/inputJrxml"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/outputReportFolder"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/reportType"/>
         <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/addAnalysis">
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis/analysis"/>
         </genOperations>
@@ -301,6 +304,8 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/PatternMatchingIndicator/matchingValueCount"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/PatternMatchingIndicator/notMatchingValueCount"/>
       </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/SqlPatternMatchingIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/RegexpMatchingIndicator"/>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">
@@ -405,12 +410,17 @@
       </genClasses>
       <nestedGenPackages prefix="Pattern" basePackage="org.talend.dataquality.domain"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//domain/pattern">
+        <genEnums typeSafeEnumCompatible="false" ecoreEnum="dataquality.ecore#//domain/pattern/ExpressionType">
+          <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//domain/pattern/ExpressionType/REGEXP"/>
+          <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//domain/pattern/ExpressionType/SQL_LIKE"/>
+        </genEnums>
         <genClasses ecoreClass="dataquality.ecore#//domain/pattern/Pattern">
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//domain/pattern/Pattern/components"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//domain/pattern/PatternComponent"/>
         <genClasses ecoreClass="dataquality.ecore#//domain/pattern/RegularExpression">
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//domain/pattern/RegularExpression/expression"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//domain/pattern/RegularExpression/expressionType"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//domain/pattern/AttributeReference">
           <genFeatures notify="false" createChild="false" propertySortChoices="true"

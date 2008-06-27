@@ -74,6 +74,9 @@ public class TdReportItemProvider
 
             addCreationDatePropertyDescriptor(object);
             addLastExecutionDatePropertyDescriptor(object);
+            addInputJrxmlPropertyDescriptor(object);
+            addOutputReportFolderPropertyDescriptor(object);
+            addReportTypePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -114,6 +117,72 @@ public class TdReportItemProvider
                  getString("_UI_TdReport_lastExecutionDate_feature"),
                  getString("_UI_PropertyDescriptor_description", "_UI_TdReport_lastExecutionDate_feature", "_UI_TdReport_type"),
                  ReportsPackage.Literals.TD_REPORT__LAST_EXECUTION_DATE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Input Jrxml feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addInputJrxmlPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_TdReport_inputJrxml_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_TdReport_inputJrxml_feature", "_UI_TdReport_type"),
+                 ReportsPackage.Literals.TD_REPORT__INPUT_JRXML,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Output Report Folder feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addOutputReportFolderPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_TdReport_outputReportFolder_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_TdReport_outputReportFolder_feature", "_UI_TdReport_type"),
+                 ReportsPackage.Literals.TD_REPORT__OUTPUT_REPORT_FOLDER,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Report Type feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addReportTypePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_TdReport_reportType_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_TdReport_reportType_feature", "_UI_TdReport_type"),
+                 ReportsPackage.Literals.TD_REPORT__REPORT_TYPE,
                  true,
                  false,
                  false,
@@ -192,6 +261,9 @@ public class TdReportItemProvider
         switch (notification.getFeatureID(TdReport.class)) {
             case ReportsPackage.TD_REPORT__CREATION_DATE:
             case ReportsPackage.TD_REPORT__LAST_EXECUTION_DATE:
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:

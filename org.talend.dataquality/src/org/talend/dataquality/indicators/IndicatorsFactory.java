@@ -296,13 +296,22 @@ public interface IndicatorsFactory extends EFactory {
     DateParameters createDateParameters();
 
     /**
-     * Returns a new object of class '<em>Pattern Matching Indicator</em>'.
+     * Returns a new object of class '<em>Sql Pattern Matching Indicator</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Pattern Matching Indicator</em>'.
+     * @return a new object of class '<em>Sql Pattern Matching Indicator</em>'.
      * @generated
      */
-    PatternMatchingIndicator createPatternMatchingIndicator();
+    SqlPatternMatchingIndicator createSqlPatternMatchingIndicator();
+
+    /**
+     * Returns a new object of class '<em>Regexp Matching Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Regexp Matching Indicator</em>'.
+     * @generated
+     */
+    RegexpMatchingIndicator createRegexpMatchingIndicator();
 
     /**
      * Returns the package supported by this factory.

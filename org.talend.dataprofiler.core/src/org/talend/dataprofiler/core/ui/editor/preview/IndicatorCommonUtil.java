@@ -173,7 +173,7 @@ public class IndicatorCommonUtil {
             tempObject = ((UpperQuartileIndicator) indicator).getValue();
             break;
 
-        case PatternMatchingIndicatorEnum:
+        case RegexpMatchingIndicatorEnum:
             tempColor = null;
             PatternMatchingExt patternExt = new PatternMatchingExt();
             patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());

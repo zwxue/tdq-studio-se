@@ -60,7 +60,9 @@ import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
 import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.TextParameters;
@@ -301,6 +303,20 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass patternMatchingIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass sqlPatternMatchingIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass regexpMatchingIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1201,6 +1217,24 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getSqlPatternMatchingIndicator() {
+        return sqlPatternMatchingIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getRegexpMatchingIndicator() {
+        return regexpMatchingIndicatorEClass;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1415,6 +1449,10 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(patternMatchingIndicatorEClass, PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT);
         createEAttribute(patternMatchingIndicatorEClass, PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT);
 
+        sqlPatternMatchingIndicatorEClass = createEClass(SQL_PATTERN_MATCHING_INDICATOR);
+
+        regexpMatchingIndicatorEClass = createEClass(REGEXP_MATCHING_INDICATOR);
+
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
         dataminingTypeEEnum = createEEnum(DATAMINING_TYPE);
@@ -1495,6 +1533,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         upperQuartileIndicatorEClass.getESuperTypes().add(this.getMaxValueIndicator());
         countsIndicatorEClass.getESuperTypes().add(this.getCompositeIndicator());
         patternMatchingIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        sqlPatternMatchingIndicatorEClass.getESuperTypes().add(this.getPatternMatchingIndicator());
+        regexpMatchingIndicatorEClass.getESuperTypes().add(this.getPatternMatchingIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1670,9 +1710,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEClass(dateParametersEClass, DateParameters.class, "DateParameters", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getDateParameters_DateAggregationType(), this.getDateGrain(), "dateAggregationType", "year", 0, 1, DateParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(patternMatchingIndicatorEClass, PatternMatchingIndicator.class, "PatternMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEClass(patternMatchingIndicatorEClass, PatternMatchingIndicator.class, "PatternMatchingIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getPatternMatchingIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1, PatternMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getPatternMatchingIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null, 0, 1, PatternMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(sqlPatternMatchingIndicatorEClass, SqlPatternMatchingIndicator.class, "SqlPatternMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(regexpMatchingIndicatorEClass, RegexpMatchingIndicator.class, "RegexpMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

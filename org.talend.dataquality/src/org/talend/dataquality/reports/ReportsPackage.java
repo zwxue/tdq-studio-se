@@ -522,13 +522,40 @@ public interface ReportsPackage extends EPackage {
     int TD_REPORT__ANALYSIS_MAP = InformationreportingPackage.REPORT_FEATURE_COUNT + 3;
 
     /**
+     * The feature id for the '<em><b>Input Jrxml</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TD_REPORT__INPUT_JRXML = InformationreportingPackage.REPORT_FEATURE_COUNT + 4;
+
+    /**
+     * The feature id for the '<em><b>Output Report Folder</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TD_REPORT__OUTPUT_REPORT_FOLDER = InformationreportingPackage.REPORT_FEATURE_COUNT + 5;
+
+    /**
+     * The feature id for the '<em><b>Report Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TD_REPORT__REPORT_TYPE = InformationreportingPackage.REPORT_FEATURE_COUNT + 6;
+
+    /**
      * The number of structural features of the '<em>Td Report</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 4;
+    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 7;
 
 
     /**
@@ -662,6 +689,39 @@ public interface ReportsPackage extends EPackage {
     EReference getTdReport_AnalysisMap();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getInputJrxml <em>Input Jrxml</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Input Jrxml</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getInputJrxml()
+     * @see #getTdReport()
+     * @generated
+     */
+    EAttribute getTdReport_InputJrxml();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getOutputReportFolder <em>Output Report Folder</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Output Report Folder</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getOutputReportFolder()
+     * @see #getTdReport()
+     * @generated
+     */
+    EAttribute getTdReport_OutputReportFolder();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getReportType <em>Report Type</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Report Type</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getReportType()
+     * @see #getTdReport()
+     * @generated
+     */
+    EAttribute getTdReport_ReportType();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.reports.PresentationParameter <em>Presentation Parameter</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -784,6 +844,27 @@ public interface ReportsPackage extends EPackage {
          * @generated
          */
         EReference TD_REPORT__ANALYSIS_MAP = eINSTANCE.getTdReport_AnalysisMap();
+        /**
+         * The meta object literal for the '<em><b>Input Jrxml</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TD_REPORT__INPUT_JRXML = eINSTANCE.getTdReport_InputJrxml();
+        /**
+         * The meta object literal for the '<em><b>Output Report Folder</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TD_REPORT__OUTPUT_REPORT_FOLDER = eINSTANCE.getTdReport_OutputReportFolder();
+        /**
+         * The meta object literal for the '<em><b>Report Type</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TD_REPORT__REPORT_TYPE = eINSTANCE.getTdReport_ReportType();
         /**
          * The meta object literal for the '{@link org.talend.dataquality.reports.impl.PresentationParameterImpl <em>Presentation Parameter</em>}' class.
          * <!-- begin-user-doc -->

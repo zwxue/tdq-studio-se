@@ -41,6 +41,7 @@ import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
@@ -220,9 +221,6 @@ public class TestAnalysisCreation {
      * @return
      */
     private PatternMatchingIndicator createPatternMatchingIndicator() {
-        PatternMatchingIndicator patternMatchingIndicator = IndicatorsFactory.eINSTANCE.createPatternMatchingIndicator();
-        IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-        Domain validData = DomainFactory.eINSTANCE.createDomain();
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         pattern.setName("My Pattern");
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
@@ -231,6 +229,11 @@ public class TestAnalysisCreation {
         expression.setLanguage("SQL");
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
+
+        PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
+        PatternMatchingIndicator patternMatchingIndicator = IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator();
+        IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        Domain validData = DomainFactory.eINSTANCE.createDomain();
         validData.getPatterns().add(pattern);
         indicParams.setDataValidDomain(validData);
         patternMatchingIndicator.setParameters(indicParams);

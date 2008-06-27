@@ -97,7 +97,7 @@ public class CompositeIndicator {
             case UpperQuartileIndicatorEnum:
                 summaryList.add(one);
                 break;
-            case PatternMatchingIndicatorEnum:
+            case RegexpMatchingIndicatorEnum:
                 patternList.add(one);
                 break;
 

@@ -18,6 +18,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpression <em>Expression</em>}</li>
+ *   <li>{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpressionType <em>Expression Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -52,4 +53,29 @@ public interface RegularExpression extends PatternComponent {
      * @generated
      */
     void setExpression(Expression value);
+
+    /**
+     * Returns the value of the '<em><b>Expression Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The type of regular expression: can be either "regexp" or "sql like" to differentiate between the regular patterns and the SQL expressions available for the LIKE clause.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Expression Type</em>' attribute.
+     * @see #setExpressionType(String)
+     * @see org.talend.dataquality.domain.pattern.PatternPackage#getRegularExpression_ExpressionType()
+     * @model
+     * @generated
+     */
+    String getExpressionType();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpressionType <em>Expression Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Expression Type</em>' attribute.
+     * @see #getExpressionType()
+     * @generated
+     */
+    void setExpressionType(String value);
 } // RegularExpression

@@ -205,6 +205,14 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
                 return createPatternMatchingIndicatorAdapter();
             }
             @Override
+            public Adapter caseSqlPatternMatchingIndicator(SqlPatternMatchingIndicator object) {
+                return createSqlPatternMatchingIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseRegexpMatchingIndicator(RegexpMatchingIndicator object) {
+                return createRegexpMatchingIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -663,6 +671,34 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createPatternMatchingIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.SqlPatternMatchingIndicator <em>Sql Pattern Matching Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.SqlPatternMatchingIndicator
+     * @generated
+     */
+    public Adapter createSqlPatternMatchingIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.RegexpMatchingIndicator <em>Regexp Matching Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.RegexpMatchingIndicator
+     * @generated
+     */
+    public Adapter createRegexpMatchingIndicatorAdapter() {
         return null;
     }
 

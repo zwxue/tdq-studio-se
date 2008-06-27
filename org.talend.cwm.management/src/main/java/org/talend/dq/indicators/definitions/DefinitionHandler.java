@@ -42,7 +42,9 @@ import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
 import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
@@ -244,6 +246,26 @@ public final class DefinitionHandler {
         @Override
         public Boolean defaultCase(EObject object) {
             return false;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#caseRegexpMatchingIndicator(org.talend.dataquality.indicators.RegexpMatchingIndicator)
+         */
+        @Override
+        public Boolean caseRegexpMatchingIndicator(RegexpMatchingIndicator object) {
+            return setIndicatorDefinition(object, "Regexp Matching Indicator");
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#caseSqlPatternMatchingIndicator(org.talend.dataquality.indicators.SqlPatternMatchingIndicator)
+         */
+        @Override
+        public Boolean caseSqlPatternMatchingIndicator(SqlPatternMatchingIndicator object) {
+            return setIndicatorDefinition(object, "SQL Pattern Matching Indicator");
         }
 
         /*

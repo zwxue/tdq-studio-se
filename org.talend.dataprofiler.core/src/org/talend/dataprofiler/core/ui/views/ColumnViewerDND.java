@@ -39,11 +39,8 @@ import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataquality.domain.Domain;
-import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
@@ -176,15 +173,7 @@ public class ColumnViewerDND {
             Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe);
             TreeItem item = (TreeItem) event.item;
             ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
-            PatternMatchingIndicator patternMatchingIndicator = IndicatorsFactory.eINSTANCE.createPatternMatchingIndicator();
-            IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-            Domain validData = DomainFactory.eINSTANCE.createDomain();
-            validData.getPatterns().add(pattern);
-            indicParams.setDataValidDomain(validData);
-            patternMatchingIndicator.setParameters(indicParams);
-
-            // MOD scorreia 2008-06-20 give the name of the pattern to the indicator
-            patternMatchingIndicator.setName(pattern.getName());
+            PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
 
             DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
 

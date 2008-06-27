@@ -7,6 +7,7 @@
 package org.talend.dataquality.domain.pattern.impl;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -75,6 +76,36 @@ public class PatternFactoryImpl extends EFactoryImpl implements PatternFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
+    public Object createFromString(EDataType eDataType, String initialValue) {
+        switch (eDataType.getClassifierID()) {
+            case PatternPackage.EXPRESSION_TYPE:
+                return createExpressionTypeFromString(eDataType, initialValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+        }
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String convertToString(EDataType eDataType, Object instanceValue) {
+        switch (eDataType.getClassifierID()) {
+            case PatternPackage.EXPRESSION_TYPE:
+                return convertExpressionTypeToString(eDataType, instanceValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+        }
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public Pattern createPattern() {
         PatternImpl pattern = new PatternImpl();
         return pattern;
@@ -118,6 +149,26 @@ public class PatternFactoryImpl extends EFactoryImpl implements PatternFactory {
     public ComponentReference createComponentReference() {
         ComponentReferenceImpl componentReference = new ComponentReferenceImpl();
         return componentReference;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public ExpressionType createExpressionTypeFromString(EDataType eDataType, String initialValue) {
+        ExpressionType result = ExpressionType.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+        return result;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String convertExpressionTypeToString(EDataType eDataType, Object instanceValue) {
+        return instanceValue == null ? null : instanceValue.toString();
     }
 
     /**
