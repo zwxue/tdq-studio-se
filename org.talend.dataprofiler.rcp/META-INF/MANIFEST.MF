@@ -13,7 +13,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide.application,
  org.talend.libraries.logging,
  org.apache.xerces,
- org.eclipse.ui.cheatsheets
+ org.eclipse.ui.cheatsheets,
+ org.talend.registration,
+ org.eclipse.update.core
 Eclipse-LazyStart: true
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.rcp,

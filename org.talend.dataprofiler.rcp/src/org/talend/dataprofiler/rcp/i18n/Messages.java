@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp.i18n;
 
+import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -30,11 +31,29 @@ public final class Messages {
     private Messages() {
     }
 
+    /**
+     * DOC qzhang Comment method "getString".
+     * 
+     * @param key
+     * @return
+     */
     public static String getString(String key) {
         try {
             return RESOURCE_BUNDLE.getString(key);
         } catch (MissingResourceException e) {
             return "!" + key + "!"; //$NON-NLS-1$ //$NON-NLS-2$
         }
+    }
+
+    /**
+     * DOC qzhang Comment method "getString".
+     * 
+     * @param key
+     * @param resourceBundle
+     * @param args
+     * @return
+     */
+    public static String getString(String key, Object... args) {
+        return MessageFormat.format(getString(key), args);
     }
 }
