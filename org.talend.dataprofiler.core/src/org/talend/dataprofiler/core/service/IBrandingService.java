@@ -23,4 +23,18 @@ public interface IBrandingService extends IService {
     public String getFullProductName();
 
     public URL getLicenseFile() throws IOException;
+
+    /**
+     * DOC qzhang Comment method "getShortProductName".
+     * 
+     * @return
+     */
+    public String getShortProductName();
+
+    /**
+     * DOC qzhang Comment method "getCorporationName".
+     * 
+     * @return
+     */
+    public String getCorporationName();
 }

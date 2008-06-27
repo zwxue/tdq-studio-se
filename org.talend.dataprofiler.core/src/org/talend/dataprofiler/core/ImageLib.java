@@ -33,7 +33,7 @@ public class ImageLib {
 
     // public static final String REFRESH_IMAGE = "refresh.gif"; //$NON-NLS-1$
 
-    public static final String REFRESH_IMAGE = "sample.gif"; //$NON-NLS-1$
+    public static final String REFRESH_IMAGE = "run_exc.gif"; //$NON-NLS-1$
 
     public static final String FOLDERNODE_IMAGE = "folder.gif"; //$NON-NLS-1$
 
@@ -71,7 +71,7 @@ public class ImageLib {
 
     public static final String PATTERN_REG = "regexp_16x32.png";
 
-    public static final String RUN_DISABLE = "run_disable.gif";
+    public static final String REGISTER_WIZ = "register_wiz.png";
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.
