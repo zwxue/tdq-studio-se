@@ -21,11 +21,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
@@ -115,7 +115,7 @@ public class CreateNewReportWizard extends Wizard {
                 ReportWriter writer = new ReportWriter();
 
                 String path = DqRepositoryViewService.createFilename(reportParameter.getFolderProvider().getFolder()
-                        .getAbsolutePath(), reportParameter.getName(), PluginConstant.REP_SUFFIX);
+                        .getAbsolutePath(), reportParameter.getName(), FactoriesUtil.REP);
                 File file = new File(path);
 
                 if (file.exists()) {
