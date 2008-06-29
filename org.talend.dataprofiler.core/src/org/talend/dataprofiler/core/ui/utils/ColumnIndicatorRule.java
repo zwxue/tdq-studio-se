@@ -35,11 +35,6 @@ public final class ColumnIndicatorRule {
 
         IndicatorEnum indicatorType = node.getIndicatorEnum();
         TdColumn column = columnIndicator.getTdColumn();
-        int javaType = column.getJavaType();
-        DataminingType dataminingType = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
-        if (dataminingType == null) {
-            dataminingType = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
-        }
 
         if (indicatorType == null) {
 
@@ -50,6 +45,17 @@ public final class ColumnIndicatorRule {
             }
 
             return false;
+        }
+
+        return patternRule(indicatorType, column);
+    }
+
+    public static boolean patternRule(IndicatorEnum indicatorType, TdColumn column) {
+
+        int javaType = column.getJavaType();
+        DataminingType dataminingType = MetadataHelper.getDataminingType(column);
+        if (dataminingType == null) {
+            dataminingType = MetadataHelper.getDefaultDataminingType(javaType);
         }
 
         switch (indicatorType) {
@@ -120,5 +126,4 @@ public final class ColumnIndicatorRule {
 
         return false;
     }
-
 }

@@ -245,6 +245,50 @@
                </adapt>
             </or>
          </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateNominalAnalysis"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateNominalAnalysis">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.talend.cwm.relational.TdColumn">
+               </instanceof>
+            </and>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateDiscreteAnalysis"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateDiscreteAnalysis">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.talend.cwm.relational.TdColumn">
+               </instanceof>
+            </and>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateDateAnalysis"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateDateAnalysis">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.talend.cwm.relational.TdColumn">
+               </instanceof>
+            </and>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateSimpleAnalysis"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateSimpleAnalysis">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.talend.cwm.relational.TdColumn">
+               </instanceof>
+            </and>
+         </enablement>
       </actionProvider>        
   </extension>
     
