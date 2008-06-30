@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
@@ -70,7 +71,8 @@ public class ColumnBuilder extends CwmBuilder {
             column.setJavaType(columns.getInt(GetColumn.DATA_TYPE.name()));
             // TODO columns.getString(GetColumn.TYPE_NAME.name());
 
-            // TODO get column description (comment)
+            // get column description (comment)
+            TaggedValueHelper.setComment(columns.getString(GetColumn.REMARKS.name()), column);
 
             // TODO scorreia other informations for columns can be retrieved here
 
