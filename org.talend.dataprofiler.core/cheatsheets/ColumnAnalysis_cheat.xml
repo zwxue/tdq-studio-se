@@ -49,7 +49,7 @@ You can run the analysis with a context menu on the &quot;Analysis&quot; objects
    </item>
    <item title="Refresh the graphics" dialog="true" skip="false">
       <description>
-         To generate the graphics of the analysis from the data, click on the <b>&quot;Refresh graphics&quot;</b>  hyperlink (<b>or click the link below</b>). <b>&quot;Refresh graphics&quot;</b> means that graphics are displayed with the last computed data.
+         To generate the graphics of the analysis from the data, click on the <b>&quot;Refresh graphics&quot;</b>  hyperlink (<b>or click the link below</b>). &quot;Refresh graphics&quot; means that graphics are displayed with the last computed data.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
