@@ -151,7 +151,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
         ModelElement modelElement;
         boolean otherFilesExistFlag = false;
         String otherFileName = null;
-        boolean anaMessageFlag = false, repMessageFlag = false, patternMessageFlag = false;
+        boolean anaMessageFlag = false, repMessageFlag = false;
         String dialogMessage;
         for (IResource res : selectedResources) {
             if (!(res instanceof IFile)) {
@@ -171,7 +171,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 modelElementList.add(pattern);
-                patternMessageFlag = true;
+                anaMessageFlag = true;
             } else {
                 otherFilesExistFlag = true;
                 if (res.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
@@ -188,8 +188,6 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 dialogMessage = "The following analyses and reporting will be unusable:";
             } else if (anaMessageFlag) {
                 dialogMessage = "The following analyses will be unusable:";
-            } else if (patternMessageFlag) {
-                dialogMessage = "The following pattern will be unusable:";
             } else {
                 dialogMessage = "The following reporting will be unusable:";
             }

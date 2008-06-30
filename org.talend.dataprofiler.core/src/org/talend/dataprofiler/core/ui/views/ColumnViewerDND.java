@@ -175,12 +175,11 @@ public class ColumnViewerDND {
             ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
             PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
 
-            DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
-
             IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
             IndicatorUnit addIndicatorUnit = data.addSpecialIndicator(type, patternMatchingIndicator);
             AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getParent().getData(
                     AnalysisColumnTreeViewer.VIEWER_KEY);
+            DependenciesHandler.getInstance().setUsageDependencyOn(viewer.getAnalysis(), pattern);
             viewer.createOneUnit(item, addIndicatorUnit);
             viewer.setDirty(true);
         }

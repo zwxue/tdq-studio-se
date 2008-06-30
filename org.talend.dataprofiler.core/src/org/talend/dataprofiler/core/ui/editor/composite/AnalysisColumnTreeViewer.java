@@ -626,4 +626,13 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             return "";
         }
     }
+
+    /**
+     * Getter for analysis.
+     * 
+     * @return the analysis
+     */
+    public Analysis getAnalysis() {
+        return this.analysis;
+    }
 }
