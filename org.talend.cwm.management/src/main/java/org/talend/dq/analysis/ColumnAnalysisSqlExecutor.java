@@ -690,6 +690,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private DbmsLanguage dbms() {
         if (this.dbmsLanguage == null) {
             this.dbmsLanguage = createDbmsLanguage();
+            this.dbmsLanguage.setDbQuoteString(this.getDbQuoteString(cachedAnalysis));
         }
         return this.dbmsLanguage;
     }
