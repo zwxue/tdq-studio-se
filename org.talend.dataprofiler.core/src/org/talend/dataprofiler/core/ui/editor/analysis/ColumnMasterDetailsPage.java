@@ -158,6 +158,15 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
             public void widgetSelected(SelectionEvent e) {
 
                 new RunAnalysisAction().run();
+
+                while (!RunAnalysisAction.finishFlag) {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
                 refreshChart(form);
             }
 
