@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -57,6 +58,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private static Logger log = Logger.getLogger(RunAnalysisAction.class);
 
     private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00");
+
+    public static boolean finishFlag = false;
 
     private TreeViewer treeViewer;
 
@@ -165,6 +168,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         job.setUser(true);
         job.schedule();
+
+        if (job.getState() != Job.RUNNING) {
+            finishFlag = true;
+        }
 
         if (treeViewer == null) {
             DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
