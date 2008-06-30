@@ -15,6 +15,9 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
@@ -50,13 +53,15 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
@@ -238,18 +243,21 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    ElementListSelectionDialog dialog = new ElementListSelectionDialog(((Button) e.getSource()).getShell(),
-                            new PatternLabelProvider());
-                    dialog.setElements(PatternResourceFileHelper.getInstance().getAllPatternes().toArray());
+                    ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(null, new PatternLabelProvider(),
+                            new WorkbenchContentProvider());
+
+                    IFolder defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
+                            DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS);
+                    dialog.setInput(defaultPatternFolder);
                     dialog.setTitle("Pattern Selector");
-                    dialog.setMessage("Pattern:");
-                    dialog.setMultipleSelection(true);
+                    dialog.setMessage("Patterns:");
                     dialog.setSize(80, 30);
                     dialog.create();
                     if (dialog.open() == Window.OK) {
 
                         for (Object obj : dialog.getResult()) {
-                            Pattern pattern = (Pattern) obj;
+                            IFile file = (IFile) obj;
+                            Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                             PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory
                                     .createRegexpMatchingIndicator(pattern);
 
@@ -605,8 +613,17 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         @Override
         public String getText(Object element) {
-            Pattern pattern = (Pattern) element;
-            return pattern.getName();
+            if (element instanceof IFile) {
+                IFile file = (IFile) element;
+                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                return pattern.getName();
+            }
+
+            if (element instanceof IFolder) {
+                return ((IFolder) element).getName();
+            }
+
+            return "";
         }
     }
 }
