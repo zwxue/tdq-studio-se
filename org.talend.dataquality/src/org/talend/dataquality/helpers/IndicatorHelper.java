@@ -26,7 +26,9 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 
 /**
- * DOC scorreia class global comment. Detailled comment
+ * @author scorreia
+ * 
+ * Helper class for handling indicator attributes.
  */
 public final class IndicatorHelper {
 
@@ -64,6 +66,45 @@ public final class IndicatorHelper {
             return new String[] { null, null };
         }
         return getDataThreshold(parameters);
+    }
+
+    public static void setIndicatorThreshold(IndicatorParameters parameters, String min, String max) {
+        assert parameters != null;
+        Domain validDomain = parameters.getIndicatorValidDomain();
+        if (validDomain == null) {
+            validDomain = DomainHelper.createDomain("Indicator threshold");
+            parameters.setIndicatorValidDomain(validDomain);
+        }
+        // remove previous ranges
+        assert validDomain.getRanges().size() < 2;
+        validDomain.getRanges().clear();
+        RangeRestriction rangeRestriction = DomainHelper.createStringRangeRestriction(min, max);
+        validDomain.getRanges().add(rangeRestriction);
+    }
+
+    public static String[] getIndicatorThreshold(Indicator indicator) {
+        IndicatorParameters parameters = indicator.getParameters();
+        if (parameters == null) {
+            return new String[] { null, null };
+        }
+        return getIndicatorThreshold(parameters);
+    }
+
+    public static String[] getIndicatorThreshold(IndicatorParameters parameters) {
+        Domain validDomain = parameters.getIndicatorValidDomain();
+        if (validDomain == null) {
+            return null;
+        }
+        EList<RangeRestriction> ranges = validDomain.getRanges();
+        if (ranges.size() != 1) {
+            log.warn("Indicator threshold contain too many ranges (or no range): " + ranges.size() + " range(s).");
+            return null;
+        }
+        RangeRestriction rangeRestriction = ranges.get(0);
+        if (rangeRestriction == null) {
+            return new String[] { null, null };
+        }
+        return new String[] { DomainHelper.getMinValue(rangeRestriction), DomainHelper.getMaxValue(rangeRestriction) };
     }
 
     /**
