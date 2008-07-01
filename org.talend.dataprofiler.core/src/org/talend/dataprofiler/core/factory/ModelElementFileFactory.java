@@ -46,7 +46,7 @@ public final class ModelElementFileFactory {
         } else if (file.getName().endsWith(PluginConstant.REP_SUFFIX)) {
             modelElement = RepResourceFileHelper.getInstance().findReport(file);
         } else {
-            log.error("The file:" + file.getFullPath() + " haven't corresponding ModelElement!");
+            log.error("The file \"" + file.getFullPath() + "\" has no corresponding ModelElement!");
         }
         return modelElement;
     }
