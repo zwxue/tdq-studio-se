@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataquality.category:AnalysisCategories xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.category="http://org.talend.dataquality.category">
-  <categories label="Connection Analysis">
+  <!--<categories label="Connection Analysis">
     <subCategories label="Default Analysis"/>
   </categories>
-  <!--<categories label="Table Analysis">
+  <categories label="Table Analysis">
     <subCategories analysisType="Table Analysis" label="Default Analysis"/>
   </categories-->
   <categories label="Multiple Column Analysis">
