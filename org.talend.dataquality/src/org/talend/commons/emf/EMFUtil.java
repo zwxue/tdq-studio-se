@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.commons.emf;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -97,8 +96,8 @@ public final class EMFUtil {
      * @param eObject the pool that contains objects.
      * @return true (as per the general contract of the <tt>Collection.add</tt> method).
      */
-    public boolean addPoolToResourceSet(String uri, EObject eObject) {
-        return addPoolToResourceSet(URI.createURI(uri), eObject);
+    public boolean addPoolToResourceSet(String pathName, EObject eObject) {
+        return addPoolToResourceSet(URI.createPlatformResourceURI(pathName, false), eObject);
     }
 
     /**
@@ -126,10 +125,9 @@ public final class EMFUtil {
      * @param eObject the pool that contains objects.
      * @return true (as per the general contract of the <tt>Collection.add</tt> method).
      */
-    public boolean addPoolToResourceSet(File file, EObject eObject) {
-        return addPoolToResourceSet(URI.createFileURI(file.getAbsolutePath()), eObject);
-    }
-
+    // public boolean addPoolToResourceSet(File file, EObject eObject) {
+    // return addPoolToResourceSet(URI.createFileURI(file.getAbsolutePath()), eObject);
+    // }
     /**
      * DOC qzhang Comment method "saveLastResource".
      * 
