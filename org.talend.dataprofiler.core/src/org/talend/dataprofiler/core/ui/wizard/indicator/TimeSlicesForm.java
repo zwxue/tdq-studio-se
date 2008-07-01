@@ -81,7 +81,7 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
         this.setLayout(new GridLayout());
 
         Group group = new Group(this, SWT.NONE);
-        group.setLayout(new GridLayout(4, true));
+        group.setLayout(new GridLayout(DateGrain.VALUES.size() / 2, true));
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         group.setText("Aggregate date by");
 

@@ -12,19 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
-import org.eclipse.jface.dialogs.TrayDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
+import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
 import org.talend.dataquality.indicators.DateGrain;
@@ -69,6 +67,9 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
                             indicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
                             indicator.setParameters(indicatorParameters);
                         }
+
+                        indicatorParameters.setTopN(patameter.getNumOfShown());
+
                         DateParameters dateParameters = indicatorParameters.getDateParameters();
                         if (dateParameters == null) {
                             dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
@@ -92,7 +93,11 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected Wizard getPredefinedWizard() {
 
-        return getStandardAnalysisWizard();
+        CreateNewAnalysisWizard wizard = (CreateNewAnalysisWizard) getStandardAnalysisWizard();
+
+        wizard.setOtherPages(new WizardPage[] { new TimeSliceOptionPage() });
+
+        return wizard;
     }
 
     /*
@@ -119,27 +124,24 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected boolean preDo() {
 
-        TimeSlicesOptioneDialog dialog = new TimeSlicesOptioneDialog(null);
-
-        if (dialog.open() == Window.OK) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**
-     * DOC Administrator CreateDateAnalysisAction class global comment. Detailled comment
+     * DOC zqin CreateDateAnalysisAction class global comment. Detailled comment
      */
-    class TimeSlicesOptioneDialog extends TrayDialog {
+    public class TimeSliceOptionPage extends WizardPage {
 
-        protected TimeSlicesOptioneDialog(Shell shell) {
-            super(shell);
+        public TimeSliceOptionPage() {
+            super("Creaete new analysis");
+            setTitle("New Analysis");
+            setDescription("add option to all frequency indicator.");
+
             patameter = new TimeSlicesParameter();
+            patameter.setDataUnit(DateGrain.YEAR.getLiteral());
         }
 
-        @Override
-        protected Control createDialogArea(Composite parent) {
+        public void createControl(Composite parent) {
 
             Composite comp = new Composite(parent, SWT.NONE);
             comp.setLayout(new GridLayout());
@@ -148,14 +150,8 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             FreqTimeSliceForm timeSliceForm = new FreqTimeSliceForm(comp, SWT.NONE);
             timeSliceForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             timeSliceForm.setParameter(patameter);
-            return timeSliceForm;
-        }
 
-        @Override
-        protected void configureShell(Shell newShell) {
-            super.configureShell(newShell);
-            newShell.setText("Set option to all frequency indicators");
-            newShell.setSize(400, 500);
+            setControl(comp);
         }
 
     }
