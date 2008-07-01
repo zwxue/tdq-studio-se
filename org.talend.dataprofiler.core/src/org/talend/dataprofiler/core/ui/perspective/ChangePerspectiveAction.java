@@ -16,7 +16,6 @@ import static org.talend.dataprofiler.core.PluginConstant.CHEAT_SHEET_VIEW;
 import static org.talend.dataprofiler.core.PluginConstant.PERSPECTIVE_ID;
 import static org.talend.dataprofiler.core.PluginConstant.SE_ID;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,8 +29,8 @@ import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -148,10 +147,9 @@ public class ChangePerspectiveAction extends Action {
     public void activeData() {
         // PTODO qzhang switch to DB Discovery
         if (SE_ID.equals(perspectiveId)) {
-            IPath location = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-            String portableString = location.append(DQStructureManager.METADATA).append(DQStructureManager.DB_CONNECTIONS)
-                    .toPortableString();
-            List<TdDataProvider> listTdDataProviders = DqRepositoryViewService.listTdDataProviders(new File(portableString));
+            IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
+                    DQStructureManager.DB_CONNECTIONS);
+            List<TdDataProvider> listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder);
             SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
             AliasManager aliasManager = default1.getAliasManager();
             aliasManager.getAliases().clear();

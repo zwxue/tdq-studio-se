@@ -12,13 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.report;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
@@ -114,17 +114,16 @@ public class CreateNewReportWizard extends Wizard {
                 // write this object to file
                 ReportWriter writer = new ReportWriter();
 
-                String path = DqRepositoryViewService.createFilename(reportParameter.getFolderProvider().getFolder()
-                        .getAbsolutePath(), reportParameter.getName(), FactoriesUtil.REP);
-                File file = new File(path);
-
+                String fileName = DqRepositoryViewService.createFilename(reportParameter.getName(), FactoriesUtil.REP);
+                IFolder folderResource = reportParameter.getFolderProvider().getFolderResource();
+                IFile file = folderResource.getFile(fileName);
                 if (file.exists()) {
                     return false;
                 } else {
                     ReturnCode saved = writer.save(report, file);
                     if (saved.isOk()) {
-                        IFile resourceFile = reportParameter.getFolderProvider().getFolderResource().getFile(file.getName());
-                        log.info("Saved in  " + file.getAbsolutePath());
+                        IFile resourceFile = folderResource.getFile(file.getName());
+                        log.info("Saved in  " + file.getFullPath().toString());
                         Resource resource = report.eResource();
                         RepResourceFileHelper.getInstance().register(resourceFile, resource);
                         // for (Analysis analysis : reportParameter.getAnalysises()) {
@@ -140,7 +139,7 @@ public class CreateNewReportWizard extends Wizard {
                         // }
                         // }
                     } else {
-                        throw new DataprofilerCoreException("Problem saving file: " + file.getAbsolutePath() + ": "
+                        throw new DataprofilerCoreException("Problem saving file: " + file.getFullPath().toString() + ": "
                                 + saved.getMessage());
                     }
 

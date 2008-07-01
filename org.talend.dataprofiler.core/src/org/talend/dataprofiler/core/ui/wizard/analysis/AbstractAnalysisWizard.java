@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
-import java.io.File;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -101,21 +99,20 @@ public abstract class AbstractAnalysisWizard extends Wizard {
         Analysis analysis = analysisBuilder.getAnalysis();
         fillAnalysisBuilder(analysisBuilder);
         AnalysisWriter writer = new AnalysisWriter();
-        File folder = folderResource.getLocation().toFile();
         // if (folder.exists()) {
         // return null;
         // } else {
-        TypedReturnCode<File> saved = writer.createAnalysisFile(analysis, folder);
+        TypedReturnCode<IFile> saved = writer.createAnalysisFile(analysis, folderResource);
         IFile file;
         if (saved.isOk()) {
-            log.info("Saved in  " + folder.getAbsolutePath());
-            File object = saved.getObject();
-            file = folderResource.getFile(object.getName());
+            log.info("Saved in  " + folderResource.getFullPath().toString());
+            file = saved.getObject();
             Resource anaResource = analysis.eResource();
             AnaResourceFileHelper.getInstance().register(file, anaResource);
             AnaResourceFileHelper.getInstance().setResourceChanged(true);
         } else {
-            throw new DataprofilerCoreException("Problem saving file: " + folder.getAbsolutePath() + ": " + saved.getMessage());
+            throw new DataprofilerCoreException("Problem saving file: " + folderResource.getFullPath().toString() + ": "
+                    + saved.getMessage());
         }
 
         CorePlugin.getDefault().refreshWorkSpace();

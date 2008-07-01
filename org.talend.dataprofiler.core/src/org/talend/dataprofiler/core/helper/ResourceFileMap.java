@@ -55,7 +55,7 @@ public class ResourceFileMap {
         if (res != null) {
             return res;
         }
-        URI uri = URI.createFileURI(file.getLocation().toFile().getAbsolutePath());
+        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
         ResourceSet rs = EMFSharedResources.getSharedEmfUtil().getResourceSet();
         Resource resource = rs.getResource(uri, true);
         this.registedResourceMap.put(file, resource);

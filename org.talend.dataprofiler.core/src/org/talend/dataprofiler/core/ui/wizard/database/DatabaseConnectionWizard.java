@@ -12,9 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.database;
 
-import java.io.File;
 import java.util.Properties;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -114,14 +114,12 @@ public class DatabaseConnectionWizard extends Wizard implements INewWizard {
         }
         TdDataProvider dataProvider = rc.getObject();
         // MODSCA 2008-03-10 save the provider
-        File returnFile = DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionProperty
+        IFile returnFile = DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionProperty
                 .getFolderProvider());
         if (returnFile != null) {
             CorePlugin.getDefault().refreshWorkSpace();
             ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
-            CorePlugin.getDefault().openEditor(
-                    this.connectionProperty.getFolderProvider().getFolderResource().getFile(returnFile.getName()),
-                    ConnectionEditor.class.getName());
+            CorePlugin.getDefault().openEditor(returnFile, ConnectionEditor.class.getName());
         }
         return true;
     }

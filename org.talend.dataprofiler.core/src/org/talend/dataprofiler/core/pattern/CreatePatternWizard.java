@@ -12,8 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import java.io.File;
-
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.Wizard;
@@ -38,6 +38,8 @@ import orgomg.cwm.objectmodel.core.Expression;
  * 
  */
 public class CreatePatternWizard extends Wizard {
+
+    private static Logger log = Logger.getLogger(CreatePatternWizard.class);
 
     private CreatePatternWizardPage1 mPage;
 
@@ -103,12 +105,14 @@ public class CreatePatternWizard extends Wizard {
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         location = folder.getLocation();
-        String fname = DqRepositoryViewService.createFilename(folder.getName(), name,
-                NewSourcePatternActionProvider.EXTENSION_PATTERN);
-        location = location.removeLastSegments(1);
-        location = location.append(fname);
+        String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
+        IFile file = folder.getFile(fname);
+        if (file.exists()) {
+            log.error("Cannot save pattern " + name + ", file " + file.getFullPath() + " already exists!");
+            return false;
+        }
 
-        util.addPoolToResourceSet(new File(location.toPortableString()), pattern);
+        util.addPoolToResourceSet(file.getFullPath().toString(), pattern);
         util.saveLastResource();
         return true;
     }
