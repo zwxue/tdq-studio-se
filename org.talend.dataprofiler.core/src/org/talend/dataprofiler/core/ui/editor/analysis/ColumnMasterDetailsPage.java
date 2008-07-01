@@ -129,15 +129,23 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        super.createFormContent(managedForm);
         final ScrolledForm form = managedForm.getForm();
+        Composite body = form.getBody();
+
+        // TableWrapLayout layout = new TableWrapLayout();
+        body.setLayout(new GridLayout(2, false));
+
+        topComp = toolkit.createComposite(body);
+        GridData anasisData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
+
+        topComp.setLayoutData(anasisData);
+        topComp.setLayout(new GridLayout(1, false));
+        metadataSection = creatMetadataSection(form, topComp);
         form.setText("Column Analysis");
         metadataSection.setText("Analysis Metadata");
         metadataSection.setDescription("Set the properties of analysis.");
         createAnalysisColumnsSection(form, topComp);
         createDataFilterSection(form, topComp);
-
-        Composite body = form.getBody();
         Composite previewComp = toolkit.createComposite(body);
         GridData previewData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 

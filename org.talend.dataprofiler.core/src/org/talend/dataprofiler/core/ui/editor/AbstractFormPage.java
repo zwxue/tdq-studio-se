@@ -71,7 +71,7 @@ public abstract class AbstractFormPage extends FormPage {
         Composite body = form.getBody();
 
         // TableWrapLayout layout = new TableWrapLayout();
-        body.setLayout(new GridLayout(2, false));
+        body.setLayout(new GridLayout());
 
         topComp = toolkit.createComposite(body);
         GridData anasisData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);

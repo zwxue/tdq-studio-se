@@ -101,19 +101,10 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
     }
 
     protected void createFormContent(IManagedForm managedForm) {
+        super.createFormContent(managedForm);
         final ScrolledForm form = managedForm.getForm();
-        Composite body = form.getBody();
+
         form.setText("Pattern Settings");
-
-        // TableWrapLayout layout = new TableWrapLayout();
-        body.setLayout(new GridLayout());
-
-        topComp = toolkit.createComposite(body);
-        GridData anasisData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-
-        topComp.setLayoutData(anasisData);
-        topComp.setLayout(new GridLayout(1, false));
-        metadataSection = creatMetadataSection(form, topComp);
         metadataSection.setText("Pattern Metadata");
         metadataSection.setDescription("Set the properties of pattern.");
         creatPatternDefinitionSection(form, topComp);
@@ -271,14 +262,33 @@ public class PatternMasterDetailsPage extends AbstractFormPage implements Proper
     @Override
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
-        savePattern();
-        this.isDirty = false;
+        if (savePattern()) {
+            this.isDirty = false;
+        }
     }
 
-    private void savePattern() {
+    private boolean savePattern() {
         this.pattern.getComponents().clear();
         this.pattern.getComponents().addAll(tempPatternComponents);
+        EList<PatternComponent> components = this.pattern.getComponents();
+        List<String> existLanguage = new ArrayList<String>();
+        for (int i = 0; i < components.size(); i++) {
+            RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
+            String language = regularExpress.getExpression().getLanguage();
+            if ((regularExpress.getExpression().getBody() == null) || (!regularExpress.getExpression().getBody().matches("'.*'"))) {
+                MessageDialog.openWarning(null, "Warning",
+                        "The pattern's expression starts and ends must has a single quote \"'\"");
+                return false;
+            }
+            if (existLanguage.contains(language)) {
+                MessageDialog.openError(null, "Error", "The language type is not unique:" + language);
+                return false;
+            } else {
+                existLanguage.add(language);
+            }
+        }
         EMFUtil.saveSingleResource(pattern.eResource());
+        return true;
 
     }
 }
