@@ -25,6 +25,11 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -142,16 +147,25 @@ public final class DqRepositoryViewService {
      * @param folder the path to the folder containing TdDataProviders
      * @return the list of all TdDataProviders in the folder (never null).
      */
-    public static List<TdDataProvider> listTdDataProviders(File folder) {
+    public static List<TdDataProvider> listTdDataProviders(IFolder folder) {
         ArrayList<TdDataProvider> providers = new ArrayList<TdDataProvider>();
-        File[] providerFiles = folder.listFiles(PRV_FILTER);
-        for (File file : providerFiles) {
-            TypedReturnCode<TdDataProvider> rc = readFromFile(file);
-            if (rc.isOk()) {
-                TdDataProvider dataProvider = rc.getObject();
-                providers.add(dataProvider);
-            } else {
-                log.warn(rc.getMessage());
+        IResource[] members = null;
+        try {
+            members = folder.members();
+        } catch (CoreException e) {
+            e.printStackTrace();
+            return new ArrayList<TdDataProvider>();
+        }
+        for (IResource res : members) {
+            if ((res instanceof IResource) && (res.getFileExtension().equals(FactoriesUtil.PROV))) {
+
+                TypedReturnCode<TdDataProvider> rc = readFromFile((IFile) res);
+                if (rc.isOk()) {
+                    TdDataProvider dataProvider = rc.getObject();
+                    providers.add(dataProvider);
+                } else {
+                    log.warn(rc.getMessage());
+                }
             }
         }
         return providers;
@@ -291,13 +305,13 @@ public final class DqRepositoryViewService {
      * @param folderProvider provides the path where to save the data provider and related elements.
      * @return
      */
-    public static File saveDataProviderAndStructure(TdDataProvider dataProvider, FolderProvider folderProvider) {
+    public static IFile saveDataProviderAndStructure(TdDataProvider dataProvider, FolderProvider folderProvider) {
         assert dataProvider != null;
         assert folderProvider != null;
 
-        String folder = ((folderProvider != null) && folderProvider.getFolder() != null) ? folderProvider.getFolder()
-                .getAbsolutePath() : null;
-        if (folder == null) { // do not serialize data
+        IPath folderPath = ((folderProvider != null) && folderProvider.getFolder() != null) ? folderProvider.getFolderResource()
+                .getFullPath() : null;
+        if (folderPath == null) { // do not serialize data
             log.info("Data provider not serialized: no folder given.");
             return null;
         }
@@ -305,14 +319,18 @@ public final class DqRepositoryViewService {
         // --- add resources in resource set
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         ResourceSet resourceSet = util.getResourceSet();
-        String dataproviderFilename = createFilename(folder, dataProvider.getName(), FactoriesUtil.PROV);
-        File file = new File(dataproviderFilename);
+        String fileName = createFilename(dataProvider.getName(), FactoriesUtil.PROV);
+
+        IFile file = folderProvider.getFolderResource().getFile(fileName);
+        // File file = new File(dataproviderFilename);
         if (file.exists()) {
-            log.error("Cannot save data provider " + dataProvider.getName() + " into file " + dataproviderFilename
-                    + ". File already exists!");
+            log
+                    .error("Cannot save data provider " + dataProvider.getName() + " into file " + fileName
+                            + ". File already exists!");
             return file;
         }
-        URI uri = URI.createFileURI(dataproviderFilename);
+        // URI uri = URI.createFileURI(dataproviderFilename);
+        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
         final Resource resource = resourceSet.createResource(uri);
         if (resource == null) {
             return null;
@@ -330,7 +348,7 @@ public final class DqRepositoryViewService {
         if (CAT_WITH_PRV) {
             ok = resource.getContents().addAll(catalogs);
         } else {
-            ok = addElementsToOwnResources(catalogs, folder, util);
+            ok = addElementsToOwnResources(catalogs, folderProvider.getFolderResource(), util);
         }
 
         if (log.isDebugEnabled()) {
@@ -343,7 +361,7 @@ public final class DqRepositoryViewService {
             ok = resource.getContents().addAll(schemata);
             util.saveSingleResource(resource);
         } else {
-            ok = addElementsToOwnResources(schemata, folder, util);
+            ok = addElementsToOwnResources(schemata, folderProvider.getFolderResource(), util);
             util.save();
         }
 
@@ -415,13 +433,15 @@ public final class DqRepositoryViewService {
             return false;
         }
 
-        String filename = createFilename(folder, domain.getName(), DomainPackage.eNAME);
-        return saveDomain(domain, new File(filename));
+        String filename = createFilename(domain.getName(), DomainPackage.eNAME);
+        IFile file = folderProvider.getFolderResource().getFile(filename);
+        return saveDomain(domain, file);
     }
 
-    private static boolean saveDomain(Domain domain, File file) {
+    private static boolean saveDomain(Domain domain, IFile file) {
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-        Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
+        Resource resource = util.getResourceSet().createResource(
+                URI.createPlatformResourceURI(file.getFullPath().toString(), false));
         assert resource != null;
         EList<EObject> contents = resource.getContents();
         contents.add(domain);
@@ -445,8 +465,8 @@ public final class DqRepositoryViewService {
      * @param extension the extension of the file
      * @return the path "folder/basename.extension"
      */
-    public static String createFilename(String folder, String basename, String extension) {
-        return folder + File.separator + createTechnicalName(basename) + "." + extension;
+    public static String createFilename(String basename, String extension) {
+        return createTechnicalName(basename) + "." + extension;
     }
 
     /**
@@ -611,19 +631,19 @@ public final class DqRepositoryViewService {
      * @param file the file to read
      * @return the Data provider if found.
      */
-    private static TypedReturnCode<TdDataProvider> readFromFile(File file) {
+    private static TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
         TypedReturnCode<TdDataProvider> rc = new TypedReturnCode<TdDataProvider>();
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
 
         ResourceSet rs = util.getResourceSet();
-        Resource r = rs.getResource(URI.createFileURI(file.getAbsolutePath()), true);
+        Resource r = rs.getResource(URI.createPlatformResourceURI(file.getFullPath().toString(), false), true);
         Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(r.getContents());
         if (tdDataProviders.isEmpty()) {
-            rc.setReturnCode("No Data Provider found in " + file.getAbsolutePath(), false);
+            rc.setReturnCode("No Data Provider found in " + file.getFullPath().toString(), false);
         }
         if (tdDataProviders.size() > 1) {
-            rc.setReturnCode("Found too many DataProvider (" + tdDataProviders.size() + ") in file " + file.getAbsolutePath(),
-                    false);
+            rc.setReturnCode("Found too many DataProvider (" + tdDataProviders.size() + ") in file "
+                    + file.getFullPath().toString(), false);
         }
         TdDataProvider prov = tdDataProviders.iterator().next();
         rc.setObject(prov);
@@ -638,14 +658,16 @@ public final class DqRepositoryViewService {
      * @param util used for linking elements to each other and to their container
      * @return true if added.
      */
-    private static boolean addElementsToOwnResources(Collection<? extends ModelElement> elements, String folder, EMFUtil util) {
+    private static boolean addElementsToOwnResources(Collection<? extends ModelElement> elements, IFolder folder, EMFUtil util) {
         boolean ok = true;
         for (ModelElement modelElement : elements) {
             String uuid = EcoreUtil.generateUUID();
             if (log.isDebugEnabled()) {
                 log.debug("Element uuid " + uuid);
             }
-            URI catUri = URI.createFileURI(createFilename(folder, modelElement.getName() + uuid, FactoriesUtil.CAT));
+            String fileName = createFilename(modelElement.getName() + uuid, FactoriesUtil.CAT);
+            IFile file = folder.getFile(fileName);
+            URI catUri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
             if (!util.addPoolToResourceSet(catUri, modelElement)) {
                 ok = false;
             }

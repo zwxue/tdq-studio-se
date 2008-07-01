@@ -12,10 +12,11 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -94,20 +95,20 @@ public class AnalysisWriter {
      * @param file the file in which the analysis will be save
      * @return whether everything is ok
      */
-    protected ReturnCode save(Analysis analysis, File file) {
+    protected ReturnCode save(Analysis analysis, IFile file) {
         assert file != null : "Cannot save analysis: No file name given.";
         assert analysis != null : "No analysis to save (null)";
 
         ReturnCode rc = new ReturnCode();
         if (!checkFileExtension(file)) {
-            rc.setReturnCode("Bad file extension for " + file.getAbsolutePath() + ". Should be " + VALID_EXTENSION, false);
+            rc.setReturnCode("Bad file extension for " + file.getFullPath() + ". Should be " + VALID_EXTENSION, false);
             return rc;
         }
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         // Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
         // resource.getContents().addAll(analysis.getResults().getIndicators());
 
-        boolean added = util.addPoolToResourceSet(file, analysis);
+        boolean added = util.addPoolToResourceSet(file.getFullPath().toString(), analysis);
 
         if (!added) {
             rc.setReturnCode("Analysis won't be saved. " + util.getLastErrorMessage(), added);
@@ -126,27 +127,28 @@ public class AnalysisWriter {
      * @param folder the folder where to save the analysis
      * @return the return code and the created file.
      */
-    public TypedReturnCode<File> createAnalysisFile(Analysis analysis, File folder) {
+    public TypedReturnCode<IFile> createAnalysisFile(Analysis analysis, IFolder folder) {
         assert analysis != null;
-        TypedReturnCode<File> rc = new TypedReturnCode<File>();
-        String filename = DqRepositoryViewService.createFilename(folder.getAbsolutePath(), analysis.getName(), FactoriesUtil.ANA);
-        File file = new File(filename);
+        TypedReturnCode<IFile> rc = new TypedReturnCode<IFile>();
+        String filename = DqRepositoryViewService.createFilename(analysis.getName(), FactoriesUtil.ANA);
+        IFile file = folder.getFile(filename);
+        // File file = new File(filename);
         if (file.exists()) {
             rc.setReturnCode("Cannot save analysis " + analysis.getName() + ", file " + filename + " already exists!", false);
             return rc;
         }
         ReturnCode saved = save(analysis, file);
         if (saved.isOk()) {
-            log.info("Saved in  " + file.getAbsolutePath());
+            log.info("Saved in  " + file.getFullPath().toString());
             rc.setObject(file);
-            analysis.setFileName(file.getAbsolutePath());
+            analysis.setFileName(file.getFullPath().toString());
         } else {
             rc.setReturnCode("Failed to save analysis " + analysis.getName() + " into " + filename, false);
         }
         return rc;
     }
 
-    private boolean checkFileExtension(File file) {
-        return file.getAbsolutePath().endsWith(VALID_EXTENSION);
+    private boolean checkFileExtension(IFile file) {
+        return file.getFileExtension().equalsIgnoreCase(VALID_EXTENSION);
     }
 }

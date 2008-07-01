@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.io.File;
-
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -44,20 +43,20 @@ public class ReportWriter {
      * @param file the file in which the analysis will be save
      * @return whether everything is ok
      */
-    public ReturnCode save(TdReport report, File file) {
+    public ReturnCode save(TdReport report, IFile file) {
         assert file != null : "Cannot save report: No file name given.";
         assert report != null : "No report to save (null)";
 
         ReturnCode rc = new ReturnCode();
         if (!checkFileExtension(file)) {
-            rc.setReturnCode("Bad file extension for " + file.getAbsolutePath() + ". Should be " + VALID_EXTENSION, false);
+            rc.setReturnCode("Bad file extension for " + file.getFullPath().toString() + ". Should be " + VALID_EXTENSION, false);
             return rc;
         }
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         // Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
         // resource.getContents().addAll(report.getResults().getIndicators());
 
-        boolean added = util.addPoolToResourceSet(file, report);
+        boolean added = util.addPoolToResourceSet(file.getFullPath().toString(), report);
 
         if (!added) {
             rc.setReturnCode("Report  " + report.getName() + " won't be saved. " + util.getLastErrorMessage(), added);
@@ -115,7 +114,7 @@ public class ReportWriter {
 
     }
 
-    private boolean checkFileExtension(File file) {
-        return file.getAbsolutePath().endsWith(VALID_EXTENSION);
+    private boolean checkFileExtension(IFile file) {
+        return file.getFileExtension().equalsIgnoreCase(VALID_EXTENSION);
     }
 }

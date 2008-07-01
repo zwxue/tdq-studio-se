@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -182,8 +181,8 @@ public class DBConnect {
      * @param filename the file name to which the object must be saved
      * @return true (as per the general contract of the Collection.add method).
      */
-    public boolean storeInResourceSet(EObject eObject, String filename) {
-        return emfUtil.addPoolToResourceSet(new File(filename).toURI().toString(), eObject);
+    public boolean storeInResourceSet(EObject eObject, String path) {
+        return emfUtil.addPoolToResourceSet(path, eObject);
     }
 
     /**

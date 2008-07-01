@@ -12,10 +12,11 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.io.File;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.junit.Assert;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -30,7 +31,6 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -200,16 +200,15 @@ public class AnalysisBuilder {
      * @param folder the folder where the analysis is saved.
      * @return true if saved without problem
      */
-    public boolean saveAnalysis(File folder) {
+    public boolean saveAnalysis(IFolder folder) {
         assert analysis != null;
         AnalysisWriter writer = new AnalysisWriter();
-        String filename = DqRepositoryViewService.createFilename(folder.getAbsolutePath(), this.analysis.getName(),
-                FactoriesUtil.ANA);
-        File file = new File(filename);
+        String filename = DqRepositoryViewService.createFilename(this.analysis.getName(), FactoriesUtil.ANA);
+        IFile file = folder.getFile(filename);
         ReturnCode saved = writer.save(analysis, file);
         Assert.assertTrue(saved.getMessage(), saved.isOk());
         if (saved.isOk()) {
-            log.info("Saved in  " + file.getAbsolutePath());
+            log.info("Saved in  " + file.getFullPath());
         }
         return saved.isOk();
     }
