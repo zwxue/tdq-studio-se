@@ -18,26 +18,40 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
+import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -52,6 +66,8 @@ public class RenameSqlFileAction extends Action {
     private String newname;
 
     private ArrayList<String> existNames;
+
+    private IFolder sourceFiles;
 
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
@@ -71,20 +87,18 @@ public class RenameSqlFileAction extends Action {
      */
     @Override
     public void run() {
-        IPath location = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-        IPath append = location.append(DQStructureManager.LIBRARIES).append(DQStructureManager.SOURCE_FILES);
         RenameDialog dialog = new RenameDialog(Display.getDefault().getActiveShell());
-        IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.SOURCE_FILES);
+        sourceFiles = (IFolder) folder.getParent();
         existNames = new ArrayList<String>();
         try {
             getExistNames(sourceFiles, existNames);
             if (dialog.open() == RenameDialog.OK) {
-                IPath addFileExtension = append.append(newname).addFileExtension(folder.getFileExtension());
+                IPath addFileExtension = sourceFiles.getLocation().append(newname).addFileExtension(folder.getFileExtension());
                 String newPath = addFileExtension.toPortableString();
                 new File(folder.getLocation().toPortableString()).renameTo(new File(newPath));
             }
             folder.getParent().refreshLocal(IResource.DEPTH_ONE, null);
+            sourceFiles.refreshLocal(IResource.DEPTH_ONE, null);
         } catch (CoreException e) {
             e.printStackTrace();
         }
@@ -142,6 +156,8 @@ public class RenameSqlFileAction extends Action {
             newShell.setText("Rename SQL File");
         }
 
+        private Text pathText;
+
         /*
          * (non-Javadoc)
          * 
@@ -153,7 +169,7 @@ public class RenameSqlFileAction extends Action {
             Composite composite = new Composite(createDialogArea, SWT.NONE);
             GridLayout gridLayout = new GridLayout(2, false);
             composite.setLayout(gridLayout);
-            GridData gridData = new GridData(GridData.FILL_BOTH);
+            GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
             composite.setLayoutData(gridData);
             Label label = new Label(composite, SWT.NONE);
             label.setText("Set New Name:");
@@ -186,7 +202,87 @@ public class RenameSqlFileAction extends Action {
                     }
                 }
             });
+            Composite pathcomposite = new Composite(createDialogArea, SWT.NONE);
+            gridLayout = new GridLayout(3, false);
+            pathcomposite.setLayout(gridLayout);
+            gridData = new GridData(GridData.FILL_HORIZONTAL);
+            pathcomposite.setLayoutData(gridData);
+            Label label2 = new Label(pathcomposite, SWT.NONE);
+            label2.setText("Path:");
+            pathText = new Text(pathcomposite, SWT.BORDER);
+            pathText.setEnabled(false);
+            pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            Button button = new Button(pathcomposite, SWT.PUSH);
+            button.setText("Select..");
+
+            pathText.setText(folder.getParent().getFullPath().toString());
+            button.addSelectionListener(new SelectionAdapter() {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    final Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
+                    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+                    ArrayList rejectedElements = new ArrayList();
+
+                    IProject theProject = root.getProject(DQStructureManager.LIBRARIES);
+                    IProject[] allProjects = root.getProjects();
+                    for (int i = 0; i < allProjects.length; i++) {
+                        if (!allProjects[i].equals(theProject)) {
+                            rejectedElements.add(allProjects[i]);
+                        }
+                    }
+
+                    try {
+                        IResource[] resourse = theProject.members();
+                        for (IResource one : resourse) {
+                            if (one.getType() == IResource.FOLDER && !one.getName().equals(DQStructureManager.SOURCE_FILES)) {
+                                rejectedElements.add(one);
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                    ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
+
+                    ILabelProvider lp = new WorkbenchLabelProvider();
+                    ITreeContentProvider cp = new WorkbenchContentProvider();
+
+                    FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(), lp, cp);
+                    // dialog.setValidator(validator);
+                    dialog.setTitle("Select folder");
+                    dialog.setMessage("Select the folder in which the item will be created");
+                    dialog.setInput(root);
+                    dialog.addFilter(filter);
+                    dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
+
+                    if (dialog.open() == Window.OK) {
+                        Object elements = dialog.getResult()[0];
+                        IResource elem = (IResource) elements;
+                        if (elem instanceof IFolder) {
+                            pathText.setText(elem.getFullPath().toString());
+                            sourceFiles = (IFolder) elem;
+                        }
+                    }
+                }
+
+            });
             return createDialogArea;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+         */
+        @Override
+        protected void okPressed() {
+            super.okPressed();
         }
     }
 }

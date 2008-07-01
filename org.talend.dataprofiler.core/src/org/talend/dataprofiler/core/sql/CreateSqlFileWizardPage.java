@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.sql;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -50,10 +49,13 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
 
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
+     * 
+     * @param folder
      */
-    public CreateSqlFileWizardPage() {
+    public CreateSqlFileWizardPage(IFolder folder) {
         metadata = new HashMap<String, String>();
         setPageComplete(false);
+        defaultFolderProviderRes = folder;
     }
 
     /*
@@ -94,8 +96,6 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
         button = new Button(pathContainer, SWT.PUSH);
         button.setText("Select..");
 
-        defaultFolderProviderRes = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.SOURCE_FILES);
         pathText.setText(defaultFolderProviderRes.getFullPath().toString());
         setControl(container);
         nameText.addModifyListener(new ModifyListener() {

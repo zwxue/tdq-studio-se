@@ -52,7 +52,7 @@ public class CreateSqlFileWizard extends Wizard {
      */
     @Override
     public void addPages() {
-        mPage = new CreateSqlFileWizardPage();
+        mPage = new CreateSqlFileWizardPage(folder);
         AbstractWizardPage.setConnectionParams(new ConnectionParameter());
         mPage.setTitle("New SQL File in repository");
         mPage.setDescription("Define the properties");

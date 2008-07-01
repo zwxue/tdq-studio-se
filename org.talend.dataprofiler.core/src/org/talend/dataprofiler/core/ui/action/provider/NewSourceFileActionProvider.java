@@ -18,13 +18,18 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
+import org.talend.dataprofiler.core.sql.CreateSourceFolderAction;
+import org.talend.dataprofiler.core.sql.DeleteFolderAction;
 import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
+import org.talend.dataprofiler.core.sql.RenameFolderAction;
 import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
 
 /**
@@ -35,8 +40,6 @@ import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
  */
 public class NewSourceFileActionProvider extends CommonActionProvider {
 
-    private String selectedFolderName;
-
     public NewSourceFileActionProvider() {
     }
 
@@ -46,9 +49,16 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
-                selectedFolderName = ((IFolder) obj).getName();
-                if (selectedFolderName.equals(DQStructureManager.SOURCE_FILES)) {
+                IPath path = new Path(DQStructureManager.LIBRARIES);
+                path = path.append(DQStructureManager.SOURCE_FILES);
+                IPath fullPath = ((IFolder) obj).getFullPath();
+                if (path.isPrefixOf(fullPath)) {
                     menu.add(new AddSqlFileAction((IFolder) obj));
+                    menu.add(new CreateSourceFolderAction((IFolder) obj));
+                    if (fullPath.segmentCount() > path.segmentCount()) {
+                        menu.add(new DeleteFolderAction((IFolder) obj));
+                        menu.add(new RenameFolderAction((IFolder) obj));
+                    }
                 }
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
