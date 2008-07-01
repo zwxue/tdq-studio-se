@@ -97,6 +97,8 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
     private Composite chartComposite;
 
+    private ScrolledForm form;
+
     private static final int TREE_MAX_LENGTH = 400;
 
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
@@ -129,7 +131,7 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        final ScrolledForm form = managedForm.getForm();
+        this.form = managedForm.getForm();
         Composite body = form.getBody();
 
         // TableWrapLayout layout = new TableWrapLayout();
@@ -167,35 +169,9 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
                 new RunAnalysisAction().run();
 
-                while (!RunAnalysisAction.finishFlag) {
-                    try {
-                        Thread.sleep(3000);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-
-                refreshChart(form);
             }
 
         });
-    }
-
-    public void refreshChart(ScrolledForm form) {
-        if (chartComposite != null) {
-            try {
-                for (Control control : chartComposite.getChildren()) {
-                    control.dispose();
-                }
-
-                createPreviewCharts(form, chartComposite, true);
-                chartComposite.layout();
-                form.reflow(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-        }
     }
 
     protected void fireTextChange() {
@@ -297,7 +273,6 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
                     if (returnCode) {
                         new RunAnalysisAction().run();
-                        createPreviewCharts(form, chartComposite, true);
                         message.setVisible(false);
                     } else {
                         createPreviewCharts(form, chartComposite, false);
@@ -380,6 +355,28 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
                 }
 
             });
+        }
+    }
+
+    /**
+     * DOC zqin Comment method "refreshChart".
+     * 
+     * @param form
+     */
+    public void refreshChart(ScrolledForm form) {
+        if (chartComposite != null) {
+            try {
+                for (Control control : chartComposite.getChildren()) {
+                    control.dispose();
+                }
+
+                createPreviewCharts(form, chartComposite, true);
+                chartComposite.layout();
+                form.reflow(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
         }
     }
 
@@ -530,6 +527,14 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
      */
     public AnalysisColumnTreeViewer getTreeViewer() {
         return this.treeViewer;
+    }
+
+    public ScrolledForm getForm() {
+        return form;
+    }
+
+    public void setForm(ScrolledForm form) {
+        this.form = form;
     }
 
 }

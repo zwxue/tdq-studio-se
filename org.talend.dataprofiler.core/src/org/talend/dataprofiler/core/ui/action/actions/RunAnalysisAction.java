@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -59,8 +58,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00");
 
-    public static boolean finishFlag = false;
-
     private TreeViewer treeViewer;
 
     private IFile currentSelection;
@@ -68,6 +65,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private Analysis analysis = null;
 
     private boolean toolbar;
+
+    private ColumnMasterDetailsPage page;
 
     public RunAnalysisAction() {
         super("Run");
@@ -91,7 +90,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
             if (editor != null) {
-                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                page = (ColumnMasterDetailsPage) editor.getMasterPage();
                 FileEditorInput input = (FileEditorInput) page.getEditorInput();
                 if (page.isDirty()) {
                     try {
@@ -147,6 +146,17 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     AnaResourceFileHelper.getInstance().save(finalAnalysis);
 
+                    if (page != null) {
+                        Display.getDefault().asyncExec(new Runnable() {
+
+                            public void run() {
+
+                                page.refreshChart(page.getForm());
+                            }
+
+                        });
+                    }
+
                     return Status.OK_STATUS;
                 } else {
                     int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
@@ -168,10 +178,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         job.setUser(true);
         job.schedule();
-
-        if (job.getState() != Job.RUNNING) {
-            finishFlag = true;
-        }
 
         if (treeViewer == null) {
             DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
