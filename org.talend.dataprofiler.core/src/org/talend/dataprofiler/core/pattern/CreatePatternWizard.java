@@ -104,9 +104,9 @@ public class CreatePatternWizard extends Wizard {
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-        location = folder.getLocation();
         String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
         IFile file = folder.getFile(fname);
+        location = file.getFullPath();
         if (file.exists()) {
             log.error("Cannot save pattern " + name + ", file " + file.getFullPath() + " already exists!");
             return false;

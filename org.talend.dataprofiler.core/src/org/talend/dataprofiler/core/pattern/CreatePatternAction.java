@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.pattern;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
@@ -119,7 +120,7 @@ public class CreatePatternAction extends Action {
         if (WizardDialog.OK == dialog.open()) {
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
-                IFile file = folder.getFile(fileWizard.getLocation().lastSegment());
+                IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fileWizard.getLocation());
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file),
                         PluginConstant.PATTERN_EDITOR);
             } catch (CoreException e) {
