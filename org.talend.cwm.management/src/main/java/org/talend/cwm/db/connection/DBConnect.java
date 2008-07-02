@@ -80,6 +80,7 @@ public class DBConnect {
      */
     public DBConnect(DBConnectionParameter connParams) {
         this(connParams.getJdbcUrl(), connParams.getDriverClassName(), connParams.getParameters());
+        this.emfUtil.setUsePlatformRelativePath(true);
     }
 
     // public DBConnect(TdDataProvider dataprovider) {
