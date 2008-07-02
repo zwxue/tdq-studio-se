@@ -67,6 +67,11 @@ public final class FactoriesUtil {
     public static final String REP = "rep";
 
     /**
+     * Extension used for the files in which the sql are serialized.
+     */
+    public static final String SQL = "sql";
+
+    /**
      * Extension used for the files in which the pattern are serialized.
      */
     public static final String PATTERN = "pattern";
