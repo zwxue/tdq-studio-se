@@ -87,7 +87,7 @@ public class DBConnect {
     // }
 
     /**
-     * DBConnect constructor.
+     * DBConnect constructor. Path will not be platform relative with this constructor.
      * 
      * @param dbUrl the database URL (must not be null)
      * @param driverClassName the driver class name (must not be null)
@@ -99,6 +99,7 @@ public class DBConnect {
         this.databaseUrl = dbUrl;
         this.driverClass = driverClassName;
         this.connectionProperties = props;
+        this.emfUtil.setUsePlatformRelativePath(false); // use file paths for tests
     }
 
     /**

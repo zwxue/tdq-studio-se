@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.commons.emf;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,6 +44,8 @@ public final class EMFUtil {
 
     /** the options needed for saving the resources. */
     private final Map<String, Object> options;
+
+    private boolean usePlatformRelativePath = true;
 
     /** Static initialization of all EMF packages needed for the application. Done only once. */
     static {
@@ -90,14 +93,28 @@ public final class EMFUtil {
 
     /**
      * Creates a new Resource in the ResourceSet. The file will be actually written when the save() method will be
-     * called.
+     * called. By default, paths are platform relative. In order to call this method outside an Eclipse platform, set
+     * the usePlatformRelativePath boolean to false.
      * 
      * @param uri the uri of the file in which the pool will be stored
      * @param eObject the pool that contains objects.
      * @return true (as per the general contract of the <tt>Collection.add</tt> method).
      */
-    public boolean addPoolToResourceSet(String pathName, EObject eObject) {
-        return addPoolToResourceSet(URI.createPlatformResourceURI(pathName, false), eObject);
+    public boolean addPoolToResourceSet(String uri, EObject eObject) {
+        return usePlatformRelativePath ? addPoolToResourceSet(URI.createPlatformResourceURI(uri, false), eObject)
+                : addPoolToResourceSet(URI.createURI(uri), eObject);
+    }
+
+    /**
+     * Creates a new Resource in the ResourceSet. The file will be actually written when the save() method will be
+     * called.
+     * 
+     * @param file the file in which the pool will be stored
+     * @param eObject the pool that contains objects.
+     * @return true (as per the general contract of the <tt>Collection.add</tt> method).
+     */
+    public boolean addPoolToResourceSet(File file, EObject eObject) {
+        return addPoolToResourceSet(URI.createFileURI(file.getAbsolutePath()), eObject);
     }
 
     /**
@@ -260,6 +277,24 @@ public final class EMFUtil {
             log.warn("Problem when saving resources " + util.getLastErrorMessage());
         }
         return save;
+    }
+
+    /**
+     * Getter for usePlatformRelativePath.
+     * 
+     * @return the usePlatformRelativePath
+     */
+    public boolean isUsePlatformRelativePath() {
+        return this.usePlatformRelativePath;
+    }
+
+    /**
+     * Sets the usePlatformRelativePath.
+     * 
+     * @param usePlatformRelativePath the usePlatformRelativePath to set
+     */
+    public void setUsePlatformRelativePath(boolean usePlatformRelativePath) {
+        this.usePlatformRelativePath = usePlatformRelativePath;
     }
 
 }
