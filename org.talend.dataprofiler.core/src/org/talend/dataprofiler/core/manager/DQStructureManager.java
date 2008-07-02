@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.manager;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +36,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
@@ -91,10 +91,10 @@ public final class DQStructureManager {
             project = this.createNewProject(LIBRARIES, shell);
             IFolder patternFolder = this.createNewFoler(project, PATTERNS);
             // Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
-            this.copyFilesToFolder(PATTERN_PATH, PluginConstant.PATTERN_SUFFIX, true, patternFolder);
+            this.copyFilesToFolder(PATTERN_PATH, true, patternFolder);
             IFolder sqlSourceFolder = this.createNewFoler(project, SOURCE_FILES);
             // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to folder "Libraries/Source Files".
-            this.copyFilesToFolder(DEMO_PATH, PluginConstant.SQL_SUFFIX, true, sqlSourceFolder);
+            this.copyFilesToFolder(DEMO_PATH, true, sqlSourceFolder);
 
             // create "Metadata" project
             project = this.createNewProject(METADATA, shell);
@@ -163,28 +163,39 @@ public final class DQStructureManager {
      * 
      * @param srcPath The path name in which to look. The path is always relative to the root of this bundle and may
      * begin with &quot;/&quot;. A path value of &quot;/&quot; indicates the root of this bundle.
-     * @param srcFilePattern The file name pattern for selecting entries in the specified path. The pattern is only
-     * matched against the last element of the entry path and it supports substring matching, as specified in the Filter
-     * specification, using the wildcard character (&quot;*&quot;). If null is specified, this is equivalent to
-     * &quot;*&quot; and matches all files.
-     * @param recurse If <code>true</code>, recurse into subdirectories. Otherwise only return entries from the
-     * specified path.
-     * @param desFolder The destination folder.
+     * @param srcPath
+     * @param recurse If <code>true</code>, recurse into subdirectories(contains directories). Otherwise only return
+     * entries from the specified path.
+     * @param desFolder
      * @throws IOException
      * @throws CoreException
      */
     @SuppressWarnings("unchecked")
-    private void copyFilesToFolder(String srcPath, String srcFilePattern, boolean recurse, IFolder desFolder) throws IOException,
-            CoreException {
-        Enumeration patterns = null;
-        patterns = CorePlugin.getDefault().getBundle().findEntries(srcPath, srcFilePattern, recurse);
-        while (patterns.hasMoreElements()) {
-            URL nextElement = (URL) patterns.nextElement();
+    private void copyFilesToFolder(String srcPath, boolean recurse, IFolder desFolder) throws IOException, CoreException {
+        Enumeration paths = null;
+        paths = CorePlugin.getDefault().getBundle().getEntryPaths(srcPath);
+        while (paths.hasMoreElements()) {
+            String nextElement = (String) paths.nextElement();
+            String currentPath = "/" + nextElement;
+            URL resourceURL = CorePlugin.getDefault().getBundle().getEntry(currentPath);
             URL fileURL = null;
+            File file = null;
             try {
-                fileURL = FileLocator.toFileURL(nextElement);
+                fileURL = FileLocator.toFileURL(resourceURL);
+                file = new File(fileURL.getFile());
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+            if (file.isDirectory() && recurse) {
+                if (file.getName().startsWith(".")) {
+                    continue;
+                }
+                IFolder folder = desFolder.getFolder(file.getName());
+                if (!folder.exists()) {
+                    folder.create(false, true, null);
+                }
+                copyFilesToFolder(currentPath, recurse, folder);
+                continue;
             }
             String fileName = new Path(fileURL.getPath()).lastSegment();
             InputStream openStream = null;
