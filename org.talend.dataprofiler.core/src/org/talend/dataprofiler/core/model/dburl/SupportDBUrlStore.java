@@ -85,11 +85,8 @@ public final class SupportDBUrlStore {
     }
 
     public String getDBUrl(SupportDBUrlType dbType) {
-        return getDBUrl(dbType.getDBKey(), dbType.getHostName(), dbType.getPort(), dbType.getDBName(), dbType.getDataSource());
-    }
-
-    public String getDBUrl(String dbType, String host, String port, String dbName, String dataSource) {
-        return getDBUrl(dbType, host, port, dbName, dataSource, PluginConstant.EMPTY_STRING);
+        return getDBUrl(dbType.getDBKey(), dbType.getHostName(), dbType.getPort(), dbType.getDBName(), dbType.getDataSource(),
+                dbType.getParamSeprator() != null ? PluginConstant.DEFAULT_PARAMETERS : PluginConstant.EMPTY_STRING);
     }
 
     /**

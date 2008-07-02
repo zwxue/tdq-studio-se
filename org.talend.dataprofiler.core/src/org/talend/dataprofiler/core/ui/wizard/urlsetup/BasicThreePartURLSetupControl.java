@@ -81,7 +81,11 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
         label.setText("Additional JDBC Parameters"); //$NON-NLS-1$
         final Text parameterText = new Text(parent, SWT.BORDER | SWT.SINGLE);
         parameterText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        parameterText.setText(PluginConstant.EMPTY_STRING);
+        if (dbType.getParamSeprator() != null) {
+            parameterText.setText(PluginConstant.DEFAULT_PARAMETERS);
+        } else {
+            parameterText.setText(PluginConstant.EMPTY_STRING);
+        }
         parameterText.setEnabled(compositeEnable);
         label.setEnabled(compositeEnable);
         parameterText.setEnabled(compositeEnable);
@@ -167,7 +171,9 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
         });
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl#setConnectionURL(java.lang.String)
      */
     @Override
