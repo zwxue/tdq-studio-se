@@ -12,14 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
@@ -29,10 +33,12 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.eclipse.ui.part.ResourceTransfer;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -44,6 +50,10 @@ import org.talend.dataquality.reports.TdReport;
 public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     private static final IResource[] NO_RESOURCES = new IResource[0];
+
+    private boolean dropRep = false;
+
+    private boolean dropSql = false;
 
     /*
      * (non-Javadoc)
@@ -65,20 +75,30 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
         } else if (ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
             resources = (IResource[]) aDropTargetEvent.data;
         }
-        TdReport findReport = RepResourceFileHelper.getInstance().findReport(((IFile) target));
-        if (resources != null && resources.length > 0) {
-            List<Analysis> anaList = new ArrayList<Analysis>();
-            for (IResource res : resources) {
-                Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis((IFile) res);
-                if (findAnalysis != null) {
-                    anaList.add(findAnalysis);
+
+        if ((target instanceof IFile) && dropRep) {
+            TdReport findReport = RepResourceFileHelper.getInstance().findReport(((IFile) target));
+            if (resources != null && resources.length > 0) {
+                List<Analysis> anaList = new ArrayList<Analysis>();
+                for (IResource res : resources) {
+                    Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis((IFile) res);
+                    if (findAnalysis != null) {
+                        anaList.add(findAnalysis);
+                    }
                 }
+                ReportHelper.addAnalyses(anaList, findReport);
+                RepResourceFileHelper.getInstance().save(findReport);
             }
-            ReportHelper.addAnalyses(anaList, findReport);
-            RepResourceFileHelper.getInstance().save(findReport);
-            CorePlugin.getDefault().refreshWorkSpace();
-            ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
+        } else if ((target instanceof IFolder) && dropSql) {
+            IFolder folder = (IFolder) target;
+            IPath location = folder.getLocation();
+            for (IResource res : resources) {
+                String name = res.getName();
+                new File(res.getLocation().toPortableString()).renameTo(new File(location.append(name).toPortableString()));
+            }
         }
+        CorePlugin.getDefault().refreshWorkSpace();
+        ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         return null;
     }
 
@@ -129,11 +149,31 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
     @Override
     public IStatus validateDrop(Object target, int operation, TransferData transferType) {
         for (IResource res : getSelectedResources()) {
-            if (!res.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
-                return Status.CANCEL_STATUS;
+            if (res instanceof IFile) {
+                IFile file = (IFile) res;
+                if (file.getFileExtension().equals(FactoriesUtil.SQL)) {
+                    if (target instanceof IFolder) {
+                        IFolder folder = (IFolder) target;
+                        IPath path = new Path(DQStructureManager.LIBRARIES);
+                        path = path.append(DQStructureManager.SOURCE_FILES);
+                        IPath fullPath = folder.getFullPath();
+                        if (path.isPrefixOf(fullPath)) {
+                            dropSql = true;
+                            return Status.OK_STATUS;
+                        }
+                    }
+                }
+                if (!res.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+                    if (target instanceof IFile) {
+                        IFile tfile = (IFile) target;
+                        if (tfile.getFileExtension().equals(FactoriesUtil.REP)) {
+                            dropRep = true;
+                            return Status.OK_STATUS;
+                        }
+                    }
+                }
             }
         }
-        return Status.OK_STATUS;
+        return Status.CANCEL_STATUS;
     }
-
 }

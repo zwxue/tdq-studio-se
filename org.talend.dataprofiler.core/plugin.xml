@@ -123,8 +123,7 @@
               id="org.talend.dataprofiler.core.ui.views.resources.ResourceDropAdapterAssistant">
            <possibleDropTargets> 
             <and>
-	            <instanceof value="org.eclipse.core.resources.IFile"/>            
-                <test property="org.eclipse.core.resources.name" value="*.rep"/>
+	            <instanceof value="org.eclipse.core.resources.IResource"/>
             </and>
            </possibleDropTargets>
         </dropAssistant>   
