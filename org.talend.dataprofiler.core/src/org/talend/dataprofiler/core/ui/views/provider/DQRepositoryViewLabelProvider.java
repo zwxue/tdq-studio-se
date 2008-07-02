@@ -14,9 +14,6 @@ package org.talend.dataprofiler.core.ui.views.provider;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.PackageHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
@@ -24,9 +21,6 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
-
-import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author rli
@@ -47,25 +41,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
     public String getText(Object element) {
 
-        if (element instanceof TableFolderNode) {
-            TableFolderNode node = (TableFolderNode) element;
-
-            Package catalogOrSchema = PackageHelper.getCatalogOrSchema(node.getParent());
-            return ((IFolderNode) element).getName() + "(" + PackageHelper.getTables(catalogOrSchema).size() + ")";
-        }
-
-        if (element instanceof ViewFolderNode) {
-            ViewFolderNode node = (ViewFolderNode) element;
-
-            Package catalogOrSchema = PackageHelper.getCatalogOrSchema(node.getParent());
-            return ((IFolderNode) element).getName() + "(" + PackageHelper.getViews(catalogOrSchema).size() + ")";
-        }
-
-        if (element instanceof ColumnFolderNode) {
-            ColumnFolderNode node = (ColumnFolderNode) element;
-
-            ColumnSet table = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(node.getParent());
-            return ((IFolderNode) element).getName() + "(" + ColumnSetHelper.getColumns(table).size() + ")";
+        if (element instanceof TableFolderNode || element instanceof ViewFolderNode || element instanceof ColumnFolderNode) {
+            return ((IFolderNode) element).getName();
         }
 
         // PTODO qzhang fixed bug 4176: Display expressions as children of the patterns

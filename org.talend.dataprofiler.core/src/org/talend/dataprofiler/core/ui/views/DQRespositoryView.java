@@ -17,7 +17,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.commands.ActionHandler;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.TreeAdapter;
+import org.eclipse.swt.events.TreeEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
@@ -25,6 +32,10 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.model.nodes.foldernode.AbstractFolderNode;
+import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
+import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
+import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
@@ -70,6 +81,49 @@ public class DQRespositoryView extends CommonNavigator {
         adjustFilter();
         activateContext();
         this.getCommonViewer().setSorter(null);
+        this.getCommonViewer().getTree().addTreeListener(new TreeAdapter() {
+
+            @Override
+            public void treeExpanded(TreeEvent e) {
+                TreeItem item = (TreeItem) e.item;
+                if (!item.getText().endsWith(")")) {
+                    Object obj = item.getData();
+
+                    if (obj instanceof TableFolderNode || obj instanceof ViewFolderNode || obj instanceof ColumnFolderNode) {
+                        item.setText(item.getText() + "(" + item.getItemCount() + ")");
+                        getCommonViewer().getTree().layout();
+                    }
+                }
+                super.treeExpanded(e);
+            }
+
+        });
+
+        this.getCommonViewer().getTree().addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseDoubleClick(MouseEvent e) {
+                Tree tree = (Tree) e.getSource();
+                Point point = new Point(e.x, e.y);
+                TreeItem item = tree.getItem(point);
+                if (!item.getText().endsWith(")")) {
+                    Object obj = item.getData();
+
+                    if (obj instanceof AbstractFolderNode) {
+                        AbstractFolderNode node = (AbstractFolderNode) obj;
+                        node.loadChildren();
+                        Object[] children = node.getChildren();
+                        if (children != null) {
+                            item.setText(item.getText() + "(" + children.length + ")");
+                        }
+
+                        getCommonViewer().getTree().layout();
+                    }
+                }
+                super.mouseDoubleClick(e);
+            }
+
+        });
     }
 
     /**
