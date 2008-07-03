@@ -174,6 +174,9 @@ public final class DQStructureManager {
     private void copyFilesToFolder(String srcPath, boolean recurse, IFolder desFolder) throws IOException, CoreException {
         Enumeration paths = null;
         paths = CorePlugin.getDefault().getBundle().getEntryPaths(srcPath);
+        if (paths == null) {
+            return;
+        }
         while (paths.hasMoreElements()) {
             String nextElement = (String) paths.nextElement();
             String currentPath = "/" + nextElement;
