@@ -18,14 +18,8 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.AssertionFailedException;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
-import org.eclipse.help.IHelpResource;
-import org.eclipse.help.ui.internal.views.HelpTray;
-import org.eclipse.help.ui.internal.views.ReusableHelpPart;
-import org.eclipse.jface.dialogs.DialogTray;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
@@ -44,7 +38,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -53,8 +46,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
-import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.relational.TdColumn;
@@ -68,9 +60,9 @@ import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.HelpUtils;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorParameterTypes;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -243,29 +235,32 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(null, new PatternLabelProvider(),
+                    CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
                             new WorkbenchContentProvider());
 
                     IFolder defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
                             DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS);
                     dialog.setInput(defaultPatternFolder);
+                    dialog.setContainerMode(true);
                     dialog.setTitle("Pattern Selector");
                     dialog.setMessage("Patterns:");
                     dialog.setSize(80, 30);
                     dialog.create();
                     if (dialog.open() == Window.OK) {
-
                         for (Object obj : dialog.getResult()) {
-                            IFile file = (IFile) obj;
-                            Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                            PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory
-                                    .createRegexpMatchingIndicator(pattern);
+                            if (obj instanceof IFile) {
+                                IFile file = (IFile) obj;
+                                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                                PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory
+                                        .createRegexpMatchingIndicator(pattern);
 
-                            DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
-                            IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
-                            IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
-                            createOneUnit(treeItem, addIndicatorUnit);
-                            setDirty(true);
+                                DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
+                                IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
+                                IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type,
+                                        patternMatchingIndicator);
+                                createOneUnit(treeItem, addIndicatorUnit);
+                                setDirty(true);
+                            }
                         }
                     }
                 }
@@ -317,8 +312,6 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         this.setElements(newsArray);
     }
 
-    private static int activeCount = 0;
-
     private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit indicatorUnit : indicatorUnits) {
             createOneUnit(treeItem, indicatorUnit);
@@ -365,81 +358,15 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             public void mouseDown(MouseEvent e) {
 
                 final IndicatorUnit indicator = (IndicatorUnit) ((Label) e.getSource()).getData();
-                final IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicator, analysis) {
+                final IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicator, analysis);
 
-                    /*
-                     * (non-Javadoc)
-                     * 
-                     * @see org.eclipse.jface.wizard.Wizard#dispose()
-                     */
-                    @Override
-                    public void dispose() {
-                        activeCount = 0;
-                        super.dispose();
-                    }
-                };
+                String helpID = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
+                WizardDialog dialog = new WizardDialog(null, wizard);
 
-                try {
-                    // open the dialog
-                    WizardDialog dialog = new WizardDialog(null, wizard) {
+                int open = HelpUtils.injectWithHelp(dialog, wizard, helpID, indicator).open();
 
-                        /*
-                         * (non-Javadoc)
-                         * 
-                         * @see org.eclipse.jface.dialogs.TrayDialog#openTray(org.eclipse.jface.dialogs.DialogTray)
-                         */
-                        @SuppressWarnings("restriction")
-                        @Override
-                        public void openTray(DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
-                            super.openTray(tray);
-                            if (tray instanceof HelpTray) {
-                                HelpTray helpTray = (HelpTray) tray;
-                                ReusableHelpPart helpPart = helpTray.getHelpPart();
-                                helpPart.getForm().getForm().notifyListeners(SWT.Activate, new Event());
-                            }
-                        }
-
-                    };
-                    dialog.setPageSize(300, 400);
-                    dialog.create();
-                    dialog.getShell().addShellListener(new ShellAdapter() {
-
-                        /*
-                         * (non-Javadoc)
-                         * 
-                         * @see org.eclipse.swt.events.ShellAdapter#shellActivated(org.eclipse.swt.events.ShellEvent)
-                         */
-                        @Override
-                        public void shellActivated(ShellEvent e) {
-                            String string = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
-                            if (activeCount < 2) {
-                                Point point = e.widget.getDisplay().getCursorLocation();
-                                IContext context = HelpSystem.getContext(string);
-                                IHelpResource[] relatedTopics = context.getRelatedTopics();
-                                for (IHelpResource topic : relatedTopics) {
-                                    topic.getLabel();
-                                    topic.getHref();
-                                }
-                                IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-                                helpSystem.displayContext(context, point.x + 15, point.y);
-                                activeCount++;
-                                ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
-                                if (lastActiveInstance != null) {
-                                    String href = IndicatorParameterTypes.getHref(indicator);
-                                    if (href != null) {
-                                        lastActiveInstance.showURL(href);
-                                    }
-                                }
-                            }
-                        }
-
-                    });
-                    int open = dialog.open();
-                    if (Window.OK == open) {
-                        setDirty(wizard.isDirty());
-                    }
-                } catch (AssertionFailedException ex) {
-                    MessageDialogWithToggle.openInformation(null, "Indicator Option", "No options to set!");
+                if (Window.OK == open) {
+                    setDirty(wizard.isDirty());
                 }
 
             }
@@ -608,7 +535,16 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         @Override
         public Image getImage(Object element) {
-            return ImageLib.getImage(ImageLib.PATTERN_REG);
+
+            if (element instanceof IFolder) {
+                return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+            }
+
+            if (element instanceof IFile) {
+                return ImageLib.getImage(ImageLib.PATTERN_REG);
+            }
+
+            return null;
         }
 
         @Override
