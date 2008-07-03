@@ -363,7 +363,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                 String helpID = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
                 WizardDialog dialog = new WizardDialog(null, wizard);
 
-                int open = HelpUtils.injectWithHelp(dialog, wizard, helpID, indicator).open();
+                int open = HelpUtils.injectHelp(dialog, wizard, helpID, indicator).open();
 
                 if (Window.OK == open) {
                     setDirty(wizard.isDirty());

@@ -23,6 +23,7 @@ import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
@@ -40,7 +41,7 @@ public class HelpUtils {
 
     private static int activeCount;
 
-    public static WizardDialog injectWithHelp(WizardDialog dialog, Wizard wizard, final String helpID,
+    public static WizardDialog injectHelp(WizardDialog dialog, Wizard wizard, final String helpID,
             final IndicatorUnit indicator) {
         try {
 
@@ -109,6 +110,73 @@ public class HelpUtils {
     }
 
     public static Dialog injectWithHelp(WizardDialog dialog, Wizard wizard, String helpID) {
-        return injectWithHelp(dialog, wizard, helpID, null);
+        return injectHelp(dialog, wizard, helpID, null);
+    }
+
+    public static ReusableHelpPart helpPart;
+
+    public static WizardDialog injectHelpForOnePage(WizardDialog dialog, Wizard wizard, final String helpID,
+            final IndicatorUnit indicator, final WizardPage page) {
+        try {
+
+            activeCount = 0;
+
+            // open the dialog
+            dialog = new WizardDialog(null, wizard) {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.jface.dialogs.TrayDialog#openTray(org.eclipse.jface.dialogs.DialogTray)
+                 */
+                @SuppressWarnings("restriction")
+                @Override
+                public void openTray(DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
+                    super.openTray(tray);
+                    if (tray instanceof HelpTray) {
+                        HelpTray helpTray = (HelpTray) tray;
+                        helpPart = helpTray.getHelpPart();
+                        helpPart.getForm().getForm().notifyListeners(SWT.Activate, new Event());
+                    }
+                }
+
+                @Override
+                protected void nextPressed() {
+                    super.nextPressed();
+
+                    if (getCurrentPage() != null && getCurrentPage() == page) {
+
+                        if (activeCount < 2) {
+                            Point point = getShell().getDisplay().getCursorLocation();
+                            IContext context = HelpSystem.getContext(helpID);
+                            IHelpResource[] relatedTopics = context.getRelatedTopics();
+                            for (IHelpResource topic : relatedTopics) {
+                                topic.getLabel();
+                                topic.getHref();
+                            }
+                            IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+                            helpSystem.displayContext(context, point.x + 15, point.y);
+                            activeCount++;
+                            ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
+                            if (lastActiveInstance != null) {
+                                String href = IndicatorParameterTypes.getHref(indicator);
+                                if (href != null) {
+                                    lastActiveInstance.showURL(href);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            };
+            dialog.setPageSize(300, 400);
+            dialog.create();
+
+            return dialog;
+        } catch (AssertionFailedException ex) {
+            MessageDialogWithToggle.openInformation(null, "Indicator Option", "No options to set!");
+        }
+
+        return null;
     }
 }

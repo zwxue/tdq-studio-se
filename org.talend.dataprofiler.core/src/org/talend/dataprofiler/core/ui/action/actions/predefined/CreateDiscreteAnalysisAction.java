@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
-import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
@@ -46,17 +46,6 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getPredefinedWizard()
-     */
-    @Override
-    protected Wizard getPredefinedWizard() {
-
-        return getStandardAnalysisWizard();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#isAllowed()
      */
     @Override
@@ -80,6 +69,12 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
     protected boolean preDo() {
 
         return true;
+    }
+
+    @Override
+    protected WizardDialog getPredefinedDialog() {
+
+        return getStandardAnalysisWizardDialog();
     }
 
 }

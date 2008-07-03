@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -43,12 +43,6 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         allwedEnumes[2] = IndicatorEnum.FrequencyIndicatorEnum;
 
         return composePredefinedColumnIndicator(allwedEnumes);
-    }
-
-    @Override
-    public Wizard getPredefinedWizard() {
-
-        return getStandardAnalysisWizard();
     }
 
     @Override
@@ -84,6 +78,12 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         }
 
         return true;
+    }
+
+    @Override
+    protected WizardDialog getPredefinedDialog() {
+
+        return getStandardAnalysisWizardDialog();
     }
 
 }

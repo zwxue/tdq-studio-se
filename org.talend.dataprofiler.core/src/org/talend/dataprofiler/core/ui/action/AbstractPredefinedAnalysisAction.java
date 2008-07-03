@@ -19,7 +19,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.relational.TdColumn;
@@ -70,12 +69,15 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         return column;
     }
 
-    protected Wizard getStandardAnalysisWizard() {
+    protected WizardDialog getStandardAnalysisWizardDialog() {
 
         CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(true, AnalysisType.MULTIPLE_COLUMN);
         wizard.setForcePreviousAndNextButtons(true);
 
-        return wizard;
+        WizardDialog dialog = new WizardDialog(null, wizard);
+        dialog.setPageSize(500, 340);
+
+        return dialog;
     }
 
     protected ColumnMasterDetailsPage getMasterPage() {
@@ -135,7 +137,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
         // do something before open the wizard
         if (preDo()) {
-            WizardDialog dialog = new WizardDialog(null, getPredefinedWizard());
+            WizardDialog dialog = getPredefinedDialog();
             dialog.setPageSize(500, 340);
 
             if (dialog.open() == Window.OK) {
@@ -147,7 +149,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
     protected abstract ColumnIndicator[] getPredefinedColumnIndicator();
 
-    protected abstract Wizard getPredefinedWizard();
+    protected abstract WizardDialog getPredefinedDialog();
 
     protected abstract boolean isAllowed();
 

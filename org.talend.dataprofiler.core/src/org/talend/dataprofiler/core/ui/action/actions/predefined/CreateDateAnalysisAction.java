@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
-import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -22,9 +22,13 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.HelpUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
+import org.talend.dataprofiler.help.HelpPlugin;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.FrequencyIndicator;
@@ -88,21 +92,6 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getPredefinedWizard()
-     */
-    @Override
-    protected Wizard getPredefinedWizard() {
-
-        CreateNewAnalysisWizard wizard = (CreateNewAnalysisWizard) getStandardAnalysisWizard();
-
-        wizard.setOtherPages(new WizardPage[] { new TimeSliceOptionPage() });
-
-        return wizard;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#isAllowed()
      */
     @Override
@@ -154,6 +143,24 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             setControl(comp);
         }
 
+    }
+
+    @Override
+    protected WizardDialog getPredefinedDialog() {
+
+        String helpID = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
+
+        CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(true, AnalysisType.MULTIPLE_COLUMN);
+        wizard.setForcePreviousAndNextButtons(true);
+        TimeSliceOptionPage page = new TimeSliceOptionPage();
+        wizard.setOtherPages(new WizardPage[] { page });
+
+        Indicator indicator = (Indicator) IndicatorsFactory.eINSTANCE.create(IndicatorEnum.FrequencyIndicatorEnum
+                .getIndicatorType());
+        ColumnIndicator columnIndicator = new ColumnIndicator(getColumns()[0]);
+        IndicatorUnit indicatorUnit = new IndicatorUnit(IndicatorEnum.FrequencyIndicatorEnum, indicator, columnIndicator);
+
+        return HelpUtils.injectHelpForOnePage(getStandardAnalysisWizardDialog(), wizard, helpID, indicatorUnit, page);
     }
 
 }
