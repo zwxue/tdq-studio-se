@@ -19,10 +19,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.helper.ViewHelper;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -30,7 +26,6 @@ import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * @author rli
@@ -81,14 +76,9 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
         if (element instanceof IContainer) {
             return ((IContainer) element).getName();
         } else if (element instanceof IFolderNode) {
-            IFolderNode node  = ((IFolderNode) element);
-            
-            if (node.isLoaded()) {
-                return ((IFolderNode) element).getName() + "(" + ((IFolderNode) element).getChildren().length + ")";
-            } else {
-                return ((IFolderNode) element).getName();
-            }
+            return ((IFolderNode) element).getName();
         }
+
         String text = super.getText(element);
         if (text.endsWith(PluginConstant.PRV_SUFFIX)) {
             IFile file = (IFile) element;
@@ -101,13 +91,7 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
             }
             return decorateText;
         }
-        if (element instanceof TdTable) {
-            text = text + "(" + TableHelper.getColumns((TdTable) element).size() + ")";
-        }
-        if (element instanceof TdView) {
-            text = text + "(" + ViewHelper.getColumns((TdView) element).size() + ")";
-        }
-        
+
         return text;
     }
 

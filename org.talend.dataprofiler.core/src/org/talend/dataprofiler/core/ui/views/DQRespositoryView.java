@@ -106,7 +106,7 @@ public class DQRespositoryView extends CommonNavigator {
                 Tree tree = (Tree) e.getSource();
                 Point point = new Point(e.x, e.y);
                 TreeItem item = tree.getItem(point);
-                if (!item.getText().endsWith(")")) {
+                if (item != null && !item.getText().endsWith(")")) {
                     Object obj = item.getData();
 
                     if (obj instanceof AbstractFolderNode) {

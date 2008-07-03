@@ -36,6 +36,7 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,10 +46,14 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
+import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
+import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 
 /**
  * A class to select elements out of a tree structure.
@@ -269,9 +274,25 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
             public void run() {
                 parentCreate();
                 fViewer.setCheckedElements(getInitialElementSelections().toArray());
-                // if (fExpandedElements != null) {
-                // fViewer.setExpandedElements(fExpandedElements);
-                // }
+                fViewer.getTree().addTreeListener(new TreeAdapter() {
+
+                    @Override
+                    public void treeExpanded(TreeEvent e) {
+                        TreeItem item = (TreeItem) e.item;
+                        if (!item.getText().endsWith(")")) {
+                            Object obj = item.getData();
+
+                            if (obj instanceof TableFolderNode || obj instanceof ViewFolderNode
+                                    || obj instanceof ColumnFolderNode) {
+                                item.setText(item.getText() + "(" + item.getItemCount() + ")");
+                                fViewer.getTree().layout();
+                            }
+                        }
+                        super.treeExpanded(e);
+                    }
+
+                });
+
                 updateOKStatus();
             }
         });
