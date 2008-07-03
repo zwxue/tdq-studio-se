@@ -129,9 +129,12 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
     @Override
     public void setVisible(boolean visible) {
         if (defaultFolderProviderRes != null) {
-            FolderProvider defaultFolder = new FolderProvider();
-            defaultFolder.setFolderResource(defaultFolderProviderRes);
-            getConnectionParams().setFolderProvider(defaultFolder);
+            FolderProvider folderProvider = getConnectionParams().getFolderProvider();
+            if (folderProvider == null) {
+                folderProvider = new FolderProvider();
+            }
+            folderProvider.setFolderResource(defaultFolderProviderRes);
+            getConnectionParams().setFolderProvider(folderProvider);
         }
 
         super.setVisible(visible);

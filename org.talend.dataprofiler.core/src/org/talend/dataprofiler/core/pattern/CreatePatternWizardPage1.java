@@ -46,6 +46,18 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
     public CreatePatternWizardPage1() {
         metadata = new HashMap<String, String>();
         setPageComplete(false);
+        defaultFolderProviderRes = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+                DQStructureManager.PATTERNS);
+    }
+
+    /**
+     * DOC qzhang CreatePatternWizardPage1 constructor comment.
+     * 
+     * @param folder
+     */
+    public CreatePatternWizardPage1(IFolder folder) {
+        this();
+        this.defaultFolderProviderRes = folder;
     }
 
     /*
@@ -58,8 +70,6 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
         container.setLayout(new FillLayout());
 
         super.createControl(container);
-        defaultFolderProviderRes = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.PATTERNS);
         pathText.setText(defaultFolderProviderRes.getFullPath().toString());
 
         setControl(container);
@@ -93,9 +103,12 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
     @Override
     public void setVisible(boolean visible) {
         if (defaultFolderProviderRes != null) {
-            FolderProvider defaultFolder = new FolderProvider();
-            defaultFolder.setFolderResource(defaultFolderProviderRes);
-            getConnectionParams().setFolderProvider(defaultFolder);
+            FolderProvider folderProvider = getConnectionParams().getFolderProvider();
+            if (folderProvider == null) {
+                folderProvider = new FolderProvider();
+            }
+            folderProvider.setFolderResource(defaultFolderProviderRes);
+            getConnectionParams().setFolderProvider(folderProvider);
         }
 
         super.setVisible(visible);

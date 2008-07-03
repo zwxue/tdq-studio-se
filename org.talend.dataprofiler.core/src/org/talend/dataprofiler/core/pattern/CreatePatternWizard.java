@@ -65,14 +65,13 @@ public class CreatePatternWizard extends Wizard {
      */
     @Override
     public void addPages() {
-        mPage = new CreatePatternWizardPage1();
+        mPage = new CreatePatternWizardPage1(folder);
         AbstractWizardPage.setConnectionParams(new ConnectionParameter());
         mPage.setTitle("New Pattern Creation Page1/2");
         mPage.setDescription("Define the properties");
         mPage.setPageComplete(false);
 
         mPage2 = new CreatePatternWizardPage2();
-        AbstractWizardPage.setConnectionParams(new ConnectionParameter());
         mPage2.setTitle("New Pattern Creation Page2/2");
         mPage2.setDescription("Define the properties");
         mPage2.setPageComplete(false);
@@ -94,6 +93,7 @@ public class CreatePatternWizard extends Wizard {
         TaggedValueHelper.setDescription(AbstractWizardPage.getConnectionParams().getDescription(), pattern);
         TaggedValueHelper.setPurpose(AbstractWizardPage.getConnectionParams().getPurpose(), pattern);
         TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(AbstractWizardPage.getConnectionParams().getStatus()));
+        IFolder folderResource = AbstractWizardPage.getConnectionParams().getFolderProvider().getFolderResource();
 
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
         Expression expression = CoreFactory.eINSTANCE.createExpression();
@@ -105,7 +105,7 @@ public class CreatePatternWizard extends Wizard {
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
-        IFile file = folder.getFile(fname);
+        IFile file = folderResource.getFile(fname);
         location = file.getFullPath();
         if (file.exists()) {
             log.error("Cannot save pattern " + name + ", file " + file.getFullPath() + " already exists!");
