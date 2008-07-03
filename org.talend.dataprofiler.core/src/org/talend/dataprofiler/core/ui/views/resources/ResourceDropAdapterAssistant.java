@@ -163,7 +163,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                         }
                     }
                 }
-                if (!res.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+                if (res.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
                     if (target instanceof IFile) {
                         IFile tfile = (IFile) target;
                         if (tfile.getFileExtension().equals(FactoriesUtil.REP)) {

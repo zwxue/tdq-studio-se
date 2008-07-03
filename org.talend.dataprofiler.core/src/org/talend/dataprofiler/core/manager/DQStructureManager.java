@@ -55,6 +55,8 @@ public final class DQStructureManager {
 
     public static final String PATTERNS = "Patterns";
 
+    public static final String SQL_PATTERNS = "SQL Patterns";
+
     public static final String LIBRARIES = "Libraries";
 
     public static final String METADATA = "Metadata";
@@ -90,6 +92,7 @@ public final class DQStructureManager {
             // create "Libraries" project
             project = this.createNewProject(LIBRARIES, shell);
             IFolder patternFolder = this.createNewFoler(project, PATTERNS);
+            IFolder sqlPatternFolder = this.createNewFoler(project, SQL_PATTERNS);
             // Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
             this.copyFilesToFolder(PATTERN_PATH, true, patternFolder);
             IFolder sqlSourceFolder = this.createNewFoler(project, SOURCE_FILES);

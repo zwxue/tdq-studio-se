@@ -107,7 +107,9 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
             if (folderProvider == null) {
                 folderProvider = new FolderProvider();
             }
-            folderProvider.setFolderResource(defaultFolderProviderRes);
+            if (folderProvider.getFolderResource() == null) {
+                folderProvider.setFolderResource(defaultFolderProviderRes);
+            }
             getConnectionParams().setFolderProvider(folderProvider);
         }
 
