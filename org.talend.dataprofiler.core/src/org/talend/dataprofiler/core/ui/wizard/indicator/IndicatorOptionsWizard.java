@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
@@ -90,8 +91,8 @@ public class IndicatorOptionsWizard extends Wizard {
                 textLengthParam.setUseBlank(textParameters.isUseBlank());
                 textLengthParam.setUseNull(textParameters.isUseNulls());
 
-                paramMap.put(AbstractIndicatorForm.TEXT_PARAMETERS_FORM, textParam);
-                paramMap.put(AbstractIndicatorForm.TEXT_LENGTH_FORM, textLengthParam);
+                paramMap.put(FormEnum.TextParametersForm.getFormName(), textParam);
+                paramMap.put(FormEnum.TextLengthForm.getFormName(), textLengthParam);
             }
 
             if (IndicatorHelper.getDataThreshold(indicator) != null) {
@@ -100,7 +101,7 @@ public class IndicatorOptionsWizard extends Wizard {
                 dataParam.setMinThreshold(IndicatorHelper.getDataThreshold(indicator)[0]);
                 dataParam.setMaxThreshold(IndicatorHelper.getDataThreshold(indicator)[1]);
 
-                paramMap.put(AbstractIndicatorForm.DATA_THRESHOLDS_FORM, dataParam);
+                paramMap.put(FormEnum.DataThresholdsForm.getFormName(), dataParam);
             }
 
             if (indicatorParam.getBins() != null) {
@@ -111,14 +112,14 @@ public class IndicatorOptionsWizard extends Wizard {
                 binsParam.setNumOfBins(DomainHelper.getNumberOfBins(indicatorParam.getBins()));
                 binsParam.setNumOfShown(indicatorParam.getTopN());
 
-                paramMap.put(AbstractIndicatorForm.BINS_DESIGNER_FORM, binsParam);
+                paramMap.put(FormEnum.BinsDesignerForm.getFormName(), binsParam);
             }
             if (indicatorParam.getDateParameters() != null) {
                 TimeSlicesParameter timeParam = new TimeSlicesParameter();
                 timeParam.setDataUnit(indicatorParam.getDateParameters().getDateAggregationType().getLiteral());
                 timeParam.setNumOfShown(indicatorParam.getTopN());
 
-                paramMap.put(AbstractIndicatorForm.TIME_SLICES_FROM, timeParam);
+                paramMap.put(FormEnum.TimeSlicesForm.getFormName(), timeParam);
             }
         }
     }

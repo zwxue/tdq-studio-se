@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -42,6 +43,7 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
+import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dq.analysis.parameters.IParameterConstant;
 
 /**
@@ -262,10 +264,11 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         nameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                metadata.put(IParameterConstant.ANALYSIS_NAME, nameText.getText());
-                getConnectionParams().setMetadate(metadata);
-
-                setPageComplete(true);
+                checkFieldsValue();
+                if (isStatusOnValid()) {
+                    metadata.put(IParameterConstant.ANALYSIS_NAME, nameText.getText());
+                    getConnectionParams().setMetadate(metadata);
+                }
             }
         });
 
@@ -293,7 +296,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         authorText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                if (authorText.getText().length() != 0) {
+                checkFieldsValue();
+                if (isStatusOnValid()) {
                     metadata.put(IParameterConstant.ANALYSIS_AUTHOR, authorText.getText());
                     getConnectionParams().setMetadate(metadata);
                 }
@@ -348,6 +352,22 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         }
 
         super.setVisible(visible);
+    }
+
+    @Override
+    public boolean checkFieldsValue() {
+        if (nameText.getText() == "") {
+            updateStatus(IStatus.ERROR, MSG_EMPTY);
+            return false;
+        }
+
+        if (!CheckValueUtils.isStringValue(nameText.getText())) {
+            updateStatus(IStatus.ERROR, MSG_ONLY_CHAR);
+            return false;
+        }
+
+        updateStatus(IStatus.OK, MSG_OK);
+        return super.checkFieldsValue();
     }
 
     protected abstract void createExtendedControl(Composite container);

@@ -18,58 +18,60 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
+ * DOC zqin class global comment. Detailled comment
  */
 public abstract class AbstractIndicatorForm extends AbstractForm {
-    
+
     private static List<AbstractIndicatorParameter> parameters = new ArrayList<AbstractIndicatorParameter>();
-    
-    public static final String TEXT_LENGTH_FORM = "Text Length";
-    
-    public static final String BINS_DESIGNER_FORM = "Bins Designer";
-    
-    public static final String DATA_THRESHOLDS_FORM = "Data Thresholds";
-    
-    public static final String TEXT_PARAMETERS_FORM = "Text Parameter";
-    
-    public static final String TIME_SLICES_FROM = "Time Slices";
-    
+
+    // ----message define----
+
+    public static final String MSG_EMPTY = "some fieldes are empty!";
+
+    public static final String MSG_ONLY_CHAR = "this field just allowed to input character text!";
+
+    public static final String MSG_ONLY_NUMBER = "this field just allowed to input numberic text!";
+
+    public static final String MSG_ONLY_DATE = "this field just allowed to input date formate text!";
+
+    public static final String MSG_OK = "your input is valid!";
+
     /**
      * DOC zqin AbstractIndicatorForm constructor comment.
+     * 
      * @param parent
      * @param style
      */
     public AbstractIndicatorForm(Composite parent, int style) {
-        
+
         super(parent, style);
     }
-    
+
     public void injectTheParameter(AbstractIndicatorParameter parameter) {
-        
+
         if (parameter != null) {
-            
+
             setParameter(parameter);
         }
-        
-        AbstractIndicatorForm.parameters.add(getParameter()); 
+
+        AbstractIndicatorForm.parameters.add(getParameter());
 
     }
-    
+
     public static List<AbstractIndicatorParameter> getTheParameter() {
-        
+
         return AbstractIndicatorForm.parameters;
     }
-    
+
     public static void emptyParameterList() {
-        
+
         parameters.clear();
     }
-    
+
     public abstract String getFormName();
-    
+
     public abstract AbstractIndicatorParameter getParameter();
-    
+
     public abstract void setParameter(AbstractIndicatorParameter parameter);
 }

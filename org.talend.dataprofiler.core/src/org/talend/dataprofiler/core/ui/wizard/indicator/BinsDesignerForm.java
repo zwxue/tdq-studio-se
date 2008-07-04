@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -21,6 +22,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 
@@ -98,7 +101,10 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                parameter.setMinValue(Double.valueOf(minValue.getText()));
+                checkFieldsValue();
+                if (isStatusOnValid()) {
+                    parameter.setMinValue(Double.valueOf(minValue.getText()));
+                }
             }
 
         });
@@ -107,7 +113,10 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                parameter.setMaxValue(Double.valueOf(maxValue.getText()));
+                checkFieldsValue();
+                if (isStatusOnValid()) {
+                    parameter.setMaxValue(Double.valueOf(maxValue.getText()));
+                }
             }
 
         });
@@ -116,7 +125,10 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                parameter.setNumOfBins(Integer.parseInt(numbOfBins.getText()));
+                checkFieldsValue();
+                if (isStatusOnValid()) {
+                    parameter.setNumOfBins(Integer.parseInt(numbOfBins.getText()));
+                }
             }
 
         });
@@ -140,8 +152,19 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        // TODO Auto-generated method stub
-        return false;
+        if (minValue.getText() == "" || maxValue.getText() == "" || numbOfBins.getText() == "") {
+            updateStatus(IStatus.ERROR, MSG_EMPTY);
+            return false;
+        }
+
+        if (!CheckValueUtils.isNumberValue(minValue.getText()) || !CheckValueUtils.isNumberValue(maxValue.getText())
+                || !CheckValueUtils.isNumberValue(numbOfBins.getText())) {
+            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+            return false;
+        }
+
+        updateStatus(IStatus.OK, MSG_OK);
+        return true;
     }
 
     /*
@@ -170,7 +193,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     @Override
     public String getFormName() {
 
-        return AbstractIndicatorForm.BINS_DESIGNER_FORM;
+        return FormEnum.BinsDesignerForm.getFormName();
     }
 
     /*

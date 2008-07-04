@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -63,7 +65,11 @@ public class FreqBinsDesignerForm extends BinsDesignerForm {
             // MOD scorreia annotation commented out for Java 5 compilation @Override
             public void modifyText(ModifyEvent e) {
 
-                parameter.setNumOfShown(Integer.parseInt(numberTxt.getText()));
+                checkFieldsValue();
+
+                if (isStatusOnValid()) {
+                    parameter.setNumOfShown(Integer.parseInt(numberTxt.getText()));
+                }
             }
 
         });
@@ -79,6 +85,23 @@ public class FreqBinsDesignerForm extends BinsDesignerForm {
             }
             numberTxt.setText(String.valueOf(this.parameter.getNumOfShown()));
         }
+    }
+
+    @Override
+    protected boolean checkFieldsValue() {
+
+        if (numberTxt.getText() == "") {
+            updateStatus(IStatus.ERROR, MSG_EMPTY);
+            return false;
+        }
+
+        if (!CheckValueUtils.isNumberValue(numberTxt.getText())) {
+            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+            return false;
+        }
+
+        updateStatus(IStatus.OK, MSG_OK);
+        return super.checkFieldsValue();
     }
 
 }

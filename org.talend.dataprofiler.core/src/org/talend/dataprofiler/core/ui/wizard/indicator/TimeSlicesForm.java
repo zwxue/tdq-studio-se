@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
 import org.talend.dataquality.indicators.DateGrain;
@@ -57,7 +58,7 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
      */
     @Override
     public String getFormName() {
-        return AbstractIndicatorForm.TIME_SLICES_FROM;
+        return FormEnum.TimeSlicesForm.getFormName();
     }
 
     /*

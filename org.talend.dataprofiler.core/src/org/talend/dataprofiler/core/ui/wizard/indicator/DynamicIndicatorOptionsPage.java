@@ -24,7 +24,10 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.AbstractForm;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.utils.FormFactory;
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -44,6 +47,8 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
     private Map<String, AbstractIndicatorParameter> paramMap;
 
+    private AbstractIndicatorForm.ICheckListener listener;
+
     /**
      * DOC zqin DynamicIndicatorOptionsPage constructor comment.
      * 
@@ -58,6 +63,20 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         setTitle("Indicator settings");
         setMessage("In this wizard, parameters for the given indicator can be set");
 
+        this.listener = new AbstractForm.ICheckListener() {
+
+            public void checkPerformed(AbstractForm source) {
+                if (source.isStatusOnError()) {
+                    DynamicIndicatorOptionsPage.this.setPageComplete(false);
+                    setErrorMessage(source.getStatus());
+                } else {
+                    DynamicIndicatorOptionsPage.this.setPageComplete(true);
+                    setErrorMessage(null);
+                    setMessage(source.getStatus(), source.getStatusLevel());
+                }
+            }
+
+        };
     }
 
     /*
@@ -80,7 +99,6 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         if (indicator != null) {
 
             int sqlType = parentColumn.getTdColumn().getJavaType();
-            // System.out.println(sqlType);
 
             switch (indicator.getType()) {
 
@@ -90,30 +108,35 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
                 if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                    setControl(createView(new TextParametersForm(tabFolder, SWT.NONE)));
+                    setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
+                            new FormEnum[] { FormEnum.TextParametersForm })));
                 }
+
                 break;
             case MinLengthIndicatorEnum:
             case MaxLengthIndicatorEnum:
             case AverageLengthIndicatorEnum:
 
-                setControl(createView(new TextLengthForm(tabFolder, SWT.NONE)));
+                setControl(createView(FormFactory.creaeteForm(tabFolder, listener, new FormEnum[] { FormEnum.TextLengthForm })));
 
                 break;
             case FrequencyIndicatorEnum:
                 if (dataminingType == DataminingType.INTERVAL) {
                     if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                        setControl(createView(new FreqBinsDesignerForm(tabFolder, SWT.NONE)));
+                        setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
+                                new FormEnum[] { FormEnum.FreqBinsDesignerForm })));
                     }
 
                     if (Java2SqlType.isDateInSQL(sqlType)) {
 
-                        setControl(createView(new FreqTimeSliceForm(tabFolder, SWT.NONE)));
+                        setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
+                                new FormEnum[] { FormEnum.FreqTimeSliceForm })));
                     }
                 } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                    setControl(createView(new FreqTextParametersForm(tabFolder, SWT.NONE)));
+                    setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
+                            new FormEnum[] { FormEnum.FreqTextParametersForm })));
                 }
 
                 break;
@@ -121,18 +144,21 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
                 if (dataminingType == DataminingType.INTERVAL) {
                     if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                        setControl(createView(new BinsDesignerForm(tabFolder, SWT.NONE)));
+                        setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
+                                new FormEnum[] { FormEnum.BinsDesignerForm })));
                     }
                 } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                    setControl(createView(new TextParametersForm(tabFolder, SWT.NONE)));
+                    setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
+                            new FormEnum[] { FormEnum.TextParametersForm })));
                 }
 
                 break;
             case BoxIIndicatorEnum:
-
-                setControl(createView(new DataThresholdsForm(tabFolder, SWT.NONE)));
+                setControl(createView(FormFactory
+                        .creaeteForm(tabFolder, listener, new FormEnum[] { FormEnum.DataThresholdsForm })));
                 break;
+
             default:
 
             }
@@ -152,15 +178,15 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
     private Composite createView(AbstractIndicatorForm... forms) {
         try {
-            for (AbstractIndicatorForm form : forms) {
+            for (AbstractIndicatorForm iForm : forms) {
                 TabItem item = new TabItem(tabFolder, SWT.NONE);
-                item.setText(form.getFormName());
-                item.setControl(form);
+                item.setText(iForm.getFormName());
+                item.setControl(iForm);
 
                 if (paramMap == null) {
-                    form.injectTheParameter(null);
+                    iForm.injectTheParameter(null);
                 } else {
-                    form.injectTheParameter(paramMap.get(form.getFormName()));
+                    iForm.injectTheParameter(paramMap.get(iForm.getFormName()));
                 }
 
             }
@@ -169,6 +195,15 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         }
 
         return tabFolder;
+    }
+
+    @Override
+    public void setErrorMessage(String newMessage) {
+        super.setErrorMessage(newMessage);
+
+        if (isCurrentPage()) {
+            getContainer().updateMessage();
+        }
     }
 
 }

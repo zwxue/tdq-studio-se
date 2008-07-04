@@ -23,6 +23,8 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.AbstractForm;
+import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.HelpUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
@@ -121,6 +123,8 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
      */
     public class TimeSliceOptionPage extends WizardPage {
 
+        private AbstractIndicatorForm.ICheckListener listener;
+
         public TimeSliceOptionPage() {
             super("Creaete new analysis");
             setTitle("New Analysis");
@@ -128,6 +132,21 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
 
             patameter = new TimeSlicesParameter();
             patameter.setDataUnit(DateGrain.YEAR.getLiteral());
+
+            this.listener = new AbstractForm.ICheckListener() {
+
+                public void checkPerformed(AbstractForm source) {
+                    if (source.isStatusOnError()) {
+                        TimeSliceOptionPage.this.setPageComplete(false);
+                        setErrorMessage(source.getStatus());
+                    } else {
+                        TimeSliceOptionPage.this.setPageComplete(true);
+                        setErrorMessage(null);
+                        setMessage(source.getStatus(), source.getStatusLevel());
+                    }
+                }
+
+            };
         }
 
         public void createControl(Composite parent) {
@@ -139,6 +158,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             FreqTimeSliceForm timeSliceForm = new FreqTimeSliceForm(comp, SWT.NONE);
             timeSliceForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             timeSliceForm.setParameter(patameter);
+            timeSliceForm.setListener(listener);
 
             setControl(comp);
         }

@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
 
@@ -53,7 +54,7 @@ public class TextParametersForm extends AbstractIndicatorForm {
     @Override
     public String getFormName() {
 
-        return AbstractIndicatorForm.TEXT_PARAMETERS_FORM;
+        return FormEnum.TextParametersForm.getFormName();
     }
 
     /*
