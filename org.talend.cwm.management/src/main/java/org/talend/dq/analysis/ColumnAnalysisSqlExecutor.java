@@ -895,8 +895,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // ResultSet.CLOSE_CURSORS_AT_COMMIT);
         Statement statement = connection.createStatement();
         // statement.setFetchSize(fetchSize);
-        if (log.isDebugEnabled()) {
-            log.debug("Excuting query: " + queryStmt);
+        if (log.isInfoEnabled()) {
+            log.info("Executing query: " + queryStmt);
         }
         statement.execute(queryStmt);
 

@@ -196,9 +196,9 @@ public class CatalogBuilder extends CwmBuilder {
                 TdCatalog catalog = createOrUpdateCatalog(catalogName);
                 name2catalog.put(catalogName, catalog);
             }
+            // --- release the result set.
+            catalogNames.close();
         }
-        // --- release the result set.
-        catalogNames.close();
         catalogsInitialized = true;
     }
 

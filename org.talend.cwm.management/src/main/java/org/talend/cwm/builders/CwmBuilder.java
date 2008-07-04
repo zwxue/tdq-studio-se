@@ -38,14 +38,14 @@ abstract class CwmBuilder {
         System.out.println(tag + " " + str);
     }
 
-    protected DatabaseMetaData getConnectionMetadata(Connection connection) throws SQLException {
-        assert connection != null : "Connection should not be null in " + getClass().getName() + " for connection "
-                + getConnectionInformations(connection);
-        return connection.getMetaData();
+    protected DatabaseMetaData getConnectionMetadata(Connection conn) throws SQLException {
+        assert conn != null : "Connection should not be null in " + getClass().getName() + " for connection "
+                + getConnectionInformations(conn);
+        return conn.getMetaData();
     }
 
-    protected String getConnectionInformations(Connection connection) {
-        return connection.toString(); // TODO scorreia give more user friendly informations.
+    protected String getConnectionInformations(Connection conn) {
+        return conn.toString(); // TODO scorreia give more user friendly informations.
     }
 
 }

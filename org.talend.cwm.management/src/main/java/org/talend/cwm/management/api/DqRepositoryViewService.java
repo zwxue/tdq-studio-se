@@ -667,8 +667,7 @@ public final class DqRepositoryViewService {
             }
             String fileName = createFilename(modelElement.getName() + uuid, FactoriesUtil.CAT);
             IFile file = folder.getFile(fileName);
-            URI catUri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
-            if (!util.addPoolToResourceSet(catUri, modelElement)) {
+            if (!util.addPoolToResourceSet(file.getFullPath().toString(), modelElement)) {
                 ok = false;
             }
         }
