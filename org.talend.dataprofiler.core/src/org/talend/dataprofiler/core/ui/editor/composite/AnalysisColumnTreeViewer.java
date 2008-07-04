@@ -188,6 +188,10 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         this.tree = createTree(this.parentComp);
         tree.setData(VIEWER_KEY, this);
         this.columnIndicators = elements;
+        addItemElements(elements);
+    }
+
+    private void addItemElements(final ColumnIndicator[] elements) {
         for (int i = 0; i < elements.length; i++) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 
@@ -308,8 +312,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         for (int i = 0; i < elements.length; i++) {
             newsArray[this.columnIndicators.length + i] = elements[i];
         }
-
-        this.setElements(newsArray);
+        this.columnIndicators = newsArray;
+        this.addItemElements(elements);
     }
 
     private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
