@@ -4,6 +4,6 @@
     <context id="helpPatternContext" >
         <description>In this page,A regular expression is a powerful way of specifying a pattern for a complex search.</description>
         <topic label="Regular Expressions" href="html/wizard/pattern/reg_experession.html"/>
-        <!-- <topic label="Oracle Regular Expressions" href="html/wizard/pattern/pattern_oracle.html"/> -->
+        <topic label="SQL Expressions" href="html/wizard/pattern/sql_experession.html"/>
     </context>
 </contexts>
