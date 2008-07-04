@@ -69,7 +69,7 @@
     <taggedValue xmi:id="_ybvvYDh8Ed2XmO7pl5Yuyg" tag="Description" value="for each distinct record, counts the number of records."/>
     <taggedValue xmi:id="_ybvvYTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the most frequent records"/>
     <sqlGenericExpression xmi:id="_ybwWcDh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT {0} val, COUNT(*) c FROM {1} t GROUP BY val ORDER BY c DESC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY COUNT(*) DESC" language="Oracle"/>
     <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="PostgreSQL"/>
   </indicatorDefinitions>

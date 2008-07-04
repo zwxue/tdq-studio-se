@@ -52,6 +52,8 @@ public class DbmsLanguage {
 
     private static final String MYSQL = "MYSQL";
 
+    private static final String POSTGRESQL = "POSTGRESQL";
+
     /**
      * Ansi SQL.
      */
@@ -79,9 +81,9 @@ public class DbmsLanguage {
     private final String dbmsName;
 
     /**
-     * the quoting string or a space if quoting is not supported.
+     * the quoting string or an empty string if quoting is not supported.
      */
-    private String dbQuoteString = " ";
+    private String dbQuoteString = "";
 
     /**
      * DbmsLanguage constructor for generic ANSI SQL (independent of any DBMS).

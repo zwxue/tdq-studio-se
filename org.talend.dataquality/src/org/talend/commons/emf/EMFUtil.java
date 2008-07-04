@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
  * @author scorreia This class creates the EMF resources and save them. All resources are stored in a ResourceSet (which
- * can be changed with the setter and getter methods).
+ * can be changed with the setter and getter methods). By default, path are platform relative.
  * 
  * This class also offers some static methods to help handling resources.
  * 
@@ -45,6 +45,9 @@ public final class EMFUtil {
     /** the options needed for saving the resources. */
     private final Map<String, Object> options;
 
+    /**
+     * Whether path are platform relative.
+     */
     private boolean usePlatformRelativePath = true;
 
     /** Static initialization of all EMF packages needed for the application. Done only once. */
@@ -66,6 +69,9 @@ public final class EMFUtil {
         options = new HashMap<String, Object>();
         options.put(XMIResource.OPTION_DECLARE_XML, Boolean.TRUE);
         options.put(XMIResource.OPTION_ENCODING, ENCODING);
+        // the OPTION_DEFER_IDREF_RESOLUTION option needs at least EMF 2.3.1 to work correctly
+        // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=216009
+        // options.put(XMIResource.OPTION_DEFER_IDREF_RESOLUTION, Boolean.TRUE);
 
         // Obtain a new resource set
         resourceSet = new ResourceSetImpl();
@@ -107,7 +113,7 @@ public final class EMFUtil {
 
     /**
      * Creates a new Resource in the ResourceSet. The file will be actually written when the save() method will be
-     * called.
+     * called. Do not use this method is you need to save with platform relative URIs.
      * 
      * @param file the file in which the pool will be stored
      * @param eObject the pool that contains objects.

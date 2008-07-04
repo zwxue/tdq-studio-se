@@ -425,21 +425,33 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             DateGrain dateAggregationType) {
         int nbExtractedColumns = 0;
         String result = "";
+        String aliases = ""; // used in group by clause in MySQL
+        String alias;
         switch (dateAggregationType) {
         case DAY:
-            result = dbms().extractDay(colName) + comma(result);
+            alias = getAlias(colName, DateGrain.DAY);
+            result = dbms().extractDay(colName) + alias + comma(result);
+            aliases = alias + comma(aliases);
             nbExtractedColumns++;
         case WEEK:
-            result = dbms().extractWeek(colName) + comma(result);
+            alias = getAlias(colName, DateGrain.WEEK);
+            result = dbms().extractWeek(colName) + alias + comma(result);
+            aliases = alias + comma(aliases);
             nbExtractedColumns++;
         case MONTH:
-            result = dbms().extractMonth(colName) + comma(result);
+            alias = getAlias(colName, DateGrain.MONTH);
+            result = dbms().extractMonth(colName) + alias + comma(result);
+            aliases = alias + comma(aliases);
             nbExtractedColumns++;
         case QUARTER:
-            result = dbms().extractQuarter(colName) + comma(result);
+            alias = getAlias(colName, DateGrain.QUARTER);
+            result = dbms().extractQuarter(colName) + alias + comma(result);
+            aliases = alias + comma(aliases);
             nbExtractedColumns++;
         case YEAR:
-            result = dbms().extractYear(colName) + comma(result);
+            alias = getAlias(colName, DateGrain.YEAR);
+            result = dbms().extractYear(colName) + alias + comma(result);
+            aliases = alias + comma(aliases);
             nbExtractedColumns++;
             break;
         case NONE:
@@ -450,8 +462,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             break;
         }
 
-        String sql = replaceVariables(sqlExpression.getBody(), result, table);
+        String sql = replaceVariablesLow(sqlExpression.getBody(), result, table, aliases);
         return sql;
+    }
+
+    private String getAlias(String colName, DateGrain dateAggregationType) {
+        return "TDAL_" + colName + dateAggregationType.getName();
     }
 
     /**
@@ -714,8 +730,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private String replaceVariables(String sqlGenericString, String column, String table) {
         Object[] arguments = { column, table };
-        String toFormat = surroundSingleQuotes(sqlGenericString);
+        return replaceVariablesLow(sqlGenericString, arguments);
+    }
 
+    private String replaceVariablesLow(String sqlGenericString, Object... arguments) {
+        String toFormat = surroundSingleQuotes(sqlGenericString);
         return MessageFormat.format(toFormat, arguments);
     }
 
