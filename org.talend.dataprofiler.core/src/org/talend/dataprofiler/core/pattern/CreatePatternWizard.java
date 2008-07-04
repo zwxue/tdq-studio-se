@@ -24,6 +24,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -49,13 +50,17 @@ public class CreatePatternWizard extends Wizard {
 
     private IPath location;
 
+    private ExpressionType type;
+
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
      * 
      * @param folder
+     * @param type
      */
-    public CreatePatternWizard(IFolder folder) {
+    public CreatePatternWizard(IFolder folder, ExpressionType type) {
         this.folder = folder;
+        this.type = type;
     }
 
     /*
@@ -65,14 +70,22 @@ public class CreatePatternWizard extends Wizard {
      */
     @Override
     public void addPages() {
+        String s = "Regular expression";
+        switch (type) {
+        case SQL_LIKE:
+            s = "SQL expression";
+            break;
+        default:
+            break;
+        }
         mPage = new CreatePatternWizardPage1(folder);
         AbstractWizardPage.setConnectionParams(new ConnectionParameter());
-        mPage.setTitle("New Pattern Creation Page1/2");
+        mPage.setTitle(s + " Creation Page1/2");
         mPage.setDescription("Define the properties");
         mPage.setPageComplete(false);
 
         mPage2 = new CreatePatternWizardPage2();
-        mPage2.setTitle("New Pattern Creation Page2/2");
+        mPage2.setTitle(s + " Creation Page2/2");
         mPage2.setDescription("Define the properties");
         mPage2.setPageComplete(false);
         addPage(mPage);

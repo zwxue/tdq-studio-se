@@ -24,6 +24,7 @@ import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.CreatePatternAction;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -47,8 +48,14 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
                 selectedFolderName = ((IFolder) obj).getName();
+                ExpressionType type = null;
                 if (selectedFolderName.equals(DQStructureManager.PATTERNS)) {
-                    menu.add(new CreatePatternAction((IFolder) obj));
+                    type = ExpressionType.REGEXP;
+                } else if (selectedFolderName.equals(DQStructureManager.SQL_PATTERNS)) {
+                    type = ExpressionType.SQL_LIKE;
+                }
+                if (type != null) {
+                    menu.add(new CreatePatternAction((IFolder) obj, type));
                 }
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;

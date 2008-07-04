@@ -37,6 +37,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.help.HelpPlugin;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -50,15 +51,26 @@ public class CreatePatternAction extends Action {
 
     private static int activeCount = 0;
 
+    private ExpressionType type;
+
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
      * 
      * @param folder
+     * @param type
      */
-    public CreatePatternAction(IFolder folder) {
-        setText("Create a new regular pattern");
+    public CreatePatternAction(IFolder folder, ExpressionType type) {
+        switch (type) {
+        case SQL_LIKE:
+            setText("Create a new sql pattern");
+            break;
+        default:
+            setText("Create a new regular pattern");
+            break;
+        }
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
+        this.type = type;
     }
 
     /*
@@ -68,7 +80,7 @@ public class CreatePatternAction extends Action {
      */
     @Override
     public void run() {
-        CreatePatternWizard fileWizard = new CreatePatternWizard(folder) {
+        CreatePatternWizard fileWizard = new CreatePatternWizard(folder, type) {
 
             /*
              * (non-Javadoc)
@@ -112,6 +124,13 @@ public class CreatePatternAction extends Action {
                     if (lastActiveInstance != null) {
                         IHelpResource[] relatedTopics = context.getRelatedTopics();
                         String href = relatedTopics[0].getHref();
+                        switch (type) {
+                        case SQL_LIKE:
+                            href = relatedTopics[1].getHref();
+                            break;
+                        default:
+                            break;
+                        }
                         lastActiveInstance.showURL(href);
                     }
                 }
