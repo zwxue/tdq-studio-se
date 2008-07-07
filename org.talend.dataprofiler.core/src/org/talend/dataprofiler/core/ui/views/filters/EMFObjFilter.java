@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.filters;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.Viewer;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -55,6 +56,9 @@ public class EMFObjFilter extends AbstractViewerFilter {
             if (SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(eObj) != null || dependencySwitch.doSwitch(eObj) != null) {
                 return false;
             }
+        } else if (element instanceof IFile) {
+            IFile file = (IFile) element;
+            return file.getFileExtension() != null;
         }
         return true;
     }

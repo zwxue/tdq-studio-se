@@ -161,8 +161,11 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                 }
 
                 AnalysisTypeNode node = (AnalysisTypeNode) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-
-                updateAnalysisNode(node);
+                if (node == null) {
+                    return;
+                } else {
+                    updateAnalysisNode(node);
+                }
 
             }
 
@@ -200,6 +203,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
     /**
      * DOC zqin Comment method "updateAnalysisNode".
+     * 
      * @param node
      */
     private void updateAnalysisNode(AnalysisTypeNode node) {
