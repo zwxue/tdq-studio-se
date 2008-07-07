@@ -73,6 +73,10 @@ public class ImageLib {
 
     public static final String REGISTER_WIZ = "register_wiz.png";
 
+    public static final String CONNECTION = "connection.gif";
+
+    public static final String METADATA = "metadata.png";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 

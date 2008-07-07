@@ -16,6 +16,8 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IMemento;
@@ -30,6 +32,7 @@ import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -56,7 +59,15 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
                 return ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
             }
-
+        }
+        if (element instanceof IProject) {
+            if (DQStructureManager.METADATA.equals(((IProject) element).getName())) {
+                return ImageLib.getImageDescriptor(ImageLib.METADATA);
+            }
+        } else if (element instanceof IFolder) {
+            if (DQStructureManager.DB_CONNECTIONS.equals(((IFolder) element).getName())) {
+                return ImageLib.getImageDescriptor(ImageLib.CONNECTION);
+            }
         }
         return super.decorateImage(input, element);
     }
