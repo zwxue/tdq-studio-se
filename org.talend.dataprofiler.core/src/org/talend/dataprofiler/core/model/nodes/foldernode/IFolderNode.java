@@ -37,16 +37,6 @@ public interface IFolderNode {
 
     public EObject getParent();
 
-    /**
-     * @return the isLoaded
-     */
-    public boolean isLoaded();
-
-    /**
-     * @param isLoaded the isLoaded to set
-     */
-    public void setLoaded(boolean isLoaded);
-
     public abstract void loadChildren();
 
     /**

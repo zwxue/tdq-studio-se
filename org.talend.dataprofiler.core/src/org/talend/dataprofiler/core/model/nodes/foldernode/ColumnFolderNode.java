@@ -51,7 +51,6 @@ public class ColumnFolderNode extends AbstractFolderNode {
         if (columnSet != null) {
             List<TdColumn> columnList = ColumnSetHelper.getColumns(columnSet);
             if (columnList.size() > 0) {
-                this.setLoaded(true);
                 this.setChildren(columnList.toArray());
                 return;
             }
@@ -72,7 +71,6 @@ public class ColumnFolderNode extends AbstractFolderNode {
             ColumnSetHelper.addColumns(columnSet, columnList);
             this.setChildren(columnList.toArray());
             NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
-            this.setLoaded(true);
         }
     }
 

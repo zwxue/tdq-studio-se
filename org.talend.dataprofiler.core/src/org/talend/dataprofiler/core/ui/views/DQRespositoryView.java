@@ -91,7 +91,6 @@ public class DQRespositoryView extends CommonNavigator {
 
                     if (obj instanceof TableFolderNode || obj instanceof ViewFolderNode || obj instanceof ColumnFolderNode) {
                         item.setText(item.getText() + "(" + item.getItemCount() + ")");
-                        getCommonViewer().getTree().layout();
                     }
                 }
                 super.treeExpanded(e);
@@ -106,7 +105,7 @@ public class DQRespositoryView extends CommonNavigator {
                 Tree tree = (Tree) e.getSource();
                 Point point = new Point(e.x, e.y);
                 TreeItem item = tree.getItem(point);
-                if (item != null && !item.getText().endsWith(")")) {
+                if (item != null) {
                     Object obj = item.getData();
 
                     if (obj instanceof AbstractFolderNode) {
@@ -114,10 +113,15 @@ public class DQRespositoryView extends CommonNavigator {
                         node.loadChildren();
                         Object[] children = node.getChildren();
                         if (children != null) {
-                            item.setText(item.getText() + "(" + children.length + ")");
+                            if (item.getText().indexOf("(") > 0) {
+                                item.setText(item.getText().substring(0, item.getText().indexOf("(")) + "(" + children.length
+                                        + ")");
+                            } else {
+                                item.setText(item.getText() + "(" + children.length + ")");
+                            }
+
                         }
 
-                        getCommonViewer().getTree().layout();
                     }
                 }
                 super.mouseDoubleClick(e);

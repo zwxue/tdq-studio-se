@@ -544,9 +544,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 return null;
             } else if (parentElement instanceof NamedColumnSetFolderNode) {
                 NamedColumnSetFolderNode folerNode = (NamedColumnSetFolderNode) parentElement;
-                if (!(folerNode.isLoaded())) {
-                    folerNode.loadChildren();
-                }
+                folerNode.loadChildren();
                 Object[] children = folerNode.getChildren();
                 if (children != null && children.length > 0) {
                     if (!(children[0] instanceof ColumnSet)) {
