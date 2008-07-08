@@ -71,4 +71,14 @@ public final class PluginConstant {
 
     public static final String MAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*(\\.[_A-Za-z0-9-]+)"; //$NON-NLS-1$
 
+    public static final String USER_PROPERTY = "user";
+
+    public static final String PASSWORD_PROPERTY = "password";
+
+    public static final String HOSTNAME_PROPERTY = "hostname";
+
+    public static final String PORT_PROPERTY = "port";
+
+    public static final String DBTYPE_PROPERTY = "dbtype";
+
 }

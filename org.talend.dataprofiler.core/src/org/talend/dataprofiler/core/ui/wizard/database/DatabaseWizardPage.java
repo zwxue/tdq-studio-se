@@ -182,12 +182,12 @@ class DatabaseWizardPage extends AbstractWizardPage {
 
         rebuildJDBCControls(SupportDBUrlType.MYSQLDEFAULTURL);
 
-        String tempUserid = connectionParam.getParameters().getProperty("user");
+        String tempUserid = connectionParam.getParameters().getProperty(PluginConstant.USER_PROPERTY);
         if (tempUserid != null) {
             userid = tempUserid;
             username.setText(userid);
         }
-        String tempPassword = connectionParam.getParameters().getProperty("password");
+        String tempPassword = connectionParam.getParameters().getProperty(PluginConstant.PASSWORD_PROPERTY);
         if (tempPassword != null) {
             password = tempPassword;
             passwordText.setText(password);

@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.model.dburl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.text.ParsePosition;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -141,6 +142,27 @@ public final class SupportDBUrlStore {
     public SupportDBUrlType getDBUrlType(String dbType) {
         SupportDBUrlType dbUrlDefaultType = supportDBUrlMap.get(dbType);
         return dbUrlDefaultType == null ? SupportDBUrlType.ODBCDEFAULTURL : dbUrlDefaultType;
+    }
+
+    public Properties getDBPameterProperties(String connectionStr) {
+        Properties paramProperties = new Properties();
+        String matchSubStr = connectionStr.substring(0, 8);
+        Set<Object> s = PROP.keySet();
+        Iterator<Object> it = s.iterator();
+        while (it.hasNext()) {
+            String id = (String) it.next();
+            String value = PROP.getProperty(id);
+            if (value.contains(matchSubStr)) {
+                paramProperties.setProperty(PluginConstant.DBTYPE_PROPERTY, id);
+                MessageFormat mf = new MessageFormat(value);
+                Object[] parseResult = mf.parse(connectionStr, new ParsePosition(0));
+                paramProperties.setProperty(PluginConstant.HOSTNAME_PROPERTY, (String) parseResult[0]);
+                paramProperties.setProperty(PluginConstant.PORT_PROPERTY, (String) parseResult[1]);
+                break;
+            }
+        }
+
+        return paramProperties;
     }
 
     /**

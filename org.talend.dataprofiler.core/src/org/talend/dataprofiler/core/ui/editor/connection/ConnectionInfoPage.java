@@ -56,10 +56,6 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class ConnectionInfoPage extends AbstractFormPage {
 
-    private static final String PASSWORD_TAG = "password";
-
-    private static final String USER_TAG = "user";
-
     private static Logger log = Logger.getLogger(ConnectionInfoPage.class);
 
     private TdDataProvider tdDataProvider;
@@ -137,10 +133,10 @@ public class ConnectionInfoPage extends AbstractFormPage {
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
-        String loginValue = TaggedValueHelper.getValue(USER_TAG, connection);
+        String loginValue = TaggedValueHelper.getValue(PluginConstant.USER_PROPERTY, connection);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
 
-        String passwordValue = TaggedValueHelper.getValue(PASSWORD_TAG, connection);
+        String passwordValue = TaggedValueHelper.getValue(PluginConstant.PASSWORD_PROPERTY, connection);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
@@ -167,8 +163,8 @@ public class ConnectionInfoPage extends AbstractFormPage {
 
     private ReturnCode checkDBConnection() {
         Properties props = new Properties();
-        props.put("user", loginText.getText());
-        props.put("password", passwordText.getText());
+        props.put(PluginConstant.USER_PROPERTY, loginText.getText());
+        props.put(PluginConstant.PASSWORD_PROPERTY, passwordText.getText());
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
         ReturnCode returnCode = ConnectionService.checkConnection(this.urlText.getText(), connection.getDriverClassName(), props);
         return returnCode;
@@ -183,8 +179,8 @@ public class ConnectionInfoPage extends AbstractFormPage {
         TaggedValueHelper.setDevStatus(this.tdDataProvider, DevelopmentStatus.get(statusCombo.getText()));
 
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
-        TaggedValueHelper.setTaggedValue(connection, USER_TAG, loginText.getText());
-        TaggedValueHelper.setTaggedValue(connection, PASSWORD_TAG, passwordText.getText());
+        TaggedValueHelper.setTaggedValue(connection, PluginConstant.USER_PROPERTY, loginText.getText());
+        TaggedValueHelper.setTaggedValue(connection, PluginConstant.PASSWORD_PROPERTY, passwordText.getText());
     }
 
     @Override
