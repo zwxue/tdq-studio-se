@@ -43,7 +43,6 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
-import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dq.analysis.parameters.IParameterConstant;
 
 /**
@@ -296,11 +295,9 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         authorText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                checkFieldsValue();
-                if (isStatusOnValid()) {
-                    metadata.put(IParameterConstant.ANALYSIS_AUTHOR, authorText.getText());
-                    getConnectionParams().setMetadate(metadata);
-                }
+
+                metadata.put(IParameterConstant.ANALYSIS_AUTHOR, authorText.getText());
+                getConnectionParams().setMetadate(metadata);
             }
 
         });
@@ -356,13 +353,13 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if (nameText.getText() == "") {
+        if (nameText.getText().trim() == "") {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }
 
-        if (!CheckValueUtils.isStringValue(nameText.getText())) {
-            updateStatus(IStatus.ERROR, MSG_ONLY_CHAR);
+        if (nameText.getText().contains(" ")) {
+            updateStatus(IStatus.ERROR, MSG_INVALID);
             return false;
         }
 

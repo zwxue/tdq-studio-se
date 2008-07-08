@@ -100,7 +100,7 @@ public class FreqTimeSliceForm extends TimeSlicesForm {
             return false;
         }
 
-        if (!CheckValueUtils.isNumberValue(numberTxt.getText())) {
+        if (!CheckValueUtils.isNumberOfShownValue(numberTxt.getText())) {
             updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
             return false;
         }

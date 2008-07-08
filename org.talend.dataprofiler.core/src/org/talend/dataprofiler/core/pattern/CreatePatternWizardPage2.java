@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
+import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
 
@@ -41,6 +43,8 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
     protected HashMap<String, String> metadata;
 
     private Combo comboLang;
+
+    public static final String ERROR_MESSAGE = "Regular expression must start and end with '";
 
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
@@ -70,7 +74,10 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
         nameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setPageComplete(true);
+                checkFieldsValue();
+                if (isStatusOnValid()) {
+                    setPageComplete(true);
+                }
             }
         });
         if (getControl() != null) {
@@ -117,6 +124,22 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
      */
     public String getComboLang() {
         return this.comboLang.getText();
+    }
+
+    @Override
+    public boolean checkFieldsValue() {
+        if (nameText.getText() == "") {
+            updateStatus(IStatus.ERROR, MSG_EMPTY);
+            return false;
+        }
+
+        if (!CheckValueUtils.isPatternValue(nameText.getText())) {
+            updateStatus(IStatus.ERROR, ERROR_MESSAGE);
+            return false;
+        }
+
+        updateStatus(IStatus.OK, MSG_OK);
+        return true;
     }
 
 }

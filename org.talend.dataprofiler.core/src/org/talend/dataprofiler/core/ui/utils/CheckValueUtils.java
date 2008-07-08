@@ -36,6 +36,24 @@ public class CheckValueUtils {
         return getCheckValue(regex, inputString);
     }
 
+    public static boolean isNumberOfShownValue(String inputString) {
+
+        String regex = "(^[^0])\\d*";
+        return getCheckValue(regex, inputString);
+    }
+
+    public static boolean isNumberWithNegativeValue(String inputString) {
+
+        String regex = "-?\\d+";
+        return getCheckValue(regex, inputString);
+    }
+
+    public static boolean isPatternValue(String inputString) {
+
+        String regex = "'.*'";
+        return getCheckValue(regex, inputString);
+    }
+
     /**
      * DOC zqin Comment method "isDateValue".
      * 

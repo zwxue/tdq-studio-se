@@ -153,7 +153,8 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
             return false;
         }
 
-        if (!CheckValueUtils.isNumberValue(lowerText.getText()) || !CheckValueUtils.isNumberValue(higherText.getText())) {
+        if (!CheckValueUtils.isNumberWithNegativeValue(lowerText.getText())
+                || !CheckValueUtils.isNumberWithNegativeValue(higherText.getText())) {
             updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
             return false;
         }

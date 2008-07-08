@@ -25,13 +25,15 @@ public abstract class AbstractWizardPage extends WizardPage {
 
     // ----message define----
 
-    public static final String MSG_EMPTY = "some fieldes are empty, please check!";
+    public static final String MSG_EMPTY = "some fieldes are empty!";
 
-    public static final String MSG_ONLY_CHAR = "this field just allowed to input character text, please check!";
+    public static final String MSG_ONLY_CHAR = "this field just allowed to input character text!";
 
-    public static final String MSG_ONLY_NUMBER = "this field just allowed to input numberic text, please check!";
+    public static final String MSG_ONLY_NUMBER = "this field just allowed to input numberic text!";
 
-    public static final String MSG_ONLY_DATE = "this field just allowed to input date formate text, please check!";
+    public static final String MSG_ONLY_DATE = "this field just allowed to input date formate text!";
+
+    public static final String MSG_INVALID = "this field is invalid!";
 
     public static final String MSG_OK = "your input is valid!";
 
