@@ -14,19 +14,24 @@ package org.talend.dataprofiler.core.ui.views.provider;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
@@ -48,6 +53,11 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
                 TdReport findReport = RepResourceFileHelper.getInstance().findReport(file);
                 Object[] array = ReportHelper.getAnalyses(findReport).toArray();
                 return ComparatorsFactory.sort(array, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+            } else if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+                Analysis analysis = (Analysis) AnaResourceFileHelper.getInstance().getFileResource(file).getContents().get(0);
+                EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+                AnaElementFolderNode folderNode = new AnaElementFolderNode(analysedElements);
+                return new Object[] { folderNode };
             }
             parentElement = PrvResourceFileHelper.getInstance().getFileResource(file);
         } else if (parentElement instanceof IFolderNode) {

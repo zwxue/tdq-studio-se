@@ -91,7 +91,12 @@
                         <test 
                           forcePluginActivation="true" 
                           property="org.eclipse.core.resources.extension" 
-                          value="rep"/> 
+                          value="rep"/>
+                        <test
+                              forcePluginActivation="true"
+                              property="org.eclipse.core.resources.extension"
+                              value="ana">
+                        </test> 
                    </or>
                 </and> 
              </or>
