@@ -15,10 +15,8 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
+import org.talend.dataprofiler.core.model.nodes.foldernode.AbstractFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
-import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
-import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 
@@ -41,7 +39,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
     public String getText(Object element) {
 
-        if (element instanceof TableFolderNode || element instanceof ViewFolderNode || element instanceof ColumnFolderNode) {
+        if (element instanceof AbstractFolderNode) {
+            if (((IFolderNode) element).getChildren() != null) {
+                return ((IFolderNode) element).getName() + "(" + ((IFolderNode) element).getChildren().length + ")";
+            }
+
             return ((IFolderNode) element).getName();
         }
 

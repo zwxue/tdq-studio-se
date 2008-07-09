@@ -21,8 +21,15 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.cwm.exception.TalendException;
+import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
+import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -32,6 +39,9 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -60,13 +70,43 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
     }
 
     protected TdColumn[] getColumns() {
-        TdColumn[] column = new TdColumn[getSelection().size()];
+        Object obj = getSelection().getFirstElement();
 
-        for (int i = 0; i < getSelection().size(); i++) {
-            column[i] = (TdColumn) getSelection().toArray()[i];
+        if (obj instanceof TdColumn) {
+            TdColumn[] column = new TdColumn[getSelection().size()];
+
+            for (int i = 0; i < getSelection().size(); i++) {
+                column[i] = (TdColumn) getSelection().toArray()[i];
+            }
+
+            return column;
         }
 
-        return column;
+        if (obj instanceof ColumnSet) {
+
+            List<TdColumn> list = new ArrayList<TdColumn>();
+            Object[] selections = getSelection().toArray();
+            for (Object currentObj : selections) {
+                ColumnSet columnSet = (ColumnSet) currentObj;
+
+                if (ColumnSetHelper.getColumns(columnSet).size() > 0) {
+                    list.addAll(ColumnSetHelper.getColumns(columnSet));
+                } else {
+                    Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
+                    TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+                    try {
+                        list.addAll(DqRepositoryViewService.getColumns(provider, columnSet, null, true));
+                        NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
+                    } catch (TalendException e) {
+                        MessageBoxExceptionHandler.process(e);
+                    }
+                }
+            }
+
+            return list.toArray(new TdColumn[list.size()]);
+        }
+
+        return null;
     }
 
     protected WizardDialog getStandardAnalysisWizardDialog() {
