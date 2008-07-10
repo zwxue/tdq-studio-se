@@ -29,6 +29,8 @@ public final class PluginConstant {
 
     public static final String EMPTY_STRING = "";
 
+    public static final int DEFAULT_INT_VALUE = 0;
+
     public static final String DEFAULT_PARAMETERS = "noDatetimeStringSync=true";
 
     public static final String SPACE_STRING = " ";

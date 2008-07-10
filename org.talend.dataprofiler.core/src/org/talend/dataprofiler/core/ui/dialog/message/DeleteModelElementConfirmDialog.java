@@ -112,6 +112,8 @@ public final class DeleteModelElementConfirmDialog {
                 if (other.nodeElement != null) {
                     return false;
                 }
+            } else if (nodeElement.getName() == other.nodeElement.getName()) {
+                return true;
             } else if (!nodeElement.getName().equals(other.nodeElement.getName())) {
                 return false;
             }
@@ -189,6 +191,7 @@ public final class DeleteModelElementConfirmDialog {
 
     /**
      * DOC rli Comment method "showDialog".
+     * 
      * @param parentShell
      * @param modelElements
      * @param dialogMessage

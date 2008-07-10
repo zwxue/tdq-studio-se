@@ -12,11 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.connection;
 
+import java.util.List;
+
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
-import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
+import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
 
@@ -75,15 +81,30 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
         this.analysisType = parameters.getAnalysisType();
         this.folderResource = parameters.getFolderProvider().getFolderResource();
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#fillAnalysisBuilder(org.talend.dq.analysis.AnalysisBuilder)
      */
     protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
         ConnectionAnalysisParameter parameters = (ConnectionAnalysisParameter) getAnalysisParameter();
         TdDataProvider tdProvider = parameters.getTdDataProvider();
         analysisBuilder.setAnalysisConnection(tdProvider);
-        Indicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
+        ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
         indicator.setAnalyzedElement(tdProvider);
+        List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdProvider);
+        for (TdSchema schema : tdSchemas) {
+            SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
+            createSchemaIndicator.setAnalyzedElement(schema);
+            indicator.addSchemaIndicator(createSchemaIndicator);
+        }
+        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tdProvider);
+        for (TdCatalog tdCatalog : tdCatalogs) {
+            SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
+            createSchemaIndicator.setAnalyzedElement(tdCatalog);
+            indicator.addSchemaIndicator(createSchemaIndicator);
+        }
         analysisBuilder.addElementToAnalyze(tdProvider, indicator);
         super.fillAnalysisBuilder(analysisBuilder);
     }
