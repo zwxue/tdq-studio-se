@@ -20,7 +20,8 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle.
  */
 public class LibrariesPlugin extends AbstractUIPlugin {
-//    private static Logger log = Logger.getLogger(LibrariesPlugin.class);
+
+    // private static Logger log = Logger.getLogger(LibrariesPlugin.class);
     // The plug-in ID
     public static final String PLUGIN_ID = "org.talend.dataprofiler.libraries";
 
