@@ -24,6 +24,7 @@ import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.CreatePatternAction;
+import org.talend.dataprofiler.core.pattern.ImportPatternsAction;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
@@ -51,9 +52,11 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
                 ExpressionType type = null;
                 if (selectedFolderName.equals(DQStructureManager.PATTERNS)) {
                     type = ExpressionType.REGEXP;
+                    menu.add(new ImportPatternsAction((IFolder) obj));
                 } else if (selectedFolderName.equals(DQStructureManager.SQL_PATTERNS)) {
                     type = ExpressionType.SQL_LIKE;
                 }
+
                 if (type != null) {
                     menu.add(new CreatePatternAction((IFolder) obj, type));
                 }

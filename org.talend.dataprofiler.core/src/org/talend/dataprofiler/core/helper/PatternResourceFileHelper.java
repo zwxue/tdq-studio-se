@@ -27,8 +27,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 
 /**
@@ -144,6 +147,27 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
     public void clear() {
         super.clear();
         this.patternsMap.clear();
+    }
+
+    /**
+     * DOC qzhang Comment method "createPattern".
+     * 
+     * @param name
+     * @param author
+     * @param description
+     * @param purpose
+     * @param status
+     * @return
+     */
+    public Pattern createPattern(String name, String author, String description, String purpose, String status) {
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
+        pattern.setName(name);
+        TaggedValueHelper.setAuthor(pattern, author == null ? "" : author);
+        TaggedValueHelper.setDescription(description == null ? "" : description, pattern);
+        TaggedValueHelper.setPurpose(purpose == null ? "" : purpose, pattern);
+        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(status == null ? "" : status));
+
+        return pattern;
     }
 
     @SuppressWarnings("static-access")

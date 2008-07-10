@@ -106,7 +106,6 @@ public class CreatePatternWizard extends Wizard {
         TaggedValueHelper.setDescription(AbstractWizardPage.getConnectionParams().getDescription(), pattern);
         TaggedValueHelper.setPurpose(AbstractWizardPage.getConnectionParams().getPurpose(), pattern);
         TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(AbstractWizardPage.getConnectionParams().getStatus()));
-        IFolder folderResource = AbstractWizardPage.getConnectionParams().getFolderProvider().getFolderResource();
 
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
         Expression expression = CoreFactory.eINSTANCE.createExpression();
@@ -115,9 +114,12 @@ public class CreatePatternWizard extends Wizard {
         String cl = mPage2.getComboLang();
         expression.setLanguage(cl); // PTODO qzhang fixed bug 4259.save language from selected db type
         regularExpr.setExpression(expression);
+
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
+
+        IFolder folderResource = AbstractWizardPage.getConnectionParams().getFolderProvider().getFolderResource();
         IFile file = folderResource.getFile(fname);
         location = file.getFullPath();
         if (file.exists()) {
