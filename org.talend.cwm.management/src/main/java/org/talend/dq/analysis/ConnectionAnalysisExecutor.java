@@ -96,6 +96,8 @@ public class ConnectionAnalysisExecutor extends AnalysisExecutor {
                 continue;
             }
             eval.storeIndicator(dataProvider, indicator);
+            // ADDED rli 2008-07-10 fixed for the SchemaIndicator will increased after connection analysis running.
+            indicator.reset();
             //
             // TdCatalog cat = SwitchHelpers.CATALOG_SWITCH.doSwitch(indicator.getAnalyzedElement());
             // if (cat == null) {

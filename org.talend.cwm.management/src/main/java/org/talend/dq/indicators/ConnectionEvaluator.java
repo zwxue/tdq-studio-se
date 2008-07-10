@@ -200,7 +200,7 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
         // this.storeIndicator(new CatalogSchema(catName, null), schemaIndic);
         // List<Indicator> indicators = getIndicators(new CatalogSchema(catName, null));
         // indicators.get(0)
-        schemaIndic.setAnalyzedElement(tdCatalog);
+        schemaIndic.setAnalyzedElement(tdCatalog == null ? tdSchema : tdCatalog);
         int tableCount = 0;
         List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(catName, schemaName, tablePattern);
         for (NamedColumnSet t : tables) {
@@ -263,7 +263,8 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
      */
     private void getRowCount(String catalog, String schemaPattern, String table, SchemaIndicator schemaIndic, ReturnCode ok)
             throws SQLException {
-        String sqlStatement = SELECT_COUNT_FROM + table;
+        String nameSpace = catalog == null ? schemaPattern : catalog;
+        String sqlStatement = SELECT_COUNT_FROM + nameSpace + "." + table;
         // Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY,
         // ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
