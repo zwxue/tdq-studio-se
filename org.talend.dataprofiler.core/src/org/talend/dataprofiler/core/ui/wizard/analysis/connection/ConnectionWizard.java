@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.connection;
 
 import java.util.List;
 
+import org.talend.commons.emf.EMFSharedResources;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
@@ -37,6 +39,8 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
     private ConnAnalysisPageStep0 page0;
 
     private ConnAnalysisPageStep1 page1;
+
+    private AnalysisBuilder analysisBuilder;
 
     /**
      * 
@@ -82,14 +86,11 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
         this.folderResource = parameters.getFolderProvider().getFolderResource();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#fillAnalysisBuilder(org.talend.dq.analysis.AnalysisBuilder)
-     */
+    @Override
     protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
         ConnectionAnalysisParameter parameters = (ConnectionAnalysisParameter) getAnalysisParameter();
         TdDataProvider tdProvider = parameters.getTdDataProvider();
+        this.analysisBuilder = analysisBuilder;
         analysisBuilder.setAnalysisConnection(tdProvider);
         ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
         indicator.setAnalyzedElement(tdProvider);
@@ -107,6 +108,17 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
         }
         analysisBuilder.addElementToAnalyze(tdProvider, indicator);
         super.fillAnalysisBuilder(analysisBuilder);
+    }
+
+    @SuppressWarnings("static-access")
+    @Override
+    public boolean performFinish() {
+        super.performFinish();
+        DependenciesHandler.getInstance().setDependencyOn(analysisBuilder.getAnalysis(),
+                analysisBuilder.getAnalysis().getContext().getConnection());
+        EMFSharedResources.getSharedEmfUtil()
+                .saveResource(analysisBuilder.getAnalysis().getContext().getConnection().eResource());
+        return true;
     }
 
 }
