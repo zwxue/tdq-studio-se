@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.core.ImageLib;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -34,6 +35,7 @@ public class ImportPatternsAction extends Action {
      */
     public ImportPatternsAction(IFolder folder) {
         setText("import patterns");
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
     }
 

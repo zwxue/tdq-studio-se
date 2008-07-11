@@ -265,6 +265,8 @@ public enum IndicatorEnum {
             returnEnum = CountsIndicatorEnum;
         } else if (indicatorType == RegexpMatchingIndicatorEnum.getIndicatorType()) {
             returnEnum = RegexpMatchingIndicatorEnum;
+        } else if (indicatorType == SqlPatternMatchingIndicatorEnum.getIndicatorType()) {
+            returnEnum = SqlPatternMatchingIndicatorEnum;
         }
 
         return returnEnum;

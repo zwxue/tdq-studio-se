@@ -31,17 +31,15 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
+import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.factories.PatternIndicatorFactory;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -169,17 +167,13 @@ public class ColumnViewerDND {
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer) {
             IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
-
-            Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe);
             TreeItem item = (TreeItem) event.item;
             ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
-            PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
-
-            IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
-            IndicatorUnit addIndicatorUnit = data.addSpecialIndicator(type, patternMatchingIndicator);
             AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getParent().getData(
                     AnalysisColumnTreeViewer.VIEWER_KEY);
-            DependenciesHandler.getInstance().setUsageDependencyOn(viewer.getAnalysis(), pattern);
+            Analysis analysis = viewer.getAnalysis();
+
+            IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
             viewer.createOneUnit(item, addIndicatorUnit);
             viewer.setDirty(true);
         }

@@ -17,11 +17,14 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -48,7 +51,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -56,6 +59,7 @@ import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
+import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
@@ -66,10 +70,8 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
  * @author rli
@@ -242,9 +244,32 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                     CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
                             new WorkbenchContentProvider());
 
-                    IFolder defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                            DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS);
+                    IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
+                            DQStructureManager.LIBRARIES);
                     dialog.setInput(defaultPatternFolder);
+                    dialog.addFilter(new ViewerFilter() {
+
+                        /*
+                         * (non-Javadoc)
+                         * 
+                         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer,
+                         * java.lang.Object, java.lang.Object)
+                         */
+                        @Override
+                        public boolean select(Viewer viewer, Object parentElement, Object element) {
+                            if (element instanceof IFile) {
+                                IFile file = (IFile) element;
+                                if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
+                                    return true;
+                                }
+                            } else if (element instanceof IFolder) {
+                                IFolder folder = (IFolder) element;
+                                return PatternUtilities.isLibraiesSubfolder(folder, DQStructureManager.PATTERNS,
+                                        DQStructureManager.SQL_PATTERNS);
+                            }
+                            return false;
+                        }
+                    });
                     dialog.setContainerMode(true);
                     dialog.setTitle("Pattern Selector");
                     dialog.setMessage("Patterns:");
@@ -254,14 +279,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                         for (Object obj : dialog.getResult()) {
                             if (obj instanceof IFile) {
                                 IFile file = (IFile) obj;
-                                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                                PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory
-                                        .createRegexpMatchingIndicator(pattern);
-
-                                DependenciesHandler.getInstance().setDependencyOn(patternMatchingIndicator, pattern);
-                                IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
-                                IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type,
-                                        patternMatchingIndicator);
+                                IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, columnIndicator,
+                                        analysis);
                                 createOneUnit(treeItem, addIndicatorUnit);
                                 setDirty(true);
                             }
@@ -337,7 +356,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
         String label = indicatorUnit.getIndicatorName();
-        if (IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0) {
+        if (IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
+                || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0) {
             indicatorItem.setImage(0, ImageLib.getImage(ImageLib.PATTERN_REG));
         }
         indicatorItem.setText(0, label);
@@ -557,7 +577,9 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             if (element instanceof IFile) {
                 IFile file = (IFile) element;
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                return pattern.getName();
+                if (pattern != null) {
+                    return pattern.getName();
+                }
             }
 
             if (element instanceof IFolder) {

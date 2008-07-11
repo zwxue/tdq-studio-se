@@ -114,6 +114,7 @@ public class CreatePatternWizard extends Wizard {
         String cl = mPage2.getComboLang();
         expression.setLanguage(cl); // PTODO qzhang fixed bug 4259.save language from selected db type
         regularExpr.setExpression(expression);
+        regularExpr.setExpressionType(type.getName());
 
         pattern.getComponents().add(regularExpr);
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();

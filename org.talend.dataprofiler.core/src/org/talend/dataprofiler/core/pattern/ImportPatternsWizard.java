@@ -36,6 +36,7 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -142,6 +143,7 @@ public class ImportPatternsWizard extends Wizard {
         expression.setBody(reg);
         expression.setLanguage("ALL_DATABASE_TYPE");
         regularExpr.setExpression(expression);
+        regularExpr.setExpressionType(ExpressionType.REGEXP.getName());
         pattern.getComponents().add(regularExpr);
 
         regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
@@ -149,6 +151,7 @@ public class ImportPatternsWizard extends Wizard {
         expression.setBody(mysql);
         expression.setLanguage("Mysql");
         regularExpr.setExpression(expression);
+        regularExpr.setExpressionType(ExpressionType.REGEXP.getName());
         pattern.getComponents().add(regularExpr);
 
         regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
@@ -156,6 +159,7 @@ public class ImportPatternsWizard extends Wizard {
         expression.setBody(oracle);
         expression.setLanguage("Oracle");
         regularExpr.setExpression(expression);
+        regularExpr.setExpressionType(ExpressionType.REGEXP.getName());
         pattern.getComponents().add(regularExpr);
 
     }
