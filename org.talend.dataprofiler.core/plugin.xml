@@ -17,6 +17,13 @@
             id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
             name="DQ Repository">
       </view>
+      <view
+            category="org.talend.dataprofiler.view.category"
+            class="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
+            icon="icons/sample.gif"
+            id="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
+            name="Detail View">
+      </view>
       <!-- view
             category="org.talend.dataprofiler.view.category"
             class="org.talend.dataprofiler.core.ui.views.GraphsView"
@@ -346,6 +353,12 @@
               relationship="bottom"
               relative="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
               visible="false">
+        </view>
+        <view
+              id="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
+              ratio="0.7"
+              relationship="bottom"
+              relative="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
         </view>
       <!--  <view id="org.talend.dataprofiler.core.ui.views.QuanlityView"
               relative="org.talend.dataprofiler.core.ui.views.CheatSheetView"
