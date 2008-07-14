@@ -15,15 +15,13 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 
@@ -31,11 +29,9 @@ import org.talend.dataquality.analysis.AnalysisType;
  * @author rli
  * 
  */
-public class AnalysisEditor extends FormEditor {
+public class AnalysisEditor extends CommonFormEditor {
 
     private IFormPage masterPage;
-
-    private boolean isDirty = false;
 
     private AnalysisType analysisType = AnalysisType.COLUMN;
 
@@ -71,45 +67,14 @@ public class AnalysisEditor extends FormEditor {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
         }
-        this.isDirty = false;
-        firePropertyChange(IEditorPart.PROP_DIRTY);
-        CorePlugin.getDefault().refreshWorkSpace();
+        super.doSave(monitor);
     }
 
     protected void firePropertyChange(final int propertyId) {
         super.firePropertyChange(propertyId);
     }
 
-    public void doSaveAs() {
-        doSave(null);
-    }
-
-    public boolean isSaveAsAllowed() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.forms.editor.FormEditor#isDirty()
-     */
-    @Override
-    public boolean isDirty() {
-        return isDirty || super.isDirty();
-    }
-
-    public void setDirty(boolean isDirty) {
-        this.isDirty = isDirty;
-        firePropertyChange(IEditorPart.PROP_DIRTY);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
-     */
-    protected void setInput(IEditorInput input) {
-        super.setInput(input);
+    protected void translateInput(IEditorInput input) {
         FileEditorInput fileEditorInput = (FileEditorInput) input;
         String name = fileEditorInput.getFile().getName();
         if (name.endsWith(PluginConstant.ANA_SUFFIX)) {
@@ -132,4 +97,5 @@ public class AnalysisEditor extends FormEditor {
             ((ColumnMasterDetailsPage) masterPage).performGlobalAction(id);
         }
     }
+
 }

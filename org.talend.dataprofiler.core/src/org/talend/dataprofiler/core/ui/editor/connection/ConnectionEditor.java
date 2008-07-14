@@ -14,21 +14,17 @@ package org.talend.dataprofiler.core.ui.editor.connection;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
+import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class ConnectionEditor extends FormEditor {
+public class ConnectionEditor extends CommonFormEditor {
 
     private IFormPage masterPage;
-
-    private boolean isDirty = false;
 
     /**
      * 
@@ -49,36 +45,11 @@ public class ConnectionEditor extends FormEditor {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
         }
-        this.isDirty = false;
-        firePropertyChange(IEditorPart.PROP_DIRTY);
-        CorePlugin.getDefault().refreshWorkSpace();
+        super.doSave(monitor);
     }
 
     protected void firePropertyChange(final int propertyId) {
         super.firePropertyChange(propertyId);
-    }
-
-    public void doSaveAs() {
-        doSave(null);
-    }
-
-    public boolean isSaveAsAllowed() {
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.forms.editor.FormEditor#isDirty()
-     */
-    @Override
-    public boolean isDirty() {
-        return isDirty || super.isDirty();
-    }
-
-    public void setDirty(boolean isDirty) {
-        this.isDirty = isDirty;
-        firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 
     /*

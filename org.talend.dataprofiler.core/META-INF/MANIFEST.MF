@@ -28,7 +28,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
  org.eclipse.help,
  org.eclipse.help.ui,
- org.talend.dataprofiler.libraries
+ org.talend.dataprofiler.libraries,
+ org.eclipse.ui.editors
 Eclipse-LazyStart: true
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
