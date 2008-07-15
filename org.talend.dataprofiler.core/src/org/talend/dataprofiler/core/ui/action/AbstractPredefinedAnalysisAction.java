@@ -109,9 +109,23 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         return null;
     }
 
+    /**
+     * DOC qzhang Comment method "getStandardAnalysisWizardDialog".
+     * 
+     * @return
+     */
     protected WizardDialog getStandardAnalysisWizardDialog() {
+        return getStandardAnalysisWizardDialog(AnalysisType.COLUMN);
+    }
 
-        CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(true, AnalysisType.MULTIPLE_COLUMN);
+    /**
+     * DOC qzhang Comment method "getStandardAnalysisWizardDialog".
+     * 
+     * @param type
+     * @return
+     */
+    protected WizardDialog getStandardAnalysisWizardDialog(AnalysisType type) {
+        CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(true, type);
         wizard.setForcePreviousAndNextButtons(true);
 
         WizardDialog dialog = new WizardDialog(null, wizard);
@@ -182,7 +196,9 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
             if (dialog.open() == Window.OK) {
 
-                getMasterPage().getTreeViewer().addElements(getPredefinedColumnIndicator());
+                if (getPredefinedColumnIndicator() != null) {
+                    getMasterPage().getTreeViewer().addElements(getPredefinedColumnIndicator());
+                }
             }
         }
     }

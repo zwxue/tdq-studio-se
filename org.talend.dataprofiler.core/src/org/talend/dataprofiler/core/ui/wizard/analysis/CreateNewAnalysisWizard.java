@@ -84,6 +84,10 @@ public class CreateNewAnalysisWizard extends Wizard {
                     analysisParameter.setAnalysisTypeName(AnalysisType.MULTIPLE_COLUMN.getLiteral());
                     wizard = WizardFactory.createColumnWizard();
                     wizard.addPages();
+                } else if (type == AnalysisType.CONNECTION) {
+                    analysisParameter.setAnalysisTypeName(type.getLiteral());
+                    wizard = WizardFactory.createConnectionWizard(false);
+                    wizard.addPages();
                 }
 
                 if (wizard != null) {
