@@ -248,5 +248,4 @@ public abstract class AbstractFormPage extends FormPage {
     public boolean isDirty() {
         return super.isDirty() || isDirty;
     }
-
 }
