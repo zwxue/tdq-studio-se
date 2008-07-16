@@ -11,7 +11,7 @@
 //
 // ============================================================================
 
-package org.talend.dataprofiler.core.sql;
+package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;

@@ -25,8 +25,6 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
-import org.talend.dataprofiler.core.sql.CreateSourceFolderAction;
-import org.talend.dataprofiler.core.sql.DeleteFolderAction;
 import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.sql.RenameFolderAction;
@@ -54,9 +52,10 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
                 IPath fullPath = ((IFolder) obj).getFullPath();
                 if (path.isPrefixOf(fullPath)) {
                     menu.add(new AddSqlFileAction((IFolder) obj));
-                    menu.add(new CreateSourceFolderAction((IFolder) obj));
+                    // rli Modification: 2008-7-16. for the feature 0004366
+                    // menu.add(new CreateSourceFolderAction((IFolder) obj));
                     if (fullPath.segmentCount() > path.segmentCount()) {
-                        menu.add(new DeleteFolderAction((IFolder) obj));
+                        // menu.add(new DeleteFolderAction((IFolder) obj));
                         menu.add(new RenameFolderAction((IFolder) obj));
                     }
                 }

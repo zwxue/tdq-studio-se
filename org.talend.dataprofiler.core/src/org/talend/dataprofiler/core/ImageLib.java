@@ -37,6 +37,10 @@ public class ImageLib {
 
     public static final String FOLDERNODE_IMAGE = "folder.gif"; //$NON-NLS-1$
 
+    public static final String FOLDER_WIZ_IMAGE = "folder_wiz.gif"; //$NON-NLS-1$
+
+    public static final String FOLDER_NEW_IMAGE = "folder_new.gif"; //$NON-NLS-1$
+
     public static final String PROJECT_ACTIVE = "prject_active.gif"; //$NON-NLS-1$
 
     public static final String REPORT_HISTORIZE = "sample.gif"; //$NON-NLS-1$

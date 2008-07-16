@@ -25,9 +25,11 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -92,7 +94,7 @@ public final class DQStructureManager {
             // create "Libraries" project
             project = this.createNewProject(LIBRARIES, shell);
             IFolder patternFolder = this.createNewFoler(project, PATTERNS);
-            IFolder sqlPatternFolder = this.createNewFoler(project, SQL_PATTERNS);
+            this.createNewFoler(project, SQL_PATTERNS);
             // Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
             this.copyFilesToFolder(PATTERN_PATH, true, patternFolder);
             IFolder sqlSourceFolder = this.createNewFoler(project, SOURCE_FILES);
@@ -158,6 +160,9 @@ public final class DQStructureManager {
         if (!desFolder.exists()) {
             desFolder.create(false, true, null);
         }
+        ResourceAttributes resAttr = new ResourceAttributes();
+        resAttr.setReadOnly(true);
+        desFolder.setResourceAttributes(resAttr);
         return desFolder;
     }
 
@@ -220,5 +225,11 @@ public final class DQStructureManager {
             return;
         }
         file.create(inputStream, false, null);
+    }
+
+    public boolean isPathValid(IPath path, String label) {
+        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
+        IFolder newFolder = folder.getFolder(label);
+        return !newFolder.exists();
     }
 }

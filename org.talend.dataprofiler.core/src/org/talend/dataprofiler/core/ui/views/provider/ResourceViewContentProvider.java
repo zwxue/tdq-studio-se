@@ -19,7 +19,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.model.WorkbenchContentProvider;
@@ -81,17 +81,17 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         if (elements == null) {
             return elements;
         }
-        List<IFile> list = new ArrayList<IFile>();
+        List<IResource> list = new ArrayList<IResource>();
         for (Object element : elements) {
-            if (element instanceof IFile) {
-                list.add((IFile) element);
-            } else {
-                log.error("The elemnt:" + ((IFolder) element).getFullPath() + " can't display on the workspace!");
-            }
+            list.add((IResource) element);
+            // if (element instanceof IFile) {
+            // list.add((IFile) element);
+            // } else {
+            // log.error("The elemnt:" + ((IFolder) element).getFullPath() + " can't display on the workspace!");
+            // }
         }
 
         Collections.sort(list, ComparatorsFactory.buildComparator(ComparatorsFactory.FILEMODEL_COMPARATOR_ID));
         return list.toArray();
     }
-
 }

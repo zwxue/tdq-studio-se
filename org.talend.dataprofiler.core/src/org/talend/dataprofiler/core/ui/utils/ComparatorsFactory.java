@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.talend.dataprofiler.core.factory.ModelElementFileFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -88,23 +89,30 @@ public final class ComparatorsFactory {
     }
 
     /**
-     * Implements Comparator to implement custom sorting of {@link IFile} which contains {@link ModelElement} elements.
+     * Implements Comparator to implement custom sorting of {@link IResource} which contains {@link ModelElement}
+     * elements.
      */
-    static class FileModelComparator implements Comparator<IFile> {
+    static class FileModelComparator implements Comparator<IResource> {
 
-        public int compare(IFile arg0, IFile arg1) {
+        public int compare(IResource arg0, IResource arg1) {
 
             if (arg0 == null || arg1 == null) {
                 return 0;
             }
-            ModelElement modelElement0 = ModelElementFileFactory.getModelElement(arg0);
-            ModelElement modelElement1 = ModelElementFileFactory.getModelElement(arg1);
-            if (modelElement0 == null || modelElement1 == null) {
-                return 0;
+            String name0;
+            String name1;
+            if (arg0.getType() == IResource.FILE) {
+                ModelElement modelElement0 = ModelElementFileFactory.getModelElement((IFile) arg0);
+                name0 = modelElement0.getName();
+            } else {
+                name0 = arg0.getName();
             }
-            String name0 = modelElement0.getName();
-            String name1 = modelElement1.getName();
-
+            if (arg1.getType() == IResource.FILE) {
+                ModelElement modelElement1 = ModelElementFileFactory.getModelElement((IFile) arg1);
+                name1 = modelElement1.getName();
+            } else {
+                name1 = arg1.getName();
+            }
             if (name0 == null || name1 == null) {
                 return 0;
             }
