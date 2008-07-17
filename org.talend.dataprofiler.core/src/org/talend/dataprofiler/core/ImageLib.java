@@ -73,7 +73,7 @@ public class ImageLib {
 
     public static final String LICENSE_WIZ = "license_wiz.png";
 
-    public static final String PATTERN_REG = "regexp_16x32.png";
+    public static final String PATTERN_REG = "pattern.png";
 
     public static final String REGISTER_WIZ = "register_wiz.png";
 
