@@ -12,19 +12,21 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -33,16 +35,20 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.eclipse.ui.part.ResourceTransfer;
+import org.talend.commons.emf.EMFSharedResources;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -51,9 +57,9 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     private static final IResource[] NO_RESOURCES = new IResource[0];
 
-    private boolean dropRep = false;
+    // private boolean dropRep = false;
 
-    private boolean dropSql = false;
+    // private boolean dropSql = false;
 
     /*
      * (non-Javadoc)
@@ -75,8 +81,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
         } else if (ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
             resources = (IResource[]) aDropTargetEvent.data;
         }
-
-        if ((target instanceof IFile) && dropRep) {
+        if ((target instanceof IFile)) { // && dropRep
             TdReport findReport = RepResourceFileHelper.getInstance().findReport(((IFile) target));
             if (resources != null && resources.length > 0) {
                 List<Analysis> anaList = new ArrayList<Analysis>();
@@ -89,15 +94,46 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 ReportHelper.addAnalyses(anaList, findReport);
                 RepResourceFileHelper.getInstance().save(findReport);
             }
-        } else if ((target instanceof IFolder) && dropSql) {
+        } else if ((target instanceof IFolder)) { // && dropSql
             IFolder folder = (IFolder) target;
-            IPath location = folder.getLocation();
+            // IPath location = folder.getFullPath();
             for (IResource res : resources) {
+                if (res.getType() != IResource.FILE) {
+                    return null;
+                }
                 String name = res.getName();
-                new File(res.getLocation().toPortableString()).renameTo(new File(location.append(name).toPortableString()));
+                IFile fileRes = (IFile) res;
+                IFile movedIFile = folder.getFile(name);
+
+                List<ModelElement> oldDependencySuppliers = EObjectHelper.getDependencySuppliers(fileRes);
+                EObjectHelper.removeDependencys(new IResource[] { fileRes });
+
+                IContainer srcParent = fileRes.getParent();
+                URI srcUri = URI.createPlatformResourceURI((fileRes).getFullPath().toString(), false);
+                ResourceSet rs = EMFSharedResources.getSharedEmfUtil().getResourceSet();
+                Resource resource = rs.getResource(srcUri, true);
+                if (resource != null) {
+                    URI desUri = URI.createPlatformResourceURI(folder.getFullPath().toString(), false);
+                    EMFUtil.changeUri(resource, desUri);
+                }
+                // File destFile = new File(location.append(name).toPortableString());
+                // File srcFile = new File(res.getLocation().toPortableString());
+                // srcFile.renameTo(destFile);
+                try {
+                    fileRes.move(movedIFile.getFullPath(), true, null);
+                    srcParent.refreshLocal(IResource.DEPTH_INFINITE, null);
+                    folder.refreshLocal(IResource.DEPTH_INFINITE, null);
+                } catch (CoreException e) {
+                    ExceptionHandler.process(e);
+                }
+                EObjectHelper.addDependenciesForFile(movedIFile, oldDependencySuppliers);
+                for (ModelElement element : oldDependencySuppliers) {
+                    EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
+                }
+
             }
         }
-        CorePlugin.getDefault().refreshWorkSpace();
+        // CorePlugin.getDefault().refreshWorkSpace();
         ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         return null;
     }
@@ -148,29 +184,34 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
      */
     @Override
     public IStatus validateDrop(Object target, int operation, TransferData transferType) {
+        if (!(target instanceof IResource)) {
+
+            return Status.CANCEL_STATUS;
+        }
+        IResource targetRes = (IResource) target;
         for (IResource res : getSelectedResources()) {
-            if (res instanceof IFile) {
-                IFile file = (IFile) res;
-                if (file.getFileExtension().equals(FactoriesUtil.SQL)) {
-                    if (target instanceof IFolder) {
-                        IFolder folder = (IFolder) target;
-                        IPath path = new Path(DQStructureManager.LIBRARIES);
-                        path = path.append(DQStructureManager.SOURCE_FILES);
-                        IPath fullPath = folder.getFullPath();
-                        if (path.isPrefixOf(fullPath)) {
-                            dropSql = true;
-                            return Status.OK_STATUS;
-                        }
-                    }
+            if (res.getType() == IResource.FILE) {
+                // IFile file = (IFile) res;
+                // if (file.getFileExtension().equals(FactoriesUtil.SQL)) {
+                if (targetRes.getType() == IResource.FOLDER) {
+                    // IFolder folder = (IFolder) target;
+                    // IPath path = new Path(DQStructureManager.LIBRARIES);
+                    // path = path.append(DQStructureManager.SOURCE_FILES);
+                    // IPath fullPath = folder.getFullPath();
+                    // if (path.isPrefixOf(fullPath)) {
+                    // dropSql = true;
+                    return Status.OK_STATUS;
+                    // }
                 }
-                if (res.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
-                    if (target instanceof IFile) {
-                        IFile tfile = (IFile) target;
-                        if (tfile.getFileExtension().equals(FactoriesUtil.REP)) {
-                            dropRep = true;
-                            return Status.OK_STATUS;
-                        }
+                // }
+                else if (res.getName().endsWith(PluginConstant.ANA_SUFFIX) && (targetRes.getType() == IResource.FILE)) {
+                    // if (targetRes instanceof IFile) {
+                    IFile tfile = (IFile) targetRes;
+                    if (tfile.getFileExtension().equals(FactoriesUtil.REP)) {
+                        // dropRep = true;
+                        return Status.OK_STATUS;
                     }
+                    // }
                 }
             }
         }

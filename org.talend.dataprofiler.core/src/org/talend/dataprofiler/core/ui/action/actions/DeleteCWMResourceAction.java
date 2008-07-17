@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.window.Window;
@@ -35,15 +34,12 @@ import org.eclipse.ui.actions.DeleteResourceAction;
 import org.eclipse.ui.ide.undo.DeleteResourcesOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.progress.WorkbenchJob;
-import org.talend.commons.emf.EMFSharedResources;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
+import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
@@ -90,7 +86,12 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
             return;
         }
 
-        removeDependencys(resources);
+        EObjectHelper.removeDependencys(resources);
+
+        // refresh workspace in order to avoid unsynchronized resources
+        CorePlugin.getDefault().refreshWorkSpace();
+        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        findView.getCommonViewer().refresh();
         Job deletionCheckJob = new Job("Checking resources") {
 
             /*
@@ -198,39 +199,6 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
             isDeleteContent = popConfirmDialog(otherFileName, selectedResources);
         }
         return isDeleteContent;
-    }
-
-    private void removeDependencys(IResource[] resources) {
-        for (IResource selectedObj : resources) {
-            IFile file = ((IFile) selectedObj);
-            // String fileName = file.getName();
-            ModelElement elementToDelete = null;
-            if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
-                TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().readFromFile(file);
-                elementToDelete = returnValue.getObject();
-                NeedSaveDataProviderHelper.remove(elementToDelete.eResource().getURI().path());
-            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.ANA)) {
-                elementToDelete = AnaResourceFileHelper.getInstance().findAnalysis(file);
-            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
-                elementToDelete = RepResourceFileHelper.getInstance().findReport(file);
-            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
-                elementToDelete = PatternResourceFileHelper.getInstance().findPattern(file);
-            }
-            if (elementToDelete != null) {
-                List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(elementToDelete);
-
-                // save now modified resources (that contain the Dependency objects)
-                EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-                for (Resource resource : modifiedResources) {
-                    util.saveSingleResource(resource);
-                }
-            }
-        }
-
-        // refresh workspace in order to avoid unsynchronized resources
-        CorePlugin.getDefault().refreshWorkSpace();
-        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
-        findView.getCommonViewer().refresh();
     }
 
     private boolean popConfirmDialog(String resourceName, IResource[] selectedResources) {

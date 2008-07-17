@@ -250,6 +250,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             if (elem instanceof IFolder) {
                 pathText.setText(elem.getFullPath().toString());
 
+                // defaultFolderProviderRe
+
                 getConnectionParams().getFolderProvider().setFolderResource((IFolder) elem);
                 // FolderProvider provider = new FolderProvider();
                 // provider.setFolderResource((IFolder) elem);
@@ -342,7 +344,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
                 getConnectionParams().setMetadate(metadata);
             }
         }
-        if (defaultFolderProviderRes != null) {
+        if (defaultFolderProviderRes != null && getConnectionParams().getFolderProvider() == null) {
             FolderProvider defaultFolder = new FolderProvider();
             defaultFolder.setFolderResource(defaultFolderProviderRes);
             getConnectionParams().setFolderProvider(defaultFolder);
