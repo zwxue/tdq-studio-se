@@ -58,8 +58,9 @@ public class ChartWithData {
         }
 
         for (ChartDataEntity oneEntity : this.enity) {
-            String str = Double.valueOf(oneEntity.getValue()) * 100 / sum + "%";
-            oneEntity.setPersent(str);
+            String str = String.valueOf(Double.valueOf(oneEntity.getValue()) * 100 / sum);
+            str = str.substring(0, str.indexOf(".") + 3);
+            oneEntity.setPersent(str + "%");
         }
     }
 

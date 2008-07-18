@@ -69,12 +69,6 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
     }
 
     @Override
-    public void initialize(FormEditor editor) {
-        // TODO Auto-generated method stub
-        super.initialize(editor);
-    }
-
-    @Override
     protected void createFormContent(IManagedForm managedForm) {
         this.form = managedForm.getForm();
         this.form.setText("Analysis Result");

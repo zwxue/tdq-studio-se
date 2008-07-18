@@ -135,8 +135,8 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
                     }
                 } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                    setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
-                            new FormEnum[] { FormEnum.FreqTextParametersForm })));
+                    setControl(createView(FormFactory.creaeteForm(tabFolder, listener, new FormEnum[] {
+                            FormEnum.FreqTextParametersForm, FormEnum.TextLengthForm })));
                 }
 
                 break;

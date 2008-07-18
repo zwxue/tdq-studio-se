@@ -38,7 +38,8 @@ public class ChartTableFactory {
         table.setLinesVisible(true);
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (inputObject.getChartNamedType().equals(CompositeIndicator.SIMPLE_STATISTICS)) {
+        if (inputObject.getChartNamedType().equals(CompositeIndicator.SIMPLE_STATISTICS)
+                || inputObject.getChartNamedType().equals(CompositeIndicator.TEXT_STATISTICS)) {
             TableColumn column1 = new TableColumn(table, SWT.NONE);
             column1.setText("Value");
             column1.setWidth(200);
@@ -96,6 +97,7 @@ public class ChartTableFactory {
         }
 
         tbViewer.setInput(inputObject);
+
     }
 
     /**
