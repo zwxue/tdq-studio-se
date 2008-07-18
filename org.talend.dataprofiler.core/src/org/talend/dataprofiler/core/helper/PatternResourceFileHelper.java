@@ -105,6 +105,7 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
         for (IResource resource : folder.members()) {
             if (resource.getType() == IResource.FOLDER) {
                 searchAllPatternes(folder.getFolder(resource.getName()));
+                continue;
             }
             IFile file = (IFile) resource;
             findPattern(file);

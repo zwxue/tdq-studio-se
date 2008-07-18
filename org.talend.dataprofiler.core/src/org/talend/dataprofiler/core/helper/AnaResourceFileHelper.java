@@ -74,6 +74,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         for (IResource resource : folder.members()) {
             if (resource.getType() == IResource.FOLDER) {
                 searchAllAnalysis(folder.getFolder(resource.getName()));
+                continue;
             }
             IFile file = (IFile) resource;
             findAnalysis(file);
