@@ -36,7 +36,11 @@ import org.talend.dataquality.analysis.AnalysisType;
  */
 public class AnalysisEditor extends CommonFormEditor {
 
-    private IFormPage masterPage;
+    private IFormPage columnMasterPage;
+
+    private IFormPage columnResultPage;
+
+    private IFormPage connectionMasterPage;
 
     private AnalysisType analysisType = AnalysisType.COLUMN;
 
@@ -48,33 +52,45 @@ public class AnalysisEditor extends CommonFormEditor {
 
     protected void addPages() {
         switch (analysisType) {
-        case COLUMN:
-            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "Analysis Settings");
+        case MULTIPLE_COLUMN:
+            columnMasterPage = new ColumnMasterDetailsPage(this, "MasterPage", "Analysis Settings");
             setPartName("Column Analysis Editor");
+            columnResultPage = new ColumnAnalysisResultPage(this, "secondpage", "Analysis Results");
+            try {
+                addPage(columnMasterPage);
+                addPage(columnResultPage);
+            } catch (PartInitException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
             break;
         case CONNECTION:
-            masterPage = new ConnectionMasterDetailsPage(this, "MasterPage", "Analysis Settings");
+            connectionMasterPage = new ConnectionMasterDetailsPage(this, "MasterPage", "Analysis Settings");
             setPartName("Connection Analysis Editor");
+            try {
+                addPage(connectionMasterPage);
+            } catch (PartInitException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
             break;
         default:
-            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "Analysis Settings");
-            setPartName("Column Analysis Editor");
-            break;
+
         }
-        try {
-            addPage(masterPage);
-        } catch (PartInitException e) {
-            ExceptionHandler.process(e, Level.ERROR);
-        }
+
     }
 
     public void doSave(IProgressMonitor monitor) {
-        if (masterPage.isDirty()) {
-            masterPage.doSave(monitor);
+        if (columnMasterPage != null && columnMasterPage.isDirty()) {
+            columnMasterPage.doSave(monitor);
+
         }
-        super.doSave(monitor);
+        if (connectionMasterPage != null && connectionMasterPage.isDirty()) {
+            connectionMasterPage.doSave(monitor);
+        }
+
         IFile efile = ((FileEditorInput) getEditorInput()).getFile();
         refreshDQView(efile);
+
+        super.doSave(monitor);
     }
 
     /**
@@ -106,12 +122,12 @@ public class AnalysisEditor extends CommonFormEditor {
      * @return the masterPage
      */
     public IFormPage getMasterPage() {
-        return this.masterPage;
+        return this.columnMasterPage;
     }
 
     public void performGlobalAction(String id) {
         if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
-            ((ColumnMasterDetailsPage) masterPage).performGlobalAction(id);
+            ((ColumnMasterDetailsPage) columnMasterPage).performGlobalAction(id);
         }
     }
 

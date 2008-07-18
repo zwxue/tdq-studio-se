@@ -47,14 +47,14 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
-import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
+import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class ConnectionInfoPage extends AbstractFormPage {
+public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     private static Logger log = Logger.getLogger(ConnectionInfoPage.class);
 

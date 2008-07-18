@@ -45,6 +45,9 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartDataEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.PatternChartDataEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -57,7 +60,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
  */
 public class IndicatorChartFactory {
 
-    private static final int CHART_WIDTH = 400;
+    private static final int CHART_WIDTH = 410;
 
     private static final int CHART_HEIGHT = 230;
 
@@ -368,8 +371,8 @@ public class IndicatorChartFactory {
                     double notMathCount = patternExt.getNotMatchingValueCount();
                     double machCount = patternExt.getMatchingValueCount();
 
-                    dataset.addValue(machCount / (notMathCount + machCount), "matching", label);
-                    dataset.addValue(notMathCount / (notMathCount + machCount), "not matching", label);
+                    dataset.addValue(machCount, "matching", label);
+                    dataset.addValue(notMathCount, "not matching", label);
                 } else {
                     dataset.addValue(0, "not matching", "");
                     dataset.addValue(0, "matching", "");
@@ -387,57 +390,111 @@ public class IndicatorChartFactory {
 
     // end create dataset with real value
 
-    public static List<ImageDescriptor> createChart(ColumnIndicator column, boolean isCreate) {
+    public static List<ChartWithData> createChart(ColumnIndicator column, boolean isCreate) {
 
         CompositeIndicator compositeIndicator = new CompositeIndicator(column);
         Map<String, List<IndicatorUnit>> separatedMap = compositeIndicator.getIndicatorComposite();
-        List<ImageDescriptor> returnFiles = new ArrayList<ImageDescriptor>();
 
-        if (separatedMap.get(CompositeIndicator.SIMPLE_STATISTICS).size() != 0) {
+        List<IndicatorUnit> simpleUnitList = separatedMap.get(CompositeIndicator.SIMPLE_STATISTICS);
+        List<IndicatorUnit> textUnitList = separatedMap.get(CompositeIndicator.TEXT_STATISTICS);
+        List<IndicatorUnit> frequencyUnitList = separatedMap.get(CompositeIndicator.FREQUENCE_STATISTICS);
+        List<IndicatorUnit> summaryUnitList = separatedMap.get(CompositeIndicator.SUMMARY_STATISTICS);
+        List<IndicatorUnit> patternUnitList = separatedMap.get(CompositeIndicator.PATTERN_MATCHING);
 
-            CategoryDataset dataset = createSimpleDataset(separatedMap.get(CompositeIndicator.SIMPLE_STATISTICS), isCreate);
+        List<ChartWithData> returnFiles = new ArrayList<ChartWithData>();
 
-            returnFiles.add(create3DBarChart(CompositeIndicator.SIMPLE_STATISTICS, dataset, true));
+        if (!simpleUnitList.isEmpty()) {
+
+            CategoryDataset dataset = createSimpleDataset(simpleUnitList, isCreate);
+            ImageDescriptor imageDescriptor = create3DBarChart(CompositeIndicator.SIMPLE_STATISTICS, dataset, true);
+            ChartWithData chart = new ChartWithData(CompositeIndicator.SIMPLE_STATISTICS, imageDescriptor,
+                    getDataEnityFromUnits(simpleUnitList));
+            returnFiles.add(chart);
 
         }
 
-        if (separatedMap.get(CompositeIndicator.TEXT_STATISTICS).size() != 0) {
+        if (!textUnitList.isEmpty()) {
 
-            CategoryDataset dataset = createTextedDataset(separatedMap.get(CompositeIndicator.TEXT_STATISTICS), isCreate);
-
-            returnFiles.add(create3DBarChart(CompositeIndicator.TEXT_STATISTICS, dataset, true));
+            CategoryDataset dataset = createTextedDataset(textUnitList, isCreate);
+            ImageDescriptor imageDescriptor = create3DBarChart(CompositeIndicator.TEXT_STATISTICS, dataset, true);
+            ChartWithData chart = new ChartWithData(CompositeIndicator.TEXT_STATISTICS, imageDescriptor,
+                    getDataEnityFromUnits(textUnitList));
+            returnFiles.add(chart);
         }
 
-        if (separatedMap.get(CompositeIndicator.FREQUENCE_STATISTICS).size() != 0) {
+        if (!frequencyUnitList.isEmpty()) {
 
-            CategoryDataset dataset = createFrequenceDataset(separatedMap.get(CompositeIndicator.FREQUENCE_STATISTICS), isCreate);
-
-            returnFiles.add(createBarChart(CompositeIndicator.FREQUENCE_STATISTICS, dataset));
+            CategoryDataset dataset = createFrequenceDataset(frequencyUnitList, isCreate);
+            ImageDescriptor imageDescriptor = createBarChart(CompositeIndicator.FREQUENCE_STATISTICS, dataset);
+            ChartWithData chart = new ChartWithData(CompositeIndicator.FREQUENCE_STATISTICS, imageDescriptor,
+                    getDataEnityFromUnits(frequencyUnitList));
+            returnFiles.add(chart);
         }
 
-        if (separatedMap.get(CompositeIndicator.SUMMARY_STATISTICS).size() != 0) {
+        if (!summaryUnitList.isEmpty()) {
 
-            CategoryDataset dataset = createSummaryDataset(separatedMap.get(CompositeIndicator.SUMMARY_STATISTICS), isCreate);
+            CategoryDataset dataset = createSummaryDataset(summaryUnitList, isCreate);
 
             if (dataset instanceof BoxAndWhiskerCategoryDataset) {
 
-                returnFiles.add(createBoxAndWhiskerChart(CompositeIndicator.SUMMARY_STATISTICS,
-                        (BoxAndWhiskerCategoryDataset) dataset));
+                ImageDescriptor imageDescriptor = createBoxAndWhiskerChart(CompositeIndicator.SUMMARY_STATISTICS,
+                        (BoxAndWhiskerCategoryDataset) dataset);
+                ChartWithData chart = new ChartWithData(CompositeIndicator.SUMMARY_STATISTICS, imageDescriptor,
+                        getDataEnityFromUnits(summaryUnitList));
+                returnFiles.add(chart);
             } else {
 
-                returnFiles.add(create3DBarChart(CompositeIndicator.SUMMARY_STATISTICS, dataset, false));
+                ImageDescriptor imageDescriptor = create3DBarChart(CompositeIndicator.SUMMARY_STATISTICS, dataset, false);
+                ChartWithData chart = new ChartWithData(CompositeIndicator.SUMMARY_STATISTICS, imageDescriptor,
+                        getDataEnityFromUnits(summaryUnitList));
+                returnFiles.add(chart);
             }
 
         }
 
-        if (separatedMap.get(CompositeIndicator.PATTERN_MATCHING).size() != 0) {
+        if (!patternUnitList.isEmpty()) {
 
-            CategoryDataset dataset = createPatternMatchDataset(separatedMap.get(CompositeIndicator.PATTERN_MATCHING), isCreate);
-
-            returnFiles.add(createStacked3DBarChart(CompositeIndicator.PATTERN_MATCHING, dataset));
+            CategoryDataset dataset = createPatternMatchDataset(patternUnitList, isCreate);
+            ImageDescriptor imageDescriptor = createStacked3DBarChart(CompositeIndicator.PATTERN_MATCHING, dataset);
+            ChartWithData chart = new ChartWithData(CompositeIndicator.PATTERN_MATCHING, imageDescriptor,
+                    getDataEnityFromUnits(patternUnitList));
+            returnFiles.add(chart);
         }
 
         return returnFiles;
     }
 
+    private static ChartDataEntity[] getDataEnityFromUnits(List<IndicatorUnit> unitList) {
+
+        List<ChartDataEntity> list = new ArrayList<ChartDataEntity>();
+
+        for (IndicatorUnit unit : unitList) {
+
+            if (unit.getType() == IndicatorEnum.FrequencyIndicatorEnum) {
+                FrequencyExt[] freqExt = (FrequencyExt[]) unit.getValue();
+                for (FrequencyExt one : freqExt) {
+                    ChartDataEntity entity = new ChartDataEntity();
+                    entity.setLabel(one.getKey().toString());
+                    entity.setValue(one.getValue().toString());
+                    list.add(entity);
+                }
+
+            } else if (unit.getType() == IndicatorEnum.RegexpMatchingIndicatorEnum) {
+                PatternMatchingExt patnExt = (PatternMatchingExt) unit.getValue();
+                PatternChartDataEntity entity = new PatternChartDataEntity();
+                entity.setLabel(unit.getIndicatorName());
+                entity.setNumMatch(String.valueOf(patnExt.getMatchingValueCount()));
+                entity.setNumNoMatch(String.valueOf(patnExt.getNotMatchingValueCount()));
+                list.add(entity);
+
+            } else {
+                ChartDataEntity entity = new ChartDataEntity();
+                entity.setLabel(unit.getIndicatorName());
+                entity.setValue(unit.getValue().toString());
+                list.add(entity);
+            }
+        }
+
+        return list.toArray(new ChartDataEntity[list.size()]);
+    }
 }

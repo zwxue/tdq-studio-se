@@ -54,7 +54,7 @@ import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
-import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
+import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
@@ -69,7 +69,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class ConnectionMasterDetailsPage extends AbstractFormPage implements PropertyChangeListener {
+public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ConnectionMasterDetailsPage.class);
 

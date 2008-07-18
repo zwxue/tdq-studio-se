@@ -62,7 +62,7 @@ import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
-import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
+import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.HelpUtils;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
@@ -158,7 +158,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         };
 
-        parent.setData(AbstractFormPage.ACTION_HANDLER, actionHandler);
+        parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
         ColumnViewerDND.installDND(newTree);
         return newTree;
     }

@@ -27,7 +27,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -65,10 +64,11 @@ import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
-import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
+import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -81,7 +81,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class ColumnMasterDetailsPage extends AbstractFormPage implements PropertyChangeListener {
+public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
 
@@ -295,16 +295,12 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
 
-        for (ModelElement modelElement : analysisHandler.getAnalyzedColumns()) {
+        for (final ColumnIndicator columnIndicator : this.treeViewer.getColumnIndicator()) {
 
-            final TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
-            final Collection<Indicator> indicators = analysisHandler.getIndicators(column);
-            final ColumnIndicator columnIndicator = new ColumnIndicator(column);
-            columnIndicator.setIndicators(indicators.toArray(new Indicator[indicators.size()]));
+            final TdColumn column = columnIndicator.getTdColumn();
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
-
             exComp.setText("Column: " + column.getName());
             exComp.setLayout(new GridLayout());
             final Composite comp = toolkit.createComposite(exComp);
@@ -323,10 +319,11 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
                             public void run() {
 
-                                for (ImageDescriptor descriptor : IndicatorChartFactory.createChart(columnIndicator, isCreate)) {
+                                for (ChartWithData chart : IndicatorChartFactory.createChart(columnIndicator, isCreate)) {
 
                                     ImageHyperlink image = toolkit.createImageHyperlink(comp, SWT.WRAP);
-                                    image.setImage(descriptor.createImage());
+                                    image.setImage(chart.getImageDescriptor().createImage());
+
                                 }
                             }
 
@@ -535,6 +532,10 @@ public class ColumnMasterDetailsPage extends AbstractFormPage implements Propert
 
     public void setForm(ScrolledForm form) {
         this.form = form;
+    }
+
+    public ColumnAnalysisHandler getAnalysisHandler() {
+        return analysisHandler;
     }
 
 }

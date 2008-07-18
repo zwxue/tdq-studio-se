@@ -46,7 +46,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
-import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
+import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -57,7 +57,7 @@ import orgomg.cwm.objectmodel.core.Expression;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class PatternMasterDetailsPage extends AbstractFormPage implements PropertyChangeListener {
+public class PatternMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
     private static final String SQL = "SQL";
 
