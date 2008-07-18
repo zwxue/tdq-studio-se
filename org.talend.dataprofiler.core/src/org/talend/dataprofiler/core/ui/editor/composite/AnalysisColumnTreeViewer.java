@@ -455,6 +455,10 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         if (parameters == null) {
             return;
         }
+        TreeItem[] items = indicatorItem.getItems();
+        for (TreeItem treeItem : items) {
+            treeItem.dispose();
+        }
         TreeItem iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "max results shown:" + parameters.getTopN());
         TextParameters tParameter = parameters.getTextParameter();
