@@ -395,6 +395,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
                     if (Window.OK == dialogWithHelp.open()) {
                         setDirty(wizard.isDirty());
+                        createIndicatorParameters(indicatorItem, indicator);
                     }
                 }
             }
@@ -440,11 +441,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             indicatorItem.setData(treeItem.getData(COLUMN_INDICATOR_KEY));
             createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
         }
-        IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
-        if (parameters != null) {
-            indicatorItem.setData(treeItem.getData(COLUMN_INDICATOR_KEY));
-            createIndicatorParameters(indicatorItem, parameters);
-        }
+        createIndicatorParameters(indicatorItem, indicatorUnit);
     }
 
     /**
@@ -453,7 +450,11 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
      * @param indicatorItem
      * @param parameters
      */
-    private void createIndicatorParameters(TreeItem indicatorItem, IndicatorParameters parameters) {
+    private void createIndicatorParameters(TreeItem indicatorItem, IndicatorUnit indicatorUnit) {
+        IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
+        if (parameters == null) {
+            return;
+        }
         TreeItem iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "max results shown:" + parameters.getTopN());
         TextParameters tParameter = parameters.getTextParameter();
