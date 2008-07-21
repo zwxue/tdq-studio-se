@@ -451,13 +451,15 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
      * @param parameters
      */
     private void createIndicatorParameters(TreeItem indicatorItem, IndicatorUnit indicatorUnit) {
+        TreeItem[] items = indicatorItem.getItems();
+        if (indicatorItem != null && !indicatorItem.isDisposed()) {
+            for (TreeItem treeItem : items) {
+                treeItem.dispose();
+            }
+        }
         IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
         if (parameters == null) {
             return;
-        }
-        TreeItem[] items = indicatorItem.getItems();
-        for (TreeItem treeItem : items) {
-            treeItem.dispose();
         }
         TreeItem iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "max results shown:" + parameters.getTopN());
@@ -488,7 +490,6 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "has bins defined:" + (parameters.getBins() != null));
-        tree.getColumn(0).pack();
     }
 
     /**
