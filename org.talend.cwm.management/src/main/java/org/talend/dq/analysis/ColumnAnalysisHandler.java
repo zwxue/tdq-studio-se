@@ -12,15 +12,19 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -36,6 +40,9 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author scorreia
@@ -281,6 +288,107 @@ public class ColumnAnalysisHandler {
 
     public String getStringDataFilter() {
         return AnalysisHelper.getStringDataFilter(analysis);
+    }
+
+    public String getConnectionName() {
+        return analysis.getContext().getConnection().getName();
+    }
+
+    public String getTableNames() {
+        String str = "";
+        for (String aStr : getColumnSetOwnerNames()) {
+            str = str + aStr + " ";
+        }
+
+        return str;
+    }
+
+    public String getSchemaNames() {
+        String str = "";
+        for (ColumnSet columnSet : getColumnSets()) {
+            Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
+            if (schema != null) {
+                str = str + schema.getName() + " ";
+            }
+        }
+
+        return str;
+    }
+
+    public String getCatalogNames() {
+        String str = "";
+        for (ColumnSet columnSet : getColumnSets()) {
+            Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
+            if (schema != null) {
+                try {
+                    Package catalog = ColumnSetHelper.getParentCatalogOrSchema(schema);
+                    if (catalog != null) {
+                        str = str + catalog.getName() + " ";
+                    }
+                } catch (NullPointerException ne) {
+                    return "";
+                }
+
+            }
+        }
+
+        return str;
+    }
+
+    public String getExecuteData() {
+        if (analysis.getResults().getResultMetadata().getExecutionDate() != null) {
+            DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT);
+
+            return format.format(analysis.getResults().getResultMetadata().getExecutionDate());
+        } else {
+            return "";
+        }
+    }
+
+    public String getExecuteDuration() {
+        return analysis.getResults().getResultMetadata().getExecutionDuration() / 100 + " s";
+    }
+
+    public String getExecuteNumber() {
+        return String.valueOf(analysis.getResults().getResultMetadata().getExecutionNumber());
+    }
+
+    public String getExecuteStatus() {
+        if (analysis.getResults().getResultMetadata().isLastRunOk()) {
+            return "success";
+        } else {
+            return "failure";
+        }
+    }
+
+    public String getErrorMessage() {
+        return analysis.getResults().getResultMetadata().getMessage();
+    }
+
+    private String[] getColumnSetOwnerNames() {
+        List<String> existingTables = new ArrayList<String>();
+
+        for (ModelElement element : getAnalyzedColumns()) {
+            String tableName = ColumnHelper.getColumnSetFullName((Column) element);
+            if (!existingTables.contains(tableName)) {
+                existingTables.add(tableName);
+            }
+        }
+
+        return existingTables.toArray(new String[existingTables.size()]);
+    }
+
+    private ColumnSet[] getColumnSets() {
+        List<ColumnSet> existingTables = new ArrayList<ColumnSet>();
+
+        for (ModelElement element : getAnalyzedColumns()) {
+            ColumnSet columnSet = ColumnHelper.getColumnSetOwner((Column) element);
+            if (!existingTables.contains(columnSet)) {
+                existingTables.add(columnSet);
+            }
+        }
+
+        return existingTables.toArray(new ColumnSet[existingTables.size()]);
     }
 
     // public boolean saveModifiedResources() {
