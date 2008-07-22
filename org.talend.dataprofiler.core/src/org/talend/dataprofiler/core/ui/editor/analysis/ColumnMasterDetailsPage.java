@@ -107,9 +107,8 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
         analysisHandler = new ColumnAnalysisHandler();
-        analysisHandler.setAnalysis(AnaResourceFileHelper.getInstance().findAnalysis(input.getFile()));
+        analysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = analysisHandler.getStringDataFilter();
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
         List<ColumnIndicator> columnIndicatorList = new ArrayList<ColumnIndicator>();
@@ -127,6 +126,14 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
             columnIndicatorList.add(currentColumnIndicator);
         }
         currentColumnIndicators = columnIndicatorList.toArray(new ColumnIndicator[columnIndicatorList.size()]);
+    }
+
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
+
+        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+        Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
+        return findAnalysis;
     }
 
     @Override
@@ -172,14 +179,6 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
             }
 
         });
-    }
-
-    protected void fireTextChange() {
-        analysisHandler.setName(nameText.getText());
-        analysisHandler.setPurpose(purposeText.getText());
-        analysisHandler.setDescription(descriptionText.getText());
-        analysisHandler.setAuthor(authorText.getText());
-        analysisHandler.setStatus(statusCombo.getText());
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
@@ -468,16 +467,6 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
             this.analysisHandler.setStringDataFilter((String) evt.getNewValue());
         }
 
-    }
-
-    @Override
-    protected void initMetaTextFied() {
-        nameText.setText(analysisHandler.getName() == null ? PluginConstant.EMPTY_STRING : analysisHandler.getName());
-        purposeText.setText(analysisHandler.getPurpose() == null ? PluginConstant.EMPTY_STRING : analysisHandler.getPurpose());
-        descriptionText.setText(analysisHandler.getDescription() == null ? PluginConstant.EMPTY_STRING : analysisHandler
-                .getDescription());
-        authorText.setText(analysisHandler.getAuthor() == null ? PluginConstant.EMPTY_STRING : analysisHandler.getAuthor());
-        statusCombo.setText(analysisHandler.getStatus() == null ? PluginConstant.EMPTY_STRING : analysisHandler.getStatus());
     }
 
     @Override

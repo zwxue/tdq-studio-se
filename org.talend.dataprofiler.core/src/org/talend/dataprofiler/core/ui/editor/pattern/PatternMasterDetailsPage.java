@@ -40,8 +40,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
-import org.talend.cwm.constants.DevelopmentStatus;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
@@ -53,6 +51,7 @@ import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -81,9 +80,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-        this.pattern = PatternResourceFileHelper.getInstance().findPattern(input.getFile());
-
         String[] supportTypes = SupportDBUrlStore.getInstance().getDBTypes();
         String[] allDBTypes = new String[supportTypes.length + 1];
         System.arraycopy(supportTypes, 0, allDBTypes, 0, supportTypes.length);
@@ -98,6 +94,13 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         tempPatternComponents.addAll(pattern.getComponents());
         remainDBTypeList = new ArrayList<String>();
         remainDBTypeList.addAll(allDBTypeList);
+    }
+
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
+        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+        this.pattern = PatternResourceFileHelper.getInstance().findPattern(input.getFile());
+        return pattern;
     }
 
     protected void createFormContent(IManagedForm managedForm) {
@@ -221,28 +224,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             }
         });
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
-    }
-
-    @Override
-    protected void fireTextChange() {
-        pattern.setName(nameText.getText());
-        TaggedValueHelper.setPurpose(purposeText.getText(), pattern);
-        TaggedValueHelper.setDescription(descriptionText.getText(), pattern);
-        TaggedValueHelper.setAuthor(pattern, authorText.getText());
-        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(statusCombo.getText()));
-    }
-
-    @Override
-    protected void initMetaTextFied() {
-        nameText.setText(pattern.getName() == null ? PluginConstant.EMPTY_STRING : pattern.getName());
-        purposeText.setText(TaggedValueHelper.getPurpose(pattern) == null ? PluginConstant.EMPTY_STRING : TaggedValueHelper
-                .getPurpose(pattern));
-        descriptionText.setText(TaggedValueHelper.getDescription(pattern) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getDescription(pattern));
-        authorText.setText(TaggedValueHelper.getAuthor(pattern) == null ? PluginConstant.EMPTY_STRING : TaggedValueHelper
-                .getAuthor(pattern));
-        statusCombo.setText(TaggedValueHelper.getDevStatus(pattern) == null ? PluginConstant.EMPTY_STRING : TaggedValueHelper
-                .getDevStatus(pattern).getLiteral());
     }
 
     @Override

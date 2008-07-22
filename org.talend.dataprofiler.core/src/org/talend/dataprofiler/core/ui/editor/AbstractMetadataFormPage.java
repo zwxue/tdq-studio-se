@@ -29,6 +29,10 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.PluginConstant;
+
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -51,8 +55,15 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected Section metadataSection;
 
+    protected ModelElement currentModelElement;
+
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+    }
+
+    public void initialize(FormEditor editor) {
+        super.initialize(editor);
+        currentModelElement = getCurrentModelElement(editor);
     }
 
     @Override
@@ -70,6 +81,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         topComp.setLayout(new GridLayout(1, false));
         metadataSection = creatMetadataSection(form, topComp);
     }
+
+    protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {
         Section section = createSection(form, topComp, "Title", true, "");
@@ -146,9 +159,25 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         return section;
     }
 
-    protected abstract void initMetaTextFied();
+    protected void initMetaTextFied() {
+        nameText.setText(currentModelElement.getName() == null ? PluginConstant.EMPTY_STRING : currentModelElement.getName());
+        purposeText.setText(TaggedValueHelper.getPurpose(currentModelElement) == null ? PluginConstant.EMPTY_STRING
+                : TaggedValueHelper.getPurpose(currentModelElement));
+        descriptionText.setText(TaggedValueHelper.getDescription(currentModelElement) == null ? PluginConstant.EMPTY_STRING
+                : TaggedValueHelper.getDescription(currentModelElement));
+        authorText.setText(TaggedValueHelper.getAuthor(currentModelElement) == null ? PluginConstant.EMPTY_STRING
+                : TaggedValueHelper.getAuthor(currentModelElement));
+        statusCombo.setText(TaggedValueHelper.getDevStatus(currentModelElement) == null ? PluginConstant.EMPTY_STRING
+                : TaggedValueHelper.getDevStatus(currentModelElement).getLiteral());
+    }
 
-    protected abstract void fireTextChange();
+    protected void fireTextChange() {
+        currentModelElement.setName(nameText.getText());
+        TaggedValueHelper.setPurpose(purposeText.getText(), currentModelElement);
+        TaggedValueHelper.setDescription(descriptionText.getText(), currentModelElement);
+        TaggedValueHelper.setAuthor(currentModelElement, authorText.getText());
+        TaggedValueHelper.setDevStatus(currentModelElement, DevelopmentStatus.get(statusCombo.getText()));
+    }
 
     public boolean performGlobalAction(String actionId) {
         Control focusControl = getFocusControl();

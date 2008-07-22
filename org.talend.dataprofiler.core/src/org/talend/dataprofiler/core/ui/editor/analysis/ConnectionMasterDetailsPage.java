@@ -42,7 +42,6 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdCatalog;
@@ -91,10 +90,11 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         super(editor, id, title);
     }
 
-    public void initialize(FormEditor editor) {
-        super.initialize(editor);
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
         FileEditorInput input = (FileEditorInput) editor.getEditorInput();
         connectionAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
+        return connectionAnalysis;
     }
 
     @Override
@@ -322,14 +322,6 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         tableColumn.setWidth(100);
     }
 
-    protected void fireTextChange() {
-        connectionAnalysis.setName(nameText.getText());
-        TaggedValueHelper.setPurpose(purposeText.getText(), connectionAnalysis);
-        TaggedValueHelper.setDescription(descriptionText.getText(), connectionAnalysis);
-        TaggedValueHelper.setAuthor(connectionAnalysis, authorText.getText());
-        TaggedValueHelper.setDevStatus(connectionAnalysis, DevelopmentStatus.get(statusCombo.getText()));
-    }
-
     public void saveAnalysis() throws DataprofilerCoreException {
 
         // Pattern tablePattern = null;
@@ -384,19 +376,6 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
         }
 
-    }
-
-    @Override
-    protected void initMetaTextFied() {
-        nameText.setText(connectionAnalysis.getName() == null ? PluginConstant.EMPTY_STRING : connectionAnalysis.getName());
-        purposeText.setText(TaggedValueHelper.getPurpose(connectionAnalysis) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getPurpose(connectionAnalysis));
-        descriptionText.setText(TaggedValueHelper.getDescription(connectionAnalysis) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getDescription(connectionAnalysis));
-        authorText.setText(TaggedValueHelper.getAuthor(connectionAnalysis) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getAuthor(connectionAnalysis));
-        statusCombo.setText(TaggedValueHelper.getDevStatus(connectionAnalysis) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getDevStatus(connectionAnalysis).getLiteral());
     }
 
     @Override

@@ -50,6 +50,7 @@ import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -70,15 +71,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         super(editor, id, title);
     }
 
-    /**
-     * Primes the form page with the parent editor instance.
-     * 
-     * @param editor the parent editor
-     */
-    public void initialize(FormEditor editor) {
-        super.initialize(editor);
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
         FileEditorInput input = (FileEditorInput) editor.getEditorInput();
         tdDataProvider = PrvResourceFileHelper.getInstance().getTdProvider(input.getFile()).getObject();
+        return tdDataProvider;
     }
 
     @Override
