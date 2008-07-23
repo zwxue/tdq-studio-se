@@ -79,6 +79,4 @@ Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.ui.wizard.database,
  org.talend.dataprofiler.core.ui.wizard.indicator,
  org.talend.dataprofiler.core.ui.wizard.indicator.parameter,
- org.talend.dataprofiler.core.ui.wizard.report,
- org.talend.dataprofiler.core.ui.wizard.report.provider,
  org.talend.dataprofiler.core.ui.wizard.urlsetup
