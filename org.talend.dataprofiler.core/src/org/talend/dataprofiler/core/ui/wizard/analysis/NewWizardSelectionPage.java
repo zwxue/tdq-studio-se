@@ -230,7 +230,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
         }
 
         if (parentNode.getName().equals(AnalysisType.CONNECTION.getLiteral())) {
-            selectedWizard = WizardFactory.createConnectionWizard();
+            selectedWizard = WizardFactory.createConnectionWizard(true);
             setConnectionParams(new ConnectionAnalysisParameter());
         }
         if (parentNode.getName().equals(AnalysisType.MULTIPLE_COLUMN.getLiteral())) {

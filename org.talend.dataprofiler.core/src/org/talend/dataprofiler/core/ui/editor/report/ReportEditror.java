@@ -18,7 +18,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
-import org.talend.dataprofiler.core.ui.editor.connection.ConnectionInfoPage;
 
 /**
  * The editor for display the details of report object.
@@ -38,7 +37,7 @@ public class ReportEditror extends CommonFormEditor {
     }
 
     protected void addPages() {
-        masterPage = new ConnectionInfoPage(this, "MasterPage", "Report Settings");
+        masterPage = new ReportMasterDetailsPage(this, "MasterPage", "Report Settings");
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
