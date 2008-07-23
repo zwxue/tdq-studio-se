@@ -476,6 +476,7 @@ public class IndicatorChartFactory {
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setLabel(one.getKey().toString());
                     entity.setValue(one.getValue().toString());
+                    entity.setIndicator(unit.getIndicator());
                     list.add(entity);
                 }
 
@@ -485,12 +486,14 @@ public class IndicatorChartFactory {
                 entity.setLabel(unit.getIndicatorName());
                 entity.setNumMatch(String.valueOf(patnExt.getMatchingValueCount()));
                 entity.setNumNoMatch(String.valueOf(patnExt.getNotMatchingValueCount()));
+                entity.setIndicator(unit.getIndicator());
                 list.add(entity);
 
             } else {
                 ChartDataEntity entity = new ChartDataEntity();
                 entity.setLabel(unit.getIndicatorName());
                 entity.setValue(unit.getValue().toString());
+                entity.setIndicator(unit.getIndicator());
                 list.add(entity);
             }
         }

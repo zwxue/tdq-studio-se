@@ -43,25 +43,18 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
      * @param parent
      * @param style
      */
-    public AbstractIndicatorForm(Composite parent, int style) {
-
+    public AbstractIndicatorForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
         super(parent, style);
+        parameters.add(parameter);
     }
 
-    public void injectTheParameter(AbstractIndicatorParameter parameter) {
+    public static AbstractIndicatorParameter[] getParameters() {
 
-        if (parameter != null) {
-
-            setParameter(parameter);
-        }
-
-        AbstractIndicatorForm.parameters.add(getParameter());
-
+        return parameters.toArray(new AbstractIndicatorParameter[parameters.size()]);
     }
 
-    public static List<AbstractIndicatorParameter> getTheParameter() {
-
-        return AbstractIndicatorForm.parameters;
+    public static boolean isParametersEmpty() {
+        return parameters.isEmpty();
     }
 
     public static void emptyParameterList() {
@@ -71,7 +64,4 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     public abstract String getFormName();
 
-    public abstract AbstractIndicatorParameter getParameter();
-
-    public abstract void setParameter(AbstractIndicatorParameter parameter);
 }

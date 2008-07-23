@@ -12,55 +12,59 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
 
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class DataThresholdsParameter extends AbstractIndicatorParameter {
 
-    private String minThreshold;
-    
-    private String maxThreshold;
+    private String minThreshold = "";
 
-    
+    private String maxThreshold = "";
+
     /**
      * Getter for minThreshold.
+     * 
      * @return the minThreshold
      */
     public String getMinThreshold() {
         return this.minThreshold;
     }
 
-    
     /**
      * Sets the minThreshold.
+     * 
      * @param minThreshold the minThreshold to set
      */
     public void setMinThreshold(String minThreshold) {
         this.minThreshold = minThreshold;
     }
 
-    
     /**
      * Getter for maxThreshold.
+     * 
      * @return the maxThreshold
      */
     public String getMaxThreshold() {
         return this.maxThreshold;
     }
 
-    
     /**
      * Sets the maxThreshold.
+     * 
      * @param maxThreshold the maxThreshold to set
      */
     public void setMaxThreshold(String maxThreshold) {
         this.maxThreshold = maxThreshold;
     }
-    
-    
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.DataThresholdsForm;
+    }
+
 }

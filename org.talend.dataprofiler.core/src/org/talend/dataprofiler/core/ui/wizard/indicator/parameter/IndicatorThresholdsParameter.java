@@ -15,12 +15,14 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 
 /**
- * DOC zqin class global comment. Detailled comment <br/>
- * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ * DOC zqin class global comment. Detailled comment
  */
-public abstract class AbstractIndicatorParameter {
+public class IndicatorThresholdsParameter extends DataThresholdsParameter {
 
-    public abstract FormEnum getFormEnum();
+    @Override
+    public FormEnum getFormEnum() {
+
+        return FormEnum.IndicatorThresholdsForm;
+    }
+
 }

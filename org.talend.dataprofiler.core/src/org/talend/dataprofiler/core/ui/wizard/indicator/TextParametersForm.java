@@ -34,16 +34,11 @@ public class TextParametersForm extends AbstractIndicatorForm {
 
     protected TextParameter parameter;
 
-    /**
-     * DOC zqin TextParametersForm constructor comment.
-     * 
-     * @param parent
-     * @param style
-     */
-    public TextParametersForm(Composite parent, int style) {
-        super(parent, style);
+    public TextParametersForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
+        super(parent, style, parameter);
 
-        setupForm();
+        this.parameter = (TextParameter) parameter;
+        this.setupForm();
     }
 
     /*
@@ -148,31 +143,6 @@ public class TextParametersForm extends AbstractIndicatorForm {
 
             caseBtn.setSelection(parameter.isIngoreCase());
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getParameter()
-     */
-    @Override
-    public AbstractIndicatorParameter getParameter() {
-
-        return this.parameter;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#setParameter
-     * (org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter)
-     */
-    @Override
-    public void setParameter(AbstractIndicatorParameter parameter) {
-
-        this.parameter = (TextParameter) parameter;
-
-        this.initialize();
     }
 
 }

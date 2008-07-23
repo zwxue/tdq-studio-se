@@ -155,9 +155,8 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-            FreqTimeSliceForm timeSliceForm = new FreqTimeSliceForm(comp, SWT.NONE);
+            FreqTimeSliceForm timeSliceForm = new FreqTimeSliceForm(comp, SWT.NONE, patameter);
             timeSliceForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            timeSliceForm.setParameter(patameter);
             timeSliceForm.setListener(listener);
 
             setControl(comp);

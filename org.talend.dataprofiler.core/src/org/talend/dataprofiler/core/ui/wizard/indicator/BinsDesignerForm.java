@@ -36,16 +36,11 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     protected BinsDesignerParameter parameter;
 
-    /**
-     * DOC zqin BinsDesignerForm constructor comment.
-     * 
-     * @param parent
-     * @param style
-     */
-    public BinsDesignerForm(Composite parent, int style) {
-        super(parent, style);
+    public BinsDesignerForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
+        super(parent, style, parameter);
 
-        setupForm();
+        this.parameter = (BinsDesignerParameter) parameter;
+        this.setupForm();
     }
 
     /*
@@ -175,14 +170,9 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     @Override
     protected void initialize() {
 
-        if (parameter == null) {
-            parameter = new BinsDesignerParameter();
-        } else {
-
-            minValue.setText(String.valueOf(parameter.getMinValue()));
-            maxValue.setText(String.valueOf(parameter.getMaxValue()));
-            numbOfBins.setText(String.valueOf(parameter.getNumOfBins()));
-        }
+        minValue.setText(String.valueOf(parameter.getMinValue()));
+        maxValue.setText(String.valueOf(parameter.getMaxValue()));
+        numbOfBins.setText(String.valueOf(parameter.getNumOfBins()));
     }
 
     /*
@@ -194,31 +184,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     public String getFormName() {
 
         return FormEnum.BinsDesignerForm.getFormName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getParameter()
-     */
-    @Override
-    public AbstractIndicatorParameter getParameter() {
-
-        return this.parameter;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#setParameter
-     * (org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter)
-     */
-    @Override
-    public void setParameter(AbstractIndicatorParameter parameter) {
-
-        this.parameter = (BinsDesignerParameter) parameter;
-
-        this.initialize();
     }
 
 }

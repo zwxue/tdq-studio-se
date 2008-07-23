@@ -13,17 +13,21 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
+import org.talend.dataquality.helpers.IndicatorHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -94,6 +98,10 @@ public class ChartTableFactory {
 
             tbViewer.setLabelProvider(new PatternLabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());
+        } else {
+
+            tbViewer.setLabelProvider(new LabelProvider());
+            tbViewer.setContentProvider(new CommonContenteProvider());
         }
 
         tbViewer.setInput(inputObject);
@@ -103,7 +111,54 @@ public class ChartTableFactory {
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class SimpleLabelProvider extends LabelProvider implements ITableLabelProvider {
+    static class BaseChartTableLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
+
+        public Image getColumnImage(Object element, int columnIndex) {
+
+            return null;
+        }
+
+        public String getColumnText(Object element, int columnIndex) {
+
+            return "";
+        }
+
+        public Color getBackground(Object element, int columnIndex) {
+
+            return null;
+        }
+
+        public Color getForeground(Object element, int columnIndex) {
+
+            ChartDataEntity entity = null;
+            if (element instanceof PatternChartDataEntity) {
+                entity = (PatternChartDataEntity) element;
+            } else {
+                entity = (ChartDataEntity) element;
+            }
+            switch (columnIndex) {
+            case 1:
+                String min = IndicatorHelper.getIndicatorThreshold(entity.getIndicator())[0];
+                String max = IndicatorHelper.getIndicatorThreshold(entity.getIndicator())[1];
+                String currentValue = getColumnText(entity, columnIndex);
+                if (min != null && max != null && currentValue != null) {
+                    if (Double.valueOf(max) < Double.valueOf(currentValue) || Double.valueOf(currentValue) < Double.valueOf(min)) {
+                        return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                    }
+                    break;
+                }
+            default:
+            }
+
+            return null;
+        }
+
+    }
+
+    /**
+     * DOC zqin ChartTableFactory class global comment. Detailled comment
+     */
+    static class SimpleLabelProvider extends BaseChartTableLabelProvider {
 
         public String getColumnText(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
@@ -120,15 +175,12 @@ public class ChartTableFactory {
             }
         }
 
-        public Image getColumnImage(Object element, int columnIndex) {
-            return null;
-        }
     }
 
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class FrequencyLabelProvider extends LabelProvider implements ITableLabelProvider {
+    static class FrequencyLabelProvider extends BaseChartTableLabelProvider {
 
         public String getColumnText(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
@@ -145,19 +197,12 @@ public class ChartTableFactory {
             }
         }
 
-        public Image getColumnImage(Object element, int columnIndex) {
-            return null;
-        }
     }
 
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class SummaryLabelProvider extends LabelProvider implements ITableLabelProvider {
-
-        public Image getColumnImage(Object element, int columnIndex) {
-            return null;
-        }
+    static class SummaryLabelProvider extends BaseChartTableLabelProvider {
 
         public String getColumnText(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
@@ -172,16 +217,13 @@ public class ChartTableFactory {
                 return "";
             }
         }
+
     }
 
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class PatternLabelProvider extends LabelProvider implements ITableLabelProvider {
-
-        public Image getColumnImage(Object element, int columnIndex) {
-            return null;
-        }
+    static class PatternLabelProvider extends BaseChartTableLabelProvider {
 
         public String getColumnText(Object element, int columnIndex) {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;

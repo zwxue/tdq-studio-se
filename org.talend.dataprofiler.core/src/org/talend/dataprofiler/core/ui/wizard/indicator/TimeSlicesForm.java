@@ -39,16 +39,11 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
 
     protected TimeSlicesParameter parameter;
 
-    /**
-     * DOC zqin TimeSlicesForm constructor comment.
-     * 
-     * @param parent
-     * @param style
-     */
-    public TimeSlicesForm(Composite parent, int style) {
-        super(parent, style);
+    public TimeSlicesForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
+        super(parent, style, parameter);
 
-        setupForm();
+        this.parameter = (TimeSlicesParameter) parameter;
+        this.setupForm();
     }
 
     /*
@@ -186,31 +181,6 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
                 oneBtn.setSelection(true);
             }
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getParameter()
-     */
-    @Override
-    public AbstractIndicatorParameter getParameter() {
-
-        return this.parameter;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#
-     * setParameter(org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter)
-     */
-    @Override
-    public void setParameter(AbstractIndicatorParameter parameter) {
-
-        this.parameter = (TimeSlicesParameter) parameter;
-
-        this.initialize();
     }
 
 }

@@ -34,16 +34,11 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     private TextLengthParameter parameter;
 
-    /**
-     * DOC zqin TextLengthForm constructor comment.
-     * 
-     * @param parent
-     * @param style
-     */
-    public TextLengthForm(Composite parent, int style) {
-        super(parent, style);
+    public TextLengthForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
+        super(parent, style, parameter);
 
-        setupForm();
+        this.parameter = (TextLengthParameter) parameter;
+        this.setupForm();
     }
 
     /*
@@ -167,31 +162,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
         nullBtn.setSelection(parameter.isUseNull());
         blankBtn.setSelection(parameter.isUseBlank());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getParameter()
-     */
-    @Override
-    public AbstractIndicatorParameter getParameter() {
-
-        return this.parameter;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#setParameter
-     * (org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter)
-     */
-    @Override
-    public void setParameter(AbstractIndicatorParameter parameter) {
-
-        this.parameter = (TextLengthParameter) parameter;
-
-        this.initialize();
     }
 
 }

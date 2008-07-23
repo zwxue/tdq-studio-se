@@ -390,7 +390,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             public void mouseDown(MouseEvent e) {
 
                 final IndicatorUnit indicator = (IndicatorUnit) ((Label) e.getSource()).getData();
-                final IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicator, analysis);
+                final IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicator);
 
                 String helpID = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
                 WizardDialog dialog = new WizardDialog(null, wizard);

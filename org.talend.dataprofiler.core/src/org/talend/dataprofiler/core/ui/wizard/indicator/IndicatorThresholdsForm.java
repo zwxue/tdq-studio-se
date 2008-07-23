@@ -10,30 +10,25 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.utils;
+package org.talend.dataprofiler.core.ui.wizard.indicator;
+
+import org.eclipse.swt.widgets.Composite;
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public enum FormEnum {
+public class IndicatorThresholdsForm extends DataThresholdsForm {
 
-    BinsDesignerForm("Bins Designer"),
-    FreqBinsDesignerForm("Bins Designer"),
-    TextParametersForm("Text Parameter"),
-    FreqTextParametersForm("Text Parameter"),
-    TimeSlicesForm("Time Slices"),
-    FreqTimeSliceForm("Time Slices"),
-    DataThresholdsForm("Data Thresholds"),
-    IndicatorThresholdsForm("Indicator Thresholds"),
-    TextLengthForm("Text Length");
-
-    private String formName;
-
-    FormEnum(String formName) {
-        this.formName = formName;
+    public IndicatorThresholdsForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
+        super(parent, style, parameter);
     }
 
+    @Override
     public String getFormName() {
-        return formName;
+
+        return FormEnum.IndicatorThresholdsForm.getFormName();
     }
+
 }

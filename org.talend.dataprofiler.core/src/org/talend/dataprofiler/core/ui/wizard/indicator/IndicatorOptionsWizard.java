@@ -23,10 +23,10 @@ import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorThresholdsParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextLengthParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.RealNumberValue;
@@ -47,22 +47,19 @@ public class IndicatorOptionsWizard extends Wizard {
 
     private boolean isDirty;
 
-    private Analysis analysis;
-
     private IndicatorUnit indicatorUnit;
 
     private Indicator indicator;
 
-    private Map<String, AbstractIndicatorParameter> paramMap;
+    private Map<FormEnum, AbstractIndicatorParameter> paramMap = new HashMap<FormEnum, AbstractIndicatorParameter>();
 
     /**
      * DOC zqin IndicatorOptionsWizard constructor comment.
      */
-    public IndicatorOptionsWizard(IndicatorUnit indicatorUnit, Analysis analysis) {
+    public IndicatorOptionsWizard(IndicatorUnit indicatorUnit) {
         setWindowTitle("Indicator");
 
         this.indicatorUnit = indicatorUnit;
-        this.analysis = analysis;
         this.indicator = indicatorUnit.getIndicator();
 
         initWizard();
@@ -70,14 +67,12 @@ public class IndicatorOptionsWizard extends Wizard {
 
     private void initWizard() {
 
-        if (!AbstractIndicatorForm.getTheParameter().isEmpty()) {
+        if (!AbstractIndicatorForm.isParametersEmpty()) {
             AbstractIndicatorForm.emptyParameterList();
         }
 
         IndicatorParameters indicatorParam = indicatorUnit.getIndicator().getParameters();
         if (indicatorParam != null) {
-
-            paramMap = new HashMap<String, AbstractIndicatorParameter>();
 
             TextParameters textParameters = indicatorParam.getTextParameter();
 
@@ -91,8 +86,8 @@ public class IndicatorOptionsWizard extends Wizard {
                 textLengthParam.setUseBlank(textParameters.isUseBlank());
                 textLengthParam.setUseNull(textParameters.isUseNulls());
 
-                paramMap.put(FormEnum.TextParametersForm.getFormName(), textParam);
-                paramMap.put(FormEnum.TextLengthForm.getFormName(), textLengthParam);
+                paramMap.put(FormEnum.TextParametersForm, textParam);
+                paramMap.put(FormEnum.TextLengthForm, textLengthParam);
             }
 
             if (IndicatorHelper.getDataThreshold(indicator) != null) {
@@ -101,7 +96,15 @@ public class IndicatorOptionsWizard extends Wizard {
                 dataParam.setMinThreshold(IndicatorHelper.getDataThreshold(indicator)[0]);
                 dataParam.setMaxThreshold(IndicatorHelper.getDataThreshold(indicator)[1]);
 
-                paramMap.put(FormEnum.DataThresholdsForm.getFormName(), dataParam);
+                paramMap.put(FormEnum.DataThresholdsForm, dataParam);
+            }
+
+            if (IndicatorHelper.getIndicatorThreshold(indicator) != null) {
+                IndicatorThresholdsParameter indicatorThresholdsParam = new IndicatorThresholdsParameter();
+                indicatorThresholdsParam.setMinThreshold(IndicatorHelper.getIndicatorThreshold(indicator)[0]);
+                indicatorThresholdsParam.setMaxThreshold(IndicatorHelper.getIndicatorThreshold(indicator)[1]);
+
+                paramMap.put(FormEnum.IndicatorThresholdsForm, indicatorThresholdsParam);
             }
 
             if (indicatorParam.getBins() != null) {
@@ -112,14 +115,14 @@ public class IndicatorOptionsWizard extends Wizard {
                 binsParam.setNumOfBins(DomainHelper.getNumberOfBins(indicatorParam.getBins()));
                 binsParam.setNumOfShown(indicatorParam.getTopN());
 
-                paramMap.put(FormEnum.BinsDesignerForm.getFormName(), binsParam);
+                paramMap.put(FormEnum.BinsDesignerForm, binsParam);
             }
             if (indicatorParam.getDateParameters() != null) {
                 TimeSlicesParameter timeParam = new TimeSlicesParameter();
                 timeParam.setDataUnit(indicatorParam.getDateParameters().getDateAggregationType().getLiteral());
                 timeParam.setNumOfShown(indicatorParam.getTopN());
 
-                paramMap.put(FormEnum.TimeSlicesForm.getFormName(), timeParam);
+                paramMap.put(FormEnum.TimeSlicesForm, timeParam);
             }
         }
     }
@@ -150,9 +153,9 @@ public class IndicatorOptionsWizard extends Wizard {
                 paramters.setTextParameter(textParameters);
             }
 
-            for (AbstractIndicatorParameter parameter : AbstractIndicatorForm.getTheParameter()) {
+            for (AbstractIndicatorParameter parameter : AbstractIndicatorForm.getParameters()) {
 
-                if (parameter instanceof BinsDesignerParameter) {
+                if (parameter.getFormEnum() == FormEnum.BinsDesignerForm) {
 
                     BinsDesignerParameter tempParam = (BinsDesignerParameter) parameter;
                     int numOfBin = tempParam.getNumOfBins();
@@ -203,7 +206,7 @@ public class IndicatorOptionsWizard extends Wizard {
                     }
                 }
 
-                if (parameter instanceof TextParameter) {
+                if (parameter.getFormEnum() == FormEnum.TextParametersForm) {
 
                     TextParameter tempParam = (TextParameter) parameter;
                     int numOfShown = paramters.getTopN();
@@ -215,7 +218,7 @@ public class IndicatorOptionsWizard extends Wizard {
                     }
                 }
 
-                if (parameter instanceof TextLengthParameter) {
+                if (parameter.getFormEnum() == FormEnum.TextLengthForm) {
 
                     TextLengthParameter tempParam = (TextLengthParameter) parameter;
                     // PTODO qzhang for bug 3491.
@@ -230,7 +233,7 @@ public class IndicatorOptionsWizard extends Wizard {
                     }
                 }
 
-                if (parameter instanceof DataThresholdsParameter) {
+                if (parameter.getFormEnum() == FormEnum.DataThresholdsForm) {
                     DataThresholdsParameter tempParam = (DataThresholdsParameter) parameter;
                     String min = tempParam.getMinThreshold();
                     String max = tempParam.getMaxThreshold();
@@ -260,7 +263,37 @@ public class IndicatorOptionsWizard extends Wizard {
                     }
                 }
 
-                if (parameter instanceof TimeSlicesParameter) {
+                if (parameter.getFormEnum() == FormEnum.IndicatorThresholdsForm) {
+                    IndicatorThresholdsParameter tempParam = (IndicatorThresholdsParameter) parameter;
+                    String min = tempParam.getMinThreshold();
+                    String max = tempParam.getMaxThreshold();
+
+                    isDirty = indicatorUnit.getIndicator().getParameters() == null;
+                    if (!isDirty) {
+                        Domain validDomain = paramters.getDataValidDomain();
+                        isDirty = validDomain == null;
+                        if (!isDirty) {
+                            int size = validDomain.getRanges().size();
+                            isDirty = size != 1;
+                            if (!isDirty) {
+                                RangeRestriction rr = validDomain.getRanges().get(0);
+                                TextValue lv = (TextValue) rr.getLowerValue();
+                                TextValue uv = (TextValue) rr.getUpperValue();
+                                if (!min.equals(lv.getValue())) {
+                                    isDirty = true;
+                                }
+                                if (!max.equals(uv.getValue())) {
+                                    isDirty = true;
+                                }
+                            }
+                        }
+                    }
+                    if (isDirty) {
+                        IndicatorHelper.setIndicatorThreshold(indicator.getParameters(), min, max);
+                    }
+                }
+
+                if (parameter.getFormEnum() == FormEnum.TimeSlicesForm) {
                     DateParameters dateParameters = paramters.getDateParameters();
                     if (dateParameters == null) {
                         dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();

@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
+import org.talend.dataquality.indicators.Indicator;
+
 /**
  * DOC zqin class global comment. Detailled comment
  */
@@ -22,6 +24,8 @@ public class ChartDataEntity {
     private String value;
 
     private String persent;
+
+    private Indicator indicator;
 
     public String getLabel() {
         return label;
@@ -45,6 +49,14 @@ public class ChartDataEntity {
 
     public void setPersent(String persent) {
         this.persent = persent;
+    }
+
+    public Indicator getIndicator() {
+        return indicator;
+    }
+
+    public void setIndicator(Indicator indicator) {
+        this.indicator = indicator;
     }
 
 }

@@ -33,20 +33,15 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholds
  */
 public class DataThresholdsForm extends AbstractIndicatorForm {
 
-    Text lowerText, higherText;
+    private Text lowerText, higherText;
 
     private DataThresholdsParameter parameter;
 
-    /**
-     * DOC zqin DataThresholdsForm constructor comment.
-     * 
-     * @param parent
-     * @param style
-     */
-    public DataThresholdsForm(Composite parent, int style) {
-        super(parent, style);
+    public DataThresholdsForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
+        super(parent, style, parameter);
 
-        setupForm();
+        this.parameter = (DataThresholdsParameter) parameter;
+        this.setupForm();
     }
 
     /*
@@ -110,9 +105,8 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
             public void modifyText(ModifyEvent e) {
 
                 checkFieldsValue();
-                if (isStatusOnValid()) {
-                    parameter.setMinThreshold(lowerText.getText());
-                }
+
+                parameter.setMinThreshold(lowerText.getText());
             }
 
         });
@@ -122,9 +116,8 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
             public void modifyText(ModifyEvent e) {
 
                 checkFieldsValue();
-                if (isStatusOnValid()) {
-                    parameter.setMaxThreshold(higherText.getText());
-                }
+
+                parameter.setMaxThreshold(higherText.getText());
             }
 
         });
@@ -179,31 +172,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
             higherText.setText(parameter.getMaxThreshold());
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getParameter()
-     */
-    @Override
-    public AbstractIndicatorParameter getParameter() {
-
-        return this.parameter;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#
-     * setParameter(org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter)
-     */
-    @Override
-    public void setParameter(AbstractIndicatorParameter parameter) {
-
-        this.parameter = (DataThresholdsParameter) parameter;
-
-        this.initialize();
     }
 
 }

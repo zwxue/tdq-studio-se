@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
+import java.text.DecimalFormat;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 
@@ -58,9 +60,12 @@ public class ChartWithData {
         }
 
         for (ChartDataEntity oneEntity : this.enity) {
-            String str = String.valueOf(Double.valueOf(oneEntity.getValue()) * 100 / sum);
-            str = str.substring(0, str.indexOf(".") + 3);
-            oneEntity.setPersent(str + "%");
+            Double doub = Double.valueOf(oneEntity.getValue()) / sum;
+
+            DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
+            format.applyPattern("0.00%");
+
+            oneEntity.setPersent(format.format(doub));
         }
     }
 

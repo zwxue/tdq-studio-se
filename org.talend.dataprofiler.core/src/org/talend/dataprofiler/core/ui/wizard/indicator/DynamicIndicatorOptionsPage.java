@@ -45,7 +45,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
     private TabFolder tabFolder;
 
-    private Map<String, AbstractIndicatorParameter> paramMap;
+    private Map<FormEnum, AbstractIndicatorParameter> paramMap;
 
     private AbstractIndicatorForm.ICheckListener listener;
 
@@ -54,7 +54,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
      * 
      * @param pageName
      */
-    public DynamicIndicatorOptionsPage(IndicatorUnit indicator, Map<String, AbstractIndicatorParameter> paramMap) {
+    public DynamicIndicatorOptionsPage(IndicatorUnit indicator, Map<FormEnum, AbstractIndicatorParameter> paramMap) {
         super("Indicator settings");
 
         this.indicator = indicator;
@@ -95,73 +95,11 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         if (dataminingType == null) {
             dataminingType = MetadataHelper.getDefaultDataminingType(parentColumn.getTdColumn().getJavaType());
         }
+        int sqlType = parentColumn.getTdColumn().getJavaType();
 
-        if (indicator != null) {
-
-            int sqlType = parentColumn.getTdColumn().getJavaType();
-
-            switch (indicator.getType()) {
-
-            case DistinctCountIndicatorEnum:
-            case UniqueIndicatorEnum:
-            case DuplicateCountIndicatorEnum:
-
-                if (Java2SqlType.isTextInSQL(sqlType)) {
-
-                    setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
-                            new FormEnum[] { FormEnum.TextParametersForm })));
-                }
-
-                break;
-            case MinLengthIndicatorEnum:
-            case MaxLengthIndicatorEnum:
-            case AverageLengthIndicatorEnum:
-
-                setControl(createView(FormFactory.creaeteForm(tabFolder, listener, new FormEnum[] { FormEnum.TextLengthForm })));
-
-                break;
-            case FrequencyIndicatorEnum:
-                if (dataminingType == DataminingType.INTERVAL) {
-                    if (Java2SqlType.isNumbericInSQL(sqlType)) {
-
-                        setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
-                                new FormEnum[] { FormEnum.FreqBinsDesignerForm })));
-                    }
-
-                    if (Java2SqlType.isDateInSQL(sqlType)) {
-
-                        setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
-                                new FormEnum[] { FormEnum.FreqTimeSliceForm })));
-                    }
-                } else if (Java2SqlType.isTextInSQL(sqlType)) {
-
-                    setControl(createView(FormFactory.creaeteForm(tabFolder, listener, new FormEnum[] {
-                            FormEnum.FreqTextParametersForm, FormEnum.TextLengthForm })));
-                }
-
-                break;
-            case ModeIndicatorEnum:
-                if (dataminingType == DataminingType.INTERVAL) {
-                    if (Java2SqlType.isNumbericInSQL(sqlType)) {
-
-                        setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
-                                new FormEnum[] { FormEnum.BinsDesignerForm })));
-                    }
-                } else if (Java2SqlType.isTextInSQL(sqlType)) {
-
-                    setControl(createView(FormFactory.creaeteForm(tabFolder, listener,
-                            new FormEnum[] { FormEnum.TextParametersForm })));
-                }
-
-                break;
-            case BoxIIndicatorEnum:
-                setControl(createView(FormFactory
-                        .creaeteForm(tabFolder, listener, new FormEnum[] { FormEnum.DataThresholdsForm })));
-                break;
-
-            default:
-
-            }
+        FormEnum[] forms = getForms(dataminingType, sqlType);
+        if (forms != null) {
+            setControl(createView(FormFactory.createForm(tabFolder, listener, forms, paramMap)));
         }
 
         if (getControl() != null) {
@@ -176,19 +114,95 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
     }
 
+    /**
+     * DOC zqin Comment method "getForms".
+     * 
+     * @param dataminingType
+     * @param sqlType
+     */
+    private FormEnum[] getForms(DataminingType dataminingType, int sqlType) {
+        FormEnum[] forms = null;
+
+        switch (indicator.getType()) {
+
+        case DistinctCountIndicatorEnum:
+        case UniqueIndicatorEnum:
+        case DuplicateCountIndicatorEnum:
+
+            if (Java2SqlType.isTextInSQL(sqlType)) {
+                forms = new FormEnum[] { FormEnum.TextParametersForm, FormEnum.IndicatorThresholdsForm };
+            }
+
+            break;
+        case MinLengthIndicatorEnum:
+        case MaxLengthIndicatorEnum:
+        case AverageLengthIndicatorEnum:
+
+            forms = new FormEnum[] { FormEnum.TextLengthForm, FormEnum.IndicatorThresholdsForm };
+
+            break;
+        case FrequencyIndicatorEnum:
+            if (dataminingType == DataminingType.INTERVAL) {
+                if (Java2SqlType.isNumbericInSQL(sqlType)) {
+
+                    forms = new FormEnum[] { FormEnum.FreqBinsDesignerForm };
+                }
+
+                if (Java2SqlType.isDateInSQL(sqlType)) {
+
+                    forms = new FormEnum[] { FormEnum.FreqTimeSliceForm };
+                }
+            } else if (Java2SqlType.isTextInSQL(sqlType)) {
+
+                forms = new FormEnum[] { FormEnum.FreqTextParametersForm, FormEnum.TextLengthForm };
+            }
+
+            break;
+        case ModeIndicatorEnum:
+            if (dataminingType == DataminingType.INTERVAL) {
+                if (Java2SqlType.isNumbericInSQL(sqlType)) {
+
+                    forms = new FormEnum[] { FormEnum.BinsDesignerForm };
+                }
+            } else if (Java2SqlType.isTextInSQL(sqlType)) {
+
+                forms = new FormEnum[] { FormEnum.TextParametersForm };
+            }
+
+            break;
+        case BoxIIndicatorEnum:
+            forms = new FormEnum[] { FormEnum.DataThresholdsForm };
+
+            break;
+        case MeanIndicatorEnum:
+        case MedianIndicatorEnum:
+        case LowerQuartileIndicatorEnum:
+        case UpperQuartileIndicatorEnum:
+        case MinValueIndicatorEnum:
+        case MaxValueIndicatorEnum:
+            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
+
+            break;
+
+        case RegexpMatchingIndicatorEnum:
+        case SqlPatternMatchingIndicatorEnum:
+            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
+
+            break;
+
+        default:
+
+        }
+
+        return forms;
+    }
+
     private Composite createView(AbstractIndicatorForm... forms) {
         try {
             for (AbstractIndicatorForm iForm : forms) {
                 TabItem item = new TabItem(tabFolder, SWT.NONE);
                 item.setText(iForm.getFormName());
                 item.setControl(iForm);
-
-                if (paramMap == null) {
-                    iForm.injectTheParameter(null);
-                } else {
-                    iForm.injectTheParameter(paramMap.get(iForm.getFormName()));
-                }
-
             }
         } catch (Exception e) {
             e.printStackTrace();

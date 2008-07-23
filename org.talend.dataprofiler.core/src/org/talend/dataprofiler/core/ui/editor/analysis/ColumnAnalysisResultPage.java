@@ -174,21 +174,21 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
 
                         public void run() {
 
-                            for (ChartWithData chart : IndicatorChartFactory.createChart(columnIndicator, true)) {
+                            for (ChartWithData chartData : IndicatorChartFactory.createChart(columnIndicator, true)) {
 
                                 ExpandableComposite subComp = toolkit.createExpandableComposite(comp, ExpandableComposite.TWISTIE
                                         | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-                                subComp.setText(chart.getChartNamedType());
+                                subComp.setText(chartData.getChartNamedType());
 
                                 Composite composite = toolkit.createComposite(subComp);
                                 composite.setLayout(new GridLayout(2, false));
                                 composite.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
                                 // create table
-                                ChartTableFactory.createTable(composite, chart);
+                                ChartTableFactory.createTable(composite, chartData);
                                 // carete image
                                 ImageHyperlink image = toolkit.createImageHyperlink(composite, SWT.WRAP);
-                                image.setImage(chart.getImageDescriptor().createImage());
+                                image.setImage(chartData.getImageDescriptor().createImage());
 
                                 subComp.setClient(composite);
                                 subComp.addExpansionListener(new ExpansionAdapter() {

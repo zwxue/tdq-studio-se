@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
+
 /**
  * DOC zqin class global comment. Detailled comment <br/>
  * 
@@ -88,6 +90,12 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
 
     public void setNumOfShown(int numOfShown) {
         this.numOfShown = numOfShown;
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+
+        return FormEnum.BinsDesignerForm;
     }
 
 }

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -23,9 +24,17 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.DataThresholdsForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqBinsDesignerForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTextParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorThresholdsForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TextLengthForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TextParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TimeSlicesForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorThresholdsParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextLengthParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -36,51 +45,102 @@ public final class FormFactory {
 
     }
 
-    public static AbstractIndicatorForm[] creaeteForm(Composite parent, ICheckListener listener, FormEnum[] formTypes) {
+    public static AbstractIndicatorForm[] createForm(Composite parent, ICheckListener listener, FormEnum[] formTypes,
+            Map<FormEnum, AbstractIndicatorParameter> paramMap) {
 
         List<AbstractIndicatorForm> list = new ArrayList<AbstractIndicatorForm>();
         AbstractIndicatorForm form = null;
+        AbstractIndicatorParameter parameter = null;
 
         for (FormEnum oneType : formTypes) {
 
             switch (oneType) {
             case BinsDesignerForm:
-                form = new BinsDesignerForm(parent, SWT.NONE);
+                parameter = paramMap.get(FormEnum.BinsDesignerForm);
+                if (parameter == null) {
+                    parameter = new BinsDesignerParameter();
+                }
+                form = new BinsDesignerForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
             case TextLengthForm:
-                form = new TextLengthForm(parent, SWT.NONE);
+                parameter = paramMap.get(FormEnum.TextLengthForm);
+                if (parameter == null) {
+                    parameter = new TextLengthParameter();
+                }
+                form = new TextLengthForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
             case TextParametersForm:
-                form = new TextParametersForm(parent, SWT.NONE);
+                parameter = paramMap.get(FormEnum.TextParametersForm);
+                if (parameter == null) {
+                    parameter = new TextParameter();
+                }
+
+                form = new TextParametersForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
             case DataThresholdsForm:
-                form = new DataThresholdsForm(parent, SWT.NONE);
+                parameter = paramMap.get(FormEnum.DataThresholdsForm);
+                if (parameter == null) {
+                    parameter = new DataThresholdsParameter();
+                }
+
+                form = new DataThresholdsForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
             case TimeSlicesForm:
-                form = new TimeSlicesForm(parent, SWT.NONE);
+                parameter = paramMap.get(FormEnum.TimeSlicesForm);
+                if (parameter == null) {
+                    parameter = new TimeSlicesParameter();
+                }
+
+                form = new TimeSlicesForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
             case FreqBinsDesignerForm:
-                form = new FreqBinsDesignerForm(parent, SWT.NONE);
+                parameter = paramMap.get(FormEnum.BinsDesignerForm);
+                if (parameter == null) {
+                    parameter = new BinsDesignerParameter();
+                }
+
+                form = new FreqBinsDesignerForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
             case FreqTextParametersForm:
-                form = new FreqTextParametersForm(parent, SWT.NONE);
+                parameter = paramMap.get(FormEnum.TextParametersForm);
+                if (parameter == null) {
+                    parameter = new TextParameter();
+                }
+
+                form = new FreqTextParametersForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
             case FreqTimeSliceForm:
-                form = new FreqTimeSliceForm(parent, SWT.NONE);
+                parameter = paramMap.get(FormEnum.BinsDesignerForm);
+                if (parameter == null) {
+                    parameter = new BinsDesignerParameter();
+                }
+
+                form = new FreqTimeSliceForm(parent, SWT.NONE, parameter);
+                form.setListener(listener);
+                list.add(form);
+                break;
+
+            case IndicatorThresholdsForm:
+                parameter = paramMap.get(FormEnum.IndicatorThresholdsForm);
+                if (parameter == null) {
+                    parameter = new IndicatorThresholdsParameter();
+                }
+
+                form = new IndicatorThresholdsForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
