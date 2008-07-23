@@ -82,6 +82,11 @@ import org.talend.dataquality.indicators.TextParameters;
  */
 public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
+    /**
+     * 
+     */
+    private static final String DATA_PARAM = "DATA_PARAM";
+
     public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY";
 
     public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY";
@@ -454,7 +459,9 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         TreeItem[] items = indicatorItem.getItems();
         if (indicatorItem != null && !indicatorItem.isDisposed()) {
             for (TreeItem treeItem : items) {
-                treeItem.dispose();
+                if (DATA_PARAM.equals(treeItem.getData(DATA_PARAM))) {
+                    treeItem.dispose();
+                }
             }
         }
         IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
@@ -463,14 +470,20 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         }
         TreeItem iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "max results shown:" + parameters.getTopN());
+        iParamItem.setData(DATA_PARAM, DATA_PARAM);
+
         TextParameters tParameter = parameters.getTextParameter();
         if (tParameter != null) {
             final TreeItem tParamItem = new TreeItem(indicatorItem, SWT.NONE);
             tParamItem.setText(0, "Text parameters");
+            tParamItem.setData(DATA_PARAM, DATA_PARAM);
+
             TreeItem item = new TreeItem(tParamItem, SWT.NONE);
             item.setText("use blanks:" + tParameter.isUseBlank());
+
             item = new TreeItem(tParamItem, SWT.NONE);
             item.setText("ignore case:" + tParameter.isIgnoreCase());
+
             item = new TreeItem(tParamItem, SWT.NONE);
             item.setText("use nulls:" + tParameter.isUseNulls());
         }
@@ -478,18 +491,23 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         if (dParameters != null) {
             final TreeItem tParamItem = new TreeItem(indicatorItem, SWT.NONE);
             tParamItem.setText(0, "Date parameters");
+            tParamItem.setData(DATA_PARAM, DATA_PARAM);
+
             TreeItem item = new TreeItem(tParamItem, SWT.NONE);
             item.setText("aggregation type:\"" + dParameters.getDateAggregationType().getName() + "\"");
         }
 
         iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "has valid domain:" + (parameters.getDataValidDomain() != null));
+        iParamItem.setData(DATA_PARAM, DATA_PARAM);
 
         iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "has quality thresholds:" + (parameters.getIndicatorValidDomain() != null));
+        iParamItem.setData(DATA_PARAM, DATA_PARAM);
 
         iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "has bins defined:" + (parameters.getBins() != null));
+        iParamItem.setData(DATA_PARAM, DATA_PARAM);
     }
 
     /**
