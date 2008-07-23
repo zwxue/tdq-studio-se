@@ -157,13 +157,7 @@
 				class="org.eclipse.ui.internal.navigator.resources.actions.OpenActionProvider">
 			<enablement>
 				<and>
-	            <instanceof value="org.eclipse.core.resources.IFile"/>
-	            <or>
-            	    <test property="org.eclipse.core.resources.name" value="*.ana"/>
-            	    <test property="org.eclipse.core.resources.name" value="*.sql"/>
-            	    <test property="org.eclipse.core.resources.name" value="*.prv"/>
-            	    <test property="org.eclipse.core.resources.name" value="*.pattern"/>
-                </or>            
+	            <instanceof value="org.eclipse.core.resources.IFile"/>         
 	        </and>
 			</enablement>
 		</actionProvider>      
