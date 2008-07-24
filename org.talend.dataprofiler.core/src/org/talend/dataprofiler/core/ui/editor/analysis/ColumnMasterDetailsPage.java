@@ -334,7 +334,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                 };
 
                 try {
-                    new ProgressMonitorDialog(null).run(true, false, rwp);
+                    new ProgressMonitorDialog(getSite().getShell()).run(true, false, rwp);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
