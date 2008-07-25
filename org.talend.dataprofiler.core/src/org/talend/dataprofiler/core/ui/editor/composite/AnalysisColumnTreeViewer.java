@@ -36,6 +36,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.TreeAdapter;
+import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -50,6 +52,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.relational.TdColumn;
@@ -63,6 +66,7 @@ import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.HelpUtils;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
@@ -103,17 +107,18 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
     private ColumnIndicator[] columnIndicators;
 
-    private Analysis analysis;
+    private ColumnMasterDetailsPage masterPage;
 
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
     }
 
-    public AnalysisColumnTreeViewer(Composite parent, ColumnIndicator[] columnIndicators, Analysis analysis) {
+    public AnalysisColumnTreeViewer(Composite parent, ColumnMasterDetailsPage masterPage) {
         this(parent);
-        this.analysis = analysis;
-        this.setElements(columnIndicators);
+        this.masterPage = masterPage;
+        this.setElements(masterPage.getCurrentColumnIndicators());
+        this.addTreeListener(this.tree);
         this.setDirty(false);
     }
 
@@ -288,7 +293,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                             if (obj instanceof IFile) {
                                 IFile file = (IFile) obj;
                                 IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, columnIndicator,
-                                        analysis);
+                                        getAnalysis());
                                 createOneUnit(treeItem, addIndicatorUnit);
                                 setDirty(true);
                             }
@@ -624,6 +629,57 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         this.setDirty(true);
     }
 
+    private void addTreeListener(Tree tree) {
+        tree.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+
+                if (getTheSuitedComposite(e) != null) {
+                    getTheSuitedComposite(e).setFocus();
+                }
+            }
+
+        });
+
+        tree.addTreeListener(new TreeAdapter() {
+
+            @Override
+            public void treeCollapsed(TreeEvent e) {
+
+                if (getTheSuitedComposite(e) != null) {
+                    getTheSuitedComposite(e).setExpanded(false);
+                }
+
+                masterPage.getForm().reflow(true);
+            }
+
+            @Override
+            public void treeExpanded(TreeEvent e) {
+                if (getTheSuitedComposite(e) != null) {
+                    getTheSuitedComposite(e).setExpanded(true);
+                }
+
+                masterPage.getForm().reflow(true);
+            }
+
+        });
+    }
+
+    private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
+        Object obj = e.item.getData(COLUMN_INDICATOR_KEY);
+        if (obj instanceof ColumnIndicator) {
+            ColumnIndicator columnIndicator = (ColumnIndicator) obj;
+            for (Composite comp : masterPage.getPreviewChartCompsites()) {
+                if (comp.getData() == columnIndicator) {
+                    return (ExpandableComposite) comp;
+                }
+            }
+        }
+
+        return null;
+    }
+
     /**
      * DOC zqin AnalysisColumnTreeViewer class global comment. Detailled comment
      */
@@ -667,6 +723,10 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
      * @return the analysis
      */
     public Analysis getAnalysis() {
-        return this.analysis;
+        return this.masterPage.getAnalysisHandler().getAnalysis();
+    }
+
+    public Tree getTree() {
+        return tree;
     }
 }

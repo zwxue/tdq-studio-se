@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -100,6 +101,8 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
     private ScrolledForm form;
 
     private static final int TREE_MAX_LENGTH = 400;
+
+    private Composite[] previewChartCompsites;
 
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -213,7 +216,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         tree.setLayout(new GridLayout());
         ((GridData) tree.getLayoutData()).heightHint = TREE_MAX_LENGTH;
 
-        treeViewer = new AnalysisColumnTreeViewer(tree, currentColumnIndicators, analysisHandler.getAnalysis());
+        treeViewer = new AnalysisColumnTreeViewer(tree, this);
         treeViewer.setDirty(false);
         treeViewer.addPropertyChangeListener(this);
         section.setClient(topComp);
@@ -294,6 +297,8 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
 
+        List<Composite> previewChartList = new ArrayList<Composite>();
+
         for (final ColumnIndicator columnIndicator : this.treeViewer.getColumnIndicator()) {
 
             final TdColumn column = columnIndicator.getTdColumn();
@@ -302,6 +307,10 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                     | ExpandableComposite.CLIENT_INDENT);
             exComp.setText("Column: " + column.getName());
             exComp.setLayout(new GridLayout());
+            exComp.setData(columnIndicator);
+            addExpandableCompositeListener(exComp);
+            previewChartList.add(exComp);
+
             final Composite comp = toolkit.createComposite(exComp);
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -353,6 +362,45 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
             });
         }
+
+        if (!previewChartList.isEmpty()) {
+            this.previewChartCompsites = previewChartList.toArray(new Composite[previewChartList.size()]);
+        }
+    }
+
+    private void addExpandableCompositeListener(final ExpandableComposite composite) {
+
+        composite.addExpansionListener(new ExpansionAdapter() {
+
+            @Override
+            public void expansionStateChanging(ExpansionEvent e) {
+                TreeItem theSuitedTreeItem = getTheSuitedTreeItem(getTreeViewer().getTree().getItems(), composite);
+                if (e.getState()) {
+                    if (theSuitedTreeItem != null) {
+                        theSuitedTreeItem.setExpanded(true);
+                    }
+                } else {
+                    if (theSuitedTreeItem != null) {
+                        theSuitedTreeItem.setExpanded(false);
+                    }
+                }
+
+                getTreeViewer().getTree().setSelection(theSuitedTreeItem);
+            }
+
+        });
+    }
+
+    private TreeItem getTheSuitedTreeItem(TreeItem[] itemes, Composite composite) {
+        for (TreeItem item : itemes) {
+            ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
+
+            if (columnIndicator == composite.getData()) {
+                return item;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -526,6 +574,14 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
     public ColumnAnalysisHandler getAnalysisHandler() {
         return analysisHandler;
+    }
+
+    public ColumnIndicator[] getCurrentColumnIndicators() {
+        return currentColumnIndicators;
+    }
+
+    public Composite[] getPreviewChartCompsites() {
+        return previewChartCompsites;
     }
 
 }

@@ -124,9 +124,9 @@ public final class FormFactory {
                 list.add(form);
                 break;
             case FreqTimeSliceForm:
-                parameter = paramMap.get(FormEnum.BinsDesignerForm);
+                parameter = paramMap.get(FormEnum.TimeSlicesForm);
                 if (parameter == null) {
-                    parameter = new BinsDesignerParameter();
+                    parameter = new TimeSlicesParameter();
                 }
 
                 form = new FreqTimeSliceForm(parent, SWT.NONE, parameter);
