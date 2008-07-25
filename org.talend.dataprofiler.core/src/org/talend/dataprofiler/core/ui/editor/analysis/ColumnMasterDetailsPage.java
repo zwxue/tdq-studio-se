@@ -338,8 +338,9 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-
-                exComp.setExpanded(true);
+                if (!exComp.isDisposed()) {
+                    exComp.setExpanded(true);
+                }
             }
 
             exComp.setClient(comp);
