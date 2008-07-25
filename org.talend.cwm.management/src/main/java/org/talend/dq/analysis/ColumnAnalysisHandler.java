@@ -291,7 +291,7 @@ public class ColumnAnalysisHandler {
     }
 
     public String getConnectionName() {
-        return analysis.getContext().getConnection().getName();
+        return analysis.getContext().getConnection() == null ? "" : analysis.getContext().getConnection().getName();
     }
 
     public String getTableNames() {
