@@ -18,8 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -36,6 +34,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -45,8 +44,6 @@ import org.talend.dataquality.reports.TdReport;
  * DOC rli RemoveAnalysisActionProvider class global comment. Detailled comment
  */
 public class RemoveAnalysisAction extends Action {
-
-    private static Logger log = Logger.getLogger(RemoveAnalysisAction.class);
 
     public RemoveAnalysisAction() {
         super("Remove Analysis");
@@ -73,8 +70,8 @@ public class RemoveAnalysisAction extends Action {
                 return;
             }
             analysisObj = (Analysis) lastSegment;
-            IFile fileSegment = (IFile) paths[i].getSegment(paths[i].getSegmentCount() - 2);
-            parentReport = RepResourceFileHelper.getInstance().findReport(fileSegment);
+            IFolderNode folderNode = (IFolderNode) paths[i].getSegment(paths[i].getSegmentCount() - 2);
+            parentReport = (TdReport) folderNode.getParent();
             analysisList = removeMap.get(parentReport);
             if (analysisList == null) {
                 analysisList = new ArrayList<Analysis>();

@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
 import org.eclipse.emf.ecore.EObject;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 
 /**
  * @author rli
@@ -38,15 +37,5 @@ public interface IFolderNode {
     public EObject getParent();
 
     public abstract void loadChildren();
-
-    /**
-     * @return the dataProvider
-     */
-    public TdDataProvider getDataProvider();
-
-    /**
-     * @param dataProvider the dataProvider to set
-     */
-    public void setDataProvider(TdDataProvider dataProvider);
 
 }

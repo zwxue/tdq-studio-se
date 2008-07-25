@@ -26,10 +26,10 @@ import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
+import org.talend.dataprofiler.core.model.nodes.foldernode.AnalysesContainerFolder;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -51,8 +51,9 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             IFile file = (IFile) parentElement;
             if (file.getName().endsWith(PluginConstant.REP_SUFFIX)) {
                 TdReport findReport = RepResourceFileHelper.getInstance().findReport(file);
-                Object[] array = ReportHelper.getAnalyses(findReport).toArray();
-                return ComparatorsFactory.sort(array, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+                IFolderNode analysesCatainerNode = new AnalysesContainerFolder(findReport);
+                // Object[] array = ReportHelper.getAnalyses(findReport).toArray();
+                return new Object[] { analysesCatainerNode };
             } else if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
                 Analysis analysis = (Analysis) AnaResourceFileHelper.getInstance().getFileResource(file).getContents().get(0);
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
