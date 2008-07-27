@@ -128,6 +128,11 @@ public class ChartTableFactory {
             return null;
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
+         */
         public Color getForeground(Object element, int columnIndex) {
 
             ChartDataEntity entity = null;
@@ -136,18 +141,23 @@ public class ChartTableFactory {
             } else {
                 entity = (ChartDataEntity) element;
             }
-            switch (columnIndex) {
-            case 1:
-                String min = IndicatorHelper.getIndicatorThreshold(entity.getIndicator())[0];
-                String max = IndicatorHelper.getIndicatorThreshold(entity.getIndicator())[1];
-                String currentValue = getColumnText(entity, columnIndex);
-                if (min != null && max != null && currentValue != null) {
-                    if (Double.valueOf(max) < Double.valueOf(currentValue) || Double.valueOf(currentValue) < Double.valueOf(min)) {
-                        return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+            String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(entity.getIndicator());
+            if (indicatorThreshold != null) {
+
+                switch (columnIndex) {
+                case 1:
+                    String min = indicatorThreshold[0];
+                    String max = indicatorThreshold[1];
+                    String currentValue = getColumnText(entity, columnIndex);
+                    if (min != null && max != null && currentValue != null) {
+                        if (Double.valueOf(max) < Double.valueOf(currentValue)
+                                || Double.valueOf(currentValue) < Double.valueOf(min)) {
+                            return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                        }
+                        break;
                     }
-                    break;
+                default:
                 }
-            default:
             }
 
             return null;

@@ -118,7 +118,6 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         this(parent);
         this.masterPage = masterPage;
         this.setElements(masterPage.getCurrentColumnIndicators());
-        this.addTreeListener(this.tree);
         this.setDirty(false);
     }
 
@@ -170,6 +169,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
         ColumnViewerDND.installDND(newTree);
+        this.addTreeListener(newTree);
         return newTree;
     }
 
@@ -667,10 +667,15 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     }
 
     private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
+        Composite[] previewChartCompsites = masterPage.getPreviewChartCompsites();
+        if (previewChartCompsites == null) {
+            return null;
+        }
+
         Object obj = e.item.getData(COLUMN_INDICATOR_KEY);
         if (obj instanceof ColumnIndicator) {
             ColumnIndicator columnIndicator = (ColumnIndicator) obj;
-            for (Composite comp : masterPage.getPreviewChartCompsites()) {
+            for (Composite comp : previewChartCompsites) {
                 if (comp.getData() == columnIndicator) {
                     return (ExpandableComposite) comp;
                 }
