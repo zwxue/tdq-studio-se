@@ -49,9 +49,9 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -260,7 +260,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         label.setText("Modification date: ");
         text = new Text(container, SWT.WRAP);
         text.setEditable(false);
-        text.setText(new Date(fe2.getModificationStamp()).toString());
+        // MODSCA 20080728 changed to getLocalTimeStamp() because modificationStamp was 1 or 2 (=> year 1970)
+        // long modificationStamp = fe2.getModificationStamp();
+        long modificationStamp = fe2.getLocalTimeStamp();
+        text.setText(new Date(modificationStamp).toString());
         data = new GridData(GridData.FILL_HORIZONTAL);
         text.setLayoutData(data);
     }
@@ -281,7 +284,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         label.setText("Number of analyses: ");
         text = new Text(container, SWT.WRAP);
         text.setEditable(false);
-        int description = rep.getAnalysisMap().size();
+        int description = ReportHelper.getAnalyses(rep).size();
         text.setText("" + description);
         data = new GridData(GridData.FILL_HORIZONTAL);
         text.setLayoutData(data);
@@ -306,7 +309,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         label.setText("Nullable: ");
         text = new Text(container, SWT.WRAP);
         text.setEditable(false);
-        String purpose = column.getIsNullable().getName();
+        String purpose = column.getIsNullable().isNullable();
         boolean b = purpose == null;
         if (b) {
             text.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
@@ -331,11 +334,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         text = new Text(container, SWT.WRAP);
         text.setEditable(false);
         String purpose = TaggedValueHelper.getComment(element);
-        boolean b = purpose == null;
+        boolean b = (purpose == null || purpose.trim().length() == 0);
         if (b) {
             text.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         }
-        text.setText(b ? "null" : purpose);
+        text.setText(b ? "No comment" : purpose);
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
         text.setLayoutData(data);
     }
