@@ -42,7 +42,7 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
      * DOC qzhang RunConnAnalysisAction constructor comment.
      */
     public RunConnAnalysisAction(IFile file) {
-        super("running Connection analysis", ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
+        super("Create connection analysis", ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
         this.file = file;
     }
 
