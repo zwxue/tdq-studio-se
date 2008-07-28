@@ -200,14 +200,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
             TextParameters textParameter = parameters.getTextParameter();
             if (textParameter != null) {
+                if (textParameter.isUseNulls()) {
+                    colName = dbms().replaceNullsWithString(colName, "''");
+                }
                 if (textParameter.isIgnoreCase()) {
                     colName = dbms().toUpperCase(colName);
                 }
                 if (!textParameter.isUseBlank()) {
                     whereExpression.add(dbms().isNotBlank(colName));
-                }
-                if (textParameter.isUseNulls()) {
-                    colName = dbms().replaceNullsWithString(colName, "''");
                 }
             }
         }
@@ -265,7 +265,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             } else { // usual nominal frequencies
-                completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table);
+                completedSqlString = replaceVariablesLow(sqlGenericExpression.getBody(), colName, table, colName);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             }

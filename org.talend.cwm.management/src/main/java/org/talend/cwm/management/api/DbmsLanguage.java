@@ -528,6 +528,7 @@ public class DbmsLanguage {
 
         if (is(MYSQL)) {
             functions.put("CHAR_LENGTH", 1);
+            functions.put("IFNULL", 2);
             for (DateGrain grain : DateGrain.values()) {
                 functions.put(grain.getName(), 1);
             }
@@ -538,6 +539,7 @@ public class DbmsLanguage {
             functions.put("LENGTH", 1);
             functions.put("TO_CHAR", 2);
             functions.put("TO_NUMBER", 1);
+            functions.put("NVL", 2);
         }
 
         return functions;
