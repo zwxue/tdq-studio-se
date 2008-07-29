@@ -20,7 +20,10 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -47,8 +50,11 @@ import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.NullCountIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -822,6 +828,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         try {
             Connection connection = trc.getObject();
+            Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
 
             // execute the sql statement for each indicator
             Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
@@ -846,18 +853,78 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
                             + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
                 }
-            }
-            // get the results
 
-            // store the results in each indicator
+                // add mapping of analyzed elements to their indicators
+                MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
+
+            }
 
             connection.close();
+
+            // --- finalize indicators by setting the row count and null when they exist.
+            Set<ModelElement> analyzedElements = elementToIndicator.keySet();
+            for (ModelElement modelElement : analyzedElements) {
+                // get row count indicator
+                RowCountIndicator rowCount = getRowCountIndicator(modelElement, elementToIndicator);
+                // get null count indicator
+                NullCountIndicator nullCount = getNullCountIndicator(modelElement, elementToIndicator);
+
+                List<Indicator> list = elementToIndicator.get(modelElement);
+                for (Indicator ind : list) {
+                    // set row count value to each indicator
+                    if (rowCount != null) {
+                        ind.setCount(rowCount.getCount());
+                    }
+                    // set null count value to each indicator
+                    if (nullCount != null) {
+                        ind.setNullCount(nullCount.getNullCount());
+                    }
+                }
+
+            }
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
         }
         return ok;
+    }
+
+    /**
+     * DOC scorreia Comment method "getRowCountIndicator".
+     * 
+     * @param modelElement
+     * @param elementToIndicator
+     * @return
+     */
+    private RowCountIndicator getRowCountIndicator(ModelElement modelElement,
+            Map<ModelElement, List<Indicator>> elementToIndicator) {
+        List<Indicator> list = elementToIndicator.get(modelElement);
+        RowCountIndicator rowCountIndicator = null;
+        if (list == null) {
+            return rowCountIndicator;
+        }
+        for (Indicator indicator : list) {
+            if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
+                rowCountIndicator = (RowCountIndicator) indicator;
+            }
+        }
+        return rowCountIndicator;
+    }
+
+    private NullCountIndicator getNullCountIndicator(ModelElement modelElement,
+            Map<ModelElement, List<Indicator>> elementToIndicator) {
+        List<Indicator> list = elementToIndicator.get(modelElement);
+        NullCountIndicator nullCountIndicator = null;
+        if (list == null) {
+            return nullCountIndicator;
+        }
+        for (Indicator indicator : list) {
+            if (IndicatorsPackage.eINSTANCE.getNullCountIndicator().equals(indicator.eClass())) {
+                nullCountIndicator = (NullCountIndicator) indicator;
+            }
+        }
+        return nullCountIndicator;
     }
 
     /**
