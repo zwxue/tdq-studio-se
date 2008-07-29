@@ -85,6 +85,8 @@ public final class DqRepositoryViewService {
 
     /**
      * if true, the catalogs (and schemas) are stored in the same file as the data provider. Used for tests only.
+     * 
+     * TODO scorreia we will need to set it to false for big databases
      */
     private static final boolean CAT_WITH_PRV = true;
 
@@ -309,8 +311,8 @@ public final class DqRepositoryViewService {
         assert dataProvider != null;
         assert folderProvider != null;
 
-        IPath folderPath = ((folderProvider != null) && folderProvider.getFolder() != null) ? folderProvider.getFolderResource()
-                .getFullPath() : null;
+        IPath folderPath = ((folderProvider != null) && folderProvider.getFolderResource() != null) ? folderProvider
+                .getFolderResource().getFullPath() : null;
         if (folderPath == null) { // do not serialize data
             log.info("Data provider not serialized: no folder given.");
             return null;
@@ -359,7 +361,7 @@ public final class DqRepositoryViewService {
         Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(dataProvider);
         if (CAT_WITH_PRV) {
             ok = resource.getContents().addAll(schemata);
-            util.saveSingleResource(resource);
+            EMFUtil.saveSingleResource(resource);
         } else {
             ok = addElementsToOwnResources(schemata, folderProvider.getFolderResource(), util);
             util.save();
