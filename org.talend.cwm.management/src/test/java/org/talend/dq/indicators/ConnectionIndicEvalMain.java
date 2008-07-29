@@ -15,10 +15,12 @@ package org.talend.dq.indicators;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.talend.commons.emf.EMFUtil;
-import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.management.api.FolderProvider;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
@@ -70,15 +72,18 @@ public class ConnectionIndicEvalMain {
             // store in file
             File file = new File("out/myi." + IndicatorsPackage.eNAME);
             EMFUtil util = new EMFUtil();
+            util.setUsePlatformRelativePath(false);
             if (!util.addPoolToResourceSet(file.toURI().toString(), connectionIndicator)) {
                 System.err.println(util.getLastErrorMessage());
             }
 
-            File dp = new File("out");
-            FolderProvider fProv = new FolderProvider();
-            fProv.setFolder(dp);
-            DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, fProv);
-            // util.addPoolToResourceSet(dp, dataProvider);
+            File dp = new File("out/dp.prv");
+            // util.addPoolToResourceSet(new File("out/dp.prv"), dataProvider);
+            util.addPoolToResourceSet(dp, dataProvider);
+            List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(dataProvider);
+            for (TdCatalog tdCatalog : tdCatalogs) {
+                util.addPoolToResourceSet(new File("out/" + tdCatalog.getName() + "." + FactoriesUtil.CAT), tdCatalog);
+            }
             util.save();
             ConnectionUtils.closeConnection(connection);
         } catch (SQLException e) {

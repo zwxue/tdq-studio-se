@@ -533,10 +533,19 @@
       <eClassifiers xsi:type="ecore:EClass" name="TableIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="rowCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
       </eClassifiers>
-      <eClassifiers xsi:type="ecore:EClass" name="ConnectionIndicator" eSuperTypes="#//indicators/schema/SchemaIndicator">
+      <eClassifiers xsi:type="ecore:EClass" name="ConnectionIndicator" eSuperTypes="#//indicators/schema/CatalogIndicator">
+        <eOperations name="addCatalogIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+          <eParameters name="catalogIndicator" eType="#//indicators/schema/CatalogIndicator"/>
+        </eOperations>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="catalogIndicators"
+            upperBound="-1" eType="#//indicators/schema/CatalogIndicator" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="catalogCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="CatalogIndicator" eSuperTypes="#//indicators/schema/SchemaIndicator">
         <eOperations name="addSchemaIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
           <eParameters name="schemaIndicator" eType="#//indicators/schema/SchemaIndicator"/>
         </eOperations>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="schemaCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="schemaIndicators" upperBound="-1"
             eType="#//indicators/schema/SchemaIndicator" containment="true"/>
       </eClassifiers>

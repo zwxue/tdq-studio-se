@@ -651,13 +651,23 @@ public interface SchemaPackage extends EPackage {
     int CONNECTION_INDICATOR = 2;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.schema.impl.CatalogIndicatorImpl <em>Catalog Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.schema.impl.CatalogIndicatorImpl
+     * @see org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl#getCatalogIndicator()
+     * @generated
+     */
+    int CATALOG_INDICATOR = 3;
+
+    /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__NAME = SCHEMA_INDICATOR__NAME;
+    int CATALOG_INDICATOR__NAME = SCHEMA_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -666,7 +676,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__VISIBILITY = SCHEMA_INDICATOR__VISIBILITY;
+    int CATALOG_INDICATOR__VISIBILITY = SCHEMA_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -675,7 +685,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__CLIENT_DEPENDENCY = SCHEMA_INDICATOR__CLIENT_DEPENDENCY;
+    int CATALOG_INDICATOR__CLIENT_DEPENDENCY = SCHEMA_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -684,7 +694,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__SUPPLIER_DEPENDENCY = SCHEMA_INDICATOR__SUPPLIER_DEPENDENCY;
+    int CATALOG_INDICATOR__SUPPLIER_DEPENDENCY = SCHEMA_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -693,7 +703,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__CONSTRAINT = SCHEMA_INDICATOR__CONSTRAINT;
+    int CATALOG_INDICATOR__CONSTRAINT = SCHEMA_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -702,7 +712,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__NAMESPACE = SCHEMA_INDICATOR__NAMESPACE;
+    int CATALOG_INDICATOR__NAMESPACE = SCHEMA_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -711,7 +721,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__IMPORTER = SCHEMA_INDICATOR__IMPORTER;
+    int CATALOG_INDICATOR__IMPORTER = SCHEMA_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -720,7 +730,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__STEREOTYPE = SCHEMA_INDICATOR__STEREOTYPE;
+    int CATALOG_INDICATOR__STEREOTYPE = SCHEMA_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -729,7 +739,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__TAGGED_VALUE = SCHEMA_INDICATOR__TAGGED_VALUE;
+    int CATALOG_INDICATOR__TAGGED_VALUE = SCHEMA_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -738,7 +748,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__DOCUMENT = SCHEMA_INDICATOR__DOCUMENT;
+    int CATALOG_INDICATOR__DOCUMENT = SCHEMA_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -747,7 +757,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__DESCRIPTION = SCHEMA_INDICATOR__DESCRIPTION;
+    int CATALOG_INDICATOR__DESCRIPTION = SCHEMA_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -756,7 +766,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__RESPONSIBLE_PARTY = SCHEMA_INDICATOR__RESPONSIBLE_PARTY;
+    int CATALOG_INDICATOR__RESPONSIBLE_PARTY = SCHEMA_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -765,7 +775,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__ELEMENT_NODE = SCHEMA_INDICATOR__ELEMENT_NODE;
+    int CATALOG_INDICATOR__ELEMENT_NODE = SCHEMA_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -774,7 +784,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__SET = SCHEMA_INDICATOR__SET;
+    int CATALOG_INDICATOR__SET = SCHEMA_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -783,7 +793,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__RENDERED_OBJECT = SCHEMA_INDICATOR__RENDERED_OBJECT;
+    int CATALOG_INDICATOR__RENDERED_OBJECT = SCHEMA_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -792,7 +802,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__VOCABULARY_ELEMENT = SCHEMA_INDICATOR__VOCABULARY_ELEMENT;
+    int CATALOG_INDICATOR__VOCABULARY_ELEMENT = SCHEMA_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -801,7 +811,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__MEASUREMENT = SCHEMA_INDICATOR__MEASUREMENT;
+    int CATALOG_INDICATOR__MEASUREMENT = SCHEMA_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -810,7 +820,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__CHANGE_REQUEST = SCHEMA_INDICATOR__CHANGE_REQUEST;
+    int CATALOG_INDICATOR__CHANGE_REQUEST = SCHEMA_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -819,7 +829,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__DASDL_PROPERTY = SCHEMA_INDICATOR__DASDL_PROPERTY;
+    int CATALOG_INDICATOR__DASDL_PROPERTY = SCHEMA_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -828,7 +838,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__COUNT = SCHEMA_INDICATOR__COUNT;
+    int CATALOG_INDICATOR__COUNT = SCHEMA_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -837,7 +847,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__NULL_COUNT = SCHEMA_INDICATOR__NULL_COUNT;
+    int CATALOG_INDICATOR__NULL_COUNT = SCHEMA_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -846,7 +856,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__PARAMETERS = SCHEMA_INDICATOR__PARAMETERS;
+    int CATALOG_INDICATOR__PARAMETERS = SCHEMA_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -855,7 +865,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__ANALYZED_ELEMENT = SCHEMA_INDICATOR__ANALYZED_ELEMENT;
+    int CATALOG_INDICATOR__ANALYZED_ELEMENT = SCHEMA_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -864,7 +874,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__DATAMINING_TYPE = SCHEMA_INDICATOR__DATAMINING_TYPE;
+    int CATALOG_INDICATOR__DATAMINING_TYPE = SCHEMA_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -873,7 +883,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__INDICATOR_DEFINITION = SCHEMA_INDICATOR__INDICATOR_DEFINITION;
+    int CATALOG_INDICATOR__INDICATOR_DEFINITION = SCHEMA_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -882,7 +892,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__INSTANTIATED_EXPRESSIONS = SCHEMA_INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int CATALOG_INDICATOR__INSTANTIATED_EXPRESSIONS = SCHEMA_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -891,7 +901,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__TABLE_COUNT = SCHEMA_INDICATOR__TABLE_COUNT;
+    int CATALOG_INDICATOR__TABLE_COUNT = SCHEMA_INDICATOR__TABLE_COUNT;
 
     /**
      * The feature id for the '<em><b>Key Count</b></em>' attribute.
@@ -900,7 +910,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__KEY_COUNT = SCHEMA_INDICATOR__KEY_COUNT;
+    int CATALOG_INDICATOR__KEY_COUNT = SCHEMA_INDICATOR__KEY_COUNT;
 
     /**
      * The feature id for the '<em><b>Index Count</b></em>' attribute.
@@ -909,7 +919,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__INDEX_COUNT = SCHEMA_INDICATOR__INDEX_COUNT;
+    int CATALOG_INDICATOR__INDEX_COUNT = SCHEMA_INDICATOR__INDEX_COUNT;
 
     /**
      * The feature id for the '<em><b>View Count</b></em>' attribute.
@@ -918,7 +928,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__VIEW_COUNT = SCHEMA_INDICATOR__VIEW_COUNT;
+    int CATALOG_INDICATOR__VIEW_COUNT = SCHEMA_INDICATOR__VIEW_COUNT;
 
     /**
      * The feature id for the '<em><b>Trigger Count</b></em>' attribute.
@@ -927,7 +937,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__TRIGGER_COUNT = SCHEMA_INDICATOR__TRIGGER_COUNT;
+    int CATALOG_INDICATOR__TRIGGER_COUNT = SCHEMA_INDICATOR__TRIGGER_COUNT;
 
     /**
      * The feature id for the '<em><b>Total Row Count</b></em>' attribute.
@@ -936,7 +946,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__TOTAL_ROW_COUNT = SCHEMA_INDICATOR__TOTAL_ROW_COUNT;
+    int CATALOG_INDICATOR__TOTAL_ROW_COUNT = SCHEMA_INDICATOR__TOTAL_ROW_COUNT;
 
     /**
      * The feature id for the '<em><b>Table Indicators</b></em>' containment reference list.
@@ -945,7 +955,16 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__TABLE_INDICATORS = SCHEMA_INDICATOR__TABLE_INDICATORS;
+    int CATALOG_INDICATOR__TABLE_INDICATORS = SCHEMA_INDICATOR__TABLE_INDICATORS;
+
+    /**
+     * The feature id for the '<em><b>Schema Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CATALOG_INDICATOR__SCHEMA_COUNT = SCHEMA_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The feature id for the '<em><b>Schema Indicators</b></em>' containment reference list.
@@ -954,7 +973,349 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__SCHEMA_INDICATORS = SCHEMA_INDICATOR_FEATURE_COUNT + 0;
+    int CATALOG_INDICATOR__SCHEMA_INDICATORS = SCHEMA_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The number of structural features of the '<em>Catalog Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CATALOG_INDICATOR_FEATURE_COUNT = SCHEMA_INDICATOR_FEATURE_COUNT + 2;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__NAME = CATALOG_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__VISIBILITY = CATALOG_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__CLIENT_DEPENDENCY = CATALOG_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__SUPPLIER_DEPENDENCY = CATALOG_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__CONSTRAINT = CATALOG_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__NAMESPACE = CATALOG_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__IMPORTER = CATALOG_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__STEREOTYPE = CATALOG_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__TAGGED_VALUE = CATALOG_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__DOCUMENT = CATALOG_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__DESCRIPTION = CATALOG_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__RESPONSIBLE_PARTY = CATALOG_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__ELEMENT_NODE = CATALOG_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__SET = CATALOG_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__RENDERED_OBJECT = CATALOG_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__VOCABULARY_ELEMENT = CATALOG_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__MEASUREMENT = CATALOG_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__CHANGE_REQUEST = CATALOG_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__DASDL_PROPERTY = CATALOG_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__COUNT = CATALOG_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__NULL_COUNT = CATALOG_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__PARAMETERS = CATALOG_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__ANALYZED_ELEMENT = CATALOG_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__DATAMINING_TYPE = CATALOG_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__INDICATOR_DEFINITION = CATALOG_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__INSTANTIATED_EXPRESSIONS = CATALOG_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Table Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__TABLE_COUNT = CATALOG_INDICATOR__TABLE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Key Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__KEY_COUNT = CATALOG_INDICATOR__KEY_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Index Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__INDEX_COUNT = CATALOG_INDICATOR__INDEX_COUNT;
+
+    /**
+     * The feature id for the '<em><b>View Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__VIEW_COUNT = CATALOG_INDICATOR__VIEW_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Trigger Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__TRIGGER_COUNT = CATALOG_INDICATOR__TRIGGER_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Total Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__TOTAL_ROW_COUNT = CATALOG_INDICATOR__TOTAL_ROW_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Table Indicators</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__TABLE_INDICATORS = CATALOG_INDICATOR__TABLE_INDICATORS;
+
+    /**
+     * The feature id for the '<em><b>Schema Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__SCHEMA_COUNT = CATALOG_INDICATOR__SCHEMA_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Schema Indicators</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__SCHEMA_INDICATORS = CATALOG_INDICATOR__SCHEMA_INDICATORS;
+
+    /**
+     * The feature id for the '<em><b>Catalog Indicators</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__CATALOG_INDICATORS = CATALOG_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Catalog Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__CATALOG_COUNT = CATALOG_INDICATOR_FEATURE_COUNT + 1;
 
     /**
      * The number of structural features of the '<em>Connection Indicator</em>' class.
@@ -963,7 +1324,7 @@ public interface SchemaPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR_FEATURE_COUNT = SCHEMA_INDICATOR_FEATURE_COUNT + 1;
+    int CONNECTION_INDICATOR_FEATURE_COUNT = CATALOG_INDICATOR_FEATURE_COUNT + 2;
 
 
     /**
@@ -1030,15 +1391,58 @@ public interface SchemaPackage extends EPackage {
     EClass getConnectionIndicator();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.indicators.schema.ConnectionIndicator#getSchemaIndicators <em>Schema Indicators</em>}'.
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.indicators.schema.ConnectionIndicator#getCatalogIndicators <em>Catalog Indicators</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference list '<em>Schema Indicators</em>'.
-     * @see org.talend.dataquality.indicators.schema.ConnectionIndicator#getSchemaIndicators()
+     * @return the meta object for the containment reference list '<em>Catalog Indicators</em>'.
+     * @see org.talend.dataquality.indicators.schema.ConnectionIndicator#getCatalogIndicators()
      * @see #getConnectionIndicator()
      * @generated
      */
-    EReference getConnectionIndicator_SchemaIndicators();
+    EReference getConnectionIndicator_CatalogIndicators();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.ConnectionIndicator#getCatalogCount <em>Catalog Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Catalog Count</em>'.
+     * @see org.talend.dataquality.indicators.schema.ConnectionIndicator#getCatalogCount()
+     * @see #getConnectionIndicator()
+     * @generated
+     */
+    EAttribute getConnectionIndicator_CatalogCount();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.schema.CatalogIndicator <em>Catalog Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Catalog Indicator</em>'.
+     * @see org.talend.dataquality.indicators.schema.CatalogIndicator
+     * @generated
+     */
+    EClass getCatalogIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.CatalogIndicator#getSchemaCount <em>Schema Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Schema Count</em>'.
+     * @see org.talend.dataquality.indicators.schema.CatalogIndicator#getSchemaCount()
+     * @see #getCatalogIndicator()
+     * @generated
+     */
+    EAttribute getCatalogIndicator_SchemaCount();
+
+    /**
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.indicators.schema.CatalogIndicator#getSchemaIndicators <em>Schema Indicators</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Schema Indicators</em>'.
+     * @see org.talend.dataquality.indicators.schema.CatalogIndicator#getSchemaIndicators()
+     * @see #getCatalogIndicator()
+     * @generated
+     */
+    EReference getCatalogIndicator_SchemaIndicators();
 
     /**
      * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableCount <em>Table Count</em>}'.
@@ -1172,12 +1576,46 @@ public interface SchemaPackage extends EPackage {
         EClass CONNECTION_INDICATOR = eINSTANCE.getConnectionIndicator();
 
         /**
+         * The meta object literal for the '<em><b>Catalog Indicators</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference CONNECTION_INDICATOR__CATALOG_INDICATORS = eINSTANCE.getConnectionIndicator_CatalogIndicators();
+
+        /**
+         * The meta object literal for the '<em><b>Catalog Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute CONNECTION_INDICATOR__CATALOG_COUNT = eINSTANCE.getConnectionIndicator_CatalogCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.schema.impl.CatalogIndicatorImpl <em>Catalog Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.schema.impl.CatalogIndicatorImpl
+         * @see org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl#getCatalogIndicator()
+         * @generated
+         */
+        EClass CATALOG_INDICATOR = eINSTANCE.getCatalogIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Schema Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute CATALOG_INDICATOR__SCHEMA_COUNT = eINSTANCE.getCatalogIndicator_SchemaCount();
+
+        /**
          * The meta object literal for the '<em><b>Schema Indicators</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
-        EReference CONNECTION_INDICATOR__SCHEMA_INDICATORS = eINSTANCE.getConnectionIndicator_SchemaIndicators();
+        EReference CATALOG_INDICATOR__SCHEMA_INDICATORS = eINSTANCE.getCatalogIndicator_SchemaIndicators();
 
         /**
          * The meta object literal for the '<em><b>Table Count</b></em>' attribute feature.

@@ -36,6 +36,7 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -141,7 +142,7 @@ public class ImportPatternsWizard extends Wizard {
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
         Expression expression = CoreFactory.eINSTANCE.createExpression();
         expression.setBody(reg);
-        expression.setLanguage("ALL_DATABASE_TYPE");
+        expression.setLanguage(PatternMasterDetailsPage.ALL_DATABASE_TYPE);
         regularExpr.setExpression(expression);
         regularExpr.setExpressionType(ExpressionType.REGEXP.getName());
         pattern.getComponents().add(regularExpr);

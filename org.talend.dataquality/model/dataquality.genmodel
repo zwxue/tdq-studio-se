@@ -324,9 +324,17 @@
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/TableIndicator/rowCount"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/ConnectionIndicator">
-          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/schema/ConnectionIndicator/schemaIndicators"/>
-          <genOperations ecoreOperation="dataquality.ecore#//indicators/schema/ConnectionIndicator/addSchemaIndicator">
-            <genParameters ecoreParameter="dataquality.ecore#//indicators/schema/ConnectionIndicator/addSchemaIndicator/schemaIndicator"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/schema/ConnectionIndicator/catalogIndicators"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/ConnectionIndicator/catalogCount"/>
+          <genOperations ecoreOperation="dataquality.ecore#//indicators/schema/ConnectionIndicator/addCatalogIndicator">
+            <genParameters ecoreParameter="dataquality.ecore#//indicators/schema/ConnectionIndicator/addCatalogIndicator/catalogIndicator"/>
+          </genOperations>
+        </genClasses>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/schema/CatalogIndicator">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/CatalogIndicator/schemaCount"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/schema/CatalogIndicator/schemaIndicators"/>
+          <genOperations ecoreOperation="dataquality.ecore#//indicators/schema/CatalogIndicator/addSchemaIndicator">
+            <genParameters ecoreParameter="dataquality.ecore#//indicators/schema/CatalogIndicator/addSchemaIndicator/schemaIndicator"/>
           </genOperations>
         </genClasses>
       </nestedGenPackages>

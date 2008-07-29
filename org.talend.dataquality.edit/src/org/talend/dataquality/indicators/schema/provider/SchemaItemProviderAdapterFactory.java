@@ -145,6 +145,29 @@ public class SchemaItemProviderAdapterFactory extends SchemaAdapterFactory imple
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.schema.CatalogIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected CatalogIndicatorItemProvider catalogIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.schema.CatalogIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createCatalogIndicatorAdapter() {
+        if (catalogIndicatorItemProvider == null) {
+            catalogIndicatorItemProvider = new CatalogIndicatorItemProvider(this);
+        }
+
+        return catalogIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -246,6 +269,7 @@ public class SchemaItemProviderAdapterFactory extends SchemaAdapterFactory imple
         if (schemaIndicatorItemProvider != null) schemaIndicatorItemProvider.dispose();
         if (tableIndicatorItemProvider != null) tableIndicatorItemProvider.dispose();
         if (connectionIndicatorItemProvider != null) connectionIndicatorItemProvider.dispose();
+        if (catalogIndicatorItemProvider != null) catalogIndicatorItemProvider.dispose();
     }
 
 }

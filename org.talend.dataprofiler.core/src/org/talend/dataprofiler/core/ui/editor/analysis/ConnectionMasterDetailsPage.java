@@ -250,10 +250,11 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         table.setBackgroundMode(SWT.INHERIT_FORCE);
         table.setLinesVisible(true);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(table);
-        List<SchemaIndicator> indicatorList = null;
+        List<? extends SchemaIndicator> indicatorList = null;
         if (this.connectionAnalysis.getResults().getIndicators().size() > 0) {
             ConnectionIndicator conIndicator = (ConnectionIndicator) connectionAnalysis.getResults().getIndicators().get(0);
-            indicatorList = conIndicator.getSchemaIndicators();
+            indicatorList = conIndicator.getCatalogIndicators();
+            // indicatorList = conIndicator.getSchemaIndicators();
         } else {
             indicatorList = new ArrayList<SchemaIndicator>();
         }
@@ -261,10 +262,10 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         AbstractStatisticalViewerProvider provider;
         if (catalogs.size() > 0) {
             createCatalogTableColumns(table);
-            provider = new SchemaViewerProvier();
+            provider = new CatalogViewerProvier();
         } else {
             createSchemaTableColumns(table);
-            provider = new CatalogViewerProvier();
+            provider = new SchemaViewerProvier();
         }
         statisticalViewer.setLabelProvider(provider);
         statisticalViewer.setContentProvider(provider);
@@ -423,14 +424,12 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
                 // SCorreia TODO text = schemaIndicator.getschemaData()?????
                 return text + PluginConstant.DEFAULT_INT_VALUE;
             case 3:
-                // text = schemaIndicator.getrowsSchema()??
                 return text + PluginConstant.DEFAULT_INT_VALUE;
             case 4:
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getTableCount();
                 return text;
             case 5:
-                // text = schemaIndicator.getTableRowsCount()?????
-                return text + PluginConstant.DEFAULT_INT_VALUE;
+                return text + getRowCountPerTable(schemaIndicator);
             case 6:
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getKeyCount();
                 return text;
@@ -460,8 +459,7 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getTableCount();
                 return text;
             case 3:
-                // SCorreia TODO text = schemaIndicator.getTableRowsCount()?????
-                return text + PluginConstant.DEFAULT_INT_VALUE;
+                return text + getRowCountPerTable(schemaIndicator);
             case 4:
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getKeyCount();
                 return text;
@@ -475,4 +473,9 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         }
     }
 
+    private static String getRowCountPerTable(SchemaIndicator schemaIndicator) {
+        Double frac = Double.valueOf(schemaIndicator.getTotalRowCount()) / schemaIndicator.getTableCount();
+        // TODO rli format number as 0.00
+        return frac.toString();
+    }
 }

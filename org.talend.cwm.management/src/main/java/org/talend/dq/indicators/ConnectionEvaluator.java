@@ -21,17 +21,21 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClassifier;
 import org.talend.cwm.builders.AbstractTableBuilder;
 import org.talend.cwm.builders.TableBuilder;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.api.DbmsLanguage;
+import org.talend.cwm.management.api.DbmsLanguageFactory;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -51,15 +55,14 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
     // --- indicators for the connection (sum of all indicators)
     private ConnectionIndicator connectionIndicator;
 
-    // private int connPkCount;
-    //
-    // private long connTotalRowCount;
-    //
-    // private int connIdxCount;
-    //
-    // private int connViewCount;
-    //
-    // private int connTableCount;
+    private DbmsLanguage dbms() {
+        if (this.dbmsLanguage == null) {
+            DataManager dm = this.getAnalyzedElements().iterator().next();
+            this.dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+            this.dbmsLanguage.setDbQuoteString(this.dbmsLanguage.getQuoteIdentifier());
+        }
+        return this.dbmsLanguage;
+    }
 
     private void resetCounts() {
         if (this.connectionIndicator != null) {
@@ -68,11 +71,6 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
                 log.debug("connection indicator reset: " + reset);
             }
         }
-        // this.connPkCount = 0;
-        // this.connTotalRowCount = 0L;
-        // this.connIdxCount = 0;
-        // this.connTableCount = 0;
-        // this.connViewCount = 0;
     }
 
     private void printCounts() {
@@ -127,6 +125,7 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
             return ok;
         }
 
+        connectionIndicator.setAnalyzedElement(dataProvider);
         this.resetCounts();
 
         // CatalogBuilder builder = new CatalogBuilder(connection);
@@ -134,29 +133,38 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
         // Collection<TdSchema> schemata = builder.getSchemata();
 
         List<TdCatalog> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
-        List<TdSchema> schemata = DataProviderHelper.getTdSchema(dataProvider);
 
         String tablePattern = null; // TODO scorreia get pattern from analysis parameters
 
         TableBuilder tableBuilder = new TableBuilder(connection); // TODO generalize
 
-        if (catalogs.isEmpty()) {
+        if (catalogs.isEmpty()) { // no catalog, only schemata
+            List<TdSchema> schemata = DataProviderHelper.getTdSchema(dataProvider);
             for (TdSchema tdSchema : schemata) {
-                evalSchemaIndic(null, tdSchema, tableBuilder, tablePattern, ok);
+                evalSchemaIndic(this.connectionIndicator, tdSchema, tableBuilder, tablePattern, ok);
             }
-        } else {
+            this.connectionIndicator.setSchemaCount(schemata.size());
+        } else { // catalogs exist
             for (TdCatalog tdCatalog : catalogs) {
                 String catName = tdCatalog.getName();
                 connection.setCatalog(catName);
-                if (schemata.isEmpty()) {
-                    evalSchemaIndic(tdCatalog, null, tableBuilder, tablePattern, ok);
+                List<TdSchema> schemas = CatalogHelper.getSchemas(tdCatalog);
+                if (schemas.isEmpty()) { // no schema
+                    evalCatalogIndic(this.connectionIndicator, tdCatalog, tableBuilder, tablePattern, ok);
                 } else {
+                    CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
+                    catalogIndic.setAnalyzedElement(tdCatalog);
+                    this.connectionIndicator.addCatalogIndicator(catalogIndic);
                     // --- create SchemaIndicator for each pair of catalog schema
-                    for (TdSchema tdSchema : schemata) {
-                        evalSchemaIndic(tdCatalog, tdSchema, tableBuilder, tablePattern, ok);
+                    for (TdSchema tdSchema : schemas) {
+                        evalSchemaIndic(connectionIndicator, catalogIndic, tdCatalog, tdSchema, tableBuilder, tablePattern, ok);
                     }
+                    // increment schema count
+                    this.connectionIndicator.setSchemaCount(this.connectionIndicator.getSchemaCount() + schemas.size());
                 }
             }
+            // set nb catalogs
+            this.connectionIndicator.setCatalogCount(catalogs.size());
         }
 
         // get the analyzed schemata
@@ -188,19 +196,85 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
         return ok;
     }
 
-    private void evalSchemaIndic(TdCatalog tdCatalog, TdSchema tdSchema,
-            AbstractTableBuilder<? extends NamedColumnSet> tableBuilder, String tablePattern, ReturnCode ok) throws SQLException {
+    /**
+     * DOC scorreia Comment method "evalSchemaIndic".
+     * 
+     * @param connIndicator
+     * @param tdCatalog
+     * @param tableBuilder
+     * @param tablePattern
+     * @param ok
+     * @throws SQLException
+     */
+    private void evalCatalogIndic(ConnectionIndicator connIndicator, TdCatalog tdCatalog, TableBuilder tableBuilder,
+            String tablePattern, ReturnCode ok) throws SQLException {
         String catName = tdCatalog != null ? tdCatalog.getName() : null;
-        String schemaName = tdSchema != null ? tdSchema.getName() : null;
-        // --- create SchemaIndicator for each catalog
-        SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
+        // --- create CatalogIndicator for each catalog
+        CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
         // add it to list of indicators
-        connectionIndicator.addSchemaIndicator(schemaIndic);
+        connIndicator.addCatalogIndicator(catalogIndic);
 
         // this.storeIndicator(new CatalogSchema(catName, null), schemaIndic);
         // List<Indicator> indicators = getIndicators(new CatalogSchema(catName, null));
         // indicators.get(0)
-        schemaIndic.setAnalyzedElement(tdCatalog == null ? tdSchema : tdCatalog);
+        catalogIndic.setAnalyzedElement(tdCatalog);
+        int tableCount = 0;
+        List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(catName, null, tablePattern);
+        for (NamedColumnSet t : tables) {
+            String tableName = t.getName();
+            tableCount++;
+            getRowCount(catName, null, tableName, catalogIndic, ok);
+        }
+        catalogIndic.setTableCount(tableCount);
+    }
+
+    /**
+     * DOC scorreia Comment method "evalSchemaIndic".
+     * 
+     * @param connIndicator
+     * @param tdSchema
+     * @param tableBuilder
+     * @param tablePattern
+     * @param ok
+     * @throws SQLException
+     */
+    private void evalSchemaIndic(ConnectionIndicator connIndicator, TdSchema tdSchema,
+            AbstractTableBuilder<? extends NamedColumnSet> tableBuilder, String tablePattern, ReturnCode ok) throws SQLException {
+        String schemaName = tdSchema != null ? tdSchema.getName() : null;
+        // --- create SchemaIndicator for each catalog
+        SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
+        // add it to list of indicators
+        connIndicator.addSchemaIndicator(schemaIndic);
+
+        // this.storeIndicator(new CatalogSchema(catName, null), schemaIndic);
+        // List<Indicator> indicators = getIndicators(new CatalogSchema(catName, null));
+        // indicators.get(0)
+        schemaIndic.setAnalyzedElement(tdSchema);
+        int tableCount = 0;
+        List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(null, schemaName, tablePattern);
+        for (NamedColumnSet t : tables) {
+            String tableName = t.getName();
+            tableCount++;
+            getRowCount(null, schemaName, tableName, schemaIndic, ok);
+        }
+        schemaIndic.setTableCount(tableCount);
+    }
+
+    private void evalSchemaIndic(ConnectionIndicator connIndicator, CatalogIndicator catalogIndic, TdCatalog tdCatalog,
+            TdSchema tdSchema, AbstractTableBuilder<? extends NamedColumnSet> tableBuilder, String tablePattern, ReturnCode ok)
+            throws SQLException {
+        String catName = tdCatalog != null ? tdCatalog.getName() : null;
+        String schemaName = tdSchema != null ? tdSchema.getName() : null;
+
+        // --- create SchemaIndicator for each catalog
+        SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
+        // add it to list of indicators
+        catalogIndic.addSchemaIndicator(schemaIndic);
+
+        // this.storeIndicator(new CatalogSchema(catName, null), schemaIndic);
+        // List<Indicator> indicators = getIndicators(new CatalogSchema(catName, null));
+        // indicators.get(0)
+        schemaIndic.setAnalyzedElement(tdSchema != null ? tdSchema : tdCatalog);
         int tableCount = 0;
         List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(catName, schemaName, tablePattern);
         for (NamedColumnSet t : tables) {
@@ -209,6 +283,10 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
             getRowCount(catName, schemaName, tableName, schemaIndic, ok);
         }
         schemaIndic.setTableCount(tableCount);
+
+        // --- increment values of catalog indicator
+        catalogIndic.setTableCount(catalogIndic.getTableCount() + tableCount);
+        catalogIndic.setTotalRowCount(catalogIndic.getTotalRowCount() + schemaIndic.getTotalRowCount());
     }
 
     // private ReturnCode executeOneQuery(String catalogName, String schemaPattern, String tablePattern, TableType[]
@@ -263,15 +341,33 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
      */
     private void getRowCount(String catalog, String schemaPattern, String table, SchemaIndicator schemaIndic, ReturnCode ok)
             throws SQLException {
-        String nameSpace = catalog == null ? schemaPattern : catalog;
-        String sqlStatement = SELECT_COUNT_FROM + nameSpace + "." + table;
+        String quCatalog = catalog == null ? null : dbms().quote(catalog);
+        String quSchema = schemaPattern == null ? null : dbms().quote(schemaPattern);
+        String quTable = dbms().quote(table);
+
+        String sqlStatement = SELECT_COUNT_FROM + dbms().toQualifiedName(quCatalog, quSchema, quTable);
         // Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY,
         // ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
         Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 
         // not needed here statement.setFetchSize(fetchSize);
-        statement.execute(sqlStatement);
+        try {
+            if (log.isInfoEnabled()) {
+                log.info("Executing SQL statement: " + sqlStatement);
+            }
+            statement.execute(sqlStatement);
+        } catch (SQLException e) {
+            log.warn(e.getMessage() + " for SQL statement: " + sqlStatement);
+            if (log.isDebugEnabled()) {
+                log.debug(e, e);
+            }
+            // some tables on Oracle give the following exception:
+            // ORA-25191: cannot reference overflow table of an index-organized table
+            ok.setReturnCode(e.getLocalizedMessage(), false);
+            statement.close();
+            return;
+        }
 
         // get the results
         ResultSet resultSet = statement.getResultSet();
@@ -289,7 +385,7 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
             Long count = Long.valueOf(str);
             totalRowCount += count;
             if (log.isDebugEnabled()) {
-                log.debug(catalog + "/" + schemaPattern + "/" + table + ": " + count);
+                log.debug(quCatalog + "/" + quSchema + "/" + quTable + ": " + count);
 
                 // // --- give row to handle to indicators
                 // for (SchemaIndicator indicator : indicators) {
@@ -306,26 +402,43 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
 
         // // ---- pk
         int pkCount = schemaIndic.getKeyCount();
-        ResultSet pk = getConnection().getMetaData().getPrimaryKeys(catalog, schemaPattern, table);
-        while (pk.next()) {
-            pkCount += 1;
+        ResultSet pk = null;
+        try {
+            pk = getConnection().getMetaData().getPrimaryKeys(quCatalog, quSchema, quTable);
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
         }
-        // ResultSetUtils.printResultSet(pk, 0);
-        pk.close();
+        if (pk != null) {
+            while (pk.next()) {
+                pkCount += 1;
+            }
+            // ResultSetUtils.printResultSet(pk, 0);
+            pk.close();
+        }
         schemaIndic.setKeyCount(pkCount);
 
         int idxCount = schemaIndic.getIndexCount();
-        ResultSet idx = getConnection().getMetaData().getIndexInfo(catalog, schemaPattern, table, false, false);
-        // TODO unicity of index could be a parameter
-        while (idx.next()) {
-            idxCount += 1;
+        ResultSet idx = null;
+        try {
+            idx = getConnection().getMetaData().getIndexInfo(quCatalog, quSchema, quTable, false, false);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        idx.close();
+        // TODO unicity of index could be a parameter
+        if (idx != null) {
+            while (idx.next()) {
+                idxCount += 1;
+            }
+            idx.close();
+        }
         schemaIndic.setIndexCount(idxCount);
 
-        // TODO triggers
-        // connection.getMetaData().get
+        // --- triggers (JDBC API cannot get triggers)
 
+        // -- release JDBC resources
+        statement.close();
     }
 
 }

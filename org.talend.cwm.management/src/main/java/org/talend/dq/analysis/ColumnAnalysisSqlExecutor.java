@@ -936,7 +936,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
             myResultSet.add(result);
         }
+        // -- release resources
         resultSet.close();
+        statement.close();
 
         return myResultSet;
     }

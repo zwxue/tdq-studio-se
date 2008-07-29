@@ -63,6 +63,7 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
             case SchemaPackage.SCHEMA_INDICATOR: return createSchemaIndicator();
             case SchemaPackage.TABLE_INDICATOR: return createTableIndicator();
             case SchemaPackage.CONNECTION_INDICATOR: return createConnectionIndicator();
+            case SchemaPackage.CATALOG_INDICATOR: return createCatalogIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -96,6 +97,16 @@ public class SchemaFactoryImpl extends EFactoryImpl implements SchemaFactory {
     public ConnectionIndicator createConnectionIndicator() {
         ConnectionIndicatorImpl connectionIndicator = new ConnectionIndicatorImpl();
         return connectionIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public CatalogIndicator createCatalogIndicator() {
+        CatalogIndicatorImpl catalogIndicator = new CatalogIndicatorImpl();
+        return catalogIndicator;
     }
 
     /**

@@ -6,6 +6,7 @@
 package org.talend.dataquality.indicators.schema.impl;
 
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -14,7 +15,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.impl.CompositeIndicatorImpl;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
@@ -487,11 +487,7 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
         this.indexCount = INDEX_COUNT_EDEFAULT;
         this.totalRowCount = TOTAL_ROW_COUNT_EDEFAULT;
         this.triggerCount = TRIGGER_COUNT_EDEFAULT;
-        for (Indicator ind : this.getTableIndicators()) {
-            if (ind != null) {
-                ind.reset();
-            }
-        }
+        this.getTableIndicators().clear();
         return ok;
     }
 

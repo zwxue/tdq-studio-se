@@ -115,11 +115,23 @@ public class SchemaSwitch<T> {
             case SchemaPackage.CONNECTION_INDICATOR: {
                 ConnectionIndicator connectionIndicator = (ConnectionIndicator)theEObject;
                 T result = caseConnectionIndicator(connectionIndicator);
+                if (result == null) result = caseCatalogIndicator(connectionIndicator);
                 if (result == null) result = caseSchemaIndicator(connectionIndicator);
                 if (result == null) result = caseCompositeIndicator(connectionIndicator);
                 if (result == null) result = caseIndicator(connectionIndicator);
                 if (result == null) result = caseModelElement(connectionIndicator);
                 if (result == null) result = caseElement(connectionIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case SchemaPackage.CATALOG_INDICATOR: {
+                CatalogIndicator catalogIndicator = (CatalogIndicator)theEObject;
+                T result = caseCatalogIndicator(catalogIndicator);
+                if (result == null) result = caseSchemaIndicator(catalogIndicator);
+                if (result == null) result = caseCompositeIndicator(catalogIndicator);
+                if (result == null) result = caseIndicator(catalogIndicator);
+                if (result == null) result = caseModelElement(catalogIndicator);
+                if (result == null) result = caseElement(catalogIndicator);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -169,6 +181,21 @@ public class SchemaSwitch<T> {
      * @generated
      */
     public T caseConnectionIndicator(ConnectionIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Catalog Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Catalog Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseCatalogIndicator(CatalogIndicator object) {
         return null;
     }
 

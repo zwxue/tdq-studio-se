@@ -53,6 +53,15 @@ public interface SchemaFactory extends EFactory {
     ConnectionIndicator createConnectionIndicator();
 
     /**
+     * Returns a new object of class '<em>Catalog Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Catalog Indicator</em>'.
+     * @generated
+     */
+    CatalogIndicator createCatalogIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

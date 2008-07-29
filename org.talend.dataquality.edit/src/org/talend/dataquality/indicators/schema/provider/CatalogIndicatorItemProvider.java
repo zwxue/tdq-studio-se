@@ -16,7 +16,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -29,18 +28,18 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
-import org.talend.dataquality.indicators.schema.ConnectionIndicator;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 
 /**
- * This is the item provider adapter for a {@link org.talend.dataquality.indicators.schema.ConnectionIndicator} object.
+ * This is the item provider adapter for a {@link org.talend.dataquality.indicators.schema.CatalogIndicator} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ConnectionIndicatorItemProvider
-    extends CatalogIndicatorItemProvider
+public class CatalogIndicatorItemProvider
+    extends SchemaIndicatorItemProvider
     implements	
         IEditingDomainItemProvider,	
         IStructuredItemContentProvider,	
@@ -53,7 +52,7 @@ public class ConnectionIndicatorItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public ConnectionIndicatorItemProvider(AdapterFactory adapterFactory) {
+    public CatalogIndicatorItemProvider(AdapterFactory adapterFactory) {
         super(adapterFactory);
     }
 
@@ -68,25 +67,25 @@ public class ConnectionIndicatorItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
-            addCatalogCountPropertyDescriptor(object);
+            addSchemaCountPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
 
     /**
-     * This adds a property descriptor for the Catalog Count feature.
+     * This adds a property descriptor for the Schema Count feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void addCatalogCountPropertyDescriptor(Object object) {
+    protected void addSchemaCountPropertyDescriptor(Object object) {
         itemPropertyDescriptors.add
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_ConnectionIndicator_catalogCount_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_ConnectionIndicator_catalogCount_feature", "_UI_ConnectionIndicator_type"),
-                 SchemaPackage.Literals.CONNECTION_INDICATOR__CATALOG_COUNT,
+                 getString("_UI_CatalogIndicator_schemaCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_CatalogIndicator_schemaCount_feature", "_UI_CatalogIndicator_type"),
+                 SchemaPackage.Literals.CATALOG_INDICATOR__SCHEMA_COUNT,
                  true,
                  false,
                  false,
@@ -107,7 +106,7 @@ public class ConnectionIndicatorItemProvider
     public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
-            childrenFeatures.add(SchemaPackage.Literals.CONNECTION_INDICATOR__CATALOG_INDICATORS);
+            childrenFeatures.add(SchemaPackage.Literals.CATALOG_INDICATOR__SCHEMA_INDICATORS);
         }
         return childrenFeatures;
     }
@@ -126,14 +125,14 @@ public class ConnectionIndicatorItemProvider
     }
 
     /**
-     * This returns ConnectionIndicator.gif.
+     * This returns CatalogIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/ConnectionIndicator"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/CatalogIndicator"));
     }
 
     /**
@@ -144,10 +143,10 @@ public class ConnectionIndicatorItemProvider
      */
     @Override
     public String getText(Object object) {
-        String label = ((ConnectionIndicator)object).getName();
+        String label = ((CatalogIndicator)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_ConnectionIndicator_type") :
-            getString("_UI_ConnectionIndicator_type") + " " + label;
+            getString("_UI_CatalogIndicator_type") :
+            getString("_UI_CatalogIndicator_type") + " " + label;
     }
 
     /**
@@ -161,11 +160,11 @@ public class ConnectionIndicatorItemProvider
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
 
-        switch (notification.getFeatureID(ConnectionIndicator.class)) {
-            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
+        switch (notification.getFeatureID(CatalogIndicator.class)) {
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
-            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
+            case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -185,36 +184,18 @@ public class ConnectionIndicatorItemProvider
 
         newChildDescriptors.add
             (createChildParameter
-                (SchemaPackage.Literals.CONNECTION_INDICATOR__CATALOG_INDICATORS,
+                (SchemaPackage.Literals.CATALOG_INDICATOR__SCHEMA_INDICATORS,
+                 SchemaFactory.eINSTANCE.createSchemaIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (SchemaPackage.Literals.CATALOG_INDICATOR__SCHEMA_INDICATORS,
                  SchemaFactory.eINSTANCE.createCatalogIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
-                (SchemaPackage.Literals.CONNECTION_INDICATOR__CATALOG_INDICATORS,
+                (SchemaPackage.Literals.CATALOG_INDICATOR__SCHEMA_INDICATORS,
                  SchemaFactory.eINSTANCE.createConnectionIndicator()));
-    }
-
-    /**
-     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
-        Object childFeature = feature;
-        Object childObject = child;
-
-        boolean qualify =
-            childFeature == SchemaPackage.Literals.CATALOG_INDICATOR__SCHEMA_INDICATORS ||
-            childFeature == SchemaPackage.Literals.CONNECTION_INDICATOR__CATALOG_INDICATORS;
-
-        if (qualify) {
-            return getString
-                ("_UI_CreateChild_text2",
-                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
-        }
-        return super.getCreateChildText(owner, feature, child, selection);
     }
 
     /**

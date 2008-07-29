@@ -723,4 +723,22 @@ public class DbmsLanguage {
         }
         return null;
     }
+
+    /**
+     * Method "getQuoteIdentifier".
+     * 
+     * @return hard coded quote identifier string.
+     */
+    public String getQuoteIdentifier() {
+        if (is(MYSQL)) {
+            return "`";
+        }
+        if (is(ORACLE)) {
+            return "\"";
+        }
+        if (is(POSTGRESQL)) {
+            return "\"";
+        }
+        return "";
+    }
 }

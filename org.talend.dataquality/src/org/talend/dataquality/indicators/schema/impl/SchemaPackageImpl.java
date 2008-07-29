@@ -40,6 +40,7 @@ import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
 
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -140,6 +141,13 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      * @generated
      */
     private EClass connectionIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass catalogIndicatorEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -333,8 +341,44 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getConnectionIndicator_SchemaIndicators() {
+    public EReference getConnectionIndicator_CatalogIndicators() {
         return (EReference)connectionIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getConnectionIndicator_CatalogCount() {
+        return (EAttribute)connectionIndicatorEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getCatalogIndicator() {
+        return catalogIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getCatalogIndicator_SchemaCount() {
+        return (EAttribute)catalogIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getCatalogIndicator_SchemaIndicators() {
+        return (EReference)catalogIndicatorEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -423,7 +467,12 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         createEAttribute(tableIndicatorEClass, TABLE_INDICATOR__ROW_COUNT);
 
         connectionIndicatorEClass = createEClass(CONNECTION_INDICATOR);
-        createEReference(connectionIndicatorEClass, CONNECTION_INDICATOR__SCHEMA_INDICATORS);
+        createEReference(connectionIndicatorEClass, CONNECTION_INDICATOR__CATALOG_INDICATORS);
+        createEAttribute(connectionIndicatorEClass, CONNECTION_INDICATOR__CATALOG_COUNT);
+
+        catalogIndicatorEClass = createEClass(CATALOG_INDICATOR);
+        createEAttribute(catalogIndicatorEClass, CATALOG_INDICATOR__SCHEMA_COUNT);
+        createEReference(catalogIndicatorEClass, CATALOG_INDICATOR__SCHEMA_INDICATORS);
     }
 
     /**
@@ -459,7 +508,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         // Add supertypes to classes
         schemaIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
         tableIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
-        connectionIndicatorEClass.getESuperTypes().add(this.getSchemaIndicator());
+        connectionIndicatorEClass.getESuperTypes().add(this.getCatalogIndicator());
+        catalogIndicatorEClass.getESuperTypes().add(this.getSchemaIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(schemaIndicatorEClass, SchemaIndicator.class, "SchemaIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -478,9 +528,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         initEAttribute(getTableIndicator_RowCount(), ecorePackage.getELong(), "rowCount", null, 0, 1, TableIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(connectionIndicatorEClass, ConnectionIndicator.class, "ConnectionIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getConnectionIndicator_SchemaIndicators(), this.getSchemaIndicator(), null, "schemaIndicators", null, 0, -1, ConnectionIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getConnectionIndicator_CatalogIndicators(), this.getCatalogIndicator(), null, "catalogIndicators", null, 0, -1, ConnectionIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getConnectionIndicator_CatalogCount(), ecorePackage.getEInt(), "catalogCount", null, 0, 1, ConnectionIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        op = addEOperation(connectionIndicatorEClass, ecorePackage.getEBoolean(), "addSchemaIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
+        op = addEOperation(connectionIndicatorEClass, ecorePackage.getEBoolean(), "addCatalogIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, this.getCatalogIndicator(), "catalogIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(catalogIndicatorEClass, CatalogIndicator.class, "CatalogIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getCatalogIndicator_SchemaCount(), ecorePackage.getEInt(), "schemaCount", null, 0, 1, CatalogIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getCatalogIndicator_SchemaIndicators(), this.getSchemaIndicator(), null, "schemaIndicators", null, 0, -1, CatalogIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        op = addEOperation(catalogIndicatorEClass, ecorePackage.getEBoolean(), "addSchemaIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, this.getSchemaIndicator(), "schemaIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
     }
 

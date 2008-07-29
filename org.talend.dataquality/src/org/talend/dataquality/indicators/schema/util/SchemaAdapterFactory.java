@@ -89,6 +89,10 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
                 return createConnectionIndicatorAdapter();
             }
             @Override
+            public Adapter caseCatalogIndicator(CatalogIndicator object) {
+                return createCatalogIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -163,6 +167,20 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createConnectionIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.schema.CatalogIndicator <em>Catalog Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.schema.CatalogIndicator
+     * @generated
+     */
+    public Adapter createCatalogIndicatorAdapter() {
         return null;
     }
 
