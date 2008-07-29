@@ -14,6 +14,9 @@ package org.talend.dataprofiler.core.model.nodes.foldernode;
 
 import java.util.List;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
@@ -21,7 +24,9 @@ import org.talend.dataquality.reports.TdReport;
 /**
  * This folder container will store all the analyses related with special report.
  */
-public class AnalysesContainerFolder extends AbstractFolderNode {
+public class AnalysesContainerFolder extends AbstractFolderNode implements IWorkbenchAdapter {
+
+    private static final String ANALYSES = "Analyses";
 
     /**
      * DOC rli AnalysesFolder constructor comment.
@@ -29,8 +34,9 @@ public class AnalysesContainerFolder extends AbstractFolderNode {
      * @param name
      */
     public AnalysesContainerFolder(TdReport report) {
-        super("Analyses");
+        super(ANALYSES);
         this.setParent(report);
+        this.loadChildren();
 
     }
 
@@ -43,6 +49,22 @@ public class AnalysesContainerFolder extends AbstractFolderNode {
     public void loadChildren() {
         List<Analysis> analyses = ReportHelper.getAnalyses((TdReport) getParent());
         this.setChildren(analyses.toArray());
+    }
+
+    public Object[] getChildren(Object o) {
+        return this.getChildren();
+    }
+
+    public ImageDescriptor getImageDescriptor(Object object) {
+        return ImageLib.getImageDescriptor(ImageLib.FOLDERNODE_IMAGE);
+    }
+
+    public String getLabel(Object o) {
+        return ANALYSES;
+    }
+
+    public Object getParent(Object o) {
+        return null;
     }
 
 }

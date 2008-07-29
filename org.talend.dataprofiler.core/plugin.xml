@@ -45,9 +45,8 @@
          point="org.eclipse.ui.navigator.viewer">
        <viewerContentBinding 
              viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
-          <includes>
-       	      <contentExtension pattern="org.eclipse.ui.navigator.DQresourceContent" />		       	      
-	         <contentExtension pattern="org.talend.dataprofiler.core.emfContent"/>
+          <includes>	       	      
+	         <contentExtension pattern="org.talend.dataprofiler.core.DQContent.*"/>
 	         <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.startsWithDot"/>
 	          <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper" />
           </includes>
@@ -82,7 +81,7 @@
       <navigatorContent
             activeByDefault="true"
             contentProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider"
-            id="org.talend.dataprofiler.core.emfContent"
+            id="org.talend.dataprofiler.core.DQContent.emfContent"
             labelProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider"
             name="DQ EMF Content"
             priority="normal">
@@ -95,10 +94,6 @@
                          forcePluginActivation="true" 
                          property="org.eclipse.core.resources.extension" 
                          value="prv"/> 
-                        <test 
-                          forcePluginActivation="true" 
-                          property="org.eclipse.core.resources.extension" 
-                          value="rep"/>
                         <test
                               forcePluginActivation="true"
                               property="org.eclipse.core.resources.extension"
@@ -122,7 +117,7 @@
             activeByDefault="true"
 			            contentProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider"
             			labelProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider"			
-            id="org.eclipse.ui.navigator.DQresourceContent">         
+            id="org.talend.dataprofiler.core.DQContent.resourceContent">         
          <enablement>
 		         <or>         
 		            <adapt type="org.eclipse.core.resources.IProject" /> 

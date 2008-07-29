@@ -42,6 +42,8 @@ public final class ComparatorsFactory {
 
     public static final int TEXT_STATISTICS_COMPARATOR_ID = 2;
 
+    public static final int FILE_RESOURCE_COMPARATOR_ID = 3;
+
     /**
      * DOC zqin Comment method "sort".
      * 
@@ -83,9 +85,43 @@ public final class ComparatorsFactory {
             return new ModelElementComparator();
         case TEXT_STATISTICS_COMPARATOR_ID:
             return new TextStatisticsComparator();
+        case FILE_RESOURCE_COMPARATOR_ID:
+            return new FileResourceComparator();
         default:
             return new ModelElementComparator();
         }
+    }
+
+    /**
+     * Implements Comparator to implement custom sorting of {@link IResource} which contains {@link ModelElement}
+     * elements.
+     */
+    static class FileResourceComparator implements Comparator<IResource> {
+
+        public int compare(IResource arg0, IResource arg1) {
+
+            if (arg0 == null || arg1 == null) {
+                return 0;
+            }
+            String name0;
+            String name1;
+            if (arg0.getType() == IResource.FILE) {
+                name0 = ((IFile) arg0).getName();
+            } else {
+                name0 = arg0.getName();
+            }
+            if (arg1.getType() == IResource.FILE) {
+                name1 = ((IFile) arg1).getName();
+            } else {
+                name1 = arg1.getName();
+            }
+            if (name0 == null || name1 == null) {
+                return 0;
+            }
+
+            return name0.compareTo(name1);
+        }
+
     }
 
     /**

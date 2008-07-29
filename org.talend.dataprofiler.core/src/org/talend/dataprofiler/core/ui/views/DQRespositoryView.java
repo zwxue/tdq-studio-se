@@ -42,6 +42,7 @@ import org.talend.dataprofiler.core.service.IViewerFilterService;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
 import org.talend.dataprofiler.core.ui.views.filters.AbstractViewerFilter;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
+import org.talend.dataprofiler.core.ui.views.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.views.filters.ReportingFilter;
 
 /**
@@ -78,6 +79,7 @@ public class DQRespositoryView extends CommonNavigator {
         super.createPartControl(parent);
         this.addViewerFilter(EMFObjFilter.FILTER_ID);
         this.addViewerFilter(ReportingFilter.FILTER_ID);
+        this.addViewerFilter(FolderObjFilter.FILTER_ID);
         adjustFilter();
         activateContext();
         this.getCommonViewer().setSorter(null);
@@ -170,6 +172,10 @@ public class DQRespositoryView extends CommonNavigator {
         case ReportingFilter.FILTER_ID:
             filter = new ReportingFilter();
             filterMap.put(String.valueOf(ReportingFilter.FILTER_ID), filter);
+            break;
+        case FolderObjFilter.FILTER_ID:
+            filter = new FolderObjFilter();
+            filterMap.put(String.valueOf(FolderObjFilter.FILTER_ID), filter);
             break;
         default:
             filter = new ReportingFilter();

@@ -54,10 +54,10 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     protected ImageDescriptor decorateImage(ImageDescriptor input, Object element) {
         if (element instanceof IFile) {
             IFile file = (IFile) element;
-            if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
-                return ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
-            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+            if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
                 return ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
+            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
+                return ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
             }
         }
         if (element instanceof IProject) {
@@ -110,14 +110,14 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                         + DateFormatUtils.getSimpleDateString(executionDate) + PluginConstant.PARENTHESIS_RIGHT;
                 return analysis.getName() + PluginConstant.SPACE_STRING + executeInfo;
             }
-        } else if (input.endsWith(PluginConstant.REP_SUFFIX)) {
-            IFile fileElement = (IFile) element;
-            TdReport findReport = RepResourceFileHelper.getInstance().findReport(fileElement);
-            return findReport.getName();
         } else if (input.endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
             IFile file = (IFile) element;
             Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
             return pattern.getName();
+        } else if (input.endsWith(PluginConstant.REP_SUFFIX)) {
+            IFile fileElement = (IFile) element;
+            TdReport findReport = RepResourceFileHelper.getInstance().findReport(fileElement);
+            return findReport.getName();
         }
         return super.decorateText(input, element);
     }

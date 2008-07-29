@@ -24,13 +24,10 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
-import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
-import org.talend.dataprofiler.core.model.nodes.foldernode.AnalysesContainerFolder;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.reports.TdReport;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -49,12 +46,7 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof IFile) {
             IFile file = (IFile) parentElement;
-            if (file.getName().endsWith(PluginConstant.REP_SUFFIX)) {
-                TdReport findReport = RepResourceFileHelper.getInstance().findReport(file);
-                IFolderNode analysesCatainerNode = new AnalysesContainerFolder(findReport);
-                // Object[] array = ReportHelper.getAnalyses(findReport).toArray();
-                return new Object[] { analysesCatainerNode };
-            } else if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+            if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
                 Analysis analysis = (Analysis) AnaResourceFileHelper.getInstance().getFileResource(file).getContents().get(0);
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 AnaElementFolderNode folderNode = new AnaElementFolderNode(analysedElements);
@@ -64,7 +56,11 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
         } else if (parentElement instanceof IFolderNode) {
             IFolderNode folerNode = (IFolderNode) parentElement;
             folerNode.loadChildren();
-            return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+            if (folerNode.getChildrenType() == IFolderNode.MODELELEMENT_TYPE) {
+                return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+            } else {
+                return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
+            }
         } else if (SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement) != null) {
             if (CatalogHelper.getSchemas(SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement)).size() > 0) {
                 return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);

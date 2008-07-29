@@ -20,6 +20,12 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface IFolderNode {
 
+    public static final int FILE_TYPE = 1;
+
+    public static final int MODELELEMENT_TYPE = 2;
+
+    public int getChildrenType();
+
     public String getName();
 
     /**

@@ -61,4 +61,8 @@ public abstract class AbstractFolderNode implements IFolderNode {
 
     public abstract void loadChildren();
 
+    public int getChildrenType() {
+        return MODELELEMENT_TYPE;
+    }
+
 }
