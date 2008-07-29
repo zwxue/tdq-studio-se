@@ -115,7 +115,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
      * @return
      */
     protected WizardDialog getStandardAnalysisWizardDialog() {
-        return getStandardAnalysisWizardDialog(AnalysisType.COLUMN);
+        return getStandardAnalysisWizardDialog(AnalysisType.MULTIPLE_COLUMN);
     }
 
     /**

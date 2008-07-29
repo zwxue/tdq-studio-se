@@ -86,6 +86,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     public MetadataWizardPage() {
 
         metadata = new HashMap<String, String>();
+
         setPageComplete(false);
     }
 
@@ -265,11 +266,9 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         nameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                checkFieldsValue();
-                if (isStatusOnValid()) {
-                    metadata.put(IParameterConstant.ANALYSIS_NAME, nameText.getText());
-                    getConnectionParams().setMetadate(metadata);
-                }
+                metadata.put(IParameterConstant.ANALYSIS_NAME, nameText.getText());
+                getConnectionParams().setMetadate(metadata);
+                setPageComplete(true);
             }
         });
 
