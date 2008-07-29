@@ -400,6 +400,7 @@ public class IndicatorChartFactory {
         List<IndicatorUnit> frequencyUnitList = separatedMap.get(CompositeIndicator.FREQUENCE_STATISTICS);
         List<IndicatorUnit> summaryUnitList = separatedMap.get(CompositeIndicator.SUMMARY_STATISTICS);
         List<IndicatorUnit> patternUnitList = separatedMap.get(CompositeIndicator.PATTERN_MATCHING);
+        List<IndicatorUnit> sqlPatternUnitList = separatedMap.get(CompositeIndicator.SQL_PATTERN_MATCHING);
 
         List<ChartWithData> returnFiles = new ArrayList<ChartWithData>();
 
@@ -461,6 +462,14 @@ public class IndicatorChartFactory {
             returnFiles.add(chart);
         }
 
+        if (!sqlPatternUnitList.isEmpty()) {
+            CategoryDataset dataset = createPatternMatchDataset(sqlPatternUnitList, isCreate);
+            ImageDescriptor imageDescriptor = createStacked3DBarChart(CompositeIndicator.SQL_PATTERN_MATCHING, dataset);
+            ChartWithData chart = new ChartWithData(CompositeIndicator.SQL_PATTERN_MATCHING, imageDescriptor,
+                    getDataEnityFromUnits(sqlPatternUnitList));
+            returnFiles.add(chart);
+        }
+
         return returnFiles;
     }
 
@@ -480,7 +489,8 @@ public class IndicatorChartFactory {
                     list.add(entity);
                 }
 
-            } else if (unit.getType() == IndicatorEnum.RegexpMatchingIndicatorEnum) {
+            } else if (unit.getType() == IndicatorEnum.RegexpMatchingIndicatorEnum
+                    || unit.getType() == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
                 PatternMatchingExt patnExt = (PatternMatchingExt) unit.getValue();
                 PatternChartDataEntity entity = new PatternChartDataEntity();
                 entity.setLabel(unit.getIndicatorName());

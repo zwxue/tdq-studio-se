@@ -37,6 +37,8 @@ public class CompositeIndicator {
 
     public static final String PATTERN_MATCHING = "Pattern Matching";
 
+    public static final String SQL_PATTERN_MATCHING = "SQL Pattern Matching";
+
     private IndicatorUnit[] indicatorUnits;
 
     private Map<String, List<IndicatorUnit>> separatedMap;
@@ -69,6 +71,7 @@ public class CompositeIndicator {
         List<IndicatorUnit> frequencyList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> summaryList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> patternList = new ArrayList<IndicatorUnit>();
+        List<IndicatorUnit> sqlPatternList = new ArrayList<IndicatorUnit>();
 
         for (IndicatorUnit one : indicatorUnits) {
 
@@ -101,6 +104,10 @@ public class CompositeIndicator {
                 patternList.add(one);
                 break;
 
+            case SqlPatternMatchingIndicatorEnum:
+                sqlPatternList.add(one);
+                break;
+
             default:
             }
         }
@@ -110,6 +117,7 @@ public class CompositeIndicator {
         separatedMap.put(FREQUENCE_STATISTICS, frequencyList);
         separatedMap.put(SUMMARY_STATISTICS, summaryList);
         separatedMap.put(PATTERN_MATCHING, patternList);
+        separatedMap.put(SQL_PATTERN_MATCHING, sqlPatternList);
 
         return separatedMap;
     }

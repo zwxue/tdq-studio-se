@@ -56,16 +56,23 @@ public class ChartWithData {
     private void computered() {
         double sum = 0;
         for (ChartDataEntity oneEntity : this.enity) {
-            sum = sum + Double.valueOf(oneEntity.getValue());
+            if (oneEntity.getValue() != null) {
+                sum = sum + Double.valueOf(oneEntity.getValue());
+            }
         }
 
         for (ChartDataEntity oneEntity : this.enity) {
-            Double doub = Double.valueOf(oneEntity.getValue()) / sum;
+            if (sum != 0) {
+                Double doub = Double.valueOf(oneEntity.getValue()) / sum;
 
-            DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
-            format.applyPattern("0.00%");
+                DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
+                format.applyPattern("0.00%");
 
-            oneEntity.setPersent(format.format(doub));
+                oneEntity.setPersent(format.format(doub));
+            } else {
+                oneEntity.setPersent("0.00%");
+            }
+
         }
     }
 

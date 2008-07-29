@@ -174,6 +174,7 @@ public class IndicatorCommonUtil {
             break;
 
         case RegexpMatchingIndicatorEnum:
+        case SqlPatternMatchingIndicatorEnum:
             tempColor = null;
             PatternMatchingExt patternExt = new PatternMatchingExt();
             patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());

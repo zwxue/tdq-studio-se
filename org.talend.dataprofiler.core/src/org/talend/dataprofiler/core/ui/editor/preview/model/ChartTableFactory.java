@@ -79,7 +79,8 @@ public class ChartTableFactory {
 
             tbViewer.setLabelProvider(new SummaryLabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());
-        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.PATTERN_MATCHING)) {
+        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.PATTERN_MATCHING)
+                || inputObject.getChartNamedType().equals(CompositeIndicator.SQL_PATTERN_MATCHING)) {
             TableColumn column1 = new TableColumn(table, SWT.NONE);
             column1.setText("Label");
             column1.setWidth(200);
