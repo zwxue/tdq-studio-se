@@ -115,11 +115,10 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
     private void setTdDataProvider() {
         ConnectionAnalysisParameter connectionParams = (ConnectionAnalysisParameter) AbstractAnalysisWizardPage
                 .getConnectionParams();
-        if (connectionParams.getTdDataProvider() == null) {
-            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(file);
-            TdDataProvider dataProvider = tdProvider.getObject();
-            connectionParams.setTdDataProvider(dataProvider);
-        }
+        file = (IFile) getSelection().getFirstElement();
+        TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(file);
+        TdDataProvider dataProvider = tdProvider.getObject();
+        connectionParams.setTdDataProvider(dataProvider);
     }
 
 }
