@@ -123,6 +123,10 @@ public class IndicatorSelectDialog extends TrayDialog {
             return buttons == null ? null : buttons[index];
         }
 
+        public Button[] getButtons() {
+            return this.buttons;
+        }
+
         /*
          * Disable the judge of subclass.
          * 
@@ -135,17 +139,17 @@ public class IndicatorSelectDialog extends TrayDialog {
     /**
      * DOC rli IndicatorSelectDialog class global comment. Detailled comment.
      */
-    private final class ButtonSelectionListener extends SelectionAdapter {
+    private class ButtonSelectionListener extends SelectionAdapter {
 
-        private final int index;
+        protected final int index;
 
-        private final TreeItemContainer treeItemContainer;
+        protected final TreeItemContainer treeItemContainer;
 
-        private final IndicatorEnum indicatorEnum;
+        protected final IndicatorEnum indicatorEnum;
 
-        private final ColumnIndicator currentColumnIndicator;
+        protected final ColumnIndicator currentColumnIndicator;
 
-        private ButtonSelectionListener(int index, TreeItemContainer treeItemContainer, IndicatorEnum indicatorEnum,
+        protected ButtonSelectionListener(int index, TreeItemContainer treeItemContainer, IndicatorEnum indicatorEnum,
                 ColumnIndicator currentColumnIndicator) {
             this.index = index;
             this.treeItemContainer = treeItemContainer;
@@ -179,7 +183,7 @@ public class IndicatorSelectDialog extends TrayDialog {
          * 
          * @param selection
          */
-        private void processParentSelection(TreeItemContainer treeItem, boolean selection) {
+        protected void processParentSelection(TreeItemContainer treeItem, boolean selection) {
             TreeItem parentItem = treeItem.getParentItem();
             if (parentItem != null && selection) {
                 boolean allSelection = true;
@@ -207,7 +211,7 @@ public class IndicatorSelectDialog extends TrayDialog {
         /**
          * handle the children button selection.
          */
-        private void processChildrenSelection(final TreeItemContainer treeItem, final int index, boolean selection) {
+        protected void processChildrenSelection(final TreeItemContainer treeItem, final int index, boolean selection) {
             Button itemButton;
             for (TreeItem childItem : treeItem.getItems()) {
                 itemButton = ((TreeItemContainer) childItem).getButton(index);
@@ -226,6 +230,68 @@ public class IndicatorSelectDialog extends TrayDialog {
                 processChildrenSelection((TreeItemContainer) childItem, index, selection);
             }
         }
+    }
+
+    /**
+     * DOC zqin IndicatorSelectDialog class global comment. Detailled comment
+     */
+    private class RowSelectButtonListener extends ButtonSelectionListener {
+
+        protected RowSelectButtonListener(int index, TreeItemContainer treeItemContainer, IndicatorEnum indicatorEnum,
+                ColumnIndicator currentColumnIndicator) {
+            super(index, treeItemContainer, indicatorEnum, currentColumnIndicator);
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void processChildrenSelection(TreeItemContainer treeItem, int index, boolean selection) {
+            Button itemButton;
+            for (TreeItem childItem : treeItem.getItems()) {
+                TreeItemContainer childItemContainer = (TreeItemContainer) childItem;
+                itemButton = childItemContainer.getButton(index);
+                if (itemButton.isEnabled()) {
+                    itemButton.setSelection(selection);
+                } else {
+                    return;
+                }
+                processRowButtonSelect(selection, (List<Button>) itemButton.getData(ROWINDICATORFLAG));
+                processChildrenSelection((TreeItemContainer) childItem, index, selection);
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void widgetSelected(SelectionEvent e) {
+            boolean selection = ((Button) e.getSource()).getSelection();
+            Button itemButton = treeItemContainer.getButton(index);
+
+            processRowButtonSelect(selection, (List<Button>) itemButton.getData(ROWINDICATORFLAG));
+            processChildrenSelection(treeItemContainer, index, selection);
+        }
+
+        private void processRowButtonSelect(boolean selection, List<Button> rowButtons) {
+            if (selection) {
+
+                for (Button btn : rowButtons) {
+                    ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
+                    IIndicatorNode node = (IIndicatorNode) btn.getData();
+                    if (ColumnIndicatorRule.match(node, columnIndicator)) {
+
+                        btn.setSelection(true);
+                        columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
+                    }
+                }
+
+            } else {
+                for (Button btn : rowButtons) {
+                    ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
+                    IIndicatorNode node = (IIndicatorNode) btn.getData();
+                    btn.setSelection(false);
+                    columnIndicator.removeTempIndicatorEnum(node.getIndicatorEnum());
+                }
+            }
+        }
+
     }
 
     protected Control createDialogArea(Composite parent) {
@@ -338,36 +404,8 @@ public class IndicatorSelectDialog extends TrayDialog {
                 } else if (j == 1 && treeColumns.length > 2) {
                     editor = new TreeEditor(tree);
                     rowCheckButton = new Button(tree, SWT.CHECK);
-                    rowCheckButton.addSelectionListener(new SelectionAdapter() {
-
-                        @SuppressWarnings("unchecked")
-                        @Override
-                        public void widgetSelected(SelectionEvent e) {
-
-                            Button currentRowBtn = (Button) e.getSource();
-
-                            if (currentRowBtn.getSelection()) {
-                                for (Button btn : (List<Button>) currentRowBtn.getData(ROWINDICATORFLAG)) {
-                                    ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
-                                    IIndicatorNode node = (IIndicatorNode) btn.getData();
-                                    if (ColumnIndicatorRule.match(node, columnIndicator)) {
-
-                                        btn.setSelection(true);
-                                        columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
-                                    }
-                                }
-
-                            } else {
-                                for (Button btn : (List<Button>) currentRowBtn.getData(ROWINDICATORFLAG)) {
-                                    ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
-                                    IIndicatorNode node = (IIndicatorNode) btn.getData();
-                                    btn.setSelection(false);
-                                    columnIndicator.removeTempIndicatorEnum(node.getIndicatorEnum());
-                                }
-                            }
-                        }
-
-                    });
+                    rowCheckButton.addSelectionListener(new RowSelectButtonListener(j, treeItem, branchNodes[i]
+                            .getIndicatorEnum(), null));
                     commonCheckButton = rowCheckButton;
                 } else {
                     editor = new TreeEditor(tree);
@@ -396,7 +434,14 @@ public class IndicatorSelectDialog extends TrayDialog {
             }
 
             if (rowCheckButton != null) {
+                boolean allChecked = true;
                 rowCheckButton.setData(ROWINDICATORFLAG, rowButtonList);
+                for (Button btn : rowButtonList) {
+                    if (!btn.getSelection()) {
+                        allChecked = false;
+                    }
+                }
+                rowCheckButton.setSelection(allChecked);
             }
 
             if (branchNodes[i].hasChildren()) {
