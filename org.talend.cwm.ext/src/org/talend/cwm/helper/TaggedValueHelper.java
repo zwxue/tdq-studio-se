@@ -55,6 +55,33 @@ public final class TaggedValueHelper {
     public static final String COMMENT = "Comment";
 
     /**
+     * A status to tell that the object is valid or invalid.
+     */
+    public static final String VALID_STATUS = "Validation_Status";
+
+    /**
+     * Method "setValidStatus" sets the status on the given element.
+     * 
+     * @param status the status to set
+     * @param element the element
+     * @return true if the value was not set before.
+     */
+    public static boolean setValidStatus(Boolean status, ModelElement element) {
+        String statusStr = String.valueOf(status);
+        return setTaggedValue(element, VALID_STATUS, statusStr);
+    }
+
+    /**
+     * Method "getValidStatus".
+     * 
+     * @param element
+     * @return the validation status of the element
+     */
+    public static Boolean getValidStatus(ModelElement element) {
+        return Boolean.valueOf(getValue(VALID_STATUS, element));
+    }
+
+    /**
      * Method "setComment" sets a comment on the given element.
      * 
      * @param comment the comment to set
