@@ -66,7 +66,7 @@ public class FolderWizardPage extends WizardPage {
 
         // Name
         Label nameLab = new Label(container, SWT.NONE);
-        nameLab.setText("Label"); //$NON-NLS-1$
+        nameLab.setText("Name"); //$NON-NLS-1$
 
         nameText = new Text(container, SWT.BORDER);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -98,12 +98,13 @@ public class FolderWizardPage extends WizardPage {
     protected void checkFieldsValue() {
         // Field Name
         if (nameText.getText().length() == 0) {
-            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, "Label is required", null);
+            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, "Name is required", null);
         } else if (!Pattern.matches(PluginConstant.FOLDER_PATTERN, nameText.getText())) {
-            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, "Label contains incorect characters", null);
+            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK,
+                    "Name contains invalid characters. Remove any space and unusual character.", null);
         } else if ((defaultLabel == null || !defaultLabel.equals(nameText.getText()))
                 && !((FolderWizard) getWizard()).isValid(nameText.getText())) {
-            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, "Label " + nameText.getText()
+            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, "Name " + nameText.getText()
                     + " is forbidden", null);
         } else {
             nameStatus = createOkStatus();
