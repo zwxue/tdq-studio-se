@@ -25,13 +25,13 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -71,6 +71,10 @@ public final class DQStructureManager {
      * String for the DB connections folder.
      */
     public static final String DB_CONNECTIONS = "DB Connections";
+
+    public static final QualifiedName FOLDER_FIRM_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FolderFirmProperty");
+
+    public static final String FOLDER_FIRM_PROPERTY = "FOLDER_FIRM_PROPERTY";
 
     private static DQStructureManager manager = new DQStructureManager();
 
@@ -154,15 +158,10 @@ public final class DQStructureManager {
 
     private IFolder createNewFoler(IProject project, String folderName) throws CoreException {
         IFolder desFolder = project.getFolder(folderName);
-        // ResourceAttributes attr = new ResourceAttributes();
-        // attr.setReadOnly(true);
-        // desFolder.setResourceAttributes(attr);
         if (!desFolder.exists()) {
             desFolder.create(false, true, null);
         }
-        ResourceAttributes resAttr = new ResourceAttributes();
-        resAttr.setReadOnly(true);
-        desFolder.setResourceAttributes(resAttr);
+        desFolder.setPersistentProperty(FOLDER_FIRM_KEY, FOLDER_FIRM_PROPERTY);
         return desFolder;
     }
 
@@ -203,7 +202,7 @@ public final class DQStructureManager {
                 }
                 IFolder folder = desFolder.getFolder(file.getName());
                 if (!folder.exists()) {
-                    folder.create(false, true, null);
+                    folder.create(true, true, null);
                 }
                 copyFilesToFolder(currentPath, recurse, folder);
                 continue;

@@ -13,9 +13,12 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteFolderAction;
 
 /**
@@ -45,8 +48,12 @@ public class DeleteUserFolderProvider extends CommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
             currentSelection = (IFolder) obj;
-            if (currentSelection.getResourceAttributes().isReadOnly()) {
-                return;
+            try {
+                if (currentSelection.getPersistentProperty(DQStructureManager.FOLDER_FIRM_KEY) != null) {
+                    return;
+                }
+            } catch (CoreException e) {
+                ExceptionHandler.process(e);
             }
         }
         DeleteFolderAction createSubFolderAction = new DeleteFolderAction(currentSelection);
