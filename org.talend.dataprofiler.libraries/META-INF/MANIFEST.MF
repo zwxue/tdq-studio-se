@@ -22,4 +22,4 @@ Export-Package:
  jxl.write.biff,
  org.talend.dataprofiler.libraries
 Bundle-ClassPath: .,
- jxl-2.6.jar
+ lib/jxl-2.6.jar
