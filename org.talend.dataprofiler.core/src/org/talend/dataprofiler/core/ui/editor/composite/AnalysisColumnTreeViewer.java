@@ -476,43 +476,56 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         TreeItem iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "max results shown:" + parameters.getTopN());
         iParamItem.setData(DATA_PARAM, DATA_PARAM);
+        iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
         TextParameters tParameter = parameters.getTextParameter();
         if (tParameter != null) {
-            final TreeItem tParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            tParamItem.setText(0, "Text parameters");
-            tParamItem.setData(DATA_PARAM, DATA_PARAM);
+            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
+            iParamItem.setText(0, "Text parameters");
+            iParamItem.setData(DATA_PARAM, DATA_PARAM);
+            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
-            TreeItem item = new TreeItem(tParamItem, SWT.NONE);
-            item.setText("use blanks:" + tParameter.isUseBlank());
+            TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
+            subParamItem.setText("use blanks:" + tParameter.isUseBlank());
+            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
-            item = new TreeItem(tParamItem, SWT.NONE);
-            item.setText("ignore case:" + tParameter.isIgnoreCase());
+            subParamItem = new TreeItem(iParamItem, SWT.NONE);
+            subParamItem.setText("ignore case:" + tParameter.isIgnoreCase());
+            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
-            item = new TreeItem(tParamItem, SWT.NONE);
-            item.setText("use nulls:" + tParameter.isUseNulls());
+            subParamItem = new TreeItem(iParamItem, SWT.NONE);
+            subParamItem.setText("use nulls:" + tParameter.isUseNulls());
+            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+
         }
         DateParameters dParameters = parameters.getDateParameters();
         if (dParameters != null) {
-            final TreeItem tParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            tParamItem.setText(0, "Date parameters");
-            tParamItem.setData(DATA_PARAM, DATA_PARAM);
+            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
+            iParamItem.setText(0, "Date parameters");
+            iParamItem.setData(DATA_PARAM, DATA_PARAM);
+            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
-            TreeItem item = new TreeItem(tParamItem, SWT.NONE);
-            item.setText("aggregation type:\"" + dParameters.getDateAggregationType().getName() + "\"");
+            TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
+            subParamItem.setText("aggregation type:\"" + dParameters.getDateAggregationType().getName() + "\"");
+            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+
         }
 
         iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "has valid domain:" + (parameters.getDataValidDomain() != null));
         iParamItem.setData(DATA_PARAM, DATA_PARAM);
+        iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
         iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "has quality thresholds:" + (parameters.getIndicatorValidDomain() != null));
         iParamItem.setData(DATA_PARAM, DATA_PARAM);
+        iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
         iParamItem = new TreeItem(indicatorItem, SWT.NONE);
         iParamItem.setText(0, "has bins defined:" + (parameters.getBins() != null));
         iParamItem.setData(DATA_PARAM, DATA_PARAM);
+        iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+
     }
 
     /**

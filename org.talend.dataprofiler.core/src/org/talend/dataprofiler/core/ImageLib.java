@@ -81,6 +81,8 @@ public class ImageLib {
 
     public static final String METADATA = "metadata.png";
 
+    public static final String OPTION = "option.png";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 
