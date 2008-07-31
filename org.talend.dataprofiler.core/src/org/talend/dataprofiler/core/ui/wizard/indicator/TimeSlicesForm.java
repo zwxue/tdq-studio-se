@@ -49,16 +49,6 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormName()
-     */
-    @Override
-    public String getFormName() {
-        return FormEnum.TimeSlicesForm.getFormName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -181,6 +171,11 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
                 oneBtn.setSelection(true);
             }
         }
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.TimeSlicesForm;
     }
 
 }

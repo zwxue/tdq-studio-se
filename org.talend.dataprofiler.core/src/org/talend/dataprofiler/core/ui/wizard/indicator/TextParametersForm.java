@@ -44,17 +44,6 @@ public class TextParametersForm extends AbstractIndicatorForm {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormName()
-     */
-    @Override
-    public String getFormName() {
-
-        return FormEnum.TextParametersForm.getFormName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -143,6 +132,11 @@ public class TextParametersForm extends AbstractIndicatorForm {
 
             caseBtn.setSelection(parameter.isIngoreCase());
         }
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.TextParametersForm;
     }
 
 }

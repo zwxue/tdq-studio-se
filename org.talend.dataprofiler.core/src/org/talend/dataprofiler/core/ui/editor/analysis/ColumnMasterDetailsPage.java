@@ -385,6 +385,8 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                     }
                 }
 
+                getTreeViewer().getTree().layout();
+
                 getTreeViewer().getTree().setSelection(theSuitedTreeItem);
             }
 

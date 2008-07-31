@@ -15,8 +15,16 @@ package org.talend.dataprofiler.core.ui.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.help.HelpSystem;
+import org.eclipse.help.IContext;
+import org.eclipse.help.IHelpResource;
+import org.eclipse.help.ui.internal.views.ReusableHelpPart;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
+import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -62,6 +70,25 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
         parameters.clear();
     }
 
-    public abstract String getFormName();
+    public abstract FormEnum getFormEnum();
+
+    public String getFormName() {
+        return getFormEnum().getFormName();
+    }
+
+    public void showHelp() {
+        String href = getFormEnum().getHelpHref();
+        if (href != null && href.length() > 0) {
+            Point point = getShell().getDisplay().getCursorLocation();
+            IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+            IHelpResource[] relatedTopics = context.getRelatedTopics();
+            IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+            helpSystem.displayContext(context, point.x + 15, point.y);
+            ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
+            if (lastActiveInstance != null) {
+                lastActiveInstance.showURL(href);
+            }
+        }
+    }
 
 }

@@ -10,15 +10,17 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.pattern;
+package org.talend.dataprofiler.core.ui.utils;
 
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
+import org.eclipse.help.IHelpResource;
 import org.eclipse.help.ui.internal.views.HelpTray;
 import org.eclipse.help.ui.internal.views.ReusableHelpPart;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
@@ -41,6 +43,8 @@ public class CheatSheetWizardDialog extends WizardDialog {
 
     private String href;
 
+    private WizardPage page;
+
     /**
      * DOC qzhang CheatSheetWizardDialog constructor comment.
      * 
@@ -48,8 +52,13 @@ public class CheatSheetWizardDialog extends WizardDialog {
      * @param newWizard
      */
     public CheatSheetWizardDialog(Shell parentShell, IWizard newWizard, String href) {
+        this(parentShell, newWizard, href, null);
+    }
+
+    public CheatSheetWizardDialog(Shell parentShell, IWizard newWizard, String href, WizardPage page) {
         super(parentShell, newWizard);
         this.href = href;
+        this.page = page;
     }
 
     /*
@@ -74,22 +83,24 @@ public class CheatSheetWizardDialog extends WizardDialog {
     @Override
     public void create() {
         super.create();
-        getShell().addShellListener(new ShellAdapter() {
 
-            public void shellActivated(ShellEvent e) {
-                if (activeCount < 2 && href != null && href.length() > 0) {
-                    Point point = e.widget.getDisplay().getCursorLocation();
-                    IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
-                    IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-                    helpSystem.displayContext(context, point.x + 15, point.y);
-                    activeCount++;
-                    ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
-                    if (lastActiveInstance != null) {
-                        lastActiveInstance.showURL(href);
-                    }
+        if (this.page == null) {
+            getShell().addShellListener(new ShellAdapter() {
+
+                public void shellActivated(ShellEvent e) {
+                    showHelp();
                 }
-            }
-        });
+            });
+        }
+    }
+
+    @Override
+    protected void nextPressed() {
+        super.nextPressed();
+
+        if (getCurrentPage() != null && this.page != null && getCurrentPage() == page) {
+            showHelp();
+        }
     }
 
     /*
@@ -101,5 +112,20 @@ public class CheatSheetWizardDialog extends WizardDialog {
     public boolean close() {
         activeCount = 0;
         return super.close();
+    }
+
+    private void showHelp() {
+        if (activeCount < 2 && href != null && href.length() > 0) {
+            Point point = getShell().getDisplay().getCursorLocation();
+            IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+            IHelpResource[] relatedTopics = context.getRelatedTopics();
+            IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+            helpSystem.displayContext(context, point.x + 15, point.y);
+            activeCount++;
+            ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
+            if (lastActiveInstance != null) {
+                lastActiveInstance.showURL(href);
+            }
+        }
     }
 }

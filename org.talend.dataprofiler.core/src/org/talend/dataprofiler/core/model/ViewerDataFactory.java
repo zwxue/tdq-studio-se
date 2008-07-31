@@ -10,21 +10,21 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.model.nodes.analysis;
+package org.talend.dataprofiler.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
 import org.talend.dataquality.analysis.category.AnalysisCategories;
 import org.talend.dataquality.analysis.category.AnalysisCategory;
 import org.talend.dq.analysis.category.CategoryHandler;
 
 /**
- * @author zqin
- * 
+ * DOC zqin class global comment. Detailled comment
  */
-public class AnalysisDataFactory {
+public class ViewerDataFactory {
 
     public static Object createTreeData() {
         List<AnalysisTypeNode> returnList = new ArrayList<AnalysisTypeNode>();
@@ -49,5 +49,9 @@ public class AnalysisDataFactory {
 
         return returnList;
 
+    }
+
+    public static Object createBinsFormData() {
+        return null;
     }
 }

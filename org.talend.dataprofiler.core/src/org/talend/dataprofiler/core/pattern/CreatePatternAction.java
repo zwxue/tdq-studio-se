@@ -27,6 +27,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ui.utils.CheatSheetWizardDialog;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 

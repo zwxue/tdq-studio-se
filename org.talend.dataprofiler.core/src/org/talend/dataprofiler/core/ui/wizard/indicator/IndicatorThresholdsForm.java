@@ -26,9 +26,14 @@ public class IndicatorThresholdsForm extends DataThresholdsForm {
     }
 
     @Override
-    public String getFormName() {
+    public FormEnum getFormEnum() {
+        return FormEnum.IndicatorThresholdsForm;
+    }
 
-        return FormEnum.IndicatorThresholdsForm.getFormName();
+    @Override
+    protected void addFields() {
+        super.addFields();
+        group.setText("Set here the thresholds expected on the indicator");
     }
 
 }

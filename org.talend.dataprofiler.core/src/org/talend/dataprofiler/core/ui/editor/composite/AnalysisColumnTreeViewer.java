@@ -26,7 +26,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TreeEditor;
@@ -68,7 +67,8 @@ import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.utils.HelpUtils;
+import org.talend.dataprofiler.core.ui.utils.CheatSheetWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -394,19 +394,15 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             @Override
             public void mouseDown(MouseEvent e) {
 
-                final IndicatorUnit indicator = (IndicatorUnit) ((Label) e.getSource()).getData();
-                final IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicator);
+                IndicatorUnit indicatorUnit = (IndicatorUnit) ((Label) e.getSource()).getData();
+                IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
 
-                String helpID = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
-                WizardDialog dialog = new WizardDialog(null, wizard);
-
-                WizardDialog dialogWithHelp = HelpUtils.injectHelp(dialog, wizard, helpID, indicator);
-                if (dialogWithHelp != null) {
-
-                    if (Window.OK == dialogWithHelp.open()) {
-                        setDirty(wizard.isDirty());
-                        createIndicatorParameters(indicatorItem, indicator);
-                    }
+                String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
+                CheatSheetWizardDialog optionDialog = new CheatSheetWizardDialog(null, wizard, href);
+                optionDialog.create();
+                if (Window.OK == optionDialog.open()) {
+                    setDirty(wizard.isDirty());
+                    createIndicatorParameters(indicatorItem, indicatorUnit);
                 }
             }
 

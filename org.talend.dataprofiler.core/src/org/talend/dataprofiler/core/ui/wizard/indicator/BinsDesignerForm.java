@@ -13,14 +13,24 @@
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
@@ -82,6 +92,39 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         gdTxt.widthHint = 50;
         numbOfBins = new Text(this, SWT.BORDER);
         numbOfBins.setLayoutData(gdTxt);
+
+        Composite rangeComp = new Composite(this, SWT.NONE);
+        rangeComp.setLayout(new GridLayout());
+        GridData gdComp = new GridData(GridData.FILL_BOTH);
+        gdComp.horizontalSpan = 2;
+        rangeComp.setLayoutData(gdComp);
+
+        Button isSetRange = new Button(rangeComp, SWT.CHECK);
+        isSetRange.setText("Set ranges manually");
+
+        TableViewer tableViewer = new TableViewer(rangeComp, SWT.BORDER);
+        tableViewer.setLabelProvider(new BinsLableProvider());
+        tableViewer.setContentProvider(new BinsContentProvider());
+
+        Table table = tableViewer.getTable();
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+        table.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        TableColumn column1 = new TableColumn(table, SWT.NONE);
+        column1.setText("Low");
+        column1.setWidth(150);
+        column1.setAlignment(SWT.CENTER);
+        TableColumn column2 = new TableColumn(table, SWT.NONE);
+        column2.setWidth(150);
+        column2.setText("Data");
+        column2.setAlignment(SWT.CENTER);
+        TableColumn column3 = new TableColumn(table, SWT.NONE);
+        column3.setWidth(150);
+        column3.setText("High");
+        column3.setAlignment(SWT.CENTER);
+
+        tableViewer.setInput(ViewerDataFactory.createBinsFormData());
     }
 
     /*
@@ -175,15 +218,42 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         numbOfBins.setText(String.valueOf(parameter.getNumOfBins()));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormName()
+    /**
+     * DOC zqin BinsDesignerForm class global comment. Detailled comment
      */
-    @Override
-    public String getFormName() {
+    class BinsLableProvider extends LabelProvider implements ITableLabelProvider {
 
-        return FormEnum.BinsDesignerForm.getFormName();
+        public Image getColumnImage(Object element, int columnIndex) {
+            return null;
+        }
+
+        public String getColumnText(Object element, int columnIndex) {
+
+            return null;
+        }
+
+    }
+
+    /**
+     * DOC zqin BinsDesignerForm class global comment. Detailled comment
+     */
+    class BinsContentProvider implements IStructuredContentProvider {
+
+        public Object[] getElements(Object inputElement) {
+            return null;
+        }
+
+        public void dispose() {
+        }
+
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        }
+
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.BinsDesignerForm;
     }
 
 }

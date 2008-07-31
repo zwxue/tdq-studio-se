@@ -37,22 +37,13 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
     private DataThresholdsParameter parameter;
 
+    protected Group group;
+
     public DataThresholdsForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
         super(parent, style, parameter);
 
         this.parameter = (DataThresholdsParameter) parameter;
         this.setupForm();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormName()
-     */
-    @Override
-    public String getFormName() {
-
-        return FormEnum.DataThresholdsForm.getFormName();
     }
 
     /*
@@ -74,7 +65,7 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
     @Override
     protected void addFields() {
 
-        Group group = new Group(this, SWT.NONE);
+        group = new Group(this, SWT.NONE);
         group.setLayout(new GridLayout(2, false));
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         group.setText("Set here the thresholds expected on the data");
@@ -172,6 +163,11 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
             higherText.setText(parameter.getMaxThreshold());
         }
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.DataThresholdsForm;
     }
 
 }

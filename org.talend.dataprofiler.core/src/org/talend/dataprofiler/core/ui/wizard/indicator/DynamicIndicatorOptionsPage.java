@@ -16,32 +16,27 @@ import java.util.Map;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.FormFactory;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataprofiler.core.ui.utils.FormFactory;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.help.HelpPlugin;
-import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dataquality.indicators.DataminingType;
-import org.talend.utils.sql.Java2SqlType;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class DynamicIndicatorOptionsPage extends WizardPage {
 
-    private IndicatorUnit indicator;
-
-    private ColumnIndicator parentColumn;
+    private IndicatorUnit indicatorUnit;
 
     private TabFolder tabFolder;
 
@@ -54,12 +49,12 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
      * 
      * @param pageName
      */
-    public DynamicIndicatorOptionsPage(IndicatorUnit indicator, Map<FormEnum, AbstractIndicatorParameter> paramMap) {
+    public DynamicIndicatorOptionsPage(IndicatorUnit indicatorUnit, Map<FormEnum, AbstractIndicatorParameter> paramMap) {
         super("Indicator settings");
 
-        this.indicator = indicator;
+        this.indicatorUnit = indicatorUnit;
         this.paramMap = paramMap;
-        this.parentColumn = indicator.getParentColumn();
+
         setTitle("Indicator settings");
         setMessage("In this wizard, parameters for the given indicator can be set");
 
@@ -89,15 +84,21 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         container.setLayout(new FillLayout());
 
         tabFolder = new TabFolder(container, SWT.FLAT);
-        tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+        tabFolder.addSelectionListener(new SelectionAdapter() {
 
-        DataminingType dataminingType = MetadataHelper.getDataminingType(parentColumn.getTdColumn());
-        if (dataminingType == null) {
-            dataminingType = MetadataHelper.getDefaultDataminingType(parentColumn.getTdColumn().getJavaType());
-        }
-        int sqlType = parentColumn.getTdColumn().getJavaType();
+            @Override
+            public void widgetSelected(SelectionEvent e) {
 
-        FormEnum[] forms = getForms(dataminingType, sqlType);
+                Object formObject = e.item.getData();
+                if (formObject != null) {
+                    AbstractIndicatorForm form = (AbstractIndicatorForm) formObject;
+                    form.showHelp();
+                }
+            }
+
+        });
+
+        FormEnum[] forms = FormEnum.getForms(this.indicatorUnit);
         if (forms != null) {
             setControl(createView(FormFactory.createForm(tabFolder, listener, forms, paramMap)));
         }
@@ -114,93 +115,11 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
     }
 
-    /**
-     * DOC zqin Comment method "getForms".
-     * 
-     * @param dataminingType
-     * @param sqlType
-     */
-    private FormEnum[] getForms(DataminingType dataminingType, int sqlType) {
-        FormEnum[] forms = null;
-
-        switch (indicator.getType()) {
-
-        case DistinctCountIndicatorEnum:
-        case UniqueIndicatorEnum:
-        case DuplicateCountIndicatorEnum:
-
-            if (Java2SqlType.isTextInSQL(sqlType)) {
-                forms = new FormEnum[] { FormEnum.TextParametersForm, FormEnum.IndicatorThresholdsForm };
-            }
-
-            break;
-        case MinLengthIndicatorEnum:
-        case MaxLengthIndicatorEnum:
-        case AverageLengthIndicatorEnum:
-
-            forms = new FormEnum[] { FormEnum.TextLengthForm, FormEnum.IndicatorThresholdsForm };
-
-            break;
-        case FrequencyIndicatorEnum:
-            if (dataminingType == DataminingType.INTERVAL) {
-                if (Java2SqlType.isNumbericInSQL(sqlType)) {
-
-                    forms = new FormEnum[] { FormEnum.FreqBinsDesignerForm };
-                }
-
-                if (Java2SqlType.isDateInSQL(sqlType)) {
-
-                    forms = new FormEnum[] { FormEnum.FreqTimeSliceForm };
-                }
-            } else if (Java2SqlType.isTextInSQL(sqlType)) {
-
-                forms = new FormEnum[] { FormEnum.FreqTextParametersForm, FormEnum.TextLengthForm };
-            }
-
-            break;
-        case ModeIndicatorEnum:
-            if (dataminingType == DataminingType.INTERVAL) {
-                if (Java2SqlType.isNumbericInSQL(sqlType)) {
-
-                    forms = new FormEnum[] { FormEnum.BinsDesignerForm };
-                }
-            } else if (Java2SqlType.isTextInSQL(sqlType)) {
-
-                forms = new FormEnum[] { FormEnum.TextParametersForm };
-            }
-
-            break;
-        case BoxIIndicatorEnum:
-            forms = new FormEnum[] { FormEnum.DataThresholdsForm };
-
-            break;
-        case MeanIndicatorEnum:
-        case MedianIndicatorEnum:
-        case LowerQuartileIndicatorEnum:
-        case UpperQuartileIndicatorEnum:
-        case MinValueIndicatorEnum:
-        case MaxValueIndicatorEnum:
-            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
-
-            break;
-
-        case RegexpMatchingIndicatorEnum:
-        case SqlPatternMatchingIndicatorEnum:
-            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
-
-            break;
-
-        default:
-
-        }
-
-        return forms;
-    }
-
     private Composite createView(AbstractIndicatorForm... forms) {
         try {
             for (AbstractIndicatorForm iForm : forms) {
                 TabItem item = new TabItem(tabFolder, SWT.NONE);
+                item.setData(iForm);
                 item.setText(iForm.getFormName());
                 item.setControl(iForm);
             }

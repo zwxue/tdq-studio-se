@@ -22,14 +22,13 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.HelpUtils;
+import org.talend.dataprofiler.core.ui.utils.CheatSheetWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
-import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
@@ -167,19 +166,12 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected WizardDialog getPredefinedDialog() {
 
-        String helpID = HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID;
-
         CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(true, AnalysisType.MULTIPLE_COLUMN);
         wizard.setForcePreviousAndNextButtons(true);
         TimeSliceOptionPage page = new TimeSliceOptionPage();
         wizard.setOtherPages(new WizardPage[] { page });
 
-        Indicator indicator = (Indicator) IndicatorsFactory.eINSTANCE.create(IndicatorEnum.FrequencyIndicatorEnum
-                .getIndicatorType());
-        ColumnIndicator columnIndicator = new ColumnIndicator(getColumns()[0]);
-        IndicatorUnit indicatorUnit = new IndicatorUnit(IndicatorEnum.FrequencyIndicatorEnum, indicator, columnIndicator);
-
-        return HelpUtils.injectHelpForOnePage(getStandardAnalysisWizardDialog(), wizard, helpID, indicatorUnit, page);
+        return new CheatSheetWizardDialog(null, wizard, FormEnum.TimeSlicesForm.getHelpHref(), page);
     }
 
 }

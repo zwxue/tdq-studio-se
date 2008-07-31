@@ -37,7 +37,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisDataFactory;
+import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
 import org.talend.dataprofiler.core.ui.wizard.analysis.filter.NamedViewerFilter;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeContentProvider;
@@ -108,7 +108,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
         analysisTypes = new TreeViewer(treeContainer, SWT.BORDER);
         analysisTypes.setContentProvider(contentProvider);
         analysisTypes.setLabelProvider(labelProvider);
-        analysisTypes.setInput(AnalysisDataFactory.createTreeData());
+        analysisTypes.setInput(ViewerDataFactory.createTreeData());
 
     }
 

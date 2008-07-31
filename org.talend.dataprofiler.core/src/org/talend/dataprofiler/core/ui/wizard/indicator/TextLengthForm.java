@@ -44,17 +44,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormName()
-     */
-    @Override
-    public String getFormName() {
-
-        return FormEnum.TextLengthForm.getFormName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -162,6 +151,11 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
         nullBtn.setSelection(parameter.isUseNull());
         blankBtn.setSelection(parameter.isUseBlank());
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.TextLengthForm;
     }
 
 }
