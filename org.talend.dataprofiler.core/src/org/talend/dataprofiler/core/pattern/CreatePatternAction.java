@@ -27,7 +27,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ui.utils.CheatSheetWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 
@@ -81,7 +81,7 @@ public class CreatePatternAction extends Action {
         default:
             break;
         }
-        WizardDialog dialog = new CheatSheetWizardDialog(Display.getDefault().getActiveShell(), fileWizard, href);
+        WizardDialog dialog = new OpeningHelpWizardDialog(Display.getDefault().getActiveShell(), fileWizard, href);
         fileWizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
             try {

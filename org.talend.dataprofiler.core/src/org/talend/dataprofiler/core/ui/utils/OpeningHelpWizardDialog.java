@@ -37,7 +37,7 @@ import org.talend.dataprofiler.help.HelpPlugin;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  * 
  */
-public class CheatSheetWizardDialog extends WizardDialog {
+public class OpeningHelpWizardDialog extends WizardDialog {
 
     private static int activeCount = 0;
 
@@ -51,11 +51,11 @@ public class CheatSheetWizardDialog extends WizardDialog {
      * @param parentShell
      * @param newWizard
      */
-    public CheatSheetWizardDialog(Shell parentShell, IWizard newWizard, String href) {
+    public OpeningHelpWizardDialog(Shell parentShell, IWizard newWizard, String href) {
         this(parentShell, newWizard, href, null);
     }
 
-    public CheatSheetWizardDialog(Shell parentShell, IWizard newWizard, String href, WizardPage page) {
+    public OpeningHelpWizardDialog(Shell parentShell, IWizard newWizard, String href, WizardPage page) {
         super(parentShell, newWizard);
         this.href = href;
         this.page = page;

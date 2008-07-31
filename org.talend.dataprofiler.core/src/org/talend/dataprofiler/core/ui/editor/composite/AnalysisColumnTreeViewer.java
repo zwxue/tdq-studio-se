@@ -67,7 +67,7 @@ import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.utils.CheatSheetWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
@@ -398,7 +398,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                 IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
 
                 String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
-                CheatSheetWizardDialog optionDialog = new CheatSheetWizardDialog(null, wizard, href);
+                OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(null, wizard, href);
                 optionDialog.create();
                 if (Window.OK == optionDialog.open()) {
                     setDirty(wizard.isDirty());

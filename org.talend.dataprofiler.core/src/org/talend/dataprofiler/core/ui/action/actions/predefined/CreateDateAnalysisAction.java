@@ -24,7 +24,7 @@ import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.CheatSheetWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
@@ -171,7 +171,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
         TimeSliceOptionPage page = new TimeSliceOptionPage();
         wizard.setOtherPages(new WizardPage[] { page });
 
-        return new CheatSheetWizardDialog(null, wizard, FormEnum.TimeSlicesForm.getHelpHref(), page);
+        return new OpeningHelpWizardDialog(null, wizard, FormEnum.TimeSlicesForm.getHelpHref(), page);
     }
 
 }
