@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -34,7 +33,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
  */
 public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
-    private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
+    // private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
 
     private List<IContainer> needSortContainers;
 

@@ -56,6 +56,9 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
         } else if (parentElement instanceof IFolderNode) {
             IFolderNode folerNode = (IFolderNode) parentElement;
             folerNode.loadChildren();
+            if (folerNode.getChildren() == null) {
+                return new Object[0];
+            }
             if (folerNode.getChildrenType() == IFolderNode.MODELELEMENT_TYPE) {
                 return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             } else {

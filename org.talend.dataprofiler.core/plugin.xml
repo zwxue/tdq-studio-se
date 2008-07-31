@@ -100,7 +100,8 @@
                               value="ana">
                         </test> 
                    </or>
-                </and> 
+                </and>                 
+                 <instanceof value="org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode"/> 
              </or>
            </triggerPoints> 
            <possibleChildren> 

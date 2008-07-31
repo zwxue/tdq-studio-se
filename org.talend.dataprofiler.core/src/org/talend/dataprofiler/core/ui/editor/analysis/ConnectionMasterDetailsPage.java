@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -217,7 +218,10 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         rightLabel.setText("Execution date: " + getFormatDateStr(resultMetadata.getExecutionDate()));
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText("Execution status: " + (resultMetadata.isLastRunOk() ? "success" : "failure"));
+
+        String executeStatus = (resultMetadata.isLastRunOk() ? "success" : "failure");
+        rightLabel.setText("Execution status: "
+                + (resultMetadata.getExecutionNumber() == 0 ? PluginConstant.EMPTY_STRING : executeStatus));
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
         rightLabel.setText("Number of executions: " + resultMetadata.getExecutionNumber());
@@ -283,12 +287,6 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         tableColumn.setText("#rows");
         tableColumn.setWidth(100);
         tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#schemata");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#rows/schema");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
         tableColumn.setText("#tables");
         tableColumn.setWidth(100);
         tableColumn = new TableColumn(table, SWT.CENTER);
@@ -308,6 +306,33 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         tableColumn.setWidth(120);
         tableColumn = new TableColumn(table, SWT.CENTER);
         tableColumn.setText("#rows");
+        tableColumn.setWidth(100);
+        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setText("#tables");
+        tableColumn.setWidth(100);
+        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setText("#rows/table");
+        tableColumn.setWidth(100);
+        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setText("#keys");
+        tableColumn.setWidth(100);
+        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setText("#indexes");
+        tableColumn.setWidth(100);
+    }
+
+    private void createCatalogSchemaColumns(Table table) {
+        TableColumn tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setText("catalog");
+        tableColumn.setWidth(120);
+        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setText("#rows");
+        tableColumn.setWidth(100);
+        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setText("#schemata");
+        tableColumn.setWidth(100);
+        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setText("#rows/schema");
         tableColumn.setWidth(100);
         tableColumn = new TableColumn(table, SWT.CENTER);
         tableColumn.setText("#tables");
@@ -421,19 +446,14 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getTotalRowCount();
                 return text;
             case 2:
-                // SCorreia TODO text = schemaIndicator.getschemaData()?????
-                return text + PluginConstant.DEFAULT_INT_VALUE;
-            case 3:
-                return text + PluginConstant.DEFAULT_INT_VALUE;
-            case 4:
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getTableCount();
                 return text;
-            case 5:
+            case 3:
                 return text + getRowCountPerTable(schemaIndicator);
-            case 6:
+            case 4:
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getKeyCount();
                 return text;
-            case 7:
+            case 5:
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getIndexCount();
                 return text;
             default:
@@ -475,7 +495,8 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
 
     private static String getRowCountPerTable(SchemaIndicator schemaIndicator) {
         Double frac = Double.valueOf(schemaIndicator.getTotalRowCount()) / schemaIndicator.getTableCount();
-        // TODO rli format number as 0.00
-        return frac.toString();
+        frac = frac.isNaN() ? 0 : frac;
+        String formatValue = new DecimalFormat("0.00").format(frac);
+        return formatValue;
     }
 }
