@@ -115,7 +115,7 @@ public class ImportPatternsWizardPage extends WizardPage {
         });
 
         Group group = new Group(container, SWT.NONE);
-        group.setText("Name Options");
+        group.setText("Duplicate patterns handling");
         layout = new GridLayout();
         group.setLayout(layout);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -126,7 +126,7 @@ public class ImportPatternsWizardPage extends WizardPage {
         skipBtn.setSelection(true);
 
         renameBtn = new Button(group, SWT.RADIO);
-        renameBtn.setText("rename new patterns with prefix");
+        renameBtn.setText("rename new patterns with suffix");
         setPageComplete(false);
         setControl(container);
     }
