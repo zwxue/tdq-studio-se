@@ -177,7 +177,9 @@ public class ImportPatternsWizard extends Wizard {
             for (IResource resource : folder.members()) {
                 if (resource instanceof IFile) {
                     Pattern fr = PatternResourceFileHelper.getInstance().findPattern((IFile) resource);
-                    list.add(fr.getName());
+                    if (fr != null) {
+                        list.add(fr.getName());
+                    }
                 }
             }
         } catch (CoreException e) {
