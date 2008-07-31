@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>BinsDesigner</title>
+<title>Indicator Thresholds</title>
 <style>
 	#title {font-size:11pt; font-faimily:Verdana; font-weight:bold}
 	#content {font-size:8pt; font-family:Verdana}
@@ -13,45 +13,36 @@
 </head>
 <body>
 	<span id ="content">
-	<span id = "title">Bins designer:</span>
+	<span id = "title">Indicator Thresholds:</span>
 	<br>
 	-------------------------------------
-	<br>
-	
-	In this panel, you can define the bins to use when you must aggregate continuous data into discrete bins. 
-	
 	<p>
-	The created bins will all have the same size, except the first and last bins. 
-	<p>
-	The minimal value is the beginning of the first bin.
-	<p>
-	The maximal value is the end of the last bin.
 	
+	Here, you can define expected thresholds on the indicator's value. 
 	<p>
-	Example:
-	min = 0
-	max = 100
-	nb = 4
+	The range defined here is used for measuring the quality of the data. 
+	<p>
+	If the indicator's value is outside the defined range, then this means that the data are of bad quality. 
+	<p>
+	For example, if you define a range [0, 3] on the Blank Indicator, this means that you want that the number of blank fields must be less than 3 (included). 
+	<p>
+	You can define only one threshold or no threshold at all.
 	
-	<br>
-	The bins are 
-	<br>
-	]0, 25] U ]25, 50] U ]50, 75] U ]75, 100]
 	</span>
 	
 	<span id="foot">
 	<p>
-		See also:
+		Also see:
 	<p>
-	<a href="TimeSlice.html">Time slice</a>
+	<a href="BinsDesigner.html">Bins designer</a>
 	<br>
 	<a href="TextParameter.html">Text parameter</a>
+	<br>
+	<a href="TimeSlice.html">Time slice</a>
 	<br>
 	<a href="TextLength.html">Text length</a>
 	<br>
 	<a href="DataThreshold.html">Data threshold</a>
-	<br>
-	<a href="IndicatorThresholds.html">Indicator Thresholds</a>
-	</span>
+	</span>	
 </body>
 </html>
