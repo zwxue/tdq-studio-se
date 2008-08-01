@@ -27,6 +27,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
@@ -307,48 +308,52 @@ public class ColumnAnalysisHandler {
         return str;
     }
 
+    /**
+     * Method "getSchemaNames".
+     * 
+     * @return the schema names concatenated or the empty string (never null)
+     */
     public String getSchemaNames() {
         String str = "";
         for (ColumnSet columnSet : getColumnSets()) {
-            try {
-                Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-                if (schema != null) {
-                    str = str + schema.getName() + " ";
-                }
-            } catch (NullPointerException ne) {
-                return null;
+            Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
+            if (schema != null && RelationalPackage.eINSTANCE.getTdSchema().equals(schema.eClass())) {
+                str = str + schema.getName() + " ";
             }
         }
-
         return str;
     }
 
+    /**
+     * Method "getCatalogNames".
+     * 
+     * @return the catalog names concatenated or the empty string (never null)
+     */
     public String getCatalogNames() {
         String str = "";
         for (ColumnSet columnSet : getColumnSets()) {
             Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-            if (schema != null) {
-                try {
-                    Package catalog = ColumnSetHelper.getParentCatalogOrSchema(schema);
-                    if (catalog != null) {
-                        str = str + catalog.getName() + " ";
-                    }
-                } catch (NullPointerException ne) {
-                    return null;
+            if (schema == null) {
+                continue;
+            }
+            if (RelationalPackage.eINSTANCE.getTdCatalog().equals(schema.eClass())) {
+                str = str + schema.getName() + " ";
+            } else {
+                Package catalog = ColumnSetHelper.getParentCatalogOrSchema(schema);
+                if (catalog != null) {
+                    str = str + catalog.getName() + " ";
                 }
-
             }
         }
-
         return str;
     }
 
     public boolean isCatalogExisting() {
-        return getCatalogNames() != null ? true : false;
+        return getCatalogNames().trim().length() != 0 ? true : false;
     }
 
     public boolean isSchemaExisting() {
-        return getSchemaNames() != null ? true : false;
+        return getSchemaNames().trim().length() != 0 ? true : false;
     }
 
     public String getExecuteData() {

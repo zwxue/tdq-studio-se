@@ -26,6 +26,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.relational.util.RelationalSwitch;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -101,11 +102,15 @@ public class ColumnSetHelper {
         if (element == null) {
             return null;
         }
-        TdCatalog res = SwitchHelpers.CATALOG_SWITCH.doSwitch(element.getNamespace());
+        Namespace namespace = element.getNamespace();
+        if (namespace == null) {
+            return null;
+        }
+        TdCatalog res = SwitchHelpers.CATALOG_SWITCH.doSwitch(namespace);
         if (res != null) {
             return res;
         }
-        return SwitchHelpers.SCHEMA_SWITCH.doSwitch(element.getNamespace());
+        return SwitchHelpers.SCHEMA_SWITCH.doSwitch(namespace);
     }
 
     /**
@@ -118,8 +123,8 @@ public class ColumnSetHelper {
      * @param tClassifierId the the classifierId of the searched elements (e.g. {@link RelationalPackage#TD_VIEW})
      * @return true if elements have been found and potentially added to the output list.
      */
-    public static <T extends ColumnSet> boolean fillColumnSets(TdCatalog catalog, TdSchema schema,
-            Collection<T> output, final int tClassifierId) {
+    public static <T extends ColumnSet> boolean fillColumnSets(TdCatalog catalog, TdSchema schema, Collection<T> output,
+            final int tClassifierId) {
         // --- precondition
         if (catalog == null && schema == null) {
             return false;
