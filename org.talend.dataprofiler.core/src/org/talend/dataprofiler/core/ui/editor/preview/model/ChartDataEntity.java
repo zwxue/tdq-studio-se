@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
+import java.text.DecimalFormat;
+
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 
 /**
@@ -22,8 +25,6 @@ public class ChartDataEntity {
     private String label;
 
     private String value;
-
-    private String persent;
 
     private Indicator indicator;
 
@@ -44,11 +45,24 @@ public class ChartDataEntity {
     }
 
     public String getPersent() {
-        return persent;
-    }
+        if (indicator != null) {
 
-    public void setPersent(String persent) {
-        this.persent = persent;
+            DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
+            format.applyPattern("0.00%");
+
+            double persent;
+
+            if (indicator instanceof FrequencyIndicator) {
+                FrequencyIndicator freIndicator = (FrequencyIndicator) indicator;
+                persent = Double.parseDouble(getValue()) / freIndicator.getValueToFreq().size();
+            } else {
+                persent = Double.parseDouble(getValue()) / indicator.getCount().doubleValue();
+            }
+
+            return persent == 0 ? "0" : format.format(persent);
+        }
+
+        return "";
     }
 
     public Indicator getIndicator() {

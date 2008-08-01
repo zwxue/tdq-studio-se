@@ -12,10 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
-import java.text.DecimalFormat;
-
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -32,13 +29,6 @@ public class ChartWithData {
         this.chartNamedType = chartNamedType;
         this.imageDescriptor = imageDescriptor;
         this.enity = enity;
-
-        /*
-         * the concluation of the pattern remain in thire inside.
-         */
-        if (chartNamedType != CompositeIndicator.PATTERN_MATCHING) {
-            this.computered();
-        }
     }
 
     public ImageDescriptor getImageDescriptor() {
@@ -51,29 +41,6 @@ public class ChartWithData {
 
     public String getChartNamedType() {
         return chartNamedType;
-    }
-
-    private void computered() {
-        double sum = 0;
-        for (ChartDataEntity oneEntity : this.enity) {
-            if (oneEntity.getValue() != null) {
-                sum = sum + Double.valueOf(oneEntity.getValue());
-            }
-        }
-
-        for (ChartDataEntity oneEntity : this.enity) {
-            if (sum != 0) {
-                Double doub = Double.valueOf(oneEntity.getValue()) / sum;
-
-                DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
-                format.applyPattern("0.00%");
-
-                oneEntity.setPersent(format.format(doub));
-            } else {
-                oneEntity.setPersent("0.00%");
-            }
-
-        }
     }
 
 }

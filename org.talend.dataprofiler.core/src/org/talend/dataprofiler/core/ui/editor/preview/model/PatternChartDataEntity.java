@@ -48,9 +48,6 @@ public class PatternChartDataEntity extends ChartDataEntity {
     }
 
     private Double getSum() {
-        Double match = Double.parseDouble(getNumMatch());
-        Double nomatch = Double.parseDouble(getNumNoMatch());
-
-        return match + nomatch;
+        return getIndicator().getCount().doubleValue();
     }
 }

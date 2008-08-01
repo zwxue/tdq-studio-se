@@ -96,32 +96,42 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
 
         Composite databaseComp = toolkit.createComposite(sectionClient);
         databaseComp.setLayout(new GridLayout(2, false));
-        databaseComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        GridData databaseCompData = new GridData(GridData.FILL_HORIZONTAL);
+        databaseCompData.verticalAlignment = GridData.BEGINNING;
+        databaseComp.setLayoutData(databaseCompData);
 
         ColumnAnalysisHandler handler = this.masterPage.getAnalysisHandler();
         toolkit.createLabel(databaseComp, "Connection:");
         toolkit.createLabel(databaseComp, handler.getConnectionName());
-        toolkit.createLabel(databaseComp, "Catalog:");
-        toolkit.createLabel(databaseComp, handler.getCatalogNames());
-        toolkit.createLabel(databaseComp, "Schema:");
-        toolkit.createLabel(databaseComp, handler.getSchemaNames());
+        if (handler.isCatalogExisting()) {
+            toolkit.createLabel(databaseComp, "Catalog:");
+            toolkit.createLabel(databaseComp, handler.getCatalogNames());
+        }
+
+        if (handler.isSchemaExisting()) {
+            toolkit.createLabel(databaseComp, "Schema:");
+            toolkit.createLabel(databaseComp, handler.getSchemaNames());
+        }
+
         toolkit.createLabel(databaseComp, "Table(s):");
         toolkit.createLabel(databaseComp, handler.getTableNames());
 
         Composite executionComp = toolkit.createComposite(sectionClient);
         executionComp.setLayout(new GridLayout(2, false));
-        executionComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        GridData executionCompData = new GridData(GridData.FILL_HORIZONTAL);
+        executionCompData.verticalAlignment = GridData.BEGINNING;
+        executionComp.setLayoutData(executionCompData);
         toolkit.createLabel(executionComp, "Execution Date:");
         toolkit.createLabel(executionComp, handler.getExecuteData());
         toolkit.createLabel(executionComp, "Execution Duration:");
         toolkit.createLabel(executionComp, handler.getExecuteDuration());
         toolkit.createLabel(executionComp, "Execution Status:");
-        toolkit.createLabel(executionComp, handler.getExecuteStatus());
+        toolkit.createLabel(executionComp, handler.getExecuteStatus()).setForeground(
+                Display.getDefault().getSystemColor(SWT.COLOR_RED));
         toolkit.createLabel(executionComp, "Number of Execution:");
         toolkit.createLabel(executionComp, handler.getExecuteNumber());
         toolkit.createLabel(executionComp, "Last Sucessful Execution:");
-        toolkit.createLabel(executionComp, handler.getErrorMessage()).setForeground(
-                Display.getDefault().getSystemColor(SWT.COLOR_RED));
+        toolkit.createLabel(executionComp, handler.getLastExecutionNumberOk());
 
         section.setClient(sectionClient);
     }
@@ -238,6 +248,14 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
         }
+    }
+
+    public void refresh(ColumnMasterDetailsPage masterPage) {
+        this.masterPage = masterPage;
+        this.summaryComp.dispose();
+        this.resultComp.dispose();
+
+        createFormContent(getManagedForm());
     }
 
 }

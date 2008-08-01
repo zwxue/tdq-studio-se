@@ -116,6 +116,15 @@ public class AnalysisEditor extends CommonFormEditor {
         }
     }
 
+    @Override
+    protected void pageChange(int newPageIndex) {
+        super.pageChange(newPageIndex);
+
+        if (columnResultPage != null && newPageIndex == columnResultPage.getIndex()) {
+            ((ColumnAnalysisResultPage) columnResultPage).refresh((ColumnMasterDetailsPage) getMasterPage());
+        }
+    }
+
     /**
      * Getter for masterPage.
      * 
