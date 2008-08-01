@@ -144,7 +144,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 }
                 movedIFile = folder.getFile(name);
                 EObjectHelper.addDependenciesForFile(movedIFile, oldDependencySuppliers);
-                EObjectHelper.addDependenciesForFile(movedIFile, oldDependencyClients);
+                EObjectHelper.addDependenciesForModelElement(movedIFile, oldDependencyClients);
                 for (ModelElement element : oldDependencySuppliers) {
                     EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
                 }

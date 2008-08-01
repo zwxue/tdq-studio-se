@@ -149,4 +149,11 @@ public final class EObjectHelper {
         }
     }
 
+    public static void addDependenciesForModelElement(IFile file, List<ModelElement> modelElements) {
+        ModelElement findElement = getModelElement(file);
+        for (int i = 0; i < modelElements.size(); i++) {
+            DependenciesHandler.getInstance().setUsageDependencyOn(modelElements.get(i), findElement);
+        }
+    }
+
 }
