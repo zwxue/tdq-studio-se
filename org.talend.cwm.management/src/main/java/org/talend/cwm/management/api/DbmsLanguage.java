@@ -46,13 +46,15 @@ public class DbmsLanguage {
     /** Functions of the system. [Function name, number of parameters] */
     private final Map<String, Integer> dbmsFunctions;
 
-    // --- add here other supported systems (always in uppercase)
+    // --- add here other supported systems (always in uppercase) // DBMS_SUPPORT
 
     private static final String ORACLE = "ORACLE";
 
     private static final String MYSQL = "MYSQL";
 
     private static final String POSTGRESQL = "POSTGRESQL";
+
+    private static final String MSSQL = "MICROSOFT SQL SERVER";
 
     /**
      * Ansi SQL.
@@ -211,7 +213,10 @@ public class DbmsLanguage {
     }
 
     // TODO scorreia move this method in a utility class
-    public String toQualifiedName(String catalog, String schema, String name) {
+    public String toQualifiedName(String catalog, String schema, String table) {
+        if (is(MSSQL)) {
+            schema = "dbo";
+        }
         StringBuffer qualName = new StringBuffer();
         if (catalog != null && catalog.length() > 0) {
             qualName.append(catalog);
@@ -222,9 +227,9 @@ public class DbmsLanguage {
             qualName.append(DOT);
         }
 
-        qualName.append(name);
+        qualName.append(table);
         if (log.isDebugEnabled()) {
-            log.debug(String.format("%s.%s.%s -> %s", catalog, schema, name, qualName));
+            log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName));
         }
         return qualName.toString();
     }
@@ -513,7 +518,7 @@ public class DbmsLanguage {
     private Map<String, Integer> initDbmsFunctions(String dbms) {
         Map<String, Integer> functions = new HashMap<String, Integer>();
 
-        // --- functions common to all databases
+        // --- functions common to all databases // DBMS_SUPPORT
         functions.put("TRIM", 1);
         functions.put("SUM", 1);
         functions.put("MIN", 1);
@@ -521,7 +526,7 @@ public class DbmsLanguage {
         functions.put("UPPER", 1);
         functions.put("LOWER", 1);
 
-        // --- set here functions specific to some databases
+        // --- set here functions specific to some databases // DBMS_SUPPORT
         if (is(SQL)) {
             functions.put("CHAR_LENGTH", 1);
         }

@@ -221,7 +221,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String table = quote(ColumnHelper.getColumnSetFullName(tdColumn));
 
         // --- normalize table name
-        String catalogName = getCatalogName(tdColumn);
+        String catalogName = getQuotedCatalogName(tdColumn);
         table = dbms().toQualifiedName(catalogName, null, table);
 
         // ### evaluate SQL Statement depending on indicators ###
@@ -940,7 +940,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return null;
         }
         // else
-        return quote(schema.getName());
+        return schema.getName();
+    }
+
+    /**
+     * Method "getCatalogName".
+     * 
+     * @param analyzedElement
+     * @return the catalog or schema quoted name
+     */
+    private String getQuotedCatalogName(ModelElement analyzedElement) {
+        return quote(this.getCatalogName(analyzedElement));
     }
 
     /**
@@ -1011,22 +1021,23 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "changeCatalog".
+     * Method "changeCatalog".
      * 
-     * @param catalogName
+     * @param catalogName unquoted catalog's name
      * @param connection
      * @throws SQLException
      */
     private boolean changeCatalog(String catalogName, Connection connection) {
         try {
+            // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
             connection.setCatalog(catalogName);
             return true;
         } catch (RuntimeException e) {
-            traceError("Problem when changing catalog on connection " + e.getMessage());
-            return false;
+            return traceError("Problem when changing trying to set catalog \"" + catalogName
+                    + "\" on connection. RuntimeException message: " + e.getMessage());
         } catch (SQLException e) {
-            traceError("Problem when changing catalog on connection " + e.getMessage());
-            return false;
+            return traceError("Problem when changing trying to set catalog \"" + catalogName
+                    + "\" on connection. SQLException message: " + e.getMessage());
         }
     }
 }
