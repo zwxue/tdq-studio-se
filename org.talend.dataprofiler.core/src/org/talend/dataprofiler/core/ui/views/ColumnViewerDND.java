@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -146,7 +147,7 @@ public class ColumnViewerDND {
                 IFile fe = (IFile) firstElement;
                 if (NewSourcePatternActionProvider.EXTENSION_PATTERN.equals(fe.getFileExtension())) {
                     Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe);
-                    if (pattern != null) {
+                    if (pattern != null && TaggedValueHelper.getValidStatus(pattern)) {
                         is = false;
                     }
                 }

@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -25,7 +26,9 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
@@ -55,6 +58,33 @@ public class PatternUtilities {
             }
         }
         return false;
+    }
+
+    /**
+     * DOC qzhang Comment method "isPatternValid".
+     * 
+     * @param pattern
+     * @return
+     */
+    public static boolean isPatternValid(Pattern pattern) {
+        boolean valid = true;
+        EList<PatternComponent> components = pattern.getComponents();
+        for (int i = 0; i < components.size(); i++) {
+            RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
+            String body = regularExpress.getExpression().getBody();
+            valid = ((body != null) && (body.matches("^.*'")));
+            if (!valid) {
+                break;
+            } else {
+                if (body.charAt(0) == '^') {
+                    body = "'" + body.substring(1);
+                } else {
+                    body = "'" + body;
+                }
+                regularExpress.getExpression().setBody(body);
+            }
+        }
+        return valid;
     }
 
     /**

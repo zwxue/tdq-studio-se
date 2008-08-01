@@ -40,6 +40,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
@@ -251,6 +252,10 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     private boolean savePattern() {
         this.pattern.getComponents().clear();
         this.pattern.getComponents().addAll(tempPatternComponents);
+
+        // PTODO fixed bug 4296: set the Pattern is valid
+        TaggedValueHelper.setValidStatus(true, pattern);
+
         EList<PatternComponent> components = this.pattern.getComponents();
         List<String> existLanguage = new ArrayList<String>();
         for (int i = 0; i < components.size(); i++) {

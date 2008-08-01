@@ -20,11 +20,16 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonLabelProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -55,7 +60,19 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         if (element instanceof IFile) {
             IFile file = (IFile) element;
             if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
-                return ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
+                Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
+                if (findPattern != null) {
+                    boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
+                    if (!validStatus) {
+                        ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
+                                ISharedImages.IMG_OBJS_WARN_TSK);
+                        DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
+                                IDecoration.BOTTOM_RIGHT);
+                        imageDescriptor = icon;
+                    }
+                }
+                return imageDescriptor;
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
                 return ImageLib.getImageDescriptor(ImageLib.REPORT_OBJECT);
             }

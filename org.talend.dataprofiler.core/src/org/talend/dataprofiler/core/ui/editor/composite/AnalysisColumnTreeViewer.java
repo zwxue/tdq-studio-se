@@ -19,9 +19,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -49,12 +54,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
+import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
@@ -260,6 +269,32 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                     IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
                             DQStructureManager.LIBRARIES);
                     dialog.setInput(defaultPatternFolder);
+                    dialog.setValidator(new ISelectionStatusValidator() {
+
+                        /*
+                         * (non-Javadoc)
+                         * 
+                         * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
+                         */
+                        public IStatus validate(Object[] selection) {
+                            IStatus status = Status.OK_STATUS;
+                            for (Object patte : selection) {
+                                if (patte instanceof IFile) {
+                                    IFile file = (IFile) patte;
+                                    if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
+                                        Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                                        boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
+                                        if (!validStatus) {
+                                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
+                                                    "please choose valid patterns.");
+                                        }
+                                    }
+                                }
+                            }
+                            return status;
+                        }
+
+                    });
                     dialog.addFilter(new ViewerFilter() {
 
                         /*
@@ -701,13 +736,22 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         @Override
         public Image getImage(Object element) {
-
             if (element instanceof IFolder) {
                 return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             }
 
             if (element instanceof IFile) {
-                return ImageLib.getImage(ImageLib.PATTERN_REG);
+                Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern((IFile) element);
+                boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
+                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
+                if (!validStatus) {
+                    ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
+                            ISharedImages.IMG_OBJS_WARN_TSK);
+                    DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
+                            IDecoration.BOTTOM_RIGHT);
+                    imageDescriptor = icon;
+                }
+                return imageDescriptor.createImage();
             }
 
             return null;
