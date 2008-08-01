@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -37,6 +39,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
@@ -72,9 +75,25 @@ public final class DQStructureManager {
      */
     public static final String DB_CONNECTIONS = "DB Connections";
 
-    public static final QualifiedName FOLDER_FIRM_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FolderFirmProperty");
+    public static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FolderFirmProperty");
 
-    public static final String FOLDER_FIRM_PROPERTY = "FOLDER_FIRM_PROPERTY";
+    public static final String ANALYSIS_FOLDER_PROPERTY = "FOLDER_ANALYSIS_PROPERTY";
+
+    public static final String REPORT_FOLDER_PROPERTY = "FOLDER_REPORT_PROPERTY";
+
+    public static final String PATTERNS_FOLDER_PROPERTY = "FOLDER_PATTERNS_PROPERTY";
+
+    public static final String SQLPATTERNS_FOLDER_PROPERTY = "SQLPATTERNS_FOLDER_PROPERTY";
+
+    public static final String SOURCEFILES_FOLDER_PROPERTY = "SOURCEFILES_FOLDER_PROPERTY";
+
+    public static final String DBCONNECTION_FOLDER_PROPERTY = "DBCONNECTION_FOLDER_PROPERTY";
+
+    public static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FolderFirmProperty");
+
+    public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_property";
+
+    private List<String> modleElementSuffixs = null;
 
     private static DQStructureManager manager = new DQStructureManager();
 
@@ -83,7 +102,18 @@ public final class DQStructureManager {
     }
 
     private DQStructureManager() {
+        init();
+    }
 
+    private void init() {
+        modleElementSuffixs = new ArrayList<String>();
+        modleElementSuffixs.add(FactoriesUtil.ANA);
+        modleElementSuffixs.add(FactoriesUtil.REP);
+        modleElementSuffixs.add(FactoriesUtil.PROV);
+    }
+
+    public List<String> getModelElementSuffixs() {
+        return modleElementSuffixs;
     }
 
     public boolean createDQStructure() {
@@ -92,22 +122,28 @@ public final class DQStructureManager {
         try {
             // create "Data Profiling" project
             IProject project = this.createNewProject(DATA_PROFILING, shell);
-            this.createNewFoler(project, ANALYSIS);
-            this.createNewFoler(project, REPORTS);
+            IFolder createNewFoler = this.createNewFoler(project, ANALYSIS);
+            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, ANALYSIS_FOLDER_PROPERTY);
+            createNewFoler = this.createNewFoler(project, REPORTS);
+            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, REPORT_FOLDER_PROPERTY);
 
             // create "Libraries" project
             project = this.createNewProject(LIBRARIES, shell);
-            IFolder patternFolder = this.createNewFoler(project, PATTERNS);
-            this.createNewFoler(project, SQL_PATTERNS);
+            createNewFoler = this.createNewFoler(project, PATTERNS);
+            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, PATTERNS_FOLDER_PROPERTY);
             // Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
-            this.copyFilesToFolder(PATTERN_PATH, true, patternFolder);
-            IFolder sqlSourceFolder = this.createNewFoler(project, SOURCE_FILES);
+            this.copyFilesToFolder(PATTERN_PATH, true, createNewFoler);
+            createNewFoler = this.createNewFoler(project, SQL_PATTERNS);
+            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SQLPATTERNS_FOLDER_PROPERTY);
+            createNewFoler = this.createNewFoler(project, SOURCE_FILES);
+            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SOURCEFILES_FOLDER_PROPERTY);
             // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to folder "Libraries/Source Files".
-            this.copyFilesToFolder(DEMO_PATH, true, sqlSourceFolder);
+            this.copyFilesToFolder(DEMO_PATH, true, createNewFoler);
 
             // create "Metadata" project
             project = this.createNewProject(METADATA, shell);
-            this.createNewFoler(project, DB_CONNECTIONS);
+            createNewFoler = this.createNewFoler(project, DB_CONNECTIONS);
+            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DBCONNECTION_FOLDER_PROPERTY);
         } catch (Exception ex) {
             ExceptionHandler.process(ex);
             return false;
@@ -161,7 +197,7 @@ public final class DQStructureManager {
         if (!desFolder.exists()) {
             desFolder.create(false, true, null);
         }
-        desFolder.setPersistentProperty(FOLDER_FIRM_KEY, FOLDER_FIRM_PROPERTY);
+        desFolder.setPersistentProperty(FOLDER_READONLY_KEY, FOLDER_READONLY_PROPERTY);
         return desFolder;
     }
 
@@ -204,6 +240,7 @@ public final class DQStructureManager {
                 if (!folder.exists()) {
                     folder.create(true, true, null);
                 }
+                folder.setPersistentProperty(FOLDER_CLASSIFY_KEY, desFolder.getPersistentProperty(FOLDER_CLASSIFY_KEY));
                 copyFilesToFolder(currentPath, recurse, folder);
                 continue;
             }

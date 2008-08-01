@@ -49,7 +49,7 @@ public class DeleteUserFolderProvider extends CommonActionProvider {
         if (obj instanceof IFolder) {
             currentSelection = (IFolder) obj;
             try {
-                if (currentSelection.getPersistentProperty(DQStructureManager.FOLDER_FIRM_KEY) != null) {
+                if (currentSelection.getPersistentProperty(DQStructureManager.FOLDER_READONLY_KEY) != null) {
                     return;
                 }
             } catch (CoreException e) {

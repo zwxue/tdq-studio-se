@@ -44,6 +44,7 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -67,6 +68,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
      * @see org.eclipse.ui.navigator.CommonDropAdapterAssistant#handleDrop (org.eclipse.ui.navigator.CommonDropAdapter,
      * org.eclipse.swt.dnd.DropTargetEvent, java.lang.Object)
      */
+    @SuppressWarnings("static-access")
     @Override
     public IStatus handleDrop(CommonDropAdapter aDropAdapter, DropTargetEvent aDropTargetEvent, Object target) {
         // alwaysOverwrite = false;
@@ -104,8 +106,23 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 String name = res.getName();
                 IFile fileRes = (IFile) res;
                 IFile movedIFile = folder.getFile(name);
+                if (!DQStructureManager.getInstance().getModelElementSuffixs().contains(fileRes.getFileExtension())) {
+
+                    try {
+                        fileRes.move(movedIFile.getFullPath(), false, null);
+                        fileRes.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+                        folder.refreshLocal(IResource.DEPTH_INFINITE, null);
+                    } catch (CoreException e) {
+                        ExceptionHandler.process(e);
+                    }
+                    return Status.OK_STATUS;
+                    // File destFile = new File(location.append(name).toPortableString());
+                    // File srcFile = new File(res.getLocation().toPortableString());
+                    // srcFile.renameTo(destFile);
+                }
 
                 List<ModelElement> oldDependencySuppliers = EObjectHelper.getDependencySuppliers(fileRes);
+                List<ModelElement> oldDependencyClients = EObjectHelper.getDependencyClients(fileRes);
                 EObjectHelper.removeDependencys(new IResource[] { fileRes });
 
                 IContainer srcParent = fileRes.getParent();
@@ -115,19 +132,23 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 if (resource != null) {
                     URI desUri = URI.createPlatformResourceURI(folder.getFullPath().toString(), false);
                     EMFUtil.changeUri(resource, desUri);
+                    EMFSharedResources.getSharedEmfUtil().saveSingleResource(resource);
                 }
-                // File destFile = new File(location.append(name).toPortableString());
-                // File srcFile = new File(res.getLocation().toPortableString());
-                // srcFile.renameTo(destFile);
                 try {
-                    fileRes.move(movedIFile.getFullPath(), true, null);
+                    // fileRes.move(movedIFile.getFullPath(), true, null);
+                    fileRes.delete(true, null);
                     srcParent.refreshLocal(IResource.DEPTH_INFINITE, null);
                     folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 } catch (CoreException e) {
                     ExceptionHandler.process(e);
                 }
+                movedIFile = folder.getFile(name);
                 EObjectHelper.addDependenciesForFile(movedIFile, oldDependencySuppliers);
+                EObjectHelper.addDependenciesForFile(movedIFile, oldDependencyClients);
                 for (ModelElement element : oldDependencySuppliers) {
+                    EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
+                }
+                for (ModelElement element : oldDependencyClients) {
                     EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
                 }
 
@@ -191,20 +212,18 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
         IResource targetRes = (IResource) target;
         for (IResource res : getSelectedResources()) {
             if (res.getType() == IResource.FILE) {
-                // IFile file = (IFile) res;
-                // if (file.getFileExtension().equals(FactoriesUtil.SQL)) {
-                if (targetRes.getType() == IResource.FOLDER) {
-                    // IFolder folder = (IFolder) target;
-                    // IPath path = new Path(DQStructureManager.LIBRARIES);
-                    // path = path.append(DQStructureManager.SOURCE_FILES);
-                    // IPath fullPath = folder.getFullPath();
-                    // if (path.isPrefixOf(fullPath)) {
-                    // dropSql = true;
-                    return Status.OK_STATUS;
-                    // }
-                }
-                // }
-                else if (res.getName().endsWith(PluginConstant.ANA_SUFFIX) && (targetRes.getType() == IResource.FILE)) {
+                if ((targetRes.getType() == IResource.FOLDER)) {
+                    IFolder targetFolder = (IFolder) targetRes;
+                    IFolder sourceFolder = (IFolder) res.getParent();
+                    try {
+                        if (sourceFolder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
+                                targetFolder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
+                            return Status.OK_STATUS;
+                        }
+                    } catch (CoreException e) {
+                        e.printStackTrace();
+                    }
+                } else if (res.getName().endsWith(PluginConstant.ANA_SUFFIX) && (targetRes.getType() == IResource.FILE)) {
                     // if (targetRes instanceof IFile) {
                     IFile tfile = (IFile) targetRes;
                     if (tfile.getFileExtension().equals(FactoriesUtil.REP)) {

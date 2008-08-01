@@ -73,6 +73,8 @@ public class FolderWizard extends Wizard {
             IFolder newFolder = folder.getFolder(folderName);
             try {
                 newFolder.create(false, true, null);
+                newFolder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, folder
+                        .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY));
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
                 findView.getCommonViewer().refresh();

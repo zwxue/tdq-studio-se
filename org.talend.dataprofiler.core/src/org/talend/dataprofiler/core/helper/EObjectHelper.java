@@ -128,6 +128,20 @@ public final class EObjectHelper {
         return supplierList;
     }
 
+    public static List<ModelElement> getDependencyClients(IFile file) {
+        ModelElement findElement = getModelElement(file);
+        EList<Dependency> clientDependencys = findElement.getSupplierDependency();
+        // locate resource of each Dependency object
+        List<ModelElement> supplierList = new ArrayList<ModelElement>();
+        for (Dependency dependency : clientDependencys) {
+            EList<ModelElement> client = dependency.getClient();
+            if (client != null) {
+                supplierList.addAll(client);
+            }
+        }
+        return supplierList;
+    }
+
     public static void addDependenciesForFile(IFile file, List<ModelElement> modelElements) {
         ModelElement findElement = getModelElement(file);
         for (int i = 0; i < modelElements.size(); i++) {
