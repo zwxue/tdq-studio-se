@@ -1,0 +1,3 @@
+JExcelApi is issued on under the GNU Lesser General Public License.
+
+For information about the LGPL license see the GNU site. (http://www.gnu.org/copyleft/lesser.html)
