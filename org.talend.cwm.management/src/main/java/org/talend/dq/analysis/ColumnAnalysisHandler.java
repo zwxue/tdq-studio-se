@@ -29,6 +29,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -60,6 +61,8 @@ public class ColumnAnalysisHandler {
 
     private Analysis analysis;
 
+    private ExecutionInformations resultMetadata;
+
     /**
      * Method "setAnalysis".
      * 
@@ -67,6 +70,7 @@ public class ColumnAnalysisHandler {
      */
     public void setAnalysis(Analysis columnAnalysis) {
         this.analysis = columnAnalysis;
+        this.resultMetadata = columnAnalysis.getResults().getResultMetadata();
     }
 
     /**
@@ -306,9 +310,13 @@ public class ColumnAnalysisHandler {
     public String getSchemaNames() {
         String str = "";
         for (ColumnSet columnSet : getColumnSets()) {
-            Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-            if (schema != null) {
-                str = str + schema.getName() + " ";
+            try {
+                Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
+                if (schema != null) {
+                    str = str + schema.getName() + " ";
+                }
+            } catch (NullPointerException ne) {
+                return null;
             }
         }
 
@@ -326,7 +334,7 @@ public class ColumnAnalysisHandler {
                         str = str + catalog.getName() + " ";
                     }
                 } catch (NullPointerException ne) {
-                    return "";
+                    return null;
                 }
 
             }
@@ -335,34 +343,46 @@ public class ColumnAnalysisHandler {
         return str;
     }
 
+    public boolean isCatalogExisting() {
+        return getCatalogNames() != null ? true : false;
+    }
+
+    public boolean isSchemaExisting() {
+        return getSchemaNames() != null ? true : false;
+    }
+
     public String getExecuteData() {
-        if (analysis.getResults().getResultMetadata().getExecutionDate() != null) {
+        if (resultMetadata.getExecutionDate() != null) {
             DateFormat format = DateFormat.getDateInstance(DateFormat.DEFAULT);
 
-            return format.format(analysis.getResults().getResultMetadata().getExecutionDate());
+            return format.format(resultMetadata.getExecutionDate());
         } else {
             return "";
         }
     }
 
     public String getExecuteDuration() {
-        return analysis.getResults().getResultMetadata().getExecutionDuration() / 100 + " s";
+        return resultMetadata.getExecutionDuration() / 100 + " s";
     }
 
     public String getExecuteNumber() {
-        return String.valueOf(analysis.getResults().getResultMetadata().getExecutionNumber());
+        return String.valueOf(resultMetadata.getExecutionNumber());
     }
 
     public String getExecuteStatus() {
-        if (analysis.getResults().getResultMetadata().isLastRunOk()) {
+        if (resultMetadata.isLastRunOk()) {
             return "success";
         } else {
-            return "failure";
+            return "failure:" + resultMetadata.getMessage();
         }
     }
 
-    public String getErrorMessage() {
-        return analysis.getResults().getResultMetadata().getMessage();
+    public String getLastExecutionNumberOk() {
+        if (resultMetadata != null) {
+            return String.valueOf(resultMetadata.getLastExecutionNumberOk());
+        } else {
+            return "0";
+        }
     }
 
     private String[] getColumnSetOwnerNames() {
