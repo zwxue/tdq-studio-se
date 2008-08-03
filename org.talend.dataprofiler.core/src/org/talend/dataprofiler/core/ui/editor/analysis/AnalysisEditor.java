@@ -44,6 +44,8 @@ public class AnalysisEditor extends CommonFormEditor {
 
     private AnalysisType analysisType = AnalysisType.COLUMN;
 
+    private boolean isRefreshResultPage = false;
+
     /**
      * 
      */
@@ -105,6 +107,7 @@ public class AnalysisEditor extends CommonFormEditor {
 
     protected void firePropertyChange(final int propertyId) {
         super.firePropertyChange(propertyId);
+        isRefreshResultPage = true;
     }
 
     protected void translateInput(IEditorInput input) {
@@ -120,9 +123,11 @@ public class AnalysisEditor extends CommonFormEditor {
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);
 
-        if (columnResultPage != null && newPageIndex == columnResultPage.getIndex()) {
+        if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()) {
             ((ColumnAnalysisResultPage) columnResultPage).refresh((ColumnMasterDetailsPage) getMasterPage());
         }
+
+        isRefreshResultPage = false;
     }
 
     /**

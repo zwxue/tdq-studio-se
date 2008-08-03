@@ -45,7 +45,7 @@ public class ChartTableFactory {
         if (inputObject.getChartNamedType().equals(CompositeIndicator.SIMPLE_STATISTICS)
                 || inputObject.getChartNamedType().equals(CompositeIndicator.TEXT_STATISTICS)) {
             TableColumn column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Value");
+            column1.setText("Label");
             column1.setWidth(200);
             TableColumn column2 = new TableColumn(table, SWT.NONE);
             column2.setText("Count");
@@ -58,7 +58,7 @@ public class ChartTableFactory {
             tbViewer.setContentProvider(new CommonContenteProvider());
         } else if (inputObject.getChartNamedType().equals(CompositeIndicator.FREQUENCE_STATISTICS)) {
             TableColumn column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Label");
+            column1.setText("Value");
             column1.setWidth(200);
             TableColumn column2 = new TableColumn(table, SWT.NONE);
             column2.setText("Count");

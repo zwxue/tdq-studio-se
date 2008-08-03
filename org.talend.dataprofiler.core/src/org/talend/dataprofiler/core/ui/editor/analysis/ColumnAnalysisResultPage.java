@@ -126,8 +126,13 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
         toolkit.createLabel(executionComp, "Execution Duration:");
         toolkit.createLabel(executionComp, handler.getExecuteDuration());
         toolkit.createLabel(executionComp, "Execution Status:");
-        toolkit.createLabel(executionComp, handler.getExecuteStatus()).setForeground(
-                Display.getDefault().getSystemColor(SWT.COLOR_RED));
+        if (handler.getResultMetadata().isLastRunOk()) {
+            toolkit.createLabel(executionComp, "success");
+        } else {
+            toolkit.createLabel(executionComp, "failure:" + handler.getResultMetadata().getMessage()).setForeground(
+                    Display.getDefault().getSystemColor(SWT.COLOR_RED));
+        }
+
         toolkit.createLabel(executionComp, "Number of Execution:");
         toolkit.createLabel(executionComp, handler.getExecuteNumber());
         toolkit.createLabel(executionComp, "Last Sucessful Execution:");
