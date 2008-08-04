@@ -25,19 +25,18 @@ import org.talend.dataquality.indicators.schema.SchemaPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.schema.impl.ConnectionIndicatorImpl#getCatalogIndicators <em>Catalog Indicators</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.schema.impl.ConnectionIndicatorImpl#getCatalogCount <em>Catalog Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.schema.impl.ConnectionIndicatorImpl#getCatalogIndicators <em>Catalog Indicators</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.schema.impl.ConnectionIndicatorImpl#getCatalogCount <em>Catalog Count</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements ConnectionIndicator {
 
     /**
-     * The cached value of the '{@link #getCatalogIndicators() <em>Catalog Indicators</em>}' containment reference
-     * list. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * The cached value of the '{@link #getCatalogIndicators() <em>Catalog Indicators</em>}' containment reference list.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #getCatalogIndicators()
      * @generated
      * @ordered
@@ -45,9 +44,9 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
     protected EList<CatalogIndicator> catalogIndicators;
 
     /**
-     * The default value of the '{@link #getCatalogCount() <em>Catalog Count</em>}' attribute. <!-- begin-user-doc -->
+     * The default value of the '{@link #getCatalogCount() <em>Catalog Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getCatalogCount()
      * @generated
      * @ordered
@@ -55,9 +54,9 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
     protected static final int CATALOG_COUNT_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getCatalogCount() <em>Catalog Count</em>}' attribute. <!-- begin-user-doc -->
+     * The cached value of the '{@link #getCatalogCount() <em>Catalog Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getCatalogCount()
      * @generated
      * @ordered
@@ -66,7 +65,6 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected ConnectionIndicatorImpl() {
@@ -75,7 +73,6 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -85,20 +82,17 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EList<CatalogIndicator> getCatalogIndicators() {
         if (catalogIndicators == null) {
-            catalogIndicators = new EObjectContainmentEList<CatalogIndicator>(CatalogIndicator.class, this,
-                    SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS);
+            catalogIndicators = new EObjectContainmentEList<CatalogIndicator>(CatalogIndicator.class, this, SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS);
         }
         return catalogIndicators;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public int getCatalogCount() {
@@ -107,15 +101,13 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setCatalogCount(int newCatalogCount) {
         int oldCatalogCount = catalogCount;
         catalogCount = newCatalogCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT,
-                    oldCatalogCount, catalogCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT, oldCatalogCount, catalogCount));
     }
 
     /**
@@ -129,97 +121,90 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
-            return ((InternalEList<?>) getCatalogIndicators()).basicRemove(otherEnd, msgs);
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
+                return ((InternalEList<?>)getCatalogIndicators()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
-            return getCatalogIndicators();
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
-            return new Integer(getCatalogCount());
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
+                return getCatalogIndicators();
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
+                return new Integer(getCatalogCount());
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
-            getCatalogIndicators().clear();
-            getCatalogIndicators().addAll((Collection<? extends CatalogIndicator>) newValue);
-            return;
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
-            setCatalogCount(((Integer) newValue).intValue());
-            return;
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
+                getCatalogIndicators().clear();
+                getCatalogIndicators().addAll((Collection<? extends CatalogIndicator>)newValue);
+                return;
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
+                setCatalogCount(((Integer)newValue).intValue());
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
-            getCatalogIndicators().clear();
-            return;
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
-            setCatalogCount(CATALOG_COUNT_EDEFAULT);
-            return;
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
+                getCatalogIndicators().clear();
+                return;
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
+                setCatalogCount(CATALOG_COUNT_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
-            return catalogIndicators != null && !catalogIndicators.isEmpty();
-        case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
-            return catalogCount != CATALOG_COUNT_EDEFAULT;
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_INDICATORS:
+                return catalogIndicators != null && !catalogIndicators.isEmpty();
+            case SchemaPackage.CONNECTION_INDICATOR__CATALOG_COUNT:
+                return catalogCount != CATALOG_COUNT_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy())
-            return super.toString();
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (catalogCount: ");

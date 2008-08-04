@@ -5085,6 +5085,21 @@
               <element href="dataquality.ecore#//reports/TdReport/addAnalysis"/>
             </semanticModel>
           </contained>
+          <contained xsi:type="di:GraphNode" xmi:id="_kNRz0GIkEd2A0eSvKHDxwg" position="0,0" size="-1,-1">
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_kNRz0WIkEd2A0eSvKHDxwg" presentation="default">
+              <element href="dataquality.ecore#//reports/TdReport/removeAnalysis"/>
+            </semanticModel>
+          </contained>
+          <contained xsi:type="di:GraphNode" xmi:id="_kNRz0mIkEd2A0eSvKHDxwg" position="0,0" size="-1,-1">
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_kNRz02IkEd2A0eSvKHDxwg" presentation="default">
+              <element href="dataquality.ecore#//reports/TdReport/setMustRefresh"/>
+            </semanticModel>
+          </contained>
+          <contained xsi:type="di:GraphNode" xmi:id="_kNRz1GIkEd2A0eSvKHDxwg" position="0,0" size="-1,-1">
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_kNRz1WIkEd2A0eSvKHDxwg" presentation="default">
+              <element href="dataquality.ecore#//reports/TdReport/addAnalysis.1"/>
+            </semanticModel>
+          </contained>
         </contained>
       </contained>
       <contained xsi:type="di:GraphNode" xmi:id="_Rj-qIMgYEdyQB43bWInoVA" position="146,36" size="205,-1">
@@ -5304,7 +5319,7 @@
         <contained xsi:type="di:EdgeObjectUV" xmi:id="_KgVIszu9Ed2m5s2NaIYxtw" id="cardinalityLabel" uDistance="20" vDistance="-20"/>
       </contained>
     </diagrams>
-    <diagrams xmi:id="_fYCgAGIgEd2A0eSvKHDxwg" position="0,0" size="100,100" name="report analysis map" viewport="0,160">
+    <diagrams xmi:id="_fYCgAGIgEd2A0eSvKHDxwg" position="0,0" size="100,100" name="report analysis map" viewport="0,287">
       <property xmi:id="_fYcIoGIgEd2A0eSvKHDxwg" key="pageFormatName" value="A4"/>
       <property xmi:id="_fYcIoWIgEd2A0eSvKHDxwg" key="diagramWidth" value="840"/>
       <property xmi:id="_fYcIomIgEd2A0eSvKHDxwg" key="diagramHeight" value="1188"/>
@@ -5317,7 +5332,7 @@
       <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_fYCgAWIgEd2A0eSvKHDxwg" presentation="org.topcased.modeler.ecore.ediagram">
         <element href="dataquality.ecore#//reports"/>
       </semanticModel>
-      <contained xsi:type="di:GraphNode" xmi:id="_me2KoGIgEd2A0eSvKHDxwg" position="82,161" size="248,-1">
+      <contained xsi:type="di:GraphNode" xmi:id="_me2KoGIgEd2A0eSvKHDxwg" position="66,43" size="456,-1">
         <anchorage xmi:id="_mfBJwGIgEd2A0eSvKHDxwg" graphEdge="_mfBw0GIgEd2A0eSvKHDxwg"/>
         <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_me2KoWIgEd2A0eSvKHDxwg" presentation="default">
           <element href="dataquality.ecore#//reports/TdReport"/>
@@ -5376,6 +5391,11 @@
           <contained xsi:type="di:GraphNode" xmi:id="_kcYuMGIhEd2A0eSvKHDxwg" position="0,0" size="-1,-1">
             <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_kcYuMWIhEd2A0eSvKHDxwg" presentation="default">
               <element href="dataquality.ecore#//reports/TdReport/addAnalysis.1"/>
+            </semanticModel>
+          </contained>
+          <contained xsi:type="di:GraphNode" xmi:id="_zpPLgGIkEd2A0eSvKHDxwg" position="0,0" size="-1,-1">
+            <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_zpPLgWIkEd2A0eSvKHDxwg" presentation="default">
+              <element href="dataquality.ecore#//reports/TdReport/mustRefresh"/>
             </semanticModel>
           </contained>
         </contained>

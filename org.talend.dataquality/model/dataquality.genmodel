@@ -90,6 +90,9 @@
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis.1/analysis"/>
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis.1/mustRefresh"/>
         </genOperations>
+        <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/mustRefresh">
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/mustRefresh/analysis"/>
+        </genOperations>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//reports/PresentationParameter">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/PresentationParameter/plotType"/>

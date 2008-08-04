@@ -378,6 +378,23 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
+     * @generated NOT mustRefresh(Analysis analysis)
+     */
+    public boolean mustRefresh(Analysis analysis) {
+        boolean yes = false;
+        EList<AnalysisMap> anMaps = this.getAnalysisMap();
+        for (AnalysisMap anMap : anMaps) {
+            if (analysis.equals(anMap.getAnalysis())) {
+                yes = anMap.isMustRefresh();
+                break;
+            }
+        }
+        return yes;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override

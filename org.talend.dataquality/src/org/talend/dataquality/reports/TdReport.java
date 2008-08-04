@@ -224,4 +224,12 @@ public interface TdReport extends Report {
      * @generated
      */
     boolean addAnalysis(Analysis analysis, boolean mustRefresh);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model
+     * @generated
+     */
+    boolean mustRefresh(Analysis analysis);
 } // TdReport
