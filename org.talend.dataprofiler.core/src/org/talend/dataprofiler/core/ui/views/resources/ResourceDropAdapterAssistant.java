@@ -123,7 +123,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
                 List<ModelElement> oldDependencySuppliers = EObjectHelper.getDependencySuppliers(fileRes);
                 List<ModelElement> oldDependencyClients = EObjectHelper.getDependencyClients(fileRes);
-                EObjectHelper.removeDependencys(new IResource[] { fileRes });
+                // EObjectHelper.removeDependencys(new IResource[] { fileRes });
 
                 IContainer srcParent = fileRes.getParent();
                 URI srcUri = URI.createPlatformResourceURI((fileRes).getFullPath().toString(), false);
@@ -131,11 +131,20 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 Resource resource = rs.getResource(srcUri, true);
                 if (resource != null) {
                     URI desUri = URI.createPlatformResourceURI(folder.getFullPath().toString(), false);
+                    EMFUtil newEmfUtil = new EMFUtil();
+                    ResourceSet newResourceSet = newEmfUtil.getResourceSet();
+                    newResourceSet.getResources().add(resource);
+                    for (ModelElement element : oldDependencySuppliers) {
+                        newResourceSet.getResources().add(element.eResource());
+                    }
+                    for (ModelElement element : oldDependencyClients) {
+                        newResourceSet.getResources().add(element.eResource());
+                    }
                     EMFUtil.changeUri(resource, desUri);
-                    EMFSharedResources.getSharedEmfUtil().saveSingleResource(resource);
+                    newEmfUtil.save();
+                    // EMFSharedResources.getSharedEmfUtil().saveSingleResource(resource);
                 }
                 try {
-                    // fileRes.move(movedIFile.getFullPath(), true, null);
                     fileRes.delete(true, null);
                     srcParent.refreshLocal(IResource.DEPTH_INFINITE, null);
                     folder.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -143,18 +152,17 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     ExceptionHandler.process(e);
                 }
                 movedIFile = folder.getFile(name);
-                EObjectHelper.addDependenciesForFile(movedIFile, oldDependencySuppliers);
-                EObjectHelper.addDependenciesForModelElement(movedIFile, oldDependencyClients);
-                for (ModelElement element : oldDependencySuppliers) {
-                    EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
-                }
-                for (ModelElement element : oldDependencyClients) {
-                    EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
-                }
+                // EObjectHelper.addDependenciesForFile(movedIFile, oldDependencySuppliers);
+                // EObjectHelper.addDependenciesForModelElement(movedIFile, oldDependencyClients);
+                // for (ModelElement element : oldDependencySuppliers) {
+                // EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
+                // }
+                // for (ModelElement element : oldDependencyClients) {
+                // EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
+                // }
 
             }
         }
-        // CorePlugin.getDefault().refreshWorkSpace();
         ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         return null;
     }
