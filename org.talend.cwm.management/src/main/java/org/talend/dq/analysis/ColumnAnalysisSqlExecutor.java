@@ -167,16 +167,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (indicatorDefinition == null) {
             return traceError("No indicator definition found for indicator " + indicator.getName());
         }
-        sqlGenericExpression = getSqlExpression(indicatorDefinition, language);
-        if (sqlGenericExpression == null) {
-            // try with default language (ANSI SQL)
-            log.warn("The indicator SQL expression has not been found for the database type " + language + " for the indicator"
-                    + indicatorDefinition.getName());
-            if (log.isInfoEnabled()) {
-                log.info("Trying to compute the indicator with the default language " + dbms().getDefaultLanguage());
-            }
-            sqlGenericExpression = getSqlExpression(indicatorDefinition, dbms().getDefaultLanguage());
-        }
+        sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
             return traceError("No SQL expression found for indicator "
@@ -577,24 +568,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             bins.add(bin);
         }
         return bins;
-    }
-
-    /**
-     * DOC scorreia Comment method "getSqlExpression".
-     * 
-     * @param indicatorDefinition
-     * @param language
-     * @param sqlExpression
-     * @return
-     */
-    private Expression getSqlExpression(IndicatorDefinition indicatorDefinition, String language) {
-        EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
-        for (Expression sqlGenExpr : sqlGenericExpression) {
-            if (StringUtils.equalsIgnoreCase(language, sqlGenExpr.getLanguage())) {
-                return sqlGenExpr; // language found
-            }
-        }
-        return null;
     }
 
     /**

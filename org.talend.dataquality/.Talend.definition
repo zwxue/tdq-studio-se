@@ -21,6 +21,7 @@
     <sqlGenericExpression xmi:id="_ybq24zh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybq25Dh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="Oracle"/>
     <sqlGenericExpression xmi:id="_poEbQEbKEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_dinuIGIuEd2g_c7Yce15OA" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Duplicate Count">
     <taggedValue xmi:id="_ybrd8Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of duplicate rows. this number and the number of unique data equals the number of distinct rows"/>
@@ -29,6 +30,7 @@
     <sqlGenericExpression xmi:id="_ybrd8zh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="Oracle"/>
     <sqlGenericExpression xmi:id="_vYa-YEbMEd2QPKsejnYyXQ" body="SELECT {0} AS col, COUNT(*) AS mycount FROM {1}  m GROUP BY col HAVING count(*) > 1" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_L6ZBQGIwEd2cR9NG8PSw3w" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0xF2Ed2PKb6nEJEvhw" name="Blank Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Blank Count">
     <taggedValue xmi:id="_ybsFADh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of blank rows. A blank is a non null textual data that contains only white spaces (or nothing)"/>
@@ -92,6 +94,7 @@
     <sqlGenericExpression xmi:id="_yb0n4zh8Ed2XmO7pl5Yuyg" body="SELECT AVG({0}) FROM ( SELECT {0}, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY {0}) rn FROM {1} ) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="Oracle"/>
     <sqlGenericExpression xmi:id="_yb0n5Dh8Ed2XmO7pl5Yuyg" body="SELECT MEDIAN({0}) FROM {1}" language="Oracle 10g"/>
     <sqlGenericExpression xmi:id="_yb0n5Th8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle 9i"/>
+    <sqlGenericExpression xmi:id="_n-8v0GI-Ed2QlOgtjAaunA" body="SELECT AVG({0}) FROM ( SELECT {0}, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY {0}) rn FROM {1} ) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48xF2Ed2PKb6nEJEvhw" name="Inter Quartile Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI49BF2Ed2PKb6nEJEvhw _ccI49RF2Ed2PKb6nEJEvhw" label="IQR">
     <taggedValue xmi:id="_yb2dEDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the spread of the main half data. This measure is more stable than the range."/>
@@ -103,6 +106,7 @@
     <sqlGenericExpression xmi:id="_yb3EIjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
     <sqlGenericExpression xmi:id="_yb3EIzh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb3EJDh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_2SZ8cGJAEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49RF2Ed2PKb6nEJEvhw" name="Upper Quartile" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Upper Quartile">
     <taggedValue xmi:id="_yb3rMDh8Ed2XmO7pl5Yuyg" tag="Description" value="1/4th of the records are above this value and 3/4th are below. "/>
@@ -110,6 +114,7 @@
     <sqlGenericExpression xmi:id="_yb4SQTh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
     <sqlGenericExpression xmi:id="_yb4SQjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb4SQzh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_P044MGJBEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  3 * INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49hF2Ed2PKb6nEJEvhw" name="Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccJgABF2Ed2PKb6nEJEvhw _ccJgARF2Ed2PKb6nEJEvhw" label="Range">
     <taggedValue xmi:id="_yb6HcDh8Ed2XmO7pl5Yuyg" tag="Description" value="is the difference between the highest record and the lowest record"/>

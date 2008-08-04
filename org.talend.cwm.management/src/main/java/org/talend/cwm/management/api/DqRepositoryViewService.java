@@ -86,7 +86,11 @@ public final class DqRepositoryViewService {
     /**
      * if true, the catalogs (and schemas) are stored in the same file as the data provider. Used for tests only.
      * 
-     * TODO scorreia we will need to set it to false for big databases
+     * TODO scorreia (saving catalog outside data provider's file) set it to false for big databases.
+     * 
+     * In case when optimization is needed: set this boolean to false and correct code so that everything works as
+     * before (DQ Repository view must not show catalog's files and Catalogs must still be children of the Data
+     * provider). Check also that old files (.prv) are still readable by the application.
      */
     private static final boolean CAT_WITH_PRV = true;
 

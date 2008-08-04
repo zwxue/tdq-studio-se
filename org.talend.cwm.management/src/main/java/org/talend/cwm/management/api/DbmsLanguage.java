@@ -20,11 +20,13 @@ import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -55,6 +57,8 @@ public class DbmsLanguage {
     private static final String POSTGRESQL = "POSTGRESQL";
 
     private static final String MSSQL = "MICROSOFT SQL SERVER";
+
+    private static final String DB2 = "DB2";
 
     /**
      * Ansi SQL.
@@ -101,6 +105,7 @@ public class DbmsLanguage {
      * @param dbmsType the name of the DBMS (MySQL, Oracle,...)
      */
     DbmsLanguage(String dbmsType) {
+        assert dbmsType != null : "DBMS type must not be null!!";
         this.dbmsName = dbmsType;
         this.dbmsFunctions = initDbmsFunctions(dbmsName);
     }
@@ -400,6 +405,9 @@ public class DbmsLanguage {
         if (is(MYSQL)) {
             return query + " LIMIT " + n;
         }
+        if (is(DB2)) {
+            return query + " FETCH FIRST " + n + " ROWS ONLY ";
+        }
         // default: I don't know, simply return the query
         return query; // FIXME find how to get top n in generic SQL or maybe return null
     }
@@ -505,7 +513,8 @@ public class DbmsLanguage {
      * @return true if this DBMS is given string
      */
     private boolean is(String dbName) {
-        return StringUtils.equalsIgnoreCase(this.dbmsName, dbName);
+        // DBMS_SUPPORT check all caller methods to set database specific code.
+        return compareDbmsLanguage(dbName, this.dbmsName);
     }
 
     /**
@@ -545,6 +554,18 @@ public class DbmsLanguage {
             functions.put("TO_CHAR", 2);
             functions.put("TO_NUMBER", 1);
             functions.put("NVL", 2);
+        }
+
+        if (is(POSTGRESQL)) {
+
+        }
+
+        if (is(MSSQL)) {
+
+        }
+
+        if (is(DB2)) {
+
         }
 
         return functions;
@@ -666,6 +687,57 @@ public class DbmsLanguage {
     }
 
     /**
+     * Method "getSqlExpression".
+     * 
+     * @param indicatorDefinition contains a list of possible expression (one for each supported database)
+     * @return the expression for this database language or null when not found
+     */
+    public Expression getSqlExpression(IndicatorDefinition indicatorDefinition) {
+        EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
+        Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName);
+        if (sqlGenExpr != null) {
+            return sqlGenExpr; // language found
+        }
+
+        // else try with default language (ANSI SQL)
+        log.warn("The indicator SQL expression has not been found for the database type " + this.dbmsName + " for the indicator"
+                + indicatorDefinition.getName());
+        if (log.isInfoEnabled()) {
+            log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
+        }
+        return getSqlExpression(indicatorDefinition, getDefaultLanguage());
+    }
+
+    /**
+     * DOC scorreia Comment method "getSqlExpression".
+     * 
+     * @param indicatorDefinition
+     * @param defaultLanguage
+     * @return
+     */
+    private static Expression getSqlExpression(IndicatorDefinition indicatorDefinition, String language) {
+        EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
+        for (Expression sqlGenExpr : sqlGenericExpression) {
+            if (compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
+                return sqlGenExpr; // language found
+            }
+        }
+        return null;
+    }
+
+    private static boolean compareDbmsLanguage(String lang1, String lang2) {
+        if (lang1 == null || lang2 == null) {
+            return false;
+        }
+        // MOD 2008-08-04 scorreia: for DB2 database, dbName can be "DB2/NT" or "DB2/6000" or "DB2"...
+        if (lang1.startsWith(DB2)) {
+            return StringUtils.upperCase(lang1).startsWith(StringUtils.upperCase(lang2))
+                    || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
+        }
+        return StringUtils.equalsIgnoreCase(lang1, lang2);
+    }
+
+    /**
      * Method "getExpression".
      * 
      * @param patternComponent
@@ -746,4 +818,5 @@ public class DbmsLanguage {
         }
         return "";
     }
+
 }
