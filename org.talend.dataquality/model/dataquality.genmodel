@@ -79,6 +79,17 @@
         <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/addAnalysis">
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis/analysis"/>
         </genOperations>
+        <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/removeAnalysis">
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/removeAnalysis/analysis"/>
+        </genOperations>
+        <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/setMustRefresh">
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/setMustRefresh/analysis"/>
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/setMustRefresh/mustRefresh"/>
+        </genOperations>
+        <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/addAnalysis.1">
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis.1/analysis"/>
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis.1/mustRefresh"/>
+        </genOperations>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//reports/PresentationParameter">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/PresentationParameter/plotType"/>

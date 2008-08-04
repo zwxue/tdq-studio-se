@@ -107,6 +107,17 @@
       <eOperations name="addAnalysis" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
         <eParameters name="analysis" eType="#//analysis/Analysis"/>
       </eOperations>
+      <eOperations name="removeAnalysis" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+        <eParameters name="analysis" eType="#//analysis/Analysis"/>
+      </eOperations>
+      <eOperations name="setMustRefresh" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+        <eParameters name="analysis" eType="#//analysis/Analysis"/>
+        <eParameters name="mustRefresh" eType="ecore:EDataType ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/Boolean"/>
+      </eOperations>
+      <eOperations name="addAnalysis" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+        <eParameters name="analysis" eType="#//analysis/Analysis"/>
+        <eParameters name="mustRefresh" eType="ecore:EDataType ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/Boolean"/>
+      </eOperations>
       <eStructuralFeatures xsi:type="ecore:EReference" name="presentationParams" upperBound="-1"
           eType="#//reports/PresentationParameter" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="creationDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>

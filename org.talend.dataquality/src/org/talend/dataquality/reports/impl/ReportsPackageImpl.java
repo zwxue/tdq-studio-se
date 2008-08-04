@@ -469,6 +469,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         // Obtain other dependent packages
         InformationreportingPackage theInformationreportingPackage = (InformationreportingPackage)EPackage.Registry.INSTANCE.getEPackage(InformationreportingPackage.eNS_URI);
         AnalysisPackage theAnalysisPackage = (AnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
+        CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
         IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
 
         // Create type parameters
@@ -490,6 +491,17 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
 
         EOperation op = addEOperation(tdReportEClass, ecorePackage.getEBoolean(), "addAnalysis", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = addEOperation(tdReportEClass, ecorePackage.getEBoolean(), "removeAnalysis", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = addEOperation(tdReportEClass, ecorePackage.getEBoolean(), "setMustRefresh", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theCorePackage.getBoolean(), "mustRefresh", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = addEOperation(tdReportEClass, ecorePackage.getEBoolean(), "addAnalysis", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theCorePackage.getBoolean(), "mustRefresh", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(presentationParameterEClass, PresentationParameter.class, "PresentationParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getPresentationParameter_PlotType(), ecorePackage.getEString(), "plotType", null, 0, 1, PresentationParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -200,4 +200,28 @@ public interface TdReport extends Report {
      * @generated
      */
     boolean addAnalysis(Analysis analysis);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model
+     * @generated
+     */
+    boolean removeAnalysis(Analysis analysis);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model mustRefreshDataType="orgomg.cwm.objectmodel.core.Boolean"
+     * @generated
+     */
+    boolean setMustRefresh(Analysis analysis, boolean mustRefresh);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model mustRefreshDataType="orgomg.cwm.objectmodel.core.Boolean"
+     * @generated
+     */
+    boolean addAnalysis(Analysis analysis, boolean mustRefresh);
 } // TdReport
