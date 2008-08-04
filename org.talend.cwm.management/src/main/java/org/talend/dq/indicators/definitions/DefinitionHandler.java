@@ -19,7 +19,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
@@ -111,12 +110,15 @@ public final class DefinitionHandler {
     }
 
     private Resource getResourceFromFile() {
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+        // MOD scorreia 2008-08-04 use EMFUtil instead of EMFSharedResources because this file does not need to be saved
+        // with the other files. Moreover, we need to be able to edit it when needed (with default ".definition" editor
+        // for development purposes)
+        EMFUtil util = new EMFUtil();
         Resource definitionsFile = null;
         URI uri = URI.createPlatformResourceURI(WORKSPACE_PATH + FILENAME, false);
         try { // load from workspace path
             // do not create it here if it does not exist.
-            definitionsFile = util.getResourceSet().getResource(uri, false);
+            definitionsFile = util.getResourceSet().getResource(uri, true);
             if (log.isDebugEnabled()) {
                 log.debug("Definition of indicators loaded from " + uri);
             }
@@ -175,8 +177,8 @@ public final class DefinitionHandler {
     public Resource copyDefinitionsIntoFolder(File folder) {
         URI destinationUri = URI.createFileURI(folder.getAbsolutePath());
         Resource resource = getIndicatorsDefinitions().eResource();
-        EMFSharedResources.getSharedEmfUtil().changeUri(resource, destinationUri);
-        if (EMFSharedResources.getSharedEmfUtil().saveResource(resource)) {
+        EMFUtil.changeUri(resource, destinationUri);
+        if (EMFUtil.saveResource(resource)) {
             if (log.isInfoEnabled()) {
                 log.info("Indicator default definitions correctly saved in " + resource.getURI());
             } else {
@@ -188,8 +190,8 @@ public final class DefinitionHandler {
 
     public Resource copyDefinitionsIntoFolder(URI destinationUri) {
         Resource resource = getIndicatorsDefinitions().eResource();
-        EMFSharedResources.getSharedEmfUtil().changeUri(resource, destinationUri);
-        if (EMFSharedResources.getSharedEmfUtil().saveResource(resource)) {
+        EMFUtil.changeUri(resource, destinationUri);
+        if (EMFUtil.saveResource(resource)) {
             if (log.isInfoEnabled()) {
                 log.info("Indicator default definitions correctly saved in " + resource.getURI());
             }
