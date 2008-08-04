@@ -147,12 +147,6 @@ public class IndicatorOptionsWizard extends Wizard {
 
             TextParameters textParameters = paramters.getTextParameter();
 
-            if (textParameters == null) {
-                isDirty = true;
-                textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-                paramters.setTextParameter(textParameters);
-            }
-
             for (AbstractIndicatorParameter parameter : AbstractIndicatorForm.getParameters()) {
 
                 if (parameter.getFormEnum() == FormEnum.BinsDesignerForm) {
@@ -207,7 +201,11 @@ public class IndicatorOptionsWizard extends Wizard {
                 }
 
                 if (parameter.getFormEnum() == FormEnum.TextParametersForm) {
-
+                    if (textParameters == null) {
+                        isDirty = true;
+                        textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
+                        paramters.setTextParameter(textParameters);
+                    }
                     TextParameter tempParam = (TextParameter) parameter;
                     int numOfShown = paramters.getTopN();
                     // PTODO qzhang for bug 3491.
@@ -219,7 +217,11 @@ public class IndicatorOptionsWizard extends Wizard {
                 }
 
                 if (parameter.getFormEnum() == FormEnum.TextLengthForm) {
-
+                    if (textParameters == null) {
+                        isDirty = true;
+                        textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
+                        paramters.setTextParameter(textParameters);
+                    }
                     TextLengthParameter tempParam = (TextLengthParameter) parameter;
                     // PTODO qzhang for bug 3491.
                     if (textParameters.isUseBlank() != tempParam.isUseBlank()) {

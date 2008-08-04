@@ -82,6 +82,7 @@ import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -542,21 +543,27 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
         }
 
-        iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-        iParamItem.setText(0, "has valid domain:" + (parameters.getDataValidDomain() != null));
-        iParamItem.setData(DATA_PARAM, DATA_PARAM);
-        iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
-        iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-        iParamItem.setText(0, "has quality thresholds:" + (parameters.getIndicatorValidDomain() != null));
-        iParamItem.setData(DATA_PARAM, DATA_PARAM);
-        iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
-        iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-        iParamItem.setText(0, "has bins defined:" + (parameters.getBins() != null));
-        iParamItem.setData(DATA_PARAM, DATA_PARAM);
-        iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
+        Domain dataValidDomain = parameters.getDataValidDomain();
+        if (dataValidDomain != null) {
+            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
+            iParamItem.setText(0, "has valid domain:" + (dataValidDomain != null));
+            iParamItem.setData(DATA_PARAM, DATA_PARAM);
+            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+        }
+        Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
+        if (indicatorValidDomain != null) {
+            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
+            iParamItem.setText(0, "has quality thresholds:" + (indicatorValidDomain != null));
+            iParamItem.setData(DATA_PARAM, DATA_PARAM);
+            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+        }
+        Domain bins = parameters.getBins();
+        if (bins != null) {
+            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
+            iParamItem.setText(0, "has bins defined:" + (bins != null));
+            iParamItem.setData(DATA_PARAM, DATA_PARAM);
+            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+        }
     }
 
     /**
