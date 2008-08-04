@@ -374,14 +374,6 @@ public class ColumnAnalysisHandler {
         return String.valueOf(resultMetadata.getExecutionNumber());
     }
 
-    public String getExecuteStatus() {
-        if (resultMetadata.isLastRunOk()) {
-            return "success";
-        } else {
-            return "failure:" + resultMetadata.getMessage();
-        }
-    }
-
     public String getLastExecutionNumberOk() {
         if (resultMetadata != null) {
             return String.valueOf(resultMetadata.getLastExecutionNumberOk());
@@ -414,6 +406,10 @@ public class ColumnAnalysisHandler {
         }
 
         return existingTables.toArray(new ColumnSet[existingTables.size()]);
+    }
+
+    public ExecutionInformations getResultMetadata() {
+        return resultMetadata;
     }
 
     // public boolean saveModifiedResources() {
