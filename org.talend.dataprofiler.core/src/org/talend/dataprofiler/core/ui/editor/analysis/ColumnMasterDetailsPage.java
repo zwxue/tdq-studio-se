@@ -211,7 +211,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
         });
 
-        Composite tree = toolkit.createComposite(topComp, SWT.BORDER);
+        Composite tree = toolkit.createComposite(topComp, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tree);
         tree.setLayout(new GridLayout());
         ((GridData) tree.getLayoutData()).heightHint = TREE_MAX_LENGTH;

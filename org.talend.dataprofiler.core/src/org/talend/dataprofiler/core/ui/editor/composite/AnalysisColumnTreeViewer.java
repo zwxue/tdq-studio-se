@@ -76,8 +76,8 @@ import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -137,18 +137,22 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
      * @param parent
      */
     private Tree createTree(Composite parent) {
-        final Tree newTree = new Tree(parent, SWT.MULTI);
+        final Tree newTree = new Tree(parent, SWT.MULTI | SWT.BORDER);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newTree);
 
-        newTree.setHeaderVisible(false);
+        newTree.setHeaderVisible(true);
         TreeColumn column1 = new TreeColumn(newTree, SWT.CENTER);
         column1.setWidth(190);
+        column1.setText("Analyzed Tree");
         TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
-        column2.setWidth(80);
+        column2.setWidth(100);
+        column2.setText("Dataming Type");
         TreeColumn column3 = new TreeColumn(newTree, SWT.CENTER);
-        column3.setWidth(120);
+        column3.setWidth(100);
+        column3.setText("Pattern");
         TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
         column4.setWidth(120);
+        column4.setText("Operation");
 
         parent.layout();
         menu = new Menu(newTree);
