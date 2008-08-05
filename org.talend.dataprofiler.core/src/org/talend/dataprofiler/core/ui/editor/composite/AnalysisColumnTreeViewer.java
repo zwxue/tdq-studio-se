@@ -119,6 +119,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
     private ColumnMasterDetailsPage masterPage;
 
+    private Menu menu;
+
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
@@ -149,7 +151,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         column4.setWidth(120);
 
         parent.layout();
-        Menu menu = new Menu(newTree);
+        menu = new Menu(newTree);
         MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
         deleteMenuItem.setText("Remove elements");
         deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
@@ -505,10 +507,13 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         if (parameters == null) {
             return;
         }
-        TreeItem iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-        iParamItem.setText(0, "max results shown:" + parameters.getTopN());
-        iParamItem.setData(DATA_PARAM, DATA_PARAM);
-        iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+        TreeItem iParamItem;
+        if (indicatorUnit.getType() == IndicatorEnum.FrequencyIndicatorEnum) {
+            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
+            iParamItem.setText(0, "max results shown:" + parameters.getTopN());
+            iParamItem.setData(DATA_PARAM, DATA_PARAM);
+            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+        }
 
         TextParameters tParameter = parameters.getTextParameter();
         if (tParameter != null) {
@@ -520,15 +525,17 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
             subParamItem.setText("use blanks:" + tParameter.isUseBlank());
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            subParamItem.setData(DATA_PARAM, DATA_PARAM);
 
             subParamItem = new TreeItem(iParamItem, SWT.NONE);
             subParamItem.setText("ignore case:" + tParameter.isIgnoreCase());
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            subParamItem.setData(DATA_PARAM, DATA_PARAM);
 
             subParamItem = new TreeItem(iParamItem, SWT.NONE);
             subParamItem.setText("use nulls:" + tParameter.isUseNulls());
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
+            subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }
         DateParameters dParameters = parameters.getDateParameters();
         if (dParameters != null) {
@@ -540,7 +547,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
             subParamItem.setText("aggregation type:\"" + dParameters.getDateAggregationType().getName() + "\"");
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
+            subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }
 
         Domain dataValidDomain = parameters.getDataValidDomain();
@@ -680,7 +687,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         this.setDirty(true);
     }
 
-    private void addTreeListener(Tree tree) {
+    private void addTreeListener(final Tree tree) {
         tree.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -689,6 +696,14 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                 if (getTheSuitedComposite(e) != null) {
                     getTheSuitedComposite(e).setFocus();
                 }
+                if (e.item instanceof TreeItem) {
+                    TreeItem item = (TreeItem) e.item;
+                    if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
+                        tree.setMenu(null);
+                        return;
+                    }
+                }
+                tree.setMenu(menu);
             }
 
         });
