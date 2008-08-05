@@ -13,17 +13,23 @@
 package org.talend.dataprofiler.core.ui.editor;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -131,11 +137,23 @@ public abstract class CommonFormEditor extends FormEditor {
         });
     }
 
+    /**
+     * DOC qzhang Comment method "refreshDQView".
+     */
+    protected void refreshDQView() {
+        IFile node = ((FileEditorInput) getEditorInput()).getFile();
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IViewPart findView = activePage.findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView");
+        DQRespositoryView view = (DQRespositoryView) findView;
+        view.getCommonViewer().refresh(node);
+    }
+
     public void doSaveAs() {
         doSave(null);
     }
 
     public void doSave(IProgressMonitor monitor) {
+        refreshDQView();
         this.isDirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
         CorePlugin.getDefault().refreshWorkSpace();

@@ -41,6 +41,7 @@ public class PatternEditor extends CommonFormEditor {
             masterPage.doSave(monitor);
         }
         super.doSave(monitor);
+
     }
 
     protected void firePropertyChange(final int propertyId) {

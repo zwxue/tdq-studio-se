@@ -76,11 +76,11 @@ public class PatternUtilities {
             if (!valid) {
                 break;
             } else {
-                if (body.charAt(0) == '^') {
-                    body = "'" + body.substring(1);
-                } else {
-                    body = "'" + body;
-                }
+                // if (body.charAt(0) == '^') {
+                // body = "'" + body.substring(1);
+                // } else {
+                body = "'" + body;
+                // }
                 regularExpress.getExpression().setBody(body);
             }
         }
