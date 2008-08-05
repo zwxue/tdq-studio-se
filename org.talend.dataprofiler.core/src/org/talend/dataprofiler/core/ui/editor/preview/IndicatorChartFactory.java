@@ -50,6 +50,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.PatternChartDataEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
@@ -401,6 +402,7 @@ public class IndicatorChartFactory {
         List<IndicatorUnit> summaryUnitList = separatedMap.get(CompositeIndicator.SUMMARY_STATISTICS);
         List<IndicatorUnit> patternUnitList = separatedMap.get(CompositeIndicator.PATTERN_MATCHING);
         List<IndicatorUnit> sqlPatternUnitList = separatedMap.get(CompositeIndicator.SQL_PATTERN_MATCHING);
+        List<IndicatorUnit> modeIndicatorUnitList = separatedMap.get(CompositeIndicator.MODE_INDICATOR);
 
         List<ChartWithData> returnFiles = new ArrayList<ChartWithData>();
 
@@ -470,6 +472,16 @@ public class IndicatorChartFactory {
             returnFiles.add(chart);
         }
 
+        if (!modeIndicatorUnitList.isEmpty()) {
+            for (IndicatorUnit unit : modeIndicatorUnitList) {
+                IndicatorCommonUtil.compositeIndicatorMap(unit);
+            }
+
+            ChartWithData chart = new ChartWithData(CompositeIndicator.MODE_INDICATOR, null,
+                    getDataEnityFromUnits(modeIndicatorUnitList));
+            returnFiles.add(chart);
+        }
+
         return returnFiles;
     }
 
@@ -485,10 +497,20 @@ public class IndicatorChartFactory {
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setLabel(one.getKey().toString());
                     entity.setValue(one.getValue().toString());
+                    entity.setPercent(one.getFrequency().toString());
                     entity.setIndicator(unit.getIndicator());
                     list.add(entity);
                 }
 
+                // add Frequency.OTHER
+                ChartDataEntity entity = new ChartDataEntity();
+                FrequencyIndicator freqIndicator = (FrequencyIndicator) unit.getIndicator();
+                entity.setLabel(FrequencyIndicator.OTHER);
+                entity.setValue(freqIndicator.getCount(FrequencyIndicator.OTHER).toString());
+                entity.setPercent(freqIndicator.getFrequency(FrequencyIndicator.OTHER).toString());
+                entity.setIndicator(freqIndicator);
+
+                list.add(entity);
             } else if (unit.getType() == IndicatorEnum.RegexpMatchingIndicatorEnum
                     || unit.getType() == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
                 PatternMatchingExt patnExt = (PatternMatchingExt) unit.getValue();

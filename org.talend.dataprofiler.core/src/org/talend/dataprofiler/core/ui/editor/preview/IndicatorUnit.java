@@ -43,7 +43,8 @@ public class IndicatorUnit {
     public IndicatorUnit(IndicatorEnum type, Indicator indicator, ColumnIndicator parentColumn) {
         this.type = type;
         this.indicator = indicator;
-        this.indicatorName = indicator.getName();
+        // this.indicatorName = indicator.getName();
+        this.indicatorName = type.getLabel();
         this.parentColumn = parentColumn;
     }
 

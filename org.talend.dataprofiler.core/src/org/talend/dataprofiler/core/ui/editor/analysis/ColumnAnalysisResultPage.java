@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -202,8 +203,11 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                                 // create table
                                 ChartTableFactory.createTable(composite, chartData);
                                 // carete image
-                                ImageHyperlink image = toolkit.createImageHyperlink(composite, SWT.WRAP);
-                                image.setImage(chartData.getImageDescriptor().createImage());
+                                ImageDescriptor imageDescriptor = chartData.getImageDescriptor();
+                                if (imageDescriptor != null) {
+                                    ImageHyperlink image = toolkit.createImageHyperlink(composite, SWT.WRAP);
+                                    image.setImage(imageDescriptor.createImage());
+                                }
 
                                 subComp.setClient(composite);
                                 subComp.addExpansionListener(new ExpansionAdapter() {

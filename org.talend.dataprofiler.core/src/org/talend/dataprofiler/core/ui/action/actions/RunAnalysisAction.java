@@ -86,9 +86,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
 
+        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor();
+
         if (currentSelection == null) {
-            AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                    .getActiveEditor();
             if (editor != null) {
                 page = (ColumnMasterDetailsPage) editor.getMasterPage();
                 FileEditorInput input = (FileEditorInput) page.getEditorInput();
@@ -111,6 +112,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             if (currentSelection.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
                 analysis = AnaResourceFileHelper.getInstance().findAnalysis(currentSelection);
             }
+        }
+
+        if (editor != null) {
+            editor.setRefreshResultPage(true);
         }
 
         AnalysisType analysisType = AnalysisHelper.getAnalysisType(analysis);

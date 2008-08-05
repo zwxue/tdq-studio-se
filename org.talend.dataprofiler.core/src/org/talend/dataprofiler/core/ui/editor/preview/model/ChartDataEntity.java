@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import java.text.DecimalFormat;
 
-import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 
 /**
@@ -27,6 +26,8 @@ public class ChartDataEntity {
     private String value;
 
     private Indicator indicator;
+
+    private String percent;
 
     public String getLabel() {
         return label;
@@ -45,24 +46,20 @@ public class ChartDataEntity {
     }
 
     public String getPersent() {
-        if (indicator != null) {
+        DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
+        format.applyPattern("0.00%");
 
-            DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
-            format.applyPattern("0.00%");
+        if (percent != null) {
+            return percent.equals("0") ? "0" : format.format(Double.valueOf(percent));
+        } else {
+            percent = format.format(Double.parseDouble(getValue()) / indicator.getCount().doubleValue());
 
-            double persent;
-
-            if (indicator instanceof FrequencyIndicator) {
-                FrequencyIndicator freIndicator = (FrequencyIndicator) indicator;
-                persent = Double.parseDouble(getValue()) / freIndicator.getValueToFreq().size();
-            } else {
-                persent = Double.parseDouble(getValue()) / indicator.getCount().doubleValue();
-            }
-
-            return persent == 0 ? "0" : format.format(persent);
+            return percent.equals("0") ? "0" : percent;
         }
+    }
 
-        return "";
+    public void setPercent(String percent) {
+        this.percent = percent;
     }
 
     public Indicator getIndicator() {
@@ -72,5 +69,4 @@ public class ChartDataEntity {
     public void setIndicator(Indicator indicator) {
         this.indicator = indicator;
     }
-
 }

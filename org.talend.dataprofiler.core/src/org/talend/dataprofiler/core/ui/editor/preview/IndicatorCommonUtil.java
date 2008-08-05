@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
+import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -136,6 +137,7 @@ public class IndicatorCommonUtil {
                 frequencyExt[i] = new FrequencyExt();
                 frequencyExt[i].setKey(o);
                 frequencyExt[i].setValue(frequency.getCount(o));
+                frequencyExt[i].setFrequency(frequency.getFrequency(o));
                 i++;
             }
 
@@ -180,6 +182,9 @@ public class IndicatorCommonUtil {
             patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());
             patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());
             tempObject = patternExt;
+        case ModeIndicatorEnum:
+            tempColor = null;
+            tempObject = ((ModeIndicator) indicator).getMode();
 
         default:
 

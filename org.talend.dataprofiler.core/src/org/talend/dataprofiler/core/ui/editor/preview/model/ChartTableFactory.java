@@ -42,8 +42,7 @@ public class ChartTableFactory {
         table.setLinesVisible(true);
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (inputObject.getChartNamedType().equals(CompositeIndicator.SIMPLE_STATISTICS)
-                || inputObject.getChartNamedType().equals(CompositeIndicator.TEXT_STATISTICS)) {
+        if (inputObject.getChartNamedType().equals(CompositeIndicator.SIMPLE_STATISTICS)) {
             TableColumn column1 = new TableColumn(table, SWT.NONE);
             column1.setText("Label");
             column1.setWidth(200);
@@ -53,6 +52,16 @@ public class ChartTableFactory {
             TableColumn column3 = new TableColumn(table, SWT.NONE);
             column3.setText("%");
             column3.setWidth(150);
+
+            tbViewer.setLabelProvider(new SimpleLabelProvider());
+            tbViewer.setContentProvider(new CommonContenteProvider());
+        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.TEXT_STATISTICS)) {
+            TableColumn column1 = new TableColumn(table, SWT.NONE);
+            column1.setText("Value");
+            column1.setWidth(200);
+            TableColumn column2 = new TableColumn(table, SWT.NONE);
+            column2.setText("Count");
+            column2.setWidth(300);
 
             tbViewer.setLabelProvider(new SimpleLabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());
@@ -98,6 +107,14 @@ public class ChartTableFactory {
             column5.setWidth(75);
 
             tbViewer.setLabelProvider(new PatternLabelProvider());
+            tbViewer.setContentProvider(new CommonContenteProvider());
+        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.MODE_INDICATOR)) {
+            TableColumn column1 = new TableColumn(table, SWT.NONE);
+            column1.setText("Mode");
+            column1.setAlignment(SWT.CENTER);
+            column1.setWidth(500);
+
+            tbViewer.setLabelProvider(new ModeLabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());
         } else {
 
@@ -254,6 +271,20 @@ public class ChartTableFactory {
             default:
                 return "";
             }
+        }
+
+    }
+
+    /**
+     * DOC zqin ChartTableFactory class global comment. Detailled comment
+     */
+    static class ModeLabelProvider extends BaseChartTableLabelProvider {
+
+        @Override
+        public String getColumnText(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+
+            return entity.getValue();
         }
 
     }

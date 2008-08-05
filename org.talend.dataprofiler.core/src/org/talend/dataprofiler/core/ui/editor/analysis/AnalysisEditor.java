@@ -107,9 +107,8 @@ public class AnalysisEditor extends CommonFormEditor {
 
         if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()) {
             ((ColumnAnalysisResultPage) columnResultPage).refresh((ColumnMasterDetailsPage) getMasterPage());
+            isRefreshResultPage = false;
         }
-
-        isRefreshResultPage = false;
     }
 
     /**
@@ -125,6 +124,10 @@ public class AnalysisEditor extends CommonFormEditor {
         if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
             ((ColumnMasterDetailsPage) columnMasterPage).performGlobalAction(id);
         }
+    }
+
+    public void setRefreshResultPage(boolean isRefreshResultPage) {
+        this.isRefreshResultPage = isRefreshResultPage;
     }
 
 }
