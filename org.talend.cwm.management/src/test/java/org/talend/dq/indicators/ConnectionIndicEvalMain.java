@@ -34,7 +34,10 @@ import org.talend.utils.sugars.ReturnCode;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class ConnectionIndicEvalMain {
+public final class ConnectionIndicEvalMain {
+
+    private ConnectionIndicEvalMain() {
+    }
 
     /**
      * DOC scorreia Comment method "main".
