@@ -80,6 +80,8 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         if (element instanceof IProject) {
             if (DQStructureManager.METADATA.equals(((IProject) element).getName())) {
                 return ImageLib.getImageDescriptor(ImageLib.METADATA);
+            } else if (DQStructureManager.LIBRARIES.equals(((IProject) element).getName())) {
+                return ImageLib.getImageDescriptor(ImageLib.LIBRARIES);
             }
         } else if (element instanceof IFolder) {
             if (DQStructureManager.DB_CONNECTIONS.equals(((IFolder) element).getName())) {

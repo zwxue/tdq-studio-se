@@ -83,6 +83,8 @@ public class ImageLib {
 
     public static final String OPTION = "option.png";
 
+    public static final String LIBRARIES = "libraries.png";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 
