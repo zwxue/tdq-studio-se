@@ -182,6 +182,7 @@ public class IndicatorCommonUtil {
             patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());
             patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());
             tempObject = patternExt;
+            break;
         case ModeIndicatorEnum:
             tempColor = null;
             tempObject = ((ModeIndicator) indicator).getMode();
