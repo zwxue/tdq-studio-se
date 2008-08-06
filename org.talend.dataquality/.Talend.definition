@@ -3,9 +3,7 @@
   <indicatorDefinitions xmi:id="_ccFOkBF2Ed2PKb6nEJEvhw" name="Row Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Row Count">
     <taggedValue xmi:id="_yboaoDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of rows"/>
     <taggedValue xmi:id="_yboaoTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records"/>
-    <sqlGenericExpression xmi:id="_ccHDwBF2Ed2PKb6nEJEvhw" body="SELECT COUNT({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybpBsDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybpBsTh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_ccHDwBF2Ed2PKb6nEJEvhw" body="SELECT COUNT(*) FROM {1}" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0BF2Ed2PKb6nEJEvhw" name="Distinct Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Distinct Count">
     <taggedValue xmi:id="_ybpowDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of distinct rows"/>

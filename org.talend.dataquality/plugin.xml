@@ -89,12 +89,13 @@
             class="org.talend.commons.emf.CwmResourceFactory"
             type="definition">
       </parser>
-   </extension>
-   <extension
-         point="org.eclipse.emf.ecore.extension_parser">
       <parser
             class="org.talend.commons.emf.CwmResourceFactory"
             type="ana">
+      </parser>
+      <parser
+            class="org.talend.commons.emf.CwmResourceFactory"
+            type="pattern">
       </parser>
    </extension>
 
