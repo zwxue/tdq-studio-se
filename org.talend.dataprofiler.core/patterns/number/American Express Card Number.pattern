@@ -4,6 +4,7 @@
   <taggedValue xmi:id="_6r_PUEEkEd2095gIBp6gJQ" tag="Description" value="American Express card numbers start with 34 or 37 and have 15 digits."/>
   <taggedValue xmi:id="_6r_PUUEkEd2095gIBp6gJQ" tag="Author" value=""/>
   <taggedValue xmi:id="_6r_PUkEkEd2095gIBp6gJQ" tag="Status" value="Draft"/>
+  <taggedValue xmi:id="_nXQzsGO9Ed2pdqzSh7BKqQ" tag="Validation_Status" value="true"/>
   <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_FcDG0T17Ed2p44yVAaDvbQ">
     <expression xmi:id="_FcDG0j17Ed2p44yVAaDvbQ" body="'^3[47][0-9]{13}$'" language="SQL"/>
   </components>

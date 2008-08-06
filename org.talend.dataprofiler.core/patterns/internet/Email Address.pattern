@@ -4,6 +4,7 @@
   <taggedValue xmi:id="_oU4qQUEmEd2095gIBp6gJQ" tag="Description" value="Matches the email addresses"/>
   <taggedValue xmi:id="_oU4qQkEmEd2095gIBp6gJQ" tag="Author" value=""/>
   <taggedValue xmi:id="_oU4qQ0EmEd2095gIBp6gJQ" tag="Status" value="Draft"/>
+  <taggedValue xmi:id="_l-DlEGO9Ed2pdqzSh7BKqQ" tag="Validation_Status" value="true"/>
   <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_rC5TcT4XEd24WPpU35gV1A">
     <expression xmi:id="_rC5Tcj4XEd24WPpU35gV1A" body="'[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'" language="Oracle"/>
   </components>
