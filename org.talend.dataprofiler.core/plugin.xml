@@ -247,7 +247,7 @@
             </or>
          </enablement>
       </actionProvider>
-      <actionProvider
+      <!--<actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.CreateUserFolderProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.CreateUserFolderProvider">
          <enablement>
@@ -264,7 +264,7 @@
                      type="org.eclipse.core.resources.IFolder">
                </adapt>
          </enablement>
-      </actionProvider>
+      </actionProvider>-->
       <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateNominalAnalysis"
             id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateNominalAnalysis">
