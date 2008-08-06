@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -31,6 +34,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dq.analysis.AnalysisWriter;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -99,6 +103,23 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
             allAnalysisMap.put(file, entity);
         }
         return analysis;
+    }
+
+    public List<IFile> findCorrespondingFile(List<RenderedObject> renderObjs) {
+        this.getAllAnalysis();
+        List<IFile> fileList = new ArrayList<IFile>();
+        for (int i = 0; i < renderObjs.size(); i++) {
+            if (this.registedResourceMap.containsValue(renderObjs.get(i).eResource())) {
+                Iterator<IFile> iterator = this.registedResourceMap.keySet().iterator();
+                while (iterator.hasNext()) {
+                    IFile next = iterator.next();
+                    if (registedResourceMap.get(next) == renderObjs.get(i).eResource()) {
+                        fileList.add(next);
+                    }
+                }
+            }
+        }
+        return fileList;
     }
 
     /**

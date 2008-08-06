@@ -26,7 +26,7 @@ import org.talend.commons.emf.EMFSharedResources;
  */
 public class ResourceFileMap {
 
-    private Map<IFile, Resource> registedResourceMap = new HashMap<IFile, Resource>();
+    protected Map<IFile, Resource> registedResourceMap = new HashMap<IFile, Resource>();
 
     protected boolean resourceChanged = true;
 

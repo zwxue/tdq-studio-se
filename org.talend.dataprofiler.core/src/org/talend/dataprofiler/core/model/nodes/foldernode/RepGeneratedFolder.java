@@ -26,6 +26,8 @@ import org.talend.dataprofiler.core.ImageLib;
  */
 public class RepGeneratedFolder extends AbstractFolderNode implements IWorkbenchAdapter {
 
+    public static final String DOT_MARK = ".";
+
     private static Logger log = Logger.getLogger(RepGeneratedFolder.class);
 
     private static final String GENERATE_REPORTS = "Generate Reports";
@@ -53,14 +55,14 @@ public class RepGeneratedFolder extends AbstractFolderNode implements IWorkbench
         IFolder reportContainer = (IFolder) reportFile.getParent();
         String fileName = reportFile.getName();
         String simpleName = null;
-        int indexOf = fileName.indexOf(".");
+        int indexOf = fileName.indexOf(DOT_MARK);
         if (indexOf != -1) {
             simpleName = fileName.substring(0, indexOf);
         } else {
             log.error("The current report file name:" + reportFile.getFullPath() + " is a illegal name.");
             return;
         }
-        IFolder currentRportFolder = reportContainer.getFolder(simpleName);
+        IFolder currentRportFolder = reportContainer.getFolder(DOT_MARK + simpleName);
         if (!currentRportFolder.exists()) {
             return;
         }
@@ -84,6 +86,7 @@ public class RepGeneratedFolder extends AbstractFolderNode implements IWorkbench
     }
 
     public Object[] getChildren(Object o) {
+        loadChildren();
         return this.getChildren();
     }
 

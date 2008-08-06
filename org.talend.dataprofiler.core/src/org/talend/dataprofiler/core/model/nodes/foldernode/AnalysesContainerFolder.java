@@ -52,6 +52,7 @@ public class AnalysesContainerFolder extends AbstractFolderNode implements IWork
     }
 
     public Object[] getChildren(Object o) {
+        loadChildren();
         return this.getChildren();
     }
 

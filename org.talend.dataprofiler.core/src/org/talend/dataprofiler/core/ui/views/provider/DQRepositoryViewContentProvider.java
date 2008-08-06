@@ -62,7 +62,7 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
             if (folerNode.getChildrenType() == IFolderNode.MODELELEMENT_TYPE) {
                 return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             } else {
-                return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
+                return ComparatorsFactory.sort(folerNode.getChildren(), ComparatorsFactory.FILE_RESOURCE_COMPARATOR_ID);
             }
         } else if (SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement) != null) {
             if (CatalogHelper.getSchemas(SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) parentElement)).size() > 0) {
