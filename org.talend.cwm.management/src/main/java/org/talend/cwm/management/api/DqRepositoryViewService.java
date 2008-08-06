@@ -163,7 +163,7 @@ public final class DqRepositoryViewService {
             return new ArrayList<TdDataProvider>();
         }
         for (IResource res : members) {
-            if ((res instanceof IResource) && (res.getFileExtension().equals(FactoriesUtil.PROV))) {
+            if ((res instanceof IFile) && (FactoriesUtil.PROV.equals(res.getFileExtension()))) {
 
                 TypedReturnCode<TdDataProvider> rc = readFromFile((IFile) res);
                 if (rc.isOk()) {
