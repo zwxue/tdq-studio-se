@@ -46,7 +46,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     private TimeSlicesParameter patameter;
 
     public CreateDateAnalysisAction() {
-        super("Date analysis", null);
+        super("Time analysis", null);
     }
 
     /*

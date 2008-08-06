@@ -38,6 +38,7 @@
     <sqlGenericExpression xmi:id="_ybsFAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybsFAzh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybsFBDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_8IFvYGOeEd2-SIyfZ_Vx6A" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1BF2Ed2PKb6nEJEvhw" name="Minimal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Minimal Length">
     <taggedValue xmi:id="_ybssEDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
@@ -45,6 +46,7 @@
     <sqlGenericExpression xmi:id="_ybssEjh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybssEzh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybtTIDh8Ed2XmO7pl5Yuyg" body="SELECT MIN(LENGTH({0})) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_dNWDkGOgEd2-SIyfZ_Vx6A" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1RF2Ed2PKb6nEJEvhw" name="Maximal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Maximal Length">
     <taggedValue xmi:id="_ybtTITh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the maximal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
@@ -52,6 +54,7 @@
     <sqlGenericExpression xmi:id="_ybt6MDh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybt6MTh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybt6Mjh8Ed2XmO7pl5Yuyg" body="SELECT MAX(LENGTH({0})) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_hi5ukGOgEd2-SIyfZ_Vx6A" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4BF2Ed2PKb6nEJEvhw" name="Average Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Average Length">
     <taggedValue xmi:id="_ybt6Mzh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average length of the field. Parameters can be set to avoid counting blank data or null data."/>
@@ -59,6 +62,7 @@
     <sqlGenericExpression xmi:id="_ybuhQTh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybuhQjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybuhQzh8Ed2XmO7pl5Yuyg" body="SELECT SUM(LENGTH({0})), COUNT({0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_lSoIoGOgEd2-SIyfZ_Vx6A" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4RF2Ed2PKb6nEJEvhw" name="Mode" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Mode">
     <taggedValue xmi:id="_ybvIUDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the mode (most probable value). For numerical data or continuous data, bins can be set in the parameters of this indicator. It is different from the average and from the median. Generalization of it is an histogram. It is good for addressing categorical attributes."/>
@@ -85,6 +89,7 @@
     <sqlGenericExpression xmi:id="_ybzZwjh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybzZwzh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb0A0Dh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_VO37sGOhEd2-SIyfZ_Vx6A" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48hF2Ed2PKb6nEJEvhw" name="Median" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Median">
     <taggedValue xmi:id="_yb0A0Th8Ed2XmO7pl5Yuyg" tag="Description" value="The median is the value separating the higher half of a sample, a population, or a probability distribution, from the lower half. "/>
@@ -95,6 +100,7 @@
     <sqlGenericExpression xmi:id="_yb0n5Dh8Ed2XmO7pl5Yuyg" body="SELECT MEDIAN({0}) FROM {1}" language="Oracle 10g"/>
     <sqlGenericExpression xmi:id="_yb0n5Th8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle 9i"/>
     <sqlGenericExpression xmi:id="_n-8v0GI-Ed2QlOgtjAaunA" body="SELECT AVG({0}) FROM ( SELECT {0}, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY {0}) rn FROM {1} ) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="DB2"/>
+    <sqlGenericExpression xmi:id="_yBfLcGOhEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48xF2Ed2PKb6nEJEvhw" name="Inter Quartile Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI49BF2Ed2PKb6nEJEvhw _ccI49RF2Ed2PKb6nEJEvhw" label="IQR">
     <taggedValue xmi:id="_yb2dEDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the spread of the main half data. This measure is more stable than the range."/>
@@ -107,6 +113,7 @@
     <sqlGenericExpression xmi:id="_yb3EIzh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb3EJDh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_2SZ8cGJAEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
+    <sqlGenericExpression xmi:id="_NsBY0GOiEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49RF2Ed2PKb6nEJEvhw" name="Upper Quartile" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Upper Quartile">
     <taggedValue xmi:id="_yb3rMDh8Ed2XmO7pl5Yuyg" tag="Description" value="1/4th of the records are above this value and 3/4th are below. "/>
@@ -115,6 +122,7 @@
     <sqlGenericExpression xmi:id="_yb4SQjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb4SQzh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_P044MGJBEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  3 * INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
+    <sqlGenericExpression xmi:id="_S33yoGOiEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49hF2Ed2PKb6nEJEvhw" name="Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccJgABF2Ed2PKb6nEJEvhw _ccJgARF2Ed2PKb6nEJEvhw" label="Range">
     <taggedValue xmi:id="_yb6HcDh8Ed2XmO7pl5Yuyg" tag="Description" value="is the difference between the highest record and the lowest record"/>
@@ -153,6 +161,7 @@
     <taggedValue xmi:id="_yb-_8jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records that match a regular pattern"/>
     <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} REGEXP {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} REGEXP_LIKE({0},{2}) THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_XXDn0GOvEd2-SIyfZ_Vx6A" body="SELECT SUM(CASE WHEN {0} ~ {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_Z4vXcERgEd2RSqFSgXiIfA" name="SQL Pattern Matching Indicator" categories="_BvUq8ERhEd2RSqFSgXiIfA" label="SQL Pattern Matching Indicator">
     <taggedValue xmi:id="_hzXEoERgEd2RSqFSgXiIfA" tag="Description" value="counts the number of records matching the given SQL pattern against the number of records that do not match the given SQL pattern"/>
