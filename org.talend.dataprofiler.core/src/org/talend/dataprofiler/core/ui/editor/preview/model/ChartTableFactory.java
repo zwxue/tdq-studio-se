@@ -57,10 +57,10 @@ public class ChartTableFactory {
             tbViewer.setContentProvider(new CommonContenteProvider());
         } else if (inputObject.getChartNamedType().equals(CompositeIndicator.TEXT_STATISTICS)) {
             TableColumn column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Value");
+            column1.setText("Label");
             column1.setWidth(200);
             TableColumn column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("Count");
+            column2.setText("Value");
             column2.setWidth(300);
 
             tbViewer.setLabelProvider(new SimpleLabelProvider());

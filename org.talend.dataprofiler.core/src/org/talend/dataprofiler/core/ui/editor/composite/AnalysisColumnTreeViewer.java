@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
@@ -439,12 +440,16 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                 IndicatorUnit indicatorUnit = (IndicatorUnit) ((Label) e.getSource()).getData();
                 IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
 
-                String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
-                OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(null, wizard, href);
-                optionDialog.create();
-                if (Window.OK == optionDialog.open()) {
-                    setDirty(wizard.isDirty());
-                    createIndicatorParameters(indicatorItem, indicatorUnit);
+                if (FormEnum.isExsitingForm(indicatorUnit)) {
+                    String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
+                    OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(null, wizard, href);
+                    optionDialog.create();
+                    if (Window.OK == optionDialog.open()) {
+                        setDirty(wizard.isDirty());
+                        createIndicatorParameters(indicatorItem, indicatorUnit);
+                    }
+                } else {
+                    MessageDialogWithToggle.openInformation(null, "Information", "No option to set!");
                 }
             }
 

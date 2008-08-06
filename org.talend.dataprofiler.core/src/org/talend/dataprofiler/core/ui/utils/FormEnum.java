@@ -164,4 +164,12 @@ public enum FormEnum {
 
         return forms;
     }
+
+    public static boolean isExsitingForm(IndicatorUnit indicatorUnit) {
+        if (getForms(indicatorUnit) != null) {
+            return true;
+        }
+
+        return false;
+    }
 }
