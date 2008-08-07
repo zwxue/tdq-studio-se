@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
@@ -44,6 +46,7 @@ import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -110,27 +113,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             Object fe = sel.getFirstElement();
             if (fe instanceof IFile) {
                 IFile fe2 = (IFile) fe;
-                if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-                    TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(fe2);
-                    TdDataProvider dataProvider = tdProvider.getObject();
-                    createDataProviderDetail(dataProvider);
-                    is = false;
-                } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
-                    Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe2);
-                    createPatternDetail(pattern);
-                    is = false;
-                } else if (fe2.getFileExtension().equals(FactoriesUtil.ANA)) {
-                    Analysis ana = AnaResourceFileHelper.getInstance().findAnalysis(fe2);
-                    createAnaysisDetail(ana);
-                    is = false;
-                } else if (fe2.getFileExtension().equals(FactoriesUtil.REP)) {
-                    TdReport rep = RepResourceFileHelper.getInstance().findReport(fe2);
-                    createReportDetail(rep);
-                    is = false;
-                } else if (fe2.getFileExtension().equals(FactoriesUtil.SQL)) {
-                    createSqlFileDetail(fe2);
-                    is = false;
-                }
+                is = createFileDetail(is, fe2);
             } else if (fe instanceof TdCatalog) {
                 TdCatalog catalog = (TdCatalog) fe;
                 createTdCatalogDetail(catalog);
@@ -148,11 +131,51 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 createTdColumn(column);
                 is = false;
             }
+        } else if (part instanceof CommonFormEditor) {
+            CommonFormEditor editor = (CommonFormEditor) part;
+            IEditorInput editorInput = editor.getEditorInput();
+            if (editorInput instanceof IFileEditorInput) {
+                IFileEditorInput input = (IFileEditorInput) editorInput;
+                IFile file = input.getFile();
+                is = createFileDetail(is, file);
+            }
         }
         if (is) {
             createDefault();
         }
         container.layout();
+    }
+
+    /**
+     * DOC qzhang Comment method "createFileDetail".
+     * 
+     * @param is
+     * @param fe2
+     * @return
+     */
+    private boolean createFileDetail(boolean is, IFile fe2) {
+        if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
+            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(fe2);
+            TdDataProvider dataProvider = tdProvider.getObject();
+            createDataProviderDetail(dataProvider);
+            is = false;
+        } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+            Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe2);
+            createPatternDetail(pattern);
+            is = false;
+        } else if (fe2.getFileExtension().equals(FactoriesUtil.ANA)) {
+            Analysis ana = AnaResourceFileHelper.getInstance().findAnalysis(fe2);
+            createAnaysisDetail(ana);
+            is = false;
+        } else if (fe2.getFileExtension().equals(FactoriesUtil.REP)) {
+            TdReport rep = RepResourceFileHelper.getInstance().findReport(fe2);
+            createReportDetail(rep);
+            is = false;
+        } else if (fe2.getFileExtension().equals(FactoriesUtil.SQL)) {
+            createSqlFileDetail(fe2);
+            is = false;
+        }
+        return is;
     }
 
     /**
