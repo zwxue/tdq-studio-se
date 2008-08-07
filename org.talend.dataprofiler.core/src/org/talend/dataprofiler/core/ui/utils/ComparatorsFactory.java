@@ -189,13 +189,18 @@ public final class ComparatorsFactory {
             IndicatorCommonUtil.compositeIndicatorMap(o1);
             IndicatorCommonUtil.compositeIndicatorMap(o2);
 
-            double value1 = Double.parseDouble(String.valueOf(o1.getValue()));
-            double value2 = Double.parseDouble(String.valueOf(o2.getValue()));
-            if (value1 <= value2) {
-                return -1;
+            if (o1.isExcuted() && o2.isExcuted()) {
+                double value1 = Double.parseDouble(String.valueOf(o1.getValue()));
+                double value2 = Double.parseDouble(String.valueOf(o2.getValue()));
+                if (value1 <= value2) {
+                    return -1;
+                } else {
+                    return 1;
+                }
             } else {
-                return 1;
+                return 0;
             }
+
         }
 
     }

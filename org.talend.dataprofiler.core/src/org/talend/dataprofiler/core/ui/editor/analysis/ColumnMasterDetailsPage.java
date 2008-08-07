@@ -329,9 +329,10 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
                                 for (ChartWithData chart : IndicatorChartFactory.createChart(columnIndicator, isCreate)) {
 
-                                    ImageHyperlink image = toolkit.createImageHyperlink(comp, SWT.WRAP);
-                                    image.setImage(chart.getImageDescriptor().createImage());
-
+                                    if (chart.getImageDescriptor() != null) {
+                                        ImageHyperlink image = toolkit.createImageHyperlink(comp, SWT.WRAP);
+                                        image.setImage(chart.getImageDescriptor().createImage());
+                                    }
                                 }
                             }
 

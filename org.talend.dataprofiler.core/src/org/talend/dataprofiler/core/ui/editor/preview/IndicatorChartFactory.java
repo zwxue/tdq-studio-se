@@ -182,12 +182,10 @@ public class IndicatorChartFactory {
             for (int index = 0; index < indicatorUnitList.size(); index++) {
                 IndicatorUnit unit = indicatorUnitList.get(index);
                 IndicatorCommonUtil.compositeIndicatorMap(unit);
-                Object object = unit.getValue();
-                String label = unit.getIndicatorName();
 
-                if (object != null && !unit.getIndicator().getInstantiatedExpressions().isEmpty()) {
-                    String valueStr = String.valueOf(object);
-                    double value = Double.parseDouble(valueStr);
+                if (unit.isExcuted()) {
+                    double value = Double.parseDouble(unit.getValue().toString());
+                    String label = unit.getIndicatorName();
 
                     renderer3d.setSeriesPaint(index, unit.getColor());
                     dataset.addValue(value, label, "");
@@ -220,16 +218,10 @@ public class IndicatorChartFactory {
 
             for (IndicatorUnit indicatorUnit : indicatorUnitList) {
 
-                try {
-                    IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
-                } catch (RuntimeException re) {
-                    isValide = false;
-                }
+                IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
 
-                Object object = indicatorUnit.getValue();
-
-                if (object != null && isValide) {
-                    String strValue = String.valueOf(object);
+                if (indicatorUnit.isExcuted() && isValide) {
+                    String strValue = String.valueOf(indicatorUnit.getValue());
                     double doubleValue = Double.valueOf(strValue);
                     map.put(indicatorUnit.getType(), doubleValue);
                 }
@@ -313,10 +305,9 @@ public class IndicatorChartFactory {
 
         for (IndicatorUnit indicatorUnit : indicatorUnitList) {
             IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
-            Object object = indicatorUnit.getValue();
 
-            if (object != null) {
-                FrequencyExt[] frequencyExt = (FrequencyExt[]) object;
+            if (indicatorUnit.isExcuted()) {
+                FrequencyExt[] frequencyExt = (FrequencyExt[]) indicatorUnit.getValue();
                 Arrays.sort(frequencyExt);
 
                 if (isCreate) {
@@ -357,17 +348,15 @@ public class IndicatorChartFactory {
                 IndicatorCommonUtil.compositeIndicatorMap(unit);
                 String label = unit.getIndicatorName();
 
-                if (unit.getValue() != null) {
+                if (unit.isExcuted()) {
                     PatternMatchingExt patternExt = (PatternMatchingExt) unit.getValue();
                     double notMathCount = patternExt.getNotMatchingValueCount();
                     double machCount = patternExt.getMatchingValueCount();
 
                     dataset.addValue(machCount, "matching", label);
                     dataset.addValue(notMathCount, "not matching", label);
-                } else {
-                    dataset.addValue(0, "not matching", "");
-                    dataset.addValue(0, "matching", "");
                 }
+
                 i++;
             }
         } else {
@@ -481,39 +470,47 @@ public class IndicatorChartFactory {
 
         for (IndicatorUnit unit : unitList) {
 
-            if (unit.getType() == IndicatorEnum.FrequencyIndicatorEnum) {
-                FrequencyExt[] freqExt = (FrequencyExt[]) unit.getValue();
-                for (FrequencyExt one : freqExt) {
-                    ChartDataEntity entity = new ChartDataEntity();
-                    entity.setLabel(one.getKey().toString());
-                    entity.setValue(String.valueOf(one.getValue()));
-                    entity.setPercent(String.valueOf(one.getFrequency()));
-                    entity.setIndicator(unit.getIndicator());
+            if (unit.isExcuted()) {
+
+                ChartDataEntity entity;
+
+                switch (unit.getType()) {
+                case FrequencyIndicatorEnum:
+                    FrequencyExt[] freqExt = (FrequencyExt[]) unit.getValue();
+                    for (FrequencyExt one : freqExt) {
+                        entity = new ChartDataEntity();
+                        entity.setLabel(one.getKey().toString());
+                        entity.setValue(String.valueOf(one.getValue()));
+                        entity.setPercent(String.valueOf(one.getFrequency()));
+                        entity.setIndicator(unit.getIndicator());
+                        list.add(entity);
+                    }
+
+                    // add Frequency.OTHER
+                    entity = new ChartDataEntity();
+                    FrequencyIndicator freqIndicator = (FrequencyIndicator) unit.getIndicator();
+                    entity.setLabel(FrequencyIndicator.OTHER);
+                    entity.setValue(freqIndicator.getCount(FrequencyIndicator.OTHER).toString());
+                    entity.setPercent(freqIndicator.getFrequency(FrequencyIndicator.OTHER).toString());
+                    entity.setIndicator(freqIndicator);
+
                     list.add(entity);
-                }
 
-                // add Frequency.OTHER
-                ChartDataEntity entity = new ChartDataEntity();
-                FrequencyIndicator freqIndicator = (FrequencyIndicator) unit.getIndicator();
-                entity.setLabel(FrequencyIndicator.OTHER);
-                entity.setValue(freqIndicator.getCount(FrequencyIndicator.OTHER).toString());
-                entity.setPercent(freqIndicator.getFrequency(FrequencyIndicator.OTHER).toString());
-                entity.setIndicator(freqIndicator);
+                    break;
+                case RegexpMatchingIndicatorEnum:
+                case SqlPatternMatchingIndicatorEnum:
+                    PatternMatchingExt patnExt = (PatternMatchingExt) unit.getValue();
+                    PatternChartDataEntity patternEntity = new PatternChartDataEntity();
+                    patternEntity.setLabel(unit.getIndicatorName());
+                    patternEntity.setNumMatch(String.valueOf(patnExt.getMatchingValueCount()));
+                    patternEntity.setNumNoMatch(String.valueOf(patnExt.getNotMatchingValueCount()));
+                    patternEntity.setIndicator(unit.getIndicator());
+                    list.add(patternEntity);
 
-                list.add(entity);
-            } else if (unit.getType() == IndicatorEnum.RegexpMatchingIndicatorEnum
-                    || unit.getType() == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
-                PatternMatchingExt patnExt = (PatternMatchingExt) unit.getValue();
-                PatternChartDataEntity entity = new PatternChartDataEntity();
-                entity.setLabel(unit.getIndicatorName());
-                entity.setNumMatch(String.valueOf(patnExt.getMatchingValueCount()));
-                entity.setNumNoMatch(String.valueOf(patnExt.getNotMatchingValueCount()));
-                entity.setIndicator(unit.getIndicator());
-                list.add(entity);
+                    break;
 
-            } else {
-                if (unit.getValue() != null) {
-                    ChartDataEntity entity = new ChartDataEntity();
+                default:
+                    entity = new ChartDataEntity();
                     entity.setLabel(unit.getIndicatorName());
                     entity.setValue(unit.getValue().toString());
                     entity.setIndicator(unit.getIndicator());

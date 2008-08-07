@@ -40,11 +40,12 @@ public class IndicatorUnit {
 
     private IndicatorUnit[] children;
 
+    private boolean isExcuted;
+
     public IndicatorUnit(IndicatorEnum type, Indicator indicator, ColumnIndicator parentColumn) {
         this.type = type;
         this.indicator = indicator;
-        // this.indicatorName = indicator.getName();
-        this.indicatorName = type.getLabel();
+        this.indicatorName = indicator.getName();
         this.parentColumn = parentColumn;
     }
 
@@ -136,6 +137,14 @@ public class IndicatorUnit {
      */
     public void setChildren(IndicatorUnit[] children) {
         this.children = children;
+    }
+
+    public boolean isExcuted() {
+        return isExcuted;
+    }
+
+    public void setExcuted(boolean isExcuted) {
+        this.isExcuted = isExcuted;
     }
 
 }
