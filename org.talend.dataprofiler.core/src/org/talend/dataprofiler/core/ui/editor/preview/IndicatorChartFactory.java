@@ -185,9 +185,7 @@ public class IndicatorChartFactory {
                 Object object = unit.getValue();
                 String label = unit.getIndicatorName();
 
-                if (object == null) {
-                    dataset.addValue(0, label, "");
-                } else {
+                if (object != null && !unit.getIndicator().getInstantiatedExpressions().isEmpty()) {
                     String valueStr = String.valueOf(object);
                     double value = Double.parseDouble(valueStr);
 
@@ -216,26 +214,24 @@ public class IndicatorChartFactory {
 
         DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 
+        boolean isValide = true;
         if (isCreate) {
             Map<IndicatorEnum, Double> map = new HashMap<IndicatorEnum, Double>();
 
             for (IndicatorUnit indicatorUnit : indicatorUnitList) {
 
-                Object object = null;
                 try {
                     IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
-                    object = indicatorUnit.getValue();
-                } catch (Exception ue) {
-                    ue.printStackTrace();
-                    object = null;
+                } catch (RuntimeException re) {
+                    isValide = false;
                 }
 
-                if (object != null) {
+                Object object = indicatorUnit.getValue();
+
+                if (object != null && isValide) {
                     String strValue = String.valueOf(object);
                     double doubleValue = Double.valueOf(strValue);
                     map.put(indicatorUnit.getType(), doubleValue);
-                } else {
-                    map.put(indicatorUnit.getType(), Double.valueOf(0));
                 }
             }
 
@@ -316,14 +312,8 @@ public class IndicatorChartFactory {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         for (IndicatorUnit indicatorUnit : indicatorUnitList) {
-            Object object = null;
-            try {
-                IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
-                object = indicatorUnit.getValue();
-
-            } catch (UnsupportedOperationException ue) {
-                object = null;
-            }
+            IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
+            Object object = indicatorUnit.getValue();
 
             if (object != null) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) object;
@@ -496,8 +486,8 @@ public class IndicatorChartFactory {
                 for (FrequencyExt one : freqExt) {
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setLabel(one.getKey().toString());
-                    entity.setValue(one.getValue().toString());
-                    entity.setPercent(one.getFrequency().toString());
+                    entity.setValue(String.valueOf(one.getValue()));
+                    entity.setPercent(String.valueOf(one.getFrequency()));
                     entity.setIndicator(unit.getIndicator());
                     list.add(entity);
                 }
@@ -522,11 +512,13 @@ public class IndicatorChartFactory {
                 list.add(entity);
 
             } else {
-                ChartDataEntity entity = new ChartDataEntity();
-                entity.setLabel(unit.getIndicatorName());
-                entity.setValue(unit.getValue().toString());
-                entity.setIndicator(unit.getIndicator());
-                list.add(entity);
+                if (unit.getValue() != null) {
+                    ChartDataEntity entity = new ChartDataEntity();
+                    entity.setLabel(unit.getIndicatorName());
+                    entity.setValue(unit.getValue().toString());
+                    entity.setIndicator(unit.getIndicator());
+                    list.add(entity);
+                }
             }
         }
 
