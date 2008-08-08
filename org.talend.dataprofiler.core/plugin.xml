@@ -430,7 +430,7 @@
       <editor
             class="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
             extensions="pattern"
-            icon="icons/sample.gif"
+            icon="icons/pattern.png"
             id="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
             name="PatternEditor">
       </editor>

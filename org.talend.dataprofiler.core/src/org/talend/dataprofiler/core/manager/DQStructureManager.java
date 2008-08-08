@@ -68,7 +68,7 @@ public final class DQStructureManager {
 
     public static final String DATA_PROFILING = "Data Profiling";
 
-    public static final String ANALYSIS = "Analysis";
+    public static final String ANALYSIS = "Analyses";
 
     /**
      * String for the DB connections folder.

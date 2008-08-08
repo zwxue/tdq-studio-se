@@ -30,7 +30,7 @@ public class RepGeneratedFolder extends AbstractFolderNode implements IWorkbench
 
     private static Logger log = Logger.getLogger(RepGeneratedFolder.class);
 
-    private static final String GENERATE_REPORTS = "Generate Reports";
+    private static final String GENERATE_REPORTS = "Generated Documents";
 
     private final IFile reportFile;
 
