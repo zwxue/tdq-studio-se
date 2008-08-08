@@ -12,16 +12,25 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,8 +38,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
+import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
@@ -43,6 +54,12 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerPa
 public class BinsDesignerForm extends AbstractIndicatorForm {
 
     private Text minValue, maxValue, numbOfBins;
+
+    private Button addSlice, delSlice;
+
+    private Button isSetRange;
+
+    private TableViewer tableViewer;
 
     protected BinsDesignerParameter parameter;
 
@@ -99,17 +116,20 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         gdComp.horizontalSpan = 2;
         rangeComp.setLayoutData(gdComp);
 
-        Button isSetRange = new Button(rangeComp, SWT.CHECK);
+        isSetRange = new Button(rangeComp, SWT.CHECK);
         isSetRange.setText("Set ranges manually");
 
-        TableViewer tableViewer = new TableViewer(rangeComp, SWT.BORDER);
+        tableViewer = new TableViewer(rangeComp, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
         tableViewer.setLabelProvider(new BinsLableProvider());
         tableViewer.setContentProvider(new BinsContentProvider());
 
         Table table = tableViewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        table.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        GridData tableData = new GridData(GridData.FILL_HORIZONTAL);
+        tableData.heightHint = 80;
+        table.setLayoutData(tableData);
 
         TableColumn column1 = new TableColumn(table, SWT.NONE);
         column1.setText("Low");
@@ -124,7 +144,29 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         column3.setText("High");
         column3.setAlignment(SWT.CENTER);
 
-        tableViewer.setInput(ViewerDataFactory.createBinsFormData());
+        tableViewer.setColumnProperties(new String[] { "low", "data", "high" });
+
+        CellEditor[] cellEditor = new CellEditor[3];
+        cellEditor[0] = new TextCellEditor(table);
+        cellEditor[1] = null;
+        cellEditor[2] = new TextCellEditor(table);
+
+        tableViewer.setCellEditors(cellEditor);
+        tableViewer.setCellModifier(new SliceCellModifier());
+
+        GridData gd = new GridData();
+        gd.horizontalAlignment = SWT.CENTER;
+        Composite operationBTNComp = new Composite(rangeComp, SWT.NONE);
+        operationBTNComp.setLayout(new FillLayout());
+        operationBTNComp.setLayoutData(gd);
+
+        addSlice = new Button(operationBTNComp, SWT.NONE);
+        addSlice.setText("add");
+        addSlice.setEnabled(false);
+
+        delSlice = new Button(operationBTNComp, SWT.NONE);
+        delSlice.setText("del");
+        delSlice.setEnabled(false);
     }
 
     /*
@@ -170,6 +212,66 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             }
 
         });
+
+        isSetRange.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+
+                boolean flag = ((Button) e.getSource()).getSelection();
+                double numb = Double.parseDouble(numbOfBins.getText());
+                double min = Double.parseDouble(minValue.getText());
+                double max = Double.parseDouble(maxValue.getText());
+
+                if (flag && numb > 0) {
+                    addSlice.setEnabled(true);
+                    delSlice.setEnabled(true);
+                    tableViewer.setInput(ViewerDataFactory.createSliceFormData(min, max, numb));
+                } else {
+                    tableViewer.setInput("");
+                }
+            }
+
+        });
+
+        addSlice.addSelectionListener(new SelectionAdapter() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (tableViewer.getInput() instanceof List) {
+                    List<SliceEntity> inputList = (List<SliceEntity>) tableViewer.getInput();
+
+                    SliceEntity newEntity = new SliceEntity();
+                    inputList.add(newEntity);
+
+                    tableViewer.setInput(inputList);
+                }
+            }
+
+        });
+
+        delSlice.addSelectionListener(new SelectionAdapter() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                boolean flag = !tableViewer.getSelection().isEmpty();
+
+                if (flag) {
+                    IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+                    SliceEntity entity = (SliceEntity) selection.getFirstElement();
+                    if (tableViewer.getInput() instanceof List) {
+                        List<SliceEntity> inputList = (List<SliceEntity>) tableViewer.getInput();
+                        inputList.remove(entity);
+
+                        tableViewer.setInput(inputList);
+                    }
+                }
+            }
+
+        });
+
     }
 
     /*
@@ -229,7 +331,17 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
         public String getColumnText(Object element, int columnIndex) {
 
-            return null;
+            SliceEntity entity = (SliceEntity) element;
+            switch (columnIndex) {
+            case 0:
+                return entity.getLowValue();
+            case 1:
+                return "<=Value<=";
+            case 2:
+                return entity.getHighValue();
+            default:
+                return "";
+            }
         }
 
     }
@@ -239,14 +351,60 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
      */
     class BinsContentProvider implements IStructuredContentProvider {
 
+        @SuppressWarnings("unchecked")
         public Object[] getElements(Object inputElement) {
-            return null;
+            if (inputElement instanceof List) {
+                return ((List<SliceEntity>) inputElement).toArray();
+            }
+
+            return new Object[0];
         }
 
         public void dispose() {
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            System.out.println("123");
+        }
+
+    }
+
+    /**
+     * DOC zqin BinsDesignerForm class global comment. Detailled comment
+     */
+    class SliceCellModifier implements ICellModifier {
+
+        public boolean canModify(Object element, String property) {
+            if (property.equals("data")) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public Object getValue(Object element, String property) {
+            SliceEntity entity = (SliceEntity) element;
+
+            if (property.equals("low")) {
+                return entity.getLowValue();
+            } else if (property.equals("high")) {
+                return entity.getHighValue();
+            }
+
+            return "";
+        }
+
+        public void modify(Object element, String property, Object value) {
+            TableItem item = (TableItem) element;
+            SliceEntity entity = (SliceEntity) item.getData();
+
+            if (property.equals("low")) {
+                entity.setLowValue(value.toString());
+            } else if (property.equals("high")) {
+                entity.setHighValue(value.toString());
+            }
+
+            tableViewer.refresh();
         }
 
     }

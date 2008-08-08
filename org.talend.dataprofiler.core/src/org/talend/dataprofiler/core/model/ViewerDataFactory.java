@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
+import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataquality.analysis.category.AnalysisCategories;
 import org.talend.dataquality.analysis.category.AnalysisCategory;
 import org.talend.dq.analysis.category.CategoryHandler;
@@ -51,7 +53,23 @@ public class ViewerDataFactory {
 
     }
 
-    public static Object createBinsFormData() {
-        return null;
+    public static Object createSliceFormData(double min, double max, double numb) {
+        List<SliceEntity> returnList = new ArrayList<SliceEntity>();
+        DecimalFormat format = (DecimalFormat) DecimalFormat.getNumberInstance();
+        format.applyPattern("0.00");
+
+        double mod = (max - min) / numb;
+
+        for (int i = 1; i < numb + 1; i++) {
+            SliceEntity entity = new SliceEntity();
+            entity.setLowValue(format.format(min));
+
+            min = min + mod;
+            entity.setHighValue(format.format(min));
+
+            returnList.add(entity);
+        }
+
+        return returnList;
     }
 }
