@@ -47,10 +47,9 @@ public abstract class Evaluator<T> {
     private Set<Indicator> allIndicators = new HashSet<Indicator>();
 
     /**
-     * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators. The column name
-     * should be completely qualified in order to avoid confusion when several elements have the same label).
+     * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators.
      * 
-     * @param elementName a column name
+     * @param elementToAnalyze the element to analyze (column, data provider...)
      * @param indicator the indicator for the given element
      * @return true if ok
      */

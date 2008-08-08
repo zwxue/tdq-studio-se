@@ -40,38 +40,6 @@ public class ConnectionAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected String createSqlStatement(Analysis analysis) {
         return "";
-        // CwmZQuery query = new CwmZQuery();
-        // EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
-        // if (analysedElements.isEmpty()) {
-        // this.errorMessage = "Nothing to analyze for given analysis: " + analysis.getName()
-        // + ". Cannot create the SQL statement!";
-        // return null;
-        // }
-        // Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
-        // for (ModelElement modelElement : analysedElements) {
-        // // --- preconditions
-        //
-        // TdDataProvider col = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(modelElement);
-        // if (col == null) {
-        // this.errorMessage = "Given element is not a schema: " + modelElement;
-        // return null;
-        // }
-        // // else add into select
-        //
-        // if (!query.addSelect("count * ")) { // TODO scorreia use a constant (create it in the model?)
-        // this.errorMessage = "Problem adding the SELECT part of the SQL statement.";
-        // return null;
-        // }
-        // // add from
-        // // TODO fromPart.add(col);
-        //
-        // }
-        //
-        // if (!query.addFrom(fromPart)) {
-        // this.errorMessage = "Problem adding the from part of the SQL statement.";
-        // return null;
-        // }
-        // return query.generateStatement();
     }
 
     /*

@@ -16,11 +16,9 @@ import java.sql.Connection;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -156,14 +154,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
                     + analysis.getName(), false);
             return rc;
         }
-        TypedReturnCode<TdProviderConnection> providerConnection = DataProviderHelper.getTdProviderConnection(dataprovider);
-        if (!providerConnection.isOk()) {
-            rc.setReturnCode(providerConnection.getMessage(), false);
-            return rc;
-        }
+
         // else ok
 
-        TypedReturnCode<Connection> connection = JavaSqlFactory.createConnection(providerConnection.getObject());
+        TypedReturnCode<Connection> connection = JavaSqlFactory.createConnection(dataprovider);
         if (!connection.isOk()) {
             rc.setReturnCode(connection.getMessage(), false);
             return rc;
