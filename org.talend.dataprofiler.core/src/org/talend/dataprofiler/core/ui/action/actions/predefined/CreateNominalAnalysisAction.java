@@ -64,13 +64,17 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         if (!tempList.isEmpty()) {
             ElementListSelectionDialog dialog = new ElementListSelectionDialog(null, new DQRepositoryViewLabelProvider());
             dialog.setElements(tempList.toArray());
-            dialog.setTitle(" The following columns do not seem to be of nominal type");
-            dialog.setMessage("here the list of non textual columns,Do you still want to continue? ");
+            dialog.setTitle("Data type warning!");
+            dialog.setMessage("The following columns do not seem to be of nominal type.\n"
+                    + "Here is the list of non textual columns. \n"
+                    + "If you continue, these columns will be marked as of nominal type\n"
+                    + "and you will be allowed to run nominal analyses on these columns.\n" + "Do you still want to continue? ");
             dialog.setSize(80, 20);
             dialog.create();
 
             if (Window.OK == dialog.open()) {
-
+                // TODO zqin get the column and change their datamining type to "Nominal"
+                // use MetadataHelper
                 return true;
             } else {
                 return false;
