@@ -470,6 +470,12 @@
            name="Analysis"
            parentCategory="org.talend.dataprofiler.core.category">
      </category>
+     <cheatsheet
+           category="org.talend.dataprofiler.core.category.analysis"
+           contentFile="cheatsheets/ConnectionAnalysis_cheat.xml"
+           id="org.talend.dataprofiler.core.cheatsheet.connection.analysis"
+           name="Connection Analysis Creation">
+     </cheatsheet>
   </extension>
    
    <extension

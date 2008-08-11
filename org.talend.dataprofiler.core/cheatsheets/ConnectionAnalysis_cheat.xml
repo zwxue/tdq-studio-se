@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Create a new Connection Analysis">
+   <intro>
+      <description>
+         This tutorial guides you through the creation of an overview analysis of the content of a database. This kind of analysis gives you an overview of the number of tables and the number of rows per table. It counts also the number of indexes and primary keys...
+      </description>
+   </intro>
+   <item title="Set the analysis metadata." dialog="true" skip="false">
+      <description>
+         This step opens the analysis creation wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a column</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....).
+      </description>
+   </item>
+   <item title="Set Filters" dialog="true" skip="false">
+      <description>
+         You can set filters on the table names and view names to restrict the analysis.
+      </description>
+   </item>
+</cheatsheet>
