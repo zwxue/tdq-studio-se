@@ -24,6 +24,11 @@ import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.RealNumberValue;
 import org.talend.dataquality.domain.TextValue;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
+import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.domain.pattern.RegularExpression;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * @author scorreia
@@ -31,6 +36,12 @@ import org.talend.dataquality.domain.TextValue;
  * Helper class for Domain object.
  */
 public class DomainHelper {
+
+    public static final String TABLE_PATTERN = "Table Pattern";
+
+    public static final String VIEW_PATTERN = "View Pattern";
+
+    public static final String ANALYSIS_DATA_FILTER = "Analysis Data Filter";
 
     private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
 
@@ -219,4 +230,106 @@ public class DomainHelper {
         }
         return domains;
     }
+
+    public static Domain setDataFilterTablePattern(final Collection<Domain> dataFilters, String tablePattern) {
+        return setDataFilterPattern(dataFilters, TABLE_PATTERN, tablePattern);
+    }
+
+    public static Domain setDataFilterViewPattern(final Collection<Domain> dataFilters, String viewPattern) {
+        return setDataFilterPattern(dataFilters, VIEW_PATTERN, viewPattern);
+    }
+
+    private static Domain setDataFilterPattern(final Collection<Domain> dataFilters, String type, String tablePattern) {
+        RegularExpression tableFilter = BooleanExpressionHelper.createRegularExpression(null, tablePattern);
+
+        for (Domain domain : dataFilters) {
+            if (!ANALYSIS_DATA_FILTER.equals(domain.getName())) {
+                continue;
+            }
+            boolean exists = false;
+            EList<Pattern> patterns = domain.getPatterns();
+            for (Pattern pattern : patterns) {
+                if (type.equals(pattern.getName())) {
+                    exists = true;
+                    pattern.getComponents().clear(); // remove previous expressions
+                    pattern.getComponents().add(tableFilter);
+                }
+            }
+            if (!exists) {
+                // create pattern and set into the data filter
+                addPatternToDomain(domain, tableFilter, tablePattern);
+            }
+            return domain;
+        }
+        // no data filter has not been set yet
+        Domain domain = DomainFactory.eINSTANCE.createDomain();
+        dataFilters.add(domain);
+        domain.setName(ANALYSIS_DATA_FILTER);
+        addPatternToDomain(domain, tableFilter, tablePattern);
+        return domain;
+    }
+
+    public static String getTablePattern(final Collection<Domain> dataFilters) {
+        return getPattern(dataFilters, TABLE_PATTERN);
+    }
+
+    public static String getViewPattern(final Collection<Domain> dataFilters) {
+        return getPattern(dataFilters, VIEW_PATTERN);
+    }
+
+    private static String getPattern(final Collection<Domain> dataFilters, String type) {
+        if (dataFilters == null) {
+            return null;
+        }
+        for (Domain domain : dataFilters) {
+            if (!ANALYSIS_DATA_FILTER.equals(domain.getName())) {
+                continue;
+            }
+            boolean exists = false;
+            EList<Pattern> patterns = domain.getPatterns();
+            for (Pattern pattern : patterns) {
+                if (type.equals(pattern.getName())) {
+                    exists = true;
+                    PatternComponent next = pattern.getComponents().iterator().next();
+                    if (next == null) {
+                        continue;
+                    } else {
+                        RegularExpression regexp = (RegularExpression) next;
+                        Expression expression = regexp.getExpression();
+                        if (expression != null) {
+                            return expression.getBody();
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * DOC scorreia Comment method "addPatternToDomain".
+     * 
+     * @param domain
+     * @param tableFilter
+     * @param tablePattern
+     */
+    private static void addPatternToDomain(Domain domain, RegularExpression tableFilter, String tablePattern) {
+        Pattern pattern = createPattern(tablePattern);
+        pattern.setName(TABLE_PATTERN);
+        pattern.getComponents().add(tableFilter);
+        domain.getPatterns().add(pattern);
+    }
+
+    /**
+     * DOC scorreia Comment method "createPattern".
+     * 
+     * @param tablePattern
+     * @return
+     */
+    private static Pattern createPattern(String tablePattern) {
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
+        pattern.getComponents().add(BooleanExpressionHelper.createRegularExpression(null, tablePattern));
+        return pattern;
+    }
+
 }

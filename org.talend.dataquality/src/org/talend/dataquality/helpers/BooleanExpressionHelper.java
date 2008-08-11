@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsFactory;
-
 import orgomg.cwm.foundation.expressions.ExpressionNode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -61,5 +62,18 @@ public class BooleanExpressionHelper {
     public static String getBody(ExpressionNode node) {
         Expression expression = node.getExpression();
         return (expression == null) ? null : expression.getBody();
+    }
+
+    /**
+     * Mmethod "createRegularExpression".
+     * 
+     * @param string
+     * @param expression
+     * @return
+     */
+    public static RegularExpression createRegularExpression(String string, String expression) {
+        RegularExpression regexp = PatternFactory.eINSTANCE.createRegularExpression();
+        regexp.setExpression(createExpression(string, expression));
+        return regexp;
     }
 }

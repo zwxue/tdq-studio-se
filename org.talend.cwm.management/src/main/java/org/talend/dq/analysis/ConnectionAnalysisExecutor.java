@@ -19,6 +19,9 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisParameters;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.ConnectionEvaluator;
 import org.talend.utils.sugars.ReturnCode;
@@ -84,6 +87,13 @@ public class ConnectionAnalysisExecutor extends AnalysisExecutor {
 
         // set it into the evaluator
         eval.setConnection(connection.getObject());
+
+        // set filters
+        String tablePattern = getTablePattern(analysis.getParameters());
+        eval.setTablePattern(tablePattern);
+        String viewPattern = getViewPattern(analysis.getParameters());
+        eval.setViewPattern(viewPattern);
+
         // when to close connection
         boolean closeAtTheEnd = true;
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
@@ -92,5 +102,27 @@ public class ConnectionAnalysisExecutor extends AnalysisExecutor {
             this.errorMessage = rc.getMessage();
         }
         return rc.isOk();
+    }
+
+    /**
+     * DOC scorreia Comment method "getTablePattern".
+     * 
+     * @param parameters
+     * @return
+     */
+    private String getTablePattern(AnalysisParameters parameters) {
+        if (parameters == null) {
+            return null;
+        }
+        EList<Domain> dataFilters = parameters.getDataFilter();
+        return DomainHelper.getTablePattern(dataFilters);
+    }
+
+    private String getViewPattern(AnalysisParameters parameters) {
+        if (parameters == null) {
+            return null;
+        }
+        EList<Domain> dataFilters = parameters.getDataFilter();
+        return DomainHelper.getViewPattern(dataFilters);
     }
 }
