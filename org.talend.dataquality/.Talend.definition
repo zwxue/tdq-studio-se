@@ -24,7 +24,7 @@
   <indicatorDefinitions xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Duplicate Count">
     <taggedValue xmi:id="_ybrd8Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of duplicate rows. this number and the number of unique data equals the number of distinct rows"/>
     <taggedValue xmi:id="_ybrd8Th8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of duplicated records"/>
-    <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING COUNT(*) > 1" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybrd8zh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="Oracle"/>
     <sqlGenericExpression xmi:id="_vYa-YEbMEd2QPKsejnYyXQ" body="SELECT {0} AS col, COUNT(*) AS mycount FROM {1}  m GROUP BY col HAVING count(*) > 1" language="PostgreSQL"/>
@@ -37,7 +37,7 @@
     <sqlGenericExpression xmi:id="_ybsFAzh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybsFBDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="Oracle"/>
     <sqlGenericExpression xmi:id="_8IFvYGOeEd2-SIyfZ_Vx6A" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_4Vq50GVjEd2wJomsB-uicA" body="SELECT COUNT({0}) FROM {1}  WHERE LTRIM(RTRIM({0})) = ''" language="MSSQL"/>
+    <sqlGenericExpression xmi:id="_4Vq50GVjEd2wJomsB-uicA" body="SELECT COUNT({0}) FROM {1}  WHERE LTRIM(RTRIM({0})) = ''" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1BF2Ed2PKb6nEJEvhw" name="Minimal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Minimal Length">
     <taggedValue xmi:id="_ybssEDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
@@ -46,6 +46,7 @@
     <sqlGenericExpression xmi:id="_ybssEzh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybtTIDh8Ed2XmO7pl5Yuyg" body="SELECT MIN(LENGTH({0})) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_dNWDkGOgEd2-SIyfZ_Vx6A" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_Z3slMGe4Ed2m7a3evIL7Lg" body="SELECT MIN(DATALENGTH({0})) FROM {1}" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1RF2Ed2PKb6nEJEvhw" name="Maximal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Maximal Length">
     <taggedValue xmi:id="_ybtTITh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the maximal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
@@ -54,6 +55,7 @@
     <sqlGenericExpression xmi:id="_ybt6MTh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybt6Mjh8Ed2XmO7pl5Yuyg" body="SELECT MAX(LENGTH({0})) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_hi5ukGOgEd2-SIyfZ_Vx6A" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_frLmwGe4Ed2m7a3evIL7Lg" body="SELECT MAX(DATALENGTH({0})) FROM {1}" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4BF2Ed2PKb6nEJEvhw" name="Average Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Average Length">
     <taggedValue xmi:id="_ybt6Mzh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average length of the field. Parameters can be set to avoid counting blank data or null data."/>
@@ -62,6 +64,7 @@
     <sqlGenericExpression xmi:id="_ybuhQjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybuhQzh8Ed2XmO7pl5Yuyg" body="SELECT SUM(LENGTH({0})), COUNT({0}) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_lSoIoGOgEd2-SIyfZ_Vx6A" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_kQeW4Ge4Ed2m7a3evIL7Lg" body="SELECT SUM(DATALENGTH({0})), COUNT({0}) FROM {1}" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4RF2Ed2PKb6nEJEvhw" name="Mode" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Mode">
     <taggedValue xmi:id="_ybvIUDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the mode (most probable value). For numerical data or continuous data, bins can be set in the parameters of this indicator. It is different from the average and from the median. Generalization of it is an histogram. It is good for addressing categorical attributes."/>

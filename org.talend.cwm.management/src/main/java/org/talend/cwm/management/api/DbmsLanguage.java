@@ -357,6 +357,9 @@ public class DbmsLanguage {
     }
 
     public String isNotBlank(String colName) {
+        if (is(MSSQL)) {
+            return " LTRIM(RTRIM(" + colName + ")) " + notEqual() + " '' ";
+        }
         // default is OK for MySQL, Oracle
         return " TRIM(" + colName + ") " + notEqual() + " '' ";
     }
@@ -528,7 +531,6 @@ public class DbmsLanguage {
         Map<String, Integer> functions = new HashMap<String, Integer>();
 
         // --- functions common to all databases // DBMS_SUPPORT
-        functions.put("TRIM", 1);
         functions.put("SUM", 1);
         functions.put("MIN", 1);
         functions.put("MAX", 1);
@@ -537,10 +539,12 @@ public class DbmsLanguage {
 
         // --- set here functions specific to some databases // DBMS_SUPPORT
         if (is(SQL)) {
+            functions.put("TRIM", 1);
             functions.put("CHAR_LENGTH", 1);
         }
 
         if (is(MYSQL)) {
+            functions.put("TRIM", 1);
             functions.put("CHAR_LENGTH", 1);
             functions.put("IFNULL", 2);
             for (DateGrain grain : DateGrain.values()) {
@@ -550,6 +554,7 @@ public class DbmsLanguage {
         }
 
         if (is(ORACLE)) {
+            functions.put("TRIM", 1);
             functions.put("LENGTH", 1);
             functions.put("TO_CHAR", 2);
             functions.put("TO_NUMBER", 1);
@@ -557,14 +562,21 @@ public class DbmsLanguage {
         }
 
         if (is(POSTGRESQL)) {
+            functions.put("TRIM", 1);
 
         }
 
         if (is(MSSQL)) {
-
+            functions.put("LTRIM", 1);
+            functions.put("RTRIM", 1);
+            // Note: datalength gives the length of any object, but in the case of unicode, this length should be
+            // divided by 2 in order to get the actual number of characters.
+            // Do not use "LEN" since it right-trims the strings.
+            functions.put("DATALENGTH", 1);
         }
 
         if (is(DB2)) {
+            functions.put("TRIM", 1);
 
         }
 
