@@ -450,6 +450,7 @@ public class DbmsLanguage {
     }
 
     private String extract(DateGrain dateGrain, String colName) {
+        // DBMS_SUPPORT how to extract date parts
         if (is(MYSQL)) {
             return dateGrain.getName() + surroundWith('(', colName, ')');
         }
@@ -471,6 +472,9 @@ public class DbmsLanguage {
             }
         }
 
+        if (is(MSSQL)) {
+            return "DATEPART(" + dateGrain.getName() + " , " + colName + ") ";
+        }
         // ANSI SQL, MySQL, Oracle
         return " EXTRACT(" + dateGrain + from() + colName + ") ";
     }
@@ -829,6 +833,20 @@ public class DbmsLanguage {
             return "\"";
         }
         return "";
+    }
+
+    /**
+     * Method "supportAliasesInGroupBy".
+     * 
+     * @return true when the DB supports aliases in group by clause
+     */
+    public boolean supportAliasesInGroupBy() {
+        // DBMS_SUPPORT
+        if (is(MYSQL)) {
+            return true;
+        }
+        // else Oracle, MSSQL
+        return false;
     }
 
 }

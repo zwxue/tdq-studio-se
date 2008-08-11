@@ -464,7 +464,22 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     private String getAlias(String colName, DateGrain dateAggregationType) {
-        return "TDAL_" + colName + dateAggregationType.getName();
+        if (dbms().supportAliasesInGroupBy()) {
+            return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * DOC scorreia Comment method "unquote".
+     * 
+     * @param colName
+     * @return
+     */
+    private String unquote(String colName) {
+        String dbQuoteString = dbms().getDbQuoteString();
+        return colName.replace(dbQuoteString, "");
     }
 
     /**
