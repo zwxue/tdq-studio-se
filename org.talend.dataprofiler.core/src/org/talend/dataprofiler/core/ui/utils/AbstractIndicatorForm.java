@@ -41,6 +41,8 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     public static final String MSG_ONLY_NUMBER = "this field just allowed to input numberic text!";
 
+    public static final String MSG_ONLY_REAL_NUMBER = "this field just allowed to input real numberic text!";
+
     public static final String MSG_ONLY_DATE = "this field just allowed to input date formate text!";
 
     public static final String MSG_OK = "your input is valid!";

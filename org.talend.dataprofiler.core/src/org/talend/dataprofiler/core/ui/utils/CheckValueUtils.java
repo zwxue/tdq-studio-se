@@ -36,6 +36,32 @@ public class CheckValueUtils {
         return getCheckValue(regex, inputString);
     }
 
+    public static boolean isRealNumberValue(String inputString) {
+        String regex = "-*\\d+\\.\\d+";
+        return getCheckValue(regex, inputString);
+    }
+
+    public static boolean isNumberValue(String[] inputString) {
+
+        boolean flag = true;
+
+        for (String str : inputString) {
+            flag = flag && isNumberValue(str);
+        }
+
+        return flag;
+    }
+
+    public static boolean isRealNumberValue(String[] inputString) {
+        boolean flag = true;
+
+        for (String str : inputString) {
+            flag = flag && isRealNumberValue(str);
+        }
+
+        return flag;
+    }
+
     public static boolean isNumberOfShownValue(String inputString) {
 
         String regex = "(^[^0])\\d*";

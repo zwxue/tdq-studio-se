@@ -12,7 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 
+import java.util.List;
+
+import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.helpers.DomainHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -29,6 +35,8 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
     private int numOfBins;
 
     private int numOfShown;
+
+    private Object binsData;
 
     /**
      * Getter for maxValue.
@@ -98,4 +106,30 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
         return FormEnum.BinsDesignerForm;
     }
 
+    public Object getBinsData() {
+        return binsData;
+    }
+
+    public void setBinsData(Object binsData) {
+        this.binsData = binsData;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Domain getUserDomian() {
+        if (getBinsData() != null) {
+            List<SliceEntity> tableData = (List<SliceEntity>) getBinsData();
+
+            Domain domain = DomainHelper.createDomain("test");
+            for (SliceEntity entity : tableData) {
+                double min = Double.parseDouble(entity.getLowValue());
+                double max = Double.parseDouble(entity.getHighValue());
+                RangeRestriction rangeRestriction = DomainHelper.createRealRangeRestriction(min, max);
+                domain.getRanges().add(rangeRestriction);
+            }
+
+            return domain;
+        }
+
+        return null;
+    }
 }

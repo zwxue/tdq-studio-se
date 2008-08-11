@@ -180,10 +180,15 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         minValue.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                String min = minValue.getText();
 
-                checkFieldsValue();
-                if (isStatusOnValid()) {
-                    parameter.setMinValue(Double.valueOf(minValue.getText()));
+                if (min == "") {
+                    updateStatus(IStatus.ERROR, MSG_EMPTY);
+                } else if (!CheckValueUtils.isRealNumberValue(min)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                } else {
+                    updateStatus(IStatus.OK, MSG_OK);
+                    parameter.setMinValue(Double.valueOf(min));
                 }
             }
 
@@ -192,10 +197,15 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         maxValue.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                String max = maxValue.getText();
 
-                checkFieldsValue();
-                if (isStatusOnValid()) {
-                    parameter.setMaxValue(Double.valueOf(maxValue.getText()));
+                if (max == "") {
+                    updateStatus(IStatus.ERROR, MSG_EMPTY);
+                } else if (!CheckValueUtils.isRealNumberValue(max)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                } else {
+                    updateStatus(IStatus.OK, MSG_OK);
+                    parameter.setMaxValue(Double.valueOf(max));
                 }
             }
 
@@ -205,9 +215,15 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                checkFieldsValue();
-                if (isStatusOnValid()) {
-                    parameter.setNumOfBins(Integer.parseInt(numbOfBins.getText()));
+                String numb = numbOfBins.getText();
+
+                if (numb == "") {
+                    updateStatus(IStatus.ERROR, MSG_EMPTY);
+                } else if (!CheckValueUtils.isNumberValue(numb)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                } else {
+                    updateStatus(IStatus.OK, MSG_OK);
+                    parameter.setNumOfBins(Integer.parseInt(numb));
                 }
             }
 
@@ -227,6 +243,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     addSlice.setEnabled(true);
                     delSlice.setEnabled(true);
                     tableViewer.setInput(ViewerDataFactory.createSliceFormData(min, max, numb));
+
+                    parameter.setBinsData(tableViewer.getInput());
                 } else {
                     tableViewer.setInput("");
                 }
@@ -288,28 +306,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#checkFieldsValue()
-     */
-    @Override
-    protected boolean checkFieldsValue() {
-        if (minValue.getText() == "" || maxValue.getText() == "" || numbOfBins.getText() == "") {
-            updateStatus(IStatus.ERROR, MSG_EMPTY);
-            return false;
-        }
-
-        if (!CheckValueUtils.isNumberValue(minValue.getText()) || !CheckValueUtils.isNumberValue(maxValue.getText())
-                || !CheckValueUtils.isNumberValue(numbOfBins.getText())) {
-            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-            return false;
-        }
-
-        updateStatus(IStatus.OK, MSG_OK);
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
      */
     @Override
@@ -364,7 +360,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            System.out.println("123");
         }
 
     }
@@ -400,18 +395,27 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
             if (property.equals("low")) {
                 entity.setLowValue(value.toString());
+
+                parameter.setBinsData(tableViewer.getInput());
             } else if (property.equals("high")) {
                 entity.setHighValue(value.toString());
+
+                parameter.setBinsData(tableViewer.getInput());
             }
 
             tableViewer.refresh();
         }
-
     }
 
     @Override
     public FormEnum getFormEnum() {
         return FormEnum.BinsDesignerForm;
+    }
+
+    @Override
+    protected boolean checkFieldsValue() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

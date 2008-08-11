@@ -156,11 +156,12 @@ public class IndicatorOptionsWizard extends Wizard {
                     int numOfShown = tempParam.getNumOfShown();
                     double min = tempParam.getMinValue();
                     double max = tempParam.getMaxValue();
-                    Domain domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numOfBin, min, max);
-                    // MOD scorreia 2008-05-27 adding to EMF resource not needed because the relation is now a
-                    // containment relation.
-                    // Resource resource = analysis.eResource();
-                    // resource.getContents().add(domain);
+                    Domain domain = tempParam.getUserDomian();
+
+                    if (domain == null) {
+                        domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numOfBin, min, max);
+                    }
+
                     Domain bins = paramters.getBins();
                     boolean same = true;
                     if (bins != null) {
