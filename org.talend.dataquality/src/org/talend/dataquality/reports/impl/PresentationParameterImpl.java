@@ -18,6 +18,7 @@ import org.talend.dataquality.indicators.Indicator;
 
 import org.talend.dataquality.reports.PresentationParameter;
 import org.talend.dataquality.reports.ReportsPackage;
+import orgomg.cwm.analysis.informationvisualization.impl.RenderingImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -33,7 +34,7 @@ import org.talend.dataquality.reports.ReportsPackage;
  *
  * @generated
  */
-public class PresentationParameterImpl extends EObjectImpl implements PresentationParameter {
+public class PresentationParameterImpl extends RenderingImpl implements PresentationParameter {
     /**
      * The default value of the '{@link #getPlotType() <em>Plot Type</em>}' attribute.
      * <!-- begin-user-doc -->

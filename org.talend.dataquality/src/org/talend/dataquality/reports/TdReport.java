@@ -232,4 +232,12 @@ public interface TdReport extends Report {
      * @generated
      */
     boolean mustRefresh(Analysis analysis);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model
+     * @generated
+     */
+    PresentationParameter setReportPresentationParam(String type, String formula);
 } // TdReport

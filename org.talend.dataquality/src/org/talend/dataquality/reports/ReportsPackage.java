@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.EReference;
+import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
 
 /**
@@ -569,13 +570,292 @@ public interface ReportsPackage extends EPackage {
     int PRESENTATION_PARAMETER = 1;
 
     /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__NAME = InformationvisualizationPackage.RENDERING__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__VISIBILITY = InformationvisualizationPackage.RENDERING__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__CLIENT_DEPENDENCY = InformationvisualizationPackage.RENDERING__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__SUPPLIER_DEPENDENCY = InformationvisualizationPackage.RENDERING__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__CONSTRAINT = InformationvisualizationPackage.RENDERING__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__NAMESPACE = InformationvisualizationPackage.RENDERING__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__IMPORTER = InformationvisualizationPackage.RENDERING__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__STEREOTYPE = InformationvisualizationPackage.RENDERING__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__TAGGED_VALUE = InformationvisualizationPackage.RENDERING__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__DOCUMENT = InformationvisualizationPackage.RENDERING__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__DESCRIPTION = InformationvisualizationPackage.RENDERING__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__RESPONSIBLE_PARTY = InformationvisualizationPackage.RENDERING__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__ELEMENT_NODE = InformationvisualizationPackage.RENDERING__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__SET = InformationvisualizationPackage.RENDERING__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__RENDERED_OBJECT = InformationvisualizationPackage.RENDERING__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__VOCABULARY_ELEMENT = InformationvisualizationPackage.RENDERING__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__MEASUREMENT = InformationvisualizationPackage.RENDERING__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__CHANGE_REQUEST = InformationvisualizationPackage.RENDERING__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__DASDL_PROPERTY = InformationvisualizationPackage.RENDERING__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Owner Scope</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__OWNER_SCOPE = InformationvisualizationPackage.RENDERING__OWNER_SCOPE;
+
+    /**
+     * The feature id for the '<em><b>Owner</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__OWNER = InformationvisualizationPackage.RENDERING__OWNER;
+
+    /**
+     * The feature id for the '<em><b>Feature Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__FEATURE_NODE = InformationvisualizationPackage.RENDERING__FEATURE_NODE;
+
+    /**
+     * The feature id for the '<em><b>Feature Map</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__FEATURE_MAP = InformationvisualizationPackage.RENDERING__FEATURE_MAP;
+
+    /**
+     * The feature id for the '<em><b>Cf Map</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__CF_MAP = InformationvisualizationPackage.RENDERING__CF_MAP;
+
+    /**
+     * The feature id for the '<em><b>Formula</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__FORMULA = InformationvisualizationPackage.RENDERING__FORMULA;
+
+    /**
+     * The feature id for the '<em><b>Action</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__ACTION = InformationvisualizationPackage.RENDERING__ACTION;
+
+    /**
+     * The feature id for the '<em><b>File Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__FILE_NAME = InformationvisualizationPackage.RENDERING__FILE_NAME;
+
+    /**
+     * The feature id for the '<em><b>Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__TYPE = InformationvisualizationPackage.RENDERING__TYPE;
+
+    /**
+     * The feature id for the '<em><b>Url</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__URL = InformationvisualizationPackage.RENDERING__URL;
+
+    /**
+     * The feature id for the '<em><b>Defaulted Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__DEFAULTED_RENDERED_OBJECT = InformationvisualizationPackage.RENDERING__DEFAULTED_RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object Set</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PRESENTATION_PARAMETER__RENDERED_OBJECT_SET = InformationvisualizationPackage.RENDERING__RENDERED_OBJECT_SET;
+
+    /**
      * The feature id for the '<em><b>Plot Type</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PRESENTATION_PARAMETER__PLOT_TYPE = 0;
+    int PRESENTATION_PARAMETER__PLOT_TYPE = InformationvisualizationPackage.RENDERING_FEATURE_COUNT + 0;
 
     /**
      * The feature id for the '<em><b>Indicator</b></em>' reference.
@@ -584,7 +864,7 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PRESENTATION_PARAMETER__INDICATOR = 1;
+    int PRESENTATION_PARAMETER__INDICATOR = InformationvisualizationPackage.RENDERING_FEATURE_COUNT + 1;
 
     /**
      * The number of structural features of the '<em>Presentation Parameter</em>' class.
@@ -593,7 +873,7 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PRESENTATION_PARAMETER_FEATURE_COUNT = 2;
+    int PRESENTATION_PARAMETER_FEATURE_COUNT = InformationvisualizationPackage.RENDERING_FEATURE_COUNT + 2;
 
 
     /**

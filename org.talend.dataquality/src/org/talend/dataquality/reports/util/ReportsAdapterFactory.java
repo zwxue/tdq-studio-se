@@ -17,8 +17,10 @@ import org.talend.dataquality.reports.*;
 
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
+import orgomg.cwm.analysis.informationvisualization.Rendering;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
+import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 
@@ -115,6 +117,14 @@ public class ReportsAdapterFactory extends AdapterFactoryImpl {
             @Override
             public Adapter caseReport(Report object) {
                 return createReportAdapter();
+            }
+            @Override
+            public Adapter caseFeature(Feature object) {
+                return createFeatureAdapter();
+            }
+            @Override
+            public Adapter caseRendering(Rendering object) {
+                return createRenderingAdapter();
             }
             @Override
             public Adapter defaultCase(EObject object) {
@@ -259,6 +269,34 @@ public class ReportsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createReportAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link orgomg.cwm.objectmodel.core.Feature <em>Feature</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see orgomg.cwm.objectmodel.core.Feature
+     * @generated
+     */
+    public Adapter createFeatureAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link orgomg.cwm.analysis.informationvisualization.Rendering <em>Rendering</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see orgomg.cwm.analysis.informationvisualization.Rendering
+     * @generated
+     */
+    public Adapter createRenderingAdapter() {
         return null;
     }
 

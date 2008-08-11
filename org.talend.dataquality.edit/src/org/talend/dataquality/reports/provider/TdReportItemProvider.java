@@ -309,7 +309,8 @@ public class TdReportItemProvider
 
         boolean qualify =
             childFeature == CorePackage.Literals.NAMESPACE__OWNED_ELEMENT ||
-            childFeature == CorePackage.Literals.CLASSIFIER__FEATURE;
+            childFeature == CorePackage.Literals.CLASSIFIER__FEATURE ||
+            childFeature == ReportsPackage.Literals.TD_REPORT__PRESENTATION_PARAMS;
 
         if (qualify) {
             return getString

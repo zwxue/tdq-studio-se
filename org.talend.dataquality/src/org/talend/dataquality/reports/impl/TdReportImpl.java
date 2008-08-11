@@ -6,8 +6,8 @@
 package org.talend.dataquality.reports.impl;
 
 import java.util.Collection;
-
 import java.util.Date;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -17,8 +17,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.PresentationParameter;
+import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.TdReport;
 import orgomg.cwmx.analysis.informationreporting.impl.ReportImpl;
@@ -390,6 +392,31 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             }
         }
         return yes;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT setReportPresentationParam(String type, String formula)
+     */
+    public PresentationParameter setReportPresentationParam(String type, String formula) {
+        PresentationParameter param = null;
+        for (PresentationParameter params : this.getPresentationParams()) {
+            if (params.getType() != null && params.getType().equals(type)) {
+                param = params;
+                break;
+            }
+        }
+
+        if (param == null) {
+            // create a new one and add it the list
+            param = ReportsFactory.eINSTANCE.createPresentationParameter();
+            this.getPresentationParams().add(param);
+        }
+        param.setType(type);
+        param.setFormula(BooleanExpressionHelper.createExpressionNode(null, formula));
+
+        return param;
     }
 
     /**

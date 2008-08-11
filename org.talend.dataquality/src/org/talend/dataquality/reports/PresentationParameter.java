@@ -9,6 +9,7 @@ package org.talend.dataquality.reports;
 import org.eclipse.emf.ecore.EObject;
 
 import org.talend.dataquality.indicators.Indicator;
+import orgomg.cwm.analysis.informationvisualization.Rendering;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,7 +28,7 @@ import org.talend.dataquality.indicators.Indicator;
  * @model
  * @generated
  */
-public interface PresentationParameter extends EObject {
+public interface PresentationParameter extends Rendering {
     /**
      * Returns the value of the '<em><b>Plot Type</b></em>' attribute.
      * <!-- begin-user-doc -->

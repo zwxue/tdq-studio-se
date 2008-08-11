@@ -470,6 +470,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         InformationreportingPackage theInformationreportingPackage = (InformationreportingPackage)EPackage.Registry.INSTANCE.getEPackage(InformationreportingPackage.eNS_URI);
         AnalysisPackage theAnalysisPackage = (AnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+        InformationvisualizationPackage theInformationvisualizationPackage = (InformationvisualizationPackage)EPackage.Registry.INSTANCE.getEPackage(InformationvisualizationPackage.eNS_URI);
         IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
 
         // Create type parameters
@@ -478,6 +479,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
 
         // Add supertypes to classes
         tdReportEClass.getESuperTypes().add(theInformationreportingPackage.getReport());
+        presentationParameterEClass.getESuperTypes().add(theInformationvisualizationPackage.getRendering());
 
         // Initialize classes and features; add operations and parameters
         initEClass(tdReportEClass, TdReport.class, "TdReport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -505,6 +507,10 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
 
         op = addEOperation(tdReportEClass, ecorePackage.getEBoolean(), "mustRefresh", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = addEOperation(tdReportEClass, this.getPresentationParameter(), "setReportPresentationParam", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, ecorePackage.getEString(), "type", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, ecorePackage.getEString(), "formula", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(presentationParameterEClass, PresentationParameter.class, "PresentationParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getPresentationParameter_PlotType(), ecorePackage.getEString(), "plotType", null, 0, 1, PresentationParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -14,6 +14,8 @@ package org.talend.dataquality.helpers;
 
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsFactory;
+
+import orgomg.cwm.foundation.expressions.ExpressionNode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -42,5 +44,22 @@ public class BooleanExpressionHelper {
         expression.setBody(body);
         expression.setLanguage("SQL");
         return expression;
+    }
+
+    public static ExpressionNode createExpressionNode(String language, String body) {
+        ExpressionNode node = orgomg.cwm.foundation.expressions.ExpressionsFactory.eINSTANCE.createExpressionNode();
+        node.setExpression(createExpression(language, body));
+        return node;
+    }
+
+    /**
+     * Method "getBody".
+     * 
+     * @param node (must not be null)
+     * @return the body string of the expression contained in the given node
+     */
+    public static String getBody(ExpressionNode node) {
+        Expression expression = node.getExpression();
+        return (expression == null) ? null : expression.getBody();
     }
 }

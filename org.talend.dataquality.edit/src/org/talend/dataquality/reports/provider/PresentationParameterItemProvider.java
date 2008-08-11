@@ -28,8 +28,11 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
+import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.reports.PresentationParameter;
 import org.talend.dataquality.reports.ReportsPackage;
+import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
+import orgomg.cwm.analysis.informationvisualization.provider.RenderingItemProvider;
 
 /**
  * This is the item provider adapter for a {@link org.talend.dataquality.reports.PresentationParameter} object.
@@ -38,7 +41,7 @@ import org.talend.dataquality.reports.ReportsPackage;
  * @generated
  */
 public class PresentationParameterItemProvider
-    extends ItemProviderAdapter
+    extends RenderingItemProvider
     implements	
         IEditingDomainItemProvider,	
         IStructuredItemContentProvider,	
@@ -135,7 +138,7 @@ public class PresentationParameterItemProvider
      */
     @Override
     public String getText(Object object) {
-        String label = ((PresentationParameter)object).getPlotType();
+        String label = ((PresentationParameter)object).getName();
         return label == null || label.length() == 0 ?
             getString("_UI_PresentationParameter_type") :
             getString("_UI_PresentationParameter_type") + " " + label;
@@ -170,6 +173,11 @@ public class PresentationParameterItemProvider
     @Override
     protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
+
+        newChildDescriptors.add
+            (createChildParameter
+                (InformationvisualizationPackage.Literals.RENDERING__FORMULA,
+                 ExpressionsFactory.eINSTANCE.createBooleanExpressionNode()));
     }
 
     /**

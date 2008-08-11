@@ -15,8 +15,10 @@ import org.talend.dataquality.reports.*;
 
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
+import orgomg.cwm.analysis.informationvisualization.Rendering;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
+import orgomg.cwm.objectmodel.core.Feature;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 
@@ -111,6 +113,10 @@ public class ReportsSwitch<T> {
             case ReportsPackage.PRESENTATION_PARAMETER: {
                 PresentationParameter presentationParameter = (PresentationParameter)theEObject;
                 T result = casePresentationParameter(presentationParameter);
+                if (result == null) result = caseRendering(presentationParameter);
+                if (result == null) result = caseFeature(presentationParameter);
+                if (result == null) result = caseModelElement(presentationParameter);
+                if (result == null) result = caseElement(presentationParameter);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -256,6 +262,36 @@ public class ReportsSwitch<T> {
      * @generated
      */
     public T caseReport(Report object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Feature</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Feature</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseFeature(Feature object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Rendering</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Rendering</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseRendering(Rendering object) {
         return null;
     }
 

@@ -15,7 +15,7 @@
   <indicatorDefinitions xmi:id="_ccHq0RF2Ed2PKb6nEJEvhw" name="Unique Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Unique Count">
     <taggedValue xmi:id="_ybq24Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of unique rows (i.e. rows that are not duplicated)"/>
     <taggedValue xmi:id="_ybq24Th8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of unique records"/>
-    <sqlGenericExpression xmi:id="_ybq24jh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybq24jh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybq24zh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybq25Dh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="Oracle"/>
     <sqlGenericExpression xmi:id="_poEbQEbKEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="PostgreSQL"/>
@@ -24,7 +24,7 @@
   <indicatorDefinitions xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Duplicate Count">
     <taggedValue xmi:id="_ybrd8Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of duplicate rows. this number and the number of unique data equals the number of distinct rows"/>
     <taggedValue xmi:id="_ybrd8Th8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of duplicated records"/>
-    <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING COUNT(*) > 1" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybrd8zh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="Oracle"/>
     <sqlGenericExpression xmi:id="_vYa-YEbMEd2QPKsejnYyXQ" body="SELECT {0} AS col, COUNT(*) AS mycount FROM {1}  m GROUP BY col HAVING count(*) > 1" language="PostgreSQL"/>
@@ -37,6 +37,7 @@
     <sqlGenericExpression xmi:id="_ybsFAzh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybsFBDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="Oracle"/>
     <sqlGenericExpression xmi:id="_8IFvYGOeEd2-SIyfZ_Vx6A" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_4Vq50GVjEd2wJomsB-uicA" body="SELECT COUNT({0}) FROM {1}  WHERE LTRIM(RTRIM({0})) = ''" language="MSSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1BF2Ed2PKb6nEJEvhw" name="Minimal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Minimal Length">
     <taggedValue xmi:id="_ybssEDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
