@@ -95,9 +95,18 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                checkFieldsValue();
+                String lowerStr = lowerText.getText();
+                String higherStr = higherText.getText();
 
-                parameter.setMinThreshold(lowerText.getText());
+                if (!CheckValueUtils.isNumberWithNegativeValue(lowerStr)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                } else if (higherStr != "" && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
+                    updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
+                } else {
+                    updateStatus(IStatus.OK, MSG_OK);
+                }
+
+                parameter.setMinThreshold(lowerStr);
             }
 
         });
@@ -105,8 +114,16 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
         higherText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                String lowerStr = lowerText.getText();
+                String higherStr = higherText.getText();
 
-                checkFieldsValue();
+                if (!CheckValueUtils.isNumberWithNegativeValue(higherStr)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                } else if (lowerStr != "" && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
+                    updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
+                } else {
+                    updateStatus(IStatus.OK, MSG_OK);
+                }
 
                 parameter.setMaxThreshold(higherText.getText());
             }
@@ -132,27 +149,7 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        String lowerStr = lowerText.getText();
-        String higherStr = higherText.getText();
-
-        if (lowerStr != "" && higherStr != "") {
-
-            if (!CheckValueUtils.isNumberWithNegativeValue(lowerStr) || !CheckValueUtils.isNumberWithNegativeValue(higherStr)) {
-                updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                return false;
-            }
-
-            double lower = Double.parseDouble(lowerStr);
-            double higher = Double.parseDouble(higherStr);
-
-            if (lower > higher) {
-                updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
-                return false;
-            }
-        }
-
-        updateStatus(IStatus.OK, MSG_OK);
-        return true;
+        return false;
     }
 
     /*

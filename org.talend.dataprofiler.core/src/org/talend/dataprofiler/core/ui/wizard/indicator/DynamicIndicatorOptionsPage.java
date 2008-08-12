@@ -55,6 +55,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         this.indicatorUnit = indicatorUnit;
         this.paramMap = paramMap;
 
+        setPageComplete(false);
         setTitle("Indicator settings");
         setMessage("In this wizard, parameters for the given indicator can be set");
 
