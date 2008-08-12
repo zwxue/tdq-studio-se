@@ -132,15 +132,23 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        if (lowerText.getText() == "" || higherText.getText() == "") {
-            updateStatus(IStatus.ERROR, MSG_EMPTY);
-            return false;
-        }
+        String lowerStr = lowerText.getText();
+        String higherStr = higherText.getText();
 
-        if (!CheckValueUtils.isNumberWithNegativeValue(lowerText.getText())
-                || !CheckValueUtils.isNumberWithNegativeValue(higherText.getText())) {
-            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-            return false;
+        if (lowerStr != "" && higherStr != "") {
+
+            if (!CheckValueUtils.isNumberWithNegativeValue(lowerStr) || !CheckValueUtils.isNumberWithNegativeValue(higherStr)) {
+                updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                return false;
+            }
+
+            double lower = Double.parseDouble(lowerStr);
+            double higher = Double.parseDouble(higherStr);
+
+            if (lower > higher) {
+                updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
+                return false;
+            }
         }
 
         updateStatus(IStatus.OK, MSG_OK);
