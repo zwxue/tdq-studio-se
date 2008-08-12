@@ -98,9 +98,9 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
                 String lowerStr = lowerText.getText();
                 String higherStr = higherText.getText();
 
-                if (!CheckValueUtils.isNumberWithNegativeValue(lowerStr)) {
+                if (lowerStr != "" && !CheckValueUtils.isNumberWithNegativeValue(lowerStr)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                } else if (higherStr != "" && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
+                } else if (lowerStr != "" && higherStr != "" && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
                     updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
@@ -117,9 +117,9 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
                 String lowerStr = lowerText.getText();
                 String higherStr = higherText.getText();
 
-                if (!CheckValueUtils.isNumberWithNegativeValue(higherStr)) {
+                if (higherStr != "" && !CheckValueUtils.isNumberWithNegativeValue(higherStr)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                } else if (lowerStr != "" && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
+                } else if (lowerStr != "" && higherStr != "" && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
                     updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
