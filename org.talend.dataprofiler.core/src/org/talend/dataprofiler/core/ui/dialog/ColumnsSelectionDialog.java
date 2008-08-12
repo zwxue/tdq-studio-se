@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -146,6 +147,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         this.addFilter(new EMFObjFilter());
     }
 
+    private final String tooMuchItemSeleted = "This action will select all columns of all tables existing below this level."
+            + " This can take a long time and will block the application during that time. Do you still want to continue?";
+
     /*
      * (non-Javadoc)
      * 
@@ -160,10 +164,23 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 // If the item is checked . . .
                 if (event.getChecked()) {
                     // . . . check all its children
-                    getTreeViewer().setSubtreeChecked(event.getElement(), true);
-                    if (event.getElement() instanceof ColumnSet) {
-                        handleColumnsChecked((ColumnSet) event.getElement(), true);
+                    boolean beContinued = true;
+                    if (!(event.getElement() instanceof TdTable)) {
+                        beContinued = MessageDialogWithToggle.openConfirm(null, "Warning", tooMuchItemSeleted);
                     }
+
+                    if (beContinued) {
+                        getTreeViewer().setSubtreeChecked(event.getElement(), true);
+                        if (event.getElement() instanceof ColumnSet) {
+                            handleColumnsChecked((ColumnSet) event.getElement(), true);
+                        }
+                    } else {
+                        getTreeViewer().setSubtreeChecked(event.getElement(), false);
+                        if (event.getElement() instanceof ColumnSet) {
+                            handleColumnsChecked((ColumnSet) event.getElement(), false);
+                        }
+                    }
+
                 } else {
                     getTreeViewer().setSubtreeChecked(event.getElement(), false);
                     if (event.getElement() instanceof ColumnSet) {
