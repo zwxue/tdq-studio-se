@@ -562,7 +562,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             List<String> whereExpression, String range) throws ParseException {
         String completedRange = replaceVariables(range, colName, table);
         String rangeColumn = "'" + completedRange + "'";
-        String completedSqlString = replaceVariables(sqlGenericExpression, rangeColumn, table);
+        String completedSqlString = replaceVariablesLow(sqlGenericExpression, rangeColumn, table, rangeColumn);
         // add this range clause to the given where clause (but do not modify the given where clause)
         List<String> allWheresForSingleSelect = new ArrayList<String>(whereExpression);
         allWheresForSingleSelect.add(completedRange);
