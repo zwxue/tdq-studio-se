@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.domain.*;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Namespace;
 
 /**
  * <!-- begin-user-doc -->
@@ -92,6 +93,7 @@ public class DomainSwitch<T> {
             case DomainPackage.DOMAIN: {
                 Domain domain = (Domain)theEObject;
                 T result = caseDomain(domain);
+                if (result == null) result = caseNamespace(domain);
                 if (result == null) result = caseModelElement(domain);
                 if (result == null) result = caseElement(domain);
                 if (result == null) result = defaultCase(theEObject);
@@ -340,6 +342,21 @@ public class DomainSwitch<T> {
      * @generated
      */
     public T caseModelElement(ModelElement object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Namespace</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Namespace</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseNamespace(Namespace object) {
         return null;
     }
 

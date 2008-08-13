@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.domain.*;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Namespace;
 
 /**
  * <!-- begin-user-doc -->
@@ -120,6 +121,10 @@ public class DomainAdapterFactory extends AdapterFactoryImpl {
             @Override
             public Adapter caseModelElement(ModelElement object) {
                 return createModelElementAdapter();
+            }
+            @Override
+            public Adapter caseNamespace(Namespace object) {
+                return createNamespaceAdapter();
             }
             @Override
             public Adapter defaultCase(EObject object) {
@@ -306,6 +311,20 @@ public class DomainAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createModelElementAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link orgomg.cwm.objectmodel.core.Namespace <em>Namespace</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see orgomg.cwm.objectmodel.core.Namespace
+     * @generated
+     */
+    public Adapter createNamespaceAdapter() {
         return null;
     }
 

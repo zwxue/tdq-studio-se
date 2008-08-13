@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.domain.pattern.Pattern;
 
 import orgomg.cwm.objectmodel.core.DataType;
+import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -34,7 +35,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @model
  * @generated
  */
-public interface Domain extends ModelElement {
+public interface Domain extends Namespace {
     /**
      * Returns the value of the '<em><b>Data Type</b></em>' reference.
      * <!-- begin-user-doc -->
@@ -94,7 +95,7 @@ public interface Domain extends ModelElement {
     EList<RangeRestriction> getRanges();
 
     /**
-     * Returns the value of the '<em><b>Patterns</b></em>' containment reference list.
+     * Returns the value of the '<em><b>Patterns</b></em>' reference list.
      * The list contents are of type {@link org.talend.dataquality.domain.pattern.Pattern}.
      * <!-- begin-user-doc -->
      * <p>
@@ -102,9 +103,9 @@ public interface Domain extends ModelElement {
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Patterns</em>' containment reference list.
+     * @return the value of the '<em>Patterns</em>' reference list.
      * @see org.talend.dataquality.domain.DomainPackage#getDomain_Patterns()
-     * @model containment="true"
+     * @model
      * @generated
      */
     EList<Pattern> getPatterns();

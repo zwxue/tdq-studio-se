@@ -19,6 +19,8 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.IntegerValue;
 import org.talend.dataquality.domain.RealNumberValue;
 import org.talend.dataquality.domain.TextValue;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.domain.util.DomainSwitch;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
@@ -70,6 +72,20 @@ public class DataqualitySwitchHelper {
 
         @Override
         public Domain caseDomain(Domain object) {
+            return object;
+        }
+
+    };
+
+    public static final PatternSwitch<Pattern> PATTERN_SWITCH = new PatternSwitch<Pattern>() {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.talend.dataquality.domain.pattern.util.PatternSwitch#casePattern(org.talend.dataquality.domain.pattern.Pattern)
+         */
+        @Override
+        public Pattern casePattern(Pattern object) {
             return object;
         }
 

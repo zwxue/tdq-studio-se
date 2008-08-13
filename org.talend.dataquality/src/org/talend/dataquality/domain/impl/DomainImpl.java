@@ -31,6 +31,7 @@ import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.pattern.Pattern;
 
 import orgomg.cwm.objectmodel.core.DataType;
+import orgomg.cwm.objectmodel.core.impl.NamespaceImpl;
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**
@@ -49,7 +50,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *
  * @generated
  */
-public class DomainImpl extends ModelElementImpl implements Domain {
+public class DomainImpl extends NamespaceImpl implements Domain {
     /**
      * The cached value of the '{@link #getDataType() <em>Data Type</em>}' reference.
      * <!-- begin-user-doc -->
@@ -81,7 +82,7 @@ public class DomainImpl extends ModelElementImpl implements Domain {
     protected EList<RangeRestriction> ranges;
 
     /**
-     * The cached value of the '{@link #getPatterns() <em>Patterns</em>}' containment reference list.
+     * The cached value of the '{@link #getPatterns() <em>Patterns</em>}' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #getPatterns()
@@ -178,7 +179,7 @@ public class DomainImpl extends ModelElementImpl implements Domain {
      */
     public EList<Pattern> getPatterns() {
         if (patterns == null) {
-            patterns = new EObjectContainmentEList<Pattern>(Pattern.class, this, DomainPackage.DOMAIN__PATTERNS);
+            patterns = new EObjectResolvingEList<Pattern>(Pattern.class, this, DomainPackage.DOMAIN__PATTERNS);
         }
         return patterns;
     }
@@ -195,8 +196,6 @@ public class DomainImpl extends ModelElementImpl implements Domain {
                 return ((InternalEList<?>)getLengthRestriction()).basicRemove(otherEnd, msgs);
             case DomainPackage.DOMAIN__RANGES:
                 return ((InternalEList<?>)getRanges()).basicRemove(otherEnd, msgs);
-            case DomainPackage.DOMAIN__PATTERNS:
-                return ((InternalEList<?>)getPatterns()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }

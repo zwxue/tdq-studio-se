@@ -77,7 +77,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__NAME = CorePackage.MODEL_ELEMENT__NAME;
+    int DOMAIN__NAME = CorePackage.NAMESPACE__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -86,7 +86,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__VISIBILITY = CorePackage.MODEL_ELEMENT__VISIBILITY;
+    int DOMAIN__VISIBILITY = CorePackage.NAMESPACE__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -95,7 +95,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__CLIENT_DEPENDENCY = CorePackage.MODEL_ELEMENT__CLIENT_DEPENDENCY;
+    int DOMAIN__CLIENT_DEPENDENCY = CorePackage.NAMESPACE__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -104,7 +104,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__SUPPLIER_DEPENDENCY = CorePackage.MODEL_ELEMENT__SUPPLIER_DEPENDENCY;
+    int DOMAIN__SUPPLIER_DEPENDENCY = CorePackage.NAMESPACE__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -113,7 +113,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__CONSTRAINT = CorePackage.MODEL_ELEMENT__CONSTRAINT;
+    int DOMAIN__CONSTRAINT = CorePackage.NAMESPACE__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -122,7 +122,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__NAMESPACE = CorePackage.MODEL_ELEMENT__NAMESPACE;
+    int DOMAIN__NAMESPACE = CorePackage.NAMESPACE__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -131,7 +131,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__IMPORTER = CorePackage.MODEL_ELEMENT__IMPORTER;
+    int DOMAIN__IMPORTER = CorePackage.NAMESPACE__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -140,7 +140,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__STEREOTYPE = CorePackage.MODEL_ELEMENT__STEREOTYPE;
+    int DOMAIN__STEREOTYPE = CorePackage.NAMESPACE__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -149,7 +149,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__TAGGED_VALUE = CorePackage.MODEL_ELEMENT__TAGGED_VALUE;
+    int DOMAIN__TAGGED_VALUE = CorePackage.NAMESPACE__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -158,7 +158,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
+    int DOMAIN__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -167,7 +167,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int DOMAIN__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -176,7 +176,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__RESPONSIBLE_PARTY = CorePackage.MODEL_ELEMENT__RESPONSIBLE_PARTY;
+    int DOMAIN__RESPONSIBLE_PARTY = CorePackage.NAMESPACE__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -185,7 +185,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__ELEMENT_NODE = CorePackage.MODEL_ELEMENT__ELEMENT_NODE;
+    int DOMAIN__ELEMENT_NODE = CorePackage.NAMESPACE__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -194,7 +194,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__SET = CorePackage.MODEL_ELEMENT__SET;
+    int DOMAIN__SET = CorePackage.NAMESPACE__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -203,7 +203,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__RENDERED_OBJECT = CorePackage.MODEL_ELEMENT__RENDERED_OBJECT;
+    int DOMAIN__RENDERED_OBJECT = CorePackage.NAMESPACE__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -212,7 +212,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__VOCABULARY_ELEMENT = CorePackage.MODEL_ELEMENT__VOCABULARY_ELEMENT;
+    int DOMAIN__VOCABULARY_ELEMENT = CorePackage.NAMESPACE__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -221,7 +221,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__MEASUREMENT = CorePackage.MODEL_ELEMENT__MEASUREMENT;
+    int DOMAIN__MEASUREMENT = CorePackage.NAMESPACE__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -230,7 +230,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__CHANGE_REQUEST = CorePackage.MODEL_ELEMENT__CHANGE_REQUEST;
+    int DOMAIN__CHANGE_REQUEST = CorePackage.NAMESPACE__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -239,7 +239,16 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__DASDL_PROPERTY = CorePackage.MODEL_ELEMENT__DASDL_PROPERTY;
+    int DOMAIN__DASDL_PROPERTY = CorePackage.NAMESPACE__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Owned Element</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOMAIN__OWNED_ELEMENT = CorePackage.NAMESPACE__OWNED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Data Type</b></em>' reference.
@@ -248,7 +257,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__DATA_TYPE = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 0;
+    int DOMAIN__DATA_TYPE = CorePackage.NAMESPACE_FEATURE_COUNT + 0;
 
     /**
      * The feature id for the '<em><b>Length Restriction</b></em>' containment reference list.
@@ -257,7 +266,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__LENGTH_RESTRICTION = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 1;
+    int DOMAIN__LENGTH_RESTRICTION = CorePackage.NAMESPACE_FEATURE_COUNT + 1;
 
     /**
      * The feature id for the '<em><b>Ranges</b></em>' containment reference list.
@@ -266,16 +275,16 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN__RANGES = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 2;
+    int DOMAIN__RANGES = CorePackage.NAMESPACE_FEATURE_COUNT + 2;
 
     /**
-     * The feature id for the '<em><b>Patterns</b></em>' containment reference list.
+     * The feature id for the '<em><b>Patterns</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOMAIN__PATTERNS = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 3;
+    int DOMAIN__PATTERNS = CorePackage.NAMESPACE_FEATURE_COUNT + 3;
 
     /**
      * The number of structural features of the '<em>Domain</em>' class.
@@ -284,7 +293,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int DOMAIN_FEATURE_COUNT = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 4;
+    int DOMAIN_FEATURE_COUNT = CorePackage.NAMESPACE_FEATURE_COUNT + 4;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.domain.impl.EnumerationRuleImpl <em>Enumeration Rule</em>}' class.
@@ -655,10 +664,10 @@ public interface DomainPackage extends EPackage {
     EReference getDomain_Ranges();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.domain.Domain#getPatterns <em>Patterns</em>}'.
+     * Returns the meta object for the reference list '{@link org.talend.dataquality.domain.Domain#getPatterns <em>Patterns</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference list '<em>Patterns</em>'.
+     * @return the meta object for the reference list '<em>Patterns</em>'.
      * @see org.talend.dataquality.domain.Domain#getPatterns()
      * @see #getDomain()
      * @generated
@@ -944,7 +953,7 @@ public interface DomainPackage extends EPackage {
         EReference DOMAIN__RANGES = eINSTANCE.getDomain_Ranges();
 
         /**
-         * The meta object literal for the '<em><b>Patterns</b></em>' containment reference list feature.
+         * The meta object literal for the '<em><b>Patterns</b></em>' reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated

@@ -231,6 +231,17 @@ public class DomainHelper {
         return domains;
     }
 
+    public static List<Pattern> getPatterns(Collection<EObject> objects) {
+        List<Pattern> patterns = new ArrayList<Pattern>();
+        for (EObject object : objects) {
+            Pattern pattern = DataqualitySwitchHelper.PATTERN_SWITCH.doSwitch(object);
+            if (pattern != null) {
+                patterns.add(pattern);
+            }
+        }
+        return patterns;
+    }
+
     public static Domain setDataFilterTablePattern(final Collection<Domain> dataFilters, String tablePattern) {
         return setDataFilterPattern(dataFilters, TABLE_PATTERN, tablePattern);
     }

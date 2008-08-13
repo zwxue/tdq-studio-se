@@ -610,14 +610,14 @@
     </eClassifiers>
   </eSubpackages>
   <eSubpackages name="domain" nsURI="http://dataquality.domain" nsPrefix="dataquality.domain">
-    <eClassifiers xsi:type="ecore:EClass" name="Domain" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement">
+    <eClassifiers xsi:type="ecore:EClass" name="Domain" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/Namespace">
       <eStructuralFeatures xsi:type="ecore:EReference" name="dataType" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/DataType"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="lengthRestriction" upperBound="-1"
           eType="#//domain/LengthRestriction" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="ranges" upperBound="-1"
           eType="#//domain/RangeRestriction" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="patterns" upperBound="-1"
-          eType="#//domain/pattern/Pattern" containment="true"/>
+          eType="#//domain/pattern/Pattern"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="EnumerationRule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

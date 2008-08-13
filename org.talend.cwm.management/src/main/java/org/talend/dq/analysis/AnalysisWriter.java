@@ -25,7 +25,9 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -63,15 +65,26 @@ public class AnalysisWriter {
         // --- store the data filter in the same resource
         EList<Domain> dataFilter = AnalysisHelper.getDataFilter(analysis);
 
-        // FIXME scorreia remove any existing domain (and replace by the new domain)
+        // remove any existing domain (and replace by the new domain)
         List<Domain> domains = DomainHelper.getDomains(resourceContents);
         resourceContents.removeAll(domains);
 
         if (dataFilter != null) {
-            // TODO scorreia save them in their own file?
+            // scorreia save them in their own file? -> no, it's ok to save them in the analysis file.
             for (Domain domain : dataFilter) {
                 if (!resourceContents.contains(domain)) {
                     resourceContents.add(domain);
+
+                    // --- save patterns
+                    if (AnalysisType.CONNECTION.compareTo(AnalysisHelper.getAnalysisType(analysis)) == 0) {
+                        List<Pattern> oldPatterns = DomainHelper.getPatterns(resourceContents);
+                        resourceContents.removeAll(oldPatterns);
+
+                        EList<Pattern> patterns = domain.getPatterns();
+                        for (Pattern pattern : patterns) {
+                            domain.getOwnedElement().add(pattern);
+                        }
+                    }
                 }
             }
         }
