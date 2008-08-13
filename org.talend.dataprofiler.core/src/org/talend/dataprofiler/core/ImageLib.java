@@ -85,6 +85,8 @@ public class ImageLib {
 
     public static final String LIBRARIES = "libraries.png";
 
+    public static final String DATA_PROFILING = "server_chart.png";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 

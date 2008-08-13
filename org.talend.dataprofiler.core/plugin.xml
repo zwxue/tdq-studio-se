@@ -13,14 +13,14 @@
             allowMultiple="false"
             category="org.talend.dataprofiler.view.category"
             class="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
-            icon="icons/TdTable.gif"
+            icon="icons/application_home.png"
             id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
             name="DQ Repository">
       </view>
       <view
             category="org.talend.dataprofiler.view.category"
             class="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
-            icon="icons/sample.gif"
+            icon="icons/newspaper.png"
             id="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
             name="Detail View">
       </view>
@@ -348,6 +348,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.talend.dataprofiler.core.ui.perspective.DataProfilingPerspective"
+            icon="icons/map.png"
             id="org.talend.dataprofiler.DataProfilingPerspective"
             name="Data Profiler">
       </perspective>
