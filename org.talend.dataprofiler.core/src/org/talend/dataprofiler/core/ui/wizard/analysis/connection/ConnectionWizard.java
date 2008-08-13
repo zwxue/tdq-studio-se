@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.connection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.commons.emf.EMFSharedResources;
@@ -20,8 +21,12 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.DomainFactory;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -126,6 +131,19 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
     @Override
     public boolean performFinish() {
         super.performFinish();
+        ConnectionAnalysisParameter parameters = (ConnectionAnalysisParameter) getAnalysisParameter();
+        Domain domain = DomainFactory.eINSTANCE.createDomain();
+        domain.setName(DomainHelper.ANALYSIS_DATA_FILTER);
+        List<Domain> domains = new ArrayList<Domain>();
+        domains.add(domain);
+        if ((parameters.getTableFilter() != null) && (!parameters.getTableFilter().equals(PluginConstant.EMPTY_STRING))) {
+            DomainHelper.setDataFilterTablePattern(domains, parameters.getTableFilter());
+        }
+        if ((parameters.getViewFilter() != null) && (!parameters.getViewFilter().equals(PluginConstant.EMPTY_STRING))) {
+            DomainHelper.setDataFilterViewPattern(domains, parameters.getViewFilter());
+        }
+        analysisBuilder.getAnalysis().getParameters().getDataFilter().add(domain);
+
         DependenciesHandler.getInstance().setDependencyOn(analysisBuilder.getAnalysis(),
                 analysisBuilder.getAnalysis().getContext().getConnection());
         EMFSharedResources.getSharedEmfUtil()

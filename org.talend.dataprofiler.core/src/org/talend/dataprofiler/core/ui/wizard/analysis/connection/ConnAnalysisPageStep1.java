@@ -13,12 +13,15 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis.connection;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
+import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
 
 /**
  * @author zqin
@@ -67,13 +70,26 @@ public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
         tableFilter = new Text(subContainer, SWT.BORDER);
         tableFilter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         tableFilter.setText("%");
+        tableFilter.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                ((ConnectionAnalysisParameter) getConnectionParams()).setViewFilter(tableFilter.getText());
+
+            }
+        });
 
         Label labelView = new Label(subContainer, SWT.NONE);
         labelView.setText("View name filter");
         viewFilter = new Text(subContainer, SWT.BORDER);
         viewFilter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         viewFilter.setText("%");
+        viewFilter.addModifyListener(new ModifyListener() {
 
+            public void modifyText(ModifyEvent e) {
+                ((ConnectionAnalysisParameter) getConnectionParams()).setViewFilter(viewFilter.getText());
+
+            }
+        });
         setControl(container);
     }
 

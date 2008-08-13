@@ -58,8 +58,10 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.utils.sugars.ReturnCode;
@@ -263,7 +265,12 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             indicatorList = new ArrayList<SchemaIndicator>();
         }
         List<TdCatalog> catalogs = DataProviderHelper.getTdCatalogs(tdDataProvider);
+        // List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdDataProvider);
         AbstractStatisticalViewerProvider provider;
+        // if (catalogs.size() > 0 && tdSchemas.size() > 0) {
+        // createSchemaTableColumns(table);
+        // provider = new CatalogViewerProvier();
+        // } else {
         if (catalogs.size() > 0) {
             createCatalogTableColumns(table);
             provider = new CatalogViewerProvier();
@@ -271,6 +278,7 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             createSchemaTableColumns(table);
             provider = new SchemaViewerProvier();
         }
+        // }
         statisticalViewer.setLabelProvider(provider);
         statisticalViewer.setContentProvider(provider);
         statisticalViewer.setInput(indicatorList);
@@ -349,48 +357,21 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
     }
 
     public void saveAnalysis() throws DataprofilerCoreException {
+        if (this.domain == null) {
+            domain = DomainFactory.eINSTANCE.createDomain();
+            domain.setName(DomainHelper.ANALYSIS_DATA_FILTER);
+        }
+        List<Domain> domains = new ArrayList<Domain>();
+        domains.add(domain);
+        if (!this.tableFilterText.getText().equals(PluginConstant.EMPTY_STRING)) {
+            DomainHelper.setDataFilterTablePattern(domains, tableFilterText.getText());
+        }
+        if (!this.viewFilterText.getText().equals(PluginConstant.EMPTY_STRING)) {
+            DomainHelper.setDataFilterViewPattern(domains, viewFilterText.getText());
+        }
 
-        // Pattern tablePattern = null;
-        // Pattern viewPattern = null;
-        // if (this.domain == null) {
-        // domain = DomainFactory.eINSTANCE.createDomain();
-        // tablePattern = PatternFactory.eINSTANCE.createPattern();
-        // tablePattern.setName(TABLE_PATTERN_NAME);
-        // domain.getPatterns().add(tablePattern);
-        // viewPattern = PatternFactory.eINSTANCE.createPattern();
-        // viewPattern.setName(VIEW_PATTERN_NAME);
-        // domain.getPatterns().add(viewPattern);
-        // connectionAnalysis.getParameters().getDataFilter().add(domain);
-        // } else {
-        // for (Pattern pattern : domain.getPatterns()) {
-        // if (pattern.getName().equals(TABLE_PATTERN_NAME)) {
-        // tablePattern = pattern;
-        // } else {
-        // viewPattern = pattern;
-        // }
-        //
-        // }
-        // }
-        // if (!this.tableFilterText.getText().equals(PluginConstant.EMPTY_STRING)) {
-        //
-        // Expression expression = CoreFactory.eINSTANCE.createExpression();
-        // expression.setBody(this.tableFilterText.getText());
-        // RegularExpressionImpl newRegularExpress = (RegularExpressionImpl)
-        // PatternFactory.eINSTANCE.createRegularExpression();
-        // newRegularExpress.setExpression(expression);
-        // newRegularExpress.setExpressionType(ExpressionType.SQL_LIKE.getLiteral());
-        // tablePattern.getComponents().add(newRegularExpress);
-        //
-        // }
-        // if (!this.viewFilterText.getText().equals(PluginConstant.EMPTY_STRING)) {
-        // Expression expression = CoreFactory.eINSTANCE.createExpression();
-        // expression.setBody(this.viewFilterText.getText());
-        // RegularExpressionImpl newRegularExpress = (RegularExpressionImpl)
-        // PatternFactory.eINSTANCE.createRegularExpression();
-        // newRegularExpress.setExpression(expression);
-        // newRegularExpress.setExpressionType(ExpressionType.SQL_LIKE.getLiteral());
-        // viewPattern.getComponents().add(newRegularExpress);
-        // }
+        connectionAnalysis.getParameters().getDataFilter().add(domain);
+
         ReturnCode save = AnaResourceFileHelper.getInstance().save(connectionAnalysis);
         if (save.isOk()) {
             log.info("Success to save connection analysis:" + connectionAnalysis.getFileName());
