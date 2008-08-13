@@ -14,8 +14,11 @@ package org.talend.dataprofiler.core.ui.views.filters;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
+
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.util.CoreSwitch;
 
@@ -51,6 +54,12 @@ public class EMFObjFilter extends AbstractViewerFilter {
      */
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
+        if (parentElement instanceof TreePath) {
+            TreePath path = (TreePath) parentElement;
+            if (path.getLastSegment() instanceof AnaElementFolderNode) {
+                return true;
+            }
+        }
         if (element instanceof EObject) {
             EObject eObj = (EObject) element;
             if (SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(eObj) != null || dependencySwitch.doSwitch(eObj) != null) {

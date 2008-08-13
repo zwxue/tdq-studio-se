@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.views.provider;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AbstractFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
@@ -33,6 +34,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
     public Image getImage(Object element) {
         if (element instanceof IFolderNode) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+        } else if (element instanceof TdDataProvider) {
+            return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         }
         return super.getImage(element);
     }
@@ -52,6 +55,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             Pattern pattern = (Pattern) element;
             RegularExpression patternComponent = (RegularExpression) pattern.getComponents().get(0);
             return patternComponent.getExpression().getBody();
+        } else if (element instanceof TdDataProvider) {
+            return ((TdDataProvider) element).getName();
         }
         return super.getText(element);
     }
