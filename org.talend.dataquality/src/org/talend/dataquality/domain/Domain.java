@@ -94,7 +94,7 @@ public interface Domain extends ModelElement {
     EList<RangeRestriction> getRanges();
 
     /**
-     * Returns the value of the '<em><b>Patterns</b></em>' reference list.
+     * Returns the value of the '<em><b>Patterns</b></em>' containment reference list.
      * The list contents are of type {@link org.talend.dataquality.domain.pattern.Pattern}.
      * <!-- begin-user-doc -->
      * <p>
@@ -102,9 +102,9 @@ public interface Domain extends ModelElement {
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Patterns</em>' reference list.
+     * @return the value of the '<em>Patterns</em>' containment reference list.
      * @see org.talend.dataquality.domain.DomainPackage#getDomain_Patterns()
-     * @model
+     * @model containment="true"
      * @generated
      */
     EList<Pattern> getPatterns();

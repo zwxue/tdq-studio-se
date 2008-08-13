@@ -269,7 +269,7 @@ public interface DomainPackage extends EPackage {
     int DOMAIN__RANGES = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 2;
 
     /**
-     * The feature id for the '<em><b>Patterns</b></em>' reference list.
+     * The feature id for the '<em><b>Patterns</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -655,10 +655,10 @@ public interface DomainPackage extends EPackage {
     EReference getDomain_Ranges();
 
     /**
-     * Returns the meta object for the reference list '{@link org.talend.dataquality.domain.Domain#getPatterns <em>Patterns</em>}'.
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.domain.Domain#getPatterns <em>Patterns</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the reference list '<em>Patterns</em>'.
+     * @return the meta object for the containment reference list '<em>Patterns</em>'.
      * @see org.talend.dataquality.domain.Domain#getPatterns()
      * @see #getDomain()
      * @generated
@@ -944,7 +944,7 @@ public interface DomainPackage extends EPackage {
         EReference DOMAIN__RANGES = eINSTANCE.getDomain_Ranges();
 
         /**
-         * The meta object literal for the '<em><b>Patterns</b></em>' reference list feature.
+         * The meta object literal for the '<em><b>Patterns</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated

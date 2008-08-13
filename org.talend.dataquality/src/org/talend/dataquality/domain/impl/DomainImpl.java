@@ -81,7 +81,7 @@ public class DomainImpl extends ModelElementImpl implements Domain {
     protected EList<RangeRestriction> ranges;
 
     /**
-     * The cached value of the '{@link #getPatterns() <em>Patterns</em>}' reference list.
+     * The cached value of the '{@link #getPatterns() <em>Patterns</em>}' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #getPatterns()
@@ -178,7 +178,7 @@ public class DomainImpl extends ModelElementImpl implements Domain {
      */
     public EList<Pattern> getPatterns() {
         if (patterns == null) {
-            patterns = new EObjectResolvingEList<Pattern>(Pattern.class, this, DomainPackage.DOMAIN__PATTERNS);
+            patterns = new EObjectContainmentEList<Pattern>(Pattern.class, this, DomainPackage.DOMAIN__PATTERNS);
         }
         return patterns;
     }
@@ -195,6 +195,8 @@ public class DomainImpl extends ModelElementImpl implements Domain {
                 return ((InternalEList<?>)getLengthRestriction()).basicRemove(otherEnd, msgs);
             case DomainPackage.DOMAIN__RANGES:
                 return ((InternalEList<?>)getRanges()).basicRemove(otherEnd, msgs);
+            case DomainPackage.DOMAIN__PATTERNS:
+                return ((InternalEList<?>)getPatterns()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
