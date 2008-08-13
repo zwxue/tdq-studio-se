@@ -12,12 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.domain.RealNumberValue;
+import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 
 /**
@@ -37,6 +42,8 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
     private int numOfShown;
 
     private Object binsData;
+
+    private Domain domain;
 
     /**
      * Getter for maxValue.
@@ -119,17 +126,47 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
         if (getBinsData() != null) {
             List<SliceEntity> tableData = (List<SliceEntity>) getBinsData();
 
-            Domain domain = DomainHelper.createDomain("test");
+            Domain userDomain = DomainHelper.createDomain("test");
             for (SliceEntity entity : tableData) {
                 double min = Double.parseDouble(entity.getLowValue());
                 double max = Double.parseDouble(entity.getHighValue());
                 RangeRestriction rangeRestriction = DomainHelper.createRealRangeRestriction(min, max);
-                domain.getRanges().add(rangeRestriction);
+                userDomain.getRanges().add(rangeRestriction);
             }
 
-            return domain;
+            return userDomain;
         }
 
         return null;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
+    }
+
+    public List<SliceEntity> getBinsDataFromExsitingDomain() {
+        List<SliceEntity> returnList = new ArrayList<SliceEntity>();
+
+        if (this.domain != null) {
+            EList<RangeRestriction> ranges = domain.getRanges();
+            for (RangeRestriction range : ranges) {
+                SliceEntity entity = new SliceEntity();
+
+                entity.setLowValue(String.valueOf(getRealValue(range.getLowerValue())));
+                entity.setHighValue(String.valueOf(getRealValue(range.getUpperValue())));
+
+                returnList.add(entity);
+            }
+        }
+
+        return returnList;
+    }
+
+    private double getRealValue(LiteralValue object) {
+        RealNumberValue upperValue = DataqualitySwitchHelper.REAL_NB_VALUE_SWITCH.doSwitch(object);
+        if (upperValue == null) {
+            throw new IllegalArgumentException(object + " does not contain real value.");
+        }
+        return upperValue.getValue();
     }
 }

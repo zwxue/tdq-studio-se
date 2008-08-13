@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
@@ -161,11 +162,11 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         operationBTNComp.setLayoutData(gd);
 
         addSlice = new Button(operationBTNComp, SWT.NONE);
-        addSlice.setText("add");
+        addSlice.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
         addSlice.setEnabled(false);
 
         delSlice = new Button(operationBTNComp, SWT.NONE);
-        delSlice.setText("del");
+        delSlice.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delSlice.setEnabled(false);
     }
 
@@ -184,8 +185,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
                 if (min == "") {
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isRealNumberValue(min)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                } else if (!CheckValueUtils.isNumberValue(min)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                     parameter.setMinValue(Double.valueOf(min));
@@ -201,8 +202,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
                 if (max == "") {
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isRealNumberValue(max)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                } else if (!CheckValueUtils.isNumberValue(max)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                     parameter.setMaxValue(Double.valueOf(max));
@@ -220,7 +221,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 if (numb == "") {
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
                 } else if (!CheckValueUtils.isNumberValue(numb)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                     parameter.setNumOfBins(Integer.parseInt(numb));
@@ -242,10 +243,22 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 if (flag && numb > 0) {
                     addSlice.setEnabled(true);
                     delSlice.setEnabled(true);
+
+                    minValue.setEnabled(false);
+                    maxValue.setEnabled(false);
+                    numbOfBins.setEnabled(false);
+
                     tableViewer.setInput(ViewerDataFactory.createSliceFormData(min, max, numb));
 
                     parameter.setBinsData(tableViewer.getInput());
                 } else {
+                    addSlice.setEnabled(false);
+                    delSlice.setEnabled(false);
+
+                    minValue.setEnabled(true);
+                    maxValue.setEnabled(true);
+                    numbOfBins.setEnabled(true);
+
                     tableViewer.setInput("");
                 }
             }
@@ -314,6 +327,18 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         minValue.setText(String.valueOf(parameter.getMinValue()));
         maxValue.setText(String.valueOf(parameter.getMaxValue()));
         numbOfBins.setText(String.valueOf(parameter.getNumOfBins()));
+
+        if (parameter.getBinsDataFromExsitingDomain().size() > 0) {
+            addSlice.setEnabled(true);
+            delSlice.setEnabled(true);
+
+            minValue.setEnabled(false);
+            maxValue.setEnabled(false);
+            numbOfBins.setEnabled(false);
+            isSetRange.setSelection(true);
+
+            tableViewer.setInput(parameter.getBinsDataFromExsitingDomain());
+        }
     }
 
     /**

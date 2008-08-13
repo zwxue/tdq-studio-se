@@ -107,12 +107,14 @@ public class IndicatorOptionsWizard extends Wizard {
                 paramMap.put(FormEnum.IndicatorThresholdsForm, indicatorThresholdsParam);
             }
 
-            if (indicatorParam.getBins() != null) {
+            Domain domain = indicatorParam.getBins();
+            if (domain != null) {
 
                 BinsDesignerParameter binsParam = new BinsDesignerParameter();
-                binsParam.setMaxValue(DomainHelper.getMaxBinValue(indicatorParam.getBins()));
-                binsParam.setMinValue(DomainHelper.getMinBinValue(indicatorParam.getBins()));
-                binsParam.setNumOfBins(DomainHelper.getNumberOfBins(indicatorParam.getBins()));
+                binsParam.setDomain(domain);
+                binsParam.setMaxValue(DomainHelper.getMaxBinValue(domain));
+                binsParam.setMinValue(DomainHelper.getMinBinValue(domain));
+                binsParam.setNumOfBins(DomainHelper.getNumberOfBins(domain));
                 binsParam.setNumOfShown(indicatorParam.getTopN());
 
                 paramMap.put(FormEnum.BinsDesignerForm, binsParam);
