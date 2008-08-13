@@ -212,11 +212,25 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
         if (!checkResults(objects, 2)) {
             return false;
         }
-        String c = String.valueOf(objects.get(0)[1]);
-        String s = String.valueOf(objects.get(0)[0]);
 
-        this.setCount(Long.valueOf(c));
-        this.setSumLength(Double.valueOf(s));
+        // http://www.talendforge.org/bugs/view.php?id=4783
+        // Oracle treats empty strings as null values
+        Object lCount = objects.get(0)[1];
+        if (lCount == null) {
+            this.setCount(null);
+        } else {
+            String c = String.valueOf(lCount);
+            this.setCount(Long.valueOf(c));
+        }
+
+        Object lSum = objects.get(0)[0];
+        if (lSum == null) {
+            this.setSumLength(null);
+        } else {
+            String s = String.valueOf(lSum);
+            this.setSumLength(Double.valueOf(s));
+        }
+
         return true;
     }
 

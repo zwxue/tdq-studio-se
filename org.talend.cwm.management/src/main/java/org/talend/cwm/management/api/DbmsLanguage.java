@@ -159,6 +159,15 @@ public class DbmsLanguage {
     }
 
     /**
+     * Method "isNotNull".
+     * 
+     * @return " IS NOT NULL " surrounded with spaces.
+     */
+    public String isNotNull() {
+        return surroundWithSpaces(SqlPredicate.IS_NOT_NULL.getLiteral());
+    }
+
+    /**
      * Method "notEqual".
      * 
      * @return "<>" by default or "!=" on some specific DBMS
@@ -360,7 +369,11 @@ public class DbmsLanguage {
         if (is(MSSQL)) {
             return " LTRIM(RTRIM(" + colName + ")) " + notEqual() + " '' ";
         }
-        // default is OK for MySQL, Oracle
+        // oracle does not currently distinguish between blank and null
+        if (is(ORACLE)) {
+            return " TRIM(" + colName + ") " + isNull();
+        }
+        // default is OK for MySQL
         return " TRIM(" + colName + ") " + notEqual() + " '' ";
     }
 

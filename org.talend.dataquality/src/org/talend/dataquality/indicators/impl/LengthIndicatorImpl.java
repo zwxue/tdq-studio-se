@@ -163,8 +163,15 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
         if (!checkResults(objects, expectedSize)) {
             return false;
         }
-        Long c = Long.valueOf(String.valueOf(objects.get(0)[0]));
-        this.setLength(c);
+        Object lLength = objects.get(0)[0];
+        if (lLength == null) {
+            // http://www.talendforge.org/bugs/view.php?id=4783
+            // Oracle treats empty strings as null values
+            this.setLength(0L);
+        } else {
+            Long c = Long.valueOf(String.valueOf(lLength));
+            this.setLength(c);
+        }
         return true;
     }
 
