@@ -76,14 +76,6 @@ public final class ReportHelper {
         return report;
     }
 
-    public static void setHeader(TdReport report, String header) {
-        // TODO scorreia set header in the report
-    }
-
-    public static void setFooter(TdReport report, String footer) {
-        // TODO scorreia set footer in the report
-    }
-
     /**
      * Method "mustRefreshAllAnalyses".
      * 
