@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
@@ -362,7 +361,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      */
     protected CheckboxTreeViewer createFirstPart(Composite parent) {
         if (fContainerMode) {
-            fViewer = new ContainerCheckedTreeViewer(parent, SWT.BORDER);
+            fViewer = new ColumnSelectionViewer(parent, SWT.BORDER);
             // {
             //
             // protected void handleTreeExpand(TreeEvent event) {
