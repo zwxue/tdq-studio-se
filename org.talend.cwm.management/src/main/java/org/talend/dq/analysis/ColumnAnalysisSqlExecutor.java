@@ -43,6 +43,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateGrain;
@@ -50,11 +51,15 @@ import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.MaxValueIndicator;
+import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
+import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.collections.MultiMapHelper;
+import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -598,12 +603,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private String getCompletedStringForQuantiles(Indicator indicator, Expression sqlExpression, String colName, String table,
             List<String> whereExpression) throws AnalysisExecutionException {
         // first, count nb lines
-        String catalog = getCatalogName(indicator.getAnalyzedElement());
-        // FIXME scorreia get schema
-        long count = getCount(cachedAnalysis, colName, table, catalog, whereExpression);
+        String catalogOrSchema = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+        long count = getCount(cachedAnalysis, colName, table, catalogOrSchema, whereExpression);
         if (count == -1) {
             throw new AnalysisExecutionException("Got an invalid result set when evaluating row count for column "
-                    + dbms().toQualifiedName(catalog, null, colName));
+                    + dbms().toQualifiedName(catalogOrSchema, null, colName));
         }
 
         Long midleCount = getLimitFirstArg(indicator, count);
@@ -814,8 +818,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
         }
 
+        Connection connection = trc.getObject();
         try {
-            Connection connection = trc.getObject();
+            // store map of element to each indicator used for computation (leaf indicator)
             Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
 
             // execute the sql statement for each indicator
@@ -827,7 +832,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     continue;
                 }
                 // set the connection's catalog
-                String catalogName = getCatalogName(indicator.getAnalyzedElement());
+                String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
                 if (catalogName != null) { // check whether null argument can be given
                     changeCatalog(catalogName, connection);
                 }
@@ -868,12 +873,35 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         ind.setNullCount(nullCount.getNullCount());
                     }
                 }
-
             }
+
+            // --- set the data threshold of the children of the BoxIndicators
+            EList<Indicator> allIndicators = analysis.getResults().getIndicators();
+            for (Indicator indicator : allIndicators) {
+                if (IndicatorsPackage.eINSTANCE.getBoxIndicator().equals(indicator.eClass())) {
+                    BoxIndicator boxIndicator = (BoxIndicator) indicator;
+                    String[] dataThreshold = IndicatorHelper.getDataThreshold(boxIndicator);
+
+                    RangeIndicator rangeIndicator = boxIndicator.getRangeIndicator();
+                    if (rangeIndicator != null) {
+                        MinValueIndicator lowerValue = rangeIndicator.getLowerValue();
+                        if (lowerValue != null && dataThreshold[0] != null) {
+                            IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], null);
+                        }
+                        MaxValueIndicator upperValue = rangeIndicator.getUpperValue();
+                        if (upperValue != null && dataThreshold[1] != null) {
+                            IndicatorHelper.setDataThreshold(upperValue, null, dataThreshold[1]);
+                        }
+                    }
+                }
+            }
+
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
+        } finally {
+            ConnectionUtils.closeConnection(connection);
         }
         return ok;
     }
@@ -921,7 +949,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param analyzedElement
      * @return the catalog or schema quoted name
      */
-    private String getCatalogName(ModelElement analyzedElement) {
+    private String getCatalogOrSchemaName(ModelElement analyzedElement) {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
             log.error("No schema found for column " + analyzedElement.getName());
@@ -938,7 +966,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return the catalog or schema quoted name
      */
     private String getQuotedCatalogName(ModelElement analyzedElement) {
-        return quote(this.getCatalogName(analyzedElement));
+        return quote(this.getCatalogOrSchemaName(analyzedElement));
     }
 
     /**
@@ -953,7 +981,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws SQLException
      */
     private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
-        String cat = getCatalogName(indicator.getAnalyzedElement());
+        String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
 
         // give result to indicator so that it handles the results

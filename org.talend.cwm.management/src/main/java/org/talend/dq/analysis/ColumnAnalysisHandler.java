@@ -367,7 +367,7 @@ public class ColumnAnalysisHandler {
     }
 
     public String getExecuteDuration() {
-        return resultMetadata.getExecutionDuration() / 100 + " s";
+        return resultMetadata.getExecutionDuration() / 1000.0d + " s";
     }
 
     public String getExecuteNumber() {

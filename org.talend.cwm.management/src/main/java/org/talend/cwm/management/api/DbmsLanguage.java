@@ -60,6 +60,8 @@ public class DbmsLanguage {
 
     private static final String DB2 = "DB2";
 
+    private static final String SYBASE = "SYBASE";
+
     /**
      * Ansi SQL.
      */
@@ -488,6 +490,9 @@ public class DbmsLanguage {
         if (is(MSSQL)) {
             return "DATEPART(" + dateGrain.getName() + " , " + colName + ") ";
         }
+
+        // TODO sybase, DB2, Postgresql
+
         // ANSI SQL, MySQL, Oracle
         return " EXTRACT(" + dateGrain + from() + colName + ") ";
     }
@@ -580,7 +585,7 @@ public class DbmsLanguage {
 
         if (is(POSTGRESQL)) {
             functions.put("TRIM", 1);
-
+            functions.put("CHAR_LENGTH", 1);
         }
 
         if (is(MSSQL)) {
@@ -594,7 +599,11 @@ public class DbmsLanguage {
 
         if (is(DB2)) {
             functions.put("TRIM", 1);
+            functions.put("LENGTH", 1);
+        }
 
+        if (is(SYBASE)) {
+            // TODO
         }
 
         return functions;
@@ -858,7 +867,7 @@ public class DbmsLanguage {
         if (is(MYSQL)) {
             return true;
         }
-        // else Oracle, MSSQL
+        // else Oracle, MSSQL, DB2, Postgresql
         return false;
     }
 
