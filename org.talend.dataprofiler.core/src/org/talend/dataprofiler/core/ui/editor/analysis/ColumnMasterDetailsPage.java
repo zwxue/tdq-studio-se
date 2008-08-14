@@ -29,6 +29,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -144,25 +145,26 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         this.form = managedForm.getForm();
         Composite body = form.getBody();
 
-        // TableWrapLayout layout = new TableWrapLayout();
-        body.setLayout(new GridLayout(2, false));
+        body.setLayout(new GridLayout());
+        SashForm sForm = new SashForm(body, SWT.NULL);
+        sForm.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.BEGINNING));
 
-        topComp = toolkit.createComposite(body);
-        GridData anasisData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-
-        topComp.setLayoutData(anasisData);
-        topComp.setLayout(new GridLayout(1, false));
+        topComp = toolkit.createComposite(sForm);
+        topComp.setLayoutData(new GridData(GridData.BEGINNING));
+        topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
         form.setText("Column Analysis");
         metadataSection.setText("Analysis Metadata");
         metadataSection.setDescription("Set the properties of analysis.");
-        createAnalysisColumnsSection(form, topComp);
-        createDataFilterSection(form, topComp);
-        Composite previewComp = toolkit.createComposite(body);
-        GridData previewData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 
-        previewComp.setLayoutData(previewData);
+        createAnalysisColumnsSection(form, topComp);
+
+        createDataFilterSection(form, topComp);
+
+        Composite previewComp = toolkit.createComposite(sForm);
+        previewComp.setLayoutData(new GridData(GridData.BEGINNING));
         previewComp.setLayout(new GridLayout());
+
         createPreviewSection(form, previewComp);
 
         GridData gdBtn = new GridData();
