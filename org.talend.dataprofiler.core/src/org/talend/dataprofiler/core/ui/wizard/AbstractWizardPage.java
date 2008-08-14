@@ -16,6 +16,7 @@ import java.util.EventListener;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.WizardPage;
+import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 
 /**
@@ -25,17 +26,17 @@ public abstract class AbstractWizardPage extends WizardPage {
 
     // ----message define----
 
-    public static final String MSG_EMPTY = "some fieldes are empty!";
+    public static final String MSG_EMPTY = UIMessages.MSG_EMPTY_FIELD;
 
-    public static final String MSG_ONLY_CHAR = "this field just allowed to input character text!";
+    public static final String MSG_ONLY_CHAR = UIMessages.MSG_ONLY_CHAR;
 
-    public static final String MSG_ONLY_NUMBER = "this field just allowed to input numberic text!";
+    public static final String MSG_ONLY_NUMBER = UIMessages.MSG_ONLY_NUMBER;
 
-    public static final String MSG_ONLY_DATE = "this field just allowed to input date formate text!";
+    public static final String MSG_ONLY_DATE = UIMessages.MSG_ONLY_DATE;
 
-    public static final String MSG_INVALID = "this field is invalid!";
+    public static final String MSG_INVALID = UIMessages.MSG_INVALID_FIELD;
 
-    public static final String MSG_OK = "your input is valid!";
+    public static final String MSG_OK = UIMessages.MSG_VALID_FIELD;
 
     private static ConnectionParameter connectionParams;
 

@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
 
@@ -32,6 +33,8 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholds
  * DOC zqin class global comment. Detailled comment
  */
 public class DataThresholdsForm extends AbstractIndicatorForm {
+
+    private static final String LOWER_LESS_HIGHER = UIMessages.MSG_LOWER_LESS_HIGHER;
 
     private Text lowerText, higherText;
 
@@ -101,7 +104,7 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
                 if (!lowerStr.equals("") && !CheckValueUtils.isNumberWithNegativeValue(lowerStr)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
-                    updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
+                    updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                 }
@@ -120,7 +123,7 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
                 if (!higherStr.equals("") && !CheckValueUtils.isNumberWithNegativeValue(higherStr)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
-                    updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
+                    updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                 }

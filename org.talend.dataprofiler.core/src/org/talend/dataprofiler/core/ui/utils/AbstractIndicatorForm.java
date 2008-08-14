@@ -35,17 +35,17 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     // ----message define----
 
-    public static final String MSG_EMPTY = "some fieldes are empty!";
+    public static final String MSG_EMPTY = UIMessages.MSG_EMPTY_FIELD;
 
-    public static final String MSG_ONLY_CHAR = "this field just allowed to input character text!";
+    public static final String MSG_ONLY_CHAR = UIMessages.MSG_ONLY_CHAR;
 
-    public static final String MSG_ONLY_NUMBER = "this field just allowed to input numberic text!";
+    public static final String MSG_ONLY_NUMBER = UIMessages.MSG_ONLY_NUMBER;
 
-    public static final String MSG_ONLY_REAL_NUMBER = "this field just allowed to input real numberic text!";
+    public static final String MSG_ONLY_REAL_NUMBER = UIMessages.MSG_ONLY_REAL_NUMBER;
 
-    public static final String MSG_ONLY_DATE = "this field just allowed to input date formate text!";
+    public static final String MSG_ONLY_DATE = UIMessages.MSG_ONLY_DATE;
 
-    public static final String MSG_OK = "your input is valid!";
+    public static final String MSG_OK = UIMessages.MSG_VALID_FIELD;
 
     /**
      * DOC zqin AbstractIndicatorForm constructor comment.
