@@ -25,6 +25,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
@@ -64,7 +65,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private Analysis analysis = null;
 
-    private boolean toolbar;
+    private boolean toolbar = false;
 
     private ColumnMasterDetailsPage page;
 
@@ -76,6 +77,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public RunAnalysisAction(boolean toolbar) {
         this();
         this.toolbar = toolbar;
+        setActionDefinitionId("org.talend.dataprofiler.core.runAnalysis");
     }
 
     /*
@@ -86,12 +88,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
 
-        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-
+        IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        AnalysisEditor editor = (AnalysisEditor) activeEditor;
         if (currentSelection == null) {
             if (editor != null) {
                 page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                if (page == null) {
+                    return;
+                }
                 FileEditorInput input = (FileEditorInput) page.getEditorInput();
                 if (page.isDirty()) {
                     try {
@@ -118,6 +122,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             editor.setRefreshResultPage(true);
         }
 
+        if (analysis == null) {
+            return;
+        }
         AnalysisType analysisType = AnalysisHelper.getAnalysisType(analysis);
         AnalysisExecutor exec = null;
         switch (analysisType) {
@@ -203,7 +210,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
-
         run();
     }
 
