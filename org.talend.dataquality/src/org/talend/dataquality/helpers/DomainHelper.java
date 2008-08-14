@@ -268,7 +268,7 @@ public class DomainHelper {
             }
             if (!exists) {
                 // create pattern and set into the data filter
-                addPatternToDomain(domain, tableFilter, tablePattern);
+                addPatternToDomain(domain, tableFilter, tablePattern, type);
             }
             return domain;
         }
@@ -276,7 +276,7 @@ public class DomainHelper {
         Domain domain = DomainFactory.eINSTANCE.createDomain();
         dataFilters.add(domain);
         domain.setName(ANALYSIS_DATA_FILTER);
-        addPatternToDomain(domain, tableFilter, tablePattern);
+        addPatternToDomain(domain, tableFilter, tablePattern, type);
         return domain;
     }
 
@@ -324,9 +324,9 @@ public class DomainHelper {
      * @param tableFilter
      * @param tablePattern
      */
-    private static void addPatternToDomain(Domain domain, RegularExpression tableFilter, String tablePattern) {
+    private static void addPatternToDomain(Domain domain, RegularExpression tableFilter, String tablePattern, String type) {
         Pattern pattern = createPattern(tablePattern);
-        pattern.setName(TABLE_PATTERN);
+        pattern.setName(type);
         pattern.getComponents().add(tableFilter);
         domain.getPatterns().add(pattern);
     }
