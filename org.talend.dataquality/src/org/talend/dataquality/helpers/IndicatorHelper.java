@@ -13,6 +13,7 @@
 package org.talend.dataquality.helpers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -60,6 +61,12 @@ public final class IndicatorHelper {
         validDomain.getRanges().add(rangeRestriction);
     }
 
+    /**
+     * Method "getDataThreshold".
+     * 
+     * @param indicator
+     * @return an array with 2 strings (or nulls)
+     */
     public static String[] getDataThreshold(Indicator indicator) {
         IndicatorParameters parameters = indicator.getParameters();
         if (parameters == null) {
@@ -167,4 +174,31 @@ public final class IndicatorHelper {
         return leafIndicators;
     }
 
+    /**
+     * Method "getExpectedValue".
+     * 
+     * @param indicator usually a mode indicator
+     * @return the expected value of the indicator
+     */
+    public static String getExpectedValue(Indicator indicator) {
+        IndicatorParameters parameters = indicator.getParameters();
+        if (parameters == null) {
+            return null;
+        }
+        Domain indValidDomain = parameters.getIndicatorValidDomain();
+        if (indValidDomain == null) {
+            return null;
+        }
+        return DomainHelper.getIndicatorExpectedValue(Collections.singleton(indValidDomain));
+    }
+
+    public static void setIndicatorExpectedValue(IndicatorParameters parameters, String value) {
+        assert parameters != null;
+        Domain validDomain = parameters.getIndicatorValidDomain();
+        if (validDomain == null) {
+            validDomain = DomainHelper.createDomain(DomainHelper.INDICATOR_EXPECTED_VALUE);
+            parameters.setIndicatorValidDomain(validDomain);
+        }
+        DomainHelper.setIndicatorExpectedValuePattern(Collections.singleton(validDomain), value);
+    }
 }
