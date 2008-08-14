@@ -107,6 +107,9 @@ public class CreatePatternWizard extends Wizard {
         TaggedValueHelper.setPurpose(AbstractWizardPage.getConnectionParams().getPurpose(), pattern);
         TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(AbstractWizardPage.getConnectionParams().getStatus()));
 
+        // PTODO qzhang fixed bug 4296: set the Pattern is valid
+        TaggedValueHelper.setValidStatus(true, pattern);
+
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
         Expression expression = CoreFactory.eINSTANCE.createExpression();
         String expr = mPage2.getNameText().getText();
