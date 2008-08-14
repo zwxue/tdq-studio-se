@@ -90,7 +90,7 @@ public abstract class AbstractAnalysisWizard extends Wizard {
         return true;
     }
 
-    private IFile createEmptyAnalysisFile() throws DataprofilerCoreException {
+    protected IFile createEmptyAnalysisFile() throws DataprofilerCoreException {
         AnalysisBuilder analysisBuilder = new AnalysisBuilder();
         boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, analysisType);
         if (!analysisInitialized) {

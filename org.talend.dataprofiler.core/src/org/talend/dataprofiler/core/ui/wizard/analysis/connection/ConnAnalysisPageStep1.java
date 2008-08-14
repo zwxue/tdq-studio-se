@@ -69,11 +69,10 @@ public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
         labelTable.setText("Table name filter");
         tableFilter = new Text(subContainer, SWT.BORDER);
         tableFilter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        tableFilter.setText("%");
         tableFilter.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                ((ConnectionAnalysisParameter) getConnectionParams()).setViewFilter(tableFilter.getText());
+                ((ConnectionAnalysisParameter) getConnectionParams()).setTableFilter(tableFilter.getText());
 
             }
         });
@@ -82,7 +81,6 @@ public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
         labelView.setText("View name filter");
         viewFilter = new Text(subContainer, SWT.BORDER);
         viewFilter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        viewFilter.setText("%");
         viewFilter.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {

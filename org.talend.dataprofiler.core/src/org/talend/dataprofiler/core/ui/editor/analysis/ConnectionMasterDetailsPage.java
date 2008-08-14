@@ -58,9 +58,6 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
-import org.talend.dataquality.domain.DomainFactory;
-import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -75,17 +72,11 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
 
     private static Logger log = Logger.getLogger(ConnectionMasterDetailsPage.class);
 
-    private static final String TABLE_PATTERN_NAME = "TABLE_PATTERN_NAME";
-
-    // private static final String VIEW_PATTERN_NAME = "VIEW_PATTERN_NAME";
-
     Analysis connectionAnalysis;
 
     private Text tableFilterText;
 
     private Text viewFilterText;
-
-    private Domain domain;
 
     private TdDataProvider tdDataProvider;
 
@@ -115,26 +106,27 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
     private void createAnalysisParamSection(ScrolledForm form, Composite topComp) {
         Section statisticalSection = this.createSection(form, topComp, "Analysis Parameters", false, null);
         Composite sectionClient = toolkit.createComposite(statisticalSection);
-        Pattern tablePattern = null;
-        Pattern viewPattern = null;
-        if (this.connectionAnalysis.getParameters().getDataFilter().size() > 0) {
-            domain = connectionAnalysis.getParameters().getDataFilter().get(0);
-            for (Pattern patttern : domain.getPatterns()) {
-                if (patttern.getName().equals(TABLE_PATTERN_NAME)) {
-                    tablePattern = patttern;
-                } else {
-                    viewPattern = patttern;
-                }
-            }
-        }
+        // Pattern tablePattern = null;
+        // Pattern viewPattern = null;
+        // if (this.connectionAnalysis.getParameters().getDataFilter().size() > 0) {
+        // domain = connectionAnalysis.getParameters().getDataFilter().get(0);
+        // for (Pattern patttern : domain.getPatterns()) {
+        // if (patttern.getName().equals(TABLE_PATTERN_NAME)) {
+        // tablePattern = patttern;
+        // } else {
+        // viewPattern = patttern;
+        // }
+        // }
+        // }
 
         sectionClient.setLayout(new GridLayout(2, false));
         Label tableFilterLabel = new Label(sectionClient, SWT.None);
         tableFilterLabel.setText("Filter on tables:");
         tableFilterLabel.setLayoutData(new GridData());
         tableFilterText = new Text(sectionClient, SWT.BORDER);
-        tableFilterText.setText(tablePattern == null ? PluginConstant.EMPTY_STRING : ((RegularExpressionImpl) tablePattern
-                .getComponents().get(0)).getExpression().getBody());
+        EList<Domain> dataFilters = connectionAnalysis.getParameters().getDataFilter();
+        String tablePattern = DomainHelper.getTablePattern(dataFilters);
+        tableFilterText.setText(tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(tableFilterText);
         tableFilterText.addModifyListener(new ModifyListener() {
 
@@ -147,8 +139,8 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         viewFilterLabel.setText("Filter on views: ");
         viewFilterLabel.setLayoutData(new GridData());
         viewFilterText = new Text(sectionClient, SWT.BORDER);
-        viewFilterText.setText(viewPattern == null ? PluginConstant.EMPTY_STRING : ((RegularExpressionImpl) viewPattern
-                .getComponents().get(0)).getExpression().getBody());
+        String viewPattern = DomainHelper.getViewPattern(dataFilters);
+        viewFilterText.setText(viewPattern == null ? PluginConstant.EMPTY_STRING : viewPattern);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(viewFilterText);
         viewFilterText.addModifyListener(new ModifyListener() {
 
@@ -265,20 +257,20 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             indicatorList = new ArrayList<SchemaIndicator>();
         }
         List<TdCatalog> catalogs = DataProviderHelper.getTdCatalogs(tdDataProvider);
-        // List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdDataProvider);
+        List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdDataProvider);
         AbstractStatisticalViewerProvider provider;
-        // if (catalogs.size() > 0 && tdSchemas.size() > 0) {
-        // createSchemaTableColumns(table);
-        // provider = new CatalogViewerProvier();
-        // } else {
-        if (catalogs.size() > 0) {
-            createCatalogTableColumns(table);
+        if (catalogs.size() > 0 && tdSchemas.size() > 0) {
+            createSchemaTableColumns(table);
             provider = new CatalogViewerProvier();
         } else {
-            createSchemaTableColumns(table);
-            provider = new SchemaViewerProvier();
+            if (catalogs.size() > 0) {
+                createCatalogTableColumns(table);
+                provider = new CatalogViewerProvier();
+            } else {
+                createSchemaTableColumns(table);
+                provider = new SchemaViewerProvier();
+            }
         }
-        // }
         statisticalViewer.setLabelProvider(provider);
         statisticalViewer.setContentProvider(provider);
         statisticalViewer.setInput(indicatorList);
@@ -357,20 +349,13 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
     }
 
     public void saveAnalysis() throws DataprofilerCoreException {
-        if (this.domain == null) {
-            domain = DomainFactory.eINSTANCE.createDomain();
-            domain.setName(DomainHelper.ANALYSIS_DATA_FILTER);
-        }
-        List<Domain> domains = new ArrayList<Domain>();
-        domains.add(domain);
+        EList<Domain> dataFilters = connectionAnalysis.getParameters().getDataFilter();
         if (!this.tableFilterText.getText().equals(PluginConstant.EMPTY_STRING)) {
-            DomainHelper.setDataFilterTablePattern(domains, tableFilterText.getText());
+            DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());
         }
         if (!this.viewFilterText.getText().equals(PluginConstant.EMPTY_STRING)) {
-            DomainHelper.setDataFilterViewPattern(domains, viewFilterText.getText());
+            DomainHelper.setDataFilterViewPattern(dataFilters, viewFilterText.getText());
         }
-
-        connectionAnalysis.getParameters().getDataFilter().add(domain);
 
         ReturnCode save = AnaResourceFileHelper.getInstance().save(connectionAnalysis);
         if (save.isOk()) {
