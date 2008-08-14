@@ -100,7 +100,7 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
                 if (lowerStr != "" && !CheckValueUtils.isNumberWithNegativeValue(lowerStr)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                } else if (lowerStr != "" && higherStr != "" && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
+                } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
                     updateStatus(IStatus.ERROR, "The lower value must less than the higher.");
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
