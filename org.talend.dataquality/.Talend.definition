@@ -4,6 +4,11 @@
     <taggedValue xmi:id="_yboaoDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of rows"/>
     <taggedValue xmi:id="_yboaoTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records"/>
     <sqlGenericExpression xmi:id="_ccHDwBF2Ed2PKb6nEJEvhw" body="SELECT COUNT(*) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_wmX5MGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_xrl00GoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_yrS-UGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_0S51UGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="DB2"/>
+    <sqlGenericExpression xmi:id="_1JPAYGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0BF2Ed2PKb6nEJEvhw" name="Distinct Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Distinct Count">
     <taggedValue xmi:id="_ybpowDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of distinct rows"/>
@@ -11,6 +16,9 @@
     <sqlGenericExpression xmi:id="_ybqP0Th8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybqP0zh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_5DU3YGoAEd20k7biVpOSRw" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_6OtFYGoAEd20k7biVpOSRw" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="DB2"/>
+    <sqlGenericExpression xmi:id="_7OCbcGoAEd20k7biVpOSRw" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0RF2Ed2PKb6nEJEvhw" name="Unique Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Unique Count">
     <taggedValue xmi:id="_ybq24Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of unique rows (i.e. rows that are not duplicated)"/>
@@ -38,6 +46,7 @@
     <sqlGenericExpression xmi:id="_ybsFBDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) IS NULL" language="Oracle"/>
     <sqlGenericExpression xmi:id="_8IFvYGOeEd2-SIyfZ_Vx6A" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_4Vq50GVjEd2wJomsB-uicA" body="SELECT COUNT({0}) FROM {1}  WHERE LTRIM(RTRIM({0})) = ''" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_Gm-CkGoBEd20k7biVpOSRw" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1BF2Ed2PKb6nEJEvhw" name="Minimal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Minimal Length">
     <taggedValue xmi:id="_ybssEDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
@@ -47,6 +56,7 @@
     <sqlGenericExpression xmi:id="_ybtTIDh8Ed2XmO7pl5Yuyg" body="SELECT MIN(LENGTH({0})) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_dNWDkGOgEd2-SIyfZ_Vx6A" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_Z3slMGe4Ed2m7a3evIL7Lg" body="SELECT MIN(DATALENGTH({0})) FROM {1}" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_Td74UGndEd2IVfUQFXDwvw" body="SELECT MIN(LENGTH({0})) FROM {1}" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1RF2Ed2PKb6nEJEvhw" name="Maximal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Maximal Length">
     <taggedValue xmi:id="_ybtTITh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the maximal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
@@ -56,6 +66,7 @@
     <sqlGenericExpression xmi:id="_ybt6Mjh8Ed2XmO7pl5Yuyg" body="SELECT MAX(LENGTH({0})) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_hi5ukGOgEd2-SIyfZ_Vx6A" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_frLmwGe4Ed2m7a3evIL7Lg" body="SELECT MAX(DATALENGTH({0})) FROM {1}" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_Wg8WUGndEd2IVfUQFXDwvw" body="SELECT MAX(LENGTH({0})) FROM {1}" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4BF2Ed2PKb6nEJEvhw" name="Average Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Average Length">
     <taggedValue xmi:id="_ybt6Mzh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average length of the field. Parameters can be set to avoid counting blank data or null data."/>
@@ -65,11 +76,12 @@
     <sqlGenericExpression xmi:id="_ybuhQzh8Ed2XmO7pl5Yuyg" body="SELECT SUM(LENGTH({0})), COUNT({0}) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_lSoIoGOgEd2-SIyfZ_Vx6A" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_kQeW4Ge4Ed2m7a3evIL7Lg" body="SELECT SUM(DATALENGTH({0})), COUNT({0}) FROM {1}" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_aPEN4GndEd2IVfUQFXDwvw" body="SELECT SUM(LENGTH({0})), COUNT({0}) FROM {1}" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4RF2Ed2PKb6nEJEvhw" name="Mode" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Mode">
     <taggedValue xmi:id="_ybvIUDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the mode (most probable value). For numerical data or continuous data, bins can be set in the parameters of this indicator. It is different from the average and from the median. Generalization of it is an histogram. It is good for addressing categorical attributes."/>
     <taggedValue xmi:id="_ybvIUTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the most frequent value"/>
-    <sqlGenericExpression xmi:id="_ybvIUjh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY 1 ORDER BY 2 DESC " language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybvIUjh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="SQL"/>
     <sqlGenericExpression xmi:id="_ybvIUzh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY 1 ORDER BY 2 DESC " language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybvIVDh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="Oracle"/>
   </indicatorDefinitions>
