@@ -12,10 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -32,6 +34,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AbstractFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
@@ -44,6 +47,8 @@ import org.talend.dataprofiler.core.ui.views.filters.AbstractViewerFilter;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.views.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.views.filters.ReportingFilter;
+import org.talend.dataquality.analysis.Analysis;
+import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
 /**
  * @author rli
@@ -124,6 +129,16 @@ public class DQRespositoryView extends CommonNavigator {
 
                         }
 
+                    }
+
+                    if (obj instanceof Analysis) {
+                        Analysis analysis = (Analysis) obj;
+                        List<RenderedObject> tempList = new ArrayList<RenderedObject>();
+                        tempList.add(analysis);
+                        IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList).get(0);
+
+                        CorePlugin.getDefault()
+                                .openEditor(file, "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor");
                     }
                 }
                 super.mouseDoubleClick(e);
