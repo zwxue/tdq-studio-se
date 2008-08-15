@@ -338,6 +338,17 @@
                   </test>
                </or></and>
          </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewTableProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewTableProvider">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.talend.cwm.relational.TdTable">
+               </instanceof>
+            </and>
+         </enablement>
       </actionProvider>        
   </extension>
     
