@@ -26,6 +26,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -43,6 +46,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdCatalog;
@@ -59,6 +63,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.utils.sugars.ReturnCode;
@@ -79,6 +84,10 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
     private Text viewFilterText;
 
     private TdDataProvider tdDataProvider;
+
+    private String latestTableFilterValue;
+
+    private String latestViewFilterValue;
 
     public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -126,7 +135,8 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         tableFilterText = new Text(sectionClient, SWT.BORDER);
         EList<Domain> dataFilters = connectionAnalysis.getParameters().getDataFilter();
         String tablePattern = DomainHelper.getTablePattern(dataFilters);
-        tableFilterText.setText(tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern);
+        latestTableFilterValue = tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern;
+        tableFilterText.setText(latestTableFilterValue);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(tableFilterText);
         tableFilterText.addModifyListener(new ModifyListener() {
 
@@ -140,7 +150,8 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         viewFilterLabel.setLayoutData(new GridData());
         viewFilterText = new Text(sectionClient, SWT.BORDER);
         String viewPattern = DomainHelper.getViewPattern(dataFilters);
-        viewFilterText.setText(viewPattern == null ? PluginConstant.EMPTY_STRING : viewPattern);
+        latestViewFilterValue = viewPattern == null ? PluginConstant.EMPTY_STRING : viewPattern;
+        viewFilterText.setText(latestViewFilterValue);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(viewFilterText);
         viewFilterText.addModifyListener(new ModifyListener() {
 
@@ -187,13 +198,6 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         leftLabel.setText("Connected as: " + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent));
         leftLabel.setLayoutData(new GridData());
 
-        // EList<Indicator> indicators = connectionAnalysis.getResults().getIndicators();
-        // ConnectionIndicator connectionIndicator = null;
-        // if (indicators.size() > 0) {
-        // connectionIndicator = (ConnectionIndicator) indicators.get(0);
-        // }
-        // int tableCount = connectionIndicator.getTableCount();
-
         List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tdDataProvider);
         List<TdSchema> tdSchema = DataProviderHelper.getTdSchema(tdDataProvider);
         leftLabel = new Label(leftComp, SWT.NONE);
@@ -212,7 +216,10 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         rightLabel.setText("Execution date: " + getFormatDateStr(resultMetadata.getExecutionDate()));
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
+        rightLabel.setText("Execution Duration: " + resultMetadata.getExecutionDuration() / 1000.0d + " s");
+        rightLabel.setLayoutData(new GridData());
 
+        rightLabel = new Label(rightComp, SWT.NONE);
         String executeStatus = (resultMetadata.isLastRunOk() ? "success" : "failure");
         rightLabel.setText("Execution status: "
                 + (resultMetadata.getExecutionNumber() == 0 ? PluginConstant.EMPTY_STRING : executeStatus));
@@ -241,27 +248,44 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         Composite sectionClient = toolkit.createComposite(statisticalSection);
         sectionClient.setLayout(new GridLayout());
 
-        TableViewer statisticalViewer = new TableViewer(sectionClient, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
+        TableViewer statisticalViewer = new TableViewer(sectionClient, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
                 | SWT.FULL_SELECTION);
         Table table = statisticalViewer.getTable();
         table.setHeaderVisible(true);
         table.setBackgroundMode(SWT.INHERIT_FORCE);
         table.setLinesVisible(true);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(table);
-        List<? extends SchemaIndicator> indicatorList = null;
+        List<CatalogIndicator> indicatorList = null;
         if (this.connectionAnalysis.getResults().getIndicators().size() > 0) {
             ConnectionIndicator conIndicator = (ConnectionIndicator) connectionAnalysis.getResults().getIndicators().get(0);
             indicatorList = conIndicator.getCatalogIndicators();
-            // indicatorList = conIndicator.getSchemaIndicators();
         } else {
-            indicatorList = new ArrayList<SchemaIndicator>();
+            indicatorList = new ArrayList<CatalogIndicator>();
         }
         List<TdCatalog> catalogs = DataProviderHelper.getTdCatalogs(tdDataProvider);
-        List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdDataProvider);
+        boolean containSchema = false;
+        for (TdCatalog catalog : catalogs) {
+            List<TdSchema> schemas = CatalogHelper.getSchemas(catalog);
+            if (schemas.size() > 0) {
+                containSchema = true;
+                break;
+            }
+        }
         AbstractStatisticalViewerProvider provider;
-        if (catalogs.size() > 0 && tdSchemas.size() > 0) {
-            createSchemaTableColumns(table);
-            provider = new CatalogViewerProvier();
+        if (catalogs.size() > 0 && containSchema) {
+            createCatalogSchemaColumns(table);
+            provider = new CatalogSchemaViewerProvier();
+            final TableViewer createSecondStatisticalTable = createSecondStatisticalTable(sectionClient);
+            statisticalViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                public void selectionChanged(SelectionChangedEvent event) {
+                    StructuredSelection selection = (StructuredSelection) event.getSelection();
+                    CatalogIndicator firstElement = (CatalogIndicator) selection.getFirstElement();
+                    createSecondStatisticalTable.setInput(firstElement.getSchemaIndicators());
+                    createSecondStatisticalTable.getTable().setVisible(true);
+                }
+
+            });
         } else {
             if (catalogs.size() > 0) {
                 createCatalogTableColumns(table);
@@ -277,6 +301,22 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         sectionClient.layout();
         statisticalSection.setClient(sectionClient);
 
+    }
+
+    private TableViewer createSecondStatisticalTable(Composite parent) {
+        TableViewer secondTableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+        Table table = secondTableViewer.getTable();
+        table.setHeaderVisible(true);
+        table.setBackgroundMode(SWT.INHERIT_FORCE);
+        table.setLinesVisible(true);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(table);
+        ((GridData) table.getLayoutData()).heightHint = 60;
+        createSchemaTableColumns(table);
+        SchemaViewerProvier provider = new SchemaViewerProvier();
+        secondTableViewer.setLabelProvider(provider);
+        secondTableViewer.setContentProvider(provider);
+        table.setVisible(false);
+        return secondTableViewer;
     }
 
     private void createCatalogTableColumns(Table table) {
@@ -350,11 +390,13 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
 
     public void saveAnalysis() throws DataprofilerCoreException {
         EList<Domain> dataFilters = connectionAnalysis.getParameters().getDataFilter();
-        if (!this.tableFilterText.getText().equals(PluginConstant.EMPTY_STRING)) {
+        if (!this.tableFilterText.getText().equals(latestTableFilterValue)) {
             DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());
+            latestTableFilterValue = this.tableFilterText.getText();
         }
-        if (!this.viewFilterText.getText().equals(PluginConstant.EMPTY_STRING)) {
+        if (!this.viewFilterText.getText().equals(latestViewFilterValue)) {
             DomainHelper.setDataFilterViewPattern(dataFilters, viewFilterText.getText());
+            latestViewFilterValue = this.viewFilterText.getText();
         }
 
         ReturnCode save = AnaResourceFileHelper.getInstance().save(connectionAnalysis);
@@ -438,9 +480,6 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         protected String getOtherColumnText(int columnIndex, SchemaIndicator schemaIndicator) {
             String text = PluginConstant.EMPTY_STRING;
             switch (columnIndex) {
-            case 1:
-                text = PluginConstant.EMPTY_STRING + schemaIndicator.getTotalRowCount();
-                return text;
             case 2:
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getTableCount();
                 return text;
@@ -451,6 +490,44 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
                 return text;
             case 5:
                 text = PluginConstant.EMPTY_STRING + schemaIndicator.getIndexCount();
+                return text;
+            default:
+                break;
+            }
+            return text;
+        }
+    }
+
+    /**
+     * The provider for display the data of catalog(contain schemas) table viewer.
+     */
+    class CatalogSchemaViewerProvier extends AbstractStatisticalViewerProvider {
+
+        @Override
+        protected String getOtherColumnText(int columnIndex, SchemaIndicator schemaIndicator) {
+            String text = PluginConstant.EMPTY_STRING;
+            CatalogIndicator catalogIndicator = null;
+            if (schemaIndicator instanceof CatalogIndicator) {
+                catalogIndicator = (CatalogIndicator) schemaIndicator;
+            } else {
+                return PluginConstant.EMPTY_STRING;
+            }
+            switch (columnIndex) {
+            case 2:
+                text = PluginConstant.EMPTY_STRING + catalogIndicator.getSchemaCount();
+                return text;
+            case 3:
+                return text;
+            case 4:
+                text = PluginConstant.EMPTY_STRING + catalogIndicator.getTableCount();
+                return text;
+            case 5:
+                text = PluginConstant.EMPTY_STRING + getRowCountPerTable(catalogIndicator);
+                return text;
+            case 6:
+                return PluginConstant.EMPTY_STRING + catalogIndicator.getKeyCount();
+            case 7:
+                text = PluginConstant.EMPTY_STRING + catalogIndicator.getIndexCount();
                 return text;
             default:
                 break;
