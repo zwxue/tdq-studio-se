@@ -172,6 +172,7 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
                         SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
                         evalSchemaIndicLow(catalogIndic, schemaIndic, tdCatalog, tdSchema, ok);
                     }
+                    catalogIndic.setSchemaCount(schemas.size());
                     // increment schema count
                     this.connectionIndicator.setSchemaCount(this.connectionIndicator.getSchemaCount() + schemas.size());
                 }
