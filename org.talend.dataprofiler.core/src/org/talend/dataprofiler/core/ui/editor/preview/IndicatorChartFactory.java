@@ -212,7 +212,6 @@ public class IndicatorChartFactory {
 
         DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 
-        boolean isValide = true;
         if (isCreate) {
             Map<IndicatorEnum, Double> map = new HashMap<IndicatorEnum, Double>();
 
@@ -220,9 +219,8 @@ public class IndicatorChartFactory {
 
                 IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
 
-                if (indicatorUnit.isExcuted() && isValide) {
-                    String strValue = String.valueOf(indicatorUnit.getValue());
-                    double doubleValue = Double.valueOf(strValue);
+                if (indicatorUnit.isExcuted()) {
+                    double doubleValue = Double.valueOf(indicatorUnit.getValue().toString());
                     map.put(indicatorUnit.getType(), doubleValue);
                 }
             }

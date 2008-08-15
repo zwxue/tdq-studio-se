@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
-import java.text.DecimalFormat;
-
+import org.talend.dataprofiler.core.ui.utils.TextFormatFactory;
 import org.talend.dataquality.indicators.Indicator;
 
 /**
@@ -46,15 +45,14 @@ public class ChartDataEntity {
     }
 
     public String getPersent() {
-        DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
-        format.applyPattern("0.00%");
 
         if (percent != null) {
-            return percent.equals("0") ? "0" : format.format(Double.valueOf(percent));
+            return percent.equals("0") ? "0" : TextFormatFactory.createStandardPercent(percent);
         } else {
-            percent = format.format(Double.parseDouble(getValue()) / indicator.getCount().doubleValue());
+            double d = Double.parseDouble(getValue()) / indicator.getCount().doubleValue();
+            percent = TextFormatFactory.createStandardPercent(d);
 
-            return percent.equals("0") ? "0" : percent;
+            return percent.equals(0) ? "0" : percent;
         }
     }
 

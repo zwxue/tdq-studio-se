@@ -147,10 +147,10 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
         body.setLayout(new GridLayout());
         SashForm sForm = new SashForm(body, SWT.NULL);
-        sForm.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.BEGINNING));
+        sForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         topComp = toolkit.createComposite(sForm);
-        topComp.setLayoutData(new GridData(GridData.BEGINNING));
+        topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
         form.setText("Column Analysis");
@@ -162,7 +162,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         createDataFilterSection(form, topComp);
 
         Composite previewComp = toolkit.createComposite(sForm);
-        previewComp.setLayoutData(new GridData(GridData.BEGINNING));
+        previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         previewComp.setLayout(new GridLayout());
 
         createPreviewSection(form, previewComp);
@@ -241,6 +241,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
         Section section = createSection(form, parent, "Graphics", true, "");
+        section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout());
@@ -350,20 +351,11 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                if (!exComp.isDisposed()) {
-                    exComp.setExpanded(true);
-                }
             }
 
+            exComp.setExpanded(true);
+
             exComp.setClient(comp);
-
-            exComp.addExpansionListener(new ExpansionAdapter() {
-
-                public void expansionStateChanged(ExpansionEvent e) {
-                    form.reflow(true);
-                }
-
-            });
         }
 
         if (!previewChartList.isEmpty()) {
