@@ -26,10 +26,11 @@ import org.eclipse.swt.widgets.CoolBar;
 
 /**
  * SQLEditorToolBar controls the toolbar displayed in the editor.
+ * 
  * @modified John Spackman
  */
 public class SQLEditorToolBar {
-	
+
     private SQLEditorCatalogSwitcher _catalogSwitcher;
 
     private ToolBarManager _catalogToolBarMgr;
@@ -46,14 +47,13 @@ public class SQLEditorToolBar {
 
     // Drop down to switch sessions
     private SQLEditorSessionSwitcher _sessionSwitcher;
-    
+
     // Whether to limit rows and by how much
     private SQLLimitRowsControl _limitRows;
-    
-    private ToolBarManager _sessionToolBarMgr;
-    
-    private LinkedList<AbstractEditorAction> actions = new LinkedList<AbstractEditorAction>();
 
+    private ToolBarManager _sessionToolBarMgr;
+
+    private LinkedList<AbstractEditorAction> actions = new LinkedList<AbstractEditorAction>();
 
     /**
      * Create a new toolbar on the given composite.
@@ -84,10 +84,10 @@ public class SQLEditorToolBar {
         actions.add(new SaveFileAsAction(_editor));
         actions.add(new ClearTextAction(_editor));
         actions.add(new OptionsDropDownAction(_editor, parent));
-        
+
         for (AbstractEditorAction action : actions) {
-        	action.setEnabled(!action.isDisabled());
-        	_defaultToolBarMgr.add(action);
+            action.setEnabled(!action.isDisabled());
+            _defaultToolBarMgr.add(action);
         }
 
         // initialize extension actions
@@ -98,7 +98,7 @@ public class SQLEditorToolBar {
 
         _sessionSwitcher = new SQLEditorSessionSwitcher(editor);
         _sessionToolBarMgr.add(_sessionSwitcher);
-        
+
         _limitRows = new SQLLimitRowsControl(editor);
         _sessionToolBarMgr.add(_limitRows);
 
@@ -121,57 +121,59 @@ public class SQLEditorToolBar {
 
     /**
      * Updates the default actions to reflect their enabled-ness
-     *
+     * 
      */
     private void updateDefaultActions() {
         for (AbstractEditorAction action : actions)
-        	action.setEnabled(!action.isDisabled());
+            action.setEnabled(!action.isDisabled());
         _defaultToolBarMgr.update(true);
     }
 
     /**
      * Called to notify that the editor's session has changed
+     * 
      * @param session The new session (can be null)
      */
     public void onEditorSessionChanged(final Session session) {
-    	if (_editor.getSite() != null && _editor.getSite().getShell() != null && _editor.getSite().getShell().getDisplay() != null)
-	        _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
-	
-	            public void run() {
-			    	if (_coolBar.isDisposed())
-			    		return;
-			    	
-			    	_extensionToolBarMgr.removeAll();
-			        _catalogToolBarMgr.removeAll();
-			    	_catalogSwitcher = null;
-			    	
-			        if (session != null)
-			        	doOnEditorSessionChanged(session);
-			
-			        updateDefaultActions();
-			        
-			        _extensionToolBarMgr.update(true);
-			        _coolBarMgr.update(true);
-			        _coolBar.update();
-	            }
-	        });
+        if (_editor.getSite() != null && _editor.getSite().getShell() != null
+                && _editor.getSite().getShell().getDisplay() != null)
+            _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
+
+                public void run() {
+                    if (_coolBar.isDisposed())
+                        return;
+
+                    _extensionToolBarMgr.removeAll();
+                    _catalogToolBarMgr.removeAll();
+                    _catalogSwitcher = null;
+
+                    if (session != null)
+                        doOnEditorSessionChanged(session);
+
+                    updateDefaultActions();
+
+                    _extensionToolBarMgr.update(true);
+                    _coolBarMgr.update(true);
+                    _coolBar.update();
+                }
+            });
     }
-    
+
     /**
-     * Implementation for onEditorSessionChanged; only called if the new session
-     * is non-null
+     * Implementation for onEditorSessionChanged; only called if the new session is non-null
+     * 
      * @param session The new session (cannot be null)
      */
     private void doOnEditorSessionChanged(Session session) {
         String databaseProductName = null;
         try {
-        	if (session.getUser() == null)
-        		return;
-        	databaseProductName = session.getUser().getMetaDataSession().getDatabaseProductName().toLowerCase().trim();
-        }catch(SQLException e) {
-        	SQLExplorerPlugin.error(e);
-        	MessageDialog.openError(_editor.getSite().getShell(), "Cannot connect", e.getMessage());
-        	return;
+            if (session.getUser() == null)
+                return;
+            databaseProductName = session.getUser().getMetaDataSession().getDatabaseProductName().toLowerCase().trim();
+        } catch (SQLException e) {
+            SQLExplorerPlugin.error(e);
+            MessageDialog.openError(_editor.getSite().getShell(), "Cannot connect", e.getMessage());
+            return;
         }
         IExtensionRegistry registry = Platform.getExtensionRegistry();
         IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "editorAction");
@@ -191,7 +193,7 @@ public class SQLEditorToolBar {
                     String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
                     String imagePath = ces[j].getAttribute("icon");
                     String id = ces[j].getAttribute("id");
-                    
+
                     // check if action is valid for current database product
                     for (int k = 0; k < validProducts.length; k++) {
 
@@ -220,12 +222,12 @@ public class SQLEditorToolBar {
 
                     AbstractEditorAction action = (AbstractEditorAction) ces[j].createExecutableExtension("class");
                     action.setEditor(_editor);
-                    
-                    String fragmentId = id.substring(0, id.indexOf('.', 28));
+
+                    String fragmentId = id.substring(0, id.indexOf('.', 27));
                     if (imagePath != null && imagePath.trim().length() != 0) {
                         action.setImageDescriptor(ImageUtil.getFragmentDescriptor(fragmentId, imagePath));
                     }
-                    
+
                     _extensionToolBarMgr.add(action);
 
                 } catch (Throwable ex) {
@@ -245,38 +247,39 @@ public class SQLEditorToolBar {
      */
     public void refresh() {
 
-    	if (_editor.getSite() != null && _editor.getSite().getShell() != null && _editor.getSite().getShell().getDisplay() != null)
-	        _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
-	
-	            public void run() {
-	            	if (_coolBar.isDisposed())
-	            		return;
-	            	
-			        updateDefaultActions();
-			        
-	                // update session toolbar
-	                _sessionToolBarMgr.update(true);
-	                _coolBarMgr.update(true);
-	                _coolBar.update();
-	            }
-	        });
+        if (_editor.getSite() != null && _editor.getSite().getShell() != null
+                && _editor.getSite().getShell().getDisplay() != null)
+            _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
+
+                public void run() {
+                    if (_coolBar.isDisposed())
+                        return;
+
+                    updateDefaultActions();
+
+                    // update session toolbar
+                    _sessionToolBarMgr.update(true);
+                    _coolBarMgr.update(true);
+                    _coolBar.update();
+                }
+            });
     }
 
-	/**
-	 * Returns the control
-	 * @return the _coolBar
-	 */
-	public CoolBar getToolbarControl() {
-		return _coolBar;
-	}
+    /**
+     * Returns the control
+     * 
+     * @return the _coolBar
+     */
+    public CoolBar getToolbarControl() {
+        return _coolBar;
+    }
 
-	/**
-	 * Returns whether to limit the results and if so by how much.
-	 * 
-	 * @return the maximum number of rows to retrieve, 0 for unlimited, or null
-	 *         if it cannot be interpretted
-	 */
-	public Integer getLimitResults() {
-		return _limitRows.getLimitResults();
-	}
+    /**
+     * Returns whether to limit the results and if so by how much.
+     * 
+     * @return the maximum number of rows to retrieve, 0 for unlimited, or null if it cannot be interpretted
+     */
+    public Integer getLimitResults() {
+        return _limitRows.getLimitResults();
+    }
 }

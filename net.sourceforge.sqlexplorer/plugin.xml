@@ -209,7 +209,7 @@
    <extension-point id="dataSetTableContextAction" name="Table Context Menu Action" schema="schema/dataSetTableContextAction.exsd"/>
    <extension-point id="editorAction" name="SQL Editor Action" schema="schema/editorAction.exsd"/>
    <extension-point id="explainPlanContextAction" name="Explain Plan Context Action" schema="schema/explainPlanContextAction.exsd"/>
-
+   
    <extension
          id="nodeContextAction"
          point="net.sourceforge.sqlexplorer.nodeContextAction">
@@ -288,4 +288,192 @@
          </property>
       </product>
    </extension>
+   <extension
+         id="EditorActions"
+         point="net.sourceforge.sqlexplorer.editorAction">
+      <action
+            class="net.sourceforge.sqlexplorer.oracle.actions.ExplainAction"
+            database-product-name="Oracle*"
+            icon="icons/explain.gif"
+            id="net.sourceforge.sqlexplorer.actions.explainplan"
+            name="Explain SQL">
+      </action>
+   </extension>
+   <extension
+         point="net.sourceforge.sqlexplorer.node">
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.FunctionFolder"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.functions"
+            name="Funtions"
+            parent-node="schema+catalog"
+            table-type="function_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.JavaSourceFolder"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.javaSources"
+            name="Java Sources"
+            parent-node="schema+catalog"
+            table-type="java_source_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.MaterializedViewFolder"
+            database-product-name="Oracle*"
+            icon="icons/view.gif"
+            id="net.sourceforge.sqlexplorer.oracle.materializedViews"
+            name="Materialized Views"
+            parent-node="schema+catalog"
+            table-type="materialized_view_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.PackageBodyFolder"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.packageBodies"
+            name="Package Bodies"
+            parent-node="schema+catalog"
+            table-type="package_body_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.PackageFolder"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.packages"
+            name="Packages"
+            parent-node="schema+catalog"
+            table-type="package_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.ProcedureFolder"
+            database-product-name="Oracle*"
+            icon="icons/stored_procedure.gif"
+            id="net.sourceforge.sqlexplorer.oracle.procedures"
+            name="Procedures"
+            parent-node="schema+catalog"
+            table-type="procedure_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.SequenceFolder"
+            database-product-name="Oracle*"
+            icon="icons/sequence.gif"
+            id="net.sourceforge.sqlexplorer.oracle.sequences"
+            name="Sequences"
+            parent-node="schema+catalog"
+            table-type="sequence_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.TriggerFolder"
+            database-product-name="Oracle*"
+            icon="icons/trigger.gif"
+            id="net.sourceforge.sqlexplorer.oracle.triggers"
+            name="Triggers"
+            parent-node="schema+catalog"
+            table-type="trigger_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.TableIndexFolder"
+            database-product-name="Oracle*"
+            icon="icons/index.gif"
+            id="net.sourceforge.sqlexplorer.oracle.nodes.TableIndexFolder"
+            name="Table Index Folder"
+            parent-node="table"
+            table-type="index_folder">
+      </node>
+      <node
+            class="net.sourceforge.sqlexplorer.oracle.nodes.TableTriggerFolder"
+            database-product-name="Oracle*"
+            icon="icons/trigger.gif"
+            id="net.sourceforge.sqlexplorer.oracle.nodes.TableTriggerFolder"
+            name="Table Trigger Folder"
+            parent-node="table"
+            table-type="trigger_folder">
+      </node>
+   </extension>
+   <extension
+         point="net.sourceforge.sqlexplorer.nodeDetailTab">
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.SessionsTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.SessionsTab"
+            name="Sessions Tab"
+            node-type="database">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.JobsTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.JobsTab"
+            name="Jobs Tab"
+            node-type="database">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.TopSQLTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.TopSQLTab"
+            name="TopSQL Tab"
+            node-type="database">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.UsersTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.UsersTab"
+            name="Users Tab"
+            node-type="database">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.ParametersTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.tabs.ParametersTab"
+            name="Parameters Tab"
+            node-type="database">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.SequenceDetailTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.SequenceDetailTab"
+            name="Sequence Detail Tab"
+            node-type="sequence">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.SourceTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.SourceTab"
+            name="Source Tab"
+            node-type="function,java_source,package_body,package,procedure,trigger">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.InfoTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.InfoTab"
+            name="Info Tab"
+            node-type="function,java_source,package_body,package,procedure,trigger,sequence,materialized_view,index">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.DDLTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.DDLTab"
+            name="DDL Tab"
+            node-type="function,java_source,package_body,package,procedure,trigger,sequence,table,materialized_view,index">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.XMLTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.XMLTab"
+            name="XML Tab"
+            node-type="function,java_source,package_body,package,procedure,trigger,sequence,table,materialized_view,index">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.ProcedureTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.oracle.ProcedureTab"
+            name="Procedure Tab"
+            node-type="procedure,package_procedure">
+      </detailtab>
+      <detailtab
+            class="net.sourceforge.sqlexplorer.oracle.tabs.ArgumentsTab"
+            database-product-name="Oracle*"
+            id="net.sourceforge.sqlexplorer.tabs.ArgumentTab"
+            name="Argument Tab"
+            node-type="procedure,package_procedure">
+      </detailtab>
+   </extension>
+
 </plugin>

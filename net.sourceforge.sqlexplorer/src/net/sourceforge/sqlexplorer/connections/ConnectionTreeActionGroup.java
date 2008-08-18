@@ -17,7 +17,6 @@ package net.sourceforge.sqlexplorer.connections;
 import net.sourceforge.sqlexplorer.connections.actions.AbstractConnectionTreeAction;
 import net.sourceforge.sqlexplorer.connections.actions.CommitAction;
 import net.sourceforge.sqlexplorer.connections.actions.ConnectAliasAction;
-import net.sourceforge.sqlexplorer.connections.actions.NewDatabaseStructureViewAction;
 import net.sourceforge.sqlexplorer.connections.actions.NewEditorAction;
 import net.sourceforge.sqlexplorer.connections.actions.RollbackAction;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
@@ -60,7 +59,7 @@ public class ConnectionTreeActionGroup extends ActionGroup {
             Alias alias = (Alias) selection[0];
 
             addAction(menu, new NewEditorAction());
-            addAction(menu, new NewDatabaseStructureViewAction());
+            // addAction(menu, new NewDatabaseStructureViewAction());
             addAction(menu, new ConnectAliasAction());
             menu.add(new Separator());
             for (User user : alias.getUsers())
@@ -80,7 +79,7 @@ public class ConnectionTreeActionGroup extends ActionGroup {
             User user = (User) selection[0];
 
             addAction(menu, new NewEditorAction());
-            addAction(menu, new NewDatabaseStructureViewAction());
+            // addAction(menu, new NewDatabaseStructureViewAction());
             addAction(menu, new ConnectAliasAction());
             menu.add(new Separator());
             if (!user.isAutoCommit()) {
@@ -98,7 +97,7 @@ public class ConnectionTreeActionGroup extends ActionGroup {
             SQLConnection connection = (SQLConnection) selection[0];
 
             addAction(menu, new NewEditorAction());
-            addAction(menu, new NewDatabaseStructureViewAction());
+            // addAction(menu, new NewDatabaseStructureViewAction());
             menu.add(new Separator());
 
             if (!connection.getUser().isAutoCommit()) {

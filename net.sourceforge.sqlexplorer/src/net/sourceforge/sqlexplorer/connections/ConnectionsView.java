@@ -21,7 +21,6 @@ import java.util.Set;
 
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
 import net.sourceforge.sqlexplorer.connections.actions.AbstractConnectionTreeAction;
-import net.sourceforge.sqlexplorer.connections.actions.NewDatabaseStructureViewAction;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.ConnectionListener;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
@@ -95,7 +94,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
         // PTODO qzhang delete the Context meun in the Connections View for feature 3519.
         // toolBarMgr.add(new NewAliasAction());
         // toolBarMgr.add(new NewEditorAction());
-        toolBarMgr.add(new NewDatabaseStructureViewAction());
+        // toolBarMgr.add(new NewDatabaseStructureViewAction());
         // toolBarMgr.add(new CloseAllConnectionsAction());
         // toolBarMgr.add(new CloseConnectionAction());
 

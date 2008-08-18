@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="net.sourceforge.sqlexplorer.oracle_3.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/rowset.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/dom4j.jar" sourcepath="C:/os/src/dom4j/dom4j-1.6.1/src/java"/>
 	<classpathentry exported="true" kind="lib" path="lib/squirrel.jar" sourcepath="C:/os/src/squirrel-sql/sql12/fw/src"/>
