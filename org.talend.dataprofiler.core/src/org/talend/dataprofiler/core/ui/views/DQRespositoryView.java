@@ -18,18 +18,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
@@ -82,6 +89,22 @@ public class DQRespositoryView extends CommonNavigator {
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
+
+        // For removing the popup menu of DQRepositoryView.
+        MenuManager menuMgr = new MenuManager("org.talend.dataprofiler.core.ui.views.DQRespositoryView");
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(new IMenuListener() {
+
+            public void menuAboutToShow(IMenuManager manager) {
+                ISelection selection = getCommonViewer().getSelection();
+                getNavigatorActionService().setContext(new ActionContext(selection));
+                getNavigatorActionService().fillContextMenu(manager);
+            }
+        });
+        TreeViewer commonViewer = getCommonViewer();
+        Menu menu = menuMgr.createContextMenu(commonViewer.getTree());
+        commonViewer.getTree().setMenu(menu);
+
         this.addViewerFilter(EMFObjFilter.FILTER_ID);
         this.addViewerFilter(ReportingFilter.FILTER_ID);
         this.addViewerFilter(FolderObjFilter.FILTER_ID);
