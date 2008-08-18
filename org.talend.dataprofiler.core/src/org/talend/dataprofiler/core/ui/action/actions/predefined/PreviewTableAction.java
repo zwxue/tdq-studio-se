@@ -24,13 +24,17 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.management.api.DbmsLanguage;
+import org.talend.cwm.management.api.DbmsLanguageFactory;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -69,7 +73,8 @@ public class PreviewTableAction extends Action {
         String url = providerConnection.getConnectionString();
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
-                String query = "select * from " + table.getName();
+                String qualifiedName = getTableQualifiedName(tdDataProvider);
+                String query = "select * from " + qualifiedName;
                 SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo()
                         + ").sql");
                 input.setUser(alias.getDefaultUser());
@@ -85,5 +90,18 @@ public class PreviewTableAction extends Action {
                 }
             }
         }
+    }
+
+    /**
+     * DOC scorreia Comment method "getQualifiedName".
+     * 
+     * @param tdDataProvider
+     * @return
+     */
+    private String getTableQualifiedName(TdDataProvider tdDataProvider) {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
+        Package catalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(table);
+        String schemaname = catalogOrSchema != null ? catalogOrSchema.getName() : null;
+        return dbmsLanguage.toQualifiedName(null, schemaname, table.getName());
     }
 }
