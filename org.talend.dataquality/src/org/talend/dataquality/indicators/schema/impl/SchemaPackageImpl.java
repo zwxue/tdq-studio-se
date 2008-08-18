@@ -296,8 +296,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getSchemaIndicator_TotalRowCount() {
-        return (EAttribute)schemaIndicatorEClass.getEStructuralFeatures().get(5);
+    public EReference getSchemaIndicator_TableIndicators() {
+        return (EReference)schemaIndicatorEClass.getEStructuralFeatures().get(6);
     }
 
     /**
@@ -305,8 +305,8 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getSchemaIndicator_TableIndicators() {
-        return (EReference)schemaIndicatorEClass.getEStructuralFeatures().get(6);
+    public EAttribute getSchemaIndicator_ViewRowCount() {
+        return (EAttribute)schemaIndicatorEClass.getEStructuralFeatures().get(7);
     }
 
     /**
@@ -431,6 +431,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getSchemaIndicator_TableRowCount() {
+        return (EAttribute)schemaIndicatorEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public SchemaFactory getSchemaFactory() {
         return (SchemaFactory)getEFactoryInstance();
     }
@@ -460,8 +469,9 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         createEAttribute(schemaIndicatorEClass, SCHEMA_INDICATOR__INDEX_COUNT);
         createEAttribute(schemaIndicatorEClass, SCHEMA_INDICATOR__VIEW_COUNT);
         createEAttribute(schemaIndicatorEClass, SCHEMA_INDICATOR__TRIGGER_COUNT);
-        createEAttribute(schemaIndicatorEClass, SCHEMA_INDICATOR__TOTAL_ROW_COUNT);
+        createEAttribute(schemaIndicatorEClass, SCHEMA_INDICATOR__TABLE_ROW_COUNT);
         createEReference(schemaIndicatorEClass, SCHEMA_INDICATOR__TABLE_INDICATORS);
+        createEAttribute(schemaIndicatorEClass, SCHEMA_INDICATOR__VIEW_ROW_COUNT);
 
         tableIndicatorEClass = createEClass(TABLE_INDICATOR);
         createEAttribute(tableIndicatorEClass, TABLE_INDICATOR__ROW_COUNT);
@@ -518,8 +528,9 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         initEAttribute(getSchemaIndicator_IndexCount(), ecorePackage.getEInt(), "indexCount", null, 0, 1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getSchemaIndicator_ViewCount(), ecorePackage.getEInt(), "viewCount", null, 0, 1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getSchemaIndicator_TriggerCount(), ecorePackage.getEInt(), "triggerCount", null, 0, 1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSchemaIndicator_TotalRowCount(), ecorePackage.getELong(), "totalRowCount", null, 0, 1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSchemaIndicator_TableRowCount(), ecorePackage.getELong(), "tableRowCount", null, 0, 1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getSchemaIndicator_TableIndicators(), this.getTableIndicator(), null, "tableIndicators", null, 0, -1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSchemaIndicator_ViewRowCount(), ecorePackage.getELong(), "viewRowCount", null, 0, 1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(schemaIndicatorEClass, ecorePackage.getEBoolean(), "addTableIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, this.getTableIndicator(), "tableIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);

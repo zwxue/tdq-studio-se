@@ -351,13 +351,13 @@ public interface SchemaPackage extends EPackage {
     int SCHEMA_INDICATOR__TRIGGER_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 4;
 
     /**
-     * The feature id for the '<em><b>Total Row Count</b></em>' attribute.
+     * The feature id for the '<em><b>Table Row Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEMA_INDICATOR__TOTAL_ROW_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 5;
+    int SCHEMA_INDICATOR__TABLE_ROW_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 5;
 
     /**
      * The feature id for the '<em><b>Table Indicators</b></em>' containment reference list.
@@ -369,13 +369,22 @@ public interface SchemaPackage extends EPackage {
     int SCHEMA_INDICATOR__TABLE_INDICATORS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 6;
 
     /**
+     * The feature id for the '<em><b>View Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SCHEMA_INDICATOR__VIEW_ROW_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 7;
+
+    /**
      * The number of structural features of the '<em>Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEMA_INDICATOR_FEATURE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 7;
+    int SCHEMA_INDICATOR_FEATURE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 8;
 
 
     /**
@@ -940,13 +949,13 @@ public interface SchemaPackage extends EPackage {
     int CATALOG_INDICATOR__TRIGGER_COUNT = SCHEMA_INDICATOR__TRIGGER_COUNT;
 
     /**
-     * The feature id for the '<em><b>Total Row Count</b></em>' attribute.
+     * The feature id for the '<em><b>Table Row Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CATALOG_INDICATOR__TOTAL_ROW_COUNT = SCHEMA_INDICATOR__TOTAL_ROW_COUNT;
+    int CATALOG_INDICATOR__TABLE_ROW_COUNT = SCHEMA_INDICATOR__TABLE_ROW_COUNT;
 
     /**
      * The feature id for the '<em><b>Table Indicators</b></em>' containment reference list.
@@ -956,6 +965,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CATALOG_INDICATOR__TABLE_INDICATORS = SCHEMA_INDICATOR__TABLE_INDICATORS;
+
+    /**
+     * The feature id for the '<em><b>View Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CATALOG_INDICATOR__VIEW_ROW_COUNT = SCHEMA_INDICATOR__VIEW_ROW_COUNT;
 
     /**
      * The feature id for the '<em><b>Schema Count</b></em>' attribute.
@@ -1264,13 +1282,13 @@ public interface SchemaPackage extends EPackage {
     int CONNECTION_INDICATOR__TRIGGER_COUNT = CATALOG_INDICATOR__TRIGGER_COUNT;
 
     /**
-     * The feature id for the '<em><b>Total Row Count</b></em>' attribute.
+     * The feature id for the '<em><b>Table Row Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONNECTION_INDICATOR__TOTAL_ROW_COUNT = CATALOG_INDICATOR__TOTAL_ROW_COUNT;
+    int CONNECTION_INDICATOR__TABLE_ROW_COUNT = CATALOG_INDICATOR__TABLE_ROW_COUNT;
 
     /**
      * The feature id for the '<em><b>Table Indicators</b></em>' containment reference list.
@@ -1280,6 +1298,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CONNECTION_INDICATOR__TABLE_INDICATORS = CATALOG_INDICATOR__TABLE_INDICATORS;
+
+    /**
+     * The feature id for the '<em><b>View Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__VIEW_ROW_COUNT = CATALOG_INDICATOR__VIEW_ROW_COUNT;
 
     /**
      * The feature id for the '<em><b>Schema Count</b></em>' attribute.
@@ -1338,17 +1365,6 @@ public interface SchemaPackage extends EPackage {
     EClass getSchemaIndicator();
 
     /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTotalRowCount <em>Total Row Count</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Total Row Count</em>'.
-     * @see org.talend.dataquality.indicators.schema.SchemaIndicator#getTotalRowCount()
-     * @see #getSchemaIndicator()
-     * @generated
-     */
-    EAttribute getSchemaIndicator_TotalRowCount();
-
-    /**
      * Returns the meta object for the containment reference list '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableIndicators <em>Table Indicators</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1358,6 +1374,17 @@ public interface SchemaPackage extends EPackage {
      * @generated
      */
     EReference getSchemaIndicator_TableIndicators();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getViewRowCount <em>View Row Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>View Row Count</em>'.
+     * @see org.talend.dataquality.indicators.schema.SchemaIndicator#getViewRowCount()
+     * @see #getSchemaIndicator()
+     * @generated
+     */
+    EAttribute getSchemaIndicator_ViewRowCount();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.schema.TableIndicator <em>Table Indicator</em>}'.
@@ -1500,6 +1527,17 @@ public interface SchemaPackage extends EPackage {
     EAttribute getSchemaIndicator_TriggerCount();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableRowCount <em>Table Row Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Table Row Count</em>'.
+     * @see org.talend.dataquality.indicators.schema.SchemaIndicator#getTableRowCount()
+     * @see #getSchemaIndicator()
+     * @generated
+     */
+    EAttribute getSchemaIndicator_TableRowCount();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1532,20 +1570,20 @@ public interface SchemaPackage extends EPackage {
         EClass SCHEMA_INDICATOR = eINSTANCE.getSchemaIndicator();
 
         /**
-         * The meta object literal for the '<em><b>Total Row Count</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute SCHEMA_INDICATOR__TOTAL_ROW_COUNT = eINSTANCE.getSchemaIndicator_TotalRowCount();
-
-        /**
          * The meta object literal for the '<em><b>Table Indicators</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
         EReference SCHEMA_INDICATOR__TABLE_INDICATORS = eINSTANCE.getSchemaIndicator_TableIndicators();
+
+        /**
+         * The meta object literal for the '<em><b>View Row Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute SCHEMA_INDICATOR__VIEW_ROW_COUNT = eINSTANCE.getSchemaIndicator_ViewRowCount();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.schema.impl.TableIndicatorImpl <em>Table Indicator</em>}' class.
@@ -1656,6 +1694,14 @@ public interface SchemaPackage extends EPackage {
          * @generated
          */
         EAttribute SCHEMA_INDICATOR__TRIGGER_COUNT = eINSTANCE.getSchemaIndicator_TriggerCount();
+
+        /**
+         * The meta object literal for the '<em><b>Table Row Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute SCHEMA_INDICATOR__TABLE_ROW_COUNT = eINSTANCE.getSchemaIndicator_TableRowCount();
 
     }
 

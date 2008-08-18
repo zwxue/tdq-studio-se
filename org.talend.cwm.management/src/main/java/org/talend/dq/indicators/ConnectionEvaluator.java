@@ -97,7 +97,8 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
         log.info("nb views= " + connectionIndicator.getViewCount());
         log.info("nb index= " + connectionIndicator.getIndexCount());
         log.info("nb PK= " + connectionIndicator.getKeyCount());
-        log.info("total row count= " + connectionIndicator.getTotalRowCount());
+        log.info("total table row count= " + connectionIndicator.getTableRowCount());
+        log.info("total view row count= " + connectionIndicator.getViewRowCount());
     }
 
     /*
@@ -181,30 +182,7 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
             this.connectionIndicator.setCatalogCount(catalogs.size());
         }
 
-        // get the analyzed schemata
-        // Set<CatalogSchema> schemata = getAnalyzedElements();
-        // TODO get the filters on tables
-
-        // TODO get the tables of the schema
-
-        // TODO create the statements for each table (count *,...)
-        // // String tablePattern = "%";
-        // TableType[] type = new TableType[] { TableType.TABLE, TableType.VIEW }; // TODO set types here
-        //
-        // for (CatalogSchema catalogSchema : schemata) {
-        //
-        // // get indicators
-        // Collection<SchemaIndicator> indicators = EcoreUtil.getObjectsByType(this.getIndicators(catalogSchema),
-        // CLASS_TYPE);
-        //
-        // String catalogName = catalogSchema.catalog;
-        // String schemaPattern = catalogSchema.schema;
-        // if (!executeOneQuery(catalogName, schemaPattern, tablePattern, type, indicators, ok).isOk()) {
-        // ok.setReturnCode(ok.getMessage(), false); // TODO scorreia concatenate message...
-        // }
-        // }
-        // // TODO execute statement and set result into indicators
-        if (log.isInfoEnabled()) {
+        if (log.isDebugEnabled()) {
             printCounts();
         }
         return ok;
@@ -279,7 +257,9 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
 
             // --- increment values of catalog indicator
             catalogIndic.setTableCount(catalogIndic.getTableCount() + tableCount);
-            catalogIndic.setTotalRowCount(catalogIndic.getTotalRowCount() + schemaIndic.getTotalRowCount());
+            catalogIndic.setTableRowCount(catalogIndic.getTableRowCount() + schemaIndic.getTableRowCount());
+            catalogIndic.setViewRowCount(catalogIndic.getViewRowCount() + schemaIndic.getViewRowCount());
+
         } else if (!hasCatalog) { // has schema only
             // add it to list of indicators
             this.connectionIndicator.addSchemaIndicator(schemaIndic);
@@ -309,11 +289,11 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
         String quSchema = schema == null ? null : dbms().quote(schema);
         String quTable = dbms().quote(table);
 
-        long totalRowCount = schemaIndic.getTotalRowCount();
-        totalRowCount = getRowCounts(quCatalog, quSchema, quTable, totalRowCount);
-        schemaIndic.setTotalRowCount(totalRowCount);
-
         if (isTable) {
+            long totalRowCount = schemaIndic.getTableRowCount();
+            totalRowCount = getRowCounts(quCatalog, quSchema, quTable, totalRowCount);
+            schemaIndic.setTableRowCount(totalRowCount);
+
             // ---- pk
             int pkCount = schemaIndic.getKeyCount();
             pkCount = getPKCount(quCatalog, quSchema, quTable, pkCount);
@@ -323,6 +303,10 @@ public class ConnectionEvaluator extends Evaluator<DataProvider> {
             int idxCount = schemaIndic.getIndexCount();
             idxCount = getIndexCount(quCatalog, quSchema, quTable, idxCount);
             schemaIndic.setIndexCount(idxCount);
+        } else { // is a view
+            long totalRowCount = schemaIndic.getViewRowCount();
+            totalRowCount = getRowCounts(quCatalog, quSchema, quTable, totalRowCount);
+            schemaIndic.setViewRowCount(totalRowCount);
         }
         // --- triggers (JDBC API cannot get triggers)
 

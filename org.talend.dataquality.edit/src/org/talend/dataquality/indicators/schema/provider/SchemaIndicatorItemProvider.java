@@ -75,31 +75,10 @@ public class SchemaIndicatorItemProvider
             addIndexCountPropertyDescriptor(object);
             addViewCountPropertyDescriptor(object);
             addTriggerCountPropertyDescriptor(object);
-            addTotalRowCountPropertyDescriptor(object);
+            addTableRowCountPropertyDescriptor(object);
+            addViewRowCountPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
-    }
-
-    /**
-     * This adds a property descriptor for the Total Row Count feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected void addTotalRowCountPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_SchemaIndicator_totalRowCount_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_SchemaIndicator_totalRowCount_feature", "_UI_SchemaIndicator_type"),
-                 SchemaPackage.Literals.SCHEMA_INDICATOR__TOTAL_ROW_COUNT,
-                 true,
-                 false,
-                 false,
-                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-                 null,
-                 null));
     }
 
     /**
@@ -243,6 +222,50 @@ public class SchemaIndicatorItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Table Row Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addTableRowCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_SchemaIndicator_tableRowCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_SchemaIndicator_tableRowCount_feature", "_UI_SchemaIndicator_type"),
+                 SchemaPackage.Literals.SCHEMA_INDICATOR__TABLE_ROW_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the View Row Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addViewRowCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_SchemaIndicator_viewRowCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_SchemaIndicator_viewRowCount_feature", "_UI_SchemaIndicator_type"),
+                 SchemaPackage.Literals.SCHEMA_INDICATOR__VIEW_ROW_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns SchemaIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -284,7 +307,8 @@ public class SchemaIndicatorItemProvider
             case SchemaPackage.SCHEMA_INDICATOR__INDEX_COUNT:
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_COUNT:
             case SchemaPackage.SCHEMA_INDICATOR__TRIGGER_COUNT:
-            case SchemaPackage.SCHEMA_INDICATOR__TOTAL_ROW_COUNT:
+            case SchemaPackage.SCHEMA_INDICATOR__TABLE_ROW_COUNT:
+            case SchemaPackage.SCHEMA_INDICATOR__VIEW_ROW_COUNT:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_INDICATORS:

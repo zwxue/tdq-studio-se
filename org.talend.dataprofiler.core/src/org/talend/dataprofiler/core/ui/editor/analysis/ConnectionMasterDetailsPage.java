@@ -75,6 +75,20 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
+    private static final String SCHEMA = "schema";
+
+    private static final String CATALOG = "catalog";
+
+    /**
+     * Width of the first column.
+     */
+    private static final int COL1_WIDTH = 200;
+
+    /**
+     * Width of columns.
+     */
+    private static final int COL_WIDTH = 100;
+
     private static Logger log = Logger.getLogger(ConnectionMasterDetailsPage.class);
 
     Analysis connectionAnalysis;
@@ -320,72 +334,81 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
     }
 
     private void createCatalogTableColumns(Table table) {
-        TableColumn tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("catalog");
-        tableColumn.setWidth(120);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#rows");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#tables");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#rows/table");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#keys");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#indexes");
-        tableColumn.setWidth(100);
+        TableColumn tableColumn = new TableColumn(table, SWT.LEFT | SWT.FILL);
+        tableColumn.setText(CATALOG);
+        tableColumn.setWidth(COL1_WIDTH);
+        createNbRowsCol(table, CATALOG);
+        createCommonStatisticalColumns(table);
     }
 
     private void createSchemaTableColumns(Table table) {
-        TableColumn tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("schema");
-        tableColumn.setWidth(120);
-        tableColumn = new TableColumn(table, SWT.CENTER);
+        TableColumn tableColumn = new TableColumn(table, SWT.LEFT);
+        tableColumn.setText(SCHEMA);
+        tableColumn.setWidth(COL1_WIDTH);
+        createNbRowsCol(table, SCHEMA);
+        createCommonStatisticalColumns(table);
+    }
+
+    /**
+     * DOC scorreia Comment method "createNbRowsCol".
+     * 
+     * @param table
+     * @param container
+     */
+    private void createNbRowsCol(Table table, String container) {
+        TableColumn tableColumn;
+        tableColumn = new TableColumn(table, SWT.RIGHT);
         tableColumn.setText("#rows");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#tables");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#rows/table");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#keys");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#indexes");
-        tableColumn.setWidth(100);
+        tableColumn.setToolTipText("Number of rows in " + container);
+        tableColumn.setWidth(COL_WIDTH);
     }
 
     private void createCatalogSchemaColumns(Table table) {
-        TableColumn tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("catalog");
-        tableColumn.setWidth(120);
-        tableColumn = new TableColumn(table, SWT.CENTER);
-        tableColumn.setText("#rows");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
+        TableColumn tableColumn = new TableColumn(table, SWT.LEFT);
+        tableColumn.setText(CATALOG);
+        tableColumn.setWidth(COL1_WIDTH);
+        createNbRowsCol(table, CATALOG);
+        tableColumn = new TableColumn(table, SWT.RIGHT);
         tableColumn.setText("#schemata");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setWidth(COL_WIDTH);
+        tableColumn = new TableColumn(table, SWT.RIGHT);
         tableColumn.setText("#rows/schema");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setToolTipText("Number of rows per schema");
+        tableColumn.setWidth(COL_WIDTH);
+        createCommonStatisticalColumns(table);
+    }
+
+    /**
+     * DOC scorreia Comment method "createCommonStatisticalColumns".
+     * 
+     * @param table
+     */
+    private void createCommonStatisticalColumns(Table table) {
+        TableColumn tableColumn;
+        tableColumn = new TableColumn(table, SWT.RIGHT);
         tableColumn.setText("#tables");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setToolTipText("Number of tables");
+        tableColumn.setWidth(COL_WIDTH);
+        tableColumn = new TableColumn(table, SWT.RIGHT);
         tableColumn.setText("#rows/table");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setToolTipText("Number of rows per table");
+        tableColumn.setWidth(COL_WIDTH);
+        tableColumn = new TableColumn(table, SWT.RIGHT);
+        tableColumn.setText("#views");
+        tableColumn.setToolTipText("Number of views");
+        tableColumn.setWidth(COL_WIDTH);
+        tableColumn = new TableColumn(table, SWT.RIGHT);
+        tableColumn.setText("#rows/view");
+        tableColumn.setToolTipText("Number of rows per view");
+        tableColumn.setWidth(COL_WIDTH);
+        tableColumn = new TableColumn(table, SWT.RIGHT);
         tableColumn.setText("#keys");
-        tableColumn.setWidth(100);
-        tableColumn = new TableColumn(table, SWT.CENTER);
+        tableColumn.setToolTipText("Number of primary keys");
+        tableColumn.setWidth(COL_WIDTH);
+        tableColumn = new TableColumn(table, SWT.RIGHT);
         tableColumn.setText("#indexes");
-        tableColumn.setWidth(100);
+        tableColumn.setToolTipText("Number of indexes");
+        tableColumn.setWidth(COL_WIDTH);
     }
 
     public void saveAnalysis() throws DataprofilerCoreException {
@@ -451,19 +474,19 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             String text = PluginConstant.EMPTY_STRING;
             switch (columnIndex) {
             case 1:
-                text = PluginConstant.EMPTY_STRING + schemaIndicator.getTotalRowCount();
-                return text;
+                return text + schemaIndicator.getTableRowCount();
             case 2:
-                text = PluginConstant.EMPTY_STRING + schemaIndicator.getTableCount();
-                return text;
+                return text + schemaIndicator.getTableCount();
             case 3:
                 return text + getRowCountPerTable(schemaIndicator);
             case 4:
-                text = PluginConstant.EMPTY_STRING + schemaIndicator.getKeyCount();
-                return text;
+                return text + schemaIndicator.getViewCount();
             case 5:
-                text = PluginConstant.EMPTY_STRING + schemaIndicator.getIndexCount();
-                return text;
+                return text + getRowCountPerView(schemaIndicator);
+            case 6:
+                return text + schemaIndicator.getKeyCount();
+            case 7:
+                return text + schemaIndicator.getIndexCount();
             default:
                 break;
             }
@@ -481,16 +504,17 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             String text = PluginConstant.EMPTY_STRING;
             switch (columnIndex) {
             case 2:
-                text = PluginConstant.EMPTY_STRING + schemaIndicator.getTableCount();
-                return text;
+                return text + schemaIndicator.getTableCount();
             case 3:
                 return text + getRowCountPerTable(schemaIndicator);
             case 4:
-                text = PluginConstant.EMPTY_STRING + schemaIndicator.getKeyCount();
-                return text;
+                return text + schemaIndicator.getViewCount();
             case 5:
-                text = PluginConstant.EMPTY_STRING + schemaIndicator.getIndexCount();
-                return text;
+                return text + getRowCountPerView(schemaIndicator);
+            case 6:
+                return text + schemaIndicator.getKeyCount();
+            case 7:
+                return text + schemaIndicator.getIndexCount();
             default:
                 break;
             }
@@ -514,21 +538,21 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             }
             switch (columnIndex) {
             case 2:
-                text = PluginConstant.EMPTY_STRING + catalogIndicator.getSchemaCount();
-                return text;
+                return text + catalogIndicator.getSchemaCount();
             case 3:
-                return text;
+                return text + getRowCountPerSchema(catalogIndicator);
             case 4:
-                text = PluginConstant.EMPTY_STRING + catalogIndicator.getTableCount();
-                return text;
+                return text + catalogIndicator.getTableCount();
             case 5:
-                text = PluginConstant.EMPTY_STRING + getRowCountPerTable(catalogIndicator);
-                return text;
+                return text + getRowCountPerTable(catalogIndicator);
             case 6:
-                return PluginConstant.EMPTY_STRING + catalogIndicator.getKeyCount();
+                return text + schemaIndicator.getViewCount();
             case 7:
-                text = PluginConstant.EMPTY_STRING + catalogIndicator.getIndexCount();
-                return text;
+                return text + getRowCountPerView(schemaIndicator);
+            case 8:
+                return text + catalogIndicator.getKeyCount();
+            case 9:
+                return text + catalogIndicator.getIndexCount();
             default:
                 break;
             }
@@ -537,8 +561,24 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
     }
 
     private static String getRowCountPerTable(SchemaIndicator schemaIndicator) {
-        Double frac = Double.valueOf(schemaIndicator.getTotalRowCount()) / schemaIndicator.getTableCount();
-        frac = frac.isNaN() ? 0 : frac;
+        Double frac = Double.valueOf(schemaIndicator.getTableRowCount()) / schemaIndicator.getTableCount();
+        return formatDouble(frac);
+    }
+
+    private static String getRowCountPerView(SchemaIndicator schemaIndicator) {
+        Double frac = Double.valueOf(schemaIndicator.getViewRowCount()) / schemaIndicator.getViewCount();
+        return formatDouble(frac);
+    }
+
+    private static String getRowCountPerSchema(CatalogIndicator catalogIndicator) {
+        Double frac = Double.valueOf(catalogIndicator.getTableRowCount()) / catalogIndicator.getSchemaCount();
+        return formatDouble(frac);
+    }
+
+    private static String formatDouble(Double frac) {
+        if (frac.isNaN()) {
+            return String.valueOf(Double.NaN);
+        }
         String formatValue = new DecimalFormat("0.00").format(frac);
         return formatValue;
     }

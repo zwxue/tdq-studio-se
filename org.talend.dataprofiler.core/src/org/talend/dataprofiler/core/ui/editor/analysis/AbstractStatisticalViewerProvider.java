@@ -50,7 +50,7 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
                 text = indicator.getAnalyzedElement().getName();
                 return text;
             case 1:
-                text = PluginConstant.EMPTY_STRING + indicator.getTotalRowCount();
+                text = PluginConstant.EMPTY_STRING + indicator.getTableRowCount();
                 return text;
             default:
                 break;

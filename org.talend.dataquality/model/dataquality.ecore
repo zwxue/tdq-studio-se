@@ -544,9 +544,18 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="triggerCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalRowCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="tableRowCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="The number of rows of the analyzed tables."/>
+          </eAnnotations>
+        </eStructuralFeatures>
         <eStructuralFeatures xsi:type="ecore:EReference" name="tableIndicators" upperBound="-1"
             eType="#//indicators/schema/TableIndicator" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewRowCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="The number of rows of the analyzed views."/>
+          </eAnnotations>
+        </eStructuralFeatures>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="TableIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="rowCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>

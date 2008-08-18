@@ -332,8 +332,9 @@
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/SchemaIndicator/indexCount"/>
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/SchemaIndicator/viewCount"/>
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/SchemaIndicator/triggerCount"/>
-          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/SchemaIndicator/totalRowCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/SchemaIndicator/tableRowCount"/>
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/schema/SchemaIndicator/tableIndicators"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/SchemaIndicator/viewRowCount"/>
           <genOperations ecoreOperation="dataquality.ecore#//indicators/schema/SchemaIndicator/addTableIndicator">
             <genParameters ecoreParameter="dataquality.ecore#//indicators/schema/SchemaIndicator/addTableIndicator/tableIndicator"/>
           </genOperations>

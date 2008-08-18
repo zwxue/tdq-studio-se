@@ -37,16 +37,16 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getCount <em>Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getNullCount <em>Null Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getParameters <em>Parameters</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getAnalyzedElement <em>Analyzed Element</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getDataminingType <em>Datamining Type</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getIndicatorDefinition <em>Indicator Definition</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getCount <em>Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getNullCount <em>Null Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getParameters <em>Parameters</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getAnalyzedElement <em>Analyzed Element</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getDataminingType <em>Datamining Type</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getIndicatorDefinition <em>Indicator Definition</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class IndicatorImpl extends ModelElementImpl implements Indicator {
@@ -54,9 +54,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     private static Logger log = Logger.getLogger(IndicatorImpl.class);
 
     /**
-     * The default value of the '{@link #getCount() <em>Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getCount() <em>Count</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getCount()
      * @generated
      * @ordered
@@ -64,9 +64,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected static final Long COUNT_EDEFAULT = new Long(0L);
 
     /**
-     * The cached value of the '{@link #getCount() <em>Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getCount() <em>Count</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getCount()
      * @generated
      * @ordered
@@ -74,9 +74,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected Long count = COUNT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getNullCount() <em>Null Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getNullCount() <em>Null Count</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getNullCount()
      * @generated
      * @ordered
@@ -84,9 +84,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected static final Long NULL_COUNT_EDEFAULT = new Long(0L);
 
     /**
-     * The cached value of the '{@link #getNullCount() <em>Null Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getNullCount() <em>Null Count</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
+     * 
      * @see #getNullCount()
      * @generated
      * @ordered
@@ -114,9 +114,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected ModelElement analyzedElement;
 
     /**
-     * The default value of the '{@link #getDataminingType() <em>Datamining Type</em>}' attribute.
-     * <!-- begin-user-doc
+     * The default value of the '{@link #getDataminingType() <em>Datamining Type</em>}' attribute. <!-- begin-user-doc
      * --> <!-- end-user-doc -->
+     * 
      * @see #getDataminingType()
      * @generated
      * @ordered
@@ -124,9 +124,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected static final DataminingType DATAMINING_TYPE_EDEFAULT = DataminingType.NOMINAL;
 
     /**
-     * The cached value of the '{@link #getDataminingType() <em>Datamining Type</em>}' attribute.
-     * <!-- begin-user-doc
+     * The cached value of the '{@link #getDataminingType() <em>Datamining Type</em>}' attribute. <!-- begin-user-doc
      * --> <!-- end-user-doc -->
+     * 
      * @see #getDataminingType()
      * @generated
      * @ordered
@@ -144,8 +144,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     protected IndicatorDefinition indicatorDefinition;
 
     /**
-     * The cached value of the '{@link #getInstantiatedExpressions() <em>Instantiated Expressions</em>}' containment reference list.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * The cached value of the '{@link #getInstantiatedExpressions() <em>Instantiated Expressions</em>}' containment
+     * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getInstantiatedExpressions()
      * @generated
      * @ordered
@@ -154,6 +155,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected IndicatorImpl() {
@@ -162,6 +164,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -171,6 +174,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Long getCount() {
@@ -179,6 +183,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setCount(Long newCount) {
@@ -190,6 +195,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Long getNullCount() {
@@ -198,17 +204,20 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setNullCount(Long newNullCount) {
         Long oldNullCount = nullCount;
         nullCount = newNullCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__NULL_COUNT, oldNullCount, nullCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__NULL_COUNT, oldNullCount,
+                    nullCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public IndicatorParameters getParameters() {
@@ -217,47 +226,58 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public NotificationChain basicSetParameters(IndicatorParameters newParameters, NotificationChain msgs) {
         IndicatorParameters oldParameters = parameters;
         parameters = newParameters;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__PARAMETERS, oldParameters, newParameters);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                    IndicatorsPackage.INDICATOR__PARAMETERS, oldParameters, newParameters);
+            if (msgs == null)
+                msgs = notification;
+            else
+                msgs.add(notification);
         }
         return msgs;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setParameters(IndicatorParameters newParameters) {
         if (newParameters != parameters) {
             NotificationChain msgs = null;
             if (parameters != null)
-                msgs = ((InternalEObject)parameters).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR__PARAMETERS, null, msgs);
+                msgs = ((InternalEObject) parameters).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+                        - IndicatorsPackage.INDICATOR__PARAMETERS, null, msgs);
             if (newParameters != null)
-                msgs = ((InternalEObject)newParameters).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.INDICATOR__PARAMETERS, null, msgs);
+                msgs = ((InternalEObject) newParameters).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+                        - IndicatorsPackage.INDICATOR__PARAMETERS, null, msgs);
             msgs = basicSetParameters(newParameters, msgs);
-            if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__PARAMETERS, newParameters, newParameters));
+            if (msgs != null)
+                msgs.dispatch();
+        } else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__PARAMETERS, newParameters,
+                    newParameters));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public ModelElement getAnalyzedElement() {
         if (analyzedElement != null && analyzedElement.eIsProxy()) {
-            InternalEObject oldAnalyzedElement = (InternalEObject)analyzedElement;
-            analyzedElement = (ModelElement)eResolveProxy(oldAnalyzedElement);
+            InternalEObject oldAnalyzedElement = (InternalEObject) analyzedElement;
+            analyzedElement = (ModelElement) eResolveProxy(oldAnalyzedElement);
             if (analyzedElement != oldAnalyzedElement) {
                 if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT, oldAnalyzedElement, analyzedElement));
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT,
+                            oldAnalyzedElement, analyzedElement));
             }
         }
         return analyzedElement;
@@ -265,6 +285,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public ModelElement basicGetAnalyzedElement() {
@@ -273,13 +294,15 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setAnalyzedElement(ModelElement newAnalyzedElement) {
         ModelElement oldAnalyzedElement = analyzedElement;
         analyzedElement = newAnalyzedElement;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT, oldAnalyzedElement, analyzedElement));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT,
+                    oldAnalyzedElement, analyzedElement));
     }
 
     /**
@@ -306,6 +329,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public DataminingType getDataminingTypeGen() {
@@ -314,26 +338,30 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setDataminingType(DataminingType newDataminingType) {
         DataminingType oldDataminingType = dataminingType;
         dataminingType = newDataminingType == null ? DATAMINING_TYPE_EDEFAULT : newDataminingType;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__DATAMINING_TYPE, oldDataminingType, dataminingType));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__DATAMINING_TYPE,
+                    oldDataminingType, dataminingType));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public IndicatorDefinition getIndicatorDefinition() {
         if (indicatorDefinition != null && indicatorDefinition.eIsProxy()) {
-            InternalEObject oldIndicatorDefinition = (InternalEObject)indicatorDefinition;
-            indicatorDefinition = (IndicatorDefinition)eResolveProxy(oldIndicatorDefinition);
+            InternalEObject oldIndicatorDefinition = (InternalEObject) indicatorDefinition;
+            indicatorDefinition = (IndicatorDefinition) eResolveProxy(oldIndicatorDefinition);
             if (indicatorDefinition != oldIndicatorDefinition) {
                 if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION, oldIndicatorDefinition, indicatorDefinition));
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION,
+                            oldIndicatorDefinition, indicatorDefinition));
             }
         }
         return indicatorDefinition;
@@ -341,6 +369,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public IndicatorDefinition basicGetIndicatorDefinition() {
@@ -349,22 +378,26 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setIndicatorDefinition(IndicatorDefinition newIndicatorDefinition) {
         IndicatorDefinition oldIndicatorDefinition = indicatorDefinition;
         indicatorDefinition = newIndicatorDefinition;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION, oldIndicatorDefinition, indicatorDefinition));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION,
+                    oldIndicatorDefinition, indicatorDefinition));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList<Expression> getInstantiatedExpressions() {
         if (instantiatedExpressions == null) {
-            instantiatedExpressions = new EObjectContainmentEList<Expression>(Expression.class, this, IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS);
+            instantiatedExpressions = new EObjectContainmentEList<Expression>(Expression.class, this,
+                    IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS);
         }
         return instantiatedExpressions;
     }
@@ -515,6 +548,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getInstanceValue() {
@@ -554,7 +588,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     protected boolean checkResults(List<Object[]> objects, final int expectedSize) {
         if (objects == null || objects.isEmpty()) {
-            log.error("Unexpected result: " + objects + " is null or empty.");
+            log.error("Unexpected result: Result set is null or empty for the query.");
             return false;
         }
         for (Object[] array : objects) {
@@ -566,7 +600,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 Object object = array[i];
                 // assume last column is not null (for example in frequency table result)
                 if (object == null && i == array.length - 1) {
-                    log.error("Unexpected result: " + object + ". One of the resulting column is null!");
+                    log.error("Unexpected result: " + object + ". One of the column returned by the query is null!");
                     return false;
                 }
             }
@@ -577,133 +611,140 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case IndicatorsPackage.INDICATOR__PARAMETERS:
-                return basicSetParameters(null, msgs);
-            case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
-                return ((InternalEList<?>)getInstantiatedExpressions()).basicRemove(otherEnd, msgs);
+        case IndicatorsPackage.INDICATOR__PARAMETERS:
+            return basicSetParameters(null, msgs);
+        case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
+            return ((InternalEList<?>) getInstantiatedExpressions()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.INDICATOR__COUNT:
-                return getCount();
-            case IndicatorsPackage.INDICATOR__NULL_COUNT:
-                return getNullCount();
-            case IndicatorsPackage.INDICATOR__PARAMETERS:
-                return getParameters();
-            case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
-                if (resolve) return getAnalyzedElement();
-                return basicGetAnalyzedElement();
-            case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
-                return getDataminingType();
-            case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
-                if (resolve) return getIndicatorDefinition();
-                return basicGetIndicatorDefinition();
-            case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
-                return getInstantiatedExpressions();
+        case IndicatorsPackage.INDICATOR__COUNT:
+            return getCount();
+        case IndicatorsPackage.INDICATOR__NULL_COUNT:
+            return getNullCount();
+        case IndicatorsPackage.INDICATOR__PARAMETERS:
+            return getParameters();
+        case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
+            if (resolve)
+                return getAnalyzedElement();
+            return basicGetAnalyzedElement();
+        case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
+            return getDataminingType();
+        case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
+            if (resolve)
+                return getIndicatorDefinition();
+            return basicGetIndicatorDefinition();
+        case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
+            return getInstantiatedExpressions();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.INDICATOR__COUNT:
-                setCount((Long)newValue);
-                return;
-            case IndicatorsPackage.INDICATOR__NULL_COUNT:
-                setNullCount((Long)newValue);
-                return;
-            case IndicatorsPackage.INDICATOR__PARAMETERS:
-                setParameters((IndicatorParameters)newValue);
-                return;
-            case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
-                setAnalyzedElement((ModelElement)newValue);
-                return;
-            case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
-                setDataminingType((DataminingType)newValue);
-                return;
-            case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
-                setIndicatorDefinition((IndicatorDefinition)newValue);
-                return;
-            case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
-                getInstantiatedExpressions().clear();
-                getInstantiatedExpressions().addAll((Collection<? extends Expression>)newValue);
-                return;
+        case IndicatorsPackage.INDICATOR__COUNT:
+            setCount((Long) newValue);
+            return;
+        case IndicatorsPackage.INDICATOR__NULL_COUNT:
+            setNullCount((Long) newValue);
+            return;
+        case IndicatorsPackage.INDICATOR__PARAMETERS:
+            setParameters((IndicatorParameters) newValue);
+            return;
+        case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
+            setAnalyzedElement((ModelElement) newValue);
+            return;
+        case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
+            setDataminingType((DataminingType) newValue);
+            return;
+        case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
+            setIndicatorDefinition((IndicatorDefinition) newValue);
+            return;
+        case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
+            getInstantiatedExpressions().clear();
+            getInstantiatedExpressions().addAll((Collection<? extends Expression>) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.INDICATOR__COUNT:
-                setCount(COUNT_EDEFAULT);
-                return;
-            case IndicatorsPackage.INDICATOR__NULL_COUNT:
-                setNullCount(NULL_COUNT_EDEFAULT);
-                return;
-            case IndicatorsPackage.INDICATOR__PARAMETERS:
-                setParameters((IndicatorParameters)null);
-                return;
-            case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
-                setAnalyzedElement((ModelElement)null);
-                return;
-            case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
-                setDataminingType(DATAMINING_TYPE_EDEFAULT);
-                return;
-            case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
-                setIndicatorDefinition((IndicatorDefinition)null);
-                return;
-            case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
-                getInstantiatedExpressions().clear();
-                return;
+        case IndicatorsPackage.INDICATOR__COUNT:
+            setCount(COUNT_EDEFAULT);
+            return;
+        case IndicatorsPackage.INDICATOR__NULL_COUNT:
+            setNullCount(NULL_COUNT_EDEFAULT);
+            return;
+        case IndicatorsPackage.INDICATOR__PARAMETERS:
+            setParameters((IndicatorParameters) null);
+            return;
+        case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
+            setAnalyzedElement((ModelElement) null);
+            return;
+        case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
+            setDataminingType(DATAMINING_TYPE_EDEFAULT);
+            return;
+        case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
+            setIndicatorDefinition((IndicatorDefinition) null);
+            return;
+        case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
+            getInstantiatedExpressions().clear();
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.INDICATOR__COUNT:
-                return COUNT_EDEFAULT == null ? count != null : !COUNT_EDEFAULT.equals(count);
-            case IndicatorsPackage.INDICATOR__NULL_COUNT:
-                return NULL_COUNT_EDEFAULT == null ? nullCount != null : !NULL_COUNT_EDEFAULT.equals(nullCount);
-            case IndicatorsPackage.INDICATOR__PARAMETERS:
-                return parameters != null;
-            case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
-                return analyzedElement != null;
-            case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
-                return dataminingType != DATAMINING_TYPE_EDEFAULT;
-            case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
-                return indicatorDefinition != null;
-            case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
-                return instantiatedExpressions != null && !instantiatedExpressions.isEmpty();
+        case IndicatorsPackage.INDICATOR__COUNT:
+            return COUNT_EDEFAULT == null ? count != null : !COUNT_EDEFAULT.equals(count);
+        case IndicatorsPackage.INDICATOR__NULL_COUNT:
+            return NULL_COUNT_EDEFAULT == null ? nullCount != null : !NULL_COUNT_EDEFAULT.equals(nullCount);
+        case IndicatorsPackage.INDICATOR__PARAMETERS:
+            return parameters != null;
+        case IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT:
+            return analyzedElement != null;
+        case IndicatorsPackage.INDICATOR__DATAMINING_TYPE:
+            return dataminingType != DATAMINING_TYPE_EDEFAULT;
+        case IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION:
+            return indicatorDefinition != null;
+        case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
+            return instantiatedExpressions != null && !instantiatedExpressions.isEmpty();
         }
         return super.eIsSet(featureID);
     }
@@ -728,11 +769,13 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy())
+            return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (count: ");

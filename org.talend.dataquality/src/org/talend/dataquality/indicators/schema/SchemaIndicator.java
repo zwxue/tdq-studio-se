@@ -23,8 +23,9 @@ import org.talend.dataquality.indicators.Indicator;
  *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getIndexCount <em>Index Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getViewCount <em>View Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTriggerCount <em>Trigger Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTotalRowCount <em>Total Row Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableRowCount <em>Table Row Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableIndicators <em>Table Indicators</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getViewRowCount <em>View Row Count</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,32 +34,6 @@ import org.talend.dataquality.indicators.Indicator;
  * @generated
  */
 public interface SchemaIndicator extends CompositeIndicator {
-    /**
-     * Returns the value of the '<em><b>Total Row Count</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Total Row Count</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Total Row Count</em>' attribute.
-     * @see #setTotalRowCount(long)
-     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getSchemaIndicator_TotalRowCount()
-     * @model
-     * @generated
-     */
-    long getTotalRowCount();
-
-    /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTotalRowCount <em>Total Row Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Total Row Count</em>' attribute.
-     * @see #getTotalRowCount()
-     * @generated
-     */
-    void setTotalRowCount(long value);
-
     /**
      * Returns the value of the '<em><b>Table Indicators</b></em>' containment reference list.
      * The list contents are of type {@link org.talend.dataquality.indicators.schema.TableIndicator}.
@@ -74,6 +49,31 @@ public interface SchemaIndicator extends CompositeIndicator {
      * @generated
      */
     EList<TableIndicator> getTableIndicators();
+
+    /**
+     * Returns the value of the '<em><b>View Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The number of rows of the analyzed views.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>View Row Count</em>' attribute.
+     * @see #setViewRowCount(long)
+     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getSchemaIndicator_ViewRowCount()
+     * @model
+     * @generated
+     */
+    long getViewRowCount();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getViewRowCount <em>View Row Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>View Row Count</em>' attribute.
+     * @see #getViewRowCount()
+     * @generated
+     */
+    void setViewRowCount(long value);
 
     /**
      * <!-- begin-user-doc -->
@@ -212,5 +212,30 @@ public interface SchemaIndicator extends CompositeIndicator {
      * @generated
      */
     void setTriggerCount(int value);
+
+    /**
+     * Returns the value of the '<em><b>Table Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The number of rows of the analyzed tables.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Table Row Count</em>' attribute.
+     * @see #setTableRowCount(long)
+     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getSchemaIndicator_TableRowCount()
+     * @model
+     * @generated
+     */
+    long getTableRowCount();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableRowCount <em>Table Row Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Table Row Count</em>' attribute.
+     * @see #getTableRowCount()
+     * @generated
+     */
+    void setTableRowCount(long value);
 
 } // SchemaIndicator

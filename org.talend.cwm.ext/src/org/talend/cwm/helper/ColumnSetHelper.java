@@ -103,14 +103,7 @@ public class ColumnSetHelper {
             return null;
         }
         Namespace namespace = element.getNamespace();
-        if (namespace == null) {
-            return null;
-        }
-        TdCatalog res = SwitchHelpers.CATALOG_SWITCH.doSwitch(namespace);
-        if (res != null) {
-            return res;
-        }
-        return SwitchHelpers.SCHEMA_SWITCH.doSwitch(namespace);
+        return PackageHelper.getCatalogOrSchema(namespace);
     }
 
     /**
