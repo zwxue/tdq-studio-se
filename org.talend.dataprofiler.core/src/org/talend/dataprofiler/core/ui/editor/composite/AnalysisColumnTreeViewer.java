@@ -56,11 +56,14 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -89,6 +92,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 
 /**
@@ -121,6 +125,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     private ColumnMasterDetailsPage masterPage;
 
     private Menu menu;
+
+    private MenuItem editPatternMenuItem;
 
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
@@ -156,6 +162,34 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         column4.setText("Operation");
 
         parent.layout();
+        createTreeMenu(newTree, false);
+
+        AbstractAnalysisActionHandler actionHandler = new AbstractAnalysisActionHandler(parent) {
+
+            @Override
+            protected void handleRemove() {
+                removeSelectedElements(newTree);
+            }
+
+        };
+
+        parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
+        ColumnViewerDND.installDND(newTree);
+        this.addTreeListener(newTree);
+        return newTree;
+    }
+
+    /**
+     * DOC qzhang Comment method "createTreeMenu".
+     * 
+     * @param newTree
+     * @param containEdit
+     */
+    private void createTreeMenu(final Tree newTree, boolean containEdit) {
+        Menu oldMenu = newTree.getMenu();
+        if (oldMenu != null && !oldMenu.isDisposed()) {
+            oldMenu.dispose();
+        }
         menu = new Menu(newTree);
         MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
         deleteMenuItem.setText("Remove elements");
@@ -173,21 +207,39 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             }
 
         });
+        if (containEdit) {
+            editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
+            editPatternMenuItem.setText("Edit Pattern");
+            editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
+            editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    TreeItem[] selection = tree.getSelection();
+                    if (selection.length > 0) {
+                        TreeItem treeItem = selection[0];
+                        IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
+                        PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit.getIndicator();
+                        Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
+                        IFile patternFile = PatternResourceFileHelper.getInstance().getPatternFile(pattern);
+                        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                        try {
+                            activePage.openEditor(new FileEditorInput(patternFile),
+                                    "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor");
+                        } catch (PartInitException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+
+            });
+        }
         newTree.setMenu(menu);
-
-        AbstractAnalysisActionHandler actionHandler = new AbstractAnalysisActionHandler(parent) {
-
-            @Override
-            protected void handleRemove() {
-                removeSelectedElements(newTree);
-            }
-
-        };
-
-        parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
-        ColumnViewerDND.installDND(newTree);
-        this.addTreeListener(newTree);
-        return newTree;
     }
 
     public void setInput(Object[] objs) {
@@ -701,7 +753,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-
+                boolean con = false;
                 if (getTheSuitedComposite(e) != null) {
                     getTheSuitedComposite(e).setFocus();
                 }
@@ -710,9 +762,14 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                     if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
                         tree.setMenu(null);
                         return;
+                    } else if (item.getData(INDICATOR_UNIT_KEY) != null) {
+                        IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                        IndicatorEnum type = indicatorUnit.getType();
+                        con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
+                                || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0;
                     }
                 }
-                tree.setMenu(menu);
+                createTreeMenu(tree, con);
             }
 
         });

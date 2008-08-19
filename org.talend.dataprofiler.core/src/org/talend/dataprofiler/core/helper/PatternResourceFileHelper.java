@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.helper;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -32,6 +33,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 
 /**
@@ -179,5 +181,44 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             setResourceChanged(true);
         }
         return saved;
+    }
+
+    /**
+     * DOC qzhang Comment method "getPatternFile".
+     * 
+     * @param pattern
+     */
+    public IFile getPatternFile(Pattern pattern) {
+        IFile file = null;
+        if (resourceChanged) {
+            patternsMap.clear();
+            IFolder defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
+                    .getFolder(DQStructureManager.PATTERNS);
+            try {
+                searchAllPatternes(defaultPatternFolder);
+                defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
+                        .getFolder(DQStructureManager.SQL_PATTERNS);
+                searchAllPatternes(defaultPatternFolder);
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+            resourceChanged = false;
+        }
+        Set<IFile> keySet = patternsMap.keySet();
+        for (IFile file2 : keySet) {
+            Pattern pattern2 = patternsMap.get(file2);
+            RegularExpression e2 = (RegularExpression) pattern.getComponents().get(0);
+            RegularExpression e = (RegularExpression) pattern2.getComponents().get(0);
+            String et = e.getExpressionType();
+            String et2 = e2.getExpressionType();
+            if (pattern2.getName().equals(pattern.getName())) {
+                boolean b = et == null && et2 == null;
+                b = b || (et != null && et.equals(et2));
+                if (b) {
+                    file = file2;
+                }
+            }
+        }
+        return file;
     }
 }
