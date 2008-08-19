@@ -505,22 +505,13 @@ public interface ReportsPackage extends EPackage {
     int TD_REPORT__CREATION_DATE = InformationreportingPackage.REPORT_FEATURE_COUNT + 1;
 
     /**
-     * The feature id for the '<em><b>Last Execution Date</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TD_REPORT__LAST_EXECUTION_DATE = InformationreportingPackage.REPORT_FEATURE_COUNT + 2;
-
-    /**
      * The feature id for the '<em><b>Analysis Map</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_REPORT__ANALYSIS_MAP = InformationreportingPackage.REPORT_FEATURE_COUNT + 3;
+    int TD_REPORT__ANALYSIS_MAP = InformationreportingPackage.REPORT_FEATURE_COUNT + 2;
 
     /**
      * The feature id for the '<em><b>Input Jrxml</b></em>' attribute.
@@ -529,7 +520,7 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TD_REPORT__INPUT_JRXML = InformationreportingPackage.REPORT_FEATURE_COUNT + 4;
+    int TD_REPORT__INPUT_JRXML = InformationreportingPackage.REPORT_FEATURE_COUNT + 3;
 
     /**
      * The feature id for the '<em><b>Output Report Folder</b></em>' attribute.
@@ -538,7 +529,7 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TD_REPORT__OUTPUT_REPORT_FOLDER = InformationreportingPackage.REPORT_FEATURE_COUNT + 5;
+    int TD_REPORT__OUTPUT_REPORT_FOLDER = InformationreportingPackage.REPORT_FEATURE_COUNT + 4;
 
     /**
      * The feature id for the '<em><b>Report Type</b></em>' attribute.
@@ -547,7 +538,16 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TD_REPORT__REPORT_TYPE = InformationreportingPackage.REPORT_FEATURE_COUNT + 6;
+    int TD_REPORT__REPORT_TYPE = InformationreportingPackage.REPORT_FEATURE_COUNT + 5;
+
+    /**
+     * The feature id for the '<em><b>Exec Informations</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TD_REPORT__EXEC_INFORMATIONS = InformationreportingPackage.REPORT_FEATURE_COUNT + 6;
 
     /**
      * The number of structural features of the '<em>Td Report</em>' class.
@@ -947,17 +947,6 @@ public interface ReportsPackage extends EPackage {
     EAttribute getTdReport_CreationDate();
 
     /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getLastExecutionDate <em>Last Execution Date</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Last Execution Date</em>'.
-     * @see org.talend.dataquality.reports.TdReport#getLastExecutionDate()
-     * @see #getTdReport()
-     * @generated
-     */
-    EAttribute getTdReport_LastExecutionDate();
-
-    /**
      * Returns the meta object for the containment reference list '{@link org.talend.dataquality.reports.TdReport#getAnalysisMap <em>Analysis Map</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1000,6 +989,17 @@ public interface ReportsPackage extends EPackage {
      * @generated
      */
     EAttribute getTdReport_ReportType();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.reports.TdReport#getExecInformations <em>Exec Informations</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Exec Informations</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getExecInformations()
+     * @see #getTdReport()
+     * @generated
+     */
+    EReference getTdReport_ExecInformations();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.reports.PresentationParameter <em>Presentation Parameter</em>}'.
@@ -1111,13 +1111,6 @@ public interface ReportsPackage extends EPackage {
          */
         EAttribute TD_REPORT__CREATION_DATE = eINSTANCE.getTdReport_CreationDate();
         /**
-         * The meta object literal for the '<em><b>Last Execution Date</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute TD_REPORT__LAST_EXECUTION_DATE = eINSTANCE.getTdReport_LastExecutionDate();
-        /**
          * The meta object literal for the '<em><b>Analysis Map</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1145,6 +1138,13 @@ public interface ReportsPackage extends EPackage {
          * @generated
          */
         EAttribute TD_REPORT__REPORT_TYPE = eINSTANCE.getTdReport_ReportType();
+        /**
+         * The meta object literal for the '<em><b>Exec Informations</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TD_REPORT__EXEC_INFORMATIONS = eINSTANCE.getTdReport_ExecInformations();
         /**
          * The meta object literal for the '{@link org.talend.dataquality.reports.impl.PresentationParameterImpl <em>Presentation Parameter</em>}' class.
          * <!-- begin-user-doc -->

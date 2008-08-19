@@ -9,6 +9,7 @@ package org.talend.dataquality.reports;
 import java.util.Date;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionInformations;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
@@ -21,11 +22,11 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * <ul>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getPresentationParams <em>Presentation Params</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getCreationDate <em>Creation Date</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.TdReport#getLastExecutionDate <em>Last Execution Date</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getAnalysisMap <em>Analysis Map</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getInputJrxml <em>Input Jrxml</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getOutputReportFolder <em>Output Report Folder</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getReportType <em>Report Type</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.TdReport#getExecInformations <em>Exec Informations</em>}</li>
  * </ul>
  * </p>
  *
@@ -76,31 +77,6 @@ public interface TdReport extends Report {
      * @generated
      */
     void setCreationDate(Date value);
-
-    /**
-     * Returns the value of the '<em><b>Last Execution Date</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * The date of the last computation of the report. 
-     * <!-- end-model-doc -->
-     * @return the value of the '<em>Last Execution Date</em>' attribute.
-     * @see #setLastExecutionDate(Date)
-     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_LastExecutionDate()
-     * @model
-     * @generated
-     */
-    Date getLastExecutionDate();
-
-    /**
-     * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getLastExecutionDate <em>Last Execution Date</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Last Execution Date</em>' attribute.
-     * @see #getLastExecutionDate()
-     * @generated
-     */
-    void setLastExecutionDate(Date value);
 
     /**
      * Returns the value of the '<em><b>Analysis Map</b></em>' containment reference list.
@@ -192,6 +168,32 @@ public interface TdReport extends Report {
      * @generated
      */
     void setReportType(String value);
+
+    /**
+     * Returns the value of the '<em><b>Exec Informations</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Exec Informations</em>' containment reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Exec Informations</em>' containment reference.
+     * @see #setExecInformations(ExecutionInformations)
+     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_ExecInformations()
+     * @model containment="true"
+     * @generated
+     */
+    ExecutionInformations getExecInformations();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getExecInformations <em>Exec Informations</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Exec Informations</em>' containment reference.
+     * @see #getExecInformations()
+     * @generated
+     */
+    void setExecInformations(ExecutionInformations value);
 
     /**
      * <!-- begin-user-doc -->

@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.PresentationParameter;
@@ -32,11 +33,11 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportImpl;
  * <ul>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getPresentationParams <em>Presentation Params</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getCreationDate <em>Creation Date</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getLastExecutionDate <em>Last Execution Date</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getAnalysisMap <em>Analysis Map</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getInputJrxml <em>Input Jrxml</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getOutputReportFolder <em>Output Report Folder</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getReportType <em>Report Type</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getExecInformations <em>Exec Informations</em>}</li>
  * </ul>
  * </p>
  *
@@ -72,26 +73,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @ordered
      */
     protected Date creationDate = CREATION_DATE_EDEFAULT;
-
-    /**
-     * The default value of the '{@link #getLastExecutionDate() <em>Last Execution Date</em>}' attribute. <!--
-     * begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @see #getLastExecutionDate()
-     * @generated
-     * @ordered
-     */
-    protected static final Date LAST_EXECUTION_DATE_EDEFAULT = null;
-
-    /**
-     * The cached value of the '{@link #getLastExecutionDate() <em>Last Execution Date</em>}' attribute. <!--
-     * begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @see #getLastExecutionDate()
-     * @generated
-     * @ordered
-     */
-    protected Date lastExecutionDate = LAST_EXECUTION_DATE_EDEFAULT;
 
     /**
      * The cached value of the '{@link #getAnalysisMap() <em>Analysis Map</em>}' containment reference list. <!--
@@ -164,6 +145,16 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     protected String reportType = REPORT_TYPE_EDEFAULT;
 
     /**
+     * The cached value of the '{@link #getExecInformations() <em>Exec Informations</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getExecInformations()
+     * @generated
+     * @ordered
+     */
+    protected ExecutionInformations execInformations;
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -208,25 +199,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         creationDate = newCreationDate;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__CREATION_DATE, oldCreationDate, creationDate));
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
-    public Date getLastExecutionDate() {
-        return lastExecutionDate;
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
-    public void setLastExecutionDate(Date newLastExecutionDate) {
-        Date oldLastExecutionDate = lastExecutionDate;
-        lastExecutionDate = newLastExecutionDate;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__LAST_EXECUTION_DATE, oldLastExecutionDate, lastExecutionDate));
     }
 
     /**
@@ -295,6 +267,49 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         reportType = newReportType;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__REPORT_TYPE, oldReportType, reportType));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public ExecutionInformations getExecInformations() {
+        return execInformations;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public NotificationChain basicSetExecInformations(ExecutionInformations newExecInformations, NotificationChain msgs) {
+        ExecutionInformations oldExecInformations = execInformations;
+        execInformations = newExecInformations;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, oldExecInformations, newExecInformations);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setExecInformations(ExecutionInformations newExecInformations) {
+        if (newExecInformations != execInformations) {
+            NotificationChain msgs = null;
+            if (execInformations != null)
+                msgs = ((InternalEObject)execInformations).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, null, msgs);
+            if (newExecInformations != null)
+                msgs = ((InternalEObject)newExecInformations).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, null, msgs);
+            msgs = basicSetExecInformations(newExecInformations, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, newExecInformations, newExecInformations));
     }
 
     /**
@@ -408,6 +423,8 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return ((InternalEList<?>)getPresentationParams()).basicRemove(otherEnd, msgs);
             case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 return ((InternalEList<?>)getAnalysisMap()).basicRemove(otherEnd, msgs);
+            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+                return basicSetExecInformations(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -423,8 +440,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return getPresentationParams();
             case ReportsPackage.TD_REPORT__CREATION_DATE:
                 return getCreationDate();
-            case ReportsPackage.TD_REPORT__LAST_EXECUTION_DATE:
-                return getLastExecutionDate();
             case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 return getAnalysisMap();
             case ReportsPackage.TD_REPORT__INPUT_JRXML:
@@ -433,6 +448,8 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return getOutputReportFolder();
             case ReportsPackage.TD_REPORT__REPORT_TYPE:
                 return getReportType();
+            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+                return getExecInformations();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -452,9 +469,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             case ReportsPackage.TD_REPORT__CREATION_DATE:
                 setCreationDate((Date)newValue);
                 return;
-            case ReportsPackage.TD_REPORT__LAST_EXECUTION_DATE:
-                setLastExecutionDate((Date)newValue);
-                return;
             case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 getAnalysisMap().clear();
                 getAnalysisMap().addAll((Collection<? extends AnalysisMap>)newValue);
@@ -467,6 +481,9 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return;
             case ReportsPackage.TD_REPORT__REPORT_TYPE:
                 setReportType((String)newValue);
+                return;
+            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+                setExecInformations((ExecutionInformations)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -485,9 +502,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             case ReportsPackage.TD_REPORT__CREATION_DATE:
                 setCreationDate(CREATION_DATE_EDEFAULT);
                 return;
-            case ReportsPackage.TD_REPORT__LAST_EXECUTION_DATE:
-                setLastExecutionDate(LAST_EXECUTION_DATE_EDEFAULT);
-                return;
             case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 getAnalysisMap().clear();
                 return;
@@ -499,6 +513,9 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return;
             case ReportsPackage.TD_REPORT__REPORT_TYPE:
                 setReportType(REPORT_TYPE_EDEFAULT);
+                return;
+            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+                setExecInformations((ExecutionInformations)null);
                 return;
         }
         super.eUnset(featureID);
@@ -515,8 +532,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return presentationParams != null && !presentationParams.isEmpty();
             case ReportsPackage.TD_REPORT__CREATION_DATE:
                 return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
-            case ReportsPackage.TD_REPORT__LAST_EXECUTION_DATE:
-                return LAST_EXECUTION_DATE_EDEFAULT == null ? lastExecutionDate != null : !LAST_EXECUTION_DATE_EDEFAULT.equals(lastExecutionDate);
             case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
                 return analysisMap != null && !analysisMap.isEmpty();
             case ReportsPackage.TD_REPORT__INPUT_JRXML:
@@ -525,6 +540,8 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return OUTPUT_REPORT_FOLDER_EDEFAULT == null ? outputReportFolder != null : !OUTPUT_REPORT_FOLDER_EDEFAULT.equals(outputReportFolder);
             case ReportsPackage.TD_REPORT__REPORT_TYPE:
                 return REPORT_TYPE_EDEFAULT == null ? reportType != null : !REPORT_TYPE_EDEFAULT.equals(reportType);
+            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+                return execInformations != null;
         }
         return super.eIsSet(featureID);
     }
@@ -540,8 +557,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (creationDate: ");
         result.append(creationDate);
-        result.append(", lastExecutionDate: ");
-        result.append(lastExecutionDate);
         result.append(", inputJrxml: ");
         result.append(inputJrxml);
         result.append(", outputReportFolder: ");

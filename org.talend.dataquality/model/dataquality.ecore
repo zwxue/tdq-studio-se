@@ -128,11 +128,6 @@
       <eStructuralFeatures xsi:type="ecore:EReference" name="presentationParams" upperBound="-1"
           eType="#//reports/PresentationParameter" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="creationDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecutionDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate">
-        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-          <details key="documentation" value="The date of the last computation of the report. "/>
-        </eAnnotations>
-      </eStructuralFeatures>
       <eStructuralFeatures xsi:type="ecore:EReference" name="analysisMap" upperBound="-1"
           eType="#//reports/AnalysisMap" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputJrxml" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -150,6 +145,8 @@
           <details key="documentation" value="The type of report. Types of report can be &quot;snapshot&quot; or &quot;temporal&quot; for the moment. "/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ExecInformations" eType="#//analysis/ExecutionInformations"
+          containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="PresentationParameter" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/analysis/informationvisualization/Rendering">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="plotType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">

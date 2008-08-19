@@ -203,15 +203,4 @@ public class BoxIndicatorItemProvider
                  IndicatorsFactory.eINSTANCE.createMedianIndicator()));
     }
 
-    /**
-     * Return the resource locator for this item provider's resources.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public ResourceLocator getResourceLocator() {
-        return DataqualityEditPlugin.INSTANCE;
-    }
-
 }
