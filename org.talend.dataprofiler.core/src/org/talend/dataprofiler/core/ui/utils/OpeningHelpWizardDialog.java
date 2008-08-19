@@ -115,7 +115,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
     }
 
     private void showHelp() {
-        if (activeCount < 2 && href != null && href.length() > 0) {
+        if (activeCount < 2 && href != null && href.endsWith("html")) {
             Point point = getShell().getDisplay().getCursorLocation();
             IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
             IHelpResource[] relatedTopics = context.getRelatedTopics();

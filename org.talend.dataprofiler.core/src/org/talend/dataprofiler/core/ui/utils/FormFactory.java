@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.FreqBinsDesignerForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTextParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorThresholdsForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.NumbericNominalForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TextLengthForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TextParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TimeSlicesForm;
@@ -32,6 +33,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndica
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorThresholdsParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.NumbericNominalParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextLengthParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
@@ -141,6 +143,17 @@ public final class FormFactory {
                 }
 
                 form = new IndicatorThresholdsForm(parent, SWT.NONE, parameter);
+                form.setListener(listener);
+                list.add(form);
+                break;
+
+            case NumbericNominalForm:
+                parameter = paramMap.get(FormEnum.NumbericNominalForm);
+                if (parameter == null) {
+                    parameter = new NumbericNominalParameter();
+                }
+
+                form = new NumbericNominalForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;

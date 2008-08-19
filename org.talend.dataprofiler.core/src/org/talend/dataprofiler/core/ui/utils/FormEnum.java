@@ -34,7 +34,8 @@ public enum FormEnum {
     FreqTimeSliceForm("Time Slices", "html/wizard/indicator/TimeSlice.html"),
     DataThresholdsForm("Data Thresholds", "html/wizard/indicator/DataThreshold.html"),
     IndicatorThresholdsForm("Indicator Thresholds", "html/wizard/indicator/IndicatorThresholds.html"),
-    TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html");
+    TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"),
+    NumbericNominalForm("Numberic Nominal", "");
 
     private String formName;
 
@@ -120,6 +121,12 @@ public enum FormEnum {
 
                     forms = new FormEnum[] { FormEnum.FreqTimeSliceForm };
                 }
+            } else if (dataminingType == DataminingType.NOMINAL) {
+
+                if (Java2SqlType.isNumbericInSQL(sqlType)) {
+
+                    forms = new FormEnum[] { FormEnum.NumbericNominalForm };
+                }
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
                 forms = new FormEnum[] { FormEnum.FreqTextParametersForm, FormEnum.TextLengthForm };
@@ -127,11 +134,10 @@ public enum FormEnum {
 
             break;
         case ModeIndicatorEnum:
-            if (dataminingType == DataminingType.INTERVAL) {
-                if (Java2SqlType.isNumbericInSQL(sqlType)) {
+            if (dataminingType == DataminingType.INTERVAL && Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { FormEnum.BinsDesignerForm };
-                }
+                forms = new FormEnum[] { FormEnum.BinsDesignerForm };
+
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
                 forms = new FormEnum[] { FormEnum.TextParametersForm };

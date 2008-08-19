@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
@@ -24,13 +23,11 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndica
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorThresholdsParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.NumbericNominalParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextLengthParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
 import org.talend.dataquality.domain.Domain;
-import org.talend.dataquality.domain.RangeRestriction;
-import org.talend.dataquality.domain.RealNumberValue;
-import org.talend.dataquality.domain.TextValue;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DateGrain;
@@ -47,9 +44,9 @@ public class IndicatorOptionsWizard extends Wizard {
 
     private boolean isDirty;
 
-    private IndicatorUnit indicatorUnit;
-
     private Indicator indicator;
+
+    private IndicatorUnit indicatorUnit;
 
     private Map<FormEnum, AbstractIndicatorParameter> paramMap = new HashMap<FormEnum, AbstractIndicatorParameter>();
 
@@ -71,20 +68,22 @@ public class IndicatorOptionsWizard extends Wizard {
             AbstractIndicatorForm.emptyParameterList();
         }
 
-        IndicatorParameters indicatorParam = indicatorUnit.getIndicator().getParameters();
+        IndicatorParameters indicatorParam = indicator.getParameters();
         if (indicatorParam != null) {
 
-            TextParameters textParameters = indicatorParam.getTextParameter();
+            NumbericNominalParameter numbericNominalParameter = new NumbericNominalParameter();
+            numbericNominalParameter.setNumberOfShown(indicatorParam.getTopN());
+            paramMap.put(FormEnum.NumbericNominalForm, numbericNominalParameter);
 
-            if (textParameters != null) {
+            if (indicatorParam.getTextParameter() != null) {
 
                 TextParameter textParam = new TextParameter();
-                textParam.setIngoreCase(textParameters.isIgnoreCase());
+                textParam.setIngoreCase(indicatorParam.getTextParameter().isIgnoreCase());
                 textParam.setNumOfShown(indicatorParam.getTopN());
 
                 TextLengthParameter textLengthParam = new TextLengthParameter();
-                textLengthParam.setUseBlank(textParameters.isUseBlank());
-                textLengthParam.setUseNull(textParameters.isUseNulls());
+                textLengthParam.setUseBlank(indicatorParam.getTextParameter().isUseBlank());
+                textLengthParam.setUseNull(indicatorParam.getTextParameter().isUseNulls());
 
                 paramMap.put(FormEnum.TextParametersForm, textParam);
                 paramMap.put(FormEnum.TextLengthForm, textLengthParam);
@@ -139,182 +138,84 @@ public class IndicatorOptionsWizard extends Wizard {
 
         try {
 
-            IndicatorParameters paramters = indicatorUnit.getIndicator().getParameters();
+            IndicatorParameters paramters = indicator.getParameters();
 
             if (paramters == null) {
                 isDirty = true;
                 paramters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-                indicatorUnit.getIndicator().setParameters(paramters);
+                indicator.setParameters(paramters);
             }
 
+            DateParameters dateParameters = paramters.getDateParameters();
             TextParameters textParameters = paramters.getTextParameter();
 
-            for (AbstractIndicatorParameter parameter : AbstractIndicatorForm.getParameters()) {
+            for (AbstractIndicatorParameter formParam : AbstractIndicatorForm.getParameters()) {
 
-                if (parameter.getFormEnum() == FormEnum.BinsDesignerForm) {
+                if (!ParamCompareFactory.compare(paramters, formParam)) {
+                    isDirty = true;
 
-                    BinsDesignerParameter tempParam = (BinsDesignerParameter) parameter;
-                    int numOfBin = tempParam.getNumOfBins();
-                    int numOfShown = tempParam.getNumOfShown();
-                    double min = tempParam.getMinValue();
-                    double max = tempParam.getMaxValue();
-                    Domain domain = tempParam.getUserDomian();
+                    switch (formParam.getFormEnum()) {
+                    case BinsDesignerForm:
+                        BinsDesignerParameter tempParam = (BinsDesignerParameter) formParam;
+                        int numOfBin = tempParam.getNumOfBins();
+                        int numOfShown = tempParam.getNumOfShown();
+                        double min = tempParam.getMinValue();
+                        double max = tempParam.getMaxValue();
+                        Domain domain = tempParam.getUserDomian();
 
-                    if (domain == null) {
-                        domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numOfBin, min, max);
-                    }
-
-                    Domain bins = paramters.getBins();
-                    boolean same = true;
-                    if (bins != null) {
-                        EList<RangeRestriction> ranges = bins.getRanges();
-                        EList<RangeRestriction> ranges2 = domain.getRanges();
-                        if (ranges.size() != ranges2.size()) {
-                            same = false;
+                        if (domain == null) {
+                            domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numOfBin, min, max);
                         }
-                        for (int i = 0; i < ranges2.size() && same; i++) {
-                            RangeRestriction d2 = ranges2.get(i);
-                            RangeRestriction d1 = ranges.get(i);
-                            double v1 = ((RealNumberValue) d1.getLowerValue()).getValue();
-                            double v2 = ((RealNumberValue) d2.getLowerValue()).getValue();
-                            if (v1 != v2) {
-                                same = false;
-                                break;
-                            }
-                            v1 = ((RealNumberValue) d1.getUpperValue()).getValue();
-                            v2 = ((RealNumberValue) d2.getUpperValue()).getValue();
-                            if (v1 != v2) {
-                                same = false;
-                                break;
-                            }
-                        }
-                    } else if (!domain.getRanges().isEmpty()) {
-                        same = false;
-                    }
 
-                    if (paramters.getTopN() != tempParam.getNumOfShown()) {
-                        same = false;
-                    }
-
-                    if (!same) {
-                        isDirty = true;
                         paramters.setBins(domain);
                         paramters.setTopN(numOfShown);
-                    }
-                }
-
-                if (parameter.getFormEnum() == FormEnum.TextParametersForm) {
-                    if (textParameters == null) {
-                        isDirty = true;
-                        textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-                        paramters.setTextParameter(textParameters);
-                    }
-                    TextParameter tempParam = (TextParameter) parameter;
-                    int numOfShown = paramters.getTopN();
-                    // PTODO qzhang for bug 3491.
-                    if (textParameters.isIgnoreCase() != tempParam.isIngoreCase() || numOfShown != tempParam.getNumOfShown()) {
-                        isDirty = true;
-                        textParameters.setIgnoreCase(tempParam.isIngoreCase());
-                        paramters.setTopN(tempParam.getNumOfShown());
-                    }
-                }
-
-                if (parameter.getFormEnum() == FormEnum.TextLengthForm) {
-                    if (textParameters == null) {
-                        isDirty = true;
-                        textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-                        paramters.setTextParameter(textParameters);
-                    }
-                    TextLengthParameter tempParam = (TextLengthParameter) parameter;
-                    // PTODO qzhang for bug 3491.
-                    if (textParameters.isUseBlank() != tempParam.isUseBlank()) {
-                        isDirty = true;
-                        textParameters.setUseBlank(tempParam.isUseBlank());
-                    }
-                    // PTODO qzhang for bug 3491.
-                    if (textParameters.isUseNulls() != tempParam.isUseNull()) {
-                        isDirty = true;
-                        textParameters.setUseNulls(tempParam.isUseNull());
-                    }
-                }
-
-                if (parameter.getFormEnum() == FormEnum.DataThresholdsForm) {
-                    DataThresholdsParameter tempParam = (DataThresholdsParameter) parameter;
-                    String min = tempParam.getMinThreshold();
-                    String max = tempParam.getMaxThreshold();
-                    // PTODO qzhang for bug 3491.
-                    isDirty = indicatorUnit.getIndicator().getParameters() == null;
-                    if (!isDirty) {
-                        Domain validDomain = paramters.getDataValidDomain();
-                        isDirty = validDomain == null;
-                        if (!isDirty) {
-                            int size = validDomain.getRanges().size();
-                            isDirty = size != 1;
-                            if (!isDirty) {
-                                RangeRestriction rr = validDomain.getRanges().get(0);
-                                TextValue lv = (TextValue) rr.getLowerValue();
-                                TextValue uv = (TextValue) rr.getUpperValue();
-                                if (!min.equals(lv.getValue())) {
-                                    isDirty = true;
-                                }
-                                if (!max.equals(uv.getValue())) {
-                                    isDirty = true;
-                                }
-                            }
+                        break;
+                    case TextParametersForm:
+                        if (textParameters == null) {
+                            textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
+                            paramters.setTextParameter(textParameters);
                         }
-                    }
-                    if (isDirty) {
-                        IndicatorHelper.setDataThreshold(indicatorUnit.getIndicator(), min, max);
-                    }
-                }
-
-                if (parameter.getFormEnum() == FormEnum.IndicatorThresholdsForm) {
-                    IndicatorThresholdsParameter tempParam = (IndicatorThresholdsParameter) parameter;
-                    String min = tempParam.getMinThreshold();
-                    String max = tempParam.getMaxThreshold();
-
-                    isDirty = indicatorUnit.getIndicator().getParameters() == null;
-                    if (!isDirty) {
-                        Domain validDomain = paramters.getDataValidDomain();
-                        isDirty = validDomain == null;
-                        if (!isDirty) {
-                            int size = validDomain.getRanges().size();
-                            isDirty = size != 1;
-                            if (!isDirty) {
-                                RangeRestriction rr = validDomain.getRanges().get(0);
-                                TextValue lv = (TextValue) rr.getLowerValue();
-                                TextValue uv = (TextValue) rr.getUpperValue();
-                                if (!min.equals(lv.getValue())) {
-                                    isDirty = true;
-                                }
-                                if (!max.equals(uv.getValue())) {
-                                    isDirty = true;
-                                }
-                            }
+                        TextParameter textParam = (TextParameter) formParam;
+                        textParameters.setIgnoreCase(textParam.isIngoreCase());
+                        paramters.setTopN(textParam.getNumOfShown());
+                        break;
+                    case TextLengthForm:
+                        if (textParameters == null) {
+                            textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
+                            paramters.setTextParameter(textParameters);
                         }
-                    }
-                    if (isDirty) {
-                        IndicatorHelper.setIndicatorThreshold(indicator.getParameters(), min, max);
-                    }
-                }
+                        TextLengthParameter lengthParam = (TextLengthParameter) formParam;
+                        textParameters.setUseBlank(lengthParam.isUseBlank());
+                        textParameters.setUseNulls(lengthParam.isUseNull());
+                        break;
+                    case DataThresholdsForm:
+                        DataThresholdsParameter dataParam = (DataThresholdsParameter) formParam;
+                        String min1 = dataParam.getMinThreshold();
+                        String max1 = dataParam.getMaxThreshold();
 
-                if (parameter.getFormEnum() == FormEnum.TimeSlicesForm) {
-                    DateParameters dateParameters = paramters.getDateParameters();
-                    if (dateParameters == null) {
-                        dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
-                        paramters.setDateParameters(dateParameters);
-                        isDirty = true;
-                    }
-                    TimeSlicesParameter tempParam = (TimeSlicesParameter) parameter;
-                    DateGrain dateGrain = DateGrain.get(tempParam.getDataUnit());
-                    int numOfShown = paramters.getTopN();
-                    // PTODO qzhang for bug 3491.
-                    if (dateGrain.compareTo(dateParameters.getDateAggregationType()) != 0
-                            || numOfShown != tempParam.getNumOfShown()) {
-                        isDirty = true;
-                        numOfShown = tempParam.getNumOfShown();
+                        IndicatorHelper.setDataThreshold(indicator, min1, max1);
+                        break;
+                    case IndicatorThresholdsForm:
+                        IndicatorThresholdsParameter indiParam = (IndicatorThresholdsParameter) formParam;
+                        String min2 = indiParam.getMinThreshold();
+                        String max2 = indiParam.getMaxThreshold();
+
+                        IndicatorHelper.setIndicatorThreshold(paramters, min2, max2);
+                        break;
+                    case TimeSlicesForm:
+                        TimeSlicesParameter timeParam = (TimeSlicesParameter) formParam;
+
+                        DateGrain dateGrain = DateGrain.get(timeParam.getDataUnit());
                         dateParameters.setDateAggregationType(dateGrain);
-                        paramters.setTopN(numOfShown);
+                        paramters.setTopN(timeParam.getNumOfShown());
+                        break;
+                    case NumbericNominalForm:
+                        NumbericNominalParameter numbParam = (NumbericNominalParameter) formParam;
+                        paramters.setTopN(numbParam.getNumberOfShown());
+                        break;
+
+                    default:
+
                     }
                 }
             }
