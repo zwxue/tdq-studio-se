@@ -13,10 +13,6 @@
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.dialogs.IPageChangedListener;
-import org.eclipse.jface.dialogs.IPageChangingListener;
-import org.eclipse.jface.dialogs.PageChangedEvent;
-import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
@@ -64,28 +60,9 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected WizardDialog getPredefinedDialog() {
         WizardDialog sana = getStandardAnalysisWizardDialog(AnalysisType.CONNECTION);
-        sana.addPageChangingListener(new IPageChangingListener() {
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.jface.dialogs.IPageChangingListener#handlePageChanging(org.eclipse.jface.dialogs.PageChangingEvent)
-             */
-            public void handlePageChanging(PageChangingEvent event) {
-                setTdDataProvider();
-            }
-        });
-        sana.addPageChangedListener(new IPageChangedListener() {
+        setTdDataProvider();
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.jface.dialogs.IPageChangedListener#pageChanged(org.eclipse.jface.dialogs.PageChangedEvent)
-             */
-            public void pageChanged(PageChangedEvent event) {
-                setTdDataProvider();
-            }
-        });
         return sana;
     }
 
@@ -115,10 +92,16 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
     private void setTdDataProvider() {
         ConnectionAnalysisParameter connectionParams = (ConnectionAnalysisParameter) AbstractAnalysisWizardPage
                 .getConnectionParams();
+        if (connectionParams == null) {
+            connectionParams = new ConnectionAnalysisParameter();
+        }
+
         file = (IFile) getSelection().getFirstElement();
         TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(file);
         TdDataProvider dataProvider = tdProvider.getObject();
         connectionParams.setTdDataProvider(dataProvider);
+
+        AbstractAnalysisWizardPage.setConnectionParams(connectionParams);
     }
 
 }

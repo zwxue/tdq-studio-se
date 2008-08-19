@@ -55,7 +55,9 @@ public class CreateNewAnalysisWizard extends Wizard {
 
             return true;
         } else {
-            return wizard.performFinish();
+            boolean flag = wizard.performFinish();
+            AbstractAnalysisWizardPage.setConnectionParams(null);
+            return flag;
         }
     }
 
@@ -78,15 +80,22 @@ public class CreateNewAnalysisWizard extends Wizard {
                 addPage(mainPage);
             } else {
 
-                ConnectionAnalysisParameter analysisParameter = new ConnectionAnalysisParameter();
-                AbstractAnalysisWizardPage.setConnectionParams(analysisParameter);
+                ConnectionAnalysisParameter analysisParameter = null;
+
+                if (AbstractAnalysisWizardPage.getConnectionParams() == null) {
+                    analysisParameter = new ConnectionAnalysisParameter();
+                    AbstractAnalysisWizardPage.setConnectionParams(analysisParameter);
+                } else {
+                    analysisParameter = (ConnectionAnalysisParameter) AbstractAnalysisWizardPage.getConnectionParams();
+                }
+
                 if (type == AnalysisType.MULTIPLE_COLUMN) {
                     analysisParameter.setAnalysisTypeName(AnalysisType.MULTIPLE_COLUMN.getLiteral());
                     wizard = WizardFactory.createColumnWizard();
                     wizard.addPages();
                 } else if (type == AnalysisType.CONNECTION) {
                     analysisParameter.setAnalysisTypeName(type.getLiteral());
-                    wizard = WizardFactory.createConnectionWizard(false);
+                    wizard = WizardFactory.createConnectionWizard();
                     wizard.addPages();
                 }
 
@@ -126,6 +135,12 @@ public class CreateNewAnalysisWizard extends Wizard {
 
     public void setOtherPages(WizardPage[] otherPages) {
         this.otherPages = otherPages;
+    }
+
+    @Override
+    public boolean performCancel() {
+        AbstractAnalysisWizardPage.setConnectionParams(null);
+        return super.performCancel();
     }
 
 }

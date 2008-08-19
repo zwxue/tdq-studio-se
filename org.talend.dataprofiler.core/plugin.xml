@@ -488,6 +488,11 @@
            id="org.talend.dataprofiler.core.cheatsheet.connection.analysis"
            name="Connection Analysis Creation">
      </cheatsheet>
+     <category
+           id="org.talend.dataprofiler.core.category.connectionanalysis"
+           name="ConnectionAnalysis"
+           parentCategory="org.talend.dataprofiler.core.category">
+     </category>
   </extension>
    
    <extension

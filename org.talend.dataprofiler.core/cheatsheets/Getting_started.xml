@@ -27,5 +27,15 @@
          <param name="path" value="ColumnAnalysis_cheat.xml">
          </param>
       </task>
+      <task kind="cheatsheet" name="ConnectionAnalysis" skip="false">
+         <intro>
+            This tutorial guides you through the creation of an overview analysis of the content of a database.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="ConnectionAnalysis_cheat.xml">
+         </param>
+      </task>
    </taskGroup>
 </compositeCheatsheet>

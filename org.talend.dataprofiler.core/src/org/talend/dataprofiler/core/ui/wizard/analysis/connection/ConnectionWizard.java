@@ -56,21 +56,10 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
 
     private ConnAnalysisPageStep1 page1;
 
-    private boolean containStep0;
-
     /**
      * 
      */
     public ConnectionWizard() {
-    }
-
-    /**
-     * DOC qzhang ConnectionWizard constructor comment.
-     * 
-     * @param containStep0
-     */
-    public ConnectionWizard(boolean containStep0) {
-        this.containStep0 = containStep0;
     }
 
     /*
@@ -83,10 +72,13 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
 
         metadataPage = new AnalysisMetadataWizardPage();
         addPage(metadataPage);
-        if (containStep0) {
+
+        ConnectionAnalysisParameter parameter = (ConnectionAnalysisParameter) getAnalysisParameter();
+        if (parameter.getTdDataProvider() == null) {
             page0 = new ConnAnalysisPageStep0();
             addPage(page0);
         }
+
         page1 = new ConnAnalysisPageStep1();
         addPage(page1);
     }

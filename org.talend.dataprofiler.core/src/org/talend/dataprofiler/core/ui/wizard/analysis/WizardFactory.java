@@ -26,16 +26,6 @@ public class WizardFactory {
         return new ConnectionWizard();
     }
 
-    /**
-     * DOC qzhang Comment method "createConnectionWizard".
-     * 
-     * @param containStep0
-     * @return
-     */
-    public static Wizard createConnectionWizard(boolean containStep0) {
-        return new ConnectionWizard(containStep0);
-    }
-
     public static Wizard createColumnWizard() {
         return new ColumnWizard();
     }
