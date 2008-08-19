@@ -42,14 +42,12 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -121,8 +119,8 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     // srcFile.renameTo(destFile);
                 }
 
-                List<ModelElement> oldDependencySuppliers = EObjectHelper.getDependencySuppliers(fileRes);
-                List<ModelElement> oldDependencyClients = EObjectHelper.getDependencyClients(fileRes);
+                // List<ModelElement> oldDependencySuppliers = EObjectHelper.getDependencySuppliers(fileRes);
+                // List<ModelElement> oldDependencyClients = EObjectHelper.getDependencyClients(fileRes);
                 // EObjectHelper.removeDependencys(new IResource[] { fileRes });
 
                 IContainer srcParent = fileRes.getParent();
@@ -131,18 +129,19 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 Resource resource = rs.getResource(srcUri, true);
                 if (resource != null) {
                     URI desUri = URI.createPlatformResourceURI(folder.getFullPath().toString(), false);
-                    EMFUtil newEmfUtil = new EMFUtil();
-                    ResourceSet newResourceSet = newEmfUtil.getResourceSet();
-                    newResourceSet.getResources().add(resource);
-                    for (ModelElement element : oldDependencySuppliers) {
-                        newResourceSet.getResources().add(element.eResource());
-                    }
-                    for (ModelElement element : oldDependencyClients) {
-                        newResourceSet.getResources().add(element.eResource());
-                    }
-                    EMFUtil.changeUri(resource, desUri);
-                    newEmfUtil.save();
-                    // EMFSharedResources.getSharedEmfUtil().saveSingleResource(resource);
+                    // EMFUtil newEmfUtil = new EMFUtil();
+                    // ResourceSet newResourceSet = newEmfUtil.getResourceSet();
+                    // newResourceSet.getResources().add(resource);
+                    // for (ModelElement element : oldDependencySuppliers) {
+                    // newResourceSet.getResources().add(element.eResource());
+                    // }
+                    // for (ModelElement element : oldDependencyClients) {
+                    // newResourceSet.getResources().add(element.eResource());
+                    // }
+                    // EMFUtil.resolveAll(resource);
+                    // EMFUtil.changeUri(resource, desUri);
+                    // newEmfUtil.save();
+                    EMFUtil.saveToUri(resource, desUri);
                 }
                 try {
                     fileRes.delete(true, null);

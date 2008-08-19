@@ -75,7 +75,7 @@ public final class DQStructureManager {
      */
     public static final String DB_CONNECTIONS = "DB Connections";
 
-    public static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FolderFirmProperty");
+    public static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_CLASSIFY");
 
     public static final String ANALYSIS_FOLDER_PROPERTY = "FOLDER_ANALYSIS_PROPERTY";
 
@@ -89,7 +89,7 @@ public final class DQStructureManager {
 
     public static final String DBCONNECTION_FOLDER_PROPERTY = "DBCONNECTION_FOLDER_PROPERTY";
 
-    public static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FolderFirmProperty");
+    public static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_READ_ONLY");
 
     public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_property";
 
