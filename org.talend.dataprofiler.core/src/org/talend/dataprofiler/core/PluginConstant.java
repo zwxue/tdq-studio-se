@@ -21,6 +21,9 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
  */
 public final class PluginConstant {
 
+    private PluginConstant() {
+    }
+
     public static final String SE_ID = "net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective";
 
     public static final String CHEAT_SHEET_VIEW = "org.eclipse.ui.cheatsheets.views.CheatSheetView";
@@ -85,4 +88,7 @@ public final class PluginConstant {
 
     public static final String DBTYPE_PROPERTY = "dbtype";
 
+    public static final String LESS_OR_EQUAL = (Character.isDefined('\u2264')) ? "\u2264" : "<=";
+
+    public static final String GREATER_OR_EQUAL = (Character.isDefined('\u2265')) ? "\u2265" : ">=";
 }

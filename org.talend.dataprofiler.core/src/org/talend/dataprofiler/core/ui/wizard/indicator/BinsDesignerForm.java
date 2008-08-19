@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
@@ -357,7 +358,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             case 0:
                 return entity.getLowValue();
             case 1:
-                return "<=Value<=";
+                return PluginConstant.LESS_OR_EQUAL + " value <";
             case 2:
                 return entity.getHighValue();
             default:
