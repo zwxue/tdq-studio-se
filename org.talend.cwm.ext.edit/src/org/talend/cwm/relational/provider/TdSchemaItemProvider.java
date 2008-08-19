@@ -22,8 +22,11 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
+import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdSchema;
 
+import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
+import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.resource.relational.provider.SchemaItemProvider;
 
 /**
@@ -113,6 +116,71 @@ public class TdSchemaItemProvider
     @Override
     protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RelationalFactory.eINSTANCE.createTdTable()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RelationalFactory.eINSTANCE.createTdView()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RelationalFactory.eINSTANCE.createTdCatalog()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RelationalFactory.eINSTANCE.createTdSchema()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RelationalFactory.eINSTANCE.createTdColumn()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RelationalFactory.eINSTANCE.createTdSqlDataType()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RelationalFactory.eINSTANCE.createTdTrigger()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RelationalFactory.eINSTANCE.createTdProcedure()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 SoftwaredeploymentFactory.eINSTANCE.createTdProviderConnection()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 SoftwaredeploymentFactory.eINSTANCE.createTdDataManager()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 SoftwaredeploymentFactory.eINSTANCE.createTdDataProvider()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 SoftwaredeploymentFactory.eINSTANCE.createTdSoftwareSystem()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 SoftwaredeploymentFactory.eINSTANCE.createTdMachine()));
     }
 
     /**

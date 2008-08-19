@@ -8,6 +8,7 @@ package org.talend.cwm.softwaredeployment.presentation;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -97,6 +98,24 @@ import org.talend.cwm.relational.presentation.OrgtalendcwmEditorPlugin;
  * @generated
  */
 public class SoftwaredeploymentModelWizard extends Wizard implements INewWizard {
+    /**
+     * The supported extensions for created files.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public static final List<String> FILE_EXTENSIONS =
+        Collections.unmodifiableList(Arrays.asList(OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentEditorFilenameExtensions").split("\\s*,\\s*")));
+
+    /**
+     * A formatted list of supported file extensions, suitable for display.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public static final String FORMATTED_FILE_EXTENSIONS =
+        OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentEditorFilenameExtensions").replaceAll("\\s*,\\s*", ", ");
+
     /**
      * This caches an instance of the model package.
      * <!-- begin-user-doc -->
@@ -317,21 +336,15 @@ public class SoftwaredeploymentModelWizard extends Wizard implements INewWizard 
     @Override
         protected boolean validatePage() {
             if (super.validatePage()) {
-                // Make sure the file ends in ".softwaredeployment".
-                //
-                String requiredExt = OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentEditorFilenameExtension");
-                String enteredExt = new Path(getFileName()).getFileExtension();
-                if (enteredExt == null || !enteredExt.equals(requiredExt)) {
-                    setErrorMessage(OrgtalendcwmEditorPlugin.INSTANCE.getString("_WARN_FilenameExtension", new Object [] { requiredExt }));
+                String extension = new Path(getFileName()).getFileExtension();
+                if (extension == null || !FILE_EXTENSIONS.contains(extension)) {
+                    String key = FILE_EXTENSIONS.size() > 1 ? "_WARN_FilenameExtensions" : "_WARN_FilenameExtension";
+                    setErrorMessage(OrgtalendcwmEditorPlugin.INSTANCE.getString(key, new Object [] { FORMATTED_FILE_EXTENSIONS }));
                     return false;
                 }
-                else {
-                    return true;
-                }
+                return true;
             }
-            else {
-                return false;
-            }
+            return false;
         }
 
         /**
@@ -565,7 +578,7 @@ public class SoftwaredeploymentModelWizard extends Wizard implements INewWizard 
         newFileCreationPage = new SoftwaredeploymentModelWizardNewFileCreationPage("Whatever", selection);
         newFileCreationPage.setTitle(OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentModelWizard_label"));
         newFileCreationPage.setDescription(OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentModelWizard_description"));
-        newFileCreationPage.setFileName(OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentEditorFilenameDefaultBase") + "." + OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentEditorFilenameExtension"));
+        newFileCreationPage.setFileName(OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentEditorFilenameDefaultBase") + "." + FILE_EXTENSIONS.get(0));
         addPage(newFileCreationPage);
 
         // Try and get the resource selection to determine a current directory for the file dialog.
@@ -592,7 +605,7 @@ public class SoftwaredeploymentModelWizard extends Wizard implements INewWizard 
                     // Make up a unique new name here.
                     //
                     String defaultModelBaseFilename = OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentEditorFilenameDefaultBase");
-                    String defaultModelFilenameExtension = OrgtalendcwmEditorPlugin.INSTANCE.getString("_UI_SoftwaredeploymentEditorFilenameExtension");
+                    String defaultModelFilenameExtension = FILE_EXTENSIONS.get(0);
                     String modelFilename = defaultModelBaseFilename + "." + defaultModelFilenameExtension;
                     for (int i = 1; ((IContainer)selectedResource).findMember(modelFilename) != null; ++i) {
                         modelFilename = defaultModelBaseFilename + i + "." + defaultModelFilenameExtension;
