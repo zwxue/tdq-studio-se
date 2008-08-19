@@ -23,9 +23,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -192,6 +194,27 @@ public final class EMFUtil {
             }
         }
         return ok;
+    }
+
+    public static URI saveToUri(Resource res, URI destinationUri) {
+        EMFUtil newEmfUtil = new EMFUtil();
+        ResourceSet newResourceSet = newEmfUtil.getResourceSet();
+        newResourceSet.getResources().add(res);
+
+        // resolve all proxies of the resource to be moved
+        EcoreUtil.resolveAll(res);
+
+        // get all external cross references and for each resolve all proxies (inverse links)
+        Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(res);
+        for (EObject object : find.keySet()) {
+            Resource resource = object.eResource();
+            EcoreUtil.resolveAll(resource);
+            newResourceSet.getResources().add(resource);
+        }
+
+        URI changeUri = changeUri(res, destinationUri);
+        newEmfUtil.save();
+        return changeUri;
     }
 
     /**
