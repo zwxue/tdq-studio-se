@@ -18,6 +18,9 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisFactory;
+import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.TdReport;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
@@ -80,9 +83,28 @@ public final class ReportHelper {
      * Method "mustRefreshAllAnalyses".
      * 
      * @param report
-     * @param refresh true if all analyses must be refreshed
+     * @param refresh true if all analyses must be refreshed. False means that no analysis will be refreshed.
      */
     public static void mustRefreshAllAnalyses(TdReport report, boolean refresh) {
-        // TODO scorreia set boolean
+        EList<AnalysisMap> analysisMap = report.getAnalysisMap();
+        for (AnalysisMap map : analysisMap) {
+            map.setMustRefresh(refresh);
+        }
+    }
+
+    /**
+     * Method "getExecutionInformations" returns the execution informations of the given report. If none existed, they
+     * are created and stored in the report.
+     * 
+     * @param report a report
+     * @return the existing execution informations
+     */
+    public static ExecutionInformations getExecutionInformations(TdReport report) {
+        ExecutionInformations execInformations = report.getExecInformations();
+        if (execInformations == null) {
+            execInformations = AnalysisFactory.eINSTANCE.createExecutionInformations();
+            report.setExecInformations(execInformations);
+        }
+        return execInformations;
     }
 }

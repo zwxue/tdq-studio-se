@@ -37,13 +37,13 @@ public class ReportBuilder {
     
     private TdReport report;
     
-    public boolean initializeTdReport(String analysisName) {
+    public boolean initializeTdReport(String reportName) {
         if (initialized) {
             log.warn("TdReport already initialized. ");
             return false;
         }
         
-        report = ReportHelper.createReport(analysisName);
+        report = ReportHelper.createReport(reportName);
         // set the creation date
         Date date = new Date(System.currentTimeMillis());
         report.setCreationDate(date);

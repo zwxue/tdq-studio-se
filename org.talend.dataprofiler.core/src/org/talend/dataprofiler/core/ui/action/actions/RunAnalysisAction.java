@@ -39,12 +39,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dataquality.helpers.AnalysisHelper;
-import org.talend.dq.analysis.AnalysisExecutor;
-import org.talend.dq.analysis.ColumnAnalysisExecutor;
-import org.talend.dq.analysis.ColumnAnalysisSqlExecutor;
-import org.talend.dq.analysis.ConnectionAnalysisExecutor;
+import org.talend.dq.analysis.AnalysisExecutorSelector;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -125,21 +120,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         if (analysis == null) {
             return;
         }
-        AnalysisType analysisType = AnalysisHelper.getAnalysisType(analysis);
-        AnalysisExecutor exec = null;
-        switch (analysisType) {
-        case MULTIPLE_COLUMN:
-            exec = new ColumnAnalysisSqlExecutor();
-            break;
-        case CONNECTION:
-            exec = new ConnectionAnalysisExecutor();
-            break;
-        default:
-            exec = new ColumnAnalysisExecutor();
-        }
 
         final Analysis finalAnalysis = analysis;
-        final AnalysisExecutor finalExec = exec;
 
         final WorkspaceJob job = new WorkspaceJob("Run Analysis") {
 
@@ -148,7 +130,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                 monitor.beginTask("Running the [" + analysis.getName() + "].....", IProgressMonitor.UNKNOWN);
 
-                final ReturnCode executed = finalExec.execute(finalAnalysis);
+                // MOD scorreia 2008-08-19 factorized code with AnalysisExecutorSelector
+                final ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(finalAnalysis);
                 monitor.done();
                 if (executed.isOk()) {
                     if (log.isInfoEnabled()) {
