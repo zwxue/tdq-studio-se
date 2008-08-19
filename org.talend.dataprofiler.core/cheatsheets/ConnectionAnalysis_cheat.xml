@@ -7,14 +7,23 @@
    </intro>
    <item title="Set the analysis metadata." dialog="true" skip="false">
       <description>
-         This step opens the analysis creation wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a column</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....).
+         This step opens the analysis creation wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a column</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....), choose the connection to analyze and optionally set some filters on tables and/or views to restrict the analysis.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
-   <item title="Set Filters" dialog="true" skip="false">
+   <item title="Review your settings" dialog="true" skip="true">
       <description>
-         You can set filters on the table names and view names to restrict the analysis.
+         This steps open the editor where you can change your analysis settings.
       </description>
+   </item>
+   <item
+         dialog="true"
+         skip="false"
+         title="Analyze.">
+      <description>
+         To execute the analysis, click on the  <b>&quot;Run&quot;</b>  button at the bottom of the editor (<b>or click the link below</b>).
+You can run the analysis with a context menu on the &quot;Analysis&quot; objects in the &quot;DQ Repository&quot; view
+      </description>      
    </item>
 </cheatsheet>
