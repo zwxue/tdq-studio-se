@@ -21,11 +21,20 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataquality.helpers.IndicatorHelper;
 
@@ -37,7 +46,7 @@ public class ChartTableFactory {
     public static void createTable(Composite parent, ChartWithData inputObject) {
         TableViewer tbViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 
-        Table table = tbViewer.getTable();
+        final Table table = tbViewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -123,6 +132,8 @@ public class ChartTableFactory {
         }
 
         tbViewer.setInput(inputObject);
+
+        addTooltipOnTableItem(table);
 
     }
 
@@ -309,4 +320,105 @@ public class ChartTableFactory {
         }
 
     }
+
+    static void addTooltipOnTableItem(final Table table) {
+        table.setToolTipText("");
+
+        final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
+        shell.setLayout(new FillLayout());
+
+        final Listener labelListener = new Listener() {
+
+            public void handleEvent(Event event) {
+                Label label = (Label) event.widget;
+                Shell shell = label.getShell();
+
+                switch (event.type) {
+                case SWT.MouseDown:
+                    Event e = new Event();
+                    e.item = (TableItem) label.getData("_TABLEITEM");
+                    table.setSelection(new TableItem[] { (TableItem) e.item });
+                    table.notifyListeners(SWT.Selection, e);
+                case SWT.MouseExit:
+                    shell.dispose();
+                    break;
+                default:
+                    break;
+                }
+            }
+        };
+
+        Listener tableListener = new Listener() {
+
+            Shell tip = null;
+
+            Label label = null;
+
+            public void handleEvent(Event event) {
+                switch (event.type) {
+                case SWT.Dispose:
+                case SWT.KeyDown:
+                case SWT.MouseMove:
+                    if (tip == null) {
+                        break;
+                    }
+                    tip.dispose();
+                    tip = null;
+                    label = null;
+                    break;
+                case SWT.MouseHover:
+                    TableItem item = table.getItem(new Point(event.x, event.y));
+
+                    if (item != null) {
+                        // deal the object
+                        ChartDataEntity entity = null;
+                        if (item.getData() instanceof PatternChartDataEntity) {
+                            entity = (PatternChartDataEntity) item.getData();
+                        } else {
+                            entity = (ChartDataEntity) item.getData();
+                        }
+
+                        String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(entity.getIndicator());
+                        String min = indicatorThreshold[0];
+                        String max = indicatorThreshold[1];
+                        String current = entity.getValue();
+
+                        if (min != null && max != null && current != null) {
+                            if (Double.valueOf(max) < Double.valueOf(current) || Double.valueOf(current) < Double.valueOf(min)) {
+                                String result = "[" + min + "," + max + "]";
+
+                                // deal the tooltip
+                                if (tip != null && !tip.isDisposed()) {
+                                    tip.dispose();
+                                }
+
+                                tip = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
+                                tip.setLayout(new FillLayout());
+                                label = new Label(tip, SWT.NONE);
+
+                                label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+                                label.setData("_TABLEITEM", item);
+                                label.setText("This value is outside the expected thresholds:" + result);
+                                label.addListener(SWT.MouseExit, labelListener);
+                                label.addListener(SWT.MouseDown, labelListener);
+                                Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+                                Rectangle rect = item.getBounds(1);
+                                Point pt = table.toDisplay(rect.x, rect.y);
+                                tip.setBounds(pt.x + 10, pt.y + 10, size.x, size.y);
+                                tip.setVisible(true);
+                            }
+                        }
+                    }
+                default:
+                    break;
+                }
+            }
+        };
+
+        table.addListener(SWT.Dispose, tableListener);
+        table.addListener(SWT.KeyDown, tableListener);
+        table.addListener(SWT.MouseMove, tableListener);
+        table.addListener(SWT.MouseHover, tableListener);
+    }
+
 }
