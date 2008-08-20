@@ -23,6 +23,8 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
+import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.DataminingType;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -75,6 +77,10 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
             if (Window.OK == dialog.open()) {
                 // TODO zqin get the column and change their datamining type to "Nominal"
                 // use MetadataHelper
+                for (TdColumn column : tempList) {
+
+                    MetadataHelper.setDataminingType(DataminingType.NOMINAL, column);
+                }
                 return true;
             } else {
                 return false;
