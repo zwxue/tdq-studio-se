@@ -25,10 +25,6 @@
          id="org.talend.top.libraries_feature"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.rcp.patch1"
-         version="0.0.0"/>
-
    <plugin
          id="javax.servlet"
          download-size="0"
@@ -309,13 +305,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.pde.runtime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.team.core"
          download-size="0"
          install-size="0"
@@ -529,13 +518,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="javax.wsdl15"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="javax.xml.soap"
          download-size="0"
          install-size="0"
@@ -543,6 +525,27 @@
 
    <plugin
          id="org.talend.dataprofiler.libraries"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.log4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javax.wsdl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.views.log"
          download-size="0"
          install-size="0"
          version="0.0.0"

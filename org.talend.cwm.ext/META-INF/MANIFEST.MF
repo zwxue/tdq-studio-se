@@ -18,4 +18,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.talend.cwm.mip;visibility:=reexport,
  org.talend.utils,
  org.eclipse.emf.ecore.xmi
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy

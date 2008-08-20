@@ -46,6 +46,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.talend.cwm.mip;visibility:=reexport,
  org.talend.cwm.ext,
  org.talend.utils,
- org.talend.libraries.logging,
- org.eclipse.emf.ecore.xmi
-Eclipse-LazyStart: true
+ org.eclipse.emf.ecore.xmi,
+ org.apache.log4j;bundle-version="1.2.13"
+Bundle-ActivationPolicy: lazy
+Eclipse-RegisterBuddy: org.apache.log4j

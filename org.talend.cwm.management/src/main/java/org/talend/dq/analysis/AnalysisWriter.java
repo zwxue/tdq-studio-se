@@ -75,7 +75,7 @@ public class AnalysisWriter {
                 if (!resourceContents.contains(domain)) {
                     resourceContents.add(domain);
 
-                    // --- save patterns
+                    // --- save pattern filters
                     if (AnalysisType.CONNECTION.compareTo(AnalysisHelper.getAnalysisType(analysis)) == 0) {
                         List<Pattern> oldPatterns = DomainHelper.getPatterns(resourceContents);
                         resourceContents.removeAll(oldPatterns);

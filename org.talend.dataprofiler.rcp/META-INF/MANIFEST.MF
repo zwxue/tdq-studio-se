@@ -11,13 +11,14 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.swt,
  org.talend.dataprofiler.core,
  org.eclipse.ui.ide.application,
- org.talend.libraries.logging,
  org.apache.xerces,
  org.eclipse.ui.cheatsheets,
  org.talend.registration,
  org.eclipse.update.core,
- org.eclipse.core.expressions
-Eclipse-LazyStart: true
+ org.eclipse.core.expressions,
+ org.apache.log4j;bundle-version="1.2.13"
+Bundle-ActivationPolicy: lazy
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.rcp,
  org.talend.dataprofiler.rcp.intro
+Eclipse-RegisterBuddy: org.apache.log4j

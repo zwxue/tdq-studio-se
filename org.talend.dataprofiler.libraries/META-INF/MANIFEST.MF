@@ -7,7 +7,7 @@ Bundle-Activator: org.talend.dataprofiler.libraries.LibrariesPlugin
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: 
  common,
  common.log,
@@ -23,3 +23,4 @@ Export-Package:
  org.talend.dataprofiler.libraries
 Bundle-ClassPath: .,
  lib/jxl-2.6.jar
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

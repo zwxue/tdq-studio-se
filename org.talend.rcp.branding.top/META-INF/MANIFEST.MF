@@ -12,5 +12,6 @@ Require-Bundle: org.eclipse.ui,
  org.talend.dataprofiler.core,
  org.eclipse.ui.cheatsheets,
  org.eclipse.ui.forms
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

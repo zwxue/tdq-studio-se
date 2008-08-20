@@ -111,4 +111,4 @@ Export-Package: orgomg.cwm.analysis.businessnomenclature,
  orgomg.mof.model.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
