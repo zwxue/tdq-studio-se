@@ -379,10 +379,12 @@ public class ChartTableFactory {
                         }
 
                         String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(entity.getIndicator());
-                        String min = indicatorThreshold[0];
-                        String max = indicatorThreshold[1];
+                        String min = indicatorThreshold != null ? indicatorThreshold[0] : null;
+                        String max = indicatorThreshold != null ? indicatorThreshold[1] : null;
                         String current = entity.getValue();
 
+                        // TODO zqin handle case when one threshold is null and the other one is not null.
+                        // TODO zqin handle when string is empty (otherwise we get an exception)
                         if (min != null && max != null && current != null) {
                             if (Double.valueOf(max) < Double.valueOf(current) || Double.valueOf(current) < Double.valueOf(min)) {
                                 String result = "[" + min + "," + max + "]";
@@ -408,6 +410,10 @@ public class ChartTableFactory {
                                 tip.setVisible(true);
                             }
                         }
+
+                        // TODO zqin handle data thresholds (currently only available on minValueIndicator and
+                        // maxValueIndicator)
+                        // use IndicatorHelper.getDataThreshold(entity.getIndicator());
                     }
                 default:
                     break;

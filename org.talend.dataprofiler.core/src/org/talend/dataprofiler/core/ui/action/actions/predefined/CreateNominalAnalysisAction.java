@@ -75,10 +75,9 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
             dialog.create();
 
             if (Window.OK == dialog.open()) {
-                // TODO zqin get the column and change their datamining type to "Nominal"
+                // zqin get the column and change their datamining type to "Nominal"
                 // use MetadataHelper
                 for (TdColumn column : tempList) {
-
                     MetadataHelper.setDataminingType(DataminingType.NOMINAL, column);
                 }
                 return true;

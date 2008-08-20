@@ -65,12 +65,13 @@ public final class IndicatorHelper {
      * Method "getDataThreshold".
      * 
      * @param indicator
-     * @return an array with 2 strings (or nulls)
+     * @return an array with 2 strings representing the data thresholds or null. If the array is not null, its content
+     * can be null but its size is always 2.
      */
     public static String[] getDataThreshold(Indicator indicator) {
         IndicatorParameters parameters = indicator.getParameters();
         if (parameters == null) {
-            return new String[] { null, null };
+            return null;
         }
         return getDataThreshold(parameters);
     }
@@ -89,10 +90,17 @@ public final class IndicatorHelper {
         validDomain.getRanges().add(rangeRestriction);
     }
 
+    /**
+     * Method "getIndicatorThreshold".
+     * 
+     * @param indicator
+     * @return an array of thresholds if any or null. When the array is not null, its size is 2 but its elements can be
+     * null. The first element is the lower threshold and the second element is the higher threshold.
+     */
     public static String[] getIndicatorThreshold(Indicator indicator) {
         IndicatorParameters parameters = indicator.getParameters();
         if (parameters == null) {
-            return new String[] { null, null };
+            return null;
         }
         return getIndicatorThreshold(parameters);
     }

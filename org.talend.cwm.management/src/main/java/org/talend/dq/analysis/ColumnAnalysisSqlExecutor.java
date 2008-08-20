@@ -881,6 +881,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (IndicatorsPackage.eINSTANCE.getBoxIndicator().equals(indicator.eClass())) {
                     BoxIndicator boxIndicator = (BoxIndicator) indicator;
                     String[] dataThreshold = IndicatorHelper.getDataThreshold(boxIndicator);
+                    if (dataThreshold == null) {
+                        dataThreshold = new String[2];
+                    }
 
                     RangeIndicator rangeIndicator = boxIndicator.getRangeIndicator();
                     if (rangeIndicator != null) {
