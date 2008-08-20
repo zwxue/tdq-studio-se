@@ -477,7 +477,8 @@ public class IndicatorChartFactory {
                     FrequencyExt[] freqExt = (FrequencyExt[]) unit.getValue();
                     for (FrequencyExt one : freqExt) {
                         entity = new ChartDataEntity();
-                        entity.setLabel(one.getKey().toString());
+                        // MOD scorreia 2008-08-20 handle case when key is null -> replace by "null"
+                        entity.setLabel(String.valueOf(one.getKey()));
                         entity.setValue(String.valueOf(one.getValue()));
                         entity.setPercent(String.valueOf(one.getFrequency()));
                         entity.setIndicator(unit.getIndicator());
