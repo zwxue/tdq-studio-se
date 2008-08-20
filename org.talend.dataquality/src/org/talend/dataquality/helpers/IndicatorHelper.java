@@ -196,7 +196,7 @@ public final class IndicatorHelper {
         assert parameters != null;
         Domain validDomain = parameters.getIndicatorValidDomain();
         if (validDomain == null) {
-            validDomain = DomainHelper.createDomain(DomainHelper.INDICATOR_EXPECTED_VALUE);
+            validDomain = DomainHelper.createIndicatorExpectedValueDomain();
             parameters.setIndicatorValidDomain(validDomain);
         }
         DomainHelper.setIndicatorExpectedValuePattern(Collections.singleton(validDomain), value);

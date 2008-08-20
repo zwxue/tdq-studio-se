@@ -37,15 +37,28 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class DomainHelper {
 
-    public static final String TABLE_PATTERN = "Table Pattern";
+    static enum PatternType {
+        TABLE_PATTERN("Table Pattern"),
+        VIEW_PATTERN("View Pattern"),
+        EXPECTED_VALUE("Expected value");
 
-    public static final String VIEW_PATTERN = "View Pattern";
+        final String label;
 
-    public static final String EXPECTED_VALUE = "Expected value";
+        PatternType(String lab) {
+            this.label = lab;
+        }
+    }
 
-    public static final String INDICATOR_EXPECTED_VALUE = "Indicator expected value";
+    static enum DomainType {
+        ANALYSIS_DATA_FILTER("Analysis Data Filter"),
+        INDICATOR_EXPECTED_VALUE("Indicator expected value");
 
-    public static final String ANALYSIS_DATA_FILTER = "Analysis Data Filter";
+        String label;
+
+        DomainType(String lab) {
+            this.label = lab;
+        }
+    }
 
     private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
 
@@ -58,8 +71,16 @@ public class DomainHelper {
     public static Domain createDomain(String name) {
         Domain domain = DOMAIN.createDomain();
         domain.setName(name);
-
         return domain;
+    }
+
+    /**
+     * Method "createIndicatorExpectedValueDomain".
+     * 
+     * @return a domain dedicated to storing the expected value. The created domain's name is already set.
+     */
+    public static Domain createIndicatorExpectedValueDomain() {
+        return createDomain(DomainHelper.DomainType.INDICATOR_EXPECTED_VALUE.label);
     }
 
     /**
@@ -247,23 +268,32 @@ public class DomainHelper {
     }
 
     public static Domain setDataFilterTablePattern(final Collection<Domain> dataFilters, String tablePattern) {
-        return setDataFilterPattern(dataFilters, TABLE_PATTERN, ANALYSIS_DATA_FILTER, tablePattern);
+        return setDataFilterPattern(dataFilters, PatternType.TABLE_PATTERN, DomainType.ANALYSIS_DATA_FILTER, tablePattern);
     }
 
     public static Domain setDataFilterViewPattern(final Collection<Domain> dataFilters, String viewPattern) {
-        return setDataFilterPattern(dataFilters, VIEW_PATTERN, ANALYSIS_DATA_FILTER, viewPattern);
+        return setDataFilterPattern(dataFilters, PatternType.VIEW_PATTERN, DomainType.ANALYSIS_DATA_FILTER, viewPattern);
     }
 
     public static Domain setIndicatorExpectedValuePattern(final Collection<Domain> dataFilters, String filterPattern) {
-        return setDataFilterPattern(dataFilters, EXPECTED_VALUE, INDICATOR_EXPECTED_VALUE, filterPattern);
+        return setDataFilterPattern(dataFilters, PatternType.EXPECTED_VALUE, DomainType.INDICATOR_EXPECTED_VALUE, filterPattern);
     }
 
-    private static Domain setDataFilterPattern(final Collection<Domain> dataFilters, String type, String domainName,
+    /**
+     * Method "setDataFilterPattern".
+     * 
+     * @param dataFilters a list of data filters
+     * @param type
+     * @param domainName
+     * @param filterPattern
+     * @return
+     */
+    private static Domain setDataFilterPattern(final Collection<Domain> dataFilters, PatternType type, DomainType domainName,
             String filterPattern) {
         RegularExpression filterExpr = BooleanExpressionHelper.createRegularExpression(null, filterPattern);
 
         for (Domain domain : dataFilters) {
-            if (!domainName.equals(domain.getName())) {
+            if (!domainName.label.equals(domain.getName())) {
                 continue;
             }
             boolean exists = false;
@@ -284,17 +314,17 @@ public class DomainHelper {
         // no data filter has not been set yet
         Domain domain = DomainFactory.eINSTANCE.createDomain();
         dataFilters.add(domain);
-        domain.setName(domainName);
+        domain.setName(domainName.label);
         addPatternToDomain(domain, filterExpr, filterPattern, type);
         return domain;
     }
 
     public static String getTablePattern(final Collection<Domain> dataFilters) {
-        return getPattern(dataFilters, ANALYSIS_DATA_FILTER, TABLE_PATTERN);
+        return getPattern(dataFilters, DomainType.ANALYSIS_DATA_FILTER, PatternType.TABLE_PATTERN);
     }
 
     public static String getViewPattern(final Collection<Domain> dataFilters) {
-        return getPattern(dataFilters, ANALYSIS_DATA_FILTER, VIEW_PATTERN);
+        return getPattern(dataFilters, DomainType.ANALYSIS_DATA_FILTER, PatternType.VIEW_PATTERN);
     }
 
     /**
@@ -304,20 +334,20 @@ public class DomainHelper {
      * @return the expected value constraint found in the list of domains.
      */
     public static String getIndicatorExpectedValue(final Collection<Domain> dataFilters) {
-        return getPattern(dataFilters, INDICATOR_EXPECTED_VALUE, EXPECTED_VALUE);
+        return getPattern(dataFilters, DomainType.INDICATOR_EXPECTED_VALUE, PatternType.EXPECTED_VALUE);
     }
 
-    private static String getPattern(final Collection<Domain> dataFilters, String domainName, String type) {
+    private static String getPattern(final Collection<Domain> dataFilters, DomainType domainType, PatternType patternType) {
         if (dataFilters == null) {
             return null;
         }
         for (Domain domain : dataFilters) {
-            if (!domainName.equals(domain.getName())) {
+            if (!domainType.label.equals(domain.getName())) {
                 continue;
             }
             EList<Pattern> patterns = domain.getPatterns();
             for (Pattern pattern : patterns) {
-                if (type.equals(pattern.getName())) {
+                if (patternType.label.equals(pattern.getName())) {
                     PatternComponent next = pattern.getComponents().iterator().next();
                     if (next == null) {
                         continue;
@@ -341,11 +371,15 @@ public class DomainHelper {
      * @param tableFilter
      * @param tablePattern
      */
-    private static void addPatternToDomain(Domain domain, RegularExpression tableFilter, String tablePattern, String type) {
+    private static void addPatternToDomain(Domain domain, RegularExpression tableFilter, String tablePattern, PatternType type) {
         Pattern pattern = createPattern(tablePattern);
-        pattern.setName(type);
+        pattern.setName(type.label);
         pattern.getComponents().add(tableFilter);
         domain.getPatterns().add(pattern);
+        if (PatternType.EXPECTED_VALUE.compareTo(type) == 0) {
+            // store the pattern within the domain
+            domain.getOwnedElement().add(pattern);
+        }
     }
 
     /**
