@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -142,7 +143,8 @@ public class SQLTextEditor extends TextEditor {
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#performSaveAs(org.eclipse.core.runtime.IProgressMonitor)
+     * @see
+     * org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#performSaveAs(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     protected void performSaveAs(IProgressMonitor progressMonitor) {
@@ -216,12 +218,23 @@ public class SQLTextEditor extends TextEditor {
             }
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IFile file = workspace.getRoot().getFile(filePath);
+            // PTODO qzhang 4753: Ask for a new name when saving a file with an already existing name
+            if (file.exists() && SQLExplorerPlugin.isEditorSerialName(filePath.lastSegment())) {
+                InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name",
+                        "this file exists already, please input new file name: ", filePath.lastSegment(), null);
+                if (inputDialog.open() == InputDialog.CANCEL) {
+                    return;
+                } else {
+                    IPath lseg = filePath.removeLastSegments(1);
+                    IPath append = lseg.append(inputDialog.getValue());
+                    file = workspace.getRoot().getFile(append);
+                }
+            }
             newInput = new FileEditorInput(file);
             if (provider == null) {
                 // editor has programmatically been closed while the dialog was open
                 return;
             }
-
             boolean success = false;
             try {
 

@@ -136,25 +136,27 @@ public enum EDriverName {
         default:
             return linkedList;
         }
-        try {
-            Bundle bundle = Platform.getBundle(plugins);
-            String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
-            ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
-            URL hsqldbJar = null;
-            if (jars != null) {
-                for (String jar : jars) {
-                    String value = elements[0].getValue();
-                    for (ManifestElement element : elements) {
-                        if (jar.equals(element.getValue())) {
-                            value = element.getValue();
-                            hsqldbJar = FileLocator.toFileURL(bundle.getEntry(value));
-                            linkedList.add(hsqldbJar.getPath());
+        Bundle bundle = Platform.getBundle(plugins);
+        if (bundle != null) {
+            try {
+                String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
+                ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
+                URL hsqldbJar = null;
+                if (jars != null) {
+                    for (String jar : jars) {
+                        String value = elements[0].getValue();
+                        for (ManifestElement element : elements) {
+                            if (jar.equals(element.getValue())) {
+                                value = element.getValue();
+                                hsqldbJar = FileLocator.toFileURL(bundle.getEntry(value));
+                                linkedList.add(hsqldbJar.getPath());
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return linkedList;
     }

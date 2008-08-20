@@ -50,6 +50,10 @@ import org.osgi.framework.BundleContext;
  */
 public class SQLExplorerPlugin extends AbstractUIPlugin {
 
+    private static final String SQL = ").sql";
+
+    private static final String SQL_EDITOR = "SQL Editor (";
+
     private AliasManager aliasManager;
 
     private int count = 0;
@@ -193,8 +197,8 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
                     }
 
                 if (openEditor) {
-                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo()
-                            + ").sql");
+                    SQLEditorInput input = new SQLEditorInput(SQL_EDITOR + SQLExplorerPlugin.getDefault().getEditorSerialNo()
+                            + SQL);
                     input.setUser(alias.getDefaultUser());
                     try {
                         site.getPage().openEditor(input, SQLEditor.class.getName());
@@ -391,5 +395,15 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
         if (getConnectionsView() == null)
             return null;
         return connectionsView.getSite();
+    }
+
+    /**
+     * DOC qzhang Comment method "isEditorSerialName".
+     * 
+     * @param name
+     * @return
+     */
+    public static boolean isEditorSerialName(String name) {
+        return name.endsWith(SQL) && name.startsWith(SQL_EDITOR);
     }
 }
