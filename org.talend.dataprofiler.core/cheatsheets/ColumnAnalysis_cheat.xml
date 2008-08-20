@@ -33,6 +33,13 @@ If you know the content of a column, set its type to either &quot;Nominal&quot;,
          Click on the <b> &quot;options&quot;</b>  button for each indicator you want to set the options to. By default, reasonable options are chosen.
       </description>
    </item>
+   <item
+         skip="true"
+         title="Choose a pattern for each column">
+      <description>
+         For each column, you can add a pattern indicator. There are two kinds of patterns. The regular patterns which are regular expressions (not supported by all databases) and the SQL patterns which are the patterns that you add in a &quot;LIKE&quot; clause. Click on the <b>&quot;Add Pattern&quot;</b> button near each column or <b>drag&amp;drop</b> a pattern from the repository view onto a column.
+      </description>
+   </item>
    <item title="Filter data to analyze." dialog="true" skip="true">
       <description>
          This step is optional. By default, all the data are analyzed. 
