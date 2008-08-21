@@ -186,11 +186,11 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
         if (modelElementList.size() > 0 && !otherFilesExistFlag) {
 
             if (anaMessageFlag && repMessageFlag) {
-                dialogMessage = "The following analyses and reporting will be unusable:";
+                dialogMessage = "The following analyses and reports will be unusable:";
             } else if (anaMessageFlag) {
                 dialogMessage = "The following analyses will be unusable:";
             } else {
-                dialogMessage = "The following reporting will be unusable:";
+                dialogMessage = "The following reports will be unusable:";
             }
             int showDialog = DeleteModelElementConfirmDialog.showDialog(null, modelElementList
                     .toArray(new ModelElement[modelElementList.size()]), dialogMessage);

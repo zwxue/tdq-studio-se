@@ -50,6 +50,16 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
  */
 public class IndicatorSelectDialog extends TrayDialog {
 
+    /**
+     * Default width of the columns.
+     */
+    private static final int COLI_WIDTH = 100;
+
+    /**
+     * Width of the first column.
+     */
+    private static final int COL0_WIDTH = 200;
+
     private static final int ROW_MAX_LENGTH = 107;
 
     private static final String DESCRIPTION = "Description: ";
@@ -459,25 +469,27 @@ public class IndicatorSelectDialog extends TrayDialog {
         if (this.columnIndicators.length > 1) {
             treeColumn = new TreeColumn[columnIndicators.length + 2];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
-            treeColumn[0].setWidth(200);
+            treeColumn[0].setWidth(COL0_WIDTH);
             treeColumn[1] = new TreeColumn(tree, SWT.CENTER);
-            treeColumn[1].setWidth(100);
-            treeColumn[1].setText("Row Select");
+            treeColumn[1].setWidth(COLI_WIDTH);
+            treeColumn[1].setText("All columns");
+            treeColumn[1].setToolTipText("This will select indicators for all analyzed columns");
 
             for (int i = 0; i < this.columnIndicators.length; i++) {
                 treeColumn[i + 2] = new TreeColumn(tree, SWT.CENTER);
-                treeColumn[i + 2].setWidth(100);
+                treeColumn[i + 2].setWidth(COLI_WIDTH);
                 treeColumn[i + 2].setText(columnIndicators[i].getTdColumn().getName());
                 treeColumn[i + 2].setData(columnIndicators[i]);
+                treeColumn[i + 2].setToolTipText("Analyzed column");
                 columnIndicators[i].copyOldIndicatorEnum();
             }
         } else {
             treeColumn = new TreeColumn[columnIndicators.length + 1];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
-            treeColumn[0].setWidth(200);
+            treeColumn[0].setWidth(COL0_WIDTH);
             for (int i = 0; i < this.columnIndicators.length; i++) {
                 treeColumn[i + 1] = new TreeColumn(tree, SWT.CENTER);
-                treeColumn[i + 1].setWidth(100);
+                treeColumn[i + 1].setWidth(COLI_WIDTH);
                 treeColumn[i + 1].setText(columnIndicators[i].getTdColumn().getName());
                 treeColumn[i + 1].setData(columnIndicators[i]);
                 columnIndicators[i].copyOldIndicatorEnum();
