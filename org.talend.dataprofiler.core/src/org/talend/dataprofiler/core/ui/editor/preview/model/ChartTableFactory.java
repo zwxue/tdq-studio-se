@@ -192,7 +192,7 @@ public class ChartTableFactory {
         String max = threshold[1];
 
         // handle min and max
-        double dMin, dMax, dValue = Double.valueOf(currentValue);
+        Double dMin, dMax, dValue = currentValue != null ? Double.valueOf(currentValue) : Double.NaN;
         if (min == null || "".equals(min) || "null".equals(min)) {
             dMin = Double.NEGATIVE_INFINITY;
             min = String.valueOf(dMin);

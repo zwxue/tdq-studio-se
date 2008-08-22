@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -499,11 +500,18 @@ public class IndicatorChartFactory {
                 case RegexpMatchingIndicatorEnum:
                 case SqlPatternMatchingIndicatorEnum:
                     PatternMatchingExt patnExt = (PatternMatchingExt) unit.getValue();
+                    PatternMatchingIndicator patternIndicator = (PatternMatchingIndicator) unit.getIndicator();
                     PatternChartDataEntity patternEntity = new PatternChartDataEntity();
                     patternEntity.setLabel(unit.getIndicatorName());
                     patternEntity.setNumMatch(String.valueOf(patnExt.getMatchingValueCount()));
                     patternEntity.setNumNoMatch(String.valueOf(patnExt.getNotMatchingValueCount()));
-                    patternEntity.setIndicator(unit.getIndicator());
+                    // MOD scorreia 2008-08-22 setValue() because used in thresholds validation
+                    Double total = patternIndicator.getMatchingValueCount().doubleValue()
+                            + patternIndicator.getNotMatchingValueCount().doubleValue();
+                    Double percentMatch = total > 0 ? patternIndicator.getMatchingValueCount().doubleValue() * 100 / total
+                            : Double.NaN;
+                    patternEntity.setValue(String.valueOf(percentMatch));
+                    patternEntity.setIndicator(patternIndicator);
                     list.add(patternEntity);
 
                     break;
