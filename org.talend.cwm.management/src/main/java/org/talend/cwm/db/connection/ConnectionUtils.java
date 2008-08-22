@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.Connection;
 import java.sql.Driver;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -145,44 +144,7 @@ public final class ConnectionUtils {
      * @return a return code with the appropriate message (never null)
      */
     public static ReturnCode isValid(final Connection connection) {
-        ReturnCode retCode = new ReturnCode();
-        if (connection == null) {
-            retCode.setReturnCode("Connection is null!", false);
-            return retCode;
-        }
-
-        ResultSet ping = null;
-        try {
-            if (connection.isClosed()) {
-                retCode.setReturnCode("Connection is closed", false);
-                return retCode;
-            }
-
-            // do something so that exception is thrown is database connection failed
-            connection.getAutoCommit();
-
-            // select 1 is not understood by Oracle => do not use it
-            // ping = connection.createStatement().executeQuery(PING_SELECT);
-            // boolean next = ping.next();
-            // if (!next) {
-            // retCode.setReturnCode("Problem executing query " + PING_SELECT, next);
-            // return retCode;
-            // }
-            // if we are here, everything is ok
-            return retCode;
-        } catch (SQLException sqle) {
-            retCode.setReturnCode("SQLException caught:" + sqle.getMessage() + " SQL error code: " + sqle.getErrorCode(), false);
-            return retCode;
-        } finally {
-            if (ping != null) {
-                try {
-                    ping.close();
-                } catch (Exception e) {
-                    // do nothing
-                }
-            }
-        }
-
+        return org.talend.utils.sql.ConnectionUtils.isValid(connection);
     }
 
     /**
@@ -193,13 +155,6 @@ public final class ConnectionUtils {
      * when there is a problem.
      */
     public static ReturnCode closeConnection(final Connection connection) {
-        assert connection != null;
-        ReturnCode rc = new ReturnCode(true);
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            rc.setReturnCode("Failed to close connection. Reason: " + e.getMessage(), false);
-        }
-        return rc;
+        return org.talend.utils.sql.ConnectionUtils.closeConnection(connection);
     }
 }
