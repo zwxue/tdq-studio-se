@@ -83,9 +83,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
 
-        IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        AnalysisEditor editor = (AnalysisEditor) activeEditor;
         if (currentSelection == null) {
+            IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            AnalysisEditor editor = (AnalysisEditor) activeEditor;
+
             if (editor != null) {
                 page = (ColumnMasterDetailsPage) editor.getMasterPage();
                 if (page == null) {
@@ -104,6 +105,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
                     analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
                 }
+
+                editor.setRefreshResultPage(true);
             }
 
         } else {
@@ -111,10 +114,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             if (currentSelection.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
                 analysis = AnaResourceFileHelper.getInstance().findAnalysis(currentSelection);
             }
-        }
-
-        if (editor != null) {
-            editor.setRefreshResultPage(true);
         }
 
         if (analysis == null) {
@@ -180,9 +179,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         } else {
             CorePlugin.getDefault().refreshWorkSpace();
             treeViewer.refresh();
-        }
-        if (toolbar) {
-            new RefreshChartAction().run();
         }
     }
 
