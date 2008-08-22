@@ -33,9 +33,9 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -192,7 +192,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         coolBar.add(new ToolBarContributionItem(toolbar, "switch_persp")); //$NON-NLS-1$
         toolbar.add(new ChangePerspectiveAction(true));
         toolbar.add(ActionFactory.SAVE.create(window));
-        runAnalysisAction = new RunAnalysisAction(true);
+        runAnalysisAction = new RunAnalysisAction();
         toolbar.add(runAnalysisAction);
         IWorkbench workbench = PlatformUI.getWorkbench();
         IHandlerService handlerService = (IHandlerService) workbench.getService(IHandlerService.class);
