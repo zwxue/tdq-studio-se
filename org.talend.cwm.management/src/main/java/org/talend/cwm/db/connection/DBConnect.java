@@ -14,7 +14,6 @@ package org.talend.cwm.db.connection;
 
 import java.sql.Connection;
 import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
@@ -143,8 +142,8 @@ public class DBConnect {
     }
 
     /**
-     * Method "getTypeSystem". Method this.{@link #retrieveDeployedSystemInformations()} should be called before
-     * getting the type system.
+     * Method "getTypeSystem". Method this.{@link #retrieveDeployedSystemInformations()} should be called before getting
+     * the type system.
      * 
      * @return the TypeSystem that defines the datatypes supported by the software system.
      */
@@ -352,9 +351,9 @@ public class DBConnect {
     private boolean connectLow(String dbUrl, String driverClassName, Properties props) throws SQLException {
         boolean ok = true;
         try {
-            driver = (Driver) Class.forName(driverClassName).newInstance();
-            DriverManager.registerDriver(driver);
-            connection = DriverManager.getConnection(dbUrl, props);
+            driver = ConnectionUtils.getClassDriver(driverClassName);
+            connection = driver.connect(dbUrl, props);
+            // connection = DriverManager.getConnection(dbUrl, props);
 
             this.providerConnection = DatabaseContentRetriever.getProviderConnection(dbUrl, driverClassName, props, connection);
         } catch (InstantiationException e) {

@@ -1,22 +1,18 @@
 package net.sourceforge.sqlexplorer.util;
 
 /*
- * Copyright (C) 2001-2002-2004 Colin Bell
- * colbell@users.sourceforge.net
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2001-2002-2004 Colin Bell colbell@users.sourceforge.net
+ * 
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 import java.io.File;
 import java.io.IOException;
@@ -37,21 +33,17 @@ public class MyURLClassLoader extends URLClassLoader {
 
     private Map _classes = new HashMap();
 
-
     public MyURLClassLoader(String fileName) throws IOException {
         this(new File(fileName).toURL());
     }
 
-
     public MyURLClassLoader(URL url) {
-        this(new URL[] {url});
+        this(new URL[] { url });
     }
-
 
     public MyURLClassLoader(URL[] urls) {
         super(urls, URLUtil.class.getClassLoader());
     }
-
 
     public Class[] getAssignableClasses(Class type) throws IOException {
         List classes = new ArrayList();
@@ -88,8 +80,7 @@ public class MyURLClassLoader extends URLClassLoader {
         return (Class[]) classes.toArray(new Class[classes.size()]);
     }
 
-
-    protected synchronized Class findClass(String className) throws ClassNotFoundException {
+    public synchronized Class findClass(String className) throws ClassNotFoundException {
         Class cls = (Class) _classes.get(className);
         if (cls == null) {
             cls = super.findClass(className);
@@ -97,7 +88,6 @@ public class MyURLClassLoader extends URLClassLoader {
         }
         return cls;
     }
-
 
     protected void classHasBeenLoaded(Class cls) {
     }

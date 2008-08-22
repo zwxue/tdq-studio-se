@@ -15,6 +15,7 @@
 package net.sourceforge.sqlexplorer.plugin;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -141,7 +142,10 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             EDriverName[] values = EDriverName.values();
             for (EDriverName supportDBUrlType : values) {
                 if (id2.equals(supportDBUrlType.getSqlEid())) {
-                    mand.setJars(supportDBUrlType.getJars());
+                    LinkedList<String> jars = mand.getJars();
+                    if (jars.isEmpty()) {
+                        mand.setJars(supportDBUrlType.getJars());
+                    }
                     mand.setDriverClassName(supportDBUrlType.getDbDriver());
                     try {
                         mand.registerSQLDriver();
