@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.utils.collections.MultiMapHelper;
-import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
