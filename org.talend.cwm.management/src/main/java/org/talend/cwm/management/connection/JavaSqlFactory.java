@@ -18,14 +18,13 @@ import java.util.Collection;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
-import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -122,8 +121,7 @@ public final class JavaSqlFactory {
                     log.debug("INVALID Mysql connection string: " + connectionString);
                 }
 
-                connectionString += (connectionString.matches(MYSQL_PATTERN + "/")) ? schema.getName() : "/"
-                        + schema.getName();
+                connectionString += (connectionString.matches(MYSQL_PATTERN + "/")) ? schema.getName() : "/" + schema.getName();
                 databaseConnection.setConnectionString(connectionString);
                 TypedReturnCode<Connection> rc = createConnection(databaseConnection);
                 // reset connection string to previous value

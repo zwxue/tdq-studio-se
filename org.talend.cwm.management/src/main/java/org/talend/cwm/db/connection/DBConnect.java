@@ -34,7 +34,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.typemapping.TypeSystem;
 

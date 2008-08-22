@@ -18,12 +18,12 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.constants.DevelopmentStatus;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.utils.sql.ConnectionUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 

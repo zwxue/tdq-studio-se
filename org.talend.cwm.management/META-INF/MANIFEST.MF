@@ -18,9 +18,11 @@ Require-Bundle: org.talend.libraries.apache,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.talend.cwm.ext;visibility:=reexport,
- org.apache.log4j;bundle-version="1.2.13"
+ org.apache.log4j;bundle-version="1.2.13",
+ net.sourceforge.sqlexplorer;bundle-version="3.5.0"
 Bundle-Vendor: .Talend SA.
-Export-Package: org.talend.cwm.dependencies,
+Export-Package: org.talend.cwm.db.connection,
+ org.talend.cwm.dependencies,
  org.talend.cwm.exception,
  org.talend.cwm.management.api,
  org.talend.cwm.management.connection,
