@@ -35,7 +35,8 @@ public enum FormEnum {
     DataThresholdsForm("Data Thresholds", "html/wizard/indicator/DataThreshold.html"),
     IndicatorThresholdsForm("Indicator Thresholds", "html/wizard/indicator/IndicatorThresholds.html"),
     TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"),
-    NumbericNominalForm("Frequency Table Parameters", "");
+    NumbericNominalForm("Frequency Table Parameters", ""),
+    ExpectedValueForm("Expected Value", "");
 
     private String formName;
 
@@ -89,17 +90,17 @@ public enum FormEnum {
         case RowCountIndicatorEnum:
         case NullCountIndicatorEnum:
         case BlankCountIndicatorEnum:
-            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
+            forms = new FormEnum[] { IndicatorThresholdsForm };
 
             break;
         case DistinctCountIndicatorEnum:
         case UniqueIndicatorEnum:
         case DuplicateCountIndicatorEnum:
 
-            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
+            forms = new FormEnum[] { IndicatorThresholdsForm };
 
             if (Java2SqlType.isTextInSQL(sqlType)) {
-                forms = new FormEnum[] { FormEnum.TextParametersForm, FormEnum.IndicatorThresholdsForm };
+                forms = new FormEnum[] { TextParametersForm, IndicatorThresholdsForm };
             }
 
             break;
@@ -107,28 +108,28 @@ public enum FormEnum {
         case MaxLengthIndicatorEnum:
         case AverageLengthIndicatorEnum:
 
-            forms = new FormEnum[] { FormEnum.TextLengthForm, FormEnum.IndicatorThresholdsForm };
+            forms = new FormEnum[] { TextLengthForm, IndicatorThresholdsForm };
 
             break;
         case FrequencyIndicatorEnum:
             if (dataminingType == DataminingType.INTERVAL) {
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { FormEnum.FreqBinsDesignerForm };
+                    forms = new FormEnum[] { FreqBinsDesignerForm };
                 }
 
                 if (Java2SqlType.isDateInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { FormEnum.FreqTimeSliceForm };
+                    forms = new FormEnum[] { FreqTimeSliceForm };
                 }
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                forms = new FormEnum[] { FormEnum.FreqTextParametersForm, FormEnum.TextLengthForm };
+                forms = new FormEnum[] { FreqTextParametersForm, TextLengthForm };
             } else if (dataminingType == DataminingType.NOMINAL) {
 
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { FormEnum.NumbericNominalForm };
+                    forms = new FormEnum[] { NumbericNominalForm };
                 }
             }
 
@@ -136,16 +137,16 @@ public enum FormEnum {
         case ModeIndicatorEnum:
             if (dataminingType == DataminingType.INTERVAL && Java2SqlType.isNumbericInSQL(sqlType)) {
 
-                forms = new FormEnum[] { FormEnum.BinsDesignerForm };
+                forms = new FormEnum[] { BinsDesignerForm, ExpectedValueForm };
 
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                forms = new FormEnum[] { FormEnum.TextParametersForm };
+                forms = new FormEnum[] { TextParametersForm, ExpectedValueForm };
             }
 
             break;
         case BoxIIndicatorEnum:
-            forms = new FormEnum[] { FormEnum.DataThresholdsForm };
+            forms = new FormEnum[] { DataThresholdsForm };
 
             break;
         case MeanIndicatorEnum:
@@ -154,13 +155,13 @@ public enum FormEnum {
         case UpperQuartileIndicatorEnum:
         case MinValueIndicatorEnum:
         case MaxValueIndicatorEnum:
-            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
+            forms = new FormEnum[] { IndicatorThresholdsForm };
 
             break;
 
         case RegexpMatchingIndicatorEnum:
         case SqlPatternMatchingIndicatorEnum:
-            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
+            forms = new FormEnum[] { IndicatorThresholdsForm };
 
             break;
 

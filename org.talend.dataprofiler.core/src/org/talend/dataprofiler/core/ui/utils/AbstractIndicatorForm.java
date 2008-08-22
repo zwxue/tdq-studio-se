@@ -80,7 +80,7 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     public void showHelp() {
         String href = getFormEnum().getHelpHref();
-        if (href != null && href.length() > 0) {
+        if (href != null && href.endsWith(".html")) {
             Point point = getShell().getDisplay().getCursorLocation();
             IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
             IHelpResource[] relatedTopics = context.getRelatedTopics();

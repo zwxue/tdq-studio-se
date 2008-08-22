@@ -35,8 +35,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.Indicator;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -137,6 +139,54 @@ public class ChartTableFactory {
 
     }
 
+    private static String getToolTipMsg(Indicator indicator, String currentValue) {
+        IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
+        String msg = null;
+        String[] indicatorThreshold = null;
+
+        switch (indicatorEnum) {
+        case ModeIndicatorEnum:
+            String expectedValue = IndicatorHelper.getExpectedValue(indicator);
+            if (expectedValue != null && !expectedValue.equals(currentValue)) {
+                msg = "Expected value: [" + expectedValue + "]";
+            }
+            break;
+        case MinValueIndicatorEnum:
+        case MaxValueIndicatorEnum:
+            indicatorThreshold = IndicatorHelper.getDataThreshold(indicator);
+            break;
+        default:
+            indicatorThreshold = IndicatorHelper.getIndicatorThreshold(indicator);
+            break;
+        }
+
+        if (indicatorThreshold != null) {
+            String min = indicatorThreshold[0];
+            String max = indicatorThreshold[1];
+
+            // handle min and max
+            double dMin, dMax, dValue = Double.valueOf(currentValue);
+            if (min == null || "".equals(min) || "null".equals(min)) {
+                dMin = Double.MIN_VALUE;
+                min = "*";
+            } else {
+                dMin = Double.valueOf(min);
+            }
+            if (max == null || "".equals(max) || "null".equals(max)) {
+                dMax = Double.MAX_VALUE;
+                max = "*";
+            } else {
+                dMax = Double.valueOf(max);
+            }
+
+            if (dValue < dMin || dValue > dMax) {
+                msg = "This value is outside the expected thresholds: [" + min + "," + max + "]";
+            }
+        }
+
+        return msg;
+    }
+
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
@@ -164,29 +214,27 @@ public class ChartTableFactory {
          */
         public Color getForeground(Object element, int columnIndex) {
 
-            ChartDataEntity entity = null;
-            if (element instanceof PatternChartDataEntity) {
-                entity = (PatternChartDataEntity) element;
-            } else {
-                entity = (ChartDataEntity) element;
-            }
-            String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(entity.getIndicator());
-            if (indicatorThreshold != null) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+            Indicator indicator = entity.getIndicator();
+            // IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
+            String currentValue = entity.getValue();
 
-                switch (columnIndex) {
-                case 1:
-                    String min = indicatorThreshold[0];
-                    String max = indicatorThreshold[1];
-                    String currentValue = getColumnText(entity, columnIndex);
-                    if (min != null && max != null && currentValue != null) {
-                        if (Double.valueOf(max) < Double.valueOf(currentValue)
-                                || Double.valueOf(currentValue) < Double.valueOf(min)) {
-                            return Display.getDefault().getSystemColor(SWT.COLOR_RED);
-                        }
-                        break;
-                    }
-                default:
-                }
+            // if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
+            // if (columnIndex == 0) {
+            // if (ChartTableFactory.getToolTipMsg(indicator, currentValue) != null) {
+            // return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+            // }
+            // }
+            // } else {
+            // if (columnIndex == 1) {
+            // if (ChartTableFactory.getToolTipMsg(indicator, currentValue) != null) {
+            // return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+            // }
+            // }
+            // }
+
+            if (ChartTableFactory.getToolTipMsg(indicator, currentValue) != null) {
+                return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 
             return null;
@@ -370,46 +418,18 @@ public class ChartTableFactory {
                     TableItem item = table.getItem(new Point(event.x, event.y));
 
                     if (item != null) {
-                        // deal the object
-                        ChartDataEntity entity = null;
-                        if (item.getData() instanceof PatternChartDataEntity) {
-                            entity = (PatternChartDataEntity) item.getData();
-                        } else {
-                            entity = (ChartDataEntity) item.getData();
-                        }
+                        // show tool tip
+                        ChartDataEntity entity = (ChartDataEntity) item.getData();
+                        String currentValue = entity.getValue();
+                        Indicator indicator = entity.getIndicator();
 
-                        String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(entity.getIndicator());
-                        String min = indicatorThreshold != null ? indicatorThreshold[0] : null;
-                        String max = indicatorThreshold != null ? indicatorThreshold[1] : null;
-                        String current = entity.getValue();
+                        String toolTipMsg = ChartTableFactory.getToolTipMsg(indicator, currentValue);
+                        if (toolTipMsg != null) {
+                            showTip(item, toolTipMsg);
+                        }
 
                         // TODO zqin handle case when one threshold is null and the other one is not null.
                         // TODO zqin handle when string is empty (otherwise we get an exception)
-                        if (min != null && max != null && current != null) {
-                            if (Double.valueOf(max) < Double.valueOf(current) || Double.valueOf(current) < Double.valueOf(min)) {
-                                String result = "[" + min + "," + max + "]";
-
-                                // deal the tooltip
-                                if (tip != null && !tip.isDisposed()) {
-                                    tip.dispose();
-                                }
-
-                                tip = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
-                                tip.setLayout(new FillLayout());
-                                label = new Label(tip, SWT.NONE);
-
-                                label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-                                label.setData("_TABLEITEM", item);
-                                label.setText("This value is outside the expected thresholds:" + result);
-                                label.addListener(SWT.MouseExit, labelListener);
-                                label.addListener(SWT.MouseDown, labelListener);
-                                Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-                                Rectangle rect = item.getBounds(1);
-                                Point pt = table.toDisplay(rect.x, rect.y);
-                                tip.setBounds(pt.x + 10, pt.y + 10, size.x, size.y);
-                                tip.setVisible(true);
-                            }
-                        }
 
                         // TODO zqin handle data thresholds (currently only available on minValueIndicator and
                         // maxValueIndicator)
@@ -418,6 +438,27 @@ public class ChartTableFactory {
                 default:
                     break;
                 }
+            }
+
+            private void showTip(TableItem item, String msg) {
+                if (tip != null && !tip.isDisposed()) {
+                    tip.dispose();
+                }
+
+                tip = new Shell(shell, SWT.ON_TOP | SWT.TOOL);
+                tip.setLayout(new FillLayout());
+                label = new Label(tip, SWT.NONE);
+
+                label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+                label.setData("_TABLEITEM", item);
+                label.setText(msg);
+                label.addListener(SWT.MouseExit, labelListener);
+                label.addListener(SWT.MouseDown, labelListener);
+                Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+                Rectangle rect = item.getBounds(1);
+                Point pt = table.toDisplay(rect.x, rect.y);
+                tip.setBounds(pt.x + 10, pt.y + 10, size.x, size.y);
+                tip.setVisible(true);
             }
         };
 

@@ -22,6 +22,7 @@ import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.ExpectedValueParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorThresholdsParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.NumbericNominalParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextLengthParameter;
@@ -106,6 +107,12 @@ public class IndicatorOptionsWizard extends Wizard {
                 paramMap.put(FormEnum.IndicatorThresholdsForm, indicatorThresholdsParam);
             }
 
+            if (IndicatorHelper.getExpectedValue(indicator) != null) {
+                ExpectedValueParameter expectedParam = new ExpectedValueParameter();
+                expectedParam.setExpectedValue(IndicatorHelper.getExpectedValue(indicator));
+                paramMap.put(FormEnum.ExpectedValueForm, expectedParam);
+            }
+
             Domain domain = indicatorParam.getBins();
             if (domain != null) {
 
@@ -138,20 +145,20 @@ public class IndicatorOptionsWizard extends Wizard {
 
         try {
 
-            IndicatorParameters paramters = indicator.getParameters();
+            IndicatorParameters parameters = indicator.getParameters();
 
-            if (paramters == null) {
+            if (parameters == null) {
                 isDirty = true;
-                paramters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-                indicator.setParameters(paramters);
+                parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+                indicator.setParameters(parameters);
             }
 
-            DateParameters dateParameters = paramters.getDateParameters();
-            TextParameters textParameters = paramters.getTextParameter();
+            DateParameters dateParameters = parameters.getDateParameters();
+            TextParameters textParameters = parameters.getTextParameter();
 
             for (AbstractIndicatorParameter formParam : AbstractIndicatorForm.getParameters()) {
 
-                if (!ParamCompareFactory.compare(paramters, formParam)) {
+                if (!ParamCompareFactory.compare(parameters, formParam)) {
                     isDirty = true;
 
                     switch (formParam.getFormEnum()) {
@@ -167,22 +174,22 @@ public class IndicatorOptionsWizard extends Wizard {
                             domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numOfBin, min, max);
                         }
 
-                        paramters.setBins(domain);
-                        paramters.setTopN(numOfShown);
+                        parameters.setBins(domain);
+                        parameters.setTopN(numOfShown);
                         break;
                     case TextParametersForm:
                         if (textParameters == null) {
                             textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-                            paramters.setTextParameter(textParameters);
+                            parameters.setTextParameter(textParameters);
                         }
                         TextParameter textParam = (TextParameter) formParam;
                         textParameters.setIgnoreCase(textParam.isIngoreCase());
-                        paramters.setTopN(textParam.getNumOfShown());
+                        parameters.setTopN(textParam.getNumOfShown());
                         break;
                     case TextLengthForm:
                         if (textParameters == null) {
                             textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-                            paramters.setTextParameter(textParameters);
+                            parameters.setTextParameter(textParameters);
                         }
                         TextLengthParameter lengthParam = (TextLengthParameter) formParam;
                         textParameters.setUseBlank(lengthParam.isUseBlank());
@@ -200,19 +207,22 @@ public class IndicatorOptionsWizard extends Wizard {
                         String min2 = indiParam.getMinThreshold();
                         String max2 = indiParam.getMaxThreshold();
 
-                        IndicatorHelper.setIndicatorThreshold(paramters, min2, max2);
+                        IndicatorHelper.setIndicatorThreshold(parameters, min2, max2);
                         break;
                     case TimeSlicesForm:
                         TimeSlicesParameter timeParam = (TimeSlicesParameter) formParam;
 
                         DateGrain dateGrain = DateGrain.get(timeParam.getDataUnit());
                         dateParameters.setDateAggregationType(dateGrain);
-                        paramters.setTopN(timeParam.getNumOfShown());
+                        parameters.setTopN(timeParam.getNumOfShown());
                         break;
                     case NumbericNominalForm:
                         NumbericNominalParameter numbParam = (NumbericNominalParameter) formParam;
-                        paramters.setTopN(numbParam.getNumberOfShown());
+                        parameters.setTopN(numbParam.getNumberOfShown());
                         break;
+                    case ExpectedValueForm:
+                        ExpectedValueParameter expectedParam = (ExpectedValueParameter) formParam;
+                        IndicatorHelper.setIndicatorExpectedValue(parameters, expectedParam.getExpectedValue());
 
                     default:
 

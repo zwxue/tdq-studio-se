@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.ExpectedValueParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.NumbericNominalParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextLengthParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
@@ -24,6 +25,7 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.RealNumberValue;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -116,8 +118,20 @@ public class ParamCompareFactory {
 
             break;
 
+        case ExpectedValueForm:
+            ExpectedValueParameter expParam = (ExpectedValueParameter) formParam;
+            String oldValue = IndicatorHelper.getExpectedValue(indicatorParam);
+            String newValue = expParam.getExpectedValue();
+            if (oldValue != null && newValue != null) {
+                same = newValue.equals(oldValue);
+            } else {
+                same = false;
+            }
+
+            break;
         default:
         }
+
         return same;
     }
 

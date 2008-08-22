@@ -52,7 +52,7 @@ public class ChartDataEntity {
             double d = Double.parseDouble(getValue()) / indicator.getCount().doubleValue();
             percent = TextFormatFactory.createStandardPercent(d);
 
-            return percent.equals(0) ? "0" : percent;
+            return d == 0 ? "0" : percent;
         }
     }
 

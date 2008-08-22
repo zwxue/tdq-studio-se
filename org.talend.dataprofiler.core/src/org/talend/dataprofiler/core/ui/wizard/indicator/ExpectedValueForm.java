@@ -14,32 +14,50 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.ExpectedValueParameter;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class TextParametersForm extends AbstractIndicatorForm {
+public class ExpectedValueForm extends AbstractIndicatorForm {
 
-    private Button caseBtn;
+    private ExpectedValueParameter parameter;
 
-    protected TextParameter parameter;
+    private Text expectedValue;
 
-    public TextParametersForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
+    /**
+     * DOC zqin ExpectedValueForm constructor comment.
+     * 
+     * @param parent
+     * @param style
+     * @param parameter
+     */
+    public ExpectedValueForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
         super(parent, style, parameter);
 
-        this.parameter = (TextParameter) parameter;
+        this.parameter = (ExpectedValueParameter) parameter;
         this.setupForm();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormEnum()
+     */
+    @Override
+    public FormEnum getFormEnum() {
+
+        return FormEnum.ExpectedValueForm;
     }
 
     /*
@@ -60,16 +78,13 @@ public class TextParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFields() {
-        this.setLayout(new GridLayout());
+        this.setLayout(new GridLayout(2, false));
+        this.setLayoutData(new GridData(GridData.FILL_BOTH));
+        Label label = new Label(this, SWT.NONE);
+        label.setText("Expected value:");
 
-        Group group = new Group(this, SWT.NONE);
-        group.setLayout(new GridLayout());
-        group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        group.setText("Options");
-
-        caseBtn = new Button(group, SWT.CHECK);
-        caseBtn.setText("ignore case");
-
+        expectedValue = new Text(this, SWT.BORDER);
+        expectedValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     }
 
     /*
@@ -79,18 +94,10 @@ public class TextParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFieldsListeners() {
+        expectedValue.addModifyListener(new ModifyListener() {
 
-        caseBtn.addSelectionListener(new SelectionAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-
-                parameter.setIngoreCase(caseBtn.getSelection());
+            public void modifyText(ModifyEvent e) {
+                parameter.setExpectedValue(expectedValue.getText());
                 updateStatus(IStatus.OK, MSG_OK);
             }
 
@@ -127,18 +134,9 @@ public class TextParametersForm extends AbstractIndicatorForm {
     @Override
     protected void initialize() {
 
-        if (parameter == null) {
-
-            parameter = new TextParameter();
-        } else {
-
-            caseBtn.setSelection(parameter.isIngoreCase());
+        if (parameter.getExpectedValue() != null) {
+            expectedValue.setText(parameter.getExpectedValue());
         }
-    }
-
-    @Override
-    public FormEnum getFormEnum() {
-        return FormEnum.TextParametersForm;
     }
 
 }

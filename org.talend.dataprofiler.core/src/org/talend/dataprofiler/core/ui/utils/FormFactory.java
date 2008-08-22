@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm.ICheckListener;
 import org.talend.dataprofiler.core.ui.wizard.indicator.BinsDesignerForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.DataThresholdsForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.ExpectedValueForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqBinsDesignerForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTextParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
@@ -32,6 +33,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.TimeSlicesForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
+import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.ExpectedValueParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.IndicatorThresholdsParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.NumbericNominalParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextLengthParameter;
@@ -154,6 +156,17 @@ public final class FormFactory {
                 }
 
                 form = new NumbericNominalForm(parent, SWT.NONE, parameter);
+                form.setListener(listener);
+                list.add(form);
+                break;
+
+            case ExpectedValueForm:
+                parameter = paramMap.get(FormEnum.ExpectedValueForm);
+                if (parameter == null) {
+                    parameter = new ExpectedValueParameter();
+                }
+
+                form = new ExpectedValueForm(parent, SWT.NONE, parameter);
                 form.setListener(listener);
                 list.add(form);
                 break;
