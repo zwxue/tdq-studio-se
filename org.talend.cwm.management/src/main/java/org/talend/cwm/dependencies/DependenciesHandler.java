@@ -87,7 +87,9 @@ public final class DependenciesHandler {
             // get the resource of each client
             for (ModelElement modelElement : client) {
                 Resource clientResource = modelElement.eResource();
-                modifiedResources.add(clientResource);
+                if (clientResource != null) {
+                    modifiedResources.add(clientResource);
+                }
             }
             // clear the dependencies of all clients
             // this clear the corresponding getClientDependency() of each client (objects that requires the
