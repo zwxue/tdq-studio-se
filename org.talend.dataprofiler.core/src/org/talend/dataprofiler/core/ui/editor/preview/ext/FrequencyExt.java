@@ -22,9 +22,9 @@ public class FrequencyExt implements Comparable<FrequencyExt> {
 
     private Object key;
 
-    private long value;
+    private Long value;
 
-    private double frequency;
+    private Double frequency;
 
     /**
      * Getter for key.
@@ -49,7 +49,7 @@ public class FrequencyExt implements Comparable<FrequencyExt> {
      * 
      * @return the value
      */
-    public long getValue() {
+    public Long getValue() {
         return this.value;
     }
 
@@ -58,15 +58,15 @@ public class FrequencyExt implements Comparable<FrequencyExt> {
      * 
      * @param value the value to set
      */
-    public void setValue(long value) {
+    public void setValue(Long value) {
         this.value = value;
     }
 
-    public double getFrequency() {
+    public Double getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(double frequency) {
+    public void setFrequency(Double frequency) {
         this.frequency = frequency;
     }
 

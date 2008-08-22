@@ -47,12 +47,11 @@ public class ChartDataEntity {
     public String getPersent() {
 
         if (percent != null) {
-            return percent.equals("0") ? "0" : TextFormatFactory.createStandardPercent(percent);
+            return TextFormatFactory.createStandardPercent(percent);
         } else {
-            double d = Double.parseDouble(getValue()) / indicator.getCount().doubleValue();
+            Double d = Double.parseDouble(getValue()) / indicator.getCount().doubleValue();
             percent = TextFormatFactory.createStandardPercent(d);
-
-            return d == 0 ? "0" : percent;
+            return percent;
         }
     }
 

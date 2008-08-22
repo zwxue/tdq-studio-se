@@ -20,11 +20,15 @@ import java.text.DecimalFormat;
 public class TextFormatFactory {
 
     public static String createStandardPercent(Object input) {
+        Double dbl = new Double(input.toString());
+        if (dbl.equals(Double.NaN)) {
+            return String.valueOf(dbl);
+        }
         DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
         format.applyPattern("0.00%");
 
         try {
-            return format.format(new Double(input.toString()));
+            return format.format(dbl);
         } catch (Exception ne) {
             return "";
         }
