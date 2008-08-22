@@ -24,6 +24,8 @@
       <description>
          To execute the analysis, click on the  <b>&quot;Run&quot;</b>  button at the bottom of the editor (<b>or click the link below</b>).
 You can run the analysis with a context menu on the &quot;Analysis&quot; objects in the &quot;DQ Repository&quot; view
-      </description>      
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      </action>      
    </item>
 </cheatsheet>

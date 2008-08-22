@@ -35,8 +35,10 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ConnectionMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.AnalysisExecutorSelector;
@@ -60,19 +62,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private Analysis analysis = null;
 
-    private boolean toolbar = false;
-
-    private ColumnMasterDetailsPage page;
+    private AbstractMetadataFormPage page;
 
     public RunAnalysisAction() {
         super("Run");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
-    }
-
-    public RunAnalysisAction(boolean toolbar) {
-        this();
-        this.toolbar = toolbar;
-        setActionDefinitionId("org.talend.dataprofiler.core.runAnalysis");
     }
 
     /*
@@ -88,20 +82,29 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             AnalysisEditor editor = (AnalysisEditor) activeEditor;
 
             if (editor != null) {
-                page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                switch (editor.getAnalysisType()) {
+                case MULTIPLE_COLUMN:
+                    page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                    break;
+                case CONNECTION:
+                    page = (ConnectionMasterDetailsPage) editor.getMasterPage();
+                    break;
+                default:
+                }
+
                 if (page == null) {
                     return;
                 }
-                FileEditorInput input = (FileEditorInput) page.getEditorInput();
+
                 if (page.isDirty()) {
                     try {
-                        page.saveAnalysis();
+                        page.doSave(null);
                     } catch (Exception e) {
                         ExceptionHandler.process(e);
                     }
-
                 }
-                IFile file = input.getFile();
+
+                IFile file = ((FileEditorInput) page.getEditorInput()).getFile();
                 if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
                     analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
                 }
@@ -140,12 +143,13 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     AnaResourceFileHelper.getInstance().save(finalAnalysis);
 
-                    if (page != null) {
+                    if (page != null && page instanceof ColumnMasterDetailsPage) {
+
                         Display.getDefault().asyncExec(new Runnable() {
 
                             public void run() {
-
-                                page.refreshChart(page.getForm());
+                                ColumnMasterDetailsPage columnMasterPage = (ColumnMasterDetailsPage) page;
+                                columnMasterPage.refreshChart(columnMasterPage.getForm());
                             }
 
                         });
