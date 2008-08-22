@@ -208,8 +208,17 @@ public final class EMFUtil {
         Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(res);
         for (EObject object : find.keySet()) {
             Resource resource = object.eResource();
+            if (resource == null) {
+                continue;
+            }
             EcoreUtil.resolveAll(resource);
-            newResourceSet.getResources().add(resource);
+        }
+        Iterator<Resource> iterator = newResourceSet.getResources().iterator();
+        while (iterator.hasNext()) {
+            Resource newRes = iterator.next();
+            if (!newRes.isLoaded()) {
+                iterator.remove();
+            }
         }
 
         URI changeUri = changeUri(res, destinationUri);
