@@ -44,7 +44,6 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
-import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateGrain;
@@ -52,10 +51,7 @@ import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.MaxValueIndicator;
-import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
-import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -871,30 +867,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     // set null count value to each indicator
                     if (nullCount != null) {
                         ind.setNullCount(nullCount.getNullCount());
-                    }
-                }
-            }
-
-            // --- set the data threshold of the children of the BoxIndicators
-            EList<Indicator> allIndicators = analysis.getResults().getIndicators();
-            for (Indicator indicator : allIndicators) {
-                if (IndicatorsPackage.eINSTANCE.getBoxIndicator().equals(indicator.eClass())) {
-                    BoxIndicator boxIndicator = (BoxIndicator) indicator;
-                    String[] dataThreshold = IndicatorHelper.getDataThreshold(boxIndicator);
-                    if (dataThreshold == null) {
-                        dataThreshold = new String[2];
-                    }
-
-                    RangeIndicator rangeIndicator = boxIndicator.getRangeIndicator();
-                    if (rangeIndicator != null) {
-                        MinValueIndicator lowerValue = rangeIndicator.getLowerValue();
-                        if (lowerValue != null && dataThreshold[0] != null) {
-                            IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], null);
-                        }
-                        MaxValueIndicator upperValue = rangeIndicator.getUpperValue();
-                        if (upperValue != null && dataThreshold[1] != null) {
-                            IndicatorHelper.setDataThreshold(upperValue, null, dataThreshold[1]);
-                        }
                     }
                 }
             }

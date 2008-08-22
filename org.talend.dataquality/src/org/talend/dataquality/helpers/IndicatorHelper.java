@@ -21,10 +21,16 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.MaxValueIndicator;
+import org.talend.dataquality.indicators.MinValueIndicator;
+import org.talend.dataquality.indicators.RangeIndicator;
 
 /**
  * @author scorreia
@@ -217,5 +223,55 @@ public final class IndicatorHelper {
             parameters.setIndicatorValidDomain(validDomain);
         }
         DomainHelper.setIndicatorExpectedValuePattern(Collections.singleton(validDomain), value);
+    }
+
+    /**
+     * Method "propagateDataThresholdsInChildren" will propage the data threshold to the indicator if the given
+     * indicator is a BoxIndicator (Otherwise, nothing is done).
+     * 
+     * @param indicator an instance of BoxIndicator
+     * 
+     * 
+     */
+    public static void propagateDataThresholdsInChildren(Indicator indicator) {
+        if (IndicatorsPackage.eINSTANCE.getBoxIndicator().equals(indicator.eClass())) {
+            BoxIndicator boxIndicator = (BoxIndicator) indicator;
+            String[] dataThreshold = IndicatorHelper.getDataThreshold(boxIndicator);
+            if (dataThreshold == null) {
+                dataThreshold = new String[2];
+            }
+
+            // --- add thresholds in min and max indicators
+            RangeIndicator rangeIndicator = boxIndicator.getRangeIndicator();
+            setDataThresholds(rangeIndicator, dataThreshold);
+
+            // --- add thresholds in lower and upper quartile indicators
+            IQRIndicator iqr = boxIndicator.getIQR();
+            setDataThresholds(iqr, dataThreshold);
+
+            // --- add threholds to the mean and median indicator
+            setDataThreshold(boxIndicator.getMeanIndicator(), dataThreshold[0], dataThreshold[1]);
+            setDataThreshold(boxIndicator.getMedianIndicator(), dataThreshold[0], dataThreshold[1]);
+        }
+
+    }
+
+    /**
+     * DOC scorreia Comment method "setDataThresholds".
+     * 
+     * @param rangeIndicator
+     * @param dataThreshold
+     */
+    private static void setDataThresholds(RangeIndicator rangeIndicator, String[] dataThreshold) {
+        if (rangeIndicator != null) {
+            MinValueIndicator lowerValue = rangeIndicator.getLowerValue();
+            if (lowerValue != null) {
+                IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
+            }
+            MaxValueIndicator upperValue = rangeIndicator.getUpperValue();
+            if (upperValue != null) {
+                IndicatorHelper.setDataThreshold(upperValue, dataThreshold[0], dataThreshold[1]);
+            }
+        }
     }
 }

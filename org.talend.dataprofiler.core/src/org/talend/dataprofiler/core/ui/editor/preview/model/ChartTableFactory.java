@@ -141,49 +141,70 @@ public class ChartTableFactory {
 
     private static String getToolTipMsg(Indicator indicator, String currentValue) {
         IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
-        String msg = null;
-        String[] indicatorThreshold = null;
+        StringBuilder msg = new StringBuilder();
 
         switch (indicatorEnum) {
         case ModeIndicatorEnum:
             String expectedValue = IndicatorHelper.getExpectedValue(indicator);
             if (expectedValue != null && !expectedValue.equals(currentValue)) {
-                msg = "Expected value: [" + expectedValue + "]";
+                msg.append("Expected value: [" + expectedValue + "]");
             }
-            break;
-        case MinValueIndicatorEnum:
-        case MaxValueIndicatorEnum:
-            indicatorThreshold = IndicatorHelper.getDataThreshold(indicator);
             break;
         default:
-            indicatorThreshold = IndicatorHelper.getIndicatorThreshold(indicator);
+            String[] dataThreshold = IndicatorHelper.getDataThreshold(indicator);
+            if (dataThreshold != null) {
+                String range = getRange(currentValue, dataThreshold);
+                if (range != null) {
+                    msg.append("This value is outside the expected data's thresholds: " + range);
+                }
+            }
+            String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(indicator);
+            if (indicatorThreshold != null) {
+                if (msg.length() != 0) {
+                    msg.append('\n');
+                }
+                String range = getRange(currentValue, indicatorThreshold);
+                if (range != null) {
+                    msg.append("This value is outside the expected indicator's thresholds: " + range);
+                }
+            }
             break;
         }
 
-        if (indicatorThreshold != null) {
-            String min = indicatorThreshold[0];
-            String max = indicatorThreshold[1];
+        return msg.length() == 0 ? null : msg.toString();
+    }
 
-            // handle min and max
-            double dMin, dMax, dValue = Double.valueOf(currentValue);
-            if (min == null || "".equals(min) || "null".equals(min)) {
-                dMin = Double.MIN_VALUE;
-                min = "*";
-            } else {
-                dMin = Double.valueOf(min);
-            }
-            if (max == null || "".equals(max) || "null".equals(max)) {
-                dMax = Double.MAX_VALUE;
-                max = "*";
-            } else {
-                dMax = Double.valueOf(max);
-            }
+    /**
+     * DOC scorreia Comment method "getRange".
+     * 
+     * @param currentValue
+     * @param msg
+     * @param threshold
+     * @return
+     */
+    private static String getRange(String currentValue, String[] threshold) {
+        String msg = null;
+        String min = threshold[0];
+        String max = threshold[1];
 
-            if (dValue < dMin || dValue > dMax) {
-                msg = "This value is outside the expected thresholds: [" + min + "," + max + "]";
-            }
+        // handle min and max
+        double dMin, dMax, dValue = Double.valueOf(currentValue);
+        if (min == null || "".equals(min) || "null".equals(min)) {
+            dMin = Double.NEGATIVE_INFINITY;
+            min = String.valueOf(dMin);
+        } else {
+            dMin = Double.valueOf(min);
+        }
+        if (max == null || "".equals(max) || "null".equals(max)) {
+            dMax = Double.POSITIVE_INFINITY;
+            max = String.valueOf(dMax);
+        } else {
+            dMax = Double.valueOf(max);
         }
 
+        if (dValue < dMin || dValue > dMax) {
+            msg = " [" + min + "," + max + "]";
+        }
         return msg;
     }
 
@@ -428,10 +449,9 @@ public class ChartTableFactory {
                             showTip(item, toolTipMsg);
                         }
 
-                        // TODO zqin handle case when one threshold is null and the other one is not null.
-                        // TODO zqin handle when string is empty (otherwise we get an exception)
-
-                        // TODO zqin handle data thresholds (currently only available on minValueIndicator and
+                        // zqin handle case when one threshold is null and the other one is not null.
+                        // zqin handle when string is empty (otherwise we get an exception)
+                        // zqin handle data thresholds (currently only available on minValueIndicator and
                         // maxValueIndicator)
                         // use IndicatorHelper.getDataThreshold(entity.getIndicator());
                     }

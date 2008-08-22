@@ -201,6 +201,7 @@ public class IndicatorOptionsWizard extends Wizard {
                         String max1 = dataParam.getMaxThreshold();
 
                         IndicatorHelper.setDataThreshold(indicator, min1, max1);
+                        IndicatorHelper.propagateDataThresholdsInChildren(indicator);
                         break;
                     case IndicatorThresholdsForm:
                         IndicatorThresholdsParameter indiParam = (IndicatorThresholdsParameter) formParam;
