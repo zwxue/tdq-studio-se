@@ -36,7 +36,8 @@ public enum SupportDBUrlType {
                      "1521", //$NON-NLS-1$
                      "dbname", //$NON-NLS-1$
                      null,
-                     "oracle.jdbc.driver.OracleDriver", //$NON-NLS-1$
+                     // MOD scorreia 2008-08-22: oracle.jdbc.driver package is not supported anymore: replaced
+                     "oracle.jdbc.OracleDriver", //$NON-NLS-1$ 
                      null), //$NON-NLS-1$
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
                     "localhost", //$NON-NLS-1$

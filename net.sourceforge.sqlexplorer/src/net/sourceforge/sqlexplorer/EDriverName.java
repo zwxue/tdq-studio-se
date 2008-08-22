@@ -37,7 +37,8 @@ public enum EDriverName {
                     "-6",
                     "lib/mysql-connector-java-5.1.0-bin.jar"),
     ORACLEDEFAULTURL("Oracle", //$NON-NLS-1$
-                     "oracle.jdbc.driver.OracleDriver", //$NON-NLS-1$
+                     // MOD scorreia 2008-08-22: oracle.jdbc.driver package is not supported anymore: replaced
+                     "oracle.jdbc.OracleDriver", //$NON-NLS-1$
                      "-4",
                      "lib/ojdbc14.jar"),
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
