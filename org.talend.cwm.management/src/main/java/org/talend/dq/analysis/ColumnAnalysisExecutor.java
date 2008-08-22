@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ColumnHelper;
@@ -58,7 +59,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             return true;
         }
         // else compare
-        if (dataprovider.equals(dp) || ResourceHelper.getUUID(dataprovider) == ResourceHelper.getUUID(dp)) {
+        if (dataprovider.equals(dp) || StringUtils.equals(ResourceHelper.getUUID(dataprovider), ResourceHelper.getUUID(dp))) {
             return true;
         }
         // else
