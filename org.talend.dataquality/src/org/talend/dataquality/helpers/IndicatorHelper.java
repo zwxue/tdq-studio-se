@@ -189,7 +189,16 @@ public final class IndicatorHelper {
      * @return the expected value of the indicator
      */
     public static String getExpectedValue(Indicator indicator) {
-        IndicatorParameters parameters = indicator.getParameters();
+        return getExpectedValue(indicator.getParameters());
+    }
+
+    /**
+     * DOC zqin Comment method "getExpectedValue".
+     * 
+     * @param parameters
+     * @return
+     */
+    public static String getExpectedValue(IndicatorParameters parameters) {
         if (parameters == null) {
             return null;
         }
