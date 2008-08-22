@@ -65,6 +65,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      */
     public TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
         TypedReturnCode<TdDataProvider> rc;
+        registedResourceMap.remove(file);
         rc = new TypedReturnCode<TdDataProvider>();
         Resource resource = getFileResource(file);
         findTdProvider(file, rc, resource);

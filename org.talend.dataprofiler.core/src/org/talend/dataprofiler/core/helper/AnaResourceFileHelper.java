@@ -105,6 +105,17 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         return analysis;
     }
 
+    public Analysis readFromFile(IFile file) {
+        registedResourceMap.remove(file);
+        Resource fileResource = getFileResource(file);
+        Analysis analysis = retireAnalysis(fileResource);
+        if (analysis != null) {
+            AnalysisEntity entity = new AnalysisEntity(analysis);
+            allAnalysisMap.put(file, entity);
+        }
+        return analysis;
+    }
+
     public List<IFile> findCorrespondingFile(List<RenderedObject> renderObjs) {
         this.getAllAnalysis();
         List<IFile> fileList = new ArrayList<IFile>();

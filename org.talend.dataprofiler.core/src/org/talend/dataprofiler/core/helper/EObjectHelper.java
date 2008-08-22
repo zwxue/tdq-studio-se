@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
@@ -31,8 +32,9 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.TypedReturnCode;
-
+import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -83,9 +85,6 @@ public final class EObjectHelper {
                 continue;
             }
             ModelElement elementToDelete = getModelElement(file);
-            if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
-                NeedSaveDataProviderHelper.remove(elementToDelete.eResource().getURI().path());
-            }
             if (elementToDelete != null) {
                 List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(elementToDelete);
 
@@ -98,6 +97,7 @@ public final class EObjectHelper {
         }
     }
 
+    @SuppressWarnings("static-access")
     private static ModelElement getModelElement(IFile file) {
         ModelElement findModelElement = null;
         if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
@@ -105,9 +105,40 @@ public final class EObjectHelper {
             findModelElement = returnValue.getObject();
             NeedSaveDataProviderHelper.remove(findModelElement.eResource().getURI().path());
         } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.ANA)) {
-            findModelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
+            findModelElement = AnaResourceFileHelper.getInstance().readFromFile(file);
         } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
-            findModelElement = RepResourceFileHelper.getInstance().findReport(file);
+            findModelElement = RepResourceFileHelper.getInstance().readFromFile(file);
+            if (findModelElement == null) {
+                return findModelElement;
+            }
+            List<Resource> modifiedResources = new ArrayList<Resource>();
+            for (RenderedObject renderedObj : ((TdReport) findModelElement).getComponent()) {
+                EList<Dependency> supplierDependencies = renderedObj.getSupplierDependency();
+                for (Dependency dependency : supplierDependencies) {
+                    EList<ModelElement> client = dependency.getClient();
+                    // get the resource of each client
+                    for (ModelElement modelElement : client) {
+                        Resource clientResource = modelElement.eResource();
+                        URI resURI = clientResource.getURI();
+                        // if (clientResource == null && modelElement.eIsProxy()) {
+                        // resURI = ((ModelElementImpl) modelElement).eProxyURI();
+                        // } else {
+                        // resURI = clientResource.getURI();
+                        // }
+                        if (resURI.toString().equals(findModelElement.eResource().getURI().toString())) {
+                            modifiedResources.add(renderedObj.eResource());
+                            AnaResourceFileHelper.getInstance().clear();
+                        }
+                    }
+                    // clear the dependencies of all clients
+                    client.clear();
+                }
+            }
+            // save now modified resources (that contain the Dependency objects)
+            EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+            for (Resource resource : modifiedResources) {
+                util.saveSingleResource(resource);
+            }
         } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
             findModelElement = PatternResourceFileHelper.getInstance().findPattern(file);
         }

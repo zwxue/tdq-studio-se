@@ -13,8 +13,10 @@
 package org.talend.dataprofiler.core.ui.views.resources;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -83,11 +85,22 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
         }
         if ((target instanceof IFile)) { // && dropRep
             TdReport findReport = RepResourceFileHelper.getInstance().findReport(((IFile) target));
+
+            List<Analysis> analyses = ReportHelper.getAnalyses(findReport);
+            Map<String, Analysis> resourcesMap = new HashMap<String, Analysis>();
+            for (Analysis ana : analyses) {
+                String uriString = ana.eResource().getURI().toString();
+                resourcesMap.put(uriString, ana);
+            }
             if (resources != null && resources.length > 0) {
                 List<Analysis> anaList = new ArrayList<Analysis>();
                 for (IResource res : resources) {
                     Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis((IFile) res);
                     if (findAnalysis != null) {
+                        String uriKey = findAnalysis.eResource().getURI().toString();
+                        if (resourcesMap.containsKey(uriKey)) {
+                            findReport.getComponent().remove(resourcesMap.get(uriKey));
+                        }
                         anaList.add(findAnalysis);
                     }
                 }

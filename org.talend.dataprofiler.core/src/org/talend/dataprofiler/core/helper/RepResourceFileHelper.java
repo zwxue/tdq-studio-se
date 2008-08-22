@@ -83,7 +83,19 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         }
         Resource fileResource = getFileResource(file);
         report = retireReport(fileResource);
-        allRepMap.put(file, report);
+        if (report != null) {
+            allRepMap.put(file, report);
+        }
+        return report;
+    }
+
+    public TdReport readFromFile(IFile file) {
+        registedResourceMap.remove(file);
+        Resource fileResource = getFileResource(file);
+        TdReport report = retireReport(fileResource);
+        if (report != null) {
+            allRepMap.put(file, report);
+        }
         return report;
     }
 
@@ -97,6 +109,7 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         EList<EObject> contents = fileResource.getContents();
         if (contents.isEmpty()) {
             log.error("No content in " + fileResource);
+            return null;
         }
         log.info("Nb elements in contents " + contents.size());
         ReportsSwitch<TdReport> mySwitch = new ReportsSwitch<TdReport>() {
