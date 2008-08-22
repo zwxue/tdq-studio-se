@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -146,7 +147,10 @@ public class ChartTableFactory {
         switch (indicatorEnum) {
         case ModeIndicatorEnum:
             String expectedValue = IndicatorHelper.getExpectedValue(indicator);
-            if (expectedValue != null && !expectedValue.equals(currentValue)) {
+            // ignore case when options is set
+            boolean areSame = StringUtils.equals(currentValue, expectedValue)
+                    || (IndicatorHelper.ignoreCaseOption(indicator) && StringUtils.equalsIgnoreCase(currentValue, expectedValue));
+            if (!areSame) {
                 msg.append("This value differs from the expected value: \"" + expectedValue + "\"");
             }
             break;

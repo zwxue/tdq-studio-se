@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
+import org.talend.dataquality.indicators.TextParameters;
 
 /**
  * @author scorreia
@@ -273,5 +274,27 @@ public final class IndicatorHelper {
                 IndicatorHelper.setDataThreshold(upperValue, dataThreshold[0], dataThreshold[1]);
             }
         }
+    }
+
+    /**
+     * Method "ignoreCaseOption".
+     * 
+     * @param indicator
+     * @return the ignoreCase option or null if it is not set.
+     */
+    public static Boolean ignoreCaseOption(Indicator indicator) {
+        IndicatorParameters parameters = indicator.getParameters();
+        return (parameters != null) ? ignoreCaseOption(parameters) : null;
+    }
+
+    /**
+     * Method "ignoreCaseOption".
+     * 
+     * @param parameters
+     * @return the ignoreCase option or null if it is not set.
+     */
+    public static Boolean ignoreCaseOption(IndicatorParameters parameters) {
+        TextParameters textParameter = parameters.getTextParameter();
+        return (textParameter != null) ? textParameter.isIgnoreCase() : null;
     }
 }
