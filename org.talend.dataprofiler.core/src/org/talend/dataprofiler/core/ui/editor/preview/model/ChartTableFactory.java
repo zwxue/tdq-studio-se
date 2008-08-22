@@ -147,7 +147,7 @@ public class ChartTableFactory {
         case ModeIndicatorEnum:
             String expectedValue = IndicatorHelper.getExpectedValue(indicator);
             if (expectedValue != null && !expectedValue.equals(currentValue)) {
-                msg.append("Expected value: [" + expectedValue + "]");
+                msg.append("This value differs from the expected value: \"" + expectedValue + "\"");
             }
             break;
         default:
