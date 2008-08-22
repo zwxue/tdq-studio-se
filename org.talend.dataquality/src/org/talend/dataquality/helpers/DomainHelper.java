@@ -299,7 +299,7 @@ public class DomainHelper {
             boolean exists = false;
             EList<Pattern> patterns = domain.getPatterns();
             for (Pattern pattern : patterns) {
-                if (type.equals(pattern.getName())) {
+                if (type.label.equals(pattern.getName())) {
                     exists = true;
                     pattern.getComponents().clear(); // remove previous expressions
                     pattern.getComponents().add(filterExpr);
