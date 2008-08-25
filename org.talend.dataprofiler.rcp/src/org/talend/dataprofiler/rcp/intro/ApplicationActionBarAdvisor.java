@@ -196,7 +196,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolbar.add(runAnalysisAction);
         IWorkbench workbench = PlatformUI.getWorkbench();
         IHandlerService handlerService = (IHandlerService) workbench.getService(IHandlerService.class);
-        handlerService.activateHandler(runAnalysisAction.getActionDefinitionId(), new ActionHandler(runAnalysisAction));
+        handlerService.activateHandler("org.talend.dataprofiler.core.runAnalysis", new ActionHandler(runAnalysisAction));
         refreshChartAction = new RefreshChartAction();
         toolbar.add(refreshChartAction);
         final IWorkbenchWindow activeWorkbenchWindow = getActionBarConfigurer().getWindowConfigurer().getWindow();
