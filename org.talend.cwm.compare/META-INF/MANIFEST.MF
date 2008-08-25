@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CWM Compare Plug-in
+Bundle-SymbolicName: org.talend.cwm.compare
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.talend.cwm.compare.Activator
+Bundle-Vendor: .Talend SA.
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.compare;bundle-version="0.8.0",
+ org.eclipse.emf.compare.diff;bundle-version="0.8.0",
+ org.talend.cwm.management;bundle-version="1.0.0",
+ org.eclipse.emf.compare.match;bundle-version="0.8.0",
+ org.apache.log4j;bundle-version="1.2.13",
+ org.eclipse.core.resources;bundle-version="3.4.0",
+ org.talend.dataprofiler.core;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
