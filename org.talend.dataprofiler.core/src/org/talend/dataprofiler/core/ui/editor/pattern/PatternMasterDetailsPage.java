@@ -121,7 +121,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         sectionComp.setLayout(new GridLayout());
         Label label = new Label(sectionComp, SWT.WRAP);
         label.setText("Add here the definition of your pattern specific to a database. "
-                + " If the expression can is simple enough to be used in all databases,"
+                + " If the expression is simple enough to be used in all databases,"
                 + " use the \"ALL_DATABASE_TYPE\" type enumerate.");
         componentsComp = new Composite(sectionComp, SWT.NONE);
         componentsComp.setLayout(new GridLayout());
