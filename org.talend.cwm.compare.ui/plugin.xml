@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.talend.cwm.compare.ui.views.DQRepositoryListenerView"
+            id="org.talend.cwm.compare.ui.views.DQRepositoryListenerView"
+            name="DQRepository Compare View">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.talend.cwm.compare.ui.actions.IFileRefresh"
+            nameFilter="*.prv"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.talend.cwm.compare.ui.actions.RefreshConnectionActionDelegate"
+               enablesFor="1"
+               icon="icons/update.gif"
+               id="org.talend.cwm.compare.ui.actions.RefreshIFileAction"
+               label="Refresh Connection"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
+      <objectContribution
+            id="org.talend.cwm.compare.ui.actions.TdSchemaRefresh"
+            objectClass="org.talend.cwm.relational.impl.TdSchemaImpl">
+         <action
+               class="org.talend.cwm.compare.ui.actions.RefreshSchemaActionDelegate"
+               enablesFor="1"
+               icon="icons/update.gif"
+               id="org.talend.cwm.compare.ui.actions.RefreshTdSchemaAction"
+               label="Refresh Schema"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
+      <objectContribution
+            id="org.talend.cwm.compare.ui.actions.TdTableRefresh"
+            objectClass="org.talend.cwm.relational.impl.TdTableImpl">
+         <action
+               class="org.talend.cwm.compare.ui.actions.RefreshTableActionDelegate"
+               enablesFor="1"
+               icon="icons/update.gif"
+               id="org.talend.cwm.compare.ui.actions.RefreshTdTableAction"
+               label="Refresh Table"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
+      <objectContribution
+            id="org.talend.cwm.compare.ui.actions.TdViewRefresh"
+            objectClass="org.talend.cwm.relational.impl.TdViewImpl">
+         <action
+               class="org.talend.cwm.compare.ui.actions.RefreshViewActionDelegate"
+               enablesFor="1"
+               icon="icons/update.gif"
+               id="org.talend.cwm.compare.ui.actions.RefreshTdViewAction"
+               label="Refresh View"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
+
+   </extension>
+
+
+</plugin>
