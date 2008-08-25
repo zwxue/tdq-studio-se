@@ -819,7 +819,7 @@ public class DbmsLanguage {
     /**
      * DOC scorreia Comment method "getRegexpTestString".
      * 
-     * @param stringToCheck
+     * @param stringToCheck a string to check (not a column name)
      * @param regularExpression
      * @return
      */
@@ -835,6 +835,39 @@ public class DbmsLanguage {
         if (is(ORACLE)) {
             return "SELECT REGEXP_LIKE(" + surroundWith('\'', stringToCheck, '\'') + " , " + regularExpression.getBody() + ")"
                     + EOS;
+        }
+        return null;
+    }
+
+    /**
+     * Method "regex".
+     * 
+     * @param element
+     * @param regex
+     * @return the regular expression according to the DBMS syntax or null if not supported.
+     */
+    public String regexLike(String element, String regex) {
+        if (is(MYSQL)) {
+            return surroundWithSpaces(element + " REGEXP " + regex);
+        }
+        if (is(ORACLE)) {
+            return surroundWithSpaces("REGEXP_LIKE(" + element + " , " + regex + " )");
+        }
+        if (is(POSTGRESQL)) {
+            return surroundWithSpaces(element + " ~ " + regex);
+        }
+        return null;
+    }
+
+    public String regexNotLike(String element, String regex) {
+        if (is(MYSQL)) {
+            return surroundWithSpaces(element + " NOT REGEXP " + regex);
+        }
+        if (is(ORACLE)) {
+            return surroundWithSpaces("NOT REGEXP_LIKE(" + element + " , " + regex + " )");
+        }
+        if (is(POSTGRESQL)) {
+            return surroundWithSpaces(element + " !~ " + regex);
         }
         return null;
     }

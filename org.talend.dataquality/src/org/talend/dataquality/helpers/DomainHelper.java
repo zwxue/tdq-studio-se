@@ -256,6 +256,12 @@ public class DomainHelper {
         return domains;
     }
 
+    /**
+     * Method "getPatterns".
+     * 
+     * @param objects a list of objects
+     * @return the Pattern objects extracted from the given list
+     */
     public static List<Pattern> getPatterns(Collection<EObject> objects) {
         List<Pattern> patterns = new ArrayList<Pattern>();
         for (EObject object : objects) {

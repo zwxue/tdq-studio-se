@@ -106,30 +106,33 @@ public final class ConnectionUtils {
      */
     public static Driver getClassDriver(String driverClassName) throws InstantiationException, IllegalAccessException,
             ClassNotFoundException {
-        net.sourceforge.sqlexplorer.dbproduct.DriverManager driverModel = SQLExplorerPlugin.getDefault().getDriverModel();
+        SQLExplorerPlugin sqlExplorerPlugin = SQLExplorerPlugin.getDefault();
         Driver driver = null;
-        try {
-            Collection<ManagedDriver> drivers = driverModel.getDrivers();
-            for (ManagedDriver managedDriver : drivers) {
-                LinkedList<String> jars = managedDriver.getJars();
-                for (String string : jars) {
-                    File file = new File(string);
-                    if (file.exists()) {
-                        MyURLClassLoader cl;
-                        cl = new MyURLClassLoader(file.toURL());
-                        try {
-                            Class clazz = cl.findClass(driverClassName);
-                            if (clazz != null) {
-                                driver = (Driver) clazz.newInstance();
+        if (sqlExplorerPlugin != null) {
+            net.sourceforge.sqlexplorer.dbproduct.DriverManager driverModel = sqlExplorerPlugin.getDriverModel();
+            try {
+                Collection<ManagedDriver> drivers = driverModel.getDrivers();
+                for (ManagedDriver managedDriver : drivers) {
+                    LinkedList<String> jars = managedDriver.getJars();
+                    for (String string : jars) {
+                        File file = new File(string);
+                        if (file.exists()) {
+                            MyURLClassLoader cl;
+                            cl = new MyURLClassLoader(file.toURL());
+                            try {
+                                Class clazz = cl.findClass(driverClassName);
+                                if (clazz != null) {
+                                    driver = (Driver) clazz.newInstance();
+                                }
+                            } catch (ClassNotFoundException e) {
+                                // do nothings
                             }
-                        } catch (ClassNotFoundException e) {
-                            // do nothings
                         }
                     }
                 }
+            } catch (MalformedURLException e) {
+                // do nothings
             }
-        } catch (MalformedURLException e) {
-            // do nothings
         }
         if (driver == null) {
             driver = (Driver) Class.forName(driverClassName).newInstance();

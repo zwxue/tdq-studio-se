@@ -144,6 +144,37 @@ public class TestAnalysisCreation {
         // }
     }
 
+    public Analysis createAndRunAnalysis() throws TalendException {
+        analysisBuilder = new AnalysisBuilder();
+        String analysisName = "My test analysis";
+
+        boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, AnalysisType.COLUMN);
+        Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized);
+
+        // get the connection
+        TdDataProvider dataManager = getDataManager();
+        Assert.assertNotNull("No datamanager found!", dataManager);
+        analysisBuilder.setAnalysisConnection(dataManager);
+
+        // get a column to analyze
+        ModelElement column;
+        column = getColumn(dataManager);
+        Indicator[] indicators = getIndicators(column);
+        analysisBuilder.addElementToAnalyze(column, indicators);
+
+        // get the domain constraint
+        Domain dataFilter = getDataFilter(dataManager, (Column) column); // CAST here for test
+        analysisBuilder.addFilterOnData(dataFilter);
+
+        // run analysis
+        Analysis analysis = analysisBuilder.getAnalysis();
+        final boolean useSql = true;
+        IAnalysisExecutor exec = useSql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
+        ReturnCode executed = exec.execute(analysis);
+        Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk());
+        return analysis;
+    }
+
     /**
      * DOC scorreia Comment method "getDataFilter".
      * 
@@ -169,7 +200,7 @@ public class TestAnalysisCreation {
      */
     private BooleanExpressionNode getExpression(Column column) {
         CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
-        expre.setOperands(column, "sunny");
+        expre.setOperands(column, "\"sunny\"");
         return expre.generateExpressions();
     }
 
