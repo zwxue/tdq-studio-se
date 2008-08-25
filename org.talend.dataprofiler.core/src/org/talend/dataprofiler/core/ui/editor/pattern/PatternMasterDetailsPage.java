@@ -32,6 +32,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -118,6 +119,10 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         Section section = createSection(form, topComp, "Pattern Definition", false, null);
         sectionComp = toolkit.createComposite(section);
         sectionComp.setLayout(new GridLayout());
+        Label label = new Label(sectionComp, SWT.WRAP);
+        label.setText("Add here the definition of your pattern specific to a database. "
+                + " If the expression can is simple enough to be used in all databases,"
+                + " use the \"ALL_DATABASE_TYPE\" type enumerate.");
         componentsComp = new Composite(sectionComp, SWT.NONE);
         componentsComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(componentsComp);
