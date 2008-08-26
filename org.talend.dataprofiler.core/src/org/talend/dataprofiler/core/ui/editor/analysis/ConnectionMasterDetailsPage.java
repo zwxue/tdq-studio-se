@@ -33,8 +33,11 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -58,6 +61,7 @@ import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
+import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
@@ -103,6 +107,8 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
 
     private String latestViewFilterValue;
 
+    private TableViewer statisticalViewer;
+
     public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -124,6 +130,23 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         createAnalysisParamSection(form, topComp);
         createAnalysisSummarySection(form, topComp);
         createStatisticalSection(form, topComp);
+
+        GridData gdBtn = new GridData();
+        gdBtn.horizontalAlignment = SWT.CENTER;
+        gdBtn.horizontalSpan = 2;
+        gdBtn.widthHint = 120;
+        Button runBtn = toolkit.createButton(form.getBody(), " Run ", SWT.NONE);
+        runBtn.setLayoutData(gdBtn);
+
+        runBtn.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                new RunAnalysisAction().run();
+            }
+
+        });
+
     }
 
     private void createAnalysisParamSection(ScrolledForm form, Composite topComp) {
@@ -262,20 +285,12 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         Composite sectionClient = toolkit.createComposite(statisticalSection);
         sectionClient.setLayout(new GridLayout());
 
-        TableViewer statisticalViewer = new TableViewer(sectionClient, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
-                | SWT.FULL_SELECTION);
+        statisticalViewer = new TableViewer(sectionClient, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         Table table = statisticalViewer.getTable();
         table.setHeaderVisible(true);
         table.setBackgroundMode(SWT.INHERIT_FORCE);
         table.setLinesVisible(true);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(table);
-        List<CatalogIndicator> indicatorList = null;
-        if (this.connectionAnalysis.getResults().getIndicators().size() > 0) {
-            ConnectionIndicator conIndicator = (ConnectionIndicator) connectionAnalysis.getResults().getIndicators().get(0);
-            indicatorList = conIndicator.getCatalogIndicators();
-        } else {
-            indicatorList = new ArrayList<CatalogIndicator>();
-        }
         List<TdCatalog> catalogs = DataProviderHelper.getTdCatalogs(tdDataProvider);
         boolean containSchema = false;
         for (TdCatalog catalog : catalogs) {
@@ -311,10 +326,24 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         }
         statisticalViewer.setLabelProvider(provider);
         statisticalViewer.setContentProvider(provider);
-        statisticalViewer.setInput(indicatorList);
+        doSetInput();
         sectionClient.layout();
         statisticalSection.setClient(sectionClient);
 
+    }
+
+    /**
+     * DOC qzhang Comment method "doSetInput".
+     */
+    public void doSetInput() {
+        List<CatalogIndicator> indicatorList = null;
+        if (this.connectionAnalysis.getResults().getIndicators().size() > 0) {
+            ConnectionIndicator conIndicator = (ConnectionIndicator) connectionAnalysis.getResults().getIndicators().get(0);
+            indicatorList = conIndicator.getCatalogIndicators();
+        } else {
+            indicatorList = new ArrayList<CatalogIndicator>();
+        }
+        statisticalViewer.setInput(indicatorList);
     }
 
     private TableViewer createSecondStatisticalTable(Composite parent) {

@@ -143,16 +143,20 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     AnaResourceFileHelper.getInstance().save(finalAnalysis);
 
-                    if (page != null && page instanceof ColumnMasterDetailsPage) {
-
+                    if (page != null) {
                         Display.getDefault().asyncExec(new Runnable() {
 
                             public void run() {
-                                ColumnMasterDetailsPage columnMasterPage = (ColumnMasterDetailsPage) page;
-                                columnMasterPage.refreshChart(columnMasterPage.getForm());
+                                if (page instanceof ColumnMasterDetailsPage) {
+                                    ColumnMasterDetailsPage columnMasterPage = (ColumnMasterDetailsPage) page;
+                                    columnMasterPage.refreshChart(columnMasterPage.getForm());
+                                } else if (page instanceof ConnectionMasterDetailsPage) {
+                                    ConnectionMasterDetailsPage connDetailsPage = (ConnectionMasterDetailsPage) page;
+                                    connDetailsPage.doSetInput();
+                                }
                             }
-
                         });
+
                     }
 
                     return Status.OK_STATUS;
