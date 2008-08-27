@@ -36,7 +36,7 @@ public enum FormEnum {
     IndicatorThresholdsForm("Indicator Thresholds", "html/wizard/indicator/IndicatorThresholds.html"),
     TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"),
     NumbericNominalForm("Frequency Table Parameters", ""),
-    ExpectedValueForm("Expected Value", "");
+    ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html");
 
     private String formName;
 
