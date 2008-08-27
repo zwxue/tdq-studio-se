@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,18 +25,30 @@ import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.DistinctCountIndicator;
+import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
+import org.talend.dataquality.indicators.MeanIndicator;
+import org.talend.dataquality.indicators.MedianIndicator;
+import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
+import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.ValueIndicator;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -332,5 +345,58 @@ public final class IndicatorHelper {
             }
         }
         return null;
+    }
+
+    public static String getIndicatorValue(Indicator indicator) {
+        String tempObject = null;
+        if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
+            tempObject = ((RowCountIndicator) indicator).getCount().toString();
+        } else if (IndicatorsPackage.eINSTANCE.getNullCountIndicator().equals(indicator.eClass())) {
+            tempObject = ((NullCountIndicator) indicator).getNullCount().toString();
+
+        } else if (IndicatorsPackage.eINSTANCE.getDistinctCountIndicator().equals(indicator.eClass())) {
+            tempObject = ((DistinctCountIndicator) indicator).getDistinctValueCount().toString();
+        } else if (IndicatorsPackage.eINSTANCE.getUniqueCountIndicator().equals(indicator.eClass())) {
+            tempObject = (((UniqueCountIndicator) indicator).getUniqueValueCount()).toString();
+        } else if (IndicatorsPackage.eINSTANCE.getDuplicateCountIndicator().equals(indicator.eClass())) {
+            tempObject = ((DuplicateCountIndicator) indicator).getDuplicateValueCount().toString();
+        } else if (IndicatorsPackage.eINSTANCE.getBlankCountIndicator().equals(indicator.eClass())) {
+            tempObject = ((BlankCountIndicator) indicator).getBlankCount().toString();
+        } else if (IndicatorsPackage.eINSTANCE.getMinLengthIndicator().equals(indicator.eClass())) {
+            tempObject = ((MinLengthIndicator) indicator).getLength().toString();
+        } else if (IndicatorsPackage.eINSTANCE.getMaxLengthIndicator().equals(indicator.eClass())) {
+            tempObject = ((MaxLengthIndicator) indicator).getLength().toString();
+        } else if (IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().equals(indicator.eClass())) {
+            tempObject = createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
+        } else if (IndicatorsPackage.eINSTANCE.getFrequencyIndicator().equals(indicator.eClass())
+                || IndicatorsPackage.eINSTANCE.getModeIndicator().equals(indicator.eClass())) {
+            // TODO tempObject = createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
+        } else if (IndicatorsPackage.eINSTANCE.getMeanIndicator().equals(indicator.eClass())) {
+            tempObject = createStandardNumber(((MeanIndicator) indicator).getMean());
+        } else if (IndicatorsPackage.eINSTANCE.getMedianIndicator().equals(indicator.eClass())) {
+            tempObject = createStandardNumber(((MedianIndicator) indicator).getMedian());
+        } else if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicator.eClass())
+                || IndicatorsPackage.eINSTANCE.getSqlPatternMatchingIndicator().equals(indicator.eClass())) {
+            Long matchingValueCount = ((PatternMatchingIndicator) indicator).getMatchingValueCount();
+            Long notMatchingValueCount = ((PatternMatchingIndicator) indicator).getNotMatchingValueCount();
+            Double total = matchingValueCount.doubleValue() + notMatchingValueCount.doubleValue();
+            tempObject = Double.valueOf(total > 0 ? matchingValueCount.doubleValue() * 100 / total : Double.NaN).toString();
+
+        } else {
+            tempObject = ((ValueIndicator) indicator).getValue();
+        }
+
+        return tempObject;
+    }
+
+    private static String createStandardNumber(Object input) {
+        DecimalFormat format = (DecimalFormat) DecimalFormat.getNumberInstance();
+        format.applyPattern("0.00");
+
+        try {
+            return format.format(new Double(input.toString()));
+        } catch (Exception ne) {
+            return "";
+        }
     }
 }
