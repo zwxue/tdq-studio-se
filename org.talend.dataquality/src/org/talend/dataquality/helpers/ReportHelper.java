@@ -30,6 +30,57 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  */
 public final class ReportHelper {
 
+    public static enum ReportType {
+        MAIN("Main", "/reports/column/report_01.jrxml"),
+        EVOLUTION("Evolution", "/reports/column/report_02.jrxml");
+
+        // TODO scorreia add a type USER_MADE("User specified", null) for the user to set his own file path
+
+        private String label;
+
+        /**
+         * Getter for label.
+         * 
+         * @return the label
+         */
+        public String getLabel() {
+            return this.label;
+        }
+
+        /**
+         * Getter for jrxmlFilename.
+         * 
+         * @return the jrxmlFilename
+         */
+        public String getJrxmlFilename() {
+            return this.jrxmlFilename;
+        }
+
+        private String jrxmlFilename;
+
+        /**
+         * Sets the jrxmlFilename.
+         * 
+         * @param jrxmlFilename the jrxmlFilename to set
+         */
+        public void setJrxmlFilename(String jrxmlFilename) {
+            this.jrxmlFilename = jrxmlFilename;
+        }
+
+        ReportType(String lab, String filename) {
+            this.label = lab;
+            this.jrxmlFilename = filename;
+        }
+
+        public static List<String> getLabels() {
+            List<String> list = new ArrayList<String>();
+            for (ReportType t : ReportType.values()) {
+                list.add(t.getLabel());
+            }
+            return list;
+        }
+    }
+
     private ReportHelper() {
     }
 
@@ -106,5 +157,18 @@ public final class ReportHelper {
             report.setExecInformations(execInformations);
         }
         return execInformations;
+    }
+
+    public static boolean setReportType(TdReport report, ReportType reportType) {
+        switch (reportType) {
+        case MAIN:
+        case EVOLUTION:
+            report.setInputJrxml(reportType.getJrxmlFilename());
+            report.setReportType(reportType.getLabel());
+            break;
+        default:
+            break;
+        }
+        return false;
     }
 }
