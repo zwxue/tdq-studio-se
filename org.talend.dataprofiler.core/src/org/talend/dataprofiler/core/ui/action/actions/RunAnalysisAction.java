@@ -135,30 +135,28 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 // MOD scorreia 2008-08-19 factorized code with AnalysisExecutorSelector
                 final ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(finalAnalysis);
                 monitor.done();
+                AnaResourceFileHelper.getInstance().save(finalAnalysis);
+
+                if (page != null) {
+                    Display.getDefault().asyncExec(new Runnable() {
+
+                        public void run() {
+                            if (page instanceof ColumnMasterDetailsPage) {
+                                ColumnMasterDetailsPage columnMasterPage = (ColumnMasterDetailsPage) page;
+                                columnMasterPage.refreshChart(columnMasterPage.getForm());
+                            } else if (page instanceof ConnectionMasterDetailsPage) {
+                                ConnectionMasterDetailsPage connDetailsPage = (ConnectionMasterDetailsPage) page;
+                                connDetailsPage.doSetInput();
+                            }
+                        }
+                    });
+                }
                 if (executed.isOk()) {
                     if (log.isInfoEnabled()) {
                         int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
                         log.info("Analysis \"" + finalAnalysis.getName() + "\" execution code: " + executed + ". Duration: "
                                 + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s.");
                     }
-                    AnaResourceFileHelper.getInstance().save(finalAnalysis);
-
-                    if (page != null) {
-                        Display.getDefault().asyncExec(new Runnable() {
-
-                            public void run() {
-                                if (page instanceof ColumnMasterDetailsPage) {
-                                    ColumnMasterDetailsPage columnMasterPage = (ColumnMasterDetailsPage) page;
-                                    columnMasterPage.refreshChart(columnMasterPage.getForm());
-                                } else if (page instanceof ConnectionMasterDetailsPage) {
-                                    ConnectionMasterDetailsPage connDetailsPage = (ConnectionMasterDetailsPage) page;
-                                    connDetailsPage.doSetInput();
-                                }
-                            }
-                        });
-
-                    }
-
                     return Status.OK_STATUS;
                 } else {
                     int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();

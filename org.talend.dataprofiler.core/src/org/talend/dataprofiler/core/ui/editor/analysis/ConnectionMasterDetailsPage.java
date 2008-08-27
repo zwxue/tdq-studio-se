@@ -39,6 +39,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -108,6 +110,8 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
     private String latestViewFilterValue;
 
     private TableViewer statisticalViewer;
+
+    private Composite sumSectionClient;
 
     public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -202,12 +206,28 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
 
     private void createAnalysisSummarySection(ScrolledForm form, Composite topComp) {
         Section summarySection = this.createSection(form, topComp, "Analysis Summary", false, null);
-        Composite sectionClient = toolkit.createComposite(summarySection);
-        sectionClient.setLayout(new GridLayout(2, false));
-        Composite leftComp = new Composite(sectionClient, SWT.NONE);
+        sumSectionClient = toolkit.createComposite(summarySection);
+        sumSectionClient.setLayout(new GridLayout(2, false));
+        refreshSumSection();
+        summarySection.setClient(sumSectionClient);
+    }
+
+    /**
+     * DOC qzhang Comment method "refreshSumSection".
+     * 
+     * @param summarySection
+     */
+    private void refreshSumSection() {
+        if (sumSectionClient != null && !sumSectionClient.isDisposed()) {
+            Control[] children = sumSectionClient.getChildren();
+            for (Control control : children) {
+                control.dispose();
+            }
+        }
+        Composite leftComp = new Composite(sumSectionClient, SWT.NONE);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(leftComp);
         leftComp.setLayout(new GridLayout());
-        Composite rightComp = new Composite(sectionClient, SWT.NONE);
+        Composite rightComp = new Composite(sumSectionClient, SWT.NONE);
         rightComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(rightComp);
         EList<ModelElement> analysedElements = this.connectionAnalysis.getContext().getAnalysedElements();
@@ -257,9 +277,12 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         rightLabel.setLayoutData(new GridData());
 
         rightLabel = new Label(rightComp, SWT.NONE);
-        String executeStatus = (resultMetadata.isLastRunOk() ? "success" : "failure");
+        String executeStatus = (resultMetadata.isLastRunOk() ? "success" : "failure: " + resultMetadata.getMessage());
         rightLabel.setText("Execution status: "
                 + (resultMetadata.getExecutionNumber() == 0 ? PluginConstant.EMPTY_STRING : executeStatus));
+        if (!resultMetadata.isLastRunOk()) {
+            rightLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+        }
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
         rightLabel.setText("Number of executions: " + resultMetadata.getExecutionNumber());
@@ -267,9 +290,7 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         rightLabel = new Label(rightComp, SWT.NONE);
         rightLabel.setText("Last successful execution: " + getFormatDateStr(resultMetadata.getExecutionDate()));
         rightLabel.setLayoutData(new GridData());
-        sectionClient.layout();
-        summarySection.setClient(sectionClient);
-
+        sumSectionClient.layout();
     }
 
     private String getFormatDateStr(Date date) {
@@ -344,6 +365,7 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             indicatorList = new ArrayList<CatalogIndicator>();
         }
         statisticalViewer.setInput(indicatorList);
+        refreshSumSection();
     }
 
     private TableViewer createSecondStatisticalTable(Composite parent) {
