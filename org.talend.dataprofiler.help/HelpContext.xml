@@ -9,5 +9,6 @@
         <topic label="Text Length" href="html/wizard/indicator/TextLength.html"/>
         <topic label="Data Threshold" href="html/wizard/indicator/DataThreshold.html"/>
         <topic label="Indicator Thresholds" href="html/wizard/indicator/IndicatorThresholds.html"/>
+        <topic href="html/wizard/indicator/ExpectedValue.html" label="Expected Value"/>
     </context>
 </contexts>
