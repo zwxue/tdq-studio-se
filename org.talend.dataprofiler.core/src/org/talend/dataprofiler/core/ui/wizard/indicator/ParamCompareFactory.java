@@ -48,6 +48,11 @@ public class ParamCompareFactory {
             Domain newDomain = binsParam.getUserDomian();
             Domain oldDomain = indicatorParam.getBins();
 
+            if (newDomain == null) {
+                newDomain = DomainHelper.createContiguousClosedBinsIntoDomain("test", binsParam.getNumOfBins(), binsParam
+                        .getMinValue(), binsParam.getMaxValue());
+            }
+
             if (oldDomain != null) {
                 EList<RangeRestriction> ranges = oldDomain.getRanges();
                 EList<RangeRestriction> ranges2 = newDomain.getRanges();
