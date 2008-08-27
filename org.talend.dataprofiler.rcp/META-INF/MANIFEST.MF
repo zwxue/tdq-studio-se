@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.registration,
  org.eclipse.update.core,
  org.eclipse.core.expressions,
- org.apache.log4j;bundle-version="1.2.13"
+ org.apache.log4j;bundle-version="1.2.13",
+ org.eclipse.ui.views.log;bundle-version="1.0.0";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.rcp,

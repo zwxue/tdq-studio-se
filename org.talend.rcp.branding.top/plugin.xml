@@ -25,11 +25,12 @@
             name="aboutImage"
             value="icons/about.gif"/>
          <property
-            name="aboutText"
-            value="%aboutText"/>
-         <property
                name="appName"
                value="Talend Open Profiler">
+         </property>
+         <property
+               name="aboutText"
+               value="%aboutText">
          </property>
       </product>
    </extension>

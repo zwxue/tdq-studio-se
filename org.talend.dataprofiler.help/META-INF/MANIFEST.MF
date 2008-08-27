@@ -8,7 +8,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.help,
  org.eclipse.help.ui,
- org.eclipse.help.webapp
+ org.eclipse.help.webapp,
+ org.eclipse.equinox.http.jetty
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.help
 Bundle-Vendor: .Talend SA.
