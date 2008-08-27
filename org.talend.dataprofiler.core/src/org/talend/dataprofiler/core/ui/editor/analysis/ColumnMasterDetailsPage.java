@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +54,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.browser.WebBrowserEditor;
+import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -335,6 +339,19 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                                     if (chart.getImageDescriptor() != null) {
                                         ImageHyperlink image = toolkit.createImageHyperlink(comp, SWT.WRAP);
                                         image.setImage(chart.getImageDescriptor().createImage());
+                                        image.setToolTipText("What is it?");
+                                        image.addHyperlinkListener(new HyperlinkAdapter() {
+
+                                            public void linkActivated(HyperlinkEvent e) {
+                                                try {
+                                                    WebBrowserEditor.open(new WebBrowserEditorInput(new URL(
+                                                            "http://en.wikipedia.org/wiki/Box_plot")));
+                                                } catch (MalformedURLException e1) {
+                                                    e1.printStackTrace();
+                                                }
+                                            }
+
+                                        });
                                     }
                                 }
                             }
