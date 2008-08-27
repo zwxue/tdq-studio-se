@@ -24,9 +24,10 @@ import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -36,6 +37,7 @@ import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -166,10 +168,11 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected WizardDialog getPredefinedDialog() {
 
-        CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(true, AnalysisType.MULTIPLE_COLUMN);
+        ColumnWizard wizard = (ColumnWizard) WizardFactory.createAnalysisWizard(AnalysisType.MULTIPLE_COLUMN,
+                new AnalysisParameter());
         wizard.setForcePreviousAndNextButtons(true);
         TimeSliceOptionPage page = new TimeSliceOptionPage();
-        wizard.setOtherPages(new WizardPage[] { page });
+        wizard.setExtenalPages(new WizardPage[] { page });
 
         return new OpeningHelpWizardDialog(null, wizard, FormEnum.TimeSlicesForm.getHelpHref(), page);
     }

@@ -86,7 +86,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     public MetadataWizardPage() {
 
         metadata = new HashMap<String, String>();
-
         setPageComplete(false);
     }
 
@@ -96,7 +95,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      * @see org.talend.dataprofiler.core.ui.wizard.PropertiesWizardPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
-        // TODO Auto-generated method stub
+
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(2, false);
         container.setLayout(gdLayout);
@@ -253,10 +252,10 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
                 // defaultFolderProviderRe
 
-                getConnectionParams().getFolderProvider().setFolderResource((IFolder) elem);
+                getParameter().getFolderProvider().setFolderResource((IFolder) elem);
                 // FolderProvider provider = new FolderProvider();
                 // provider.setFolderResource((IFolder) elem);
-                // getConnectionParams().setFolderProvider(provider);
+                // getParameter().setFolderProvider(provider);
             }
         }
     }
@@ -267,7 +266,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
             public void modifyText(ModifyEvent e) {
                 metadata.put(IParameterConstant.ANALYSIS_NAME, nameText.getText());
-                getConnectionParams().setMetadate(metadata);
+                getParameter().setMetadate(metadata);
                 setPageComplete(true);
             }
         });
@@ -277,7 +276,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             public void modifyText(ModifyEvent e) {
                 if (purposeText.getText().length() != 0) {
                     metadata.put(IParameterConstant.ANALYSIS_PURPOSE, purposeText.getText());
-                    getConnectionParams().setMetadate(metadata);
+                    getParameter().setMetadate(metadata);
                 }
             }
         });
@@ -287,7 +286,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             public void modifyText(ModifyEvent e) {
                 if (descriptionText.getText().length() != 0) {
                     metadata.put(IParameterConstant.ANALYSIS_DESCRIPTION, descriptionText.getText());
-                    getConnectionParams().setMetadate(metadata);
+                    getParameter().setMetadate(metadata);
                 }
 
             }
@@ -298,7 +297,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             public void modifyText(ModifyEvent e) {
 
                 metadata.put(IParameterConstant.ANALYSIS_AUTHOR, authorText.getText());
-                getConnectionParams().setMetadate(metadata);
+                getParameter().setMetadate(metadata);
             }
 
         });
@@ -323,7 +322,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             public void modifyText(ModifyEvent e) {
                 String selected = ((CCombo) e.getSource()).getText();
                 metadata.put(IParameterConstant.ANALYSIS_STATUS, selected);
-                getConnectionParams().setMetadate(metadata);
+                getParameter().setMetadate(metadata);
             }
 
         });
@@ -340,13 +339,13 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             String status = statusText.getText();
             if (status != null) {
                 metadata.put(IParameterConstant.ANALYSIS_STATUS, status);
-                getConnectionParams().setMetadate(metadata);
+                getParameter().setMetadate(metadata);
             }
         }
-        if (defaultFolderProviderRes != null && getConnectionParams().getFolderProvider() == null) {
+        if (defaultFolderProviderRes != null && getParameter().getFolderProvider() == null) {
             FolderProvider defaultFolder = new FolderProvider();
             defaultFolder.setFolderResource(defaultFolderProviderRes);
-            getConnectionParams().setFolderProvider(defaultFolder);
+            getParameter().setFolderProvider(defaultFolder);
         }
 
         super.setVisible(visible);

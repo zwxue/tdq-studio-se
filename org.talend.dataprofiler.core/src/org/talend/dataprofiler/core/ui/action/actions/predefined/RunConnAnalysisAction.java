@@ -19,7 +19,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
-import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -59,11 +58,15 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
      */
     @Override
     protected WizardDialog getPredefinedDialog() {
-        WizardDialog sana = getStandardAnalysisWizardDialog(AnalysisType.CONNECTION);
+        ConnectionAnalysisParameter connectionParams = new ConnectionAnalysisParameter();
 
-        setTdDataProvider();
+        file = (IFile) getSelection().getFirstElement();
+        TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(file);
+        TdDataProvider dataProvider = tdProvider.getObject();
+        connectionParams.setTdDataProvider(dataProvider);
+        connectionParams.setAnalysisTypeName(AnalysisType.CONNECTION.getLiteral());
 
-        return sana;
+        return getStandardAnalysisWizardDialog(AnalysisType.CONNECTION, connectionParams);
     }
 
     /*
@@ -84,24 +87,6 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected boolean preDo() {
         return true;
-    }
-
-    /**
-     * DOC qzhang Comment method "setTdDataProvider".
-     */
-    private void setTdDataProvider() {
-        ConnectionAnalysisParameter connectionParams = (ConnectionAnalysisParameter) AbstractAnalysisWizardPage
-                .getConnectionParams();
-        if (connectionParams == null) {
-            connectionParams = new ConnectionAnalysisParameter();
-        }
-
-        file = (IFile) getSelection().getFirstElement();
-        TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(file);
-        TdDataProvider dataProvider = tdProvider.getObject();
-        connectionParams.setTdDataProvider(dataProvider);
-
-        AbstractAnalysisWizardPage.setConnectionParams(connectionParams);
     }
 
 }

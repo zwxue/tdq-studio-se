@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
-import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
+import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
@@ -36,7 +36,7 @@ import org.talend.dataprofiler.help.HelpPlugin;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
-public class CreatePatternWizardPage2 extends MetadataWizardPage {
+public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     private Text nameText;
 
@@ -63,7 +63,6 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(2, false);
         container.setLayout(gdLayout);
-        GridData data;
         // Name
         Label nameLab = new Label(container, SWT.NONE);
         nameLab.setText("Regular expression:");
@@ -96,16 +95,6 @@ public class CreatePatternWizardPage2 extends MetadataWizardPage {
         if (types.length > 0) {
             comboLang.select(0);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    protected void createExtendedControl(Composite container) {
-
     }
 
     /**

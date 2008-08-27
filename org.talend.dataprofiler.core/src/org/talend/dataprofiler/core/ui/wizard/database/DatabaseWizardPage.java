@@ -78,17 +78,8 @@ class DatabaseWizardPage extends AbstractWizardPage {
         }
     };
 
-    /**
-     * Constructor for BookmarkPage.
-     * 
-     * @param pageName
-     */
-    public DatabaseWizardPage() {
-
-        connectionParam = (DBConnectionParameter) getConnectionParams();
-    }
-
     public void createControl(Composite parent) {
+        connectionParam = (DBConnectionParameter) getParameter();
         setPageComplete(false);
 
         Composite comp = new Composite(parent, SWT.NULL);

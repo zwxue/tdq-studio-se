@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
+import org.eclipse.jface.wizard.WizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
-import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.analysis.parameters.AnalysisParameter;
 
 /**
  * @author zqin
@@ -22,13 +23,24 @@ import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
  */
 public class ColumnWizard extends AbstractAnalysisWizard {
 
-    private AnalysisMetadataWizardPage metadataPage;
+    private AnalysisParameter parameter;
 
-    /**
-     * 
-     */
-    public ColumnWizard() {
+    private WizardPage[] extenalPages;
 
+    public WizardPage[] getExtenalPages() {
+        if (extenalPages == null) {
+            return new WizardPage[0];
+        }
+        return extenalPages;
+    }
+
+    public void setExtenalPages(WizardPage[] extenalPages) {
+        this.extenalPages = extenalPages;
+    }
+
+    public ColumnWizard(AnalysisParameter parameter) {
+        super(parameter);
+        this.parameter = parameter;
     }
 
     /*
@@ -38,18 +50,17 @@ public class ColumnWizard extends AbstractAnalysisWizard {
      */
     @Override
     public void addPages() {
+        addPage(new AnalysisMetadataWizardPage());
 
-        metadataPage = new AnalysisMetadataWizardPage();
-
-        addPage(metadataPage);
+        for (WizardPage page : getExtenalPages()) {
+            addPage(page);
+        }
     }
 
     @Override
     protected void fillAnalysisEditorParam() {
-        ConnectionAnalysisParameter parameters = (ConnectionAnalysisParameter) getAnalysisParameter();
-        this.analysisName = parameters.getAnalysisName();
-        this.analysisType = parameters.getAnalysisType();
-        this.folderResource = parameters.getFolderProvider().getFolderResource();
+        this.analysisName = parameter.getAnalysisName();
+        this.analysisType = parameter.getAnalysisType();
+        this.folderResource = parameter.getFolderProvider().getFolderResource();
     }
-
 }

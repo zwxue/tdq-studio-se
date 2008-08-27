@@ -50,7 +50,7 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
 
     private static Logger log = Logger.getLogger(ConnectionWizard.class);
 
-    private AnalysisMetadataWizardPage metadataPage;
+    private ConnectionAnalysisParameter parameter;
 
     private ConnAnalysisPageStep0 page0;
 
@@ -59,7 +59,9 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
     /**
      * 
      */
-    public ConnectionWizard() {
+    public ConnectionWizard(ConnectionAnalysisParameter parameter) {
+        super(parameter);
+        this.parameter = parameter;
     }
 
     /*
@@ -70,10 +72,8 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
     @Override
     public void addPages() {
 
-        metadataPage = new AnalysisMetadataWizardPage();
-        addPage(metadataPage);
+        addPage(new AnalysisMetadataWizardPage());
 
-        ConnectionAnalysisParameter parameter = (ConnectionAnalysisParameter) getAnalysisParameter();
         if (parameter.getTdDataProvider() == null) {
             page0 = new ConnAnalysisPageStep0();
             addPage(page0);
@@ -98,17 +98,15 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
 
     @Override
     protected void fillAnalysisEditorParam() {
-        ConnectionAnalysisParameter parameters = (ConnectionAnalysisParameter) getAnalysisParameter();
-        this.analysisName = parameters.getAnalysisName();
-        this.analysisType = parameters.getAnalysisType();
-        this.folderResource = parameters.getFolderProvider().getFolderResource();
+        this.analysisName = parameter.getAnalysisName();
+        this.analysisType = parameter.getAnalysisType();
+        this.folderResource = parameter.getFolderProvider().getFolderResource();
     }
 
     @Override
     protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
-        ConnectionAnalysisParameter parameters = (ConnectionAnalysisParameter) getAnalysisParameter();
-        TdDataProvider tdProvider = parameters.getTdDataProvider();
-        // this.analysisBuilder = analysisBuilder;
+
+        TdDataProvider tdProvider = parameter.getTdDataProvider();
         analysisBuilder.setAnalysisConnection(tdProvider);
         ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
         indicator.setAnalyzedElement(tdProvider);
@@ -151,13 +149,12 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
                     + saved.getMessage());
         }
 
-        ConnectionAnalysisParameter parameters = (ConnectionAnalysisParameter) getAnalysisParameter();
         EList<Domain> dataFilters = analysisBuilder.getAnalysis().getParameters().getDataFilter();
-        if ((parameters.getTableFilter() != null) && (!parameters.getTableFilter().equals(PluginConstant.EMPTY_STRING))) {
-            DomainHelper.setDataFilterTablePattern(dataFilters, parameters.getTableFilter());
+        if ((parameter.getTableFilter() != null) && (!parameter.getTableFilter().equals(PluginConstant.EMPTY_STRING))) {
+            DomainHelper.setDataFilterTablePattern(dataFilters, parameter.getTableFilter());
         }
-        if ((parameters.getViewFilter() != null) && (!parameters.getViewFilter().equals(PluginConstant.EMPTY_STRING))) {
-            DomainHelper.setDataFilterViewPattern(dataFilters, parameters.getViewFilter());
+        if ((parameter.getViewFilter() != null) && (!parameter.getViewFilter().equals(PluginConstant.EMPTY_STRING))) {
+            DomainHelper.setDataFilterViewPattern(dataFilters, parameter.getViewFilter());
         }
 
         DependenciesHandler.getInstance().setDependencyOn(analysisBuilder.getAnalysis(),
@@ -174,5 +171,4 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
         return file;
 
     }
-
 }

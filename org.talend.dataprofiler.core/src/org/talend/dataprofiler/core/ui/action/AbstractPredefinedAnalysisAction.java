@@ -19,6 +19,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.exception.TalendException;
@@ -35,11 +36,11 @@ import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
-import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
-
+import org.talend.dq.analysis.parameters.AnalysisParameter;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -118,14 +119,13 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         return getStandardAnalysisWizardDialog(AnalysisType.MULTIPLE_COLUMN);
     }
 
-    /**
-     * DOC qzhang Comment method "getStandardAnalysisWizardDialog".
-     * 
-     * @param type
-     * @return
-     */
     protected WizardDialog getStandardAnalysisWizardDialog(AnalysisType type) {
-        CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(true, type);
+
+        return getStandardAnalysisWizardDialog(type, null);
+    }
+
+    protected WizardDialog getStandardAnalysisWizardDialog(AnalysisType type, AnalysisParameter parameter) {
+        Wizard wizard = WizardFactory.createAnalysisWizard(type, parameter);
         wizard.setForcePreviousAndNextButtons(true);
 
         WizardDialog dialog = new WizardDialog(null, wizard);
@@ -185,7 +185,6 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         return predefinedColumnIndicator;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void run() {
 

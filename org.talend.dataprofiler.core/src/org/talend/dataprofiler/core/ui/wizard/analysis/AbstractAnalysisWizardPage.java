@@ -14,36 +14,38 @@ package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
-
+import org.talend.dq.analysis.parameters.AnalysisParameter;
 
 /**
  * @author zqin
- *
+ * 
  */
 public abstract class AbstractAnalysisWizardPage extends AbstractWizardPage {
 
     private boolean canFinishEarly = false, hasPages = true;
-    
+
     /**
      * @param pageName
      */
     public AbstractAnalysisWizardPage() {
     }
-    
+
     /**
      * Makes the next page visible.
      */
     public void advanceToNextPageOrFinish() {
-            if (canFlipToNextPage()) {
-                getContainer().showPage(getNextPage());
-            } else if (isCanFinishEarly()) {
-                if (getWizard().performFinish()) {
-                    ((WizardDialog) getContainer()).close();
-                }
+        if (canFlipToNextPage()) {
+            getContainer().showPage(getNextPage());
+        } else if (isCanFinishEarly()) {
+            if (getWizard().performFinish()) {
+                ((WizardDialog) getContainer()).close();
             }
+        }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
      */
     @Override
@@ -54,10 +56,9 @@ public abstract class AbstractAnalysisWizardPage extends AbstractWizardPage {
         } else {
             return false;
         }
-        
+
     }
 
-    
     /**
      * @return the canFinishEarly
      */
@@ -65,13 +66,13 @@ public abstract class AbstractAnalysisWizardPage extends AbstractWizardPage {
         return this.canFinishEarly;
     }
 
-    
     /**
      * @param canFinishEarly the canFinishEarly to set
      */
     public void setCanFinishEarly(boolean canFinishEarly) {
         this.canFinishEarly = canFinishEarly;
     }
+
     /**
      * @return the hasPages
      */
@@ -79,7 +80,6 @@ public abstract class AbstractAnalysisWizardPage extends AbstractWizardPage {
         return this.hasPages;
     }
 
-    
     /**
      * @param hasPages the hasPages to set
      */
@@ -87,4 +87,8 @@ public abstract class AbstractAnalysisWizardPage extends AbstractWizardPage {
         this.hasPages = hasPages;
     }
 
+    protected AnalysisParameter getConnectionParams() {
+
+        return (AnalysisParameter) super.getParameter();
+    }
 }

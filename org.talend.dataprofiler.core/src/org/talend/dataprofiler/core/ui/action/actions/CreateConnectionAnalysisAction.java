@@ -13,10 +13,11 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
-import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 
 /**
@@ -29,11 +30,11 @@ public class CreateConnectionAnalysisAction extends Action implements ICheatShee
 
     public void run(String[] params, ICheatSheetManager manager) {
 
-        openStandardAnalysisDialog(true, AnalysisType.CONNECTION);
+        openStandardAnalysisDialog(AnalysisType.CONNECTION);
     }
 
-    private void openStandardAnalysisDialog(boolean creation, AnalysisType type) {
-        CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(creation, type);
+    private void openStandardAnalysisDialog(AnalysisType type) {
+        Wizard wizard = WizardFactory.createAnalysisWizard(type);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);

@@ -27,6 +27,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
+import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -58,7 +59,8 @@ public class AddSqlFileAction extends Action {
     public void run() {
         IWorkbenchWindow aww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IWorkbenchPage ap = aww.getActivePage();
-        CreateSqlFileWizard fileWizard = new CreateSqlFileWizard(folder);
+
+        CreateSqlFileWizard fileWizard = (CreateSqlFileWizard) WizardFactory.createSqlFileWizard(folder);
         WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), fileWizard);
         fileWizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {

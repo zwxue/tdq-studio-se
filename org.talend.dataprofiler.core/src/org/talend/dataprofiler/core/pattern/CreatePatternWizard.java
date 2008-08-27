@@ -16,14 +16,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
-import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
+import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -38,13 +37,11 @@ import orgomg.cwm.objectmodel.core.Expression;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
-public class CreatePatternWizard extends Wizard {
+public class CreatePatternWizard extends AbstractWizard {
 
     private static Logger log = Logger.getLogger(CreatePatternWizard.class);
 
     private CreatePatternWizardPage1 mPage;
-
-    private IFolder folder;
 
     private CreatePatternWizardPage2 mPage2;
 
@@ -52,15 +49,17 @@ public class CreatePatternWizard extends Wizard {
 
     private ExpressionType type;
 
+    private ConnectionParameter parameter;
+
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
      * 
      * @param folder
      * @param type
      */
-    public CreatePatternWizard(IFolder folder, ExpressionType type) {
-        this.folder = folder;
+    public CreatePatternWizard(ConnectionParameter parameter, ExpressionType type) {
         this.type = type;
+        this.parameter = parameter;
     }
 
     /*
@@ -78,8 +77,7 @@ public class CreatePatternWizard extends Wizard {
         default:
             break;
         }
-        mPage = new CreatePatternWizardPage1(folder);
-        AbstractWizardPage.setConnectionParams(new ConnectionParameter());
+        mPage = new CreatePatternWizardPage1();
         mPage.setTitle(s + " Creation Page1/2");
         mPage.setDescription("Define the properties");
         mPage.setPageComplete(false);
@@ -100,12 +98,12 @@ public class CreatePatternWizard extends Wizard {
     @Override
     public boolean performFinish() {
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
-        String name = AbstractWizardPage.getConnectionParams().getName();
+        String name = parameter.getName();
         pattern.setName(name);
-        TaggedValueHelper.setAuthor(pattern, AbstractWizardPage.getConnectionParams().getAuthor());
-        TaggedValueHelper.setDescription(AbstractWizardPage.getConnectionParams().getDescription(), pattern);
-        TaggedValueHelper.setPurpose(AbstractWizardPage.getConnectionParams().getPurpose(), pattern);
-        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(AbstractWizardPage.getConnectionParams().getStatus()));
+        TaggedValueHelper.setAuthor(pattern, parameter.getAuthor());
+        TaggedValueHelper.setDescription(parameter.getDescription(), pattern);
+        TaggedValueHelper.setPurpose(parameter.getPurpose(), pattern);
+        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(parameter.getStatus()));
 
         // PTODO qzhang fixed bug 4296: set the Pattern is valid
         TaggedValueHelper.setValidStatus(true, pattern);
@@ -123,7 +121,7 @@ public class CreatePatternWizard extends Wizard {
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
 
-        IFolder folderResource = AbstractWizardPage.getConnectionParams().getFolderProvider().getFolderResource();
+        IFolder folderResource = parameter.getFolderProvider().getFolderResource();
         IFile file = folderResource.getFile(fname);
         location = file.getFullPath();
         if (file.exists()) {
@@ -143,6 +141,12 @@ public class CreatePatternWizard extends Wizard {
      */
     public IPath getLocation() {
         return this.location;
+    }
+
+    @Override
+    protected ConnectionParameter getConnectionParameter() {
+
+        return this.parameter;
     }
 
 }

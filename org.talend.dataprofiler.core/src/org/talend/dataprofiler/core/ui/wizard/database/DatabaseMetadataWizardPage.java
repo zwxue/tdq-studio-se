@@ -22,31 +22,35 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
+ * DOC zqin class global comment. Detailled comment
  */
 public class DatabaseMetadataWizardPage extends MetadataWizardPage {
 
-    
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
     public void createControl(Composite parent) {
         Composite container = new Composite(parent, SWT.NONE);
         container.setLayout(new FillLayout());
-        
+
         super.createControl(container);
-        defaultFolderProviderRes = ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME).getFolder(
-                DQStructureManager.DB_CONNECTIONS);
+        defaultFolderProviderRes = ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME)
+                .getFolder(DQStructureManager.DB_CONNECTIONS);
         pathText.setText(defaultFolderProviderRes.getFullPath().toString());
 
         setControl(container);
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite
+     * )
      */
     @Override
     protected void createExtendedControl(Composite container) {
@@ -54,25 +58,28 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#addListeners()
      */
     @Override
     protected void addListeners() {
         button.addSelectionListener(new SelectionAdapter() {
 
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
+             * 
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                
+
                 openFolderSelectionDialog(DQStructureManager.METADATA, DQStructureManager.DB_CONNECTIONS);
             }
         });
-        
+
         super.addListeners();
     }
 
-    
 }

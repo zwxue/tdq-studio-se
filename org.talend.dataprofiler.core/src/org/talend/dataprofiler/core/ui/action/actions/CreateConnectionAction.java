@@ -13,19 +13,18 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class CreateConnectionAction extends Action implements ICheatSheetAction {
 
@@ -38,21 +37,26 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
     public void run() {
 
-        DatabaseConnectionWizard wizard = new DatabaseConnectionWizard(PlatformUI.getWorkbench(), true, null, null);
-        wizard.init(PlatformUI.getWorkbench(), null);
+        Wizard wizard = WizardFactory.createDatabaseConnectionWizard();
+
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         dialog.open();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[], org.eclipse.ui.cheatsheets.ICheatSheetManager)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
+     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
         run();

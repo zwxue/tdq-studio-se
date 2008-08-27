@@ -17,13 +17,14 @@ import java.util.Iterator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 
 /**
@@ -50,7 +51,7 @@ public class AnalyzeColumnAction extends Action {
     @Override
     public void run() {
 
-        if (openStandardAnalysisDialog(true, AnalysisType.MULTIPLE_COLUMN) == Window.OK) {
+        if (openStandardAnalysisDialog(AnalysisType.MULTIPLE_COLUMN) == Window.OK) {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
             if (editor != null) {
@@ -74,8 +75,8 @@ public class AnalyzeColumnAction extends Action {
         this.selection = selection;
     }
 
-    private int openStandardAnalysisDialog(boolean creation, AnalysisType type) {
-        CreateNewAnalysisWizard wizard = new CreateNewAnalysisWizard(creation, type);
+    private int openStandardAnalysisDialog(AnalysisType type) {
+        Wizard wizard = WizardFactory.createAnalysisWizard(type);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);

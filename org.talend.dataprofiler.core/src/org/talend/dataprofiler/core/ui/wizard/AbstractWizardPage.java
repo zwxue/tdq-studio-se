@@ -38,8 +38,6 @@ public abstract class AbstractWizardPage extends WizardPage {
 
     public static final String MSG_OK = UIMessages.MSG_VALID_FIELD;
 
-    private static ConnectionParameter connectionParams;
-
     protected AbstractWizardPage.ICheckListener listener;
 
     private int statusLevel = IStatus.OK;
@@ -66,20 +64,6 @@ public abstract class AbstractWizardPage extends WizardPage {
             }
 
         };
-    }
-
-    /**
-     * @return the connectionParams
-     */
-    public static ConnectionParameter getConnectionParams() {
-        return AbstractWizardPage.connectionParams;
-    }
-
-    /**
-     * @param connectionParams the connectionParams to set
-     */
-    public static synchronized void setConnectionParams(ConnectionParameter connectionParams) {
-        AbstractWizardPage.connectionParams = connectionParams;
     }
 
     /**
@@ -138,5 +122,9 @@ public abstract class AbstractWizardPage extends WizardPage {
 
     public int getStatusLevel() {
         return statusLevel;
+    }
+
+    protected ConnectionParameter getParameter() {
+        return ((AbstractWizard) getWizard()).getConnectionParameter();
     }
 }

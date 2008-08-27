@@ -56,7 +56,6 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
      * @param folder
      */
     public CreatePatternWizardPage1(IFolder folder) {
-        this();
         this.defaultFolderProviderRes = folder;
     }
 
@@ -103,14 +102,14 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
     @Override
     public void setVisible(boolean visible) {
         if (defaultFolderProviderRes != null) {
-            FolderProvider folderProvider = getConnectionParams().getFolderProvider();
+            FolderProvider folderProvider = getParameter().getFolderProvider();
             if (folderProvider == null) {
                 folderProvider = new FolderProvider();
             }
             if (folderProvider.getFolderResource() == null) {
                 folderProvider.setFolderResource(defaultFolderProviderRes);
             }
-            getConnectionParams().setFolderProvider(folderProvider);
+            getParameter().setFolderProvider(folderProvider);
         }
 
         super.setVisible(visible);
@@ -119,7 +118,9 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite)
+     * @see
+     * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite
+     * )
      */
     @Override
     protected void createExtendedControl(Composite container) {

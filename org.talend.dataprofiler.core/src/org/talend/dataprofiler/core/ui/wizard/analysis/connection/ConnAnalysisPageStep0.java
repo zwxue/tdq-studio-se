@@ -47,18 +47,18 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ConnectionsConte
 import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
 import org.talend.utils.sugars.TypedReturnCode;
 
-
 /**
  * @author zqin
- *
+ * 
  */
 public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
-    
+
     private TreeViewer fViewer;
-    
+
     protected ILabelProvider fLabelProvider;
 
     protected ITreeContentProvider fContentProvider;
+
     /**
      * @param pageName
      */
@@ -66,26 +66,28 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
         setTitle("New Analysis");
         setMessage("Choose a connection to analyze");
         setPageComplete(false);
-        
+
         fLabelProvider = new DBTablesViewLabelProvider();
         fContentProvider = new ConnectionsContentProvider();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
-        
+
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         container.setLayout(layout);
-        
+
         Label nameLabel = new Label(container, SWT.NONE);
         nameLabel.setText("Connections:");
 
         createConnectionTree(container);
         addListeners();
-        
+
         setControl(container);
     }
 
@@ -94,16 +96,16 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
         Composite treeContainer = new Composite(parent, SWT.NONE);
         treeContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         treeContainer.setLayout(new FillLayout());
-        
+
         fViewer = new TreeViewer(treeContainer, SWT.BORDER);
         fViewer.setContentProvider(fContentProvider);
-        fViewer.setLabelProvider(fLabelProvider); 
+        fViewer.setLabelProvider(fLabelProvider);
         fViewer.setInput(ResourcesPlugin.getWorkspace().getRoot());
         fViewer.expandAll();
-        
+
         addFilters();
-    }  
-    
+    }
+
     @SuppressWarnings("unchecked")
     private void addFilters() {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -121,7 +123,7 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
         fViewer.addFilter(filter);
         fViewer.addFilter(new EMFObjFilter());
     }
-    
+
     protected void addListeners() {
         fViewer.addDoubleClickListener(new IDoubleClickListener() {
 
@@ -135,32 +137,32 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
                     }
                 }
             }
-            
+
         });
 
         fViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
-                
-                //get the dataprovider from the seleted connection
+
+                // get the dataprovider from the seleted connection
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 ConnectionAnalysisParameter connPanameter = (ConnectionAnalysisParameter) getConnectionParams();
                 if (object instanceof IFile) {
                     IFile file = (IFile) object;
                     TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(file);
-                    
+
                     if (tdProvider != null && connPanameter != null) {
-                        
+
                         connPanameter.setTdDataProvider(tdProvider.getObject());
                     }
-                    
+
                     setPageComplete(true);
                 } else {
                     setPageComplete(false);
                 }
             }
-            
+
         });
     }
-    
+
 }

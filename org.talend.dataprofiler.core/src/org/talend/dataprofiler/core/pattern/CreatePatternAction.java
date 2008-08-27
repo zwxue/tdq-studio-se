@@ -28,6 +28,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 
@@ -70,7 +71,7 @@ public class CreatePatternAction extends Action {
      */
     @Override
     public void run() {
-        CreatePatternWizard fileWizard = new CreatePatternWizard(folder, type);
+        CreatePatternWizard fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type);
         IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
         IHelpResource[] relatedTopics = context.getRelatedTopics();
         String href = relatedTopics[0].getHref();

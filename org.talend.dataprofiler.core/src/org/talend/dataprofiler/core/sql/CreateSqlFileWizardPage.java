@@ -52,10 +52,9 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
      * 
      * @param folder
      */
-    public CreateSqlFileWizardPage(IFolder folder) {
+    public CreateSqlFileWizardPage() {
         metadata = new HashMap<String, String>();
         setPageComplete(false);
-        defaultFolderProviderRes = folder;
     }
 
     /*
@@ -67,8 +66,6 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(2, false);
         container.setLayout(gdLayout);
-
-        GridData data;
 
         // Name
         Label nameLab = new Label(container, SWT.NONE);
@@ -96,13 +93,14 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
         button = new Button(pathContainer, SWT.PUSH);
         button.setText("Select..");
 
+        defaultFolderProviderRes = getParameter().getFolderProvider().getFolderResource();
         pathText.setText(defaultFolderProviderRes.getFullPath().toString());
         setControl(container);
         nameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 metadata.put(IParameterConstant.ANALYSIS_NAME, nameText.getText());
-                getConnectionParams().setMetadate(metadata);
+                getParameter().setMetadate(metadata);
                 setPageComplete(true);
             }
         });
@@ -129,12 +127,12 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
     @Override
     public void setVisible(boolean visible) {
         if (defaultFolderProviderRes != null) {
-            FolderProvider folderProvider = getConnectionParams().getFolderProvider();
+            FolderProvider folderProvider = getParameter().getFolderProvider();
             if (folderProvider == null) {
                 folderProvider = new FolderProvider();
             }
             folderProvider.setFolderResource(defaultFolderProviderRes);
-            getConnectionParams().setFolderProvider(folderProvider);
+            getParameter().setFolderProvider(folderProvider);
         }
 
         super.setVisible(visible);
@@ -143,7 +141,9 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite)
+     * @see
+     * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite
+     * )
      */
     @Override
     protected void createExtendedControl(Composite container) {

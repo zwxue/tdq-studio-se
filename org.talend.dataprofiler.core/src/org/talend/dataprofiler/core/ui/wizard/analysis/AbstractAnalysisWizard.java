@@ -17,7 +17,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -26,18 +25,19 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisWriter;
-import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * AbstractAnalysisWizard can creat a empty analysis file.
  */
-public abstract class AbstractAnalysisWizard extends Wizard {
+public abstract class AbstractAnalysisWizard extends AbstractWizard {
 
     static Logger log = Logger.getLogger(AbstractAnalysisWizard.class);
 
@@ -45,18 +45,19 @@ public abstract class AbstractAnalysisWizard extends Wizard {
 
     protected AnalysisType analysisType;
 
+    private AnalysisParameter parameter;
+
     /**
      * The folder where to save the analysis.
      */
     protected IFolder folderResource;
 
-    public AbstractAnalysisWizard() {
-        super();
+    public AbstractAnalysisWizard(AnalysisParameter parameter) {
+        this.parameter = parameter;
     }
 
     @Override
     public boolean performFinish() {
-        // CorePlugin.getDefault().openEditor(folderProvider.getFolder());
         this.fillAnalysisEditorParam();
         if (!checkAnalysisEditorParam()) {
             return false;
@@ -99,9 +100,7 @@ public abstract class AbstractAnalysisWizard extends Wizard {
         Analysis analysis = analysisBuilder.getAnalysis();
         fillAnalysisBuilder(analysisBuilder);
         AnalysisWriter writer = new AnalysisWriter();
-        // if (folder.exists()) {
-        // return null;
-        // } else {
+
         TypedReturnCode<IFile> saved = writer.createAnalysisFile(analysis, folderResource);
         IFile file;
         if (saved.isOk()) {
@@ -123,11 +122,11 @@ public abstract class AbstractAnalysisWizard extends Wizard {
     }
 
     protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
-        ConnectionAnalysisParameter parameters = (ConnectionAnalysisParameter) getAnalysisParameter();
-        String analysisStatue = parameters.getAnalysisStatus();
-        String analysisAuthor = parameters.getAnalysisAuthor();
-        String analysisPurpse = parameters.getAnalysisPurpose();
-        String analysisDescription = parameters.getAnalysisDescription();
+
+        String analysisStatue = parameter.getAnalysisStatus();
+        String analysisAuthor = parameter.getAnalysisAuthor();
+        String analysisPurpse = parameter.getAnalysisPurpose();
+        String analysisDescription = parameter.getAnalysisDescription();
 
         Analysis analysis = analysisBuilder.getAnalysis();
         TaggedValueHelper.setDevStatus(analysis, DevelopmentStatus.get(analysisStatue));
@@ -136,7 +135,9 @@ public abstract class AbstractAnalysisWizard extends Wizard {
         TaggedValueHelper.setDescription(analysisDescription, analysis);
     }
 
-    protected ConnectionParameter getAnalysisParameter() {
-        return AbstractAnalysisWizardPage.getConnectionParams();
+    @Override
+    protected ConnectionParameter getConnectionParameter() {
+
+        return this.parameter;
     }
 }

@@ -38,6 +38,8 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     private final String pageMessage = "Adds an analysis in the repository.";
 
+    private AnalysisParameter parameter;
+
     public AnalysisMetadataWizardPage() {
         setTitle(pageTitle);
         setDescription(pageMessage);
@@ -110,16 +112,9 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
     @Override
     public void setVisible(boolean visible) {
 
-        if (getConnectionParams() != null) {
-            if (getConnectionParams() instanceof AnalysisParameter) {
-
-                AnalysisParameter parameters = (AnalysisParameter) getConnectionParams();
-                String typeName = parameters.getAnalysisTypeName();
-                if (typeName != null) {
-                    typeText.setText(typeName);
-                }
-            }
-        }
+        // TODO here need modification
+        parameter = (AnalysisParameter) getParameter();
+        typeText.setText(parameter.getAnalysisTypeName() != null ? parameter.getAnalysisTypeName() : "");
 
         super.setVisible(visible);
     }
