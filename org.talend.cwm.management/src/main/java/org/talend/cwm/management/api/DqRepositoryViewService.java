@@ -151,9 +151,10 @@ public final class DqRepositoryViewService {
      * Method "listTdDataProviders" list all the connections in the given folder.
      * 
      * @param folder the path to the folder containing TdDataProviders
+     * @param containSubFolders if it contains all sub folders.
      * @return the list of all TdDataProviders in the folder (never null).
      */
-    public static List<TdDataProvider> listTdDataProviders(IFolder folder) {
+    public static List<TdDataProvider> listTdDataProviders(IFolder folder, boolean containSubFolders) {
         ArrayList<TdDataProvider> providers = new ArrayList<TdDataProvider>();
         IResource[] members = null;
         try {
@@ -171,6 +172,10 @@ public final class DqRepositoryViewService {
                     providers.add(dataProvider);
                 } else {
                     log.warn(rc.getMessage());
+                }
+            } else {
+                if (containSubFolders && (res instanceof IFolder)) {
+                    providers.addAll(listTdDataProviders((IFolder) res, containSubFolders));
                 }
             }
         }

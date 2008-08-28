@@ -149,7 +149,7 @@ public class ChangePerspectiveAction extends Action {
         if (SE_ID.equals(perspectiveId)) {
             IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                     DQStructureManager.DB_CONNECTIONS);
-            List<TdDataProvider> listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder);
+            List<TdDataProvider> listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder, true);
             SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
             AliasManager aliasManager = default1.getAliasManager();
             aliasManager.getAliases().clear();
