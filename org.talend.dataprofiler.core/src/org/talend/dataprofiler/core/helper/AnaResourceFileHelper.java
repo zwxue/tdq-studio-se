@@ -60,7 +60,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
 
     public Collection<AnalysisEntity> getAllAnalysis() {
         if (resourceChanged) {
-            allAnalysisMap.clear();
+            this.clear();
             IFolder defaultAnalysFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
                     PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
             try {
