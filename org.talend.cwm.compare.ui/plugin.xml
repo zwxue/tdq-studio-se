@@ -9,6 +9,31 @@
 -->
 
 <plugin>
+   
+   <extension  
+         point="org.eclipse.ui.navigator.navigatorContent">
+     <actionProvider
+            class="org.talend.cwm.compare.ui.actions.provider.ReloadDatabaseProvider"
+            id="org.talend.cwm.compare.ui.actions.provider.ReloadDatabaseProvider">
+         <enablement>
+          <or>
+            <instanceof
+                     value="org.talend.dataprofiler.core.model.nodes.foldernode.AbstractDatabaseFolderNode">
+            </instanceof>
+            <and>
+               <instanceof
+                     value="org.eclipse.core.resources.IFile">
+               </instanceof>
+                <test
+                        property="org.eclipse.core.resources.name"
+                        value="*.prv">
+                </test>
+             </and>
+           </or>
+         </enablement>
+      </actionProvider>        
+   </extension>
+   
    <extension
          point="org.eclipse.ui.views">
       <view
@@ -71,6 +96,4 @@
       </objectContribution>
 
    </extension>
-
-
 </plugin>
