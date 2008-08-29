@@ -18,7 +18,6 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
-
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.util.CoreSwitch;
 
@@ -67,6 +66,9 @@ public class EMFObjFilter extends AbstractViewerFilter {
             }
         } else if (element instanceof IFile) {
             IFile file = (IFile) element;
+            if (file.getName().indexOf(".") == 0) {
+                return false;
+            }
             return file.getFileExtension() != null;
         }
         return true;

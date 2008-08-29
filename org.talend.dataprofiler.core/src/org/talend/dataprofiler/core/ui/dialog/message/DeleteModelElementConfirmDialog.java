@@ -34,7 +34,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public final class DeleteModelElementConfirmDialog {
+public class DeleteModelElementConfirmDialog {
 
     private static final String REQUIRES = "requires";
 
@@ -214,6 +214,23 @@ public final class DeleteModelElementConfirmDialog {
             return result;
         } else {
             return popConfirmDialog(modelElements);
+        }
+    }
+
+    public static int showElementImpactDialog(Shell parentShell, ModelElement[] modelElements, String dialogMessage) {
+        addDenpendencyElements(modelElements);
+        ImpactNode[] impactElements = getImpactNodes();
+        if (impactElements.length > 0) {
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, "Confirm Element Delete", null, dialogMessage,
+                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 0);
+            dialog.setContentProvider(new DialogContentProvider(impactElements));
+            dialog.setLabelProvider(getLabelProvider());
+            dialog.setInput(new Object());
+            clear();
+            int result = dialog.open();
+            return result;
+        } else {
+            return Window.OK;
         }
     }
 

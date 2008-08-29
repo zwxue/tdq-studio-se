@@ -30,7 +30,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * @author rli
  * 
  */
-public class ColumnFolderNode extends AbstractFolderNode {
+public class ColumnFolderNode extends AbstractDatabaseFolderNode {
 
     /**
      * @param name

@@ -26,7 +26,7 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  * @author scorreia
  * @param <COLSET> either TdTable or TdView
  */
-public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> extends AbstractFolderNode {
+public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> extends AbstractDatabaseFolderNode {
 
     private static Logger log = Logger.getLogger(NamedColumnSetFolderNode.class);
 
