@@ -326,10 +326,6 @@ public final class DqRepositoryViewService {
             log.info("Data provider not serialized: no folder given.");
             return null;
         }
-
-        // --- add resources in resource set
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-        ResourceSet resourceSet = util.getResourceSet();
         String fileName = createFilename(dataProvider.getName(), FactoriesUtil.PROV);
 
         IFile file = folderProvider.getFolderResource().getFile(fileName);
@@ -340,11 +336,26 @@ public final class DqRepositoryViewService {
                             + ". File already exists!");
             return file;
         }
-        // URI uri = URI.createFileURI(dataproviderFilename);
+
+        saveDataProviderResource(dataProvider, folderProvider.getFolderResource(), file);
+        return file;
+    }
+
+    /**
+     * Save the contents of dataProvider, make the dataProvider corresponding a resource value.
+     * 
+     * @param dataProvider
+     * @param folderProvider
+     * @param file
+     */
+    public static boolean saveDataProviderResource(TdDataProvider dataProvider, IFolder folderProvider, IFile file) {
+        // --- add resources in resource set
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+        ResourceSet resourceSet = util.getResourceSet();
         URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
         final Resource resource = resourceSet.createResource(uri);
         if (resource == null) {
-            return null;
+            return false;
         }
         boolean ok = resource.getContents().add(dataProvider);
         if (log.isDebugEnabled()) {
@@ -357,9 +368,9 @@ public final class DqRepositoryViewService {
         // save each catalog is its own file
         Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
         if (CAT_WITH_PRV) {
-            ok = resource.getContents().addAll(catalogs);
+            resource.getContents().addAll(catalogs);
         } else {
-            ok = addElementsToOwnResources(catalogs, folderProvider.getFolderResource(), util);
+            ok = addElementsToOwnResources(catalogs, folderProvider, util);
         }
 
         if (log.isDebugEnabled()) {
@@ -369,17 +380,17 @@ public final class DqRepositoryViewService {
         // save each schema is its own file
         Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(dataProvider);
         if (CAT_WITH_PRV) {
-            ok = resource.getContents().addAll(schemata);
+            resource.getContents().addAll(schemata);
             EMFUtil.saveSingleResource(resource);
         } else {
-            ok = addElementsToOwnResources(schemata, folderProvider.getFolderResource(), util);
+            ok = addElementsToOwnResources(schemata, folderProvider, util);
             util.save();
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Schema added " + ok);
         }
-        return file;
+        return ok;
     }
 
     /**
