@@ -64,6 +64,7 @@ public class CreateUserFolderProvider extends CommonActionProvider {
         public CreateUserFolderAction() {
             super("Create folder");
             setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.FOLDER_NEW_IMAGE));
+            setId("Create_User_Folder_Action");
         }
 
         /*
