@@ -19,14 +19,19 @@ import java.util.Locale;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class TextFormatFactory {
+public final class TextFormatFactory {
+
+    private TextFormatFactory() {
+    }
 
     public static String createStandardPercent(Object input) {
         Double dbl = new Double(input.toString());
         if (dbl.equals(Double.NaN)) {
             return String.valueOf(dbl);
         }
-        DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance();
+        // MOD scorreia 2008-08-29 use English Locale to display percentage in English format for everybody (otherwise
+        // we should handle user's locale everywhere in the platform
+        DecimalFormat format = (DecimalFormat) DecimalFormat.getPercentInstance(Locale.ENGLISH);
         format.applyPattern("0.00%");
 
         try {
@@ -41,7 +46,7 @@ public class TextFormatFactory {
         format.applyPattern("0.00");
 
         try {
-            return format.parse(format.format(new Double(input.toString())));
+            return Double.parseDouble(input.toString());
         } catch (Exception ne) {
             return 0;
         }
