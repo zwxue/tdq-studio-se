@@ -52,14 +52,10 @@ public final class TextFormatFactory {
         }
     }
 
-    public static Number createLocalFormatValue(Object input) {
+    public static Number createLocalFormatValue(Object input) throws ParseException {
         DecimalFormat format = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
 
-        try {
-            return format.parse(input.toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return 0;
-        }
+        return format.parse(input.toString());
+
     }
 }

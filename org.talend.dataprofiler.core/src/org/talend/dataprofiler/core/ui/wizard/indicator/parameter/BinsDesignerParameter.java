@@ -129,10 +129,14 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
 
             Domain userDomain = DomainHelper.createDomain("test");
             for (SliceEntity entity : tableData) {
-                double min = TextFormatFactory.createLocalFormatValue(entity.getLowValue()).doubleValue();
-                double max = TextFormatFactory.createLocalFormatValue(entity.getHighValue()).doubleValue();
-                RangeRestriction rangeRestriction = DomainHelper.createRealRangeRestriction(min, max);
-                userDomain.getRanges().add(rangeRestriction);
+                try {
+                    double min = TextFormatFactory.createLocalFormatValue(entity.getLowValue()).doubleValue();
+                    double max = TextFormatFactory.createLocalFormatValue(entity.getHighValue()).doubleValue();
+                    RangeRestriction rangeRestriction = DomainHelper.createRealRangeRestriction(min, max);
+                    userDomain.getRanges().add(rangeRestriction);
+                } catch (Exception e) {
+                    // TODO handle the exception
+                }
             }
 
             return userDomain;
