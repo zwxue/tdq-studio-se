@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -34,14 +36,25 @@ public class TextFormatFactory {
         }
     }
 
-    public static String createStandardNumber(Object input) {
+    public static Number createStandardNumber(Object input) {
         DecimalFormat format = (DecimalFormat) DecimalFormat.getNumberInstance();
         format.applyPattern("0.00");
 
         try {
-            return format.format(new Double(input.toString()));
+            return format.parse(format.format(new Double(input.toString())));
         } catch (Exception ne) {
-            return "";
+            return 0;
+        }
+    }
+
+    public static Number createLocalFormatValue(Object input) {
+        DecimalFormat format = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
+
+        try {
+            return format.parse(input.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 }

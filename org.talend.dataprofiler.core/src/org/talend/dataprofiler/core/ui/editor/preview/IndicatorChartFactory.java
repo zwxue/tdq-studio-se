@@ -221,7 +221,7 @@ public class IndicatorChartFactory {
                 IndicatorCommonUtil.compositeIndicatorMap(indicatorUnit);
 
                 if (indicatorUnit.isExcuted()) {
-                    double doubleValue = Double.valueOf(indicatorUnit.getValue().toString());
+                    double doubleValue = Double.parseDouble(indicatorUnit.getValue().toString());
                     map.put(indicatorUnit.getType(), doubleValue);
                 }
             }
