@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -30,11 +32,12 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  */
 public final class ReportHelper {
 
+    private static Logger log = Logger.getLogger(ReportHelper.class);
+
     public static enum ReportType {
         MAIN("Main", "/reports/column/report_01.jrxml"),
-        EVOLUTION("Evolution", "/reports/column/report_02.jrxml");
-
-        // TODO scorreia add a type USER_MADE("User specified", null) for the user to set his own file path
+        EVOLUTION("Evolution", "/reports/column/report_02.jrxml"),
+        USER_MADE("User specified", null); // for the user to set his own file path
 
         private String label;
 
@@ -159,16 +162,35 @@ public final class ReportHelper {
         return execInformations;
     }
 
-    public static boolean setReportType(TdReport report, ReportType reportType) {
+    /**
+     * Method "setReportType".
+     * 
+     * @param report the report object to update
+     * @param reportType the report type to set
+     * @param jrxmlFullPath the full path to the jxrxml file (can be null when the type of report is different from the
+     * USER_DEFINED)
+     * @return true if everything is set correctly, false otherwise.
+     */
+    public static boolean setReportType(TdReport report, ReportType reportType, String jrxmlFullPath) {
+        boolean ok = true;
         switch (reportType) {
         case MAIN:
         case EVOLUTION:
             report.setInputJrxml(reportType.getJrxmlFilename());
             report.setReportType(reportType.getLabel());
             break;
+        case USER_MADE:
+            report.setReportType(reportType.getLabel());
+            report.setInputJrxml(jrxmlFullPath);
+            if (StringUtils.isBlank(jrxmlFullPath)) {
+                log.error("Empty path to jasper report xml file: " + jrxmlFullPath);
+                ok = false;
+            }
+            break;
         default:
+            ok = false;
             break;
         }
-        return false;
+        return ok;
     }
 }
