@@ -63,6 +63,7 @@ import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -364,6 +365,12 @@ public final class DqRepositoryViewService {
 
         // The provider connection is stored in the dataprovider because of the containment relation.
         // addInSoftwareSystemResourceSet(folder, connector, providerConnection);
+
+        // save dependency values
+        EList<Dependency> supplierDependency = dataProvider.getSupplierDependency();
+        if (supplierDependency.size() != 0) {
+            resource.getContents().addAll(supplierDependency);
+        }
 
         // save each catalog is its own file
         Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
