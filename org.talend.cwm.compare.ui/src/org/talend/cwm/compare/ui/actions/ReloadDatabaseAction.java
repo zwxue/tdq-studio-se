@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,6 +34,7 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.emf.FactoriesUtil;
@@ -65,6 +67,8 @@ import orgomg.cwm.resource.relational.util.RelationalSwitch;
  * DOC rli class global comment. Detailled comment
  */
 public class ReloadDatabaseAction extends Action {
+
+    private static Logger log = Logger.getLogger(ReloadDatabaseAction.class);
 
     private Object selectedNode;
 
@@ -173,19 +177,24 @@ public class ReloadDatabaseAction extends Action {
         for (DiffElement de : ownedElements) {
             EList<DiffElement> subDiffElements = de.getSubDiffElements();
             for (DiffElement difElement : subDiffElements) {
-                handleDiffPackage(oldDataProvider, difElement);
+                handleDiffPackageElement(oldDataProvider, difElement);
             }
         }
 
         boolean ok = DqRepositoryViewService.saveDataProviderResource(oldDataProvider, (IFolder) tempConnectionFile.getParent(),
                 selectedFile);
+        // ReturnCode saveOpenDataProvider = DqRepositoryViewService.saveOpenDataProvider(oldDataProvider);
+        // boolean reloadSuccess = saveOpenDataProvider.isOk();
+        // if (!reloadSuccess) {
+        // log.error(saveOpenDataProvider.getMessage());
+        // }
 
         PrvResourceFileHelper.getInstance().remove(selectedFile);
         PrvResourceFileHelper.getInstance().register(selectedFile, oldDataProvider.eResource());
         return ok;
     }
 
-    private void handleDiffPackage(TdDataProvider oldDataProvider, DiffElement difElement) {
+    private void handleDiffPackageElement(TdDataProvider oldDataProvider, DiffElement difElement) {
         AddModelElement addElement = addModelSwitch.doSwitch(difElement);
         if (addElement != null) {
             EObject rightElement = addElement.getRightElement();
@@ -207,8 +216,16 @@ public class ReloadDatabaseAction extends Action {
                 return;
             }
             if (!removeElementConfirm) {
-                DeleteModelElementConfirmDialog.showElementImpactDialog(null, new ModelElement[] { oldDataProvider },
-                        "The following analyses is impacted:");
+                final Display display = PlatformUI.getWorkbench().getDisplay();
+                final TdDataProvider provider = oldDataProvider;
+                display.asyncExec(new Runnable() {
+
+                    public void run() {
+
+                        DeleteModelElementConfirmDialog.showElementImpactDialog(new Shell(display),
+                                new ModelElement[] { provider }, "The following analyses will be impacted:");
+                    }
+                });
                 removeElementConfirm = true;
             }
             oldDataProvider.getDataPackage().remove(removePackage);
