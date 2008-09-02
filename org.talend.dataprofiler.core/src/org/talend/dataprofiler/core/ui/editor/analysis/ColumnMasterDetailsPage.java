@@ -15,8 +15,6 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -54,8 +52,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.browser.WebBrowserEditor;
-import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -73,6 +69,7 @@ import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
+import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataquality.analysis.Analysis;
@@ -335,23 +332,12 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                             public void run() {
 
                                 for (ChartWithData chart : IndicatorChartFactory.createChart(columnIndicator, isCreate)) {
-
                                     if (chart.getImageDescriptor() != null) {
                                         ImageHyperlink image = toolkit.createImageHyperlink(comp, SWT.WRAP);
                                         image.setImage(chart.getImageDescriptor().createImage());
-                                        image.setToolTipText("What is it?");
-                                        image.addHyperlinkListener(new HyperlinkAdapter() {
-
-                                            public void linkActivated(HyperlinkEvent e) {
-                                                try {
-                                                    WebBrowserEditor.open(new WebBrowserEditorInput(new URL(
-                                                            "http://en.wikipedia.org/wiki/Box_plot")));
-                                                } catch (MalformedURLException e1) {
-                                                    e1.printStackTrace();
-                                                }
-                                            }
-
-                                        });
+                                        if (chart.getChartNamedType().equals(CompositeIndicator.SUMMARY_STATISTICS)) {
+                                            ColumnAnalysisResultPage.addShowDefinition(image);
+                                        }
                                     }
                                 }
                             }

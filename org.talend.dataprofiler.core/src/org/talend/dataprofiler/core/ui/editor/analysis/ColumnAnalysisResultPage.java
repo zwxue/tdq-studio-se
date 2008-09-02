@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -30,14 +32,20 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.browser.WebBrowserEditor;
+import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
+import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
@@ -207,6 +215,9 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                                 if (imageDescriptor != null) {
                                     ImageHyperlink image = toolkit.createImageHyperlink(composite, SWT.WRAP);
                                     image.setImage(imageDescriptor.createImage());
+                                    if (chartData.getChartNamedType().equals(CompositeIndicator.SUMMARY_STATISTICS)) {
+                                        addShowDefinition(image);
+                                    }
                                 }
 
                                 subComp.setClient(composite);
@@ -265,6 +276,26 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
         this.resultComp.dispose();
 
         createFormContent(getManagedForm());
+    }
+
+    /**
+     * DOC qzhang Comment method "addShowDefinition".
+     * 
+     * @param image
+     */
+    public static void addShowDefinition(ImageHyperlink image) {
+        image.setToolTipText("What is it?");
+        image.addHyperlinkListener(new HyperlinkAdapter() {
+
+            public void linkActivated(HyperlinkEvent e) {
+                try {
+                    WebBrowserEditor.open(new WebBrowserEditorInput(new URL("http://en.wikipedia.org/wiki/Box_plot")));
+                } catch (MalformedURLException e1) {
+                    ExceptionHandler.process(e1);
+                }
+            }
+
+        });
     }
 
 }
