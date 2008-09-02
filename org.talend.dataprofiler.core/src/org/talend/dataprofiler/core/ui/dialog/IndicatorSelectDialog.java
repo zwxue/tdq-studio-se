@@ -280,22 +280,17 @@ public class IndicatorSelectDialog extends TrayDialog {
         }
 
         private void processRowButtonSelect(boolean selection, List<Button> rowButtons) {
-            if (selection) {
+            for (Button btn : rowButtons) {
+                ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
+                IIndicatorNode node = (IIndicatorNode) btn.getData();
+                IndicatorEnum indicatorEnum = node.getIndicatorEnum();
 
-                for (Button btn : rowButtons) {
-                    ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
-                    IIndicatorNode node = (IIndicatorNode) btn.getData();
-                    if (ColumnIndicatorRule.match(node, columnIndicator)) {
-
-                        btn.setSelection(true);
+                if (selection && ColumnIndicatorRule.match(node, columnIndicator)) {
+                    btn.setSelection(true);
+                    if (indicatorEnum != null) {
                         columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
                     }
-                }
-
-            } else {
-                for (Button btn : rowButtons) {
-                    ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
-                    IIndicatorNode node = (IIndicatorNode) btn.getData();
+                } else {
                     btn.setSelection(false);
                     columnIndicator.removeTempIndicatorEnum(node.getIndicatorEnum());
                 }
