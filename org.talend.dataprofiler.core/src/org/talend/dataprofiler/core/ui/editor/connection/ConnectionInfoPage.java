@@ -126,7 +126,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         GridDataFactory.fillDefaults().grab(true, true).applyTo(loginText);
         Label passwordLabel = new Label(sectionClient, SWT.NONE);
         passwordLabel.setText("Password:");
-        passwordText = new Text(sectionClient, SWT.BORDER);
+        passwordText = new Text(sectionClient, SWT.BORDER | SWT.PASSWORD);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
