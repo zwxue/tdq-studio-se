@@ -56,13 +56,15 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
                 loadChildrenLow(schema, null, schema, new ArrayList<TdView>());
             }
         }
+        super.loadChildren();
 
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.model.nodes.AbstractFolderNode#getColumnSets(org.talend.cwm.relational.TdCatalog,
+     * @see
+     * org.talend.dataprofiler.core.model.nodes.AbstractFolderNode#getColumnSets(org.talend.cwm.relational.TdCatalog,
      * org.talend.cwm.relational.TdSchema)
      */
     @Override
@@ -79,7 +81,8 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.model.nodes.AbstractFolderNode#loadColumnSets(org.talend.cwm.relational.TdCatalog,
+     * @see
+     * org.talend.dataprofiler.core.model.nodes.AbstractFolderNode#loadColumnSets(org.talend.cwm.relational.TdCatalog,
      * org.talend.cwm.relational.TdSchema, org.talend.cwm.softwaredeployment.TdDataProvider, java.util.List)
      */
     @Override

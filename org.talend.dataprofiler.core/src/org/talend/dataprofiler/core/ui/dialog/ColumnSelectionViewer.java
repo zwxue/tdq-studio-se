@@ -14,14 +14,14 @@ package org.talend.dataprofiler.core.ui.dialog;
 
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.cwm.relational.TdTable;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class ColumnSelectionViewer extends CheckboxTreeViewer {
+public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
 
     private final String tooMuchItemSeleted = "This action will select all columns of all tables existing below this level."
             + " This can take a long time and will block the application during that time. Do you still want to continue?";

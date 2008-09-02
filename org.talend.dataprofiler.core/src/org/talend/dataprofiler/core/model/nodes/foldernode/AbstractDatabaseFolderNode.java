@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
+import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
+
 /**
  * DOC rli class global comment. Detailled comment
  */
@@ -24,5 +26,9 @@ public abstract class AbstractDatabaseFolderNode extends AbstractFolderNode {
      */
     public AbstractDatabaseFolderNode(String name) {
         super(name);
+    }
+
+    public void loadChildren() {
+        NeedSaveDataProviderHelper.saveAllDataProvider();
     }
 }

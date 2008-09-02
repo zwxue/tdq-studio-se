@@ -39,7 +39,7 @@ public final class ModelElementFileFactory {
     public static ModelElement getModelElement(IFile file) {
         ModelElement modelElement = null;
         if (file.getName().endsWith(PluginConstant.PRV_SUFFIX)) {
-            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().readFromFile(file);
+            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().getTdProvider(file);
             modelElement = returnValue.getObject();
         } else if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
             modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);

@@ -72,6 +72,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             this.setChildren(columnList.toArray());
             NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
         }
+        super.loadChildren();
     }
 
 }

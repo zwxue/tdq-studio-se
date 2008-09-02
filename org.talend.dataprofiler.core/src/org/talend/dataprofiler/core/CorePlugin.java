@@ -25,7 +25,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 
 /**
@@ -66,7 +65,7 @@ public class CorePlugin extends AbstractUIPlugin {
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         super.stop(context);
-        save();
+        // save();
     }
 
     /**
@@ -78,9 +77,9 @@ public class CorePlugin extends AbstractUIPlugin {
         return plugin;
     }
 
-    public void save() {
-        NeedSaveDataProviderHelper.saveAllDataProvider();
-    }
+    // public void save() {
+    // NeedSaveDataProviderHelper.saveAllDataProvider();
+    // }
 
     /**
      * Returns an image descriptor for the image file at the given plug-in relative path.

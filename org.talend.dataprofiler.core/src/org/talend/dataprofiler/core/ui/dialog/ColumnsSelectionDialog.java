@@ -44,6 +44,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -59,7 +60,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
-import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
@@ -231,8 +231,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#addSelectionButtonListener(org.eclipse.swt.widgets.Button,
-     * org.eclipse.swt.widgets.Button)
+     * @see
+     * org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#addSelectionButtonListener(org.eclipse.swt
+     * .widgets.Button, org.eclipse.swt.widgets.Button)
      */
     protected void addSelectionButtonListener(Button selectButton, Button deselectButton) {
         SelectionListener listener = new SelectionAdapter() {
@@ -421,7 +422,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         super.okPressed();
         this.columnSetCheckedMap = null;
         this.currentCheckedColumnSet = null;
-        NeedSaveDataProviderHelper.saveAllDataProvider();
     }
 
     /**
@@ -481,7 +481,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         } catch (TalendException e) {
                             MessageBoxExceptionHandler.process(e);
                         }
-                        NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
+                        EMFSharedResources.getSharedEmfUtil().saveResource(provider.eResource());
                     }
                     return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                 }
