@@ -87,6 +87,8 @@ public class ImageLib {
 
     public static final String DATA_PROFILING = "server_chart.png";
 
+    public static final String EXPORT_REPORT = "export_rep.gif";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 
