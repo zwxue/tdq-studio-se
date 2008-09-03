@@ -37,7 +37,7 @@ public class CheckValueUtils {
     }
 
     public static boolean isRealNumberValue(String inputString) {
-        String regex = "-*\\d+\\.\\d+";
+        String regex = "-?\\d+(\\.\\d+)?";
         return getCheckValue(regex, inputString);
     }
 

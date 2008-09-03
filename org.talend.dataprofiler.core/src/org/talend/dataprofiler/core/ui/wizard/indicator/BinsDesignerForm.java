@@ -187,8 +187,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
                 if (min == "") {
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isNumberValue(min)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                } else if (!CheckValueUtils.isRealNumberValue(min)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                     parameter.setMinValue(Double.valueOf(min));
@@ -204,8 +204,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
                 if (max == "") {
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isNumberValue(max)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                } else if (!CheckValueUtils.isRealNumberValue(max)) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                     parameter.setMaxValue(Double.valueOf(max));
@@ -434,7 +434,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 TextFormatFactory.createLocalFormatValue(value);
                 updateStatus(IStatus.OK, MSG_OK);
             } catch (Exception e) {
-                updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
             }
 
             tableViewer.refresh();
