@@ -12,20 +12,10 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.api.MatchOptions;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -60,20 +50,21 @@ public class DataProviderComparisonLevel extends AbstractPartComparisonLevel {
         };
     }
 
-    protected void handleRemoveElement(TdDataProvider oldDataProvider, RemoveModelElement removeElement) {
+    protected void handleRemoveElement(RemoveModelElement removeElement) {
         Package removePackage = packageSwitch.doSwitch(removeElement.getLeftElement());
         if (removePackage == null) {
             return;
         }
-        popRemoveElementConfirm(oldDataProvider);
+        popRemoveElementConfirm();
         oldDataProvider.getDataPackage().remove(removePackage);
     }
 
-    protected void handleAddElement(TdDataProvider oldDataProvider, AddModelElement addElement) {
+    protected void handleAddElement(AddModelElement addElement) {
         EObject rightElement = addElement.getRightElement();
         TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
         if (catalog != null) {
             DataProviderHelper.addCatalog(catalog, oldDataProvider);
+            this.tempReloadProvider.getDataPackage().remove(catalog);
         } else {
             TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
             if (schema != null) {
@@ -83,48 +74,27 @@ public class DataProviderComparisonLevel extends AbstractPartComparisonLevel {
         return;
     }
 
-    public void reloadCurrentLevelElement() {
-        super.reloadCurrentLevelElement();
-        reloadDataProviderFile(tempConnectionFile, (IFile) selectedObj);
+    protected boolean isValid() {
+        return ((IFile) selectedObj).getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV);
     }
 
-    private boolean reloadDataProviderFile(IFile tempConnectionFile, IFile selectedFile) {
-        if (!selectedFile.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
-            return false;
-        }
-        TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().getTdProvider(selectedFile);
-        TdDataProvider oldDataProvider = returnVlaue.getObject();
-        TypedReturnCode<TdDataProvider> returnProvider = getRefreshedDataProvider(oldDataProvider);
-        if (returnProvider.isOk()) {
-            DqRepositoryViewService.saveDataProviderResource(returnProvider.getObject(),
-                    (IFolder) tempConnectionFile.getParent(), tempConnectionFile);
+    @Override
+    protected TdDataProvider findDataProvider() {
+        TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().getTdProvider((IFile) selectedObj);
+        return returnVlaue.getObject();
+    }
 
-        }
-
-        // add option for ignoring some elements
-        Map<String, Object> options = new HashMap<String, Object>();
-        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-        MatchModel match = null;
-        try {
-            match = MatchService.doMatch(oldDataProvider, returnProvider.getObject(), options);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return false;
-        }
-        final DiffModel diff = DiffService.doDiff(match, false);
-        EList<DiffElement> ownedElements = diff.getOwnedElements();
-        for (DiffElement de : ownedElements) {
-            EList<DiffElement> subDiffElements = de.getSubDiffElements();
-            for (DiffElement difElement : subDiffElements) {
-                handleDiffPackageElement(oldDataProvider, difElement);
-            }
-        }
-
-        boolean ok = DqRepositoryViewService.saveDataProviderResource(oldDataProvider, (IFolder) tempConnectionFile.getParent(),
-                selectedFile);
+    @Override
+    protected void saveReloadResult() {
+        IFile selectedFile = (IFile) selectedObj;
+        DqRepositoryViewService.saveDataProviderResource(oldDataProvider, (IFolder) selectedFile.getParent(), selectedFile);
         PrvResourceFileHelper.getInstance().remove(selectedFile);
         PrvResourceFileHelper.getInstance().register(selectedFile, oldDataProvider.eResource());
-        return ok;
+    }
+
+    @Override
+    protected EObject getSavedReloadObject() {
+        return this.tempReloadProvider;
     }
 
 }

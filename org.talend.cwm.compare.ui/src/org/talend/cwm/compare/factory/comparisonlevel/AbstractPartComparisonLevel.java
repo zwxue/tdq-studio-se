@@ -13,13 +13,23 @@
 package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
+import org.eclipse.emf.compare.diff.service.DiffService;
+import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -28,6 +38,7 @@ import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -42,6 +53,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public abstract class AbstractPartComparisonLevel implements IComparisonLevel {
 
+    private static Logger log = Logger.getLogger(AbstractPartComparisonLevel.class);
+
     private DiffSwitch<AddModelElement> addModelSwitch;
 
     private DiffSwitch<RemoveModelElement> removeModelSwitch;
@@ -50,7 +63,11 @@ public abstract class AbstractPartComparisonLevel implements IComparisonLevel {
 
     protected Object selectedObj;
 
-    protected IFile tempConnectionFile;
+    protected TdDataProvider oldDataProvider;
+
+    // protected IFile tempConnectionFile;
+
+    protected TdDataProvider tempReloadProvider;
 
     public AbstractPartComparisonLevel(Object selectedObj) {
         this.selectedObj = selectedObj;
@@ -73,41 +90,69 @@ public abstract class AbstractPartComparisonLevel implements IComparisonLevel {
         };
     }
 
-    protected void handleDiffPackageElement(TdDataProvider oldDataProvider, DiffElement difElement) {
-        AddModelElement addElement = addModelSwitch.doSwitch(difElement);
-        if (addElement != null) {
-            handleAddElement(oldDataProvider, addElement);
+    public void reloadCurrentLevelElement() {
+        if (!isValid()) {
             return;
         }
-        RemoveModelElement removeElement = removeModelSwitch.doSwitch(difElement);
-        if (removeElement != null) {
-            handleRemoveElement(oldDataProvider, removeElement);
-        }
-    }
-
-    protected abstract void handleRemoveElement(TdDataProvider oldDataProvider, RemoveModelElement removeElement);
-
-    protected abstract void handleAddElement(TdDataProvider oldDataProvider, AddModelElement addElement);
-
-    protected void popRemoveElementConfirm(TdDataProvider oldDataProvider) {
-        if (!removeElementConfirm) {
-            final Display display = PlatformUI.getWorkbench().getDisplay();
-            final TdDataProvider provider = oldDataProvider;
-            display.asyncExec(new Runnable() {
-
-                public void run() {
-
-                    DeleteModelElementConfirmDialog.showElementImpactDialog(new Shell(display), new ModelElement[] { provider },
-                            "The following analyses will be impacted:");
-                }
-            });
-            removeElementConfirm = true;
-        }
-    }
-
-    public void reloadCurrentLevelElement() {
         DQStructureComparer.deleteCopiedResourceFile();
-        tempConnectionFile = DQStructureComparer.createTempConnectionFile();
+        IFile tempConnectionFile = DQStructureComparer.createTempConnectionFile();
+        oldDataProvider = findDataProvider();
+        if (oldDataProvider == null) {
+            return;
+        }
+        TypedReturnCode<TdDataProvider> returnProvider = getRefreshedDataProvider(oldDataProvider);
+        if (!returnProvider.isOk()) {
+            log.error(returnProvider.getMessage());
+            return;
+        }
+        tempReloadProvider = returnProvider.getObject();
+        DqRepositoryViewService.saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
+                tempConnectionFile);
+        EObject savedReloadObject = getSavedReloadObject();
+
+        if (compareWithReloadObject(savedReloadObject)) {
+            saveReloadResult();
+        }
+    }
+
+    protected abstract EObject getSavedReloadObject();
+
+    protected void saveReloadResult() {
+        DqRepositoryViewService.saveOpenDataProvider(this.oldDataProvider);
+    }
+
+    protected abstract TdDataProvider findDataProvider();
+
+    protected boolean isValid() {
+        return true;
+    }
+
+    /**
+     * 
+     * 
+     * @param oldDataProvider
+     */
+    protected boolean compareWithReloadObject(EObject reloadedObj) {
+
+        // add option for ignoring some elements
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        MatchModel match = null;
+        try {
+            match = MatchService.doMatch(oldDataProvider, reloadedObj, options);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+        final DiffModel diff = DiffService.doDiff(match);
+        EList<DiffElement> ownedElements = diff.getOwnedElements();
+        for (DiffElement de : ownedElements) {
+            EList<DiffElement> subDiffElements = de.getSubDiffElements();
+            for (DiffElement difElement : subDiffElements) {
+                handleDiffPackageElement(difElement);
+            }
+        }
+        return true;
     }
 
     protected TypedReturnCode<TdDataProvider> getRefreshedDataProvider(TdDataProvider oldDataProvider) {
@@ -133,6 +178,38 @@ public abstract class AbstractPartComparisonLevel implements IComparisonLevel {
         connectionParameters.setParameters(properties);
         TypedReturnCode<TdDataProvider> returnProvider = ConnectionService.createConnection(connectionParameters);
         return returnProvider;
+    }
+
+    protected void handleDiffPackageElement(DiffElement difElement) {
+        AddModelElement addElement = addModelSwitch.doSwitch(difElement);
+        if (addElement != null) {
+            handleAddElement(addElement);
+            return;
+        }
+        RemoveModelElement removeElement = removeModelSwitch.doSwitch(difElement);
+        if (removeElement != null) {
+            handleRemoveElement(removeElement);
+        }
+    }
+
+    protected abstract void handleRemoveElement(RemoveModelElement removeElement);
+
+    protected abstract void handleAddElement(AddModelElement addElement);
+
+    protected void popRemoveElementConfirm() {
+        if (!removeElementConfirm) {
+            final Display display = PlatformUI.getWorkbench().getDisplay();
+            final TdDataProvider provider = oldDataProvider;
+            display.asyncExec(new Runnable() {
+
+                public void run() {
+
+                    DeleteModelElementConfirmDialog.showElementImpactDialog(new Shell(display), new ModelElement[] { provider },
+                            "The following analyses will be impacted:");
+                }
+            });
+            removeElementConfirm = true;
+        }
     }
 
 }

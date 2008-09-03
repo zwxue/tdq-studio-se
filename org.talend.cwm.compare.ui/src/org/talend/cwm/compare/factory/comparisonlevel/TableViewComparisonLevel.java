@@ -14,6 +14,7 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 
 /**
@@ -26,15 +27,34 @@ public class TableViewComparisonLevel extends AbstractPartComparisonLevel {
     }
 
     @Override
-    protected void handleAddElement(TdDataProvider oldDataProvider, AddModelElement addElement) {
+    public void reloadCurrentLevelElement() {
+        // super.reloadCurrentLevelElement();
+        // EObject parent = ((AbstractDatabaseFolderNode) selectedObj).getParent();
+        // SwitchHelpers.c
+    }
+
+    @Override
+    protected void handleAddElement(AddModelElement addElement) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    protected void handleRemoveElement(TdDataProvider oldDataProvider, RemoveModelElement removeElement) {
+    protected void handleRemoveElement(RemoveModelElement removeElement) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    protected TdDataProvider findDataProvider() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected EObject getSavedReloadObject() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
