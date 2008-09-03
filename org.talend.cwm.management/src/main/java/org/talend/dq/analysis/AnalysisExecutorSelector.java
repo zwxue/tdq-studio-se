@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import org.apache.log4j.Logger;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -24,6 +25,8 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public final class AnalysisExecutorSelector {
 
+    private static Logger log = Logger.getLogger(AnalysisExecutorSelector.class);
+
     private AnalysisExecutorSelector() {
     }
 
@@ -31,11 +34,15 @@ public final class AnalysisExecutorSelector {
      * Method "getAnalysisExecutor".
      * 
      * @param analysis the analysis to be run by the executor.
-     * @return the appropriate executor of the analysis.
+     * @return the appropriate executor of the analysis or null when no appropriate executor has been found.
      */
     public static IAnalysisExecutor getAnalysisExecutor(Analysis analysis) {
         assert analysis != null;
         AnalysisType analysisType = AnalysisHelper.getAnalysisType(analysis);
+        if (analysisType == null) {
+            log.error("Analysis type is not set for analysis " + analysis.getName());
+            return null;
+        }
         AnalysisExecutor exec = null;
         switch (analysisType) {
         case MULTIPLE_COLUMN:
@@ -46,7 +53,7 @@ public final class AnalysisExecutorSelector {
             break;
         default:
             // this should not happen. This executor has not been tested for a long time.
-            exec = new ColumnAnalysisExecutor();
+            exec = null;
         }
         return exec;
     }
