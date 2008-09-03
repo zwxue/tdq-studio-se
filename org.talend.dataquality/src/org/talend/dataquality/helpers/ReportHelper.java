@@ -82,6 +82,22 @@ public final class ReportHelper {
             }
             return list;
         }
+
+        /**
+         * DOC qzhang Comment method "getReportType".
+         * 
+         * @param text
+         * @return
+         */
+        public static ReportType getReportType(String text) {
+            for (ReportType reptype : values()) {
+                if (reptype.label.equals(text)) {
+                    return reptype;
+                }
+            }
+            return MAIN;
+        }
+
     }
 
     private ReportHelper() {
