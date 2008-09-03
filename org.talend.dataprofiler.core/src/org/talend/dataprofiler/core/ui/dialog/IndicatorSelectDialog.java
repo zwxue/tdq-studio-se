@@ -411,6 +411,8 @@ public class IndicatorSelectDialog extends TrayDialog {
                     rowCheckButton = new Button(tree, SWT.CHECK);
                     rowCheckButton.addSelectionListener(new RowSelectButtonListener(j, treeItem, branchNodes[i]
                             .getIndicatorEnum(), null));
+
+                    rowCheckButton.setBackground(rowCheckButton.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
                     commonCheckButton = rowCheckButton;
                 } else {
                     editor = new TreeEditor(tree);
