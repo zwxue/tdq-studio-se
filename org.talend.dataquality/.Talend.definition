@@ -47,6 +47,7 @@
     <sqlGenericExpression xmi:id="_8IFvYGOeEd2-SIyfZ_Vx6A" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_4Vq50GVjEd2wJomsB-uicA" body="SELECT COUNT({0}) FROM {1}  WHERE LTRIM(RTRIM({0})) = ''" language="Microsoft SQL Server"/>
     <sqlGenericExpression xmi:id="_Gm-CkGoBEd20k7biVpOSRw" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="DB2"/>
+    <sqlGenericExpression xmi:id="_RjJMMHLIEd29UNvGybxJUw" body="SELECT COUNT({0}) FROM {1}  WHERE LTRIM(RTRIM({0})) = ''" language="Adaptive Server Enterprise"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1BF2Ed2PKb6nEJEvhw" name="Minimal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Minimal Length">
     <taggedValue xmi:id="_ybssEDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data."/>
@@ -90,7 +91,7 @@
     <taggedValue xmi:id="_ybvvYTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the most frequent records"/>
     <sqlGenericExpression xmi:id="_ybwWcDh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY COUNT(*) DESC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
     <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48BF2Ed2PKb6nEJEvhw" name="Summary Statistics" categories="_ccKuIRF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI48xF2Ed2PKb6nEJEvhw _ccI48RF2Ed2PKb6nEJEvhw _ccI48hF2Ed2PKb6nEJEvhw _ccI49hF2Ed2PKb6nEJEvhw" label="Summary Statistics">
@@ -173,14 +174,14 @@
   <indicatorDefinitions xmi:id="_yb-_8Dh8Ed2XmO7pl5Yuyg" name="Regexp Matching Indicator" categories="_BvUq8ERhEd2RSqFSgXiIfA" label="Regexp Matching Indicator">
     <taggedValue xmi:id="_yb-_8Th8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of records matching the given pattern against the number of records that do not match the given pattern"/>
     <taggedValue xmi:id="_yb-_8jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records that match a regular pattern"/>
-    <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} REGEXP {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CASE WHEN {0} REGEXP_LIKE({0},{2}) THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_XXDn0GOvEd2-SIyfZ_Vx6A" body="SELECT SUM(CASE WHEN {0} ~ {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN {0} REGEXP {2} THEN 1 END), COUNT(*) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN {0} REGEXP_LIKE({0},{2}) THEN 1 END), COUNT(*) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_XXDn0GOvEd2-SIyfZ_Vx6A" body="SELECT COUNT(CASE WHEN {0} ~ {2} THEN 1 END), COUNT(*) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_Z4vXcERgEd2RSqFSgXiIfA" name="SQL Pattern Matching Indicator" categories="_BvUq8ERhEd2RSqFSgXiIfA" label="SQL Pattern Matching Indicator">
     <taggedValue xmi:id="_hzXEoERgEd2RSqFSgXiIfA" tag="Description" value="counts the number of records matching the given SQL pattern against the number of records that do not match the given SQL pattern"/>
     <taggedValue xmi:id="_hzXEoURgEd2RSqFSgXiIfA" tag="Purpose" value="evaluate the number of records that match a SQL pattern (entering in LIKE clause)"/>
-    <sqlGenericExpression xmi:id="_vIt8MERgEd2RSqFSgXiIfA" body="SELECT SUM(CASE WHEN {0} LIKE {2} THEN 1 ELSE 0 END), COUNT(*) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_vIt8MERgEd2RSqFSgXiIfA" body="SELECT COUNT(CASE WHEN {0} LIKE {2} THEN 1 END), COUNT(*) FROM {1}" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_GrAeADh9Ed2XmO7pl5Yuyg" name="Null Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Null Count">
     <taggedValue xmi:id="_GrBFEDh9Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of missing data (null records)"/>

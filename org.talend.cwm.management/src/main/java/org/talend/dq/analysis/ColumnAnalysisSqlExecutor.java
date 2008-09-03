@@ -171,9 +171,16 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
+            // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
+            // expressions.
+            if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicator.eClass())) {
+                return traceError("Unsupported use of regular expressions on this database (" + language
+                        + "). Remove all Pattern indicators from this analysis, please.");
+            }
+
             return traceError("No SQL expression found for indicator "
-                    + (indicator.getName() != null ? indicator.getName() : indicator.eClass().getName()) + ". Definition: "
-                    + ResourceHelper.getUUID(indicatorDefinition));
+                    + (indicator.getName() != null ? indicator.getName() : indicator.eClass().getName()) + " (Pattern id: "
+                    + ResourceHelper.getUUID(indicatorDefinition) + ")");
         }
 
         // --- get indicator parameters and convert them into sql expression
@@ -533,15 +540,27 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         final int last = rangeStrings.size();
 
         String sqlGenericExpression = sqlExpression.getBody();
+
+        // MOD scorreia 2008-09-03 Bug #4976 Order by clause cannot be in each single select statement (Oracle
+        // constraint, but MySQL allows it)
+        // hence we extract the ORDER BY clause and add it at the end.
+        int idxOfOrderBY = sqlGenericExpression.indexOf("ORDER BY");
+        String orderBy = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(idxOfOrderBY) : "";
+        String singleStatement = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(0, idxOfOrderBY) : sqlGenericExpression;
+
         for (int i = 0; i < last; i++) {
-            String singleSelect = getCompletedSingleSelect(indicator, sqlGenericExpression, colName, table, whereExpression,
+            String singleSelect = getCompletedSingleSelect(indicator, singleStatement, colName, table, whereExpression,
                     rangeStrings.get(i));
-            buf.append('(');
+            buf.append('('); // parenthesis necessary for MySQL
             buf.append(singleSelect);
-            buf.append(')');
+            buf.append(')'); // parenthesis necessary for MySQL
             if (i != last - 1) {
                 buf.append(dbms().unionAll());
             }
+        }
+        // MOD scorreia 2008-09-03 Bug #4976 append the order by clause at the end of the whole statement
+        if (idxOfOrderBY != -1) {
+            buf.append(orderBy);
         }
 
         return buf.toString();
