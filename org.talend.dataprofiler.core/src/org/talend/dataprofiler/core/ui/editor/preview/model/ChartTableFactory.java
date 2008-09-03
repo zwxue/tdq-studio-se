@@ -441,7 +441,7 @@ public class ChartTableFactory {
 
         MenuItem item = new MenuItem(menu, SWT.PUSH);
         item.setText("View invalid rows");
-        item.setImage(ImageLib.getImage(ImageLib.REFRESH_IMAGE));
+        item.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
 
         item.addListener(SWT.Selection, new Listener() {
 

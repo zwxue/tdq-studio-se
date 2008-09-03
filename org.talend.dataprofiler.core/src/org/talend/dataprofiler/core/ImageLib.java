@@ -32,6 +32,7 @@ public class ImageLib {
     private static URL iconURL;
 
     // public static final String REFRESH_IMAGE = "refresh.gif"; //$NON-NLS-1$
+    public static final String EXPLORE_IMAGE = "magnifier.png"; //$NON-NLS-1$
 
     public static final String REFRESH_IMAGE = "run_exc.gif"; //$NON-NLS-1$
 
