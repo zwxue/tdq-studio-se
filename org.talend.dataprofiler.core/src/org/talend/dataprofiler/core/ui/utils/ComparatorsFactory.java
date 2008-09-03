@@ -139,13 +139,13 @@ public final class ComparatorsFactory {
             String name1;
             if (arg0.getType() == IResource.FILE) {
                 ModelElement modelElement0 = ModelElementFileFactory.getModelElement((IFile) arg0);
-                name0 = modelElement0.getName();
+                name0 = modelElement0 == null ? arg0.getName() : modelElement0.getName();
             } else {
                 name0 = arg0.getName();
             }
             if (arg1.getType() == IResource.FILE) {
                 ModelElement modelElement1 = ModelElementFileFactory.getModelElement((IFile) arg1);
-                name1 = modelElement1.getName();
+                name1 = modelElement1 == null ? arg1.getName() : modelElement1.getName();
             } else {
                 name1 = arg1.getName();
             }
