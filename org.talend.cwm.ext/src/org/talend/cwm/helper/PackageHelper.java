@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.cwm.helper;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -19,6 +20,7 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * Helper class for getting elements of Schema or Catalog indifferently.
@@ -59,6 +61,22 @@ public class PackageHelper {
             return res;
         }
         return SwitchHelpers.SCHEMA_SWITCH.doSwitch(element);
+    }
+
+    public static boolean addColumnSets(Collection<ColumnSet> columnSets, Package packageElement) {
+        return packageElement.getOwnedElement().addAll(columnSets);
+    }
+
+    public static boolean addColumnSet(ColumnSet columnSet, Package packageElement) {
+        return packageElement.getOwnedElement().add(columnSet);
+    }
+
+    public static boolean removeColumnSet(ColumnSet columnSet, Package packageElement) {
+        return packageElement.getOwnedElement().remove(columnSet);
+    }
+
+    public static boolean removeColumnSets(Collection<ColumnSet> columnSets, Package packageElement) {
+        return packageElement.getOwnedElement().removeAll(columnSets);
     }
 
 }
