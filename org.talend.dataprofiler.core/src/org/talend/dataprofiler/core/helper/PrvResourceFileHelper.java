@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.helper;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -55,6 +56,18 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
             return rc;
         }
         return readFromFile(file);
+    }
+
+    public IFile findCorrespondingFile(TdDataProvider provider) {
+        Iterator<IFile> iterator = this.providerMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            IFile next = iterator.next();
+            TypedReturnCode<TdDataProvider> typedReturnCode = providerMap.get(next);
+            if (provider == typedReturnCode.getObject()) {
+                return next;
+            }
+        }
+        return null;
     }
 
     /**
