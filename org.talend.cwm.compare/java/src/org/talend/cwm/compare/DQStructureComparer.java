@@ -13,7 +13,6 @@
 package org.talend.cwm.compare;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -41,7 +40,7 @@ public final class DQStructureComparer {
     }
 
     @SuppressWarnings("restriction")
-    public static IFile copyCurrentResourceFile(File f) {
+    public static IFile copyCurrentResourceFile(IFile f) {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
 
