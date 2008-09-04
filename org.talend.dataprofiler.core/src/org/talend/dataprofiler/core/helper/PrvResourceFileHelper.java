@@ -63,6 +63,8 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         while (iterator.hasNext()) {
             IFile next = iterator.next();
             TypedReturnCode<TdDataProvider> typedReturnCode = providerMap.get(next);
+            // tried to compare ids instead of instances but it gives another exception later...
+            // if (ResourceHelper.areSame(provider, typedReturnCode.getObject())) {
             if (provider == typedReturnCode.getObject()) {
                 return next;
             }

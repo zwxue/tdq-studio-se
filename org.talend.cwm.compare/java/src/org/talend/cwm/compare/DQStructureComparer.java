@@ -25,6 +25,11 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
  */
 public final class DQStructureComparer {
 
+    /**
+     * 
+     */
+    private static final String TEMP_PRV_FILE = ".refresh.prv";
+
     private static final Class<DQStructureComparer> THAT = DQStructureComparer.class;
 
     protected static Logger log = Logger.getLogger(THAT);
@@ -39,12 +44,18 @@ public final class DQStructureComparer {
 
     }
 
+    /**
+     * Method "copyCurrentResourceFile" copies the given file into the temporary file ".refresh.prv".
+     * 
+     * @param f the file to copy
+     * @return the copy
+     */
     @SuppressWarnings("restriction")
     public static IFile copyCurrentResourceFile(IFile f) {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
 
-        String fileName = ".refresh.prv";
+        String fileName = TEMP_PRV_FILE;
         IFile file = folder.getFile(fileName);
         try {
             f.copy(file.getFullPath(), true, new NullProgressMonitor());
@@ -59,18 +70,23 @@ public final class DQStructureComparer {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
 
-        String fileName = ".refresh.prv";
+        String fileName = TEMP_PRV_FILE;
         IFile file = folder.getFile(fileName);
         return file;
     }
 
+    /**
+     * Method "deleteCopiedResourceFile".
+     * 
+     * @return true if temporary file ".refresh.prv" has been deleted (or did not exist)
+     */
     public static boolean deleteCopiedResourceFile() {
 
         boolean retValue = false;
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
 
-        String fileName = ".refresh.prv";
+        String fileName = TEMP_PRV_FILE;
         IFile file = folder.getFile(fileName);
         if (file.exists()) {
             try {

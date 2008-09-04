@@ -62,7 +62,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     protected void createTempConnectionFile() throws ReloadCompareException {
         IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
         if (findCorrespondingFile == null) {
-            throw new ReloadCompareException("Can't find the file corresponding dataprovider:" + oldDataProvider.getName());
+            throw new ReloadCompareException("Can't find the file of dataprovider:" + oldDataProvider.getName());
         }
         IFile tempConnectionFile = DQStructureComparer.copyCurrentResourceFile(findCorrespondingFile);
 

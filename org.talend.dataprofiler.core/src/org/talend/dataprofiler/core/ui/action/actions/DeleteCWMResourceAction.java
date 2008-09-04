@@ -161,7 +161,7 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 file = (IFile) res;
             }
             if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
-                TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().readFromFile(file);
+                TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().getTdProvider(file);
                 modelElement = returnValue.getObject();
                 modelElementList.add(modelElement);
                 anaMessageFlag = true;
@@ -240,7 +240,8 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                             /*
                              * (non-Javadoc)
                              * 
-                             * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+                             * @see
+                             * org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
                              */
                             public IStatus runInUIThread(IProgressMonitor monitor) {
                                 return op.computeExecutionStatus(monitor);

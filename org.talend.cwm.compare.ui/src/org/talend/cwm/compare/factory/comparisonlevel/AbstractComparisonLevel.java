@@ -130,6 +130,11 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         DqRepositoryViewService.saveOpenDataProvider(this.oldDataProvider);
     }
 
+    /**
+     * Method "findDataProvider".
+     * 
+     * @return the data provider of the selected object
+     */
     protected abstract TdDataProvider findDataProvider();
 
     protected boolean isValid() {

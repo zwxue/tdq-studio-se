@@ -14,6 +14,7 @@ package org.talend.cwm.helper;
 
 import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -44,6 +45,17 @@ public final class ResourceHelper {
         }
         XMLResource xmlResource = (XMLResource) resource;
         return xmlResource.getID(object);
+    }
+
+    public static boolean areSame(EObject o1, EObject o2) {
+        if (o1 == null || o2 == null) {
+            return false;
+        }
+        if (o1.equals(o2) || StringUtils.equals(ResourceHelper.getUUID(o1), ResourceHelper.getUUID(o2))) {
+            return true;
+        }
+        // else
+        return false;
     }
 
     /**
