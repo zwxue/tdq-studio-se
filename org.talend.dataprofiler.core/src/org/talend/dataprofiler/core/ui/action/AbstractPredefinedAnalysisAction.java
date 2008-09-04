@@ -95,14 +95,19 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 } else {
                     Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
                     TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+
                     try {
-                        list.addAll(DqRepositoryViewService.getColumns(provider, columnSet, null, true));
+                        List<TdColumn> columns = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
+                        ColumnSetHelper.addColumns(columnSet, columns);
+                        list.addAll(columns);
                         NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
                     } catch (TalendException e) {
                         MessageBoxExceptionHandler.process(e);
                     }
                 }
             }
+
+            NeedSaveDataProviderHelper.saveAllDataProvider();
 
             return list.toArray(new TdColumn[list.size()]);
         }
