@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.sql;
 
 import static org.talend.dataprofiler.core.PluginConstant.SE_ID;
+
 import java.io.File;
 import java.util.List;
 
@@ -27,7 +28,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
 /**
@@ -64,8 +64,7 @@ public class OpenSqlFileAction extends Action {
         action.run();
         IPath location = ResourcesPlugin.getWorkspace().getRoot().getLocation();
         for (IFile file : folder) {
-            String portableString = location.append(DQStructureManager.LIBRARIES).append(DQStructureManager.SOURCE_FILES).append(
-                    file.getName()).toPortableString();
+            String portableString = location.append(file.getFullPath()).toPortableString();
             try {
                 ap.openEditor(new SQLEditorInput(new File(portableString)),
                         "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor");
