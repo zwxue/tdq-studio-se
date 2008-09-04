@@ -126,7 +126,7 @@
     <taggedValue xmi:id="_yb3EITh8Ed2XmO7pl5Yuyg" tag="Purpose" value="indiquate the threshold of the lowest 1/4th records"/>
     <sqlGenericExpression xmi:id="_yb3EIjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
     <sqlGenericExpression xmi:id="_yb3EIzh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb3EJDh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_yb3EJDh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_DISC(0.25) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_2SZ8cGJAEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
     <sqlGenericExpression xmi:id="_NsBY0GOiEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
   </indicatorDefinitions>
@@ -135,7 +135,7 @@
     <taggedValue xmi:id="_yb4SQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="indiquate the threshold of the highest 1/4th records"/>
     <sqlGenericExpression xmi:id="_yb4SQTh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
     <sqlGenericExpression xmi:id="_yb4SQjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb4SQzh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_yb4SQzh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_P044MGJBEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  3 * INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
     <sqlGenericExpression xmi:id="_S33yoGOiEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
   </indicatorDefinitions>
