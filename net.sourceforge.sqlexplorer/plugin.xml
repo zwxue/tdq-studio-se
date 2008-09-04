@@ -292,11 +292,11 @@
          id="EditorActions"
          point="net.sourceforge.sqlexplorer.editorAction">
       <action
-            class="net.sourceforge.sqlexplorer.oracle.actions.ExplainAction"
+            class="net.sourceforge.sqlexplorer.oracle.actions.ExplainAction2"
             database-product-name="Oracle*"
             icon="icons/explain.gif"
             id="net.sourceforge.sqlexplorer.actions.explainplan"
-            name="Explain SQL">
+            name="Explain Action">
       </action>
    </extension>
    <extension
