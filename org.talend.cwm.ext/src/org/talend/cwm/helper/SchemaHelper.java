@@ -56,6 +56,10 @@ public final class SchemaHelper {
         return schema.getOwnedElement().addAll(tables);
     }
 
+    public static boolean addViews(Collection<TdView> views, Schema schema) {
+        return schema.getOwnedElement().addAll(views);
+    }
+
     /**
      * Method "getParentSchema" returns a schema if the element is directly owned by a schema.
      * 

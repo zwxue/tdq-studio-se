@@ -52,6 +52,10 @@ public class ColumnSetHelper {
         return columnSet.getFeature().add(column);
     }
 
+    public static boolean removeColumn(Column column, ColumnSet columnSet) {
+        return columnSet.getFeature().remove(column);
+    }
+
     public static List<TdColumn> getColumns(ColumnSet columnSet) {
         return ColumnHelper.getColumns(columnSet.getFeature());
     }
@@ -66,6 +70,20 @@ public class ColumnSetHelper {
     public static boolean addColumns(ColumnSet columnSet, Collection<? extends Column> columns) {
         assert columnSet != null;
         assert columns != null;
+        return columnSet.getFeature().addAll(columns);
+    }
+
+    /**
+     * Method "addColumns".
+     * 
+     * @param columnSet the column set in which to add the columns (must not be null)
+     * @param columns the columns to add (must not be null)
+     * @return true if the content of the table changed as a result of the call.
+     */
+    public static boolean setColumns(ColumnSet columnSet, Collection<? extends Column> columns) {
+        assert columnSet != null;
+        assert columns != null;
+        columnSet.getFeature().clear();
         return columnSet.getFeature().addAll(columns);
     }
 
