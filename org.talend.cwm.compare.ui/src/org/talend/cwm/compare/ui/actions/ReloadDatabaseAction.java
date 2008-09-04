@@ -19,6 +19,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.ui.ImageLib;
@@ -53,7 +54,11 @@ public class ReloadDatabaseAction extends Action {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
                 IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(selectedObject);
-                creatComparisonLevel.reloadCurrentLevelElement();
+                try {
+                    creatComparisonLevel.reloadCurrentLevelElement();
+                } catch (ReloadCompareException e) {
+                    e.printStackTrace();
+                }
             }
         };
         try {

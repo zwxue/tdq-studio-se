@@ -32,11 +32,11 @@ import orgomg.cwm.resource.relational.util.RelationalSwitch;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class DataProviderComparisonLevel extends AbstractPartComparisonLevel {
+public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     private RelationalSwitch<Package> packageSwitch;
 
-    public DataProviderComparisonLevel(IFile selectedObj) {
+    public DataProviderComparisonLevel(Object selectedObj) {
         super(selectedObj);
     }
 

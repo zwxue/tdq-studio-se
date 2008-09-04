@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.DQStructureComparer;
+import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -51,9 +52,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public abstract class AbstractPartComparisonLevel implements IComparisonLevel {
+public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
-    private static Logger log = Logger.getLogger(AbstractPartComparisonLevel.class);
+    private static Logger log = Logger.getLogger(AbstractComparisonLevel.class);
 
     private DiffSwitch<AddModelElement> addModelSwitch;
 
@@ -69,7 +70,7 @@ public abstract class AbstractPartComparisonLevel implements IComparisonLevel {
 
     protected TdDataProvider tempReloadProvider;
 
-    public AbstractPartComparisonLevel(Object selectedObj) {
+    public AbstractComparisonLevel(Object selectedObj) {
         this.selectedObj = selectedObj;
         initSwitchValue();
     }
@@ -90,24 +91,16 @@ public abstract class AbstractPartComparisonLevel implements IComparisonLevel {
         };
     }
 
-    public void reloadCurrentLevelElement() {
+    public void reloadCurrentLevelElement() throws ReloadCompareException {
         if (!isValid()) {
             return;
         }
         DQStructureComparer.deleteCopiedResourceFile();
-        IFile tempConnectionFile = DQStructureComparer.createTempConnectionFile();
         oldDataProvider = findDataProvider();
         if (oldDataProvider == null) {
             return;
         }
-        TypedReturnCode<TdDataProvider> returnProvider = getRefreshedDataProvider(oldDataProvider);
-        if (!returnProvider.isOk()) {
-            log.error(returnProvider.getMessage());
-            return;
-        }
-        tempReloadProvider = returnProvider.getObject();
-        DqRepositoryViewService.saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
-                tempConnectionFile);
+        createTempConnectionFile();
         EObject savedReloadObject = getSavedReloadObject();
 
         if (compareWithReloadObject(savedReloadObject)) {
@@ -115,7 +108,23 @@ public abstract class AbstractPartComparisonLevel implements IComparisonLevel {
         }
     }
 
-    protected abstract EObject getSavedReloadObject();
+    /**
+     * DOC rli Comment method "createTempConnectionFile".
+     * 
+     * @throws ReloadCompareException
+     */
+    protected void createTempConnectionFile() throws ReloadCompareException {
+        IFile tempConnectionFile = DQStructureComparer.createTempConnectionFile();
+        TypedReturnCode<TdDataProvider> returnProvider = getRefreshedDataProvider(oldDataProvider);
+        if (!returnProvider.isOk()) {
+            throw new ReloadCompareException(returnProvider.getMessage());
+        }
+        tempReloadProvider = returnProvider.getObject();
+        DqRepositoryViewService.saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
+                tempConnectionFile);
+    }
+
+    protected abstract EObject getSavedReloadObject() throws ReloadCompareException;
 
     protected void saveReloadResult() {
         DqRepositoryViewService.saveOpenDataProvider(this.oldDataProvider);

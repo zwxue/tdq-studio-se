@@ -10,14 +10,22 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.cwm.compare.factory;
+package org.talend.cwm.compare.exception;
 
-import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public interface IComparisonLevel {
+public class ReloadCompareException extends DataprofilerCoreException {
 
-    public void reloadCurrentLevelElement() throws ReloadCompareException;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6647762192837141336L;
+
+    public ReloadCompareException(String message) {
+        super(message);
+    }
+
 }

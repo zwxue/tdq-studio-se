@@ -24,30 +24,32 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class CatalogComparisonLevel extends AbstractPartComparisonLevel {
+public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
-    public CatalogComparisonLevel(Object selectedObj) {
+    public CatalogSchemaComparisonLevel(Object selectedObj) {
         super(selectedObj);
     }
 
@@ -58,12 +60,21 @@ public class CatalogComparisonLevel extends AbstractPartComparisonLevel {
 
     @Override
     protected boolean compareWithReloadObject(EObject reloadedObj) {
-        TdCatalog catalogObj = (TdCatalog) reloadedObj;
+        Package catalogSchemaObj = (Package) reloadedObj;
         try {
-            List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
-            CatalogHelper.addTables(tables, catalogObj);
-            List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
-            CatalogHelper.addViews(views, catalogObj);
+            TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(catalogSchemaObj);
+            if (catalogObj != null) {
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
+                CatalogHelper.addTables(tables, catalogObj);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
+                CatalogHelper.addViews(views, catalogObj);
+            } else {
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, (Schema) catalogSchemaObj, null,
+                        true);
+                SchemaHelper.addTables(tables, (Schema) catalogSchemaObj);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, (Schema) catalogSchemaObj, null, true);
+                SchemaHelper.addViews(views, (Schema) catalogSchemaObj);
+            }
         } catch (TalendException e1) {
             e1.printStackTrace();
             ExceptionHandler.process(e1);
@@ -74,7 +85,7 @@ public class CatalogComparisonLevel extends AbstractPartComparisonLevel {
         options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
         MatchModel match = null;
         try {
-            match = MatchService.doContentMatch((Package) selectedObj, catalogObj, options);
+            match = MatchService.doContentMatch((Package) selectedObj, catalogSchemaObj, options);
         } catch (InterruptedException e) {
             e.printStackTrace();
             return false;
@@ -85,7 +96,7 @@ public class CatalogComparisonLevel extends AbstractPartComparisonLevel {
             handleSubDiffElement(de);
         }
 
-        test(match);
+        // test(match);
         return true;
     }
 
@@ -94,15 +105,14 @@ public class CatalogComparisonLevel extends AbstractPartComparisonLevel {
      * 
      * @param match
      */
-    private void test(MatchModel match) {
-        EList<UnMatchElement> unMatchedElements = match.getUnMatchedElements();
-        for (Object object : unMatchedElements) {
-            UnMatchElement unMatched = (UnMatchElement) object;
-            ModelElement modelElt = (ModelElement) unMatched.getElement();
-            System.out.println("Unmatched elt= " + modelElt.getName());
-        }
-    }
-
+    // private void test(MatchModel match) {
+    // EList<UnMatchElement> unMatchedElements = match.getUnMatchedElements();
+    // for (Object object : unMatchedElements) {
+    // UnMatchElement unMatched = (UnMatchElement) object;
+    // ModelElement modelElt = (ModelElement) unMatched.getElement();
+    // System.out.println("Unmatched elt= " + modelElt.getName());
+    // }
+    // }
     private void handleSubDiffElement(DiffElement de) {
         if (de.getSubDiffElements().size() > 0) {
             EList<DiffElement> subDiffElements = de.getSubDiffElements();
@@ -136,7 +146,7 @@ public class CatalogComparisonLevel extends AbstractPartComparisonLevel {
     }
 
     @Override
-    protected EObject getSavedReloadObject() {
+    protected EObject getSavedReloadObject() throws ReloadCompareException {
         Package selectedPackage = (Package) selectedObj;
         List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(this.tempReloadProvider);
         for (TdCatalog catalog : tdCatalogs) {
@@ -144,7 +154,14 @@ public class CatalogComparisonLevel extends AbstractPartComparisonLevel {
                 return catalog;
             }
         }
-        return null;
+        List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(this.tempReloadProvider);
+        for (TdSchema schema : tdSchemas) {
+            if (selectedPackage.getName().equals(schema.getName())) {
+                return schema;
+            }
+        }
+        throw new ReloadCompareException("Can't find out the corresponding reload catalog/schema node for current selected node:"
+                + selectedPackage.getName());
     }
 
 }
