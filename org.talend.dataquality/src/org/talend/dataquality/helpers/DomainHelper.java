@@ -205,6 +205,7 @@ public class DomainHelper {
      * 
      * @param domain
      * @return the higher value of the last bin.
+     * @throws IllegalArgumentException
      */
     public static double getMaxBinValue(Domain domain) {
         EList<RangeRestriction> ranges = domain.getRanges();
