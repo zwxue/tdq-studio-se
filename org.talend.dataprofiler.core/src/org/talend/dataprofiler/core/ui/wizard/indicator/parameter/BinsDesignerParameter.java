@@ -142,7 +142,7 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
             return userDomain;
         }
 
-        return null;
+        return DomainHelper.createContiguousClosedBinsIntoDomain("test", getNumOfBins(), getMinValue(), getMaxValue());
     }
 
     public void setDomain(Domain domain) {

@@ -164,17 +164,13 @@ public class IndicatorOptionsWizard extends Wizard {
                     switch (formParam.getFormEnum()) {
                     case BinsDesignerForm:
                         BinsDesignerParameter tempParam = (BinsDesignerParameter) formParam;
-                        int numOfBin = tempParam.getNumOfBins();
                         int numOfShown = tempParam.getNumOfShown();
-                        double min = tempParam.getMinValue();
-                        double max = tempParam.getMaxValue();
                         Domain domain = tempParam.getUserDomian();
 
-                        if (domain == null) {
-                            domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numOfBin, min, max);
+                        if (domain.getRanges().size() > 0) {
+                            parameters.setBins(domain);
                         }
 
-                        parameters.setBins(domain);
                         parameters.setTopN(numOfShown);
                         break;
                     case TextParametersForm:
