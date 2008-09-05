@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -87,12 +88,14 @@ public final class ConnectionUtils {
         // e.printStackTrace();
         // }
         Driver driver = getClassDriver(driverClassName);
-        if (driver != null) {
-            return driver.connect(url, props);
-        }
+        Connection conn = DriverManager.getConnection(url, props);
+        return conn;
+        // if (driver != null) {
+        // return driver.connect(url, props);
+        // }
         // DriverManager.registerDriver(driver);
         // Connection connection = DriverManager.getConnection(url, props);
-        return null;
+        // return null;
     }
 
     /**

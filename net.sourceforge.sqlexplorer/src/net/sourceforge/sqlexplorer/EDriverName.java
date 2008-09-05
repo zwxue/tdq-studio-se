@@ -36,6 +36,10 @@ public enum EDriverName {
                     "org.gjt.mm.mysql.Driver", //$NON-NLS-1$
                     "-6",
                     "lib/mysql-connector-java-5.1.0-bin.jar"),
+    HSQLDEFAULTURL("HSql", //$NON-NLS-1$
+                   "org.hsqldb.jdbcDriver", //$NON-NLS-1$
+                   "-18",
+                   "lib/hsqldb.jar"),
     ORACLEDEFAULTURL("Oracle", //$NON-NLS-1$
                      // MOD scorreia 2008-08-22: oracle.jdbc.driver package is not supported anymore: replaced
                      "oracle.jdbc.OracleDriver", //$NON-NLS-1$
@@ -133,6 +137,9 @@ public enum EDriverName {
             break;
         case SYBASEDEFAULTURL:
             plugins = "org.talend.libraries.jdbc.sybase";
+            break;
+        case HSQLDEFAULTURL:
+            plugins = "org.talend.libraries.jdbc.hsql";
             break;
         default:
             return linkedList;
