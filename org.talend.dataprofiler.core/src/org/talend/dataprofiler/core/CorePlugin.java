@@ -170,7 +170,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     public void refreshWorkSpace() {
         if (refreshAction == null) {
-            refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+            refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 
         }
         refreshAction.run();
