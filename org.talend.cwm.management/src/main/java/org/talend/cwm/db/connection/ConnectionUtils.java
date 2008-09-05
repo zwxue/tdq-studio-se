@@ -20,6 +20,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Properties;
 
@@ -27,12 +28,15 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
+import org.apache.log4j.Logger;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
  * Utility class for database connection handling.
  */
 public final class ConnectionUtils {
+
+    private static Logger log = Logger.getLogger(ConnectionUtils.class);
 
     /**
      * The query to execute in order to verify the connection.
@@ -60,42 +64,23 @@ public final class ConnectionUtils {
      */
     public static Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
             InstantiationException, IllegalAccessException, ClassNotFoundException {
-        // net.sourceforge.sqlexplorer.dbproduct.DriverManager driverModel =
-        // SQLExplorerPlugin.getDefault().getDriverModel();
-        // Driver driver = null;
-        // try {
-        // Collection<ManagedDriver> drivers = driverModel.getDrivers();
-        // for (ManagedDriver managedDriver : drivers) {
-        // LinkedList<String> jars = managedDriver.getJars();
-        // for (String string : jars) {
-        // File file = new File(string);
-        // if (file.exists()) {
-        // MyURLClassLoader cl;
-        // cl = new MyURLClassLoader(file.toURL());
-        // try {
-        // Class clazz = cl.findClass(driverClassName);
-        // if (clazz != null) {
-        // driver = (Driver) clazz.newInstance();
-        // return driver.connect(url, props);
-        // }
-        // } catch (ClassNotFoundException e) {
-        // //
-        // }
-        // }
-        // }
-        // }
-        // } catch (MalformedURLException e) {
-        // e.printStackTrace();
-        // }
         Driver driver = getClassDriver(driverClassName);
-        Connection conn = DriverManager.getConnection(url, props);
-        return conn;
-        // if (driver != null) {
-        // return driver.connect(url, props);
-        // }
-        // DriverManager.registerDriver(driver);
-        // Connection connection = DriverManager.getConnection(url, props);
-        // return null;
+        if (driver != null) {
+            DriverManager.registerDriver(driver);
+            if (log.isDebugEnabled()) {
+                log.debug("SQL driver found and registered: " + driverClassName);
+                log.debug("Enumerating all drivers:");
+                Enumeration<Driver> drivers = DriverManager.getDrivers();
+                while (drivers.hasMoreElements()) {
+                    log.debug(drivers.nextElement());
+                }
+            }
+            Connection connection = DriverManager.getConnection(url, props);
+            // Connection connection = driver.connect(url, props);
+            return connection;
+        }
+        return null;
+
     }
 
     /**
@@ -126,6 +111,7 @@ public final class ConnectionUtils {
                                 Class clazz = cl.findClass(driverClassName);
                                 if (clazz != null) {
                                     driver = (Driver) clazz.newInstance();
+                                    break; // driver is found
                                 }
                             } catch (ClassNotFoundException e) {
                                 // do nothings
