@@ -27,11 +27,32 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
  * The activator class controls the plug-in life cycle.
  */
 public class CorePlugin extends AbstractUIPlugin {
+
+    private DQRespositoryView respositoryView;
+
+    /**
+     * Getter for respositoryView.
+     * 
+     * @return the respositoryView
+     */
+    public DQRespositoryView getRespositoryView() {
+        return this.respositoryView;
+    }
+
+    /**
+     * Sets the respositoryView.
+     * 
+     * @param respositoryView the respositoryView to set
+     */
+    public void setRespositoryView(DQRespositoryView respositoryView) {
+        this.respositoryView = respositoryView;
+    }
 
     // The plug-in ID
     public static final String PLUGIN_ID = "org.talend.dataprofiler.core";
