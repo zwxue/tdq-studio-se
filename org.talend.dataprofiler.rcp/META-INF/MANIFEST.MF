@@ -18,8 +18,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
  org.apache.log4j;bundle-version="1.2.13",
  org.eclipse.ui.views.log;bundle-version="1.0.0";resolution:=optional,
- org.talend.cwm.compare;bundle-version="1.0.0",
- org.talend.cwm.compare.ui;bundle-version="1.0.0"
+ org.talend.cwm.compare,
+ org.talend.cwm.compare.ui
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.rcp,
