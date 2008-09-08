@@ -46,12 +46,15 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     public static final String ERROR_MESSAGE = "Regular expression must start and end with '";
 
+    private String title;
+
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
      */
     public CreatePatternWizardPage2() {
         metadata = new HashMap<String, String>();
         setPageComplete(false);
+
     }
 
     /*
@@ -63,9 +66,14 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(2, false);
         container.setLayout(gdLayout);
+        title = getTitle();
         // Name
         Label nameLab = new Label(container, SWT.NONE);
-        nameLab.setText("Regular expression:");
+        if (title.contains("SQL expression")) {
+            nameLab.setText("SQL Like expression:");
+        } else {
+            nameLab.setText("Regular expression:");
+        }
 
         nameText = new Text(container, SWT.BORDER);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
