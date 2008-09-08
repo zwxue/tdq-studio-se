@@ -103,10 +103,10 @@ public class ReportWriter {
 
         // save the resource and related resources (when needed, for example when we change the data mining type of a
         // column)
-        boolean saved = EMFSharedResources.getSharedEmfUtil().saveResource(resource);
 
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         addAnaResourceOfReport(report, util);
+        boolean saved = EMFSharedResources.getSharedEmfUtil().saveResource(resource);
         if (!saved) {
             rc.setReturnCode("Problem while saving report " + report.getName() + ". ", saved);
         }
