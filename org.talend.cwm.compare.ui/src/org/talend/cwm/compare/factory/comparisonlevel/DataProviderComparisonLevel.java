@@ -80,7 +80,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected TdDataProvider findDataProvider() {
-        TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().getTdProvider((IFile) selectedObj);
+        TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().readFromFile((IFile) selectedObj);
         return returnVlaue.getObject();
     }
 

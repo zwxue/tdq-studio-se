@@ -35,6 +35,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.exception.TalendException;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
@@ -199,8 +200,33 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected TdDataProvider findDataProvider() {
-        Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema((ColumnSet) selectedObj);
-        return DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+        ColumnSet columnSet = (ColumnSet) selectedObj;
+        Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
+        TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+        IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(provider);
+        TdDataProvider synchronizedProvider = PrvResourceFileHelper.getInstance().readFromFile(file).getObject();
+
+        // re-assign the value of synchronizedProvider to selectedObj.
+        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(synchronizedProvider);
+        TdCatalog newCatalog = null;
+        for (TdCatalog catalog : tdCatalogs) {
+            if (parentCatalogOrSchema.getName().equals(catalog.getName())) {
+                newCatalog = catalog;
+            }
+        }
+        List<TdTable> tables = CatalogHelper.getTables(newCatalog);
+        for (TdTable table : tables) {
+            if (columnSet.getName().equals(table.getName())) {
+                selectedObj = table;
+            }
+        }
+        List<TdView> views = CatalogHelper.getViews(newCatalog);
+        for (TdView view : views) {
+            if (columnSet.getName().equals(view.getName())) {
+                selectedObj = view;
+            }
+        }
+        return synchronizedProvider;
     }
 
 }

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -40,6 +41,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
@@ -55,7 +57,17 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected TdDataProvider findDataProvider() {
-        return DataProviderHelper.getTdDataProvider((Package) selectedObj);
+        TdDataProvider provider = DataProviderHelper.getTdDataProvider((Package) selectedObj);
+        IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(provider);
+        TdDataProvider synchronizedProvider = PrvResourceFileHelper.getInstance().readFromFile(file).getObject();
+        // re-assign the value of synchronizedProvider to selectedObj.
+        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(synchronizedProvider);
+        for (TdCatalog catalog : tdCatalogs) {
+            if (((Package) selectedObj).getName().equals(catalog.getName())) {
+                selectedObj = catalog;
+            }
+        }
+        return synchronizedProvider;
     }
 
     @Override
