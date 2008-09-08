@@ -161,12 +161,12 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 file = (IFile) res;
             }
             if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
-                TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().getTdProvider(file);
+                TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().readFromFile(file);
                 modelElement = returnValue.getObject();
                 modelElementList.add(modelElement);
                 anaMessageFlag = true;
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.ANA)) {
-                modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
+                modelElement = AnaResourceFileHelper.getInstance().readFromFile(file);
                 modelElementList.add(modelElement);
                 repMessageFlag = true;
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {

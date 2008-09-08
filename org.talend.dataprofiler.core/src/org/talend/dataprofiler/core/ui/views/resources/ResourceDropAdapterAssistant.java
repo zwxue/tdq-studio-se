@@ -43,6 +43,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.factory.ModelElementFileFactory;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -158,6 +159,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 }
                 try {
                     fileRes.delete(true, null);
+                    ModelElementFileFactory.getResourceFileMap(fileRes).setResourcesNumberChanged(true);
                     srcParent.refreshLocal(IResource.DEPTH_INFINITE, null);
                     folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 } catch (CoreException e) {

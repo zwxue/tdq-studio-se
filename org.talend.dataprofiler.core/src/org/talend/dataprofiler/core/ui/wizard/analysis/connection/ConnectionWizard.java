@@ -143,7 +143,7 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
             AnaResourceFileHelper.getInstance().clear();
             Resource anaResource = analysis.eResource();
             AnaResourceFileHelper.getInstance().register(file, anaResource);
-            AnaResourceFileHelper.getInstance().setResourceChanged(true);
+            AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
         } else {
             throw new DataprofilerCoreException("Problem saving file: " + folderResource.getFullPath().toString() + ": "
                     + saved.getMessage());

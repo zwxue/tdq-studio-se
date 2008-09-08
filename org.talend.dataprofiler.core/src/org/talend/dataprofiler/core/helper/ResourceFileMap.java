@@ -28,7 +28,9 @@ public class ResourceFileMap {
 
     protected Map<IFile, Resource> registedResourceMap = new HashMap<IFile, Resource>();
 
-    protected boolean resourceChanged = true;
+    // We judge the resources number whether changed, at first time will load all the resource of someone folder, so the
+    // default value is 'true'.
+    protected boolean resourcesNumberChanged = true;
 
     // private ResourceFileMapHelper instance = new ResourceFileMapHelper();
 
@@ -67,8 +69,8 @@ public class ResourceFileMap {
      * 
      * @return the resourceChanged
      */
-    public boolean isResourceChanged() {
-        return resourceChanged;
+    public boolean isResourcesNumberChanged() {
+        return resourcesNumberChanged;
     }
 
     /**
@@ -76,8 +78,8 @@ public class ResourceFileMap {
      * 
      * @param resourceChanged the resourceChanged to set
      */
-    public void setResourceChanged(boolean resourceChanged) {
-        this.resourceChanged = resourceChanged;
+    public void setResourcesNumberChanged(boolean resourceChanged) {
+        this.resourcesNumberChanged = resourceChanged;
     }
 
 }

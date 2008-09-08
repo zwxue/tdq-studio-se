@@ -491,7 +491,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
             if (tdProvider != null) {
                 DqRepositoryViewService.saveOpenDataProvider(tdProvider);
             }
-            AnaResourceFileHelper.getInstance().setResourceChanged(true);
+            // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + urlString + " successful");
             }

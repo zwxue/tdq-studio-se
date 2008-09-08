@@ -22,6 +22,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.helper.ResourceFileMap;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -47,6 +48,18 @@ public final class ModelElementFileFactory {
             modelElement = RepResourceFileHelper.getInstance().findReport(file);
         } else {
             log.info("The file \"" + file.getFullPath() + "\" has no corresponding ModelElement!");
+        }
+        return modelElement;
+    }
+
+    public static ResourceFileMap getResourceFileMap(IFile file) {
+        ResourceFileMap modelElement = null;
+        if (file.getName().endsWith(PluginConstant.PRV_SUFFIX)) {
+            modelElement = PrvResourceFileHelper.getInstance();
+        } else if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+            modelElement = AnaResourceFileHelper.getInstance();
+        } else if (file.getName().endsWith(PluginConstant.REP_SUFFIX)) {
+            modelElement = RepResourceFileHelper.getInstance();
         }
         return modelElement;
     }

@@ -83,8 +83,8 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
      * @return
      */
     public Collection<Pattern> getAllPatternes() {
-        if (resourceChanged) {
-            patternsMap.clear();
+        if (resourcesNumberChanged) {
+            // patternsMap.clear();
             IFolder defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
                     .getFolder(DQStructureManager.PATTERNS);
             try {
@@ -92,7 +92,7 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             } catch (CoreException e) {
                 e.printStackTrace();
             }
-            resourceChanged = false;
+            resourcesNumberChanged = false;
         }
         return patternsMap.values();
     }
@@ -177,9 +177,9 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
     public boolean save(Pattern pattern) {
         EMFUtil sharedEmfUtil = EMFSharedResources.getSharedEmfUtil();
         boolean saved = sharedEmfUtil.saveSingleResource(pattern.eResource());
-        if (saved) {
-            setResourceChanged(true);
-        }
+        // if (saved) {
+        // setResourcesNumberChanged(true);
+        // }
         return saved;
     }
 
@@ -190,8 +190,8 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
      */
     public IFile getPatternFile(Pattern pattern) {
         IFile file = null;
-        if (resourceChanged) {
-            patternsMap.clear();
+        if (resourcesNumberChanged) {
+            // patternsMap.clear();
             IFolder defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
                     .getFolder(DQStructureManager.PATTERNS);
             try {
@@ -202,7 +202,7 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             } catch (CoreException e) {
                 e.printStackTrace();
             }
-            resourceChanged = false;
+            resourcesNumberChanged = false;
         }
         Set<IFile> keySet = patternsMap.keySet();
         for (IFile file2 : keySet) {

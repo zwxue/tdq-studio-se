@@ -103,7 +103,6 @@ public final class EObjectHelper {
         if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
             TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().readFromFile(file);
             findModelElement = returnValue.getObject();
-            NeedSaveDataProviderHelper.remove(findModelElement.eResource().getURI().path());
         } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.ANA)) {
             findModelElement = AnaResourceFileHelper.getInstance().readFromFile(file);
         } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {

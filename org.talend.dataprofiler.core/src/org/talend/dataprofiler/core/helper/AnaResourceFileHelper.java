@@ -59,8 +59,8 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
     }
 
     public Collection<AnalysisEntity> getAllAnalysis() {
-        if (resourceChanged) {
-            this.clear();
+        if (resourcesNumberChanged) {
+            // this.clear();
             IFolder defaultAnalysFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
                     PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
             try {
@@ -68,7 +68,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
             } catch (CoreException e) {
                 e.printStackTrace();
             }
-            resourceChanged = false;
+            resourcesNumberChanged = false;
         }
         return allAnalysisMap.values();
     }
@@ -96,17 +96,11 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         if (analysisEntity != null) {
             return analysisEntity.getAnalysis();
         }
-        Resource fileResource = getFileResource(file);
-        Analysis analysis = retireAnalysis(fileResource);
-        if (analysis != null) {
-            AnalysisEntity entity = new AnalysisEntity(analysis);
-            allAnalysisMap.put(file, entity);
-        }
-        return analysis;
+        return readFromFile(file);
     }
 
     public Analysis readFromFile(IFile file) {
-        registedResourceMap.remove(file);
+        this.remove(file);
         Resource fileResource = getFileResource(file);
         Analysis analysis = retireAnalysis(fileResource);
         if (analysis != null) {
@@ -120,15 +114,18 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         this.getAllAnalysis();
         List<IFile> fileList = new ArrayList<IFile>();
         for (int i = 0; i < renderObjs.size(); i++) {
-            if (this.registedResourceMap.containsValue(renderObjs.get(i).eResource())) {
-                Iterator<IFile> iterator = this.registedResourceMap.keySet().iterator();
-                while (iterator.hasNext()) {
-                    IFile next = iterator.next();
-                    if (registedResourceMap.get(next) == renderObjs.get(i).eResource()) {
-                        fileList.add(next);
-                    }
+            // if (this.registedResourceMap.containsValue(renderObjs.get(i).eResource())) {
+            Iterator<IFile> iterator = this.registedResourceMap.keySet().iterator();
+            Resource renderObjResource = renderObjs.get(i).eResource();
+            while (iterator.hasNext()) {
+                IFile next = iterator.next();
+                if (registedResourceMap.get(next).getURI().toString().equals(renderObjResource.getURI().toString())) {
+                    // this.register(next, renderObjResource);
+                    fileList.add(next);
+                    break;
                 }
             }
+            // }
         }
         return fileList;
     }
@@ -175,9 +172,9 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         // MODSCA 20080425 do not overwrite existing file.
         // File file = new File(analysis.getUrl());
         ReturnCode saved = writer.save(analysis);
-        if (saved.isOk()) {
-            setResourceChanged(true);
-        }
+        // if (saved.isOk()) {
+        // setResourcesNumberChanged(true);
+        // }
         return saved;
     }
 }

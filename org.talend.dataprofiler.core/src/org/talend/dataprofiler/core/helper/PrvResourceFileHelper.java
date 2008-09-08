@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -65,7 +66,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
             TypedReturnCode<TdDataProvider> typedReturnCode = providerMap.get(next);
             // tried to compare ids instead of instances but it gives another exception later...
             // if (ResourceHelper.areSame(provider, typedReturnCode.getObject())) {
-            if (provider == typedReturnCode.getObject()) {
+            if (ResourceHelper.areSame(provider, typedReturnCode.getObject())) {
                 return next;
             }
         }
@@ -80,7 +81,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      */
     public TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
         TypedReturnCode<TdDataProvider> rc;
-        registedResourceMap.remove(file);
+        this.remove(file);
         rc = new TypedReturnCode<TdDataProvider>();
         Resource resource = getFileResource(file);
         findTdProvider(file, rc, resource);

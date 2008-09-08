@@ -108,7 +108,7 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
             file = saved.getObject();
             Resource anaResource = analysis.eResource();
             AnaResourceFileHelper.getInstance().register(file, anaResource);
-            AnaResourceFileHelper.getInstance().setResourceChanged(true);
+            AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
         } else {
             throw new DataprofilerCoreException("Problem saving file: " + folderResource.getFullPath().toString() + ": "
                     + saved.getMessage());
