@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -46,7 +47,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     public static final String ERROR_MESSAGE = "Regular expression must start and end with '";
 
-    private String title;
+    private ExpressionType type;
 
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
@@ -54,6 +55,12 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
     public CreatePatternWizardPage2() {
         metadata = new HashMap<String, String>();
         setPageComplete(false);
+
+    }
+
+    public CreatePatternWizardPage2(ExpressionType type) {
+        this();
+        this.type = type;
 
     }
 
@@ -66,15 +73,16 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(2, false);
         container.setLayout(gdLayout);
-        title = getTitle();
+        String s = "Regular expression:";
         // Name
         Label nameLab = new Label(container, SWT.NONE);
-        if (title.contains("SQL expression")) {
-            nameLab.setText("SQL Like expression:");
-        } else {
-            nameLab.setText("Regular expression:");
+        if (type != null) {
+            switch (type) {
+            case SQL_LIKE:
+                s = "SQL Like expression:";
+            }
         }
-
+        nameLab.setText(s);
         nameText = new Text(container, SWT.BORDER);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         setControl(container);

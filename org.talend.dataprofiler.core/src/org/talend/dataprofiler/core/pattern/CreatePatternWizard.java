@@ -82,7 +82,7 @@ public class CreatePatternWizard extends AbstractWizard {
         mPage.setDescription("Define the properties");
         mPage.setPageComplete(false);
 
-        mPage2 = new CreatePatternWizardPage2();
+        mPage2 = new CreatePatternWizardPage2(type);
         mPage2.setTitle(s + " Creation Page2/2");
         mPage2.setDescription("Define the properties");
         mPage2.setPageComplete(false);
