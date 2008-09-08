@@ -167,7 +167,9 @@ public class IndicatorOptionsWizard extends Wizard {
                         int numOfShown = tempParam.getNumOfShown();
                         Domain domain = tempParam.getUserDomian();
 
-                        if (domain.getRanges().size() > 0) {
+                        if (domain.getRanges().size() == 0) {
+                            parameters.setBins(null);
+                        } else {
                             parameters.setBins(domain);
                         }
 
