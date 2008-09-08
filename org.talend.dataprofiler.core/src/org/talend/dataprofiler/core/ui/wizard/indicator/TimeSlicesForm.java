@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -86,6 +87,7 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
                 public void widgetSelected(SelectionEvent e) {
 
                     parameter.setDataUnit(btn.getText());
+                    updateStatus(IStatus.OK, MSG_OK);
                 }
 
             });
