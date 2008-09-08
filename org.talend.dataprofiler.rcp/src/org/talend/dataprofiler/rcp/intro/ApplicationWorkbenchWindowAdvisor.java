@@ -20,6 +20,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IBrandingService;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
+import org.talend.dataprofiler.rcp.Activator;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>
@@ -40,10 +41,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setInitialSize(new Point(1024, 768));
         configurer.setShowCoolBar(true);
         configurer.setShowStatusLine(false);
-
+        Object buildId = Activator.getDefault().getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
         IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
                 IBrandingService.class);
-        configurer.setTitle(brandingService.getFullProductName());
+        configurer.setTitle(brandingService.getFullProductName() + " (" + buildId + ")");
     }
 
     /*
