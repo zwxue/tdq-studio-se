@@ -175,7 +175,7 @@
     <taggedValue xmi:id="_yb-_8Th8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of records matching the given pattern against the number of records that do not match the given pattern"/>
     <taggedValue xmi:id="_yb-_8jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records that match a regular pattern"/>
     <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN {0} REGEXP {2} THEN 1 END), COUNT(*) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN {0} REGEXP_LIKE({0},{2}) THEN 1 END), COUNT(*) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN REGEXP_LIKE({0},{2}) THEN 1 END), COUNT(*) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_XXDn0GOvEd2-SIyfZ_Vx6A" body="SELECT COUNT(CASE WHEN {0} ~ {2} THEN 1 END), COUNT(*) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_Z4vXcERgEd2RSqFSgXiIfA" name="SQL Pattern Matching Indicator" categories="_BvUq8ERhEd2RSqFSgXiIfA" label="SQL Pattern Matching Indicator">
