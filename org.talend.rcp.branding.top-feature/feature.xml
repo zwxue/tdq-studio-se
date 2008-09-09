@@ -21,10 +21,6 @@
          id="org.talend.top_feature"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.help"
-         version="0.0.0"/>
-
    <plugin
          id="org.talend.rcp.branding.top"
          download-size="0"
