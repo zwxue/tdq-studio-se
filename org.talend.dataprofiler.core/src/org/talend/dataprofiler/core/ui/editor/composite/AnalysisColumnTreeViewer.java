@@ -150,7 +150,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         newTree.setHeaderVisible(true);
         TreeColumn column1 = new TreeColumn(newTree, SWT.CENTER);
         column1.setWidth(190);
-        column1.setText("Analyzed Tree");
+        column1.setText("Analyzed Columns");
         TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
         column2.setWidth(100);
         column2.setText("Dataming Type");
