@@ -14,12 +14,15 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -52,6 +55,9 @@ public class DeleteFolderAction extends Action {
         if (conf) {
             try {
                 obj.delete(true, null);
+                obj.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+                DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+                findView.getCommonViewer().refresh();
             } catch (CoreException e) {
                 e.printStackTrace();
             }

@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -77,6 +78,10 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
     public void deleteResource() {
 
         final IResource[] resources = getSelectedResourcesArray();
+        List<IContainer> parentList = new ArrayList<IContainer>();
+        for (IResource resource : resources) {
+            parentList.add(resource.getParent());
+        }
         // WARNING: do not query the selected resources more than once
         // since the selection may change during the run,
         // e.g. due to window activation when the prompt dialog is dismissed.
@@ -87,11 +92,6 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
         }
 
         EObjectHelper.removeDependencys(resources);
-
-        // refresh workspace in order to avoid unsynchronized resources
-        CorePlugin.getDefault().refreshWorkSpace();
-        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
-        findView.getCommonViewer().refresh();
         Job deletionCheckJob = new Job("Checking resources") {
 
             /*
@@ -121,6 +121,18 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
         };
 
         deletionCheckJob.schedule();
+
+        // refresh workspace in order to avoid unsynchronized resources
+        for (IContainer container : parentList) {
+            try {
+                container.refreshLocal(IResource.DEPTH_INFINITE, null);
+            } catch (CoreException e) {
+                // Jump it
+                e.printStackTrace();
+            }
+        }
+        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        findView.getCommonViewer().refresh();
     }
 
     /**
