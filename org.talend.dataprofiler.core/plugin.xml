@@ -178,6 +178,9 @@
             	   <test property="org.eclipse.core.resources.name" value="*.ana"/>	            
             	   <test property="org.eclipse.core.resources.name" value="*.prv"/>	
             	   <test property="org.eclipse.core.resources.name" value="*.rep"/>
+            	   <test property="org.eclipse.core.resources.name" value="*.xml"/>
+            	   <test property="org.eclipse.core.resources.name" value="*.pdf"/>
+            	   <test property="org.eclipse.core.resources.name" value="*.html"/>
                 <test
                       property="org.eclipse.core.resources.name"
                       value="*.pattern">
