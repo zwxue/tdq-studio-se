@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -58,7 +59,7 @@ public class ReloadDatabaseAction extends Action {
                 try {
                     creatComparisonLevel.reloadCurrentLevelElement();
                 } catch (ReloadCompareException e) {
-                    log.error(e, e);
+                    throw new InvocationTargetException(e);
                 }
             }
         };
@@ -66,7 +67,7 @@ public class ReloadDatabaseAction extends Action {
             ProgressUI.popProgressDialog(op, shell);
             ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            MessageDialog.openInformation(shell, "Connection Failure", "Check connection failure:" + e.getCause().getMessage());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

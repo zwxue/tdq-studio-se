@@ -40,7 +40,6 @@ import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -71,7 +70,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected boolean compareWithReloadObject(EObject reloadedObj) {
+    protected boolean compareWithReloadObject(EObject reloadedObj) throws ReloadCompareException {
         Package catalogSchemaObj = (Package) reloadedObj;
         try {
             TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(catalogSchemaObj);
@@ -88,8 +87,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
                 SchemaHelper.addViews(views, (Schema) catalogSchemaObj);
             }
         } catch (TalendException e1) {
-            e1.printStackTrace();
-            ExceptionHandler.process(e1);
+            throw new ReloadCompareException(e1);
         }
 
         // add option for ignoring some elements

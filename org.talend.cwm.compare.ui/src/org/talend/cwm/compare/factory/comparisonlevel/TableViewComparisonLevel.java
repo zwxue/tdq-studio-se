@@ -84,15 +84,14 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected boolean compareWithReloadObject(EObject reloadedObj) {
+    protected boolean compareWithReloadObject(EObject reloadedObj) throws ReloadCompareException {
         ColumnSet columnSet = (ColumnSet) reloadedObj;
 
         List<TdColumn> columns = null;
         try {
             columns = DqRepositoryViewService.getColumns(tempReloadProvider, columnSet, null, true);
         } catch (TalendException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            throw new ReloadCompareException(e1);
         }
         ColumnSetHelper.setColumns(columnSet, columns);
 

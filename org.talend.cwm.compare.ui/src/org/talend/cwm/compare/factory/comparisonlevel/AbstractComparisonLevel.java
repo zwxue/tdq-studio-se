@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
@@ -53,8 +52,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC rli class global comment. Detailled comment
  */
 public abstract class AbstractComparisonLevel implements IComparisonLevel {
-
-    private static Logger log = Logger.getLogger(AbstractComparisonLevel.class);
 
     private DiffSwitch<AddModelElement> addModelSwitch;
 
@@ -146,7 +143,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
      * 
      * @param oldDataProvider
      */
-    protected boolean compareWithReloadObject(EObject reloadedObj) {
+    protected boolean compareWithReloadObject(EObject reloadedObj) throws ReloadCompareException {
 
         // add option for ignoring some elements
         Map<String, Object> options = new HashMap<String, Object>();

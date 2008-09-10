@@ -28,4 +28,8 @@ public class ReloadCompareException extends DataprofilerCoreException {
         super(message);
     }
 
+    public ReloadCompareException(Throwable cause) {
+        super(cause);
+    }
+
 }
