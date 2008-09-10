@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -105,7 +104,7 @@ public class CreatePatternWizard extends AbstractWizard {
         TaggedValueHelper.setPurpose(parameter.getPurpose(), pattern);
         TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(parameter.getStatus()));
 
-        // PTODO qzhang fixed bug 4296: set the Pattern is valid
+        // qzhang fixed bug 4296: set the Pattern is valid
         TaggedValueHelper.setValidStatus(true, pattern);
 
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
@@ -113,12 +112,12 @@ public class CreatePatternWizard extends AbstractWizard {
         String expr = mPage2.getNameText().getText();
         expression.setBody(expr);
         String cl = mPage2.getComboLang();
-        expression.setLanguage(cl); // PTODO qzhang fixed bug 4259.save language from selected db type
+        expression.setLanguage(cl); // qzhang fixed bug 4259.save language from selected db type
         regularExpr.setExpression(expression);
         regularExpr.setExpressionType(type.getName());
 
         pattern.getComponents().add(regularExpr);
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+        EMFUtil util = new EMFUtil();
         String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
 
         IFolder folderResource = parameter.getFolderProvider().getFolderResource();
