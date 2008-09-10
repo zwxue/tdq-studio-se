@@ -52,11 +52,11 @@ public class ReportWriter {
             rc.setReturnCode("Bad file extension for " + file.getFullPath().toString() + ". Should be " + VALID_EXTENSION, false);
             return rc;
         }
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+        EMFSharedResources util = EMFSharedResources.getInstance();
         // Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
         // resource.getContents().addAll(report.getResults().getIndicators());
 
-        boolean added = util.addPoolToResourceSet(file.getFullPath().toString(), report);
+        boolean added = util.addEObjectToResourceSet(file.getFullPath().toString(), report);
 
         if (!added) {
             rc.setReturnCode("Report  " + report.getName() + " won't be saved. " + util.getLastErrorMessage(), added);
@@ -67,8 +67,8 @@ public class ReportWriter {
         EList<EObject> resourceContents = report.eResource().getContents();
         resourceContents.addAll(report.getDescription());
 
-        addAnaResourceOfReport(report, util);
-        boolean saved = util.saveSingleResource(report.eResource());
+        addAnaResourceOfReport(report);
+        boolean saved = EMFUtil.saveSingleResource(report.eResource());
         if (!saved) {
             rc.setReturnCode("Problem while saving report " + report.getName() + ". " + util.getLastErrorMessage(), saved);
         }
@@ -79,14 +79,13 @@ public class ReportWriter {
      * DOC rli Comment method "addAnaResourceOfReport".
      * 
      * @param report
-     * @param util
      */
-    private void addAnaResourceOfReport(TdReport report, EMFUtil util) {
+    private void addAnaResourceOfReport(TdReport report) {
         for (Analysis ana : ReportHelper.getAnalyses(report)) {
             TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
             if (dependencyReturn.isOk()) {
                 // util.getResourceSet().getResources().add(DependenciesHandler.getInstance().getDependencyResource());
-                util.saveSingleResource(ana.eResource());
+                EMFUtil.saveSingleResource(ana.eResource());
             }
         }
     }
@@ -104,9 +103,8 @@ public class ReportWriter {
         // save the resource and related resources (when needed, for example when we change the data mining type of a
         // column)
 
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-        addAnaResourceOfReport(report, util);
-        boolean saved = EMFSharedResources.getSharedEmfUtil().saveResource(resource);
+        addAnaResourceOfReport(report);
+        boolean saved = EMFUtil.saveResource(resource);
         if (!saved) {
             rc.setReturnCode("Problem while saving report " + report.getName() + ". ", saved);
         }

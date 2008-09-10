@@ -91,7 +91,7 @@ public class AnalysisWriter {
 
         // save the resource and related resources (when needed, for example when we change the data mining type of a
         // column)
-        boolean saved = EMFSharedResources.getSharedEmfUtil().saveResource(resource);
+        boolean saved = EMFUtil.saveResource(resource);
 
         if (!saved) {
             rc.setReturnCode("Problem while saving analysis " + analysis.getName() + ". ", saved);
@@ -117,11 +117,9 @@ public class AnalysisWriter {
             rc.setReturnCode("Bad file extension for " + file.getFullPath() + ". Should be " + VALID_EXTENSION, false);
             return rc;
         }
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-        // Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
-        // resource.getContents().addAll(analysis.getResults().getIndicators());
+        EMFSharedResources util = EMFSharedResources.getInstance();
 
-        boolean added = util.addPoolToResourceSet(file.getFullPath().toString(), analysis);
+        boolean added = util.addEObjectToResourceSet(file.getFullPath().toString(), analysis);
 
         if (!added) {
             rc.setReturnCode("Analysis won't be saved. " + util.getLastErrorMessage(), added);

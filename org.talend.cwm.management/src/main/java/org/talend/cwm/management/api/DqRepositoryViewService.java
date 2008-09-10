@@ -351,20 +351,16 @@ public final class DqRepositoryViewService {
      */
     public static boolean saveDataProviderResource(TdDataProvider dataProvider, IFolder folderProvider, IFile file) {
         // --- add resources in resource set
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-        ResourceSet resourceSet = util.getResourceSet();
-        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
-        final Resource resource = resourceSet.createResource(uri);
-        if (resource == null) {
+        EMFSharedResources util = EMFSharedResources.getInstance();
+        boolean ok = util.addEObjectToResourceSet(file.getFullPath().toString(), dataProvider);
+        if (!ok) {
             return false;
-        }
-        boolean ok = resource.getContents().add(dataProvider);
-        if (log.isDebugEnabled()) {
-            log.debug("Data provider added " + ok);
         }
 
         // The provider connection is stored in the dataprovider because of the containment relation.
         // addInSoftwareSystemResourceSet(folder, connector, providerConnection);
+
+        final Resource resource = dataProvider.eResource();
 
         // save dependency values
         EList<Dependency> supplierDependency = dataProvider.getSupplierDependency();
@@ -391,7 +387,7 @@ public final class DqRepositoryViewService {
             EMFUtil.saveSingleResource(resource);
         } else {
             ok = addElementsToOwnResources(schemata, folderProvider, util);
-            util.save();
+            util.saveAll();
         }
 
         if (log.isDebugEnabled()) {
@@ -429,7 +425,7 @@ public final class DqRepositoryViewService {
             rc.setReturnCode("No resource in given Data provider " + dataProvider.getName()
                     + ". Data provider must be saved first.", false);
         } else {
-            rc.setOk(EMFSharedResources.getSharedEmfUtil().saveResource(resource));
+            rc.setOk(EMFUtil.saveResource(resource));
         }
         return rc;
     }
@@ -684,10 +680,11 @@ public final class DqRepositoryViewService {
      * 
      * @param elements the elements to save
      * @param folder where to save the elements.
-     * @param util used for linking elements to each other and to their container
+     * @param instance used for linking elements to each other and to their container
      * @return true if added.
      */
-    private static boolean addElementsToOwnResources(Collection<? extends ModelElement> elements, IFolder folder, EMFUtil util) {
+    private static boolean addElementsToOwnResources(Collection<? extends ModelElement> elements, IFolder folder,
+            EMFSharedResources instance) {
         boolean ok = true;
         for (ModelElement modelElement : elements) {
             String uuid = EcoreUtil.generateUUID();
@@ -696,7 +693,7 @@ public final class DqRepositoryViewService {
             }
             String fileName = createFilename(modelElement.getName() + uuid, FactoriesUtil.CAT);
             IFile file = folder.getFile(fileName);
-            if (!util.addPoolToResourceSet(file.getFullPath().toString(), modelElement)) {
+            if (!instance.addEObjectToResourceSet(file.getFullPath().toString(), modelElement)) {
                 ok = false;
             }
         }
