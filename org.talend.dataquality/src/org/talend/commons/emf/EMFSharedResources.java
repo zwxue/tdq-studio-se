@@ -15,6 +15,7 @@ package org.talend.commons.emf;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
@@ -63,12 +64,27 @@ public final class EMFSharedResources {
     }
 
     /**
+     * Method "addEObjectToResourceSet".
+     * 
+     * @param filePath the file path to the resource which contains the given object
+     * @param eObject an EMF object to save in the appropriate resource
+     * @return true when ok
+     */
+    public boolean addEObjectToResourceSet(String filePath, EObject eObject) {
+        return this.emfUtil.addPoolToResourceSet(filePath, eObject);
+    }
+
+    /**
      * Method "saveAll" saves all the resources of the resourceSet.
      * 
      * @return true when ok
      */
     public synchronized boolean saveAll() {
         return this.emfUtil.save();
+    }
+
+    public boolean saveLastResource() {
+        return this.emfUtil.saveLastResource();
     }
 
     /**
@@ -83,5 +99,14 @@ public final class EMFSharedResources {
      */
     public static EMFUtil getSharedEmfUtil() {
         return getInstance().getEmfUtil();
+    }
+
+    /**
+     * Method "getLastErrorMessage".
+     * 
+     * @return the last error message or null when none exists.
+     */
+    public String getLastErrorMessage() {
+        return this.emfUtil.getLastErrorMessage();
     }
 }

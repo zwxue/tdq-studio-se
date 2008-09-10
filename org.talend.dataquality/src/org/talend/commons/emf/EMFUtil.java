@@ -143,20 +143,9 @@ public final class EMFUtil {
     }
 
     /**
-     * Creates a new Resource in the ResourceSet. The file will be actually written when the save() method will be
-     * called.
+     * Method "saveLastResource" saves the last resource added to the resource set.
      * 
-     * @param file the file in which the pool will be stored
-     * @param eObject the pool that contains objects.
-     * @return true (as per the general contract of the <tt>Collection.add</tt> method).
-     */
-    // public boolean addPoolToResourceSet(File file, EObject eObject) {
-    // return addPoolToResourceSet(URI.createFileURI(file.getAbsolutePath()), eObject);
-    // }
-    /**
-     * DOC qzhang Comment method "saveLastResource".
-     * 
-     * @return
+     * @return true when ok.
      */
     public boolean saveLastResource() {
         boolean ok = true;
