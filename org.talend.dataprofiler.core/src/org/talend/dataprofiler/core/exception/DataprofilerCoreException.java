@@ -12,10 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.exception;
 
-
 /**
  * @author rli
- *
+ * 
  */
 public class DataprofilerCoreException extends Exception {
 
@@ -23,9 +22,13 @@ public class DataprofilerCoreException extends Exception {
      * 
      */
     private static final long serialVersionUID = 556930098222177421L;
-    
+
     public DataprofilerCoreException(String message) {
         super(message);
+    }
+
+    public DataprofilerCoreException(Throwable cause) {
+        super(cause);
     }
 
 }
