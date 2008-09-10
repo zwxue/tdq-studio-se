@@ -27,12 +27,14 @@ public final class EMFSharedResources {
 
     private final EMFUtil emfUtil = new EMFUtil();
 
+    private final ResourceSet resourceSet = emfUtil.getResourceSet();
+
     /**
      * Getter for instance.
      * 
      * @return the instance
      */
-    public static EMFSharedResources getInstance() {
+    public static synchronized EMFSharedResources getInstance() {
         if (instance == null) {
             instance = new EMFSharedResources();
         }
@@ -43,13 +45,16 @@ public final class EMFSharedResources {
      * Getter for emfUtil.
      * 
      * @return the emfUtil
+     * @deprecated do not use directly EMFUtil.
      */
-    public EMFUtil getEmfUtil() {
+    private EMFUtil getEmfUtil() {
         return this.emfUtil;
     }
 
-    public void unloadResources() {
-        ResourceSet resourceSet = this.emfUtil.getResourceSet();
+    /**
+     * Method "unloadResources" unloads and removes all the resources from the resource set.
+     */
+    public synchronized void unloadResources() {
         List<Resource> resources = new ArrayList<Resource>(resourceSet.getResources());
         for (Resource resource : resources) {
             resource.unload();
@@ -57,6 +62,25 @@ public final class EMFSharedResources {
         }
     }
 
+    /**
+     * Method "saveAll" saves all the resources of the resourceSet.
+     * 
+     * @return true when ok
+     */
+    public synchronized boolean saveAll() {
+        return this.emfUtil.save();
+    }
+
+    /**
+     * DOC scorreia Comment method "getSharedEmfUtil".
+     * 
+     * @return
+     * @deprecated do not use directly EMFUtil.
+     * 
+     * TODO rli use {@link #saveAll()} method when needed.
+     * 
+     * TODO rli create other methods in this class when needed.
+     */
     public static EMFUtil getSharedEmfUtil() {
         return getInstance().getEmfUtil();
     }
