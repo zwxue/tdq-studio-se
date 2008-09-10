@@ -2,7 +2,7 @@
 <?NLS TYPE="org.eclipse.help.contexts"?>
 <contexts>
     <context id="mycontexthelpid" >
-        <description>Description for the parameters of the indicators:</description>
+        <description>Description of the parameters of the indicators:</description>
         <topic label="Bins designer" href="html/wizard/indicator/BinsDesigner.html"/>
         <topic label="Time slice" href="html/wizard/indicator/TimeSlice.html"/>
         <topic label="Text Parameter" href="html/wizard/indicator/TextParameter.html"/>
