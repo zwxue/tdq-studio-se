@@ -129,9 +129,7 @@
     <name>PostgreSQL</name>
     <driver-class>org.postgresql.Driver</driver-class>
     <url>jdbc:postgresql:[&lt;//host&gt;[:&lt;5432&gt;/]]&lt;database&gt;</url>
-    <jars>
-      <jar>C:\Program Files\PostgreSQL\8.2\jdbc\postgresql-8.2-506.jdbc4.jar</jar>
-    </jars>
+    <jars/>
   </driver>
   <driver id="-9">
     <name>Sybase Adaptive Server Enterprise</name>
