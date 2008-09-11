@@ -15,7 +15,7 @@ package org.talend.cwm.compare.factory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 
 /**
- * DOC rli class global comment. Detailled comment
+ * The class use to reload the current level element, after that it will save the updated elements.
  */
 public interface IComparisonLevel {
 

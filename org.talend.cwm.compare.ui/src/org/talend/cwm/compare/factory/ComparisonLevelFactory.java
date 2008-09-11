@@ -23,7 +23,7 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.AbstractDatabaseFolde
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
- * DOC rli class global comment. Detailled comment
+ * This factory use to create the <code>IComparisonLevel</code> object.
  */
 public final class ComparisonLevelFactory {
 
