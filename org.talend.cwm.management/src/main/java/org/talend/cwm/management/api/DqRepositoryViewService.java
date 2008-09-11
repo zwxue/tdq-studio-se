@@ -34,7 +34,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
@@ -402,10 +401,14 @@ public final class DqRepositoryViewService {
      * @param dataProvider the data provider to save
      * @return true if saved without any problem.
      */
-    public static ReturnCode saveOpenDataProvider(TdDataProvider dataProvider) {
+    public static ReturnCode saveOpenDataProvider(TdDataProvider dataProvider, boolean addPackage) {
         assert dataProvider != null;
 
         Resource resource = dataProvider.eResource();
+        if (addPackage) {
+            Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
+            resource.getContents().addAll(catalogs);
+        }
 
         // // get all content
         // try {
@@ -658,10 +661,8 @@ public final class DqRepositoryViewService {
      */
     private static TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
         TypedReturnCode<TdDataProvider> rc = new TypedReturnCode<TdDataProvider>();
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-
-        ResourceSet rs = util.getResourceSet();
-        Resource r = rs.getResource(URI.createPlatformResourceURI(file.getFullPath().toString(), false), true);
+        Resource r = EMFSharedResources.getInstance().getResource(
+                URI.createPlatformResourceURI(file.getFullPath().toString(), false), true);
         Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(r.getContents());
         if (tdDataProviders.isEmpty()) {
             rc.setReturnCode("No Data Provider found in " + file.getFullPath().toString(), false);
