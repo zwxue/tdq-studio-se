@@ -55,7 +55,6 @@ public final class RepResourceFileHelper extends ResourceFileMap {
     }
 
     public Collection<TdReport> getAllReports() {
-        // allRepMap.clear();
         IFolder defaultAnalysFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
                 PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.REPORTS);
         try {
@@ -133,9 +132,6 @@ public final class RepResourceFileHelper extends ResourceFileMap {
     public ReturnCode save(TdReport report) {
         ReportWriter writer = new ReportWriter();
         ReturnCode saved = writer.save(report);
-        // if (saved.isOk()) {
-        // setResourcesNumberChanged(true);
-        // }
         return saved;
     }
 

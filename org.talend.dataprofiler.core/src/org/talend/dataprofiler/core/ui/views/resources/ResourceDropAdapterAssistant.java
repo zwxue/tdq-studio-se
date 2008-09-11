@@ -57,17 +57,12 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     private static final IResource[] NO_RESOURCES = new IResource[0];
 
-    // private boolean dropRep = false;
-
-    // private boolean dropSql = false;
-
     /*
      * (non-Javadoc)
      * 
      * @see org.eclipse.ui.navigator.CommonDropAdapterAssistant#handleDrop (org.eclipse.ui.navigator.CommonDropAdapter,
      * org.eclipse.swt.dnd.DropTargetEvent, java.lang.Object)
      */
-    @SuppressWarnings("static-access")
     @Override
     public IStatus handleDrop(CommonDropAdapter aDropAdapter, DropTargetEvent aDropTargetEvent, Object target) {
         // alwaysOverwrite = false;
@@ -126,32 +121,12 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                         ExceptionHandler.process(e);
                     }
                     return Status.OK_STATUS;
-                    // File destFile = new File(location.append(name).toPortableString());
-                    // File srcFile = new File(res.getLocation().toPortableString());
-                    // srcFile.renameTo(destFile);
                 }
-
-                // List<ModelElement> oldDependencySuppliers = EObjectHelper.getDependencySuppliers(fileRes);
-                // List<ModelElement> oldDependencyClients = EObjectHelper.getDependencyClients(fileRes);
-                // EObjectHelper.removeDependencys(new IResource[] { fileRes });
-
                 IContainer srcParent = fileRes.getParent();
                 URI srcUri = URI.createPlatformResourceURI((fileRes).getFullPath().toString(), false);
                 Resource resource = EMFSharedResources.getInstance().getResource(srcUri, true);
                 if (resource != null) {
                     URI desUri = URI.createPlatformResourceURI(folder.getFullPath().toString(), false);
-                    // EMFUtil newEmfUtil = new EMFUtil();
-                    // ResourceSet newResourceSet = newEmfUtil.getResourceSet();
-                    // newResourceSet.getResources().add(resource);
-                    // for (ModelElement element : oldDependencySuppliers) {
-                    // newResourceSet.getResources().add(element.eResource());
-                    // }
-                    // for (ModelElement element : oldDependencyClients) {
-                    // newResourceSet.getResources().add(element.eResource());
-                    // }
-                    // EMFUtil.resolveAll(resource);
-                    // EMFUtil.changeUri(resource, desUri);
-                    // newEmfUtil.save();
                     EMFSharedResources.getInstance().saveToUri(resource, desUri);
                 }
                 try {
@@ -163,15 +138,6 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     ExceptionHandler.process(e);
                 }
                 movedIFile = folder.getFile(name);
-                // EObjectHelper.addDependenciesForFile(movedIFile, oldDependencySuppliers);
-                // EObjectHelper.addDependenciesForModelElement(movedIFile, oldDependencyClients);
-                // for (ModelElement element : oldDependencySuppliers) {
-                // EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
-                // }
-                // for (ModelElement element : oldDependencyClients) {
-                // EMFSharedResources.getSharedEmfUtil().saveSingleResource(element.eResource());
-                // }
-
             }
         }
         ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();

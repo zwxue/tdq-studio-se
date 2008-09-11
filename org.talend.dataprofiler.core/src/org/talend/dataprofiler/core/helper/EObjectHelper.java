@@ -53,10 +53,6 @@ public final class EObjectHelper {
 
     }
 
-    // public static boolean isColumnSet(EObject eObj) {
-    // return (SwitchHelpers.TABLE_SWITCH.doSwitch(eObj) != null) || (SwitchHelpers.VIEW_SWITCH.doSwitch(eObj) != null);
-    // }
-
     public static TdColumn[] getColumns(ColumnSet columnSet) {
         List<TdColumn> columns = ColumnSetHelper.getColumns(columnSet);
         return columns.toArray(new TdColumn[columns.size()]);
@@ -79,7 +75,6 @@ public final class EObjectHelper {
 
     }
 
-    @SuppressWarnings("static-access")
     public static void removeDependencys(IResource[] resources) {
         for (IResource selectedObj : resources) {
             IFile file = ((IFile) selectedObj);
@@ -99,7 +94,6 @@ public final class EObjectHelper {
         }
     }
 
-    @SuppressWarnings("static-access")
     private static ModelElement getModelElement(IFile file) {
         ModelElement findModelElement = null;
         if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
@@ -121,11 +115,6 @@ public final class EObjectHelper {
                     for (ModelElement modelElement : client) {
                         Resource clientResource = modelElement.eResource();
                         URI resURI = clientResource.getURI();
-                        // if (clientResource == null && modelElement.eIsProxy()) {
-                        // resURI = ((ModelElementImpl) modelElement).eProxyURI();
-                        // } else {
-                        // resURI = clientResource.getURI();
-                        // }
                         if (resURI.toString().equals(findModelElement.eResource().getURI().toString())) {
                             modifiedResources.add(renderedObj.eResource());
                             AnaResourceFileHelper.getInstance().clear();
