@@ -398,8 +398,9 @@ public final class DqRepositoryViewService {
     /**
      * Method "saveOpenDataProvider" saves a Data provider which has already a resource (has already been saved once).
      * 
-     * @param dataProvider the data provider to save
-     * @return true if saved without any problem.
+     * @param dataProvider
+     * @param addPackage decide whether need to add the Package(catalog/schema) element to dataprovider.
+     * @return
      */
     public static ReturnCode saveOpenDataProvider(TdDataProvider dataProvider, boolean addPackage) {
         assert dataProvider != null;
