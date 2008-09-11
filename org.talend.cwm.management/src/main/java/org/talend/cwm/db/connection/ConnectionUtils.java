@@ -75,8 +75,13 @@ public final class ConnectionUtils {
                     log.debug(drivers.nextElement());
                 }
             }
-            Connection connection = DriverManager.getConnection(url, props);
-            // Connection connection = driver.connect(url, props);
+            Connection connection = null;
+            if (driverClassName.equals("org.hsqldb.jdbcDriver")) {
+                connection = DriverManager.getConnection(url, props);
+            } else {
+                connection = driver.connect(url, props);
+            }
+
             return connection;
         }
         return null;
