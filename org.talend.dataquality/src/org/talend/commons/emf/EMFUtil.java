@@ -23,11 +23,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -185,36 +183,6 @@ public final class EMFUtil {
         return ok;
     }
 
-    public static URI saveToUri(Resource res, URI destinationUri) {
-        EMFUtil newEmfUtil = new EMFUtil();
-        ResourceSet newResourceSet = newEmfUtil.getResourceSet();
-        newResourceSet.getResources().add(res);
-
-        // resolve all proxies of the resource to be moved
-        EcoreUtil.resolveAll(res);
-
-        // get all external cross references and for each resolve all proxies (inverse links)
-        Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(res);
-        for (EObject object : find.keySet()) {
-            Resource resource = object.eResource();
-            if (resource == null) {
-                continue;
-            }
-            EcoreUtil.resolveAll(resource);
-        }
-        Iterator<Resource> iterator = newResourceSet.getResources().iterator();
-        while (iterator.hasNext()) {
-            Resource newRes = iterator.next();
-            if (!newRes.isLoaded()) {
-                iterator.remove();
-            }
-        }
-
-        URI changeUri = changeUri(res, destinationUri);
-        newEmfUtil.save();
-        return changeUri;
-    }
-
     /**
      * @return the resource set (never null)
      */
@@ -297,11 +265,19 @@ public final class EMFUtil {
      * @return true if no problem
      */
     public static boolean saveSingleResource(Resource resource) {
-        EMFUtil util = new EMFUtil();
-        util.getResourceSet().getResources().add(resource);
-        boolean save = util.save();
-        if (!save) {
-            log.warn("Problem when saving resources " + util.getLastErrorMessage());
+        boolean save = true;
+        try {
+            Map<String, Object> options = new HashMap<String, Object>();
+            options.put(XMIResource.OPTION_DECLARE_XML, Boolean.TRUE);
+            options.put(XMIResource.OPTION_ENCODING, ENCODING);
+            resource.save(options);
+            if (log.isDebugEnabled()) {
+                log.debug("Resource saved in:" + resource.getURI());
+            }
+        } catch (IOException e) {
+            log.error("Error during the saving of resource. Uri=" + resource.getURI().toString(), e);
+            // possible cause is a missing factory initialization and filename extension.
+            save = false;
         }
         return save;
     }

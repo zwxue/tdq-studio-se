@@ -13,11 +13,16 @@
 package org.talend.commons.emf;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -64,6 +69,19 @@ public final class EMFSharedResources {
     }
 
     /**
+     * Method "unloadResources" unloads and removes all the resources from the resource set.
+     */
+    public synchronized void unloadResource(String uriString) {
+        List<Resource> resources = new ArrayList<Resource>(resourceSet.getResources());
+        for (Resource res : resources) {
+            if (uriString.equals(res.getURI().toString())) {
+                res.unload();
+                resourceSet.getResources().remove(res);
+            }
+        }
+    }
+
+    /**
      * Method "addEObjectToResourceSet".
      * 
      * @param filePath the file path to the resource which contains the given object
@@ -74,6 +92,10 @@ public final class EMFSharedResources {
         return this.emfUtil.addPoolToResourceSet(filePath, eObject);
     }
 
+    public Resource getResource(URI uri, boolean loadOnDemand) {
+        return resourceSet.getResource(uri, loadOnDemand);
+    }
+
     /**
      * Method "saveAll" saves all the resources of the resourceSet.
      * 
@@ -81,6 +103,31 @@ public final class EMFSharedResources {
      */
     public synchronized boolean saveAll() {
         return this.emfUtil.save();
+    }
+
+    public URI saveToUri(Resource res, URI destinationUri) {
+
+        // resolve all proxies of the resource to be moved
+        EcoreUtil.resolveAll(res);
+
+        // get all external cross references and for each resolve all proxies (inverse links)
+        Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(res);
+        List<Resource> needSaves = new ArrayList<Resource>();
+        for (EObject object : find.keySet()) {
+            Resource resource = object.eResource();
+            if (resource == null) {
+                continue;
+            }
+            EcoreUtil.resolveAll(resource);
+            needSaves.add(resource);
+        }
+
+        URI changeUri = EMFUtil.changeUri(res, destinationUri);
+        needSaves.add(res);
+        for (Resource toSave : needSaves) {
+            EMFUtil.saveResource(toSave);
+        }
+        return changeUri;
     }
 
     public boolean saveLastResource() {
