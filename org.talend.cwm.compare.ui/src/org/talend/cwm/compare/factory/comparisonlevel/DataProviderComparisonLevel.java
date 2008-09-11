@@ -13,7 +13,6 @@
 package org.talend.cwm.compare.factory.comparisonlevel;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.ecore.EObject;
@@ -24,7 +23,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.util.RelationalSwitch;
@@ -57,6 +56,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         }
         popRemoveElementConfirm();
         oldDataProvider.getDataPackage().remove(removePackage);
+        oldDataProvider.eResource().getContents().remove(removePackage);
     }
 
     protected void handleAddElement(AddModelElement addElement) {
@@ -80,16 +80,17 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected TdDataProvider findDataProvider() {
-        TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().readFromFile((IFile) selectedObj);
+        TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
         return returnVlaue.getObject();
     }
 
     @Override
     protected void saveReloadResult() {
-        IFile selectedFile = (IFile) selectedObj;
-        DqRepositoryViewService.saveDataProviderResource(oldDataProvider, (IFolder) selectedFile.getParent(), selectedFile);
-        PrvResourceFileHelper.getInstance().remove(selectedFile);
-        PrvResourceFileHelper.getInstance().register(selectedFile, oldDataProvider.eResource());
+        DqRepositoryViewService.saveOpenDataProvider(oldDataProvider, true);
+        // IFile selectedFile = (IFile) selectedObj;
+        // DqRepositoryViewService.saveDataProviderAndStructure(oldDataProvider, true);
+        // PrvResourceFileHelper.getInstance().remove(selectedFile);
+        // PrvResourceFileHelper.getInstance().register(selectedFile, oldDataProvider.eResource());
     }
 
     @Override

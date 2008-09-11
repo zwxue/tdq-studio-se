@@ -30,12 +30,10 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.exception.TalendException;
-import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
@@ -47,7 +45,7 @@ import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -68,8 +66,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         IFile tempConnectionFile = DQStructureComparer.copyCurrentResourceFile(findCorrespondingFile);
 
         URI uri = URI.createPlatformResourceURI(tempConnectionFile.getFullPath().toString(), false);
-        ResourceSet rs = new EMFUtil().getResourceSet();
-        Resource resource = rs.getResource(uri, true);
+        Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
         Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(resource.getContents());
 
         if (tdDataProviders.isEmpty()) {
@@ -202,30 +199,31 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         ColumnSet columnSet = (ColumnSet) selectedObj;
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
         TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
-        IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(provider);
-        TdDataProvider synchronizedProvider = PrvResourceFileHelper.getInstance().readFromFile(file).getObject();
-
-        // re-assign the value of synchronizedProvider to selectedObj.
-        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(synchronizedProvider);
-        TdCatalog newCatalog = null;
-        for (TdCatalog catalog : tdCatalogs) {
-            if (parentCatalogOrSchema.getName().equals(catalog.getName())) {
-                newCatalog = catalog;
-            }
-        }
-        List<TdTable> tables = CatalogHelper.getTables(newCatalog);
-        for (TdTable table : tables) {
-            if (columnSet.getName().equals(table.getName())) {
-                selectedObj = table;
-            }
-        }
-        List<TdView> views = CatalogHelper.getViews(newCatalog);
-        for (TdView view : views) {
-            if (columnSet.getName().equals(view.getName())) {
-                selectedObj = view;
-            }
-        }
-        return synchronizedProvider;
+        // IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(provider);
+        // TdDataProvider synchronizedProvider = PrvResourceFileHelper.getInstance().readFromFile(file).getObject();
+        //
+        // // re-assign the value of synchronizedProvider to selectedObj.
+        // List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(synchronizedProvider);
+        // TdCatalog newCatalog = null;
+        // for (TdCatalog catalog : tdCatalogs) {
+        // if (parentCatalogOrSchema.getName().equals(catalog.getName())) {
+        // newCatalog = catalog;
+        // }
+        // }
+        // List<TdTable> tables = CatalogHelper.getTables(newCatalog);
+        // for (TdTable table : tables) {
+        // if (columnSet.getName().equals(table.getName())) {
+        // selectedObj = table;
+        // }
+        // }
+        // List<TdView> views = CatalogHelper.getViews(newCatalog);
+        // for (TdView view : views) {
+        // if (columnSet.getName().equals(view.getName())) {
+        // selectedObj = view;
+        // }
+        // }
+        // return synchronizedProvider;
+        return provider;
     }
 
 }

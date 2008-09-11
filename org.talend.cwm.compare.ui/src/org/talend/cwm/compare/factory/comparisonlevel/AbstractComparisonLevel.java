@@ -42,6 +42,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.analysis.parameters.IParameterConstant;
@@ -124,7 +125,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected abstract EObject getSavedReloadObject() throws ReloadCompareException;
 
     protected void saveReloadResult() {
-        DqRepositoryViewService.saveOpenDataProvider(this.oldDataProvider);
+        PrvResourceFileHelper.getInstance().save(oldDataProvider);
     }
 
     /**
