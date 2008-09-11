@@ -18,6 +18,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 
 /**
@@ -89,6 +91,8 @@ public final class DQStructureComparer {
         String fileName = TEMP_PRV_FILE;
         IFile file = folder.getFile(fileName);
         if (file.exists()) {
+            URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+            EMFSharedResources.getInstance().unloadResource(uri.toString());
             try {
                 file.delete(true, new NullProgressMonitor());
                 retValue = true;
