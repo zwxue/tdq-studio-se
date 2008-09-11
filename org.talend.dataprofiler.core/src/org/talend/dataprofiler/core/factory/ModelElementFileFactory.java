@@ -19,10 +19,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
-import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
-import org.talend.dataprofiler.core.helper.ResourceFileMap;
+import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -40,7 +40,7 @@ public final class ModelElementFileFactory {
     public static ModelElement getModelElement(IFile file) {
         ModelElement modelElement = null;
         if (file.getName().endsWith(PluginConstant.PRV_SUFFIX)) {
-            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().getTdProvider(file);
+            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
             modelElement = returnValue.getObject();
         } else if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
             modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);

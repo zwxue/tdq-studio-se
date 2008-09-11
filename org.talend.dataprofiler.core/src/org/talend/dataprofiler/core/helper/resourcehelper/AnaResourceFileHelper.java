@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.helper;
+package org.talend.dataprofiler.core.helper.resourcehelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.AnalysisEntity;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
@@ -99,7 +100,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         return readFromFile(file);
     }
 
-    public Analysis readFromFile(IFile file) {
+    private Analysis readFromFile(IFile file) {
         this.remove(file);
         Resource fileResource = getFileResource(file);
         Analysis analysis = retireAnalysis(fileResource);

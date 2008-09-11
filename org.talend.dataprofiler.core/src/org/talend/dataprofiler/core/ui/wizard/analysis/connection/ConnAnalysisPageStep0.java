@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
@@ -149,7 +149,7 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
                 ConnectionAnalysisParameter connPanameter = (ConnectionAnalysisParameter) getConnectionParams();
                 if (object instanceof IFile) {
                     IFile file = (IFile) object;
-                    TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(file);
+                    TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
 
                     if (tdProvider != null && connPanameter != null) {
 

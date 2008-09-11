@@ -57,7 +57,7 @@ public final class NeedSaveDataProviderHelper {
         Iterator<String> it = needSaveProviderMap.keySet().iterator();
         while (it.hasNext()) {
             TdDataProvider provider = needSaveProviderMap.get(it.next());
-            DqRepositoryViewService.saveOpenDataProvider(provider);
+            DqRepositoryViewService.saveOpenDataProvider(provider, false);
         }
         isSaved = true;
         needSaveProviderMap.clear();

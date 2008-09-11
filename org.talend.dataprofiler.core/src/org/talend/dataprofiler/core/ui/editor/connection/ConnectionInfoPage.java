@@ -40,13 +40,12 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.ConnectionService;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -74,7 +73,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
         FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-        tdDataProvider = PrvResourceFileHelper.getInstance().getTdProvider(input.getFile()).getObject();
+        tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(input.getFile()).getObject();
         return tdDataProvider;
     }
 
@@ -215,7 +214,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
-        ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(this.tdDataProvider);
+        ReturnCode returnCode = PrvResourceFileHelper.getInstance().save(tdDataProvider);
         if (returnCode.isOk()) {
             log.info("Saved in  " + tdDataProvider.eResource().getURI().toFileString() + " successful");
         } else {

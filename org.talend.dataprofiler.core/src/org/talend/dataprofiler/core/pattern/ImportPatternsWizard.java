@@ -31,11 +31,10 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.EMFSharedResources;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -115,12 +114,11 @@ public class ImportPatternsWizard extends Wizard {
                         addComponents(pattern, row[3].getContents(), row[4].getContents(), row[5].getContents());
                         boolean validStatus = PatternUtilities.isPatternValid(pattern);
                         TaggedValueHelper.setValidStatus(validStatus, pattern);
-                        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
                         String fname = DqRepositoryViewService.createFilename(contents,
                                 NewSourcePatternActionProvider.EXTENSION_PATTERN);
                         IFile pfile = folder.getFile(fname);
-                        util.addPoolToResourceSet(pfile.getFullPath().toString(), pattern);
-                        util.saveLastResource();
+                        EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), pattern);
+                        EMFSharedResources.getInstance().saveLastResource();
                         names.add(contents);
                     }
                 }

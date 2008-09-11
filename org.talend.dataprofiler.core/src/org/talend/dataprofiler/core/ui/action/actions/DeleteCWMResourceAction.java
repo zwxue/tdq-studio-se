@@ -39,11 +39,11 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.EObjectHelper;
-import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
-import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
-import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -173,12 +173,12 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
                 file = (IFile) res;
             }
             if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
-                TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().readFromFile(file);
+                TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
                 modelElement = returnValue.getObject();
                 modelElementList.add(modelElement);
                 anaMessageFlag = true;
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.ANA)) {
-                modelElement = AnaResourceFileHelper.getInstance().readFromFile(file);
+                modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
                 modelElementList.add(modelElement);
                 repMessageFlag = true;
             } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {

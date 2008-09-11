@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -117,7 +117,6 @@ public class CreatePatternWizard extends AbstractWizard {
         regularExpr.setExpressionType(type.getName());
 
         pattern.getComponents().add(regularExpr);
-        EMFUtil util = new EMFUtil();
         String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
 
         IFolder folderResource = parameter.getFolderProvider().getFolderResource();
@@ -128,8 +127,8 @@ public class CreatePatternWizard extends AbstractWizard {
             return false;
         }
 
-        util.addPoolToResourceSet(file.getFullPath().toString(), pattern);
-        util.saveLastResource();
+        EMFSharedResources.getInstance().addEObjectToResourceSet(file.getFullPath().toString(), pattern);
+        EMFSharedResources.getInstance().saveLastResource();
         return true;
     }
 

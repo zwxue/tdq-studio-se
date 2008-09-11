@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,14 +37,13 @@ import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.talend.commons.emf.EMFSharedResources;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.factory.ModelElementFileFactory;
-import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
@@ -139,8 +137,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
                 IContainer srcParent = fileRes.getParent();
                 URI srcUri = URI.createPlatformResourceURI((fileRes).getFullPath().toString(), false);
-                ResourceSet rs = EMFSharedResources.getSharedEmfUtil().getResourceSet();
-                Resource resource = rs.getResource(srcUri, true);
+                Resource resource = EMFSharedResources.getInstance().getResource(srcUri, true);
                 if (resource != null) {
                     URI desUri = URI.createPlatformResourceURI(folder.getFullPath().toString(), false);
                     // EMFUtil newEmfUtil = new EMFUtil();
@@ -155,7 +152,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     // EMFUtil.resolveAll(resource);
                     // EMFUtil.changeUri(resource, desUri);
                     // newEmfUtil.save();
-                    EMFUtil.saveToUri(resource, desUri);
+                    EMFSharedResources.getInstance().saveToUri(resource, desUri);
                 }
                 try {
                     fileRes.delete(true, null);

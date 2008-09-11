@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.helper;
+package org.talend.dataprofiler.core.helper.resourcehelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +18,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.EMFSharedResources;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -58,10 +57,9 @@ public class ResourceFileMap {
             return res;
         }
         URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
-        ResourceSet rs = new EMFUtil().getResourceSet();
-        Resource resource = rs.getResource(uri, true);
-        this.registedResourceMap.put(file, resource);
-        return resource;
+        Resource rs = EMFSharedResources.getInstance().getResource(uri, true);
+        this.registedResourceMap.put(file, rs);
+        return rs;
     }
 
     /**

@@ -42,10 +42,10 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
-import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
-import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -155,7 +155,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private boolean createFileDetail(boolean is, IFile fe2) {
         if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().getTdProvider(fe2);
+            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
             TdDataProvider dataProvider = tdProvider.getObject();
             createDataProviderDetail(dataProvider);
             is = false;

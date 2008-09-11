@@ -44,7 +44,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.domain.pattern.Pattern;

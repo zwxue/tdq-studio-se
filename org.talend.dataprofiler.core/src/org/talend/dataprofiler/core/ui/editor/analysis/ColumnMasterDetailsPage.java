@@ -54,15 +54,15 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.EObjectHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
@@ -489,7 +489,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
-                DqRepositoryViewService.saveOpenDataProvider(tdProvider);
+                PrvResourceFileHelper.getInstance().save(tdProvider);
             }
             // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
             if (log.isDebugEnabled()) {

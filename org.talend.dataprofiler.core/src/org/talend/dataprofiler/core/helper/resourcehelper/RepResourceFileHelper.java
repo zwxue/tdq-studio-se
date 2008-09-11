@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.helper;
+package org.talend.dataprofiler.core.helper.resourcehelper;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -84,7 +84,7 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         return readFromFile(file);
     }
 
-    public TdReport readFromFile(IFile file) {
+    private TdReport readFromFile(IFile file) {
         this.remove(file);
         Resource fileResource = getFileResource(file);
         TdReport report = retireReport(fileResource);

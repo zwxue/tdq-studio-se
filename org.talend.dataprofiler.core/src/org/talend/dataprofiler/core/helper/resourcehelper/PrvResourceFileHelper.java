@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.helper;
+package org.talend.dataprofiler.core.helper.resourcehelper;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,7 +21,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -51,7 +53,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      * @param file the file to read
      * @return the Data provider if found.
      */
-    public TypedReturnCode<TdDataProvider> getTdProvider(IFile file) {
+    public TypedReturnCode<TdDataProvider> findProvider(IFile file) {
         TypedReturnCode<TdDataProvider> rc = providerMap.get(file);
         if (rc != null) {
             return rc;
@@ -79,7 +81,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      * @param file
      * @return
      */
-    public TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
+    private TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
         TypedReturnCode<TdDataProvider> rc;
         this.remove(file);
         rc = new TypedReturnCode<TdDataProvider>();
@@ -112,6 +114,11 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     public void remove(IFile file) {
         super.remove(file);
         this.providerMap.remove(file);
+    }
+
+    public ReturnCode save(TdDataProvider dataProvider) {
+        ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
+        return returnCode;
     }
 
 }

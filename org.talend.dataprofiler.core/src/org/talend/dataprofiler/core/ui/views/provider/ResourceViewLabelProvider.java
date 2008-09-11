@@ -33,10 +33,10 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.PatternResourceFileHelper;
-import org.talend.dataprofiler.core.helper.PrvResourceFileHelper;
-import org.talend.dataprofiler.core.helper.RepResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.analysis.Analysis;
@@ -111,7 +111,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     protected String decorateText(String input, Object element) {
         if (input.endsWith(PluginConstant.PRV_SUFFIX)) {
             IFile fileElement = (IFile) element;
-            TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().getTdProvider(fileElement);
+            TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(fileElement);
             String decorateText = PluginConstant.EMPTY_STRING;
             if (rc.isOk()) {
                 decorateText = rc.getObject().getName();

@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.helper;
+package org.talend.dataprofiler.core.helper.resourcehelper;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -173,10 +172,8 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
         return pattern;
     }
 
-    @SuppressWarnings("static-access")
     public boolean save(Pattern pattern) {
-        EMFUtil sharedEmfUtil = EMFSharedResources.getSharedEmfUtil();
-        boolean saved = sharedEmfUtil.saveSingleResource(pattern.eResource());
+        boolean saved = EMFUtil.saveSingleResource(pattern.eResource());
         // if (saved) {
         // setResourcesNumberChanged(true);
         // }
