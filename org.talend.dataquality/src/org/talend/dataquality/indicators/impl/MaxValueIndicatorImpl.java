@@ -1,29 +1,28 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
+import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Max Value Indicator</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Max Value Indicator</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValueIndicator {
+
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected MaxValueIndicatorImpl() {
@@ -31,8 +30,8 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -40,4 +39,14 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
         return IndicatorsPackage.Literals.MAX_VALUE_INDICATOR;
     }
 
-} //MaxValueIndicatorImpl
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.ValueIndicatorImpl#getValueType()
+     */
+    @Override
+    public IndicatorValueType getValueType() {
+        return IndicatorValueType.REAL_VALUE;
+    }
+
+} // MaxValueIndicatorImpl

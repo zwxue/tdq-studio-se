@@ -15,6 +15,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.algorithms.AlgoUtils;
+import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.utils.sql.Java2SqlType;
@@ -474,4 +475,25 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
         // else a number
         return Double.valueOf(object);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getRealValue()
+     */
+    @Override
+    public Double getRealValue() {
+        return median;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.ValueIndicatorImpl#getValueType()
+     */
+    @Override
+    public IndicatorValueType getValueType() {
+        return IndicatorValueType.REAL_VALUE;
+    }
+
 } // MedianIndicatorImpl
