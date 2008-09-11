@@ -69,7 +69,9 @@ public final class EMFSharedResources {
     }
 
     /**
-     * Method "unloadResources" unloads and removes all the resources from the resource set.
+     * Method "unloadResource" unload and remove the specification resource from the resource set.
+     * 
+     * @param uriString the uri sting of resource.
      */
     public synchronized void unloadResource(String uriString) {
         List<Resource> resources = new ArrayList<Resource>(resourceSet.getResources());
@@ -105,6 +107,13 @@ public final class EMFSharedResources {
         return this.emfUtil.save();
     }
 
+    /**
+     * Save the resource to destinationUri and saved the related resources.
+     * 
+     * @param res
+     * @param destinationUri
+     * @return
+     */
     public URI saveToUri(Resource res, URI destinationUri) {
 
         // resolve all proxies of the resource to be moved

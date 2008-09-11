@@ -243,14 +243,6 @@ public final class EMFUtil {
      * @return true if no problem
      */
     public static boolean saveResource(Resource resource) {
-        // ResourceSet resourceSet = resource.getResourceSet();
-        // EMFUtil util = new EMFUtil();
-        // if (resourceSet != null) {
-        // util.setResourceSet(resourceSet);
-        // return util.save();
-        // }
-        // // else
-        // util.getResourceSet().getResources().add(resource);
         return saveSingleResource(resource);
     }
 
@@ -276,7 +268,6 @@ public final class EMFUtil {
             }
         } catch (IOException e) {
             log.error("Error during the saving of resource. Uri=" + resource.getURI().toString(), e);
-            // possible cause is a missing factory initialization and filename extension.
             save = false;
         }
         return save;
