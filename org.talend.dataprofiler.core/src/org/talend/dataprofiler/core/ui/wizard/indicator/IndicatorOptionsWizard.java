@@ -198,15 +198,25 @@ public class IndicatorOptionsWizard extends Wizard {
                         String min1 = dataParam.getMinThreshold();
                         String max1 = dataParam.getMaxThreshold();
 
-                        IndicatorHelper.setDataThreshold(indicator, min1, max1);
-                        IndicatorHelper.propagateDataThresholdsInChildren(indicator);
+                        if ("".equals(min1) && "".equals(max1)) {
+                            parameters.setDataValidDomain(null);
+                        } else {
+                            IndicatorHelper.setDataThreshold(indicator, min1, max1);
+                            IndicatorHelper.propagateDataThresholdsInChildren(indicator);
+                        }
+
                         break;
                     case IndicatorThresholdsForm:
                         IndicatorThresholdsParameter indiParam = (IndicatorThresholdsParameter) formParam;
                         String min2 = indiParam.getMinThreshold();
                         String max2 = indiParam.getMaxThreshold();
 
-                        IndicatorHelper.setIndicatorThreshold(parameters, min2, max2);
+                        if ("".equals(min2) && "".equals(max2)) {
+                            parameters.setIndicatorValidDomain(null);
+                        } else {
+                            IndicatorHelper.setIndicatorThreshold(parameters, min2, max2);
+                        }
+
                         break;
                     case TimeSlicesForm:
                         TimeSlicesParameter timeParam = (TimeSlicesParameter) formParam;
