@@ -13,7 +13,6 @@
 package org.talend.cwm.helper;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.foundation.businessinformation.BusinessinformationFactory;
 import orgomg.cwm.foundation.businessinformation.Description;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -25,65 +24,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public final class DescriptionHelper {
 
-    /**
-     * @deprecated use TaggedValueHelper.DESCRIPTION instead.
-     */
-    public static final String DESCRIPTION = TaggedValueHelper.DESCRIPTION;
-
-    /**
-     * @deprecated use TaggedValueHelper.PURPOSE instead.
-     */
-    public static final String PURPOSE = TaggedValueHelper.PURPOSE;
-
     private DescriptionHelper() {
-    }
-
-    /**
-     * @deprecated use TaggedValueHelper.getDescription(element) instead.
-     * 
-     * Method "getDescription".
-     * 
-     * @param element a CWM element
-     * @return the description of the element or null
-     */
-    public static String getDescription(ModelElement element) {
-        return TaggedValueHelper.getDescription(element);
-    }
-
-    /**
-     * @deprecated use {@link TaggedValueHelper#setDescription(String, ModelElement)} instead.
-     * 
-     * Method "setDescription".
-     * 
-     * @param description the functional description to set or create
-     * @param element a CWM element
-     */
-    public static void setDescription(String description, ModelElement element) {
-        TaggedValueHelper.setDescription(description, element);
-    }
-
-    /**
-     * @deprecated use {@link TaggedValueHelper#setPurpose(String, ModelElement)} instead.
-     * 
-     * Method "setPurpose".
-     * 
-     * @param purpose the purpose to set or create
-     * @param element a CWM element
-     */
-    public static void setPurpose(String purpose, ModelElement element) {
-        TaggedValueHelper.setPurpose(purpose, element);
-    }
-
-    /**
-     * @deprecated use {@link TaggedValueHelper#getPurpose(ModelElement)} instead.
-     * 
-     * Method "getPurpose".
-     * 
-     * @param element a CWM element
-     * @return the purpose or null
-     */
-    public static String getPurpose(ModelElement element) {
-        return TaggedValueHelper.getPurpose(element);
     }
 
     /**
