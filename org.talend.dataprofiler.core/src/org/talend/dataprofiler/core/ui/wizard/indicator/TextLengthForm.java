@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -92,7 +93,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-
+                updateStatus(IStatus.OK, MSG_OK);
                 parameter.setUseNull(nullBtn.getSelection());
             }
 
@@ -107,7 +108,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-
+                updateStatus(IStatus.OK, MSG_OK);
                 parameter.setUseBlank(blankBtn.getSelection());
             }
 
