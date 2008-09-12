@@ -359,8 +359,8 @@ public class IndicatorChartFactory {
                 i++;
             }
         } else {
-            dataset.addValue(0.23, "1", "");
-            dataset.addValue(0.77, "2", "");
+            dataset.addValue(0.23, "matching", "Regex");
+            dataset.addValue(0.77, "not matching", "Regex");
         }
 
         return dataset;
