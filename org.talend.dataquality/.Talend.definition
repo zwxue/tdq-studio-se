@@ -171,14 +171,14 @@
     <taggedValue xmi:id="_yb-Y4Th8Ed2XmO7pl5Yuyg" tag="Description" value="contains several count indicators"/>
     <taggedValue xmi:id="_yb-Y4jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze the quantity of records"/>
   </indicatorDefinitions>
-  <indicatorDefinitions xmi:id="_yb-_8Dh8Ed2XmO7pl5Yuyg" name="Regexp Matching Indicator" categories="_BvUq8ERhEd2RSqFSgXiIfA" label="Regexp Matching Indicator">
+  <indicatorDefinitions xmi:id="_yb-_8Dh8Ed2XmO7pl5Yuyg" name="Regular Expression Matching" categories="_tJjIwIDEEd2nDvn5vy_C5A" label="Regular Expression Matching">
     <taggedValue xmi:id="_yb-_8Th8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of records matching the given pattern against the number of records that do not match the given pattern"/>
     <taggedValue xmi:id="_yb-_8jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records that match a regular pattern"/>
     <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN {0} REGEXP {2} THEN 1 END), COUNT(*) FROM {1}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN REGEXP_LIKE({0},{2}) THEN 1 END), COUNT(*) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_XXDn0GOvEd2-SIyfZ_Vx6A" body="SELECT COUNT(CASE WHEN {0} ~ {2} THEN 1 END), COUNT(*) FROM {1}" language="PostgreSQL"/>
   </indicatorDefinitions>
-  <indicatorDefinitions xmi:id="_Z4vXcERgEd2RSqFSgXiIfA" name="SQL Pattern Matching Indicator" categories="_BvUq8ERhEd2RSqFSgXiIfA" label="SQL Pattern Matching Indicator">
+  <indicatorDefinitions xmi:id="_Z4vXcERgEd2RSqFSgXiIfA" name="SQL Pattern Matching" categories="_tJjIwIDEEd2nDvn5vy_C5A" label="SQL Pattern Matching">
     <taggedValue xmi:id="_hzXEoERgEd2RSqFSgXiIfA" tag="Description" value="counts the number of records matching the given SQL pattern against the number of records that do not match the given SQL pattern"/>
     <taggedValue xmi:id="_hzXEoURgEd2RSqFSgXiIfA" tag="Purpose" value="evaluate the number of records that match a SQL pattern (entering in LIKE clause)"/>
     <sqlGenericExpression xmi:id="_vIt8MERgEd2RSqFSgXiIfA" body="SELECT COUNT(CASE WHEN {0} LIKE {2} THEN 1 END), COUNT(*) FROM {1}" language="SQL"/>
@@ -193,6 +193,10 @@
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>
+  </categories>
+  <categories xmi:id="_tJjIwIDEEd2nDvn5vy_C5A" name="Pattern Matching" label="Pattern Matching">
+    <taggedValue xmi:id="_zuOWsIDEEd2nDvn5vy_C5A" tag="Description" value="contains indicators for pattern matching"/>
+    <taggedValue xmi:id="_zuOWsYDEEd2nDvn5vy_C5A" tag="Purpose" value="evaluate the number of data matching a pattern (regular expression or SQL like expression) "/>
   </categories>
   <categories xmi:id="_BvUq8ERhEd2RSqFSgXiIfA" name="Quality" label="Quality">
     <taggedValue xmi:id="_II4OAERhEd2RSqFSgXiIfA" tag="Description" value="contains quality indicators"/>
