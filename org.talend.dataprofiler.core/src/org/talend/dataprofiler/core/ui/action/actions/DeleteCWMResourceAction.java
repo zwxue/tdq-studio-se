@@ -13,28 +13,15 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.DeleteResourceAction;
-import org.eclipse.ui.ide.undo.DeleteResourcesOperation;
-import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
-import org.eclipse.ui.progress.WorkbenchJob;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -54,17 +41,15 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * This action to delete the file which suffix is .rep/.ana/.prv files.
  */
-public class DeleteCWMResourceAction extends DeleteResourceAction {
+public class DeleteCWMResourceAction extends Action {
 
-    private static Logger log = Logger.getLogger(DeleteCWMResourceAction.class);
+    private boolean isDeleteContent = false;
 
-    protected boolean isDeleteContent = false;
+    private IFile[] selectedFiles;
 
-    private Shell shell;
-
-    public DeleteCWMResourceAction() {
-        super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
-        this.shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+    public DeleteCWMResourceAction(IFile[] files) {
+        super("Delete");
+        selectedFiles = files;
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
     }
 
@@ -77,57 +62,19 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
 
     public void deleteResource() {
 
-        final IResource[] resources = getSelectedResourcesArray();
-        List<IContainer> parentList = new ArrayList<IContainer>();
-        for (IResource resource : resources) {
-            parentList.add(resource.getParent());
-        }
-        // WARNING: do not query the selected resources more than once
-        // since the selection may change during the run,
-        // e.g. due to window activation when the prompt dialog is dismissed.
-        // For more details, see Bug 60606 [Navigator] (data loss) Navigator
-        // deletes/moves the wrong file
+        final IResource[] resources = selectedFiles;
         if (!checkDeleteContent(resources)) {
             return;
         }
 
         EObjectHelper.removeDependencys(resources);
-        Job deletionCheckJob = new Job("Checking resources") {
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-             */
-            protected IStatus run(IProgressMonitor monitor) {
-                if (resources.length == 0) {
-                    return Status.CANCEL_STATUS;
-                }
-                scheduleDeleteJob(resources);
-                return Status.OK_STATUS;
-            }
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-             */
-            public boolean belongsTo(Object family) {
-                if ("Deleting resources".equals(family)) {
-                    return true;
-                }
-                return super.belongsTo(family);
-            }
-        };
-
-        deletionCheckJob.schedule();
-
-        // refresh workspace in order to avoid unsynchronized resources
-        for (IContainer container : parentList) {
+        // refresh the parent resource in order to avoid unsynchronized resources
+        for (IResource res : resources) {
             try {
-                container.refreshLocal(IResource.DEPTH_INFINITE, null);
+                res.delete(true, new NullProgressMonitor());
+                res.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {
-                // Jump it
                 e.printStackTrace();
             }
         }
@@ -135,27 +82,8 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
         findView.getCommonViewer().refresh();
     }
 
-    /**
-     * Return an array of the currently selected resources.
-     * 
-     * @return the selected resources
-     */
-    @SuppressWarnings("unchecked")
-    private IFile[] getSelectedResourcesArray() {
-        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
-        TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
-        List<IFile> selectedFiles = new ArrayList<IFile>();
-        Iterator iterator = treeSelection.iterator();
-        while (iterator.hasNext()) {
-            Object obj = iterator.next();
-            if (obj instanceof IFile) {
-                IFile file = (IFile) obj;
-                selectedFiles.add(file);
-            } else {
-                return new IFile[0];
-            }
-        }
-        return selectedFiles.toArray(new IFile[selectedFiles.size()]);
+    public boolean isFilesDeleted() {
+        return isDeleteContent;
     }
 
     private boolean checkDeleteContent(IResource[] selectedResources) {
@@ -215,90 +143,12 @@ public class DeleteCWMResourceAction extends DeleteResourceAction {
 
     private boolean popConfirmDialog(String resourceName, IResource[] selectedResources) {
         if (selectedResources.length > 1) {
-            isDeleteContent = MessageDialog.openConfirm(null, "Confirm Resource Delete", "Are you sure you want to delele these "
-                    + selectedResources.length + " resources from file system?");
+            isDeleteContent = MessageDialog.openConfirm(null, "Confirm Resource Delete",
+                    "Are you sure you want to delele these resources from file system?");
         } else {
             isDeleteContent = MessageDialog.openConfirm(null, "Confirm Resource Delete", "Are you sure you want to delele "
                     + "\"" + resourceName + "\" from file system?");
         }
         return isDeleteContent;
     }
-
-    /**
-     * Schedule a job to delete the resources to delete.
-     * 
-     * @param resourcesToDelete
-     */
-    private void scheduleDeleteJob(final IResource[] resourcesToDelete) {
-        // use a non-workspace job with a runnable inside so we can avoid
-        // periodic updates
-        Job deleteJob = new Job("Deleting resources") {
-
-            public IStatus run(final IProgressMonitor monitor) {
-                try {
-                    final DeleteResourcesOperation op = new DeleteResourcesOperation(resourcesToDelete, "Delete Resources",
-                            isDeleteContent);
-                    op.setModelProviderIds(getModelProviderIds());
-                    // If we are deleting projects and their content, do not
-                    // execute the operation in the undo history, since it cannot be
-                    // properly restored. Just execute it directly so it won't be
-                    // added to the undo history.
-                    if (isDeleteContent) {
-                        // We must compute the execution status first so that any user prompting
-                        // or validation checking occurs. Do it in a syncExec because
-                        // we are calling this from a Job.
-                        WorkbenchJob statusJob = new WorkbenchJob("Status checking") { //$NON-NLS-1$
-
-                            /*
-                             * (non-Javadoc)
-                             * 
-                             * @see
-                             * org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-                             */
-                            public IStatus runInUIThread(IProgressMonitor monitor) {
-                                return op.computeExecutionStatus(monitor);
-                            }
-
-                        };
-
-                        statusJob.setSystem(true);
-                        statusJob.schedule();
-                        try { // block until the status is ready
-                            statusJob.join();
-                        } catch (InterruptedException e) {
-                            // Do nothing as status will be a cancel
-                        }
-
-                        if (statusJob.getResult().isOK()) {
-                            return op.execute(monitor, WorkspaceUndoUtil.getUIInfoAdapter(shell));
-                        }
-                        return statusJob.getResult();
-                    }
-                    return PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(op, monitor,
-                            WorkspaceUndoUtil.getUIInfoAdapter(shell));
-                } catch (ExecutionException e) {
-                    if (e.getCause() instanceof CoreException) {
-                        return ((CoreException) e.getCause()).getStatus();
-                    }
-                    return new Status(IStatus.ERROR, "The IDE workbench plugin ID.", e.getMessage(), e);
-                }
-            }
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
-             */
-            public boolean belongsTo(Object family) {
-                if ("Deleting resources".equals(family)) {
-                    return true;
-                }
-                return super.belongsTo(family);
-            }
-
-        };
-        deleteJob.setUser(true);
-        deleteJob.schedule();
-    }
-
 }

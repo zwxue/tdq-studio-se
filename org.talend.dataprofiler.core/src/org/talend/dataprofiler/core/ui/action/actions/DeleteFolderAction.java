@@ -13,6 +13,10 @@
 
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -21,8 +25,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -50,18 +52,49 @@ public class DeleteFolderAction extends Action {
      */
     @Override
     public void run() {
-        boolean conf = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Delete Folder",
-                "Are you sure delete the folder, all sub folders and files?");
-        if (conf) {
-            try {
-                obj.delete(true, null);
-                obj.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
-                DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
-                findView.getCommonViewer().refresh();
-            } catch (CoreException e) {
-                e.printStackTrace();
-            }
+        IFolder parent = (IFolder) obj.getParent();
+        boolean isFilesDeleted = deleteFolderAndFiles();
+        if (!isFilesDeleted) {
+            return;
+        }
+        try {
+            IFolder folder = parent.getFolder(obj.getName());
+            folder.delete(true, null);
+            parent.refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            e.printStackTrace();
         }
     }
 
+    private boolean deleteFolderAndFiles() {
+
+        List<IFile> fileList = new ArrayList<IFile>();
+        getAllSubFiles(obj, fileList);
+        if (fileList.size() > 0) {
+            IFile[] files = fileList.toArray(new IFile[fileList.size()]);
+            DeleteCWMResourceAction action = new DeleteCWMResourceAction(files);
+            action.run();
+            return action.isFilesDeleted();
+        }
+        return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Delete Folder",
+                "Are you sure delete the folder, all sub folders and files?");
+
+    }
+
+    private void getAllSubFiles(IFolder folder, List<IFile> fileList) {
+        IResource[] members = null;
+        try {
+            members = folder.members();
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+        for (IResource res : members) {
+            if (res.getType() == IResource.FILE) {
+                fileList.add((IFile) res);
+            } else if (res.getType() == IResource.FOLDER) {
+                getAllSubFiles((IFolder) res, fileList);
+            }
+        }
+
+    }
 }

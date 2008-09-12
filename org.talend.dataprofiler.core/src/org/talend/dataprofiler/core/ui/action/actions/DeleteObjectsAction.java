@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -68,6 +69,29 @@ public class DeleteObjectsAction extends Action {
     }
 
     private void removeCWMResource() {
-        new DeleteCWMResourceAction().run();
+        new DeleteCWMResourceAction(getSelectedResourcesArray()).run();
+    }
+
+    /**
+     * Return an array of the currently selected resources.
+     * 
+     * @return the selected resources
+     */
+    @SuppressWarnings("unchecked")
+    private IFile[] getSelectedResourcesArray() {
+        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
+        List<IFile> selectedFiles = new ArrayList<IFile>();
+        Iterator iterator = treeSelection.iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            if (obj instanceof IFile) {
+                IFile file = (IFile) obj;
+                selectedFiles.add(file);
+            } else {
+                return new IFile[0];
+            }
+        }
+        return selectedFiles.toArray(new IFile[selectedFiles.size()]);
     }
 }

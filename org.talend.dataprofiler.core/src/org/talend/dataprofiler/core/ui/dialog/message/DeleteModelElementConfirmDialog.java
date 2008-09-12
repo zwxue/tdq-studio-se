@@ -237,9 +237,9 @@ public class DeleteModelElementConfirmDialog {
     private static int popConfirmDialog(ModelElement[] modelElements) {
         MessageDialog messageDialog;
         if (modelElements.length > 1) {
-            messageDialog = new MessageDialog(null, "Confirm Resource Delete", null, "Are you sure you want to delele these "
-                    + modelElements.length + " resources from file system?", MessageDialog.WARNING, new String[] {
-                    IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+            messageDialog = new MessageDialog(null, "Confirm Resource Delete", null,
+                    "Are you sure you want to delele these resources from file system?", MessageDialog.WARNING, new String[] {
+                            IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
         } else {
             messageDialog = new MessageDialog(null, "Confirm Resource Delete", null, "Are you sure you want to delele " + "\""
