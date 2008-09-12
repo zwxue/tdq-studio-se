@@ -242,6 +242,9 @@ public final class DefinitionHandler {
 
     /**
      * Note: scorreia. All indicator definitions defined in .Talend.definition file must be implemented here.
+     * 
+     * WARNING: The label of the indicator definition in .Talend.definition must be exactly the same as the strings used
+     * here.
      */
     private final IndicatorsSwitch<Boolean> mySwitch = new IndicatorsSwitch<Boolean>() {
 
@@ -253,27 +256,33 @@ public final class DefinitionHandler {
         /*
          * (non-Javadoc)
          * 
-         * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#caseRegexpMatchingIndicator(org.talend.dataquality.indicators.RegexpMatchingIndicator)
+         * @see
+         * org.talend.dataquality.indicators.util.IndicatorsSwitch#caseRegexpMatchingIndicator(org.talend.dataquality
+         * .indicators.RegexpMatchingIndicator)
          */
         @Override
         public Boolean caseRegexpMatchingIndicator(RegexpMatchingIndicator object) {
-            return setIndicatorDefinition(object, "Regexp Matching Indicator");
+            return setIndicatorDefinition(object, "Regular Expression Matching");
         }
 
         /*
          * (non-Javadoc)
          * 
-         * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#caseSqlPatternMatchingIndicator(org.talend.dataquality.indicators.SqlPatternMatchingIndicator)
+         * @see
+         * org.talend.dataquality.indicators.util.IndicatorsSwitch#caseSqlPatternMatchingIndicator(org.talend.dataquality
+         * .indicators.SqlPatternMatchingIndicator)
          */
         @Override
         public Boolean caseSqlPatternMatchingIndicator(SqlPatternMatchingIndicator object) {
-            return setIndicatorDefinition(object, "SQL Pattern Matching Indicator");
+            return setIndicatorDefinition(object, "SQL Pattern Matching");
         }
 
         /*
          * (non-Javadoc)
          * 
-         * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#casePatternMatchingIndicator(org.talend.dataquality.indicators.PatternMatchingIndicator)
+         * @see
+         * org.talend.dataquality.indicators.util.IndicatorsSwitch#casePatternMatchingIndicator(org.talend.dataquality
+         * .indicators.PatternMatchingIndicator)
          */
         @Override
         public Boolean casePatternMatchingIndicator(PatternMatchingIndicator object) {
