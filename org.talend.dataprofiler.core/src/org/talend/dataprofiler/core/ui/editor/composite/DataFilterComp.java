@@ -42,6 +42,8 @@ public class DataFilterComp extends AbstractPagePart {
         parent.setLayout(new GridLayout(3, true));
 
         dataFilterText = new Text(parent, SWT.BORDER | SWT.MULTI);
+        dataFilterText.setToolTipText("Write here a \"WHERE\" clause that will restrict "
+                + "the data of the whole analysis (without the WHERE keyword).");
         dataFilterText.setText(stringDataFilter == null ? PluginConstant.EMPTY_STRING : stringDataFilter);
         GridDataFactory.fillDefaults().span(2, 3).align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(dataFilterText);
         ((GridData) dataFilterText.getLayoutData()).heightHint = 150;
@@ -57,7 +59,7 @@ public class DataFilterComp extends AbstractPagePart {
         Composite buttonsComp = new Composite(parent, SWT.None);
         GridDataFactory.fillDefaults().span(1, 1).applyTo(buttonsComp);
         buttonsComp.setLayout(new GridLayout(1, true));
-        
+
         buttonsComp.setVisible(false);
 
         Button button = new Button(buttonsComp, SWT.None);
