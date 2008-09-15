@@ -355,6 +355,11 @@ public class DbmsLanguage {
         return buf.toString();
     }
 
+    /**
+     * Method "getZqlParser".
+     * 
+     * @return a new parser with predefined functions.
+     */
     private ZqlParser getZqlParser() {
         ZqlParser parser = new ZqlParser();
         for (String fnct : this.dbmsFunctions.keySet()) {
@@ -568,6 +573,8 @@ public class DbmsLanguage {
         functions.put("LOWER", 1);
 
         // --- set here functions specific to some databases // DBMS_SUPPORT
+        // TODO as the user can write any function in the data filter, we must write all possible functions for all
+        // systems.
         if (is(SQL)) {
             functions.put("TRIM", 1);
             functions.put("CHAR_LENGTH", 1);
@@ -575,8 +582,23 @@ public class DbmsLanguage {
 
         if (is(MYSQL)) {
             functions.put("TRIM", 1);
+            functions.put("RTRIM", 1);
+            functions.put("LTRIM", 1);
+            functions.put("LCASE", 1);
+            functions.put("UCASE", 1);
+            functions.put("REPLACE", 3);
             functions.put("CHAR_LENGTH", 1);
+            functions.put("CHARACTER_LENGTH", 1);
+            functions.put("BIT_LENGTH", 1);
             functions.put("IFNULL", 2);
+            functions.put("LENGTH", 1);
+            functions.put("SOUNDEX", 1);
+            functions.put("SPACE", 1);
+            functions.put("SUBSTRING", 2);
+            functions.put("SUBSTRING", 3);
+            functions.put("LEFT", 2);
+            functions.put("OCTET_LENGTH", 1);
+
             for (DateGrain grain : DateGrain.values()) {
                 functions.put(grain.getName(), 1);
             }
