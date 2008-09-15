@@ -363,7 +363,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.talend.dataprofiler.core.ui.perspective.DataProfilingPerspective"
-            icon="icons/map.png"
+            icon="icons/profiler_persp.png"
             id="org.talend.dataprofiler.DataProfilingPerspective"
             name="Data Profiler">
       </perspective>
