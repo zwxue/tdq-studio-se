@@ -22,9 +22,6 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
-import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.domain.pattern.PatternComponent;
-import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
@@ -49,7 +46,6 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.ValueIndicator;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * @author scorreia
@@ -314,37 +310,6 @@ public final class IndicatorHelper {
     public static Boolean ignoreCaseOption(IndicatorParameters parameters) {
         TextParameters textParameter = parameters.getTextParameter();
         return (textParameter != null) ? textParameter.isIgnoreCase() : null;
-    }
-
-    /**
-     * Method "getRegexPatternString".
-     * 
-     * @param indicator
-     * @return the regular expression or null if none was found
-     */
-    public static String getRegexPatternString(PatternMatchingIndicator indicator) {
-        IndicatorParameters parameters = indicator.getParameters();
-        if (parameters == null) {
-            return null;
-        }
-        Domain dataValidDomain = parameters.getDataValidDomain();
-        if (dataValidDomain == null) {
-            return null;
-        }
-        EList<Pattern> patterns = dataValidDomain.getPatterns();
-        for (Pattern pattern : patterns) {
-            PatternComponent next = pattern.getComponents().iterator().next();
-            if (next == null) {
-                continue;
-            } else {
-                RegularExpression regexp = (RegularExpression) next;
-                Expression expression = regexp.getExpression();
-                if (expression != null) {
-                    return expression.getBody();
-                }
-            }
-        }
-        return null;
     }
 
     public static String getIndicatorValue(Indicator indicator) {
