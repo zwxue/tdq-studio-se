@@ -21,11 +21,15 @@ import java.util.Vector;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -60,7 +64,7 @@ public class DbmsLanguage {
 
     private static final String DB2 = "DB2";
 
-    private static final String SYBASE = "SYBASE";
+    private static final String SYBASE_ASE = "ADAPTIVE SERVER ENTERPRISE";
 
     /**
      * Ansi SQL.
@@ -233,6 +237,10 @@ public class DbmsLanguage {
         if (is(MSSQL)) {
             schema = "dbo";
         }
+        if (is(SYBASE_ASE)) {
+            schema = "dbo";
+        }
+
         StringBuffer qualName = new StringBuffer();
         if (catalog != null && catalog.length() > 0) {
             qualName.append(catalog);
@@ -602,7 +610,7 @@ public class DbmsLanguage {
             functions.put("LENGTH", 1);
         }
 
-        if (is(SYBASE)) {
+        if (is(SYBASE_ASE)) {
             // TODO
         }
 
@@ -747,6 +755,28 @@ public class DbmsLanguage {
     }
 
     /**
+     * Method "getRegexPatternString".
+     * 
+     * @param indicator
+     * @return the regular expression or null if none was found
+     */
+    public String getRegexPatternString(PatternMatchingIndicator indicator) {
+        IndicatorParameters parameters = indicator.getParameters();
+        if (parameters == null) {
+            return null;
+        }
+        Domain dataValidDomain = parameters.getDataValidDomain();
+        if (dataValidDomain == null) {
+            return null;
+        }
+        EList<Pattern> patterns = dataValidDomain.getPatterns();
+        for (Pattern pattern : patterns) {
+            return this.getRegexp(pattern);
+        }
+        return null;
+    }
+
+    /**
      * DOC scorreia Comment method "getSqlExpression".
      * 
      * @param indicatorDefinition
@@ -773,6 +803,25 @@ public class DbmsLanguage {
                     || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
         }
         return StringUtils.equalsIgnoreCase(lang1, lang2);
+    }
+
+    /**
+     * Method "getRegexp".
+     * 
+     * @param pattern a pattern
+     * @return the body of the regular expression applicable to this dbms or null
+     */
+    public String getRegexp(Pattern pattern) {
+        EList<PatternComponent> components = pattern.getComponents();
+        for (PatternComponent patternComponent : components) {
+            if (patternComponent != null) {
+                Expression expression = this.getExpression(patternComponent);
+                if (expression != null) {
+                    return expression.getBody();
+                }
+            }
+        }
+        return null;
     }
 
     /**

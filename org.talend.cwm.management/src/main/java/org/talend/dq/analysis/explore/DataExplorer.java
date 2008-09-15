@@ -46,7 +46,13 @@ public abstract class DataExplorer implements IDataExplorer {
         super();
     }
 
-    protected String getRowsStatement(String regexpCmp) {
+    /**
+     * Method "getRowsStatement".
+     * 
+     * @param whereClause the WHERE clause of the statement
+     * @return the full SELECT statement with the WHERE clause
+     */
+    protected String getRowsStatement(String whereClause) {
         String lang = dbmsLanguage.getDbmsName();
         Expression instantiatedExpression = this.indicator.getInstantiatedExpressions(lang);
         String instantiatedSQL = instantiatedExpression.getBody();
@@ -57,7 +63,7 @@ public abstract class DataExplorer implements IDataExplorer {
         int b = instantiatedSQL.indexOf(this.dbmsLanguage.from());
         String fromClause = instantiatedSQL.substring(b);
         String where = fromClause.contains(dbmsLanguage.where()) ? dbmsLanguage.and() : dbmsLanguage.where();
-        return SELECT + fromClause + where + regexpCmp;
+        return SELECT + fromClause + where + whereClause;
     }
 
     public boolean setAnalysis(Analysis analysis) {

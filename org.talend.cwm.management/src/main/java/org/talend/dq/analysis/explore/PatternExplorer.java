@@ -13,7 +13,6 @@
 package org.talend.dq.analysis.explore;
 
 import org.talend.cwm.exception.TalendException;
-import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
@@ -37,9 +36,12 @@ public class PatternExplorer extends DataExplorer {
      * @see org.talend.dq.analysis.explore.IDataExplorer#getInvalidRowsStatement()
      */
     public String getInvalidRowsStatement() {
-        String regexPatternString = IndicatorHelper.getRegexPatternString((PatternMatchingIndicator) this.indicator);
-        String regexCmp = dbmsLanguage.regexNotLike(indicator.getAnalyzedElement().getName(), regexPatternString);
-        return getRowsStatement(regexCmp);
+        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String columnName = indicator.getAnalyzedElement().getName();
+        String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString);
+        // add null as invalid rows
+        String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
+        return getRowsStatement(regexCmp + nullClause);
     }
 
     /*
@@ -51,7 +53,7 @@ public class PatternExplorer extends DataExplorer {
         if (this.indicator == null || !(this.indicator instanceof PatternMatchingIndicator)) {
             throw new TalendException("No indicator exist in analysis " + analysis.getName());
         }
-        String regexPatternString = IndicatorHelper.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
         String regexCmp = dbmsLanguage.regexLike(indicator.getAnalyzedElement().getName(), regexPatternString);
         return getRowsStatement(regexCmp);
     }

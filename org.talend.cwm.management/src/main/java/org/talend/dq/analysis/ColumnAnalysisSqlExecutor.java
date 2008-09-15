@@ -41,7 +41,6 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -371,13 +370,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
         EList<Pattern> patterns = dataValidDomain.getPatterns();
         for (Pattern pattern : patterns) {
-            EList<PatternComponent> components = pattern.getComponents();
-            for (PatternComponent patternComponent : components) {
-                Expression expression = dbms().getExpression(patternComponent);
-                if (expression != null) {
-                    String body = expression.getBody();
-                    patternStrings.add(body);
-                }
+            String regexp = this.dbmsLanguage.getRegexp(pattern);
+            if (regexp != null) {
+                patternStrings.add(regexp);
             }
         }
         return patternStrings;
