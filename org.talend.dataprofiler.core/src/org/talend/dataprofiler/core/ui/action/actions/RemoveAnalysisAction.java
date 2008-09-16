@@ -92,13 +92,15 @@ public class RemoveAnalysisAction extends Action {
             while (iterator.hasNext()) {
                 TdReport report = iterator.next();
                 ReportHelper.removeAnalyses(report, removeMap.get(report));
-                RepResourceFileHelper.getInstance().save(report);
 
                 // save now modified resources (that contain the Dependency objects)
-                List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(report);
+                List<Resource> modifiedResources = DependenciesHandler.getInstance().removeDependenciesBetweenModels(report,
+                        removeMap.get(report));
                 for (int i = 0; i < modifiedResources.size(); i++) {
                     EMFUtil.saveSingleResource(modifiedResources.get(i));
                 }
+
+                RepResourceFileHelper.getInstance().save(report);
             }
 
             IFolder reportsFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.DATA_PROFILING)
