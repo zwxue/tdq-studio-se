@@ -65,8 +65,7 @@ public final class FormFactory {
                     parameter = new BinsDesignerParameter();
                 }
                 form = new BinsDesignerForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
             case TextLengthForm:
                 parameter = paramMap.get(FormEnum.TextLengthForm);
@@ -74,8 +73,7 @@ public final class FormFactory {
                     parameter = new TextLengthParameter();
                 }
                 form = new TextLengthForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
             case TextParametersForm:
                 parameter = paramMap.get(FormEnum.TextParametersForm);
@@ -84,8 +82,7 @@ public final class FormFactory {
                 }
 
                 form = new TextParametersForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
             case DataThresholdsForm:
                 parameter = paramMap.get(FormEnum.DataThresholdsForm);
@@ -94,8 +91,7 @@ public final class FormFactory {
                 }
 
                 form = new DataThresholdsForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
             case TimeSlicesForm:
                 parameter = paramMap.get(FormEnum.TimeSlicesForm);
@@ -104,8 +100,7 @@ public final class FormFactory {
                 }
 
                 form = new TimeSlicesForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
             case FreqBinsDesignerForm:
                 parameter = paramMap.get(FormEnum.BinsDesignerForm);
@@ -114,8 +109,7 @@ public final class FormFactory {
                 }
 
                 form = new FreqBinsDesignerForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
             case FreqTextParametersForm:
                 parameter = paramMap.get(FormEnum.TextParametersForm);
@@ -124,8 +118,7 @@ public final class FormFactory {
                 }
 
                 form = new FreqTextParametersForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
             case FreqTimeSliceForm:
                 parameter = paramMap.get(FormEnum.TimeSlicesForm);
@@ -134,8 +127,7 @@ public final class FormFactory {
                 }
 
                 form = new FreqTimeSliceForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
 
             case IndicatorThresholdsForm:
@@ -145,8 +137,7 @@ public final class FormFactory {
                 }
 
                 form = new IndicatorThresholdsForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
+
                 break;
 
             case NumbericNominalForm:
@@ -156,8 +147,6 @@ public final class FormFactory {
                 }
 
                 form = new NumbericNominalForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
                 break;
 
             case ExpectedValueForm:
@@ -167,12 +156,13 @@ public final class FormFactory {
                 }
 
                 form = new ExpectedValueForm(parent, SWT.NONE, parameter);
-                form.setListener(listener);
-                list.add(form);
                 break;
 
             default:
             }
+
+            form.setListener(listener);
+            list.add(form);
         }
 
         return list.toArray(new AbstractIndicatorForm[list.size()]);

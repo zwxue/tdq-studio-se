@@ -72,15 +72,24 @@ public class IndicatorOptionsWizard extends Wizard {
         IndicatorParameters indicatorParam = indicator.getParameters();
         if (indicatorParam != null) {
 
+            int topN = indicatorParam.getTopN();
+
             NumbericNominalParameter numbericNominalParameter = new NumbericNominalParameter();
-            numbericNominalParameter.setNumberOfShown(indicatorParam.getTopN());
+            numbericNominalParameter.setNumberOfShown(topN);
+
+            BinsDesignerParameter binsParam = new BinsDesignerParameter();
+            binsParam.setNumOfShown(topN);
+
+            TimeSlicesParameter timeParam = new TimeSlicesParameter();
+            timeParam.setNumOfShown(topN);
+
             paramMap.put(FormEnum.NumbericNominalForm, numbericNominalParameter);
 
             if (indicatorParam.getTextParameter() != null) {
 
                 TextParameter textParam = new TextParameter();
                 textParam.setIngoreCase(indicatorParam.getTextParameter().isIgnoreCase());
-                textParam.setNumOfShown(indicatorParam.getTopN());
+                textParam.setNumOfShown(topN);
 
                 TextLengthParameter textLengthParam = new TextLengthParameter();
                 textLengthParam.setUseBlank(indicatorParam.getTextParameter().isUseBlank());
@@ -116,22 +125,17 @@ public class IndicatorOptionsWizard extends Wizard {
             Domain domain = indicatorParam.getBins();
             if (domain != null) {
 
-                BinsDesignerParameter binsParam = new BinsDesignerParameter();
                 binsParam.setDomain(domain);
                 binsParam.setMaxValue(DomainHelper.getMaxBinValue(domain));
                 binsParam.setMinValue(DomainHelper.getMinBinValue(domain));
                 binsParam.setNumOfBins(DomainHelper.getNumberOfBins(domain));
-                binsParam.setNumOfShown(indicatorParam.getTopN());
-
-                paramMap.put(FormEnum.BinsDesignerForm, binsParam);
             }
+            paramMap.put(FormEnum.BinsDesignerForm, binsParam);
+
             if (indicatorParam.getDateParameters() != null) {
-                TimeSlicesParameter timeParam = new TimeSlicesParameter();
                 timeParam.setDataUnit(indicatorParam.getDateParameters().getDateAggregationType().getLiteral());
-                timeParam.setNumOfShown(indicatorParam.getTopN());
-
-                paramMap.put(FormEnum.TimeSlicesForm, timeParam);
             }
+            paramMap.put(FormEnum.TimeSlicesForm, timeParam);
         }
     }
 

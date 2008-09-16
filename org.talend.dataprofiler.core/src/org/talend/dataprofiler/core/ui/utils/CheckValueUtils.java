@@ -64,7 +64,7 @@ public class CheckValueUtils {
 
     public static boolean isNumberOfShownValue(String inputString) {
 
-        String regex = "(^[^0])\\d*";
+        String regex = "^[1-9]\\d*";
         return getCheckValue(regex, inputString);
     }
 
