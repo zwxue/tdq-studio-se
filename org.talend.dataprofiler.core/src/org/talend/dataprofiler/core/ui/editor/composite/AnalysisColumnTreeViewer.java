@@ -152,13 +152,14 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         column1.setWidth(190);
         column1.setText("Analyzed Columns");
         TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
-        column2.setWidth(100);
-        column2.setText("Dataming Type");
+        column2.setWidth(120);
+        column2.setText("Datamining Type");
+        column2.setToolTipText("This forces to change the data semantic type. Please refer to documentation.");
         TreeColumn column3 = new TreeColumn(newTree, SWT.CENTER);
-        column3.setWidth(100);
+        column3.setWidth(80);
         column3.setText("Pattern");
         TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
-        column4.setWidth(120);
+        column4.setWidth(80);
         column4.setText("Operation");
 
         parent.layout();

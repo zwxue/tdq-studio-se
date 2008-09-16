@@ -101,7 +101,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 ReportHelper.addAnalyses(anaList, findReport);
                 RepResourceFileHelper.getInstance().save(findReport);
             }
-        } else if ((target instanceof IFolder)) { // && dropSql
+        } else if (resources != null && (target instanceof IFolder)) { // && dropSql
             IFolder folder = (IFolder) target;
             // IPath location = folder.getFullPath();
             for (IResource res : resources) {
