@@ -22,6 +22,7 @@ import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -221,10 +222,10 @@ public class IndicatorSelectDialog extends TrayDialog {
         /**
          * handle the children button selection.
          */
-        protected void processChildrenSelection(final TreeItemContainer treeItem, final int index, boolean selection) {
+        protected void processChildrenSelection(final TreeItemContainer treeItem, final int idx, boolean selection) {
             Button itemButton;
             for (TreeItem childItem : treeItem.getItems()) {
-                itemButton = ((TreeItemContainer) childItem).getButton(index);
+                itemButton = ((TreeItemContainer) childItem).getButton(idx);
                 if (itemButton.isEnabled()) {
                     itemButton.setSelection(selection);
                 } else {
@@ -237,7 +238,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                     currentColumnIndicator.removeTempIndicatorEnum(((IIndicatorNode) itemButton.getData()).getIndicatorEnum());
                 }
 
-                processChildrenSelection((TreeItemContainer) childItem, index, selection);
+                processChildrenSelection((TreeItemContainer) childItem, idx, selection);
             }
         }
     }
@@ -254,18 +255,18 @@ public class IndicatorSelectDialog extends TrayDialog {
 
         @SuppressWarnings("unchecked")
         @Override
-        protected void processChildrenSelection(TreeItemContainer treeItem, int index, boolean selection) {
+        protected void processChildrenSelection(TreeItemContainer treeItem, int idx, boolean selection) {
             Button itemButton;
             for (TreeItem childItem : treeItem.getItems()) {
                 TreeItemContainer childItemContainer = (TreeItemContainer) childItem;
-                itemButton = childItemContainer.getButton(index);
+                itemButton = childItemContainer.getButton(idx);
                 if (itemButton.isEnabled()) {
                     itemButton.setSelection(selection);
                 } else {
                     return;
                 }
                 processRowButtonSelect(selection, (List<Button>) itemButton.getData(ROWINDICATORFLAG));
-                processChildrenSelection((TreeItemContainer) childItem, index, selection);
+                processChildrenSelection((TreeItemContainer) childItem, idx, selection);
             }
         }
 
@@ -283,11 +284,11 @@ public class IndicatorSelectDialog extends TrayDialog {
             for (Button btn : rowButtons) {
                 ColumnIndicator columnIndicator = (ColumnIndicator) btn.getData(COLUMNINDICATORFLAG);
                 IIndicatorNode node = (IIndicatorNode) btn.getData();
-                IndicatorEnum indicatorEnum = node.getIndicatorEnum();
+                IndicatorEnum indicEnum = node.getIndicatorEnum();
 
                 if (selection && ColumnIndicatorRule.match(node, columnIndicator)) {
                     btn.setSelection(true);
-                    if (indicatorEnum != null) {
+                    if (indicEnum != null) {
                         columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
                     }
                 } else {
@@ -412,8 +413,13 @@ public class IndicatorSelectDialog extends TrayDialog {
                     rowCheckButton.addSelectionListener(new RowSelectButtonListener(j, treeItem, branchNodes[i]
                             .getIndicatorEnum(), null));
 
-                    rowCheckButton.setBackground(rowCheckButton.getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+                    // set background color to the "All columns" column
+                    Color systemColor = tree.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
+                    treeItem.setBackground(j, systemColor); // no need to free this color
+                    rowCheckButton.setBackground(systemColor);
+
                     commonCheckButton = rowCheckButton;
+
                 } else {
                     editor = new TreeEditor(tree);
                     checkButton = new Button(tree, SWT.CHECK);
