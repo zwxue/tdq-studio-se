@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -31,8 +30,6 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  * DOC scorreia class global comment. Detailled comment
  */
 public final class ReportHelper {
-
-    private static Logger log = Logger.getLogger(ReportHelper.class);
 
     public static enum ReportType {
         MAIN("Main", "/reports/column/report_01.jrxml"),
@@ -199,7 +196,7 @@ public final class ReportHelper {
             report.setReportType(reportType.getLabel());
             report.setInputJrxml(jrxmlFullPath);
             if (StringUtils.isBlank(jrxmlFullPath)) {
-                log.error("Empty path to jasper report xml file: " + jrxmlFullPath);
+                // do not log an error here
                 ok = false;
             }
             break;

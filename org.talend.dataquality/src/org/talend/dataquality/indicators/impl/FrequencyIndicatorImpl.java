@@ -460,6 +460,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * 
      * ADDED scorreia 2008-04-30 storeSqlResults(List<Object[]> objects)
      */
+    @SuppressWarnings("fallthrough")
     @Override
     public boolean storeSqlResults(List<Object[]> objects) {
         // handle case when frequencies are computed on dates.
@@ -469,12 +470,16 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             switch (dategrain) {
             case DAY:
                 nbColumns++;
+                // no break
             case WEEK:
                 nbColumns++;
+                // no break
             case MONTH:
                 nbColumns++;
+                // no break
             case QUARTER:
                 nbColumns++;
+                // no break
             case YEAR:
                 break;
             default:
@@ -483,9 +488,13 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         }
         // handle case when no row is returned because there is no value.
         if (objects.isEmpty()) {
-            log
-                    .error("Query for frequency table did not return any result. Check the options of this indicator. Bins must contains some data.");
-            return false;
+
+            if (log.isInfoEnabled()) {
+                log.info("Query for frequency table did not return any result. "
+                        + "Check the options of this indicator. Bins must contains some data.");
+            }
+            this.setValueToFreq(new HashMap<Object, Long>());
+            return true;
         } // else we got some values
         if (!checkResults(objects, nbColumns)) {
             return false;
