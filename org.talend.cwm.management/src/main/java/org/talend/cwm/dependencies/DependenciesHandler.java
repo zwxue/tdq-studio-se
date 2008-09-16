@@ -13,6 +13,7 @@
 package org.talend.cwm.dependencies;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -95,6 +96,41 @@ public final class DependenciesHandler {
             // this clear the corresponding getClientDependency() of each client (objects that requires the
             // elementToDelete)
             client.clear();
+        }
+        return modifiedResources;
+    }
+
+    /**
+     * Method "removeDependenciesBetweenModels" is to be used before a model dependency(elementToRemove) removed from
+     * the elementFromRemove. The elementToRemove not truly to deleted, not a file to deleted, just remove the
+     * dependency between elementFromRemove and elementToRemove,
+     * 
+     * @param elementFromRemove
+     * @param elementToRemove
+     * @return
+     */
+    public List<Resource> removeDependenciesBetweenModels(ModelElement elementFromRemove,
+            List<? extends ModelElement> elementToRemove) {
+        EList<Dependency> clientDependencies;
+        List<Resource> toRemoveResources = new ArrayList<Resource>();
+        for (ModelElement modelElement : elementToRemove) {
+            toRemoveResources.add(modelElement.eResource());
+        }
+        // get the client dependencies (
+        clientDependencies = elementFromRemove.getClientDependency();
+        // locate resource of each Dependency object
+        List<Resource> modifiedResources = new ArrayList<Resource>();
+        Iterator<Dependency> dependencyIterator = clientDependencies.iterator();
+        while (dependencyIterator.hasNext()) {
+            Dependency dependency = dependencyIterator.next();
+            Resource dependencyResource = dependency.eResource();
+            if (!toRemoveResources.contains(dependencyResource)) {
+                continue;
+            }
+            if (dependencyResource != null) {
+                modifiedResources.add(dependencyResource);
+                dependencyIterator.remove();
+            }
         }
         return modifiedResources;
     }
