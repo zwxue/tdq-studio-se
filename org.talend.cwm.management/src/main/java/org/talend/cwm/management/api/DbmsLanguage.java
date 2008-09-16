@@ -608,14 +608,36 @@ public class DbmsLanguage {
         if (is(ORACLE)) {
             functions.put("TRIM", 1);
             functions.put("LENGTH", 1);
+            functions.put("LENGTHB", 1);
             functions.put("TO_CHAR", 2);
             functions.put("TO_NUMBER", 1);
             functions.put("NVL", 2);
+            functions.put("CEIL", 1);
+            functions.put("FLOOR", 1);
+            functions.put("ROUND", 2);
+            functions.put("TRUNC", 2);
+            functions.put("SIGN", 1);
+            functions.put("CONVERT", 3);
+            functions.put("REPLACE", 2);
+            functions.put("REPLACE", 3);
         }
 
         if (is(POSTGRESQL)) {
             functions.put("TRIM", 1);
+            functions.put("LTRIM", 1);
+            functions.put("RTRIM", 1);
+            functions.put("LENGTH", 1);
             functions.put("CHAR_LENGTH", 1);
+            functions.put("CHARACTER_LENGTH", 1);
+            functions.put("OCTET_LENGTH", 1);
+            functions.put("CEIL", 1);
+            functions.put("FLOOR", 1);
+            functions.put("ROUND", 1);
+            functions.put("ROUND", 2);
+            functions.put("SIGN", 1);
+            functions.put("SQRT", 1);
+            functions.put("BIT_LENGTH", 1);
+            functions.put("DECODE", 2);
         }
 
         if (is(MSSQL)) {
@@ -752,6 +774,10 @@ public class DbmsLanguage {
 
     public String orderBy() {
         return " ORDER BY ";
+    }
+
+    public String groupBy() {
+        return " GROUP BY ";
     }
 
     /**

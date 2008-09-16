@@ -421,6 +421,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param dateAggregationType
      * @return
      */
+    @SuppressWarnings("fallthrough")
     private String getDateAggregatedCompletedString(Expression sqlExpression, String colName, String table,
             DateGrain dateAggregationType) {
         int nbExtractedColumns = 0;
@@ -438,16 +439,19 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             result = dbms().extractWeek(colName) + alias + comma(result);
             aliases = alias + comma(aliases);
             nbExtractedColumns++;
+            // no break
         case MONTH:
             alias = getAlias(colName, DateGrain.MONTH);
             result = dbms().extractMonth(colName) + alias + comma(result);
             aliases = alias + comma(aliases);
             nbExtractedColumns++;
+            // no break
         case QUARTER:
             alias = getAlias(colName, DateGrain.QUARTER);
             result = dbms().extractQuarter(colName) + alias + comma(result);
             aliases = alias + comma(aliases);
             nbExtractedColumns++;
+            // no break
         case YEAR:
             alias = getAlias(colName, DateGrain.YEAR);
             result = dbms().extractYear(colName) + alias + comma(result);
@@ -539,7 +543,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // MOD scorreia 2008-09-03 Bug #4976 Order by clause cannot be in each single select statement (Oracle
         // constraint, but MySQL allows it)
         // hence we extract the ORDER BY clause and add it at the end.
-        int idxOfOrderBY = sqlGenericExpression.indexOf("ORDER BY");
+        int idxOfOrderBY = sqlGenericExpression.indexOf(" ORDER BY");
         String orderBy = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(idxOfOrderBY) : "";
         String singleStatement = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(0, idxOfOrderBY) : sqlGenericExpression;
 
@@ -578,10 +582,29 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String completedRange = replaceVariables(range, colName, table);
         String rangeColumn = "'" + completedRange + "'";
         String completedSqlString = replaceVariablesLow(sqlGenericExpression, rangeColumn, table, rangeColumn);
-        // add this range clause to the given where clause (but do not modify the given where clause)
+
         List<String> allWheresForSingleSelect = new ArrayList<String>(whereExpression);
-        allWheresForSingleSelect.add(completedRange);
-        return addWhereToSqlStringStatement(allWheresForSingleSelect, completedSqlString);
+
+        // add this range clause to the given where clause (but do not modify the given where clause)
+        // allWheresForSingleSelect.add(completedRange);
+
+        completedSqlString = addWhereToSqlStringStatement(allWheresForSingleSelect, completedSqlString);
+        // replacement in order to get lines even when no data is available
+        // do this replacement after having added the where clause otherwise the parsing with ZQL will fail.
+        completedSqlString = replaceCountByZeroCount(completedSqlString, completedRange);
+        return completedSqlString;
+    }
+
+    /**
+     * Method "replaceCountByZeroCount" replaces "COUNT(*)" by "CASE WHEN completedRange THEN COUNT(*) ELSE 0 END" in
+     * the given SQL statement completedSqlString.
+     * 
+     * @param completedSqlString
+     * @param completedRange
+     * @return the new SQL statement
+     */
+    private String replaceCountByZeroCount(String completedSqlString, String completedRange) {
+        return completedSqlString.replace("COUNT(*)", "CASE WHEN " + completedRange + " THEN COUNT(*) ELSE 0 END");
     }
 
     /**
