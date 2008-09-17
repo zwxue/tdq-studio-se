@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
+import org.talend.dataprofiler.core.ui.utils.TextFormatFactory;
+
 /**
  * DOC zqin class global comment. Detailled comment
  */
@@ -39,12 +41,12 @@ public class PatternChartDataEntity extends ChartDataEntity {
 
     public String getPerMatch() {
         Double match = Double.parseDouble(getNumMatch());
-        return match * 100 / getSum() + "%";
+        return TextFormatFactory.createStandardPercent(match / getSum());
     }
 
     public String getPerNoMatch() {
         Double nomatch = Double.parseDouble(getNumNoMatch());
-        return nomatch * 100 / getSum() + "%";
+        return TextFormatFactory.createStandardPercent(nomatch / getSum());
     }
 
     private Double getSum() {
