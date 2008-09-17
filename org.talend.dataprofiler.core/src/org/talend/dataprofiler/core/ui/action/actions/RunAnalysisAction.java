@@ -33,7 +33,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -77,8 +76,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
 
-        if (currentSelection == null) {
-            IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        if (activeEditor instanceof AnalysisEditor) {
             AnalysisEditor editor = (AnalysisEditor) activeEditor;
 
             if (editor != null) {
@@ -91,27 +90,25 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     break;
                 default:
                 }
-
-                if (page == null) {
-                    return;
-                }
-
-                if (page.isDirty()) {
-                    try {
-                        page.doSave(null);
-                    } catch (Exception e) {
-                        ExceptionHandler.process(e);
-                    }
-                }
-
-                IFile file = ((FileEditorInput) page.getEditorInput()).getFile();
-                if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
-                    analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
-                }
-
-                editor.setRefreshResultPage(true);
             }
 
+            if (page != null && page.isDirty()) {
+                page.doSave(null);
+            }
+
+            editor.setRefreshResultPage(true);
+        }
+
+        if (currentSelection == null) {
+
+            if (page == null) {
+                return;
+            }
+
+            IFile file = ((FileEditorInput) page.getEditorInput()).getFile();
+            if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+                analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+            }
         } else {
 
             if (currentSelection.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
@@ -141,9 +138,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     Display.getDefault().asyncExec(new Runnable() {
 
                         public void run() {
-                            if (page instanceof ColumnMasterDetailsPage) {
+                            if (page instanceof ColumnMasterDetailsPage && page.isActive()) {
                                 ColumnMasterDetailsPage columnMasterPage = (ColumnMasterDetailsPage) page;
-                                columnMasterPage.refreshChart(columnMasterPage.getForm());
+                                columnMasterPage.refreshChart();
                             } else if (page instanceof ConnectionMasterDetailsPage) {
                                 ConnectionMasterDetailsPage connDetailsPage = (ConnectionMasterDetailsPage) page;
                                 connDetailsPage.doSetInput();

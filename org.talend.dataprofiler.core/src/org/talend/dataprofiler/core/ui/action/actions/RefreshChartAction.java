@@ -59,7 +59,7 @@ public class RefreshChartAction extends Action implements ICheatSheetAction {
                 e.printStackTrace();
             }
         }
-        page.refreshChart(page.getManagedForm().getForm());
+        page.refreshChart();
     }
 
 }

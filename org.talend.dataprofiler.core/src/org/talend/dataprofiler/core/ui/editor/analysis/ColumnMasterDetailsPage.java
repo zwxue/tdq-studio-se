@@ -408,7 +408,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
      * 
      * @param form
      */
-    public void refreshChart(ScrolledForm form) {
+    public void refreshChart() {
         if (chartComposite != null) {
             try {
                 for (Control control : chartComposite.getChildren()) {
@@ -417,7 +417,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
                 createPreviewCharts(form, chartComposite, true);
                 chartComposite.layout();
-                form.reflow(true);
+                getForm().reflow(true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
