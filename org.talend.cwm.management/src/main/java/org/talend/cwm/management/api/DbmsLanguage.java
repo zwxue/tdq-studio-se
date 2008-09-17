@@ -235,10 +235,17 @@ public class DbmsLanguage {
     // TODO scorreia move this method in a utility class
     public String toQualifiedName(String catalog, String schema, String table) {
         if (is(MSSQL)) {
-            schema = "dbo";
+            // schema = "dbo";
+            // Bug fixed: 5118. ZQL parser does not understand statement like
+            // select count(*) from Talend.dbo.departement
+            // hence remove catalog and try statement like
+            // select count(*) from dbo.departement
+            catalog = "dbo";
         }
         if (is(SYBASE_ASE)) {
-            schema = "dbo";
+            // schema = "dbo";
+            // Bug fixed: 5118. ZQL parser does not understand statement with full qualified name
+            catalog = "dbo";
         }
 
         StringBuffer qualName = new StringBuffer();
