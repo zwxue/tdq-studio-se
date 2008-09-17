@@ -29,9 +29,12 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * 
  * This class gives easy access to the correctly typed elements.
  */
-public class SwitchHelpers {
+public final class SwitchHelpers {
 
-    public static final RelationalSwitch<Package> Package_SWITCH = new RelationalSwitch<Package>() {
+    private SwitchHelpers() {
+    }
+
+    public static final RelationalSwitch<Package> PACKAGE_SWITCH = new RelationalSwitch<Package>() {
 
         @Override
         public Package casePackage(Package object) {

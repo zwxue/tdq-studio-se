@@ -3,4 +3,9 @@
     <fileset name="all" enabled="true" check-config-name="Talend Checks" local="false">
         <file-match-pattern match-pattern="." include-pattern="true"/>
     </fileset>
+    <filter name="FilesFromPackage" enabled="true">
+        <filter-data value="src/org/talend/cwm/constants"/>
+        <filter-data value="src/org/talend/cwm/relational"/>
+        <filter-data value="src/org/talend/cwm/softwaredeployment"/>
+    </filter>
 </fileset-config>
