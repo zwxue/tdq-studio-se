@@ -65,4 +65,8 @@ public abstract class AbstractFolderNode implements IFolderNode {
         return MODELELEMENT_TYPE;
     }
 
+    public int getFolderNodeType() {
+        return MODELFOLDER_NODE_TYPE;
+    }
+
 }

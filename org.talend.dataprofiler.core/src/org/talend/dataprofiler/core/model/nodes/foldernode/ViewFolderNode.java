@@ -108,4 +108,8 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
         }
     }
 
+    public int getFolderNodeType() {
+        return VIEWFOLDER_NODE_TYPE;
+    }
+
 }

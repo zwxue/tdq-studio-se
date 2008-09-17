@@ -75,4 +75,8 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         super.loadChildren();
     }
 
+    public int getFolderNodeType() {
+        return COLUMNFOLDER_NODE_TYPE;
+    }
+
 }

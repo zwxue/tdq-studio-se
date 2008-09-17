@@ -103,4 +103,8 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
         }
     }
 
+    public int getFolderNodeType() {
+        return TABLEFOLDER_NODE_TYPE;
+    }
+
 }

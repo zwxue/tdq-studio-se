@@ -20,9 +20,17 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface IFolderNode {
 
-    public static final int FILE_TYPE = 1;
+    public static final int FILE_TYPE = -1;
 
-    public static final int MODELELEMENT_TYPE = 2;
+    public static final int MODELELEMENT_TYPE = -2;
+
+    public static final int MODELFOLDER_NODE_TYPE = 0;
+
+    public static final int TABLEFOLDER_NODE_TYPE = 1;
+
+    public static final int VIEWFOLDER_NODE_TYPE = 2;
+
+    public static final int COLUMNFOLDER_NODE_TYPE = 3;
 
     public int getChildrenType();
 
@@ -43,5 +51,7 @@ public interface IFolderNode {
     public EObject getParent();
 
     public abstract void loadChildren();
+
+    public int getFolderNodeType();
 
 }
