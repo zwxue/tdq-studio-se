@@ -105,7 +105,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
      */
     private T createTable(String catalogName, String schemaPattern, ResultSet tablesSet) throws SQLException {
         String tableName = tablesSet.getString(GetTable.TABLE_NAME.name());
-        String tableComment = tablesSet.getString(GetTable.REMARKS.name());
+        String tableComment = getTableComment(tableName, tablesSet);
 
         // TODO scorreia get table type and display in separate folder according to the type
         // --- create a table and add columns
@@ -118,6 +118,26 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
             ColumnSetHelper.addColumns(table, columns);
         }
         return table;
+    }
+
+    /**
+     * DOC scorreia Comment method "getTableComment".
+     * 
+     * @param tableName
+     * 
+     * @param tablesSet
+     * @return
+     * @throws SQLException
+     */
+    private String getTableComment(String tableName, ResultSet tablesSet) throws SQLException {
+        String tableComment = tablesSet.getString(GetTable.REMARKS.name());
+        if (tableComment == null) {
+            String selectRemarkOnTable = dbms.getSelectRemarkOnTable(tableName);
+            if (selectRemarkOnTable != null) {
+                tableComment = executeGetCommentStatement(selectRemarkOnTable);
+            }
+        }
+        return tableComment;
     }
 
     protected abstract T createTable();

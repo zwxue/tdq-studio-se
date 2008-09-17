@@ -1008,4 +1008,30 @@ public class DbmsLanguage {
         return false;
     }
 
+    /**
+     * Method "getSelectRemarkOnTable".
+     * 
+     * @param tableName a table name
+     * @return the select statement to execute to get the comment on the table, or null
+     */
+    public String getSelectRemarkOnTable(String tableName) {
+        if (is(ORACLE)) {
+            return "SELECT COMMENTS FROM USER_TAB_COMMENTS WHERE TABLE_NAME='" + tableName + "'";
+        }
+        return null;
+    }
+
+    /**
+     * Method "getSelectRemarkOnColumn".
+     * 
+     * @param columnName a column name
+     * @return the select statement to execute to get the comment on the column, or null
+     */
+    public String getSelectRemarkOnColumn(String columnName) {
+        if (is(ORACLE)) {
+            return "SELECT COMMENTS FROM USER_COL_COMMENTS WHERE COLUMN_NAME='" + columnName + "'";
+        }
+        return null;
+    }
+
 }

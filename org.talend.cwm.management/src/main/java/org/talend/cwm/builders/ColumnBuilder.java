@@ -65,14 +65,16 @@ public class ColumnBuilder extends CwmBuilder {
         // --- add columns to table
         ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         while (columns.next()) {
-            TdColumn column = ColumnHelper.createTdColumn(columns.getString(GetColumn.COLUMN_NAME.name()));
+            String colName = columns.getString(GetColumn.COLUMN_NAME.name());
+            TdColumn column = ColumnHelper.createTdColumn(colName);
             column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
             column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
             column.setJavaType(columns.getInt(GetColumn.DATA_TYPE.name()));
             // TODO columns.getString(GetColumn.TYPE_NAME.name());
 
             // get column description (comment)
-            TaggedValueHelper.setComment(columns.getString(GetColumn.REMARKS.name()), column);
+            String colComment = getComment(colName, columns);
+            TaggedValueHelper.setComment(colComment, column);
 
             // TODO scorreia other informations for columns can be retrieved here
 
@@ -90,6 +92,26 @@ public class ColumnBuilder extends CwmBuilder {
 
         return tableColumns;
 
+    }
+
+    /**
+     * DOC scorreia Comment method "getComment".
+     * 
+     * @param colName
+     * 
+     * @param columns
+     * @return
+     * @throws SQLException
+     */
+    private String getComment(String colName, ResultSet columns) throws SQLException {
+        String colComment = columns.getString(GetColumn.REMARKS.name());
+        if (colComment == null) {
+            String selectRemarkOnColumn = dbms.getSelectRemarkOnColumn(colName);
+            if (selectRemarkOnColumn != null) {
+                colComment = executeGetCommentStatement(selectRemarkOnColumn);
+            }
+        }
+        return colComment;
     }
 
 }

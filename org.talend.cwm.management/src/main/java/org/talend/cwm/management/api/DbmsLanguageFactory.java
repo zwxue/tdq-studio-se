@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.cwm.management.api;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
@@ -23,6 +27,8 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
  * Factory for the creation of DbmsLanguage objects.
  */
 public final class DbmsLanguageFactory {
+
+    private static Logger log = Logger.getLogger(DbmsLanguageFactory.class);
 
     private DbmsLanguageFactory() {
         // avoid instantiation
@@ -48,5 +54,24 @@ public final class DbmsLanguageFactory {
             return new DbmsLanguage();
         }
         return new DbmsLanguage(softwareSystem.getSubtype());
+    }
+
+    /**
+     * Method "createDbmsLanguage".
+     * 
+     * @param connection a connection (must be open)
+     * @return the appropriate DbmsLanguage or a default one if something failed with the connection.
+     */
+    public static DbmsLanguage createDbmsLanguage(Connection connection) {
+        assert connection != null;
+        String databaseProductName;
+        try {
+            databaseProductName = connection.getMetaData().getDatabaseProductName();
+            return new DbmsLanguage(databaseProductName);
+        } catch (SQLException e) {
+            log.warn("Exception when retrieving database informations:" + e + ". Creating a default DbmsLanguage.", e);
+            return new DbmsLanguage();
+        }
+
     }
 }
