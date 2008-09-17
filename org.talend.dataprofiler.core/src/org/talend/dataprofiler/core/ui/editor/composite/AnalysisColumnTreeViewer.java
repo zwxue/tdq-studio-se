@@ -62,6 +62,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
@@ -755,9 +756,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 boolean con = false;
-                if (getTheSuitedComposite(e) != null) {
-                    getTheSuitedComposite(e).setFocus();
-                }
+
                 if (e.item instanceof TreeItem) {
                     TreeItem item = (TreeItem) e.item;
                     if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
@@ -780,20 +779,30 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             @Override
             public void treeCollapsed(TreeEvent e) {
 
-                if (getTheSuitedComposite(e) != null) {
+                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
+                ScrolledForm form = masterPage.getForm();
+                Composite comp = masterPage.getChartComposite();
+
+                if (theSuitedComposite != null && theSuitedComposite.isExpanded()) {
                     getTheSuitedComposite(e).setExpanded(false);
                 }
 
-                masterPage.getForm().reflow(true);
+                comp.layout();
+                form.reflow(true);
             }
 
             @Override
             public void treeExpanded(TreeEvent e) {
-                if (getTheSuitedComposite(e) != null) {
-                    getTheSuitedComposite(e).setExpanded(true);
+                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
+                ScrolledForm form = masterPage.getForm();
+                Composite comp = masterPage.getChartComposite();
+
+                if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
+                    theSuitedComposite.setExpanded(true);
                 }
 
-                masterPage.getForm().reflow(true);
+                comp.layout();
+                form.reflow(true);
             }
 
         });

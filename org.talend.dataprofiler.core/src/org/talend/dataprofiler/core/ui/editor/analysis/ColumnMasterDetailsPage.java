@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -312,7 +311,6 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
             exComp.setText("Column: " + column.getName());
             exComp.setLayout(new GridLayout());
             exComp.setData(columnIndicator);
-            addExpandableCompositeListener(exComp);
             previewChartList.add(exComp);
 
             final Composite comp = toolkit.createComposite(exComp);
@@ -356,6 +354,16 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                 }
             }
 
+            exComp.addExpansionListener(new ExpansionAdapter() {
+
+                @Override
+                public void expansionStateChanged(ExpansionEvent e) {
+                    getChartComposite().layout();
+                    form.reflow(true);
+                }
+
+            });
+
             exComp.setExpanded(true);
 
             exComp.setClient(comp);
@@ -364,43 +372,6 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         if (!previewChartList.isEmpty()) {
             this.previewChartCompsites = previewChartList.toArray(new Composite[previewChartList.size()]);
         }
-    }
-
-    private void addExpandableCompositeListener(final ExpandableComposite composite) {
-
-        composite.addExpansionListener(new ExpansionAdapter() {
-
-            @Override
-            public void expansionStateChanging(ExpansionEvent e) {
-                TreeItem theSuitedTreeItem = getTheSuitedTreeItem(getTreeViewer().getTree().getItems(), composite);
-                if (e.getState()) {
-                    if (theSuitedTreeItem != null) {
-                        theSuitedTreeItem.setExpanded(true);
-                    }
-                } else {
-                    if (theSuitedTreeItem != null) {
-                        theSuitedTreeItem.setExpanded(false);
-                    }
-                }
-
-                getTreeViewer().getTree().layout();
-
-                getTreeViewer().getTree().setSelection(theSuitedTreeItem);
-            }
-
-        });
-    }
-
-    private TreeItem getTheSuitedTreeItem(TreeItem[] itemes, Composite composite) {
-        for (TreeItem item : itemes) {
-            ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
-
-            if (columnIndicator == composite.getData()) {
-                return item;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -584,4 +555,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         return previewChartCompsites;
     }
 
+    public Composite getChartComposite() {
+        return chartComposite;
+    }
 }
