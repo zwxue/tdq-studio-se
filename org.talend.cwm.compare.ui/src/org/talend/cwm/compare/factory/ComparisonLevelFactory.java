@@ -18,8 +18,8 @@ import org.talend.cwm.compare.factory.comparisonlevel.CatalogSchemaComparisonLev
 import org.talend.cwm.compare.factory.comparisonlevel.DataProviderComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AbstractDatabaseFolderNode;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -39,7 +39,7 @@ public final class ComparisonLevelFactory {
         if (selectedObject instanceof AbstractDatabaseFolderNode) {
             AbstractDatabaseFolderNode dbFolderNode = (AbstractDatabaseFolderNode) selectedObject;
             EObject theEObject = dbFolderNode.getParent();
-            TdCatalog ctatlogSwtich = SwitchHelpers.CATALOG_SWITCH.doSwitch(theEObject);
+            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(theEObject);
             if (ctatlogSwtich != null) {
                 comparisonLevel = new CatalogSchemaComparisonLevel(ctatlogSwtich);
             }

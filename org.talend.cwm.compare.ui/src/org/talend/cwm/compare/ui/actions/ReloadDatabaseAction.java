@@ -14,6 +14,7 @@ package org.talend.cwm.compare.ui.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -32,6 +33,8 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
  * DOC rli class global comment. Detailled comment
  */
 public class ReloadDatabaseAction extends Action {
+
+    private static Logger log = Logger.getLogger(ReloadDatabaseAction.class);
 
     private Object selectedObject;
 
@@ -65,8 +68,9 @@ public class ReloadDatabaseAction extends Action {
             ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         } catch (InvocationTargetException e) {
             MessageDialog.openInformation(shell, "Connection Failure", "Check connection failure:" + e.getCause().getMessage());
+            log.error(e, e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
     }

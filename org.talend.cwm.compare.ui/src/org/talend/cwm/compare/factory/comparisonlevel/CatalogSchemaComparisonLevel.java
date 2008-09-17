@@ -73,11 +73,17 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         Package catalogSchemaObj = (Package) reloadedObj;
         try {
             TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(catalogSchemaObj);
+            TdSchema schemaObj = SwitchHelpers.SCHEMA_SWITCH.doSwitch(catalogSchemaObj);
             if (catalogObj != null) {
                 List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
                 CatalogHelper.addTables(tables, catalogObj);
                 List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
                 CatalogHelper.addViews(views, catalogObj);
+            } else if (schemaObj != null) {
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, schemaObj, null, true);
+                SchemaHelper.addTables(tables, schemaObj);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, schemaObj, null, true);
+                SchemaHelper.addViews(views, schemaObj);
             } else {
                 List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, (Schema) catalogSchemaObj, null,
                         true);
@@ -139,7 +145,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         EObject rightElement = addElement.getRightElement();
         ColumnSet columnSetSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
         if (columnSetSwitch != null) {
-            TdCatalog catalog = (TdCatalog) selectedObj;
+            Package catalog = (Package) selectedObj;
             PackageHelper.addColumnSet(columnSetSwitch, catalog);
         }
     }
@@ -151,7 +157,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
             return;
         }
         popRemoveElementConfirm();
-        PackageHelper.removeColumnSet(removeColumnSet, (TdCatalog) selectedObj);
+        PackageHelper.removeColumnSet(removeColumnSet, (Package) selectedObj);
     }
 
     @Override
