@@ -21,6 +21,7 @@ import org.talend.cwm.relational.util.RelationalSwitch;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -29,6 +30,14 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * This class gives easy access to the correctly typed elements.
  */
 public class SwitchHelpers {
+
+    public static final RelationalSwitch<Package> Package_SWITCH = new RelationalSwitch<Package>() {
+
+        @Override
+        public Package casePackage(Package object) {
+            return object;
+        }
+    };
 
     public static final RelationalSwitch<TdCatalog> CATALOG_SWITCH = new RelationalSwitch<TdCatalog>() {
 
