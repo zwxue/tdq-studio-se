@@ -21,14 +21,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -44,7 +41,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -60,6 +56,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
+import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
@@ -481,7 +478,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         } catch (TalendException e) {
                             MessageBoxExceptionHandler.process(e);
                         }
-                        EMFSharedResources.getSharedEmfUtil().saveResource(provider.eResource());
+
+                        PrvResourceFileHelper.getInstance().save(provider);
                     }
                     return sort(columns, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                 }
@@ -574,16 +572,19 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             columnSet);
                     return folderNode;
                 }
-                URI uri = eObj.eResource().getURI();
-
-                Path path = new Path(uri.path());
-                String fileName = path.lastSegment();
-                IFolder connectionsFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA)
-                        .getFolder(DQStructureManager.DB_CONNECTIONS);
-                IFile resourceFile = connectionsFolder.getFile(fileName);
-                return resourceFile;
+                Package packageValue = SwitchHelpers.Package_SWITCH.doSwitch(eObj);
+                if (packageValue != null) {
+                    TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
+                    IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
+                    return findCorrespondingFile;
+                    // Path path = new Path(uri.path());
+                    // String fileName = path.lastSegment();
+                    // IFolder connectionsFolder =
+                    // ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA)
+                    // .getFolder(DQStructureManager.DB_CONNECTIONS);
+                    // IFile resourceFile = connectionsFolder.getFile(fileName);
+                }
             } else if (element instanceof IFolderNode) {
-
                 return ((IFolderNode) element).getParent();
             } else if (element instanceof IResource) {
                 return ((IResource) element).getParent();

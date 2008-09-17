@@ -86,7 +86,18 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         this.remove(file);
         rc = new TypedReturnCode<TdDataProvider>();
         Resource resource = getFileResource(file);
-        findTdProvider(file, rc, resource);
+        Iterator<IFile> fileIterator = providerMap.keySet().iterator();
+        while (fileIterator.hasNext()) {
+            IFile key = fileIterator.next();
+            TypedReturnCode<TdDataProvider> returnValue = providerMap.get(key);
+            Resource resourceObj = returnValue.getObject().eResource();
+            if (resourceObj == resource) {
+                registedResourceMap.remove(key);
+                providerMap.remove(key);
+                break;
+            }
+        }
+        retireTdProvider(file, rc, resource);
         return rc;
     }
 
@@ -97,7 +108,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      * @param rc
      * @param resource
      */
-    private void findTdProvider(IFile file, TypedReturnCode<TdDataProvider> rc, Resource resource) {
+    private void retireTdProvider(IFile file, TypedReturnCode<TdDataProvider> rc, Resource resource) {
         Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(resource.getContents());
         if (tdDataProviders.isEmpty()) {
             rc.setReturnCode("No Data Provider found in " + file.getLocation().toFile().getAbsolutePath(), false);

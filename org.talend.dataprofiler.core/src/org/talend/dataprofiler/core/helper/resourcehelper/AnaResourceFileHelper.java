@@ -103,6 +103,17 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
     private Analysis readFromFile(IFile file) {
         this.remove(file);
         Resource fileResource = getFileResource(file);
+        Iterator<IFile> fileIterator = allAnalysisMap.keySet().iterator();
+        while (fileIterator.hasNext()) {
+            IFile key = fileIterator.next();
+            AnalysisEntity entity = allAnalysisMap.get(key);
+            Resource resourceObj = entity.getAnalysis().eResource();
+            if (resourceObj == fileResource) {
+                registedResourceMap.remove(key);
+                allAnalysisMap.remove(key);
+                break;
+            }
+        }
         Analysis analysis = retireAnalysis(fileResource);
         if (analysis != null) {
             AnalysisEntity entity = new AnalysisEntity(analysis);

@@ -108,6 +108,9 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                 if (res.getType() != IResource.FILE) {
                     return null;
                 }
+                if (folder.equals(res.getParent())) {
+                    continue;
+                }
                 String name = res.getName();
                 IFile fileRes = (IFile) res;
                 IFile movedIFile = folder.getFile(name);

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.helper.resourcehelper;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -86,6 +87,17 @@ public final class RepResourceFileHelper extends ResourceFileMap {
     private TdReport readFromFile(IFile file) {
         this.remove(file);
         Resource fileResource = getFileResource(file);
+        Iterator<IFile> fileIterator = allRepMap.keySet().iterator();
+        while (fileIterator.hasNext()) {
+            IFile key = fileIterator.next();
+            TdReport rePort = allRepMap.get(key);
+            Resource resourceObj = rePort.eResource();
+            if (resourceObj == fileResource) {
+                registedResourceMap.remove(key);
+                allRepMap.remove(key);
+                break;
+            }
+        }
         TdReport report = retireReport(fileResource);
         if (report != null) {
             allRepMap.put(file, report);
