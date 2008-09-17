@@ -572,7 +572,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             columnSet);
                     return folderNode;
                 }
-                Package packageValue = SwitchHelpers.Package_SWITCH.doSwitch(eObj);
+                Package packageValue = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObj);
                 if (packageValue != null) {
                     TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
                     IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);

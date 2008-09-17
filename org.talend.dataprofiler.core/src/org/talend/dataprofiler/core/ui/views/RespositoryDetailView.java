@@ -353,7 +353,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(element);
 
         label = new Label(container, SWT.NONE);
-        label.setText("Comment: ");
+        label.setText("Remarks: ");
         text = new Text(container, SWT.WRAP);
         text.setEditable(false);
         String purpose = TaggedValueHelper.getComment(element);
@@ -361,7 +361,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (b) {
             text.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         }
-        text.setText(b ? "No comment" : purpose);
+        text.setText(b ? "No remark" : purpose);
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
         text.setLayoutData(data);
     }
