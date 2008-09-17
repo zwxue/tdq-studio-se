@@ -169,7 +169,7 @@ public class DBConnect {
      * 
      * @return true if CWM objects have been saved in file.
      */
-    public boolean saveInFiles() {
+    boolean saveInFiles() {
         return emfUtil.save();
     }
 

@@ -107,6 +107,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
         String tableName = tablesSet.getString(GetTable.TABLE_NAME.name());
         String tableComment = tablesSet.getString(GetTable.REMARKS.name());
 
+        // TODO scorreia get table type and display in separate folder according to the type
         // --- create a table and add columns
         T table = createTable();
         table.setName(tableName);
