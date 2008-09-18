@@ -47,6 +47,8 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     public static final String ERROR_MESSAGE = "Regular expression must start and end with '";
 
+    public static final String SQLERROR_MESSAGE = "SQL expression must start and end with '";
+
     private ExpressionType type;
 
     /**
@@ -139,7 +141,16 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         }
 
         if (!CheckValueUtils.isPatternValue(nameText.getText())) {
-            updateStatus(IStatus.ERROR, ERROR_MESSAGE);
+            if (type != null) {
+                switch (type) {
+                case SQL_LIKE:
+                    updateStatus(IStatus.ERROR, SQLERROR_MESSAGE);
+                default:
+                    updateStatus(IStatus.ERROR, ERROR_MESSAGE);
+                }
+            } else {
+                updateStatus(IStatus.ERROR, ERROR_MESSAGE);
+            }
             return false;
         }
 

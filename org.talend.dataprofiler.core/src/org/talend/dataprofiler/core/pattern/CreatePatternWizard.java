@@ -15,11 +15,13 @@ package org.talend.dataprofiler.core.pattern;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -72,11 +74,15 @@ public class CreatePatternWizard extends AbstractWizard {
         switch (type) {
         case SQL_LIKE:
             s = "SQL expression";
+            mPage = new CreatePatternWizardPage1(ResourcesPlugin.getWorkspace().getRoot()
+                    .getProject(DQStructureManager.LIBRARIES).getFolder(DQStructureManager.SQL_PATTERNS));
             break;
         default:
+            mPage = new CreatePatternWizardPage1(ResourcesPlugin.getWorkspace().getRoot()
+                    .getProject(DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS));
             break;
         }
-        mPage = new CreatePatternWizardPage1();
+
         mPage.setTitle(s + " Creation Page1/2");
         mPage.setDescription("Define the properties");
         mPage.setPageComplete(false);
