@@ -604,7 +604,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return the new SQL statement
      */
     private String replaceCountByZeroCount(String completedSqlString, String completedRange) {
-        return completedSqlString.replace("COUNT(*)", "CASE WHEN " + completedRange + " THEN COUNT(*) ELSE 0 END");
+        return completedSqlString.replace("COUNT(*)", "COUNT( CASE WHEN " + completedRange + " THEN 1 END )");
     }
 
     /**
