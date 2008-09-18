@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -41,6 +42,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -48,6 +50,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * DOC zqin class global comment. Detailled comment
  */
 public abstract class AbstractPredefinedAnalysisAction extends Action {
+
+    private static Logger log = Logger.getLogger(AbstractPredefinedAnalysisAction.class);
 
     private TreeSelection selection;
 
@@ -158,6 +162,11 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
             for (IndicatorEnum oneEnum : indicatorEnum.getChildren()) {
                 if (ColumnIndicatorRule.patternRule(oneEnum, column)) {
                     Indicator indicator = (Indicator) factory.create(oneEnum.getIndicatorType());
+                    // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is
+                    // created.
+                    if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
+                        log.error("Could not set the definition of the given indicator : " + indicator.getName());
+                    }
                     predefinedIndicators.add(indicator);
                 }
             }

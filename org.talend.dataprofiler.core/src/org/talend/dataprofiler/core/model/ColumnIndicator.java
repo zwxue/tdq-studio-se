@@ -512,6 +512,10 @@ public class ColumnIndicator {
         if (indicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+            // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
+            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
+                log.error("Could not set the definition of the given indicator : " + indicator.getName());
+            }
         }
         if (!flatIndicatorEnumList.contains(indicatorEnum)) {
             this.flatIndicatorEnumList.add(indicatorEnum);

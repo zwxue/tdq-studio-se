@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
@@ -31,6 +32,7 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -38,7 +40,12 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  * 
  */
-public class PatternUtilities {
+public final class PatternUtilities {
+
+    private static Logger log = Logger.getLogger(PatternUtilities.class);
+
+    private PatternUtilities() {
+    }
 
     /**
      * DOC qzhang Comment method "isLibraiesSubfolder".
@@ -98,9 +105,13 @@ public class PatternUtilities {
     public static IndicatorUnit createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis) {
         Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(pfile);
         RegularExpression expression = (RegularExpression) pattern.getComponents().get(0);
-        PatternMatchingIndicator patternMatchingIndicator = PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
-        if (ExpressionType.SQL_LIKE.getName().equals(expression.getExpressionType())) {
-            patternMatchingIndicator = PatternIndicatorFactory.createSqlPatternMatchingIndicator(pattern);
+        PatternMatchingIndicator patternMatchingIndicator = (ExpressionType.SQL_LIKE.getName().equals(expression
+                .getExpressionType())) ? PatternIndicatorFactory.createSqlPatternMatchingIndicator(pattern)
+                : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
+
+        // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
+        if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(patternMatchingIndicator)) {
+            log.error("Could not set the definition of the given indicator : " + patternMatchingIndicator.getName());
         }
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
         IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
