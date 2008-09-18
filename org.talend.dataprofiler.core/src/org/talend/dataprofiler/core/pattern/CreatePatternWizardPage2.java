@@ -145,6 +145,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
                 switch (type) {
                 case SQL_LIKE:
                     updateStatus(IStatus.ERROR, SQLERROR_MESSAGE);
+                    break;
                 default:
                     updateStatus(IStatus.ERROR, ERROR_MESSAGE);
                 }
