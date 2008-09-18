@@ -1018,6 +1018,9 @@ public class DbmsLanguage {
         if (is(ORACLE)) {
             return "SELECT COMMENTS FROM USER_TAB_COMMENTS WHERE TABLE_NAME='" + tableName + "'";
         }
+        if (is(MYSQL)) {
+            return "SELECT TABLE_COMMENT FROM information_schema WHERE TABLE_NAME='" + tableName + "'";
+        }
         return null;
     }
 
