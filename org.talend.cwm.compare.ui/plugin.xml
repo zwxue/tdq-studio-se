@@ -34,14 +34,14 @@
       </actionProvider>        
    </extension>
    
-   <extension
+   <!-- extension
          point="org.eclipse.ui.views">
       <view
             class="org.talend.cwm.compare.ui.views.DQRepositoryListenerView"
             id="org.talend.cwm.compare.ui.views.DQRepositoryListenerView"
             name="DQRepository Compare View">
       </view>
-   </extension>
+   </extension -->
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
