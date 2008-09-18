@@ -42,11 +42,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.cwm.exception.TalendException;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -572,7 +574,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             columnSet);
                     return folderNode;
                 }
+
                 Package packageValue = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObj);
+                TdCatalog parentCatalog = CatalogHelper.getParentCatalog(packageValue);
+                if (parentCatalog != null) {
+                    return parentCatalog;
+                }
+
                 if (packageValue != null) {
                     TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(packageValue);
                     IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
