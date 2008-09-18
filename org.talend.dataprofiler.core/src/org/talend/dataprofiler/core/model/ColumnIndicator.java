@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -46,6 +47,7 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -53,6 +55,8 @@ import org.talend.utils.sql.Java2SqlType;
  * 
  */
 public class ColumnIndicator {
+
+    private static Logger log = Logger.getLogger(ColumnIndicator.class);
 
     private final List<IndicatorEnum> countsEnumChildren = Arrays.asList(IndicatorEnum.CountsIndicatorEnum.getChildren());
 
@@ -475,6 +479,10 @@ public class ColumnIndicator {
         if (indicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+            // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
+            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
+                log.error("Could not set the definition of the given indicator : " + indicator.getName());
+            }
 
             // for 4225, the frequency indicator need be initialized
             int sqlType = this.tdColumn.getJavaType();
