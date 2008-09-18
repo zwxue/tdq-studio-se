@@ -24,9 +24,9 @@ public class HelpPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "org.talend.dataprofiler.help";
 
-    public static final String INDICATOR_OPTION_HELP_ID = ".mycontexthelpid";
+    public static final String INDICATOR_OPTION_HELP_ID = PLUGIN_ID + ".mycontexthelpid";
 
-    public static final String INDICATOR_SELECTOR_HELP_ID = ".indicatorhelpcontext";
+    public static final String INDICATOR_SELECTOR_HELP_ID = PLUGIN_ID + ".indicatorhelpcontext";
 
     public static final String PATTERN_CONTEXT_HELP_ID = PLUGIN_ID + ".helpPatternContext";
 
