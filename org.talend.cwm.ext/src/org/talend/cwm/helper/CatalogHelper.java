@@ -22,8 +22,8 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.resource.relational.Catalog;
 
 /**
@@ -66,10 +66,11 @@ public final class CatalogHelper {
      * @return the Catalog or null
      */
     public static TdCatalog getParentCatalog(ModelElement element) {
-        if (element == null) {
+        Namespace namespace = element.getNamespace();
+        if (element == null || namespace == null) {
             return null;
         }
-        return SwitchHelpers.CATALOG_SWITCH.doSwitch(element.getNamespace());
+        return SwitchHelpers.CATALOG_SWITCH.doSwitch(namespace);
     }
 
     public static boolean addSchemas(Collection<TdSchema> schemas, Catalog catalog) {
