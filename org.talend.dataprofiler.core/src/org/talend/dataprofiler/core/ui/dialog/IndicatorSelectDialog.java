@@ -21,7 +21,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -32,7 +31,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -41,7 +39,6 @@ import org.talend.dataprofiler.core.model.nodes.indicator.IndicatorTreeModelBuil
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
-import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
@@ -324,12 +321,9 @@ public class IndicatorSelectDialog extends TrayDialog {
         ((GridData) tree.getLayoutData()).heightHint = 380;
         createTreeStructure(tree);
         tree.setLinesVisible(true);
-        tree.addSelectionListener(new SelectionListener() {
+        tree.addSelectionListener(new SelectionAdapter() {
 
-            public void widgetDefaultSelected(SelectionEvent e) {
-
-            }
-
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 IIndicatorNode indicatorNode = ((IIndicatorNode) e.item.getData(INDICATORITEM));
                 if (indicatorNode == null) {
@@ -343,7 +337,6 @@ public class IndicatorSelectDialog extends TrayDialog {
                 String description = DESCRIPTION + TaggedValueHelper.getDescription(indicatorDefinition);
                 description = splitLongString(description);
                 descriptionLabel.setText(description);
-
             }
 
             private String splitLongString(String longString) {
@@ -505,23 +498,4 @@ public class IndicatorSelectDialog extends TrayDialog {
     public ColumnIndicator[] getResult() {
         return columnIndicators;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    protected Control createContents(Composite parent) {
-
-        try {
-            PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-                    HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_SELECTOR_HELP_ID);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return super.createContents(parent);
-    }
-
 }

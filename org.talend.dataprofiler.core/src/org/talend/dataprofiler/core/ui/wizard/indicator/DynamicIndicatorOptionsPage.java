@@ -22,14 +22,12 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.utils.FormFactory;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
-import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -103,17 +101,6 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         if (forms != null) {
             setControl(createView(FormFactory.createForm(tabFolder, listener, forms, paramMap)));
         }
-
-        if (getControl() != null) {
-            try {
-                PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-                        HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_OPTION_HELP_ID);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
     }
 
     private Composite createView(AbstractIndicatorForm... forms) {

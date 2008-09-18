@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.utils;
 
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
-import org.eclipse.help.IHelpResource;
 import org.eclipse.help.ui.internal.views.HelpTray;
 import org.eclipse.help.ui.internal.views.ReusableHelpPart;
 import org.eclipse.jface.dialogs.DialogTray;
@@ -24,7 +23,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -103,29 +101,16 @@ public class OpeningHelpWizardDialog extends WizardDialog {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.WizardDialog#close()
-     */
-    @Override
-    public boolean close() {
-        activeCount = 0;
-        return super.close();
-    }
-
     private void showHelp() {
-        if (activeCount < 2 && href != null && href.endsWith("html")) {
-            Point point = getShell().getDisplay().getCursorLocation();
-            IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
-            IHelpResource[] relatedTopics = context.getRelatedTopics();
-            IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-            helpSystem.displayContext(context, point.x + 15, point.y);
-            activeCount++;
-            ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
-            if (lastActiveInstance != null) {
-                lastActiveInstance.showURL(href);
-            }
+        getShell().setFocus();
+
+        IContext context = HelpSystem.getContext(HelpPlugin.INDICATOR_OPTION_HELP_ID);
+        IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+        helpSystem.displayHelp(context);
+
+        ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
+        if (lastActiveInstance != null) {
+            lastActiveInstance.showURL(href);
         }
     }
 }

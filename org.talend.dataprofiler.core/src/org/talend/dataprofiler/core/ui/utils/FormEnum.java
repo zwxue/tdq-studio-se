@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.utils.sql.Java2SqlType;
@@ -42,8 +43,6 @@ public enum FormEnum {
 
     private String helpHref;
 
-    private static String pid = "org.talend.dataprofiler.help";
-
     FormEnum(String formName, String helpHref) {
         this.formName = formName;
         this.helpHref = helpHref;
@@ -54,7 +53,7 @@ public enum FormEnum {
     }
 
     public String getHelpHref() {
-        return "/" + pid + "/" + helpHref;
+        return "/" + HelpPlugin.PLUGIN_ID + "/" + helpHref;
     }
 
     public static String[] getHelpHref(IndicatorUnit indicatorUnit) {

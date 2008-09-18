@@ -44,7 +44,6 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -667,7 +666,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     }
 
     public void openIndicatorSelectDialog(Shell shell) {
-        IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, "Indicator Selection", columnIndicators);
+        final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, "Indicator Selection", columnIndicators);
         dialog.create();
         dialog.getShell().addShellListener(new ShellAdapter() {
 
@@ -678,9 +677,9 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
              */
             @Override
             public void shellActivated(ShellEvent e) {
-                Point point = e.widget.getDisplay().getCursorLocation();
-                IContext context = HelpSystem.getContext(HelpPlugin.PLUGIN_ID + HelpPlugin.INDICATOR_SELECTOR_HELP_ID);
-                PlatformUI.getWorkbench().getHelpSystem().displayContext(context, point.x + 15, point.y);
+                dialog.getShell().setFocus();
+                IContext context = HelpSystem.getContext(HelpPlugin.INDICATOR_SELECTOR_HELP_ID);
+                PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
             }
         });
 
