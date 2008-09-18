@@ -66,8 +66,11 @@ public final class CatalogHelper {
      * @return the Catalog or null
      */
     public static TdCatalog getParentCatalog(ModelElement element) {
+        if (element == null) {
+            return null;
+        }
         Namespace namespace = element.getNamespace();
-        if (element == null || namespace == null) {
+        if (namespace == null) {
             return null;
         }
         return SwitchHelpers.CATALOG_SWITCH.doSwitch(namespace);
