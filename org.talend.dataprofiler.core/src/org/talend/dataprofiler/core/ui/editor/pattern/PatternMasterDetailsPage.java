@@ -255,12 +255,16 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     }
 
     private boolean savePattern() {
+        if (tempPatternComponents.size() == 0) {
+            MessageDialog.openError(null, "Error", "Can't save the pattern '" + pattern.getName()
+                    + "', there is no regular expression.");
+            return false;
+        }
         this.pattern.getComponents().clear();
         this.pattern.getComponents().addAll(tempPatternComponents);
 
         // PTODO fixed bug 4296: set the Pattern is valid
         TaggedValueHelper.setValidStatus(true, pattern);
-
         EList<PatternComponent> components = this.pattern.getComponents();
         List<String> existLanguage = new ArrayList<String>();
         for (int i = 0; i < components.size(); i++) {
