@@ -290,20 +290,6 @@ public class DbmsLanguage {
     }
 
     /**
-     * DOC scorreia Comment method "removeSemiColumn".
-     * 
-     * @param queryString
-     * @return
-     */
-    private String removeSemiColumn(String queryString) {
-        if (queryString.trim().endsWith(eos())) {
-            int endIndex = queryString.lastIndexOf(eos());
-            return queryString.substring(0, endIndex);
-        }
-        return queryString;
-    }
-
-    /**
      * Method "prepareQuery" prepares the query for being parsed without exception (remove LIMIT clause...). It will
      * remove all elements that cannot be currently parsed by ZQL.
      * 
@@ -344,22 +330,6 @@ public class DbmsLanguage {
         containsLimitClause = false;
         return buf.toString();
         // return closeStatement(buf.toString());
-    }
-
-    /**
-     * Method "finalizeQuery" must be called after parseQuery().
-     * 
-     * @param zQuery
-     * @return the final query string
-     * @deprecated use this{@link #finalizeQuery(String)} instead
-     */
-    private String finalizeQuery(ZQuery zQuery) {
-        StringBuffer buf = new StringBuffer();
-        buf.append(zQuery.toString());
-        if (containsLimitClause) {
-            buf.append(" " + withoutLimit[1]);
-        }
-        return buf.toString();
     }
 
     /**
@@ -759,6 +729,7 @@ public class DbmsLanguage {
      * @param sqlStatement
      * @return
      */
+    @SuppressWarnings("unchecked")
     public String getOrderBy(String sqlStatement) {
         ZqlParser zqlParser = getZqlParser();
         zqlParser.initParser(new ByteArrayInputStream(sqlStatement.getBytes()));
@@ -775,7 +746,6 @@ public class DbmsLanguage {
         } catch (ParseException e) {
             log.error(e, e);
         }
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -794,7 +764,6 @@ public class DbmsLanguage {
      * @return the expression for this database language or null when not found
      */
     public Expression getSqlExpression(IndicatorDefinition indicatorDefinition) {
-        EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
         Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName);
         if (sqlGenExpr != null) {
             return sqlGenExpr; // language found
@@ -921,25 +890,47 @@ public class DbmsLanguage {
     }
 
     /**
-     * DOC scorreia Comment method "getRegexpTestString".
+     * Method "getRegexpTestString" returns the SQL SELECT statement that can be used to check a string against a
+     * regular expression.
      * 
      * @param stringToCheck a string to check (not a column name)
      * @param regularExpression
-     * @return
+     * @return the appropriate SQL SELECT statement that can be used to check a string against a regular expression.
      */
-    public String getRegexpTestString(String stringToCheck, Expression regularExpression) {
+    public String getSelectRegexpTestString(String stringToCheck, Expression regularExpression) {
         if (!isApplicable(regularExpression)) {
             return null;
         }
+        String regex = regularExpression.getBody();
+        if (regex == null) {
+            return null;
+        }
+        return getSelectRegexpTestString(stringToCheck, regex);
+    }
+
+    /**
+     * Method "getSelectRegexpTestString".
+     * 
+     * @param stringToCheck a string to check against the regular expression (can contain quotes at start and end)
+     * @param regex a regular expression
+     * @return the appropriate SQL SELECT statement that can be used to check a string against a regular expression.
+     */
+    public String getSelectRegexpTestString(String stringToCheck, String regex) {
+        String surroundedTestString = (stringToCheck.startsWith("'") && stringToCheck.endsWith("'")) ? stringToCheck
+                : surroundWith('\'', stringToCheck, '\'');
+        String regexLikeExpression = regexLike(surroundedTestString, regex);
         // else
-        if (is(MYSQL)) {
-            return "SELECT " + surroundWith('\'', stringToCheck, '\'') + " REGEXP " + regularExpression.getBody() + EOS;
+        if (regexLikeExpression == null) {
+            return null;
+        }
+        if (is(MYSQL) || is(POSTGRESQL)) {
+            return "SELECT " + regexLikeExpression + " AS OK" + EOS;
         }
 
         if (is(ORACLE)) {
-            return "SELECT REGEXP_LIKE(" + surroundWith('\'', stringToCheck, '\'') + " , " + regularExpression.getBody() + ")"
-                    + EOS;
+            return "SELECT " + regexLikeExpression + EOS;
         }
+
         return null;
     }
 
@@ -1019,7 +1010,7 @@ public class DbmsLanguage {
             return "SELECT COMMENTS FROM USER_TAB_COMMENTS WHERE TABLE_NAME='" + tableName + "'";
         }
         if (is(MYSQL)) {
-            return "SELECT TABLE_COMMENT FROM information_schema WHERE TABLE_NAME='" + tableName + "'";
+            return "SELECT TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_NAME='" + tableName + "'";
         }
         return null;
     }

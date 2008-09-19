@@ -190,11 +190,9 @@ public class ColumnAnalysisHandler {
 
     private void initializeIndicator(Indicator indicator, TdColumn column) {
         indicator.setAnalyzedElement(column);
-        // ADDED MODSCA 2008-04-24 set the default indicator definitions
-        // // FIXME following code should be executed as soon as an indicator is created, not here.
-        boolean definitionSet = DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
-        if (log.isDebugEnabled()) {
-            log.debug("Definition set for " + indicator.getName() + ": " + definitionSet);
+        // Make sure that indicator definition is set
+        if (indicator.getIndicatorDefinition() == null) {
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }
 
         // FIXME scorreia in case of composite indicators, add children to result.

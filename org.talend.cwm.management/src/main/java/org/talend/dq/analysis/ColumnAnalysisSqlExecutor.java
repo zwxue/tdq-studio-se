@@ -165,7 +165,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
         if (indicatorDefinition == null) {
-            return traceError("No indicator definition found for indicator " + indicator.getName());
+            return traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
+                    + ". Please, report a bug at http://talendforge.org/bugs/");
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 

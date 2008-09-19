@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -131,7 +132,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
      */
     private String getTableComment(String tableName, ResultSet tablesSet) throws SQLException {
         String tableComment = tablesSet.getString(GetTable.REMARKS.name());
-        if (tableComment == null) {
+        if (StringUtils.isBlank(tableComment)) {
             String selectRemarkOnTable = dbms.getSelectRemarkOnTable(tableName);
             if (selectRemarkOnTable != null) {
                 tableComment = executeGetCommentStatement(selectRemarkOnTable);
