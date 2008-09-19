@@ -32,7 +32,7 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 public final class ReportHelper {
 
     public static enum ReportType {
-        MAIN("Main", "/reports/column/report_01.jrxml"),
+        BASIC("Basic", "/reports/column/report_01.jrxml"),
         EVOLUTION("Evolution", "/reports/column/report_02.jrxml"),
         USER_MADE("User specified", null); // for the user to set his own file path
 
@@ -92,7 +92,7 @@ public final class ReportHelper {
                     return reptype;
                 }
             }
-            return MAIN;
+            return BASIC;
         }
 
     }
@@ -187,7 +187,7 @@ public final class ReportHelper {
     public static boolean setReportType(TdReport report, ReportType reportType, String jrxmlFullPath) {
         boolean ok = true;
         switch (reportType) {
-        case MAIN:
+        case BASIC:
         case EVOLUTION:
             report.setInputJrxml(reportType.getJrxmlFilename());
             report.setReportType(reportType.getLabel());
