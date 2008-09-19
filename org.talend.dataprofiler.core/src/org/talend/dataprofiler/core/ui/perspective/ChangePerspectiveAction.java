@@ -49,6 +49,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -62,9 +63,9 @@ public class ChangePerspectiveAction extends Action {
 
     private static Logger log = Logger.getLogger(ChangePerspectiveAction.class);
 
-    private static final String SWITCH_TO_DATA_PROFILING = "Switch to Data Profiler";
+    private static final String SWITCH_TO_DATA_PROFILING = "Switch to " + PluginConstant.DATAPROFILER_PERSPECTIVE;
 
-    private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to Data Explorer";
+    private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to " + PluginConstant.DATAEXPLORER_PERSPECTIVE;
 
     static ChangePerspectiveAction action;
 

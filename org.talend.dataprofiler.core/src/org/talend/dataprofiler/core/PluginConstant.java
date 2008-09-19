@@ -91,4 +91,8 @@ public final class PluginConstant {
     public static final String LESS_OR_EQUAL = (Character.isDefined('\u2264')) ? "\u2264" : "<=";
 
     public static final String GREATER_OR_EQUAL = (Character.isDefined('\u2265')) ? "\u2265" : ">=";
+
+    public static final String DATAEXPLORER_PERSPECTIVE = "Data Explorer";
+
+    public static final String DATAPROFILER_PERSPECTIVE = "Data Profiler";
 }

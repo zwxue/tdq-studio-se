@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -61,6 +62,8 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
  * 
  */
 public class IndicatorChartFactory {
+
+    private static Logger log = Logger.getLogger(IndicatorChartFactory.class);
 
     private static final int CHART_WIDTH = 410;
 
@@ -104,7 +107,7 @@ public class IndicatorChartFactory {
             return ChartUtils.convertToImage(chart, CHART_WIDTH, CHART_HEIGHT);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return null;
@@ -120,7 +123,7 @@ public class IndicatorChartFactory {
             return ChartUtils.convertToImage(chart, CHART_WIDTH, CHART_HEIGHT);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return null;
@@ -135,7 +138,7 @@ public class IndicatorChartFactory {
             return ChartUtils.convertToImage(chart, CHART_WIDTH2, CHART_HEIGHT2);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return null;
@@ -165,7 +168,7 @@ public class IndicatorChartFactory {
             return ChartUtils.convertToImage(chart, CHART_WIDTH, CHART_HEIGHT);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return null;

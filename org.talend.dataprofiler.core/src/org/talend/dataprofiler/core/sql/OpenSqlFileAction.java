@@ -23,11 +23,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
 /**
@@ -46,7 +48,7 @@ public class OpenSqlFileAction extends Action {
      * @param selectedFiles
      */
     public OpenSqlFileAction(List<IFile> selectedFiles) {
-        setText("Open SQL File");
+        setText("Open in " + PluginConstant.DATAEXPLORER_PERSPECTIVE);
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.folder = selectedFiles;
     }
