@@ -21,7 +21,6 @@ import java.net.URL;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -68,9 +67,7 @@ public class LicenseWizardPage extends WizardPage {
         subTitleLabel.setText("This product is released under the following license:");
 
         clufText = new Text(container, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL | SWT.LEFT | SWT.BORDER);
-        Color color = new Color(null, 255, 255, 255);
-        clufText.setBackground(color);
-        color.dispose();
+        clufText.setBackground(clufText.getDisplay().getSystemColor(SWT.COLOR_WHITE));
         clufText.setEditable(false);
         String license = getLicense();
         clufText.setText(license);
