@@ -104,7 +104,9 @@ public final class ColumnIndicatorRule {
         case UpperQuartileIndicatorEnum:
         case RangeIndicatorEnum:
 
-            if (Java2SqlType.isNumbericInSQL(javaType) || Java2SqlType.isDateInSQL(javaType)) {
+            // MOD scorreia 2008-09-19 do not allow box plot on date fields because it is not correctly handled in the
+            // graphics and database yet.
+            if (Java2SqlType.isNumbericInSQL(javaType) /* || Java2SqlType.isDateInSQL(javaType) */) {
                 if (dataminingType == DataminingType.INTERVAL) {
                     return true;
                 }
