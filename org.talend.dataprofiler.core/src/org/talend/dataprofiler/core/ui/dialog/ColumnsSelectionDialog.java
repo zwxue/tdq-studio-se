@@ -33,6 +33,8 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -156,18 +158,22 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         getTreeViewer().addCheckStateListener(new ICheckStateListener() {
 
             public void checkStateChanged(CheckStateChangedEvent event) {
-                // If the item is checked . . .
-                if (event.getChecked()) {
-                    // . . . check all its children
 
+                ColumnSelectionViewer columnViewer = (ColumnSelectionViewer) event.getSource();
+                TreePath treePath = new TreePath(new Object[] { event.getElement() });
+                columnViewer.setSelection(new TreeSelection(treePath));
+
+                if (event.getChecked()) {
                     getTreeViewer().setSubtreeChecked(event.getElement(), true);
                     if (event.getElement() instanceof ColumnSet) {
+                        setOutput(event.getElement());
                         handleColumnsChecked((ColumnSet) event.getElement(), true);
                     }
 
                 } else {
                     getTreeViewer().setSubtreeChecked(event.getElement(), false);
                     if (event.getElement() instanceof ColumnSet) {
+                        setOutput(event.getElement());
                         handleColumnsChecked((ColumnSet) event.getElement(), false);
                     }
                 }
