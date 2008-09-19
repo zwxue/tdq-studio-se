@@ -56,7 +56,6 @@
           <includes>
              <actionExtension pattern="org.talend.dataprofiler.core.ui.action.provider.*" />
              <actionExtension pattern="org.talend.cwm.compare.ui.actions.provider.*" />
-             <actionExtension pattern="org.talend.dataprofiler.ui.OpenActionProvider" />
           </includes>
        </viewerActionBinding>  
         <dragAssistant
@@ -150,8 +149,8 @@
 	         </enablement>
       </actionProvider>
       <actionProvider 
-      			id="org.talend.dataprofiler.ui.OpenActionProvider"
-				class="org.eclipse.ui.internal.navigator.resources.actions.OpenActionProvider">
+      			id="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider"
+				class="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider">
 			<enablement>
 				<and>
 	            <instanceof value="org.eclipse.core.resources.IFile"/>         
