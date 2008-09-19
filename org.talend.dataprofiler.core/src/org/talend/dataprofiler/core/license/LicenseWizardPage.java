@@ -68,8 +68,9 @@ public class LicenseWizardPage extends WizardPage {
         subTitleLabel.setText("This product is released under the following license:");
 
         clufText = new Text(container, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL | SWT.LEFT | SWT.BORDER);
-        // FIXME each Color should be disposed. When is it disposed?
-        clufText.setBackground(new Color(null, 255, 255, 255));
+        Color color = new Color(null, 255, 255, 255);
+        clufText.setBackground(color);
+        color.dispose();
         clufText.setEditable(false);
         String license = getLicense();
         clufText.setText(license);
