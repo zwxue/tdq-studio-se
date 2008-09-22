@@ -24,14 +24,14 @@ public enum SupportDBUrlType {
                    null,
                    "sun.jdbc.odbc.JdbcOdbcDriver", //$NON-NLS-1$
                    "datasourceName"), //$NON-NLS-1$ //$NON-NLS-2$
-    MYSQLDEFAULTURL("Mysql", //$NON-NLS-1$
+    MYSQLDEFAULTURL("MySQL", //$NON-NLS-1$
                     "localhost", //$NON-NLS-1$
                     "3306", //$NON-NLS-1$
                     "dbname", //$NON-NLS-1$
                     "?", //$NON-NLS-1$
                     "org.gjt.mm.mysql.Driver", //$NON-NLS-1$
                     null), //$NON-NLS-1$
-    ORACLEWITHSIDDEFAULTURL("OracleWithSid", //$NON-NLS-1$
+    ORACLEWITHSIDDEFAULTURL("Oracle with SID", //$NON-NLS-1$
                             "localhost", //$NON-NLS-1$
                             "1521", //$NON-NLS-1$
                             "dbname", //$NON-NLS-1$
@@ -39,14 +39,14 @@ public enum SupportDBUrlType {
                             // MOD scorreia 2008-08-22: oracle.jdbc.driver package is not supported anymore: replaced
                             "oracle.jdbc.OracleDriver", //$NON-NLS-1$ 
                             null), //$NON-NLS-1$
-    ORACLEWITHSERVICENAMEDEFAULTURL("OracleWithServiceName", //$NON-NLS-1$
+    ORACLEWITHSERVICENAMEDEFAULTURL("Oracle with Service Name", //$NON-NLS-1$
                                     "localhost", //$NON-NLS-1$
                                     "1521", //$NON-NLS-1$
                                     "dbname", //$NON-NLS-1$
                                     null, // replaced
                                     "oracle.jdbc.OracleDriver", //$NON-NLS-1$ 
                                     null), //$NON-NLS-1$
-    MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
+    MSSQLDEFAULTURL("SQL Server", //$NON-NLS-1$
                     "localhost", //$NON-NLS-1$
                     "1433", //$NON-NLS-1$
                     "dbname", //$NON-NLS-1$

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.text.ParsePosition;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -84,6 +85,7 @@ public final class SupportDBUrlStore {
     public String[] getDBTypes() {
         String[] dbTypeItems = new String[supportDBUrlMap.size()];
         supportDBUrlMap.keySet().toArray(dbTypeItems);
+        Arrays.sort(dbTypeItems);
         return dbTypeItems;
     }
 
@@ -176,9 +178,9 @@ public final class SupportDBUrlStore {
             InputStream in = SupportDBUrlStore.class.getResourceAsStream("dburl.properties"); //$NON-NLS-1$
             PROP.load(in);
             in.close();
-            Set s = PROP.keySet();
+            Set<?> s = PROP.keySet();
             // System.out.println(s.toString());
-            Iterator it = s.iterator();
+            Iterator<?> it = s.iterator();
             while (it.hasNext()) {
                 String id = (String) it.next();
                 String value = PROP.getProperty(id);
