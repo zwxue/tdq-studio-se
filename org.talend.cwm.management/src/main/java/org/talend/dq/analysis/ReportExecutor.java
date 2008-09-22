@@ -68,7 +68,11 @@ public class ReportExecutor implements IReportExecutor {
         }
         // log execution
         if (log.isInfoEnabled()) {
-            log.info(strBuilder.toString());
+            if (strBuilder.length() == 0) {
+                log.info("Generating reports for \"" + report.getName() + "\" without refreshing any analysis.");
+            } else {
+                log.info(strBuilder.toString());
+            }
         }
 
         long endTime = System.currentTimeMillis();
