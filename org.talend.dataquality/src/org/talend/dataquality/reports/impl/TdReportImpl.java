@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
@@ -344,7 +345,14 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @generated NOT addAnalysis(Analysis analysis)
      */
     public boolean addAnalysis(Analysis analysis) {
-        return this.getComponent().add(analysis);
+        boolean added = this.getComponent().add(analysis);
+        if (added) {
+            AnalysisMap createAnalysisMap = ReportsFactory.eINSTANCE.createAnalysisMap();
+            createAnalysisMap.setAnalysis(analysis);
+            createAnalysisMap.setMustRefresh(true); // refresh by default
+            this.getAnalysisMap().add(createAnalysisMap);
+        }
+        return added;
     }
 
     /**
@@ -357,7 +365,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         EList<AnalysisMap> anMaps = this.getAnalysisMap();
         boolean removedFromMap = false;
         for (AnalysisMap anMap : anMaps) {
-            if (analysis.equals(anMap.getAnalysis())) {
+            if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
                 anMaps.remove(anMap);
                 removedFromMap = true;
                 break;
@@ -376,7 +384,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         boolean ok = false;
         EList<AnalysisMap> anMaps = this.getAnalysisMap();
         for (AnalysisMap anMap : anMaps) {
-            if (analysis.equals(anMap.getAnalysis())) {
+            if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
                 ok = true;
                 anMap.setMustRefresh(mustRefresh);
                 break;
@@ -405,7 +413,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         boolean yes = true;
         EList<AnalysisMap> anMaps = this.getAnalysisMap();
         for (AnalysisMap anMap : anMaps) {
-            if (analysis.equals(anMap.getAnalysis())) {
+            if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
                 yes = anMap.isMustRefresh();
                 break;
             }
