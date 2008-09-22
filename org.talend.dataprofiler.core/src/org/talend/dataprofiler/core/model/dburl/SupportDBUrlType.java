@@ -31,14 +31,21 @@ public enum SupportDBUrlType {
                     "?", //$NON-NLS-1$
                     "org.gjt.mm.mysql.Driver", //$NON-NLS-1$
                     null), //$NON-NLS-1$
-    ORACLEDEFAULTURL("Oracle", //$NON-NLS-1$
-                     "localhost", //$NON-NLS-1$
-                     "1521", //$NON-NLS-1$
-                     "dbname", //$NON-NLS-1$
-                     null,
-                     // MOD scorreia 2008-08-22: oracle.jdbc.driver package is not supported anymore: replaced
-                     "oracle.jdbc.OracleDriver", //$NON-NLS-1$ 
-                     null), //$NON-NLS-1$
+    ORACLEWITHSIDDEFAULTURL("OracleWithSid", //$NON-NLS-1$
+                            "localhost", //$NON-NLS-1$
+                            "1521", //$NON-NLS-1$
+                            "dbname", //$NON-NLS-1$
+                            null,
+                            // MOD scorreia 2008-08-22: oracle.jdbc.driver package is not supported anymore: replaced
+                            "oracle.jdbc.OracleDriver", //$NON-NLS-1$ 
+                            null), //$NON-NLS-1$
+    ORACLEWITHSERVICENAMEDEFAULTURL("OracleWithServiceName", //$NON-NLS-1$
+                                    "localhost", //$NON-NLS-1$
+                                    "1521", //$NON-NLS-1$
+                                    "dbname", //$NON-NLS-1$
+                                    null, // replaced
+                                    "oracle.jdbc.OracleDriver", //$NON-NLS-1$ 
+                                    null), //$NON-NLS-1$
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
                     "localhost", //$NON-NLS-1$
                     "1433", //$NON-NLS-1$

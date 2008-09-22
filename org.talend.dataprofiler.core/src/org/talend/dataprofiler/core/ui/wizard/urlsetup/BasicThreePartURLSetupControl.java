@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.wizard.urlsetup;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
@@ -67,7 +69,13 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
         compositeEnable = !(dbType.getDBName() == null);
         label = new Label(parent, SWT.NONE);
-        label.setText("DBname"); //$NON-NLS-1$
+        if (dbType == SupportDBUrlType.ORACLEWITHSIDDEFAULTURL) {
+            label.setText("SID");
+        } else if (dbType == SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL) {
+            label.setText("Service Name");
+        } else {
+            label.setText("DBname"); //$NON-NLS-1$
+        }
         final Text databaseNameText = new Text(parent, SWT.BORDER | SWT.SINGLE);
         databaseNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         if (compositeEnable) {
@@ -106,7 +114,24 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
         urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
         urlText.setEditable(false);
         urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        urlText.addFocusListener(new FocusAdapter() {
+
+            public void focusGained(FocusEvent e) {
+                urlText.setEditable(true);
+            }
+
+            public void focusLost(FocusEvent e) {
+                urlText.setEditable(false);
+            }
+        });
         urlText.setText(getConnectionURL());
+        urlText.addKeyListener(new KeyAdapter() {
+
+            public void keyReleased(KeyEvent e) {
+                setConnectionURL(urlText.getText());
+            }
+
+        });
 
         dataSourceText.addModifyListener(new ModifyListener() {
 
