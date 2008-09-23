@@ -260,6 +260,10 @@ public class ChartTableFactory {
 
         public Image getColumnImage(Object element, int columnIndex) {
 
+            if (isOutsideValueRange(element) && isOutsideValue(element, columnIndex)) {
+                return ImageLib.getImage(ImageLib.LEVEL_WARNING);
+            }
+
             return null;
         }
 
@@ -280,30 +284,30 @@ public class ChartTableFactory {
          */
         public Color getForeground(Object element, int columnIndex) {
 
-            ChartDataEntity entity = (ChartDataEntity) element;
-            Indicator indicator = entity.getIndicator();
-            // IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
-            String currentValue = entity.getValue();
-
-            // if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
-            // if (columnIndex == 0) {
-            // if (ChartTableFactory.getToolTipMsg(indicator, currentValue) != null) {
-            // return Display.getDefault().getSystemColor(SWT.COLOR_RED);
-            // }
-            // }
-            // } else {
-            // if (columnIndex == 1) {
-            // if (ChartTableFactory.getToolTipMsg(indicator, currentValue) != null) {
-            // return Display.getDefault().getSystemColor(SWT.COLOR_RED);
-            // }
-            // }
-            // }
-
-            if (ChartTableFactory.getToolTipMsg(indicator, currentValue) != null) {
+            if (isOutsideValueRange(element) && isOutsideValue(element, columnIndex)) {
                 return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 
             return null;
+        }
+
+        private boolean isOutsideValueRange(Object element) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+            Indicator indicator = entity.getIndicator();
+            String currentValue = entity.getValue();
+
+            return ChartTableFactory.getToolTipMsg(indicator, currentValue) != null;
+        }
+
+        private boolean isOutsideValue(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+            String currentValue = entity.getValue();
+
+            if (currentValue.endsWith(getColumnText(element, columnIndex))) {
+                return true;
+            }
+
+            return false;
         }
 
     }

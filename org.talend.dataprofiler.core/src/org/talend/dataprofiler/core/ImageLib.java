@@ -90,6 +90,8 @@ public class ImageLib {
 
     public static final String EXPORT_REPORT = "export_rep.gif";
 
+    public static final String LEVEL_WARNING = "level_warning.gif";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 
