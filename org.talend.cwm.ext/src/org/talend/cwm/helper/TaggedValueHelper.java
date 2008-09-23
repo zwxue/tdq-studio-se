@@ -17,7 +17,6 @@ import java.util.Properties;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.constants.DevelopmentStatus;
-
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -47,6 +46,8 @@ public final class TaggedValueHelper {
     public static final String AUTHOR = "Author";
 
     private static final String EMPTY_STRING = "";
+
+    private static final String DEFAULT_FORMAT = "pdf";
 
     public static final String DESCRIPTION = "Description";
 
@@ -309,4 +310,13 @@ public final class TaggedValueHelper {
         }
         return tv.getValue();
     }
+
+    public static String getFileValue(String tag, ModelElement element) {
+        TaggedValue tv = getTaggedValue(tag, element.getTaggedValue());
+        if (tv == null) {
+            return DEFAULT_FORMAT;
+        }
+        return tv.getValue();
+    }
+
 }
