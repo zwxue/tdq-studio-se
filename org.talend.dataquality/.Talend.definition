@@ -54,7 +54,7 @@
     <taggedValue xmi:id="_ybssETh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the length of the smallest textual record"/>
     <sqlGenericExpression xmi:id="_ybssEjh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybssEzh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybtTIDh8Ed2XmO7pl5Yuyg" body="SELECT MIN(LENGTH({0})) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_ybtTIDh8Ed2XmO7pl5Yuyg" body="SELECT MIN(LENGTH(TRIM('XX' || {0}))) - LENGTH('XX') FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_dNWDkGOgEd2-SIyfZ_Vx6A" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_Z3slMGe4Ed2m7a3evIL7Lg" body="SELECT MIN(DATALENGTH({0})) FROM {1}" language="Microsoft SQL Server"/>
     <sqlGenericExpression xmi:id="_Td74UGndEd2IVfUQFXDwvw" body="SELECT MIN(LENGTH({0})) FROM {1}" language="DB2"/>
@@ -64,7 +64,7 @@
     <taggedValue xmi:id="_ybtTIjh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the length of the longest textual record"/>
     <sqlGenericExpression xmi:id="_ybt6MDh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybt6MTh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybt6Mjh8Ed2XmO7pl5Yuyg" body="SELECT MAX(LENGTH({0})) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_ybt6Mjh8Ed2XmO7pl5Yuyg" body="SELECT MAX(LENGTH(TRIM('XX' || {0}))) - LENGTH('XX') FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_hi5ukGOgEd2-SIyfZ_Vx6A" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_frLmwGe4Ed2m7a3evIL7Lg" body="SELECT MAX(DATALENGTH({0})) FROM {1}" language="Microsoft SQL Server"/>
     <sqlGenericExpression xmi:id="_Wg8WUGndEd2IVfUQFXDwvw" body="SELECT MAX(LENGTH({0})) FROM {1}" language="DB2"/>

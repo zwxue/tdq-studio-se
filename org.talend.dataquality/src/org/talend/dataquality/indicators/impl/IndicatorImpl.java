@@ -583,7 +583,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
-     * Method "checkResults" checks whether the result has the right number of element and that no element is null.
+     * Method "checkResults" checks whether the result has the right number of elements (but some elements could be
+     * null).
      * 
      * @param objects the results of the query
      * @param expectedSize the expected number of elements in the resulting array "objects"
@@ -602,14 +603,14 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             if (log.isDebugEnabled()) {
                 log.debug("Result of query: " + ArrayUtils.toString(array));
             }
-            for (int i = 0; i < array.length; i++) {
-                Object object = array[i];
-                // assume last column is not null (for example in frequency table result)
-                if (object == null && i == array.length - 1) {
-                    log.error("Unexpected result: " + object + ". One of the column returned by the query is null!");
-                    return false;
-                }
-            }
+            // for (int i = 0; i < array.length; i++) {
+            // Object object = array[i];
+            // // assume last column is not null (for example in frequency table result)
+            // if (object == null && i == array.length - 1) {
+            // log.error("Unexpected result: " + object + ". One of the column returned by the query is null!");
+            // return false;
+            // }
+            // }
         }
 
         return true;
