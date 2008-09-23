@@ -5,5 +5,6 @@
         <description>In this page, a regular expression is a powerful way of specifying a pattern for a complex search.</description>
         <topic label="Regular Expressions" href="html/wizard/pattern/reg_experession.html"/>
         <topic label="SQL Expressions" href="html/wizard/pattern/sql_experession.html"/>
+        <topic href="html/wizard/pattern/importPattern.html" label="Import Pattern"/>
     </context>
 </contexts>

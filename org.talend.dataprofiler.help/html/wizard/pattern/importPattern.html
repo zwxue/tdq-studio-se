@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Import Pattern</title>
+<style>
+	#title {font-size:11pt; font-faimily:Verdana; font-weight:bold}
+	#content {font-size:8pt; font-family:Verdana}
+	#foot {font-size:8pt; font-family:Verdana}
+	a{text-decoration:none; color:#cc0000; margin-left:20px;}
+	a:hover{text-decoration:underline}
+	li{font-size:7pt;}
+</style>
+</head>
+<body>
+	<span id ="content">
+	<span id = "title">Import Pattern:</span>
+	<br>
+	--------------------------------------
+	<p>
+	You can import several regular expressions from an xls file. 
+	</p>
+
+	The file format is the following: 
+	<br>
+	<ul>
+		<li>C1: Label: the label of the pattern (must not be empty)</li>
+		<li>C2: Purpose: the purpose of the pattern (can be empty)</li>
+		<li>C3: Description: the description of the pattern (can be empty)</li>
+		<li>C4: Regular expression: the regular expression applicable to all databases (can be empty)</li>
+		<li>C5: MySQL Regexp: the regular expression applicable to MySQL databases (can be empty)</li>
+		<li>C6: Oracle Regexp: the regular expression applicable to Oracle databases (can be empty)</li>
+		<li>C7: Author: the author of the regular expression (can be empty) </li>
+	</ul>
+	
+	</span>
+</body>
+</html>
