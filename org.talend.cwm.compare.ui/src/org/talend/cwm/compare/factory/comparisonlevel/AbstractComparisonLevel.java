@@ -45,7 +45,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.analysis.parameters.IParameterConstant;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -177,14 +176,13 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         properties.setProperty(PluginConstant.PASSWORD_PROPERTY, TaggedValueHelper.getValue(PluginConstant.PASSWORD_PROPERTY,
                 tdProviderConnection.getObject()));
         DBConnectionParameter connectionParameters = new DBConnectionParameter();
-        String connectionName = oldDataProvider.getName();
-        HashMap<String, String> paramMetadate = new HashMap<String, String>();
-        paramMetadate.put(IParameterConstant.ANALYSIS_AUTHOR, TaggedValueHelper.getAuthor(oldDataProvider));
-        paramMetadate.put(IParameterConstant.ANALYSIS_DESCRIPTION, TaggedValueHelper.getDescription(oldDataProvider));
-        paramMetadate.put(IParameterConstant.ANALYSIS_PURPOSE, TaggedValueHelper.getPurpose(oldDataProvider));
-        paramMetadate.put(IParameterConstant.ANALYSIS_STATUS, TaggedValueHelper.getDevStatus(oldDataProvider).getLiteral());
-        paramMetadate.put(IParameterConstant.ANALYSIS_NAME, connectionName);
-        connectionParameters.setMetadate(paramMetadate);
+
+        connectionParameters.setName(oldDataProvider.getName());
+        connectionParameters.setAuthor(TaggedValueHelper.getAuthor(oldDataProvider));
+        connectionParameters.setDescription(TaggedValueHelper.getDescription(oldDataProvider));
+        connectionParameters.setPurpose(TaggedValueHelper.getPurpose(oldDataProvider));
+        connectionParameters.setStatus(TaggedValueHelper.getDevStatus(oldDataProvider).getLiteral());
+
         connectionParameters.setJdbcUrl(urlString);
         connectionParameters.setDriverClassName(driverClassName);
         connectionParameters.setParameters(properties);

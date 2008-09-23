@@ -63,7 +63,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.analysis.parameters.IParameterConstant;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -141,7 +140,6 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             ListIterator<ProviderConnection> li = connections.listIterator();
             if (li.hasNext()) {
                 TdProviderConnection pc = (TdProviderConnection) li.next();
-                String name = pc.getName();
                 String dbUrl = pc.getConnectionString();
                 String driverClassName = pc.getDriverClassName();
                 EList<EObject> pcObjects = pc.eContents();
@@ -164,16 +162,13 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 System.out.println(dbUrl);
                 System.out.println(driverClassName);
                 DBConnectionParameter dbcp = new DBConnectionParameter();
-                // dbcp.setMetadate(analysisMetadate)
 
-                HashMap<String, String> hm = new HashMap<String, String>();
+                dbcp.setName(pc.getName());
+                dbcp.setAuthor(TaggedValueHelper.getAuthor(pc));
+                dbcp.setDescription(TaggedValueHelper.getDescription(pc));
+                dbcp.setPurpose(TaggedValueHelper.getPurpose(pc));
+                dbcp.setStatus(TaggedValueHelper.getValue("Status", pc));
 
-                hm.put(IParameterConstant.ANALYSIS_AUTHOR, TaggedValueHelper.getAuthor(pc));
-                hm.put(IParameterConstant.ANALYSIS_DESCRIPTION, TaggedValueHelper.getDescription(pc));
-                hm.put(IParameterConstant.ANALYSIS_NAME, name);
-                hm.put(IParameterConstant.ANALYSIS_STATUS, TaggedValueHelper.getValue("Status", pc));
-
-                dbcp.setMetadate(hm);
                 dbcp.setDriverClassName(driverClassName);
                 dbcp.setJdbcUrl(dbUrl);
                 dbcp.setParameters(parameters);
