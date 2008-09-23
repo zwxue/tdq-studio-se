@@ -357,13 +357,19 @@ public class DbmsLanguage {
         return " CASE WHEN " + colName + isNull() + " THEN " + replacement + " ELSE " + colName + " END ";
     }
 
+    /**
+     * Method "isNotBlank".
+     * 
+     * @param colName a column name
+     * @return the expression saying that the given column is not blank.
+     */
     public String isNotBlank(String colName) {
         if (is(MSSQL)) {
             return " LTRIM(RTRIM(" + colName + ")) " + notEqual() + " '' ";
         }
         // oracle does not currently distinguish between blank and null
         if (is(ORACLE)) {
-            return " TRIM(" + colName + ") " + isNull();
+            return " TRIM(" + colName + ") " + isNotNull();
         }
         // default is OK for MySQL
         return " TRIM(" + colName + ") " + notEqual() + " '' ";
@@ -575,7 +581,7 @@ public class DbmsLanguage {
             functions.put("SUBSTRING", 3);
             functions.put("LEFT", 2);
             functions.put("OCTET_LENGTH", 1);
-
+            functions.put("CONCAT", 2);
             for (DateGrain grain : DateGrain.values()) {
                 functions.put(grain.getName(), 1);
             }
@@ -596,6 +602,7 @@ public class DbmsLanguage {
             functions.put("SIGN", 1);
             functions.put("CONVERT", 3);
             functions.put("REPLACE", 2);
+            functions.put("CONCAT", 2);
             functions.put("REPLACE", 3);
         }
 
@@ -685,11 +692,12 @@ public class DbmsLanguage {
             }
             return query.toString();
         } catch (ParseException e) {
-            log.error(e, e);
+            log.warn(e, e);
         }
         // FIXME scorreia need to parse statement here and then to add the where clause correctly
-        String finalQuery = statement + where() + whereClause;
-        log.error("Query parsing failed. Returning simple concatenated string: " + finalQuery);
+        String op = statement.toUpperCase().contains(where()) ? and() : where();
+        String finalQuery = statement + op + whereClause;
+        log.warn("Query parsing failed. Returning simple concatenated string: " + finalQuery);
         return finalQuery;
     }
 
