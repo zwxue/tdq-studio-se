@@ -87,7 +87,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      */
     public void createControl(Composite parent) {
 
-        if (getParameter().getFolderProvider().isNull()) {
+        if (getParameter().getFolderProvider() == null || getParameter().getFolderProvider().isNull()) {
             FolderProvider defaultFolder = new FolderProvider();
             defaultFolder.setFolderResource(getStoredFolder());
             getParameter().setFolderProvider(defaultFolder);
