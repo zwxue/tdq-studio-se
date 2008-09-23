@@ -14,7 +14,6 @@ package org.talend.dq.analysis;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -45,7 +44,6 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.analysis.parameters.IParameterConstant;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.sql.converters.CwmZExpression;
@@ -318,10 +316,8 @@ public class TestAnalysisCreation {
         String driverClassName = connectionParams.getProperty("driver");
         String dbUrl = connectionParams.getProperty("url");
 
-        HashMap<String, String> metadata = new HashMap<String, String>();
-        metadata.put(IParameterConstant.ANALYSIS_NAME, "My connection");
         DBConnectionParameter params = new DBConnectionParameter();
-        params.setMetadate(metadata);
+        params.setName("My connection");
         params.setDriverClassName(driverClassName);
         params.setJdbcUrl(dbUrl);
         params.setParameters(connectionParams);

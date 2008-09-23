@@ -12,75 +12,91 @@
 // ============================================================================
 package org.talend.dq.analysis.parameters;
 
-import java.util.HashMap;
-
+import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.dataquality.analysis.AnalysisType;
-
 
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
 public class ConnectionParameter {
 
-    private HashMap<String, String> metadate;
+    private String name;
+
+    private String purpose;
+
+    private String description;
+
+    private String author;
+
+    private String status = DevelopmentStatus.DRAFT.getLiteral();
+
+    private String version;
 
     private FolderProvider folderProvider;
-    
-    /**
-     * Sets the analysisMetadate.
-     * @param analysisMetadate the analysisMetadate to set
-     */
-    public void setMetadate(HashMap<String, String> analysisMetadate) {
-        this.metadate = analysisMetadate;
-    }
-    
+
     public String getName() {
-        
-        return metadate.get(IParameterConstant.ANALYSIS_NAME);
+        return name;
     }
-    
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getPurpose() {
-        
-        return metadate.get(IParameterConstant.ANALYSIS_PURPOSE);
+        return purpose;
     }
-    
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
+    }
+
     public String getDescription() {
-        
-        return metadate.get(IParameterConstant.ANALYSIS_DESCRIPTION);
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getAuthor() {
-        
-        return metadate.get(IParameterConstant.ANALYSIS_AUTHOR);
+        return author;
     }
-    
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     public String getStatus() {
-        
-        return metadate.get(IParameterConstant.ANALYSIS_STATUS);
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getVersion() {
-        
-        return metadate.get(IParameterConstant.ANALYSIS_VERSION);
+        return version;
     }
-    
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
     /**
      * Getter for folderProvider.
+     * 
      * @return the folderProvider
      */
     public FolderProvider getFolderProvider() {
         return this.folderProvider;
     }
 
-
-    
     /**
      * Sets the folderProvider.
+     * 
      * @param folderProvider the folderProvider to set
      */
     public void setFolderProvider(FolderProvider folderProvider) {

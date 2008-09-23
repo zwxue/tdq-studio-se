@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dq.analysis.parameters;
 
-import java.util.HashMap;
-
 import org.talend.dataquality.analysis.AnalysisType;
 
 /**
@@ -25,15 +23,6 @@ import org.talend.dataquality.analysis.AnalysisType;
 public class AnalysisParameter extends ConnectionParameter {
 
     private String analysisTypeName;
-
-    /**
-     * Sets the analysisMetadate.
-     * 
-     * @param analysisMetadate the analysisMetadate to set
-     */
-    public void setAnalysisMetadate(HashMap<String, String> analysisMetadate) {
-        super.setMetadate(analysisMetadate);
-    }
 
     /**
      * Getter for analysisTypeName.

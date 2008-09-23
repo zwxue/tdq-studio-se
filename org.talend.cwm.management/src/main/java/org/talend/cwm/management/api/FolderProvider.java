@@ -24,7 +24,7 @@ import org.eclipse.core.resources.IFolder;
 public class FolderProvider {
 
     private File folder;
-    
+
     private IFolder folderResource;
 
     /**
@@ -45,22 +45,34 @@ public class FolderProvider {
         this.folder = folder;
     }
 
-    
     /**
      * Getter for folderResource.
+     * 
      * @return the folderResource
      */
     public IFolder getFolderResource() {
         return folderResource;
     }
 
-    
     /**
      * Sets the folderResource.
+     * 
      * @param folderResource the folderResource to set
      */
     public void setFolderResource(IFolder folderResource) {
         this.folderResource = folderResource;
         this.folder = folderResource.getLocation().toFile();
+    }
+
+    public String getFolderURI() {
+        if (this.folderResource != null) {
+            return this.folderResource.getFullPath().toString();
+        }
+
+        return "";
+    }
+
+    public boolean isNull() {
+        return this.folderResource == null;
     }
 }
