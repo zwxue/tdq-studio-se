@@ -25,12 +25,14 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.dq.analysis.parameters.ConnectionParameter;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -71,7 +73,12 @@ public class CreatePatternAction extends Action {
      */
     @Override
     public void run() {
-        CreatePatternWizard fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type);
+        ConnectionParameter parameter = new ConnectionParameter();
+        FolderProvider folderProvider = new FolderProvider();
+        folderProvider.setFolderResource(folder);
+        parameter.setFolderProvider(folderProvider);
+
+        CreatePatternWizard fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter);
         IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
         IHelpResource[] relatedTopics = context.getRelatedTopics();
         String href = relatedTopics[0].getHref();

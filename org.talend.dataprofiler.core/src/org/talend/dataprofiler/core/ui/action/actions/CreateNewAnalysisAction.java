@@ -12,12 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 
@@ -33,6 +35,13 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         super("New Analysis");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
+
+    public CreateNewAnalysisAction(IFolder folder) {
+        this();
+        this.folder = folder;
+    }
+
+    private IFolder folder;
 
     /*
      * (non-Javadoc)
@@ -55,7 +64,11 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
     }
 
     private void openStandardAnalysisDialog(AnalysisType type) {
-        Wizard wizard = WizardFactory.createAnalysisWizard(type);
+        FolderProvider currentFolderProvider = new FolderProvider();
+        currentFolderProvider.setFolderResource(folder);
+
+        CreateNewAnalysisWizard wizard = (CreateNewAnalysisWizard) WizardFactory.createAnalysisWizard(type);
+        wizard.setCurrentFolderProvider(currentFolderProvider);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);

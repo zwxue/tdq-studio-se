@@ -12,13 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.Properties;
+
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -32,9 +37,16 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
 
     private static final int HEIGHT = 450;
 
+    private IFolder folder;
+
     public CreateConnectionAction() {
         super("Create a new connection");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
+    }
+
+    public CreateConnectionAction(IFolder folder) {
+        this();
+        this.folder = folder;
     }
 
     /*
@@ -44,8 +56,15 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
      */
     @Override
     public void run() {
+        DBConnectionParameter connectionParam = new DBConnectionParameter();
+        connectionParam.setParameters(new Properties());
 
-        Wizard wizard = WizardFactory.createDatabaseConnectionWizard();
+        if (folder != null) {
+            FolderProvider provider = new FolderProvider();
+            provider.setFolderResource(folder);
+            connectionParam.setFolderProvider(provider);
+        }
+        Wizard wizard = WizardFactory.createDatabaseConnectionWizard(connectionParam);
 
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);

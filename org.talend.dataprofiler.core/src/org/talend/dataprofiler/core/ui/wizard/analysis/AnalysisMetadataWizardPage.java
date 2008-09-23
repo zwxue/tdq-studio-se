@@ -12,12 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -38,8 +38,6 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     private final String pageMessage = "Adds an analysis in the repository.";
 
-    private AnalysisParameter parameter;
-
     public AnalysisMetadataWizardPage() {
         setTitle(pageTitle);
         setDescription(pageMessage);
@@ -57,9 +55,13 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
         Label typeLabel = new Label(container, SWT.NONE);
         typeLabel.setText("Type");
+
         typeText = new Text(container, SWT.BORDER);
+        AnalysisParameter parameter = (AnalysisParameter) getParameter();
+        typeText.setText(parameter.getAnalysisTypeName() != null ? parameter.getAnalysisTypeName() : "");
         typeText.setLayoutData(dataForTypeText);
         typeText.setEnabled(false);
+
     }
 
     /*
@@ -69,15 +71,8 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
      */
     @Override
     public void createControl(Composite parent) {
-        Composite container = new Composite(parent, SWT.NONE);
-        container.setLayout(new FillLayout());
-
-        super.createControl(container);
-        defaultFolderProviderRes = ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.DATA_PROFILING_PROJECTNAME)
-                .getFolder(DQStructureManager.ANALYSIS);
-        pathText.setText(defaultFolderProviderRes.getFullPath().toString());
-
-        setControl(container);
+        super.createControl(parent);
+        pathText.setText(getParameter().getFolderProvider().getFolderURI());
     }
 
     /*
@@ -104,21 +99,6 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
         super.addListeners();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#setVisible(boolean)
-     */
-    @Override
-    public void setVisible(boolean visible) {
-
-        // TODO here need modification
-        parameter = (AnalysisParameter) getParameter();
-        typeText.setText(parameter.getAnalysisTypeName() != null ? parameter.getAnalysisTypeName() : "");
-
-        super.setVisible(visible);
-    }
-
     @Override
     public boolean checkFieldsValue() {
         if (typeText.getText() == "" || pathText.getText() == "") {
@@ -127,6 +107,13 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
         }
 
         return super.checkFieldsValue();
+    }
+
+    @Override
+    protected IFolder getStoredFolder() {
+
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(
+                DQStructureManager.ANALYSIS);
     }
 
 }

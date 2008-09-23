@@ -37,8 +37,6 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
 
     public static final String EXTENSION_PATTERN = FactoriesUtil.PATTERN;
 
-    private String selectedFolderName;
-
     public NewSourcePatternActionProvider() {
     }
 
@@ -48,17 +46,24 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
-                selectedFolderName = ((IFolder) obj).getName();
-                ExpressionType type = null;
-                if (selectedFolderName.equals(DQStructureManager.PATTERNS)) {
-                    type = ExpressionType.REGEXP;
-                    menu.add(new ImportPatternsAction((IFolder) obj));
-                } else if (selectedFolderName.equals(DQStructureManager.SQL_PATTERNS)) {
-                    type = ExpressionType.SQL_LIKE;
-                }
 
-                if (type != null) {
-                    menu.add(new CreatePatternAction((IFolder) obj, type));
+                try {
+                    IFolder folder = (IFolder) obj;
+                    ExpressionType type = null;
+                    if (folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
+                            DQStructureManager.PATTERNS_FOLDER_PROPERTY)) {
+                        type = ExpressionType.REGEXP;
+                        menu.add(new ImportPatternsAction((IFolder) obj));
+                    } else if (folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
+                            DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY)) {
+                        type = ExpressionType.SQL_LIKE;
+                    }
+
+                    if (type != null) {
+                        menu.add(new CreatePatternAction((IFolder) obj, type));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;

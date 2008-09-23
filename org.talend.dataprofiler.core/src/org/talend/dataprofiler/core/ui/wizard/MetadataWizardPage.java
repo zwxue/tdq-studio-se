@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
@@ -43,7 +42,6 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
-import org.talend.dq.analysis.parameters.IParameterConstant;
 
 /**
  * @author zqin
@@ -66,27 +64,20 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     protected Button button;
 
-    protected IFolder defaultFolderProviderRes;
-
     protected CCombo statusText;
 
     protected Text pathText;
-
-    protected HashMap<String, String> metadata;
 
     // private members
     private Button versionMajorBtn;
 
     private Button versionMinorBtn;
 
-    private boolean readOnly;
-
     private boolean editPath = true;
 
     public MetadataWizardPage() {
 
-        metadata = new HashMap<String, String>();
-        setPageComplete(false);
+        this.setPageComplete(false);
     }
 
     /*
@@ -95,6 +86,12 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      * @see org.talend.dataprofiler.core.ui.wizard.PropertiesWizardPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
+
+        if (getParameter().getFolderProvider().isNull()) {
+            FolderProvider defaultFolder = new FolderProvider();
+            defaultFolder.setFolderResource(getStoredFolder());
+            getParameter().setFolderProvider(defaultFolder);
+        }
 
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(2, false);
@@ -108,7 +105,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         nameText = new Text(container, SWT.BORDER);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        nameText.setEditable(!readOnly);
 
         // Purpose
         Label purposeLab = new Label(container, SWT.NONE);
@@ -116,7 +112,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         purposeText = new Text(container, SWT.BORDER);
         purposeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        purposeText.setEditable(!readOnly);
 
         // Description
         Label descriptionLab = new Label(container, SWT.NONE);
@@ -127,14 +122,12 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 60;
         descriptionText.setLayoutData(data);
-        descriptionText.setEditable(!readOnly);
 
         // Author
         Label authorLab = new Label(container, SWT.NONE);
         authorLab.setText("Author");
 
         authorText = new Text(container, SWT.BORDER);
-        authorText.setEnabled(!readOnly);
         authorText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // Version
@@ -169,7 +162,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         statusText.setText(DevelopmentStatus.DRAFT.getLiteral());
         statusText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         statusText.setEditable(false);
-        statusText.setEnabled(!readOnly);
 
         for (DevelopmentStatus status : DevelopmentStatus.values()) {
 
@@ -250,12 +242,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             if (elem instanceof IFolder) {
                 pathText.setText(elem.getFullPath().toString());
 
-                // defaultFolderProviderRe
-
                 getParameter().getFolderProvider().setFolderResource((IFolder) elem);
-                // FolderProvider provider = new FolderProvider();
-                // provider.setFolderResource((IFolder) elem);
-                // getParameter().setFolderProvider(provider);
             }
         }
     }
@@ -265,8 +252,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         nameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                metadata.put(IParameterConstant.ANALYSIS_NAME, nameText.getText());
-                getParameter().setMetadate(metadata);
+                getParameter().setName(nameText.getText());
                 setPageComplete(true);
             }
         });
@@ -274,30 +260,21 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         purposeText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                if (purposeText.getText().length() != 0) {
-                    metadata.put(IParameterConstant.ANALYSIS_PURPOSE, purposeText.getText());
-                    getParameter().setMetadate(metadata);
-                }
+                getParameter().setPurpose(purposeText.getText());
             }
         });
 
         descriptionText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                if (descriptionText.getText().length() != 0) {
-                    metadata.put(IParameterConstant.ANALYSIS_DESCRIPTION, descriptionText.getText());
-                    getParameter().setMetadate(metadata);
-                }
-
+                getParameter().setDescription(descriptionText.getText());
             }
         });
 
         authorText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-
-                metadata.put(IParameterConstant.ANALYSIS_AUTHOR, authorText.getText());
-                getParameter().setMetadate(metadata);
+                getParameter().setAuthor(authorText.getText());
             }
 
         });
@@ -321,34 +298,10 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
             public void modifyText(ModifyEvent e) {
                 String selected = ((CCombo) e.getSource()).getText();
-                metadata.put(IParameterConstant.ANALYSIS_STATUS, selected);
-                getParameter().setMetadate(metadata);
+                getParameter().setStatus(selected);
             }
 
         });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-     */
-    @Override
-    public void setVisible(boolean visible) {
-        if (statusText != null) {
-            String status = statusText.getText();
-            if (status != null) {
-                metadata.put(IParameterConstant.ANALYSIS_STATUS, status);
-                getParameter().setMetadate(metadata);
-            }
-        }
-        if (defaultFolderProviderRes != null && getParameter().getFolderProvider() == null) {
-            FolderProvider defaultFolder = new FolderProvider();
-            defaultFolder.setFolderResource(defaultFolderProviderRes);
-            getParameter().setFolderProvider(defaultFolder);
-        }
-
-        super.setVisible(visible);
     }
 
     @Override
@@ -369,4 +322,5 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     protected abstract void createExtendedControl(Composite container);
 
+    protected abstract IFolder getStoredFolder();
 }

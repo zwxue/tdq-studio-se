@@ -12,11 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.database;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -34,15 +33,10 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
      */
     @Override
     public void createControl(Composite parent) {
-        Composite container = new Composite(parent, SWT.NONE);
-        container.setLayout(new FillLayout());
 
-        super.createControl(container);
-        defaultFolderProviderRes = ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME)
-                .getFolder(DQStructureManager.DB_CONNECTIONS);
-        pathText.setText(defaultFolderProviderRes.getFullPath().toString());
+        super.createControl(parent);
 
-        setControl(container);
+        pathText.setText(getParameter().getFolderProvider().getFolderURI());
     }
 
     /*
@@ -80,6 +74,13 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
         });
 
         super.addListeners();
+    }
+
+    @Override
+    protected IFolder getStoredFolder() {
+
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME).getFolder(
+                DQStructureManager.DB_CONNECTIONS);
     }
 
 }

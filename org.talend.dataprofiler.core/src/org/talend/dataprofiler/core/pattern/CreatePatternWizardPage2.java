@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import java.util.HashMap;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -41,8 +39,6 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     private Text nameText;
 
-    protected HashMap<String, String> metadata;
-
     private Combo comboLang;
 
     public static final String ERROR_MESSAGE = "Regular expression must start and end with '";
@@ -51,17 +47,8 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     private ExpressionType type;
 
-    /**
-     * DOC qzhang CreateSqlFileWizardPage constructor comment.
-     */
-    public CreatePatternWizardPage2() {
-        metadata = new HashMap<String, String>();
-        setPageComplete(false);
-
-    }
-
     public CreatePatternWizardPage2(ExpressionType type) {
-        this();
+        super();
         this.type = type;
 
     }
@@ -82,6 +69,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
             switch (type) {
             case SQL_LIKE:
                 s = "SQL Like expression:";
+            default:
             }
         }
         nameLab.setText(s);

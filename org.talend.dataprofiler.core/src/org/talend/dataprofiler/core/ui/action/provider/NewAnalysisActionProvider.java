@@ -13,34 +13,20 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.jface.action.IAction;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.eclipse.ui.navigator.ICommonActionExtensionSite;
-import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction;
 
-
 /**
  * @author rli
- *
+ * 
  */
 public class NewAnalysisActionProvider extends CommonActionProvider {
-    
+
     public NewAnalysisActionProvider() {
-    }
-
-    private IAction createAnalysisAction;
-
-    private String selectedFolderName;
-
-    public void init(ICommonActionExtensionSite anExtensionSite) {
-
-        if (anExtensionSite.getViewSite() instanceof ICommonViewerWorkbenchSite) {
-            createAnalysisAction = new CreateNewAnalysisAction();
-        }
     }
 
     /**
@@ -49,11 +35,17 @@ public class NewAnalysisActionProvider extends CommonActionProvider {
     public void fillContextMenu(IMenuManager menu) {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
-            selectedFolderName = ((IFolder) obj).getName();
-            if (selectedFolderName.equals(DQStructureManager.ANALYSIS)) {
-                menu.add(createAnalysisAction);
+            IFolder folder = (IFolder) obj;
+            try {
+                if (folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
+                        DQStructureManager.ANALYSIS_FOLDER_PROPERTY)) {
+                    CreateNewAnalysisAction createAnalysisAction = new CreateNewAnalysisAction(folder);
+                    menu.add(createAnalysisAction);
+                }
+            } catch (CoreException e) {
+                e.printStackTrace();
             }
         }
     }
-    
+
 }

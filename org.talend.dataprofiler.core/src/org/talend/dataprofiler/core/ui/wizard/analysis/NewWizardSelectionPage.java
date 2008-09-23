@@ -25,6 +25,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
+import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeContentProvider;
@@ -92,13 +93,18 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
                     AnalysisType type = AnalysisType.get(literal);
 
+                    FolderProvider currentFolderProvider = ((CreateNewAnalysisWizard) getWizard()).getCurrentFolderProvider();
                     switch (type) {
                     case MULTIPLE_COLUMN:
-                        parameter = new AnalysisParameter();
+                        AnalysisParameter anaParam = new AnalysisParameter();
+                        anaParam.setFolderProvider(currentFolderProvider);
+                        parameter = anaParam;
 
                         break;
                     case CONNECTION:
-                        parameter = new ConnectionAnalysisParameter();
+                        ConnectionAnalysisParameter connParam = new ConnectionAnalysisParameter();
+                        connParam.setFolderProvider(currentFolderProvider);
+                        parameter = connParam;
 
                         break;
                     default:

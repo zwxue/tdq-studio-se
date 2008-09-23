@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
-import java.util.Properties;
-
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.management.api.FolderProvider;
@@ -49,7 +47,6 @@ public class WizardFactory {
                     parameter = new ConnectionAnalysisParameter();
                 }
                 parameter.setAnalysisTypeName(type.getLiteral());
-                parameter.getAnalysisType();
                 return new ConnectionWizard((ConnectionAnalysisParameter) parameter);
             default:
                 return null;
@@ -76,13 +73,17 @@ public class WizardFactory {
     }
 
     public static Wizard createPatternWizard(ExpressionType type) {
-        ConnectionParameter parameter = new ConnectionAnalysisParameter();
+        return createPatternWizard(type, null);
+    }
+
+    public static Wizard createPatternWizard(ExpressionType type, ConnectionParameter parameter) {
+        if (parameter == null) {
+            parameter = new ConnectionParameter();
+        }
         return new CreatePatternWizard(parameter, type);
     }
 
-    public static Wizard createDatabaseConnectionWizard() {
-        DBConnectionParameter connectionParam = new DBConnectionParameter();
-        connectionParam.setParameters(new Properties());
+    public static Wizard createDatabaseConnectionWizard(DBConnectionParameter connectionParam) {
 
         return new DatabaseConnectionWizard(connectionParam);
     }

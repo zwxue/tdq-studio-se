@@ -16,14 +16,11 @@ import java.util.HashMap;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -36,8 +33,6 @@ import org.talend.dataprofiler.help.HelpPlugin;
  */
 public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
-    private IFolder defaultFolderProviderRes;
-
     protected HashMap<String, String> metadata;
 
     /**
@@ -46,17 +41,6 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
     public CreatePatternWizardPage1() {
         metadata = new HashMap<String, String>();
         setPageComplete(false);
-        defaultFolderProviderRes = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.PATTERNS);
-    }
-
-    /**
-     * DOC qzhang CreatePatternWizardPage1 constructor comment.
-     * 
-     * @param folder
-     */
-    public CreatePatternWizardPage1(IFolder folder) {
-        this.defaultFolderProviderRes = folder;
     }
 
     /*
@@ -65,13 +49,9 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
-        Composite container = new Composite(parent, SWT.NONE);
-        container.setLayout(new FillLayout());
 
-        super.createControl(container);
-        pathText.setText(defaultFolderProviderRes.getFullPath().toString());
-
-        setControl(container);
+        super.createControl(parent);
+        pathText.setText(getParameter().getFolderProvider().getFolderURI());
 
         button.addSelectionListener(new SelectionAdapter() {
 
@@ -97,27 +77,6 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-     */
-    @Override
-    public void setVisible(boolean visible) {
-        if (defaultFolderProviderRes != null) {
-            FolderProvider folderProvider = getParameter().getFolderProvider();
-            if (folderProvider == null) {
-                folderProvider = new FolderProvider();
-            }
-            if (folderProvider.getFolderResource() == null) {
-                folderProvider.setFolderResource(defaultFolderProviderRes);
-            }
-            getParameter().setFolderProvider(folderProvider);
-        }
-
-        super.setVisible(visible);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite
      * )
@@ -134,6 +93,13 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
      */
     public Text getPathText() {
         return this.pathText;
+    }
+
+    @Override
+    protected IFolder getStoredFolder() {
+
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+                DQStructureManager.PATTERNS);
     }
 
 }

@@ -26,10 +26,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
-import org.talend.dq.analysis.parameters.IParameterConstant;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -42,8 +40,6 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
     private Text nameText;
 
     private Button button;
-
-    private IFolder defaultFolderProviderRes;
 
     protected HashMap<String, String> metadata;
 
@@ -93,14 +89,12 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
         button = new Button(pathContainer, SWT.PUSH);
         button.setText("Select..");
 
-        defaultFolderProviderRes = getParameter().getFolderProvider().getFolderResource();
-        pathText.setText(defaultFolderProviderRes.getFullPath().toString());
+        pathText.setText(getParameter().getFolderProvider().getFolderURI());
         setControl(container);
         nameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                metadata.put(IParameterConstant.ANALYSIS_NAME, nameText.getText());
-                getParameter().setMetadate(metadata);
+                getParameter().setName(nameText.getText());
                 setPageComplete(true);
             }
         });
@@ -122,25 +116,6 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
-     */
-    @Override
-    public void setVisible(boolean visible) {
-        if (defaultFolderProviderRes != null) {
-            FolderProvider folderProvider = getParameter().getFolderProvider();
-            if (folderProvider == null) {
-                folderProvider = new FolderProvider();
-            }
-            folderProvider.setFolderResource(defaultFolderProviderRes);
-            getParameter().setFolderProvider(folderProvider);
-        }
-
-        super.setVisible(visible);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite
      * )
@@ -157,6 +132,11 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
      */
     public Text getPathText() {
         return this.pathText;
+    }
+
+    @Override
+    protected IFolder getStoredFolder() {
+        return null;
     }
 
 }

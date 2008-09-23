@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
+import org.talend.cwm.management.api.FolderProvider;
 
 /**
  * @author zqin
@@ -27,6 +28,16 @@ public class CreateNewAnalysisWizard extends Wizard {
     private NewWizardSelectionPage mainPage;
 
     private WizardPage[] otherPages;
+
+    private FolderProvider currentFolderProvider;
+
+    public FolderProvider getCurrentFolderProvider() {
+        return currentFolderProvider;
+    }
+
+    public void setCurrentFolderProvider(FolderProvider currentFolderProvider) {
+        this.currentFolderProvider = currentFolderProvider;
+    }
 
     public CreateNewAnalysisWizard() {
         setWindowTitle("Create New Analysis");
