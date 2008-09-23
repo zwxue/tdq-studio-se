@@ -17,9 +17,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -48,7 +46,7 @@ public class ImportPatternsAction extends Action {
     @Override
     public void run() {
         ImportPatternsWizard wizard = new ImportPatternsWizard(folder);
-        WizardDialog dialog = new OpeningHelpWizardDialog(Display.getDefault().getActiveShell(), wizard, "");
+        WizardDialog dialog = new WizardDialog(null, wizard);
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
             try {

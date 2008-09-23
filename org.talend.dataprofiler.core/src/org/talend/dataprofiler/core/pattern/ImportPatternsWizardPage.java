@@ -51,6 +51,9 @@ public class ImportPatternsWizardPage extends WizardPage {
      */
     protected ImportPatternsWizardPage() {
         super("ImportPatternsWizardPage");
+
+        setTitle("Import Patterns from File");
+        setDescription("Choose a file to import patterns.");
     }
 
     /*
