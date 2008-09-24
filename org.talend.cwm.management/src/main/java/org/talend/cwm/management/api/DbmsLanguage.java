@@ -1014,7 +1014,7 @@ public class DbmsLanguage {
      */
     public boolean supportNonIntegerConstantInGroupBy() {
         // DBMS_SUPPORT
-        if (is(POSTGRESQL)) {
+        if (is(POSTGRESQL) || is(MSSQL)) {
             return false;
         }
         // else MySQL, Oracle

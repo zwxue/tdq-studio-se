@@ -472,7 +472,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     private String getAlias(String colName, DateGrain dateAggregationType) {
+        if (dbms().supportAliasesInGroupBy()) {
         return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -578,8 +582,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             List<String> whereExpression, String range) throws ParseException {
         String completedRange = replaceVariables(range, colName, table);
         String rangeColumn = "'" + completedRange + "'";
-        String rangeColumnInGroupBy = dbms().supportNonIntegerConstantInGroupBy() ? rangeColumn : "1";
-        String completedSqlString = replaceVariablesLow(sqlGenericExpression, rangeColumn, table, rangeColumnInGroupBy);
+
+        String singleQuery = removeGroupBy(sqlGenericExpression);
+        String completedSqlString = replaceVariablesLow(singleQuery, rangeColumn, table);
 
         List<String> allWheresForSingleSelect = new ArrayList<String>(whereExpression);
 
@@ -591,6 +596,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // do this replacement after having added the where clause otherwise the parsing with ZQL will fail.
         completedSqlString = replaceCountByZeroCount(completedSqlString, completedRange);
         return completedSqlString;
+    }
+
+    /**
+     * DOC scorreia Comment method "removeGroupBy".
+     * 
+     * @param sqlGenericExpression
+     * @return
+     */
+    private String removeGroupBy(String sqlGenericExpression) {
+        int idxOfGroupBy = sqlGenericExpression.toUpperCase().indexOf(dbms().groupBy());
+        return sqlGenericExpression.substring(0, idxOfGroupBy);
     }
 
     /**
