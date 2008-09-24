@@ -466,17 +466,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         default:
             break;
         }
-
-        String sql = replaceVariablesLow(sqlExpression.getBody(), result, table, aliases);
+        String groupByAliases = dbms().supportAliasesInGroupBy() ? aliases : result;
+        String sql = replaceVariablesLow(sqlExpression.getBody(), result, table, groupByAliases);
         return sql;
     }
 
     private String getAlias(String colName, DateGrain dateAggregationType) {
-        if (dbms().supportAliasesInGroupBy()) {
-            return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
-        } else {
-            return "";
-        }
+        return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
     }
 
     /**
@@ -582,7 +578,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             List<String> whereExpression, String range) throws ParseException {
         String completedRange = replaceVariables(range, colName, table);
         String rangeColumn = "'" + completedRange + "'";
-        String completedSqlString = replaceVariablesLow(sqlGenericExpression, rangeColumn, table, rangeColumn);
+        String rangeColumnInGroupBy = dbms().supportNonIntegerConstantInGroupBy() ? rangeColumn : "1";
+        String completedSqlString = replaceVariablesLow(sqlGenericExpression, rangeColumn, table, rangeColumnInGroupBy);
 
         List<String> allWheresForSingleSelect = new ArrayList<String>(whereExpression);
 

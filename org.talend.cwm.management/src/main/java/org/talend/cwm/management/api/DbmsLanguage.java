@@ -416,7 +416,7 @@ public class DbmsLanguage {
         if (is(ORACLE)) {
             return "SELECT * FROM (" + query + ") WHERE ROWNUM <= " + n;
         }
-        if (is(MYSQL)) {
+        if (is(MYSQL) || is(POSTGRESQL)) {
             return query + " LIMIT " + n;
         }
         if (is(DB2)) {
@@ -1005,6 +1005,20 @@ public class DbmsLanguage {
         }
         // else Oracle, MSSQL, DB2, Postgresql
         return false;
+    }
+
+    /**
+     * Method "supportNonIntegerConstantInGroupBy".
+     * 
+     * @return true if expression like "GROUP BY 'toto'" are supported
+     */
+    public boolean supportNonIntegerConstantInGroupBy() {
+        // DBMS_SUPPORT
+        if (is(POSTGRESQL)) {
+            return false;
+        }
+        // else MySQL, Oracle
+        return true;
     }
 
     /**
