@@ -92,7 +92,7 @@
     <sqlGenericExpression xmi:id="_ybwWcDh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48BF2Ed2PKb6nEJEvhw" name="Summary Statistics" categories="_ccKuIRF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI48xF2Ed2PKb6nEJEvhw _ccI48RF2Ed2PKb6nEJEvhw _ccI48hF2Ed2PKb6nEJEvhw _ccI49hF2Ed2PKb6nEJEvhw" label="Summary Statistics">
     <taggedValue xmi:id="_ybyLoDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average, the median and the extent of the data (range, interquartile range)"/>
