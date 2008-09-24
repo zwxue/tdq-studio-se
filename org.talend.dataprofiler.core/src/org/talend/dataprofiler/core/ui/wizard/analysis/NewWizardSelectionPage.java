@@ -83,6 +83,9 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
             public void selectionChanged(SelectionChangedEvent event) {
 
                 AnalysisTypeNode node = (AnalysisTypeNode) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                if (node == null) {
+                    return;
+                }
                 AnalysisTypeNode parent = (AnalysisTypeNode) node.getParent();
                 if (parent == null) {
                     return;
