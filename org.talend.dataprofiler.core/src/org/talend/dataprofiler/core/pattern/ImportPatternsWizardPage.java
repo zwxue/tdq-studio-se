@@ -53,7 +53,7 @@ public class ImportPatternsWizardPage extends WizardPage {
         super("ImportPatternsWizardPage");
 
         setTitle("Import Patterns from File");
-        setDescription("Choose a file to import patterns.");
+        setDescription("Choose a file to import patterns from.");
     }
 
     /*
