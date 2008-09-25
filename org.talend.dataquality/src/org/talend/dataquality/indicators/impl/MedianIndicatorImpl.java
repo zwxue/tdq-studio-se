@@ -453,6 +453,7 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
      * @return
      */
     private Double getRealValue(int javaType, String object) {
+
         // FIXME scorreia this is not the best way to work. Other indicator simply store dates.
         if (Java2SqlType.isDateInSQL(javaType)) {
             Date date = null;
@@ -473,7 +474,11 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
             return date != null ? Double.valueOf(date.getTime()) : Double.NaN;
         }
         // else a number
-        return Double.valueOf(object);
+        try {
+            return Double.valueOf(object);
+        } catch (NumberFormatException e) {
+            return Double.NaN;
+        }
     }
 
     /*
