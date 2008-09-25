@@ -393,18 +393,19 @@ public class IndicatorSelectDialog extends TrayDialog {
             Button rowCheckButton = null;
             Button commonCheckButton;
             List<Button> rowButtonList = new ArrayList<Button>();
+            IIndicatorNode indicatorNode = branchNodes[i];
             for (int j = 0; j < treeColumns.length; j++) {
+                IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();
                 if (j == 0) {
-                    treeItem.setText(0, branchNodes[i].getLabel());
-                    if (branchNodes[i].getIndicatorEnum() != null) {
-                        treeItem.setData(INDICATORITEM, branchNodes[i]);
+                    treeItem.setText(0, indicatorNode.getLabel());
+                    if (indicatorEnum != null) {
+                        treeItem.setData(INDICATORITEM, indicatorNode);
                     }
                     continue;
                 } else if (j == 1 && treeColumns.length > 2) {
                     editor = new TreeEditor(tree);
                     rowCheckButton = new Button(tree, SWT.CHECK);
-                    rowCheckButton.addSelectionListener(new RowSelectButtonListener(j, treeItem, branchNodes[i]
-                            .getIndicatorEnum(), null));
+                    rowCheckButton.addSelectionListener(new RowSelectButtonListener(j, treeItem, indicatorEnum, null));
 
                     // set background color to the "All columns" column
                     Color systemColor = tree.getDisplay().getSystemColor(SWT.COLOR_YELLOW);
@@ -416,15 +417,19 @@ public class IndicatorSelectDialog extends TrayDialog {
                 } else {
                     editor = new TreeEditor(tree);
                     checkButton = new Button(tree, SWT.CHECK);
-                    checkButton.setData(branchNodes[i]);
+                    checkButton.setData(indicatorNode);
 
-                    if (((ColumnIndicator) treeColumns[j].getData()).contains(branchNodes[i].getIndicatorEnum())) {
+                    if (((ColumnIndicator) treeColumns[j].getData()).contains(indicatorEnum)) {
                         checkButton.setSelection(true);
                     }
                     final ColumnIndicator currentColumnIndicator = (ColumnIndicator) treeColumns[j].getData();
-                    checkButton.setEnabled(ColumnIndicatorRule.match(branchNodes[i], currentColumnIndicator));
-                    checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, branchNodes[i].getIndicatorEnum(),
+                    checkButton.setEnabled(ColumnIndicatorRule.match(indicatorNode, currentColumnIndicator));
+                    checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum,
                             currentColumnIndicator));
+                    if (indicatorEnum != null) {
+                        checkButton.setToolTipText("Enable " + indicatorEnum.getLabel() + " on "
+                                + currentColumnIndicator.getTdColumn().getName());
+                    }
                     checkButton.setData(COLUMNINDICATORFLAG, currentColumnIndicator);
                     commonCheckButton = checkButton;
 
@@ -450,8 +455,8 @@ public class IndicatorSelectDialog extends TrayDialog {
                 rowCheckButton.setSelection(allChecked);
             }
 
-            if (branchNodes[i].hasChildren()) {
-                createChildrenNode(tree, treeItem, treeColumns, branchNodes[i].getChildren());
+            if (indicatorNode.hasChildren()) {
+                createChildrenNode(tree, treeItem, treeColumns, indicatorNode.getChildren());
             }
             treeItem.setExpanded(true);
         }
@@ -466,6 +471,7 @@ public class IndicatorSelectDialog extends TrayDialog {
             treeColumn = new TreeColumn[columnIndicators.length + 2];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[0].setWidth(COL0_WIDTH);
+            treeColumn[0].setText("Indicators");
             treeColumn[1] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[1].setWidth(COLI_WIDTH);
             treeColumn[1].setText("All columns");
@@ -483,6 +489,7 @@ public class IndicatorSelectDialog extends TrayDialog {
             treeColumn = new TreeColumn[columnIndicators.length + 1];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[0].setWidth(COL0_WIDTH);
+            treeColumn[0].setText("Indicators");
             for (int i = 0; i < this.columnIndicators.length; i++) {
                 treeColumn[i + 1] = new TreeColumn(tree, SWT.CENTER);
                 treeColumn[i + 1].setWidth(COLI_WIDTH);
