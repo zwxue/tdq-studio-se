@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
@@ -33,6 +34,8 @@ import org.talend.dataquality.helpers.DomainHelper;
  * 
  */
 public class BinsDesignerParameter extends AbstractIndicatorParameter {
+
+    private static Logger log = Logger.getLogger(BinsDesignerParameter.class);
 
     private double maxValue;
 
@@ -135,7 +138,7 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
                     RangeRestriction rangeRestriction = DomainHelper.createRealRangeRestriction(min, max);
                     userDomain.getRanges().add(rangeRestriction);
                 } catch (Exception e) {
-                    // TODO handle the exception
+                    log.error(e, e);
                 }
             }
 
