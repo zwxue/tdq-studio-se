@@ -63,6 +63,7 @@ import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -83,7 +84,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
+public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements IRuningStatusListener, PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
 
@@ -104,6 +105,8 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
     private static final int TREE_MAX_LENGTH = 400;
 
     private Composite[] previewChartCompsites;
+
+    private Button runBtn;
 
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -171,7 +174,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         gdBtn.horizontalAlignment = SWT.CENTER;
         gdBtn.horizontalSpan = 2;
         gdBtn.widthHint = 120;
-        Button runBtn = toolkit.createButton(form.getBody(), " Run ", SWT.NONE);
+        runBtn = toolkit.createButton(form.getBody(), " Run ", SWT.NONE);
         runBtn.setLayoutData(gdBtn);
 
         runBtn.addSelectionListener(new SelectionAdapter() {
@@ -179,10 +182,8 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                new RunAnalysisAction().run();
-
+                new RunAnalysisAction(ColumnMasterDetailsPage.this).run();
             }
-
         });
     }
 
@@ -277,7 +278,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                             "Do you want to run the analysis or simply see sample data?");
 
                     if (returnCode) {
-                        new RunAnalysisAction().run();
+                        new RunAnalysisAction(ColumnMasterDetailsPage.this).run();
                         message.setVisible(false);
                     } else {
                         createPreviewCharts(form, chartComposite, false);
@@ -557,5 +558,16 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
     public Composite getChartComposite() {
         return chartComposite;
+    }
+
+    public void fireRuningItemChanged(boolean status) {
+
+        this.runBtn.setEnabled(status);
+
+        if (status) {
+            ((AnalysisEditor) getEditor()).setRefreshResultPage(true);
+            refreshChart();
+        }
+
     }
 }

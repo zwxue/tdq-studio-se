@@ -23,21 +23,19 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.editor.analysis.ConnectionMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.AnalysisExecutorSelector;
@@ -55,17 +53,28 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00");
 
-    private TreeViewer treeViewer;
-
-    private IFile currentSelection;
-
     private Analysis analysis = null;
 
-    private AbstractMetadataFormPage page;
+    private IRuningStatusListener listener;
+
+    private IFile selectionFile;
+
+    public IFile getSelectionFile() {
+        return selectionFile;
+    }
+
+    public void setSelectionFile(IFile selectionFile) {
+        this.selectionFile = selectionFile;
+    }
 
     public RunAnalysisAction() {
-        super("Run");
+        super("run");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
+    }
+
+    public RunAnalysisAction(IRuningStatusListener listener) {
+        this();
+        this.listener = listener;
     }
 
     /*
@@ -76,51 +85,19 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
 
-        IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        if (activeEditor instanceof AnalysisEditor) {
-            AnalysisEditor editor = (AnalysisEditor) activeEditor;
+        if (getSelectionFile() == null) {
+            IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            if (editor != null && editor instanceof AnalysisEditor) {
+                AnalysisEditor anaEditor = (AnalysisEditor) editor;
+                IFormPage masterPage = anaEditor.getMasterPage();
+                masterPage.doSave(null);
+                IFile afile = ((FileEditorInput) masterPage.getEditorInput()).getFile();
 
-            if (editor != null) {
-                switch (editor.getAnalysisType()) {
-                case MULTIPLE_COLUMN:
-                    page = (ColumnMasterDetailsPage) editor.getMasterPage();
-                    break;
-                case CONNECTION:
-                    page = (ConnectionMasterDetailsPage) editor.getMasterPage();
-                    break;
-                default:
-                }
-            }
-
-            if (page != null && page.isDirty()) {
-                page.doSave(null);
-            }
-
-            editor.setRefreshResultPage(true);
-        }
-
-        if (currentSelection == null) {
-
-            if (page == null) {
-                return;
-            }
-
-            IFile file = ((FileEditorInput) page.getEditorInput()).getFile();
-            if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
-                analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+                analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
             }
         } else {
-
-            if (currentSelection.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
-                analysis = AnaResourceFileHelper.getInstance().findAnalysis(currentSelection);
-            }
+            analysis = AnaResourceFileHelper.getInstance().findAnalysis(getSelectionFile());
         }
-
-        if (analysis == null) {
-            return;
-        }
-
-        final Analysis finalAnalysis = analysis;
 
         final WorkspaceJob job = new WorkspaceJob("Run Analysis") {
 
@@ -129,46 +106,31 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                 monitor.beginTask("Running the [" + analysis.getName() + "].....", IProgressMonitor.UNKNOWN);
 
-                // MOD scorreia 2008-08-19 factorized code with AnalysisExecutorSelector
-                final ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(finalAnalysis);
-                monitor.done();
-                AnaResourceFileHelper.getInstance().save(finalAnalysis);
+                Display.getDefault().asyncExec(new Runnable() {
 
-                if (page != null) {
-                    Display.getDefault().asyncExec(new Runnable() {
-
-                        public void run() {
-                            if (page instanceof ColumnMasterDetailsPage && page.isActive()) {
-                                ColumnMasterDetailsPage columnMasterPage = (ColumnMasterDetailsPage) page;
-                                columnMasterPage.refreshChart();
-                            } else if (page instanceof ConnectionMasterDetailsPage) {
-                                ConnectionMasterDetailsPage connDetailsPage = (ConnectionMasterDetailsPage) page;
-                                connDetailsPage.doSetInput();
-                            }
+                    public void run() {
+                        if (listener != null) {
+                            listener.fireRuningItemChanged(false);
                         }
-                    });
-                }
-                if (executed.isOk()) {
-                    if (log.isInfoEnabled()) {
-                        int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-                        log.info("Analysis \"" + finalAnalysis.getName() + "\" execution code: " + executed + ". Duration: "
-                                + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s.");
                     }
-                    return Status.OK_STATUS;
-                } else {
-                    int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-                    log.warn("Analysis \"" + finalAnalysis.getName() + "\" execution code: " + executed + ". Duration: "
-                            + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s.");
-                    // open error dialog
-                    Display.getDefault().asyncExec(new Runnable() {
 
-                        public void run() {
-                            MessageDialogWithToggle.openError(null, "Run analysis error", "Fail to run this analysis: \""
-                                    + finalAnalysis.getName() + "\". Error message:" + executed.getMessage());
+                });
+
+                ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(analysis);
+                monitor.done();
+                AnaResourceFileHelper.getInstance().save(analysis);
+
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        if (listener != null) {
+                            listener.fireRuningItemChanged(true);
                         }
-                    });
-                    return Status.CANCEL_STATUS;
-                }
+                    }
+
+                });
+
+                return getResultStatus(executed);
             }
 
         };
@@ -176,13 +138,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         job.setUser(true);
         job.schedule();
 
-        if (treeViewer == null) {
-            DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
-            view.getCommonViewer().refresh();
-        } else {
-            CorePlugin.getDefault().refreshWorkSpace();
-            treeViewer.refresh();
-        }
+        DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
+        view.getCommonViewer().refresh();
     }
 
     /*
@@ -192,25 +149,32 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
+
         run();
     }
 
-    /**
-     * Sets the currentSelection.
-     * 
-     * @param currentSelection the currentSelection to set
-     */
-    public void setCurrentSelection(IFile currentSelection) {
-        this.currentSelection = currentSelection;
-    }
+    private IStatus getResultStatus(final ReturnCode executed) {
+        if (executed.isOk()) {
+            if (log.isInfoEnabled()) {
+                int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
+                log.info("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: "
+                        + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s.");
+            }
+            return Status.OK_STATUS;
+        } else {
+            int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
+            log.warn("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: "
+                    + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s.");
+            // open error dialog
+            Display.getDefault().asyncExec(new Runnable() {
 
-    /**
-     * Sets the treeViewer.
-     * 
-     * @param treeViewer the treeViewer to set
-     */
-    public void setTreeViewer(TreeViewer treeViewer) {
-        this.treeViewer = treeViewer;
-    }
+                public void run() {
+                    MessageDialogWithToggle.openError(null, "Run analysis error", "Fail to run this analysis: \""
+                            + analysis.getName() + "\". Error message:" + executed.getMessage());
+                }
+            });
 
+            return Status.CANCEL_STATUS;
+        }
+    }
 }

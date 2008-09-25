@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
@@ -50,7 +51,15 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
      */
     @Override
     public void run() {
-        openStandardAnalysisDialog(null);
+        FolderProvider currentFolderProvider = new FolderProvider();
+        currentFolderProvider.setFolderResource(folder);
+
+        CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard();
+        wizard.setCurrentFolderProvider(currentFolderProvider);
+        wizard.setForcePreviousAndNextButtons(true);
+        WizardDialog dialog = new WizardDialog(null, wizard);
+
+        dialog.open();
     }
 
     /*
@@ -60,19 +69,12 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
-        openStandardAnalysisDialog(AnalysisType.MULTIPLE_COLUMN);
-    }
-
-    private void openStandardAnalysisDialog(AnalysisType type) {
-        FolderProvider currentFolderProvider = new FolderProvider();
-        currentFolderProvider.setFolderResource(folder);
-
-        CreateNewAnalysisWizard wizard = (CreateNewAnalysisWizard) WizardFactory.createAnalysisWizard(type);
-        wizard.setCurrentFolderProvider(currentFolderProvider);
+        Wizard wizard = WizardFactory.createAnalysisWizard(AnalysisType.MULTIPLE_COLUMN);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);
 
         dialog.open();
     }
+
 }

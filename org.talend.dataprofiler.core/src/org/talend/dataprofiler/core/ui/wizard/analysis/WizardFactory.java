@@ -34,30 +34,32 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
 public class WizardFactory {
 
     public static Wizard createAnalysisWizard(AnalysisType type, AnalysisParameter parameter) {
-        if (type != null) {
-            switch (type) {
-            case MULTIPLE_COLUMN:
-                if (parameter == null) {
-                    parameter = new AnalysisParameter();
-                }
-                parameter.setAnalysisTypeName(type.getLiteral());
-                return new ColumnWizard(parameter);
-            case CONNECTION:
-                if (parameter == null) {
-                    parameter = new ConnectionAnalysisParameter();
-                }
-                parameter.setAnalysisTypeName(type.getLiteral());
-                return new ConnectionWizard((ConnectionAnalysisParameter) parameter);
-            default:
-                return null;
+        assert type != null;
+
+        switch (type) {
+        case MULTIPLE_COLUMN:
+            if (parameter == null) {
+                parameter = new AnalysisParameter();
             }
-        } else {
-            return new CreateNewAnalysisWizard();
+            parameter.setAnalysisTypeName(type.getLiteral());
+            return new ColumnWizard(parameter);
+        case CONNECTION:
+            if (parameter == null) {
+                parameter = new ConnectionAnalysisParameter();
+            }
+            parameter.setAnalysisTypeName(type.getLiteral());
+            return new ConnectionWizard((ConnectionAnalysisParameter) parameter);
+        default:
+            return null;
         }
     }
 
     public static Wizard createAnalysisWizard(AnalysisType type) {
         return createAnalysisWizard(type, null);
+    }
+
+    public static CreateNewAnalysisWizard createNewAnalysisWizard() {
+        return new CreateNewAnalysisWizard();
     }
 
     public static Wizard createSqlFileWizard(IFolder folder) {

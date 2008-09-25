@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,6 +62,7 @@ import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
+import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
@@ -79,7 +79,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
+public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implements IRuningStatusListener {
 
     private static final String SCHEMA = "schema";
 
@@ -146,11 +146,10 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                new RunAnalysisAction().run();
+                new RunAnalysisAction(ConnectionMasterDetailsPage.this).run();
             }
 
         });
-
     }
 
     private void createAnalysisParamSection(ScrolledForm form, Composite topComp) {
@@ -632,5 +631,12 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         }
         String formatValue = new DecimalFormat("0.00").format(frac);
         return formatValue;
+    }
+
+    public void fireRuningItemChanged(boolean status) {
+
+        if (status) {
+            doSetInput();
+        }
     }
 }
