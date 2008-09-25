@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -55,12 +56,19 @@ public class ReloadDatabaseAction extends Action {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(selectedObject);
-                try {
-                    creatComparisonLevel.reloadCurrentLevelElement();
-                } catch (ReloadCompareException e) {
-                    throw new InvocationTargetException(e);
-                }
+                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(selectedObject);
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        try {
+                            creatComparisonLevel.reloadCurrentLevelElement();
+                        } catch (ReloadCompareException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
             }
         };
         try {

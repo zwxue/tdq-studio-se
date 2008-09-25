@@ -39,9 +39,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -126,31 +124,9 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     protected EObject getSavedReloadObject() throws ReloadCompareException {
         ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema((ColumnSet) selectedObj);
-        TdCatalog oldCatalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentCatalogOrSchema);
 
         // find the corresponding package from reloaded object.
-        Package toReloadPackage = null;
-        if (oldCatalog != null) {
-            List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(this.tempReloadProvider);
-            for (TdCatalog catalog : tdCatalogs) {
-                if (parentCatalogOrSchema.getName().equals(catalog.getName())) {
-                    toReloadPackage = catalog;
-                }
-            }
-
-        } else {
-            List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(this.tempReloadProvider);
-            for (TdSchema schema : tdSchemas) {
-                if (parentCatalogOrSchema.getName().equals(schema.getName())) {
-                    toReloadPackage = schema;
-                }
-            }
-        }
-        if (toReloadPackage == null) {
-            throw new ReloadCompareException(
-                    "Can't find out the corresponding reloaded parent node(catalog/schema) for current selected node:"
-                            + selectedColumnSet.getName());
-        }
+        Package toReloadPackage = findMatchPackage(parentCatalogOrSchema);
 
         // find the corresponding columnSet from reloaded object.
         TdTable oldTable = SwitchHelpers.TABLE_SWITCH.doSwitch(selectedColumnSet);

@@ -163,20 +163,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected EObject getSavedReloadObject() throws ReloadCompareException {
         Package selectedPackage = (Package) selectedObj;
-        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(this.tempReloadProvider);
-        for (TdCatalog catalog : tdCatalogs) {
-            if (selectedPackage.getName().equals(catalog.getName())) {
-                return catalog;
-            }
-        }
-        List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(this.tempReloadProvider);
-        for (TdSchema schema : tdSchemas) {
-            if (selectedPackage.getName().equals(schema.getName())) {
-                return schema;
-            }
-        }
-        throw new ReloadCompareException("Can't find out the corresponding reload catalog/schema node for current selected node:"
-                + selectedPackage.getName());
+        return findMatchPackage(selectedPackage);
     }
 
 }
