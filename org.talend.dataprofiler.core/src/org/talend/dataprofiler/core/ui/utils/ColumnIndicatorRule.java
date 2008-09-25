@@ -115,9 +115,12 @@ public final class ColumnIndicatorRule {
 
         case MinValueIndicatorEnum:
         case MaxValueIndicatorEnum:
-
-            if (dataminingType == DataminingType.INTERVAL) {
-                return true;
+            // MOD scorreia 2008-09-25 do not allow min and max on date fields because it is not correctly handled in
+            // the graphics and database yet.
+            if (!Java2SqlType.isDateInSQL(javaType)) {
+                if (dataminingType == DataminingType.INTERVAL) {
+                    return true;
+                }
             }
 
             break;
