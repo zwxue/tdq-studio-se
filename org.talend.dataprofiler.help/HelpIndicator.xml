@@ -2,7 +2,9 @@
 <?NLS TYPE="org.eclipse.help.contexts"?>
 <contexts>
     <context id="indicatorhelpcontext" >
-        <description>In this page, you can choose several indicators for each column.There are several groups of indicators:</description>
+        <description>In this page, choose indicators for each column. In order to get percentages of the indicator values, check the Row Count indicator checkbox for at least one column.
+
+The groups of indicators are:</description>
         <topic label="Simple statistics" href="html/wizard/indicator_select/simple_statistics.html"/>
         <topic label="Text statistics" href="html/wizard/indicator_select/text_statistics.html"/>
         <topic label="Summary statistics" href="html/wizard/indicator_select/summary_statistics.html"/>
