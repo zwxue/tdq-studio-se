@@ -488,6 +488,9 @@ public class DbmsLanguage {
         }
 
         // TODO sybase, DB2, Postgresql
+        if (is(POSTGRESQL)) {
+            return " CAST( EXTRACT(" + dateGrain + from() + colName + ") AS INTEGER )";
+        }
 
         // ANSI SQL, MySQL, Oracle
         return " EXTRACT(" + dateGrain + from() + colName + ") ";
