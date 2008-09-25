@@ -27,6 +27,8 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
  */
 public final class DQStructureComparer {
 
+    private static final String RESULT_EMFDIFF_FILE = ".result.emfdiff";
+
     /**
      * 
      */
@@ -104,5 +106,14 @@ public final class DQStructureComparer {
             retValue = true;
         }
         return retValue;
+    }
+
+    public static IFile createDiffResourceFile() {
+        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
+                DQStructureManager.DB_CONNECTIONS);
+
+        String fileName = RESULT_EMFDIFF_FILE;
+        IFile file = folder.getFile(fileName);
+        return file;
     }
 }
