@@ -603,6 +603,8 @@ public class DbmsLanguage {
             functions.put("CONVERT", 3);
             functions.put("REPLACE", 2);
             functions.put("CONCAT", 2);
+            functions.put("PERCENTILE_DISC", 1);
+            functions.put("PERCENTILE_CONT", 1);
             functions.put("REPLACE", 3);
         }
 
@@ -672,33 +674,55 @@ public class DbmsLanguage {
      * @return the new statement
      */
     public String addWhereToStatement(String statement, String whereClause) {
-        try {
-            ZQuery query = this.parseQuery(statement);
-            if (whereClause != null) {
-                if (StringUtils.isNotBlank(whereClause)) {
-                    ZqlParser filterParser = new ZqlParser();
-                    filterParser.initParser(new ByteArrayInputStream(whereClause.getBytes()));
-                    ZExp currentWhere = query.getWhere();
-                    ZExp whereExpression = filterParser.readExpression();
-                    if (currentWhere != null && whereExpression != null) {
-                        ZExpression finalWhereExpression = new ZExpression(and(), currentWhere, whereExpression);
-                        query.addWhere(finalWhereExpression);
-                    } else {
-                        if (whereExpression != null) {
-                            query.addWhere(whereExpression);
+        if (!isTooComplexForZql(statement)) {
+            try {
+                ZQuery query = this.parseQuery(statement);
+                if (whereClause != null) {
+                    if (StringUtils.isNotBlank(whereClause)) {
+                        ZqlParser filterParser = new ZqlParser();
+                        filterParser.initParser(new ByteArrayInputStream(whereClause.getBytes()));
+                        ZExp currentWhere = query.getWhere();
+                        ZExp whereExpression = filterParser.readExpression();
+                        if (currentWhere != null && whereExpression != null) {
+                            ZExpression finalWhereExpression = new ZExpression(and(), currentWhere, whereExpression);
+                            query.addWhere(finalWhereExpression);
+                        } else {
+                            if (whereExpression != null) {
+                                query.addWhere(whereExpression);
+                            }
                         }
                     }
                 }
+                return query.toString();
+            } catch (ParseException e) {
+                log.warn("Given statement cannot be parsed: " + statement + ". Error message: " + e, e);
             }
-            return query.toString();
-        } catch (ParseException e) {
-            log.warn(e, e);
         }
+        // else
+        // bug 4979 fix (add where to internal query for Oracle and DB2...)
+        if (statement.contains("OVER ( ORDER BY ") && statement.contains(") x")) { // awkward piece of code!!
+            int insertIdx = statement.indexOf(") x");
+            StringBuilder finalQuery = new StringBuilder().append(statement.substring(0, insertIdx)).append(where()).append(
+                    surroundWithSpaces(whereClause)).append(statement.substring(insertIdx));
+            return finalQuery.toString();
+        }
+        // else
+
         // FIXME scorreia need to parse statement here and then to add the where clause correctly
         String op = statement.toUpperCase().contains(where()) ? and() : where();
         String finalQuery = statement + op + whereClause;
         log.warn("Query parsing failed. Returning simple concatenated string: " + finalQuery);
         return finalQuery;
+    }
+
+    /**
+     * DOC scorreia Comment method "isTooComplexForZql".
+     * 
+     * @param statement
+     * @return
+     */
+    private boolean isTooComplexForZql(String statement) {
+        return statement.contains("OVER ( ORDER BY ") && statement.contains(") x");
     }
 
     public String where() {
