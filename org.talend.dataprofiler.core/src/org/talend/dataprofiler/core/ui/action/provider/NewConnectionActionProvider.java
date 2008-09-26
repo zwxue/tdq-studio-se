@@ -41,8 +41,8 @@ public class NewConnectionActionProvider extends CommonActionProvider {
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
             try {
-                if (folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
-                        DQStructureManager.DBCONNECTION_FOLDER_PROPERTY)) {
+                if (DQStructureManager.DBCONNECTION_FOLDER_PROPERTY.equals(folder
+                        .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
                     CreateConnectionAction createConnectionAction = new CreateConnectionAction(folder);
                     menu.add(createConnectionAction);
                     // menu.insertBefore("group.edit", createConnectionAction);

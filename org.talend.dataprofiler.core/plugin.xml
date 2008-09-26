@@ -48,7 +48,8 @@
           <includes>	       	      
 	         <contentExtension pattern="org.talend.dataprofiler.core.DQContent.*"/>
 	         <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.startsWithDot"/>
-	          <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper" />
+	         <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.htmlFolder"/>	         
+	         <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper" />
           </includes>
        </viewerContentBinding>
        <viewerActionBinding
@@ -78,6 +79,20 @@
 					</or>
 	         </enablement>
 		</actionProvider>
+		<commonFilter
+            id="org.eclipse.ui.navigator.resources.filters.htmlFolder"
+            name="htmlFolder"
+            description="html folder "
+            activeByDefault="true"
+            >
+         <filterExpression>
+         	<and>
+	            <adapt type="org.eclipse.core.resources.IFolder">
+            		<test property="org.eclipse.core.resources.name" value="*.html_files"/>
+            	</adapt>	            
+	        </and>
+         </filterExpression>
+      </commonFilter>
       <navigatorContent
             activeByDefault="true"
             contentProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider"

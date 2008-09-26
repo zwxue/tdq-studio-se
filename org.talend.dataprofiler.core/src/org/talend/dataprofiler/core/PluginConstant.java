@@ -44,6 +44,8 @@ public final class PluginConstant {
 
     public static final String CONNECTION_DBNAME_PROPERTY = "CONNECTION_DBNAME_PROPERTY";
 
+    public static final String HTML_SUFFIX = "html";
+
     public static final String PRV_SUFFIX = "." + FactoriesUtil.PROV;
 
     public static final String ANA_SUFFIX = "." + FactoriesUtil.ANA;

@@ -50,12 +50,12 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
                 try {
                     IFolder folder = (IFolder) obj;
                     ExpressionType type = null;
-                    if (folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
-                            DQStructureManager.PATTERNS_FOLDER_PROPERTY)) {
+                    if (DQStructureManager.PATTERNS_FOLDER_PROPERTY.equals(folder
+                            .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
                         type = ExpressionType.REGEXP;
                         menu.add(new ImportPatternsAction((IFolder) obj));
-                    } else if (folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
-                            DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY)) {
+                    } else if (DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY.equals(folder
+                            .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
                         type = ExpressionType.SQL_LIKE;
                     }
 

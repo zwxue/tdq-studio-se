@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -69,7 +72,14 @@ public class RepGeneratedFolder extends AbstractFolderNode implements IWorkbench
 
         try {
             IResource[] members = currentRportFolder.members();
-            this.setChildren(members);
+            List<IResource> children = new ArrayList<IResource>();
+            for (IResource member : members) {
+                if (member.getType() == IResource.FOLDER) {
+                    continue;
+                }
+                children.add(member);
+            }
+            this.setChildren(children.toArray(new IResource[children.size()]));
         } catch (CoreException e) {
             e.printStackTrace();
         }

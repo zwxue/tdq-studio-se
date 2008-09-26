@@ -37,8 +37,8 @@ public class NewAnalysisActionProvider extends CommonActionProvider {
         if (obj instanceof IFolder) {
             IFolder folder = (IFolder) obj;
             try {
-                if (folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY).equals(
-                        DQStructureManager.ANALYSIS_FOLDER_PROPERTY)) {
+                if (DQStructureManager.ANALYSIS_FOLDER_PROPERTY.equals(folder
+                        .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
                     CreateNewAnalysisAction createAnalysisAction = new CreateNewAnalysisAction(folder);
                     menu.add(createAnalysisAction);
                 }

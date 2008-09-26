@@ -16,16 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
+import org.jfree.util.Log;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
@@ -66,7 +69,7 @@ public class DeleteCWMResourceAction extends Action {
         if (!checkDeleteContent(resources)) {
             return;
         }
-
+        delRelatedResource(isDeleteContent, resources);
         EObjectHelper.removeDependencys(resources);
 
         // refresh the parent resource in order to avoid unsynchronized resources
@@ -100,22 +103,22 @@ public class DeleteCWMResourceAction extends Action {
             } else {
                 file = (IFile) res;
             }
-            if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV)) {
+            if (FactoriesUtil.PROV.equalsIgnoreCase(file.getFileExtension())) {
                 TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance().findProvider(file);
                 modelElement = returnValue.getObject();
                 modelElementList.add(modelElement);
                 anaMessageFlag = true;
-            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.ANA)) {
+            } else if (FactoriesUtil.ANA.equalsIgnoreCase(file.getFileExtension())) {
                 modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
                 modelElementList.add(modelElement);
                 repMessageFlag = true;
-            } else if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+            } else if (FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension())) {
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 modelElementList.add(pattern);
                 anaMessageFlag = true;
             } else {
                 otherFilesExistFlag = true;
-                if (res.getFileExtension().equalsIgnoreCase(FactoriesUtil.REP)) {
+                if (FactoriesUtil.REP.equalsIgnoreCase(res.getFileExtension())) {
                     TdReport findReport = RepResourceFileHelper.getInstance().findReport(file);
                     otherFileName = findReport.getName();
                 } else {
@@ -139,6 +142,37 @@ public class DeleteCWMResourceAction extends Action {
             isDeleteContent = popConfirmDialog(otherFileName, selectedResources);
         }
         return isDeleteContent;
+    }
+
+    private void delRelatedResource(boolean isDeleteContent, IResource[] selectedResources) {
+        if (!isDeleteContent) {
+            return;
+        }
+
+        for (IResource selectedResource : selectedResources) {
+            if (selectedResource.getType() != IResource.FILE) {
+                continue;
+            }
+            String folderName = null;
+
+            // remove the unused folder related with current selected resources.
+            if (PluginConstant.HTML_SUFFIX.equalsIgnoreCase(selectedResource.getFileExtension())) {
+                folderName = selectedResource.getFullPath().lastSegment() + "_files";
+
+            } else if (FactoriesUtil.REP.equalsIgnoreCase(selectedResource.getFileExtension())) {
+                folderName = "." + selectedResource.getFullPath().removeFileExtension().lastSegment();
+            } else {
+                continue;
+            }
+            IFolder folder = ((IFolder) selectedResource.getParent()).getFolder(folderName);
+            if (folder.exists()) {
+                try {
+                    folder.delete(true, null);
+                } catch (CoreException e) {
+                    Log.warn("Failure to delete the folder: " + folder.getLocationURI().toString(), e);
+                }
+            }
+        }
     }
 
     private boolean popConfirmDialog(String resourceName, IResource[] selectedResources) {
