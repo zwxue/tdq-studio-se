@@ -126,7 +126,13 @@ public final class ReportHelper {
      * @return true if the analyses list of the report changed as a result of the call.
      */
     public static boolean removeAnalyses(TdReport report, Collection<Analysis> analyses) {
-        return report.getComponent().removeAll(analyses);
+        boolean removed = true;
+        for (Analysis analysis : analyses) {
+            if (!report.removeAnalysis(analysis)) {
+                removed = false;
+            }
+        }
+        return removed;
     }
 
     /**
@@ -137,7 +143,13 @@ public final class ReportHelper {
      * @return true if the analysis list changed as a result of the call.
      */
     public static boolean addAnalyses(Collection<Analysis> analyses, TdReport report) {
-        return report.getComponent().addAll(analyses);
+        boolean added = true;
+        for (Analysis analysis : analyses) {
+            if (!report.addAnalysis(analysis)) {
+                added = false;
+            }
+        }
+        return added;
     }
 
     public static TdReport createReport(String name) {
