@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -265,6 +266,8 @@ public class DeleteModelElementConfirmDialog {
                     anaList.add((Analysis) element);
                 }
                 ReportHelper.removeAnalyses(report, anaList);
+                // remove dependencies
+                DependenciesHandler.getInstance().removeDependenciesBetweenModels(report, anaList);
             }
         }
     }
