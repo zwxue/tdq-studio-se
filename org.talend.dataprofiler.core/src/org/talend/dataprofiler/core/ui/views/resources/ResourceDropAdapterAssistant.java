@@ -93,7 +93,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     if (findAnalysis != null) {
                         String uriKey = findAnalysis.eResource().getURI().toString();
                         if (resourcesMap.containsKey(uriKey)) {
-                            findReport.getComponent().remove(resourcesMap.get(uriKey));
+                            findReport.removeAnalysis(resourcesMap.get(uriKey));
                         }
                         anaList.add(findAnalysis);
                     }
