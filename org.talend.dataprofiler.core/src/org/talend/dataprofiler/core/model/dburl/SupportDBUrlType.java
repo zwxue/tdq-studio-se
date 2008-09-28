@@ -17,6 +17,13 @@ package org.talend.dataprofiler.core.model.dburl;
  * 
  */
 public enum SupportDBUrlType {
+    ALL("SQL", //$NON-NLS-1$
+        null,
+        null,
+        null,
+        null,
+        null, //$NON-NLS-1$
+        null),
     ODBCDEFAULTURL("Generic ODBC", //$NON-NLS-1$
                    null,
                    null,
