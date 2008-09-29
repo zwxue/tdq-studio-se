@@ -522,7 +522,7 @@ public class IndicatorChartFactory {
                 default:
                     entity = new ChartDataEntity();
                     entity.setLabel(unit.getIndicatorName());
-                    entity.setValue(unit.getValue().toString());
+                    entity.setValue(String.valueOf(unit.getValue()));
                     entity.setIndicator(unit.getIndicator());
                     list.add(entity);
                 }
