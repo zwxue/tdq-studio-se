@@ -160,9 +160,11 @@ public final class SupportDBUrlStore {
                 paramProperties.setProperty(PluginConstant.DBTYPE_PROPERTY, id);
                 MessageFormat mf = new MessageFormat(value);
                 Object[] parseResult = mf.parse(connectionStr, new ParsePosition(0));
-                paramProperties.setProperty(PluginConstant.HOSTNAME_PROPERTY, (String) parseResult[0]);
-                paramProperties.setProperty(PluginConstant.PORT_PROPERTY, (String) parseResult[1]);
-                break;
+                if (parseResult != null) {
+                    paramProperties.setProperty(PluginConstant.HOSTNAME_PROPERTY, (String) parseResult[0]);
+                    paramProperties.setProperty(PluginConstant.PORT_PROPERTY, (String) parseResult[1]);
+                    break;
+                }
             }
         }
 
