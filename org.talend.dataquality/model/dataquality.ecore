@@ -87,6 +87,7 @@
       <eLiterals name="CONNECTION" value="4" literal="Connection Analysis"/>
       <eLiterals name="SCHEMA" value="5" literal="Schema Analysis"/>
       <eLiterals name="MULTIPLE_COLUMN" value="6" literal="Multiple Column Analysis"/>
+      <eLiterals name="CATALOG" value="7" literal="Catalog Analysis"/>
     </eClassifiers>
     <eSubpackages name="category" nsURI="http://org.talend.dataquality.category" nsPrefix="dataquality.category">
       <eClassifiers xsi:type="ecore:EClass" name="AnalysisCategory">
@@ -536,6 +537,9 @@
         <eOperations name="addTableIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
           <eParameters name="tableIndicator" eType="#//indicators/schema/TableIndicator"/>
         </eOperations>
+        <eOperations name="addViewIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+          <eParameters name="viewIndicator" eType="#//indicators/schema/ViewIndicator"/>
+        </eOperations>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="tableCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -553,9 +557,20 @@
             <details key="documentation" value="The number of rows of the analyzed views."/>
           </eAnnotations>
         </eStructuralFeatures>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="viewIndicators" upperBound="-1"
+            eType="#//indicators/schema/ViewIndicator" containment="true"/>
       </eClassifiers>
-      <eClassifiers xsi:type="ecore:EClass" name="TableIndicator" eSuperTypes="#//indicators/CompositeIndicator">
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="rowCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+      <eClassifiers xsi:type="ecore:EClass" name="TableIndicator" eSuperTypes="#//indicators/schema/AbstractTableIndicator">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="Number of Primary keys"/>
+          </eAnnotations>
+        </eStructuralFeatures>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="Number of indices"/>
+          </eAnnotations>
+        </eStructuralFeatures>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="ConnectionIndicator" eSuperTypes="#//indicators/schema/CatalogIndicator">
         <eOperations name="addCatalogIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
@@ -572,6 +587,15 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="schemaCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="schemaIndicators" upperBound="-1"
             eType="#//indicators/schema/SchemaIndicator" containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ViewIndicator" eSuperTypes="#//indicators/schema/AbstractTableIndicator"/>
+      <eClassifiers xsi:type="ecore:EClass" name="AbstractTableIndicator" eSuperTypes="#//indicators/Indicator">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="rowCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="Number of rows of the analyzed element (Table, View...)"/>
+          </eAnnotations>
+        </eStructuralFeatures>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="tableName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </eClassifiers>
     </eSubpackages>
     <eSubpackages name="definition" nsURI="http://dataquality.indicators.definition"

@@ -93,6 +93,14 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
                 return createCatalogIndicatorAdapter();
             }
             @Override
+            public Adapter caseViewIndicator(ViewIndicator object) {
+                return createViewIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseAbstractTableIndicator(AbstractTableIndicator object) {
+                return createAbstractTableIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -181,6 +189,34 @@ public class SchemaAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createCatalogIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.schema.ViewIndicator <em>View Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.schema.ViewIndicator
+     * @generated
+     */
+    public Adapter createViewIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.schema.AbstractTableIndicator <em>Abstract Table Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.schema.AbstractTableIndicator
+     * @generated
+     */
+    public Adapter createAbstractTableIndicatorAdapter() {
         return null;
     }
 

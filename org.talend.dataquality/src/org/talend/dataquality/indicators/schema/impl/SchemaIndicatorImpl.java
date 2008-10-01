@@ -19,6 +19,7 @@ import org.talend.dataquality.indicators.impl.CompositeIndicatorImpl;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.dataquality.indicators.schema.TableIndicator;
+import org.talend.dataquality.indicators.schema.ViewIndicator;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Indicator</b></em>'. <!-- end-user-doc -->
@@ -33,6 +34,7 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
  *   <li>{@link org.talend.dataquality.indicators.schema.impl.SchemaIndicatorImpl#getTableRowCount <em>Table Row Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.schema.impl.SchemaIndicatorImpl#getTableIndicators <em>Table Indicators</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.schema.impl.SchemaIndicatorImpl#getViewRowCount <em>View Row Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.schema.impl.SchemaIndicatorImpl#getViewIndicators <em>View Indicators</em>}</li>
  * </ul>
  * </p>
  *
@@ -42,8 +44,8 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
 
     /**
      * The default value of the '{@link #getTableCount() <em>Table Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getTableCount()
      * @generated
      * @ordered
@@ -82,8 +84,8 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
 
     /**
      * The default value of the '{@link #getIndexCount() <em>Index Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getIndexCount()
      * @generated
      * @ordered
@@ -152,8 +154,8 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
 
     /**
      * The cached value of the '{@link #getTableRowCount() <em>Table Row Count</em>}' attribute.
-     * <!-- begin-user-doc
-     * --> <!-- end-user-doc -->
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
      * @see #getTableRowCount()
      * @generated
      * @ordered
@@ -171,8 +173,8 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
 
     /**
      * The default value of the '{@link #getViewRowCount() <em>View Row Count</em>}' attribute.
-     * <!-- begin-user-doc
-     * --> <!-- end-user-doc -->
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
      * @see #getViewRowCount()
      * @generated
      * @ordered
@@ -188,6 +190,16 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
      * @ordered
      */
     protected long viewRowCount = VIEW_ROW_COUNT_EDEFAULT;
+
+    /**
+     * The cached value of the '{@link #getViewIndicators() <em>View Indicators</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @see #getViewIndicators()
+     * @generated
+     * @ordered
+     */
+    protected EList<ViewIndicator> viewIndicators;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -238,11 +250,31 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
+    public EList<ViewIndicator> getViewIndicators() {
+        if (viewIndicators == null) {
+            viewIndicators = new EObjectContainmentEList<ViewIndicator>(ViewIndicator.class, this, SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS);
+        }
+        return viewIndicators;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated NOT
      */
     public boolean addTableIndicator(TableIndicator tableIndicator) {
         return this.getTableIndicators().add(tableIndicator);
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    public boolean addViewIndicator(ViewIndicator viewIndicator) {
+        return this.getViewIndicators().add(viewIndicator);
     }
 
     /**
@@ -254,6 +286,8 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
         switch (featureID) {
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_INDICATORS:
                 return ((InternalEList<?>)getTableIndicators()).basicRemove(otherEnd, msgs);
+            case SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS:
+                return ((InternalEList<?>)getViewIndicators()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -395,6 +429,8 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
                 return getTableIndicators();
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_ROW_COUNT:
                 return new Long(getViewRowCount());
+            case SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS:
+                return getViewIndicators();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -432,6 +468,10 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_ROW_COUNT:
                 setViewRowCount(((Long)newValue).longValue());
                 return;
+            case SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS:
+                getViewIndicators().clear();
+                getViewIndicators().addAll((Collection<? extends ViewIndicator>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -467,6 +507,9 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_ROW_COUNT:
                 setViewRowCount(VIEW_ROW_COUNT_EDEFAULT);
                 return;
+            case SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS:
+                getViewIndicators().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -494,6 +537,8 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
                 return tableIndicators != null && !tableIndicators.isEmpty();
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_ROW_COUNT:
                 return viewRowCount != VIEW_ROW_COUNT_EDEFAULT;
+            case SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS:
+                return viewIndicators != null && !viewIndicators.isEmpty();
         }
         return super.eIsSet(featureID);
     }

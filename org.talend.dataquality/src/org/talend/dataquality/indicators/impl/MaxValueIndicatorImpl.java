@@ -15,14 +15,13 @@ import org.talend.dataquality.indicators.MaxValueIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValueIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MaxValueIndicatorImpl() {
@@ -31,7 +30,6 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

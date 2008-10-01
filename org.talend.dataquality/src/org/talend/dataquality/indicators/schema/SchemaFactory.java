@@ -62,6 +62,24 @@ public interface SchemaFactory extends EFactory {
     CatalogIndicator createCatalogIndicator();
 
     /**
+     * Returns a new object of class '<em>View Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>View Indicator</em>'.
+     * @generated
+     */
+    ViewIndicator createViewIndicator();
+
+    /**
+     * Returns a new object of class '<em>Abstract Table Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Abstract Table Indicator</em>'.
+     * @generated
+     */
+    AbstractTableIndicator createAbstractTableIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

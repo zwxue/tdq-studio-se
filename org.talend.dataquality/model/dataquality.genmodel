@@ -17,6 +17,7 @@
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/CONNECTION"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/SCHEMA"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/MULTIPLE_COLUMN"/>
+        <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/CATALOG"/>
       </genEnums>
       <genClasses ecoreClass="dataquality.ecore#//analysis/Analysis">
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//analysis/Analysis/context"/>
@@ -335,12 +336,17 @@
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/SchemaIndicator/tableRowCount"/>
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/schema/SchemaIndicator/tableIndicators"/>
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/SchemaIndicator/viewRowCount"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/schema/SchemaIndicator/viewIndicators"/>
           <genOperations ecoreOperation="dataquality.ecore#//indicators/schema/SchemaIndicator/addTableIndicator">
             <genParameters ecoreParameter="dataquality.ecore#//indicators/schema/SchemaIndicator/addTableIndicator/tableIndicator"/>
           </genOperations>
+          <genOperations ecoreOperation="dataquality.ecore#//indicators/schema/SchemaIndicator/addViewIndicator">
+            <genParameters ecoreParameter="dataquality.ecore#//indicators/schema/SchemaIndicator/addViewIndicator/viewIndicator"/>
+          </genOperations>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/TableIndicator">
-          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/TableIndicator/rowCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/TableIndicator/keyCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/TableIndicator/indexCount"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/ConnectionIndicator">
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/schema/ConnectionIndicator/catalogIndicators"/>
@@ -355,6 +361,11 @@
           <genOperations ecoreOperation="dataquality.ecore#//indicators/schema/CatalogIndicator/addSchemaIndicator">
             <genParameters ecoreParameter="dataquality.ecore#//indicators/schema/CatalogIndicator/addSchemaIndicator/schemaIndicator"/>
           </genOperations>
+        </genClasses>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/schema/ViewIndicator"/>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/schema/AbstractTableIndicator">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/AbstractTableIndicator/rowCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/schema/AbstractTableIndicator/tableName"/>
         </genClasses>
       </nestedGenPackages>
       <nestedGenPackages prefix="Definition" basePackage="org.talend.dataquality.indicators"

@@ -105,7 +105,7 @@ public class SchemaSwitch<T> {
             case SchemaPackage.TABLE_INDICATOR: {
                 TableIndicator tableIndicator = (TableIndicator)theEObject;
                 T result = caseTableIndicator(tableIndicator);
-                if (result == null) result = caseCompositeIndicator(tableIndicator);
+                if (result == null) result = caseAbstractTableIndicator(tableIndicator);
                 if (result == null) result = caseIndicator(tableIndicator);
                 if (result == null) result = caseModelElement(tableIndicator);
                 if (result == null) result = caseElement(tableIndicator);
@@ -132,6 +132,25 @@ public class SchemaSwitch<T> {
                 if (result == null) result = caseIndicator(catalogIndicator);
                 if (result == null) result = caseModelElement(catalogIndicator);
                 if (result == null) result = caseElement(catalogIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case SchemaPackage.VIEW_INDICATOR: {
+                ViewIndicator viewIndicator = (ViewIndicator)theEObject;
+                T result = caseViewIndicator(viewIndicator);
+                if (result == null) result = caseAbstractTableIndicator(viewIndicator);
+                if (result == null) result = caseIndicator(viewIndicator);
+                if (result == null) result = caseModelElement(viewIndicator);
+                if (result == null) result = caseElement(viewIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case SchemaPackage.ABSTRACT_TABLE_INDICATOR: {
+                AbstractTableIndicator abstractTableIndicator = (AbstractTableIndicator)theEObject;
+                T result = caseAbstractTableIndicator(abstractTableIndicator);
+                if (result == null) result = caseIndicator(abstractTableIndicator);
+                if (result == null) result = caseModelElement(abstractTableIndicator);
+                if (result == null) result = caseElement(abstractTableIndicator);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -196,6 +215,36 @@ public class SchemaSwitch<T> {
      * @generated
      */
     public T caseCatalogIndicator(CatalogIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>View Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>View Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseViewIndicator(ViewIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Abstract Table Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Abstract Table Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAbstractTableIndicator(AbstractTableIndicator object) {
         return null;
     }
 

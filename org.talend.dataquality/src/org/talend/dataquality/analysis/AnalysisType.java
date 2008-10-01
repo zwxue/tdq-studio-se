@@ -84,7 +84,15 @@ public enum AnalysisType implements Enumerator {
      * @generated
      * @ordered
      */
-    MULTIPLE_COLUMN(6, "MULTIPLE_COLUMN", "Multiple Column Analysis");
+    MULTIPLE_COLUMN(6, "MULTIPLE_COLUMN", "Multiple Column Analysis"), /**
+     * The '<em><b>CATALOG</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #CATALOG_VALUE
+     * @generated
+     * @ordered
+     */
+    CATALOG(7, "CATALOG", "Catalog Analysis");
 
     /**
      * The '<em><b>COLUMN</b></em>' literal value.
@@ -192,6 +200,21 @@ public enum AnalysisType implements Enumerator {
     public static final int MULTIPLE_COLUMN_VALUE = 6;
 
     /**
+     * The '<em><b>CATALOG</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>CATALOG</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #CATALOG
+     * @model literal="Catalog Analysis"
+     * @generated
+     * @ordered
+     */
+    public static final int CATALOG_VALUE = 7;
+
+    /**
      * An array of all the '<em><b>Type</b></em>' enumerators.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -206,6 +229,7 @@ public enum AnalysisType implements Enumerator {
             CONNECTION,
             SCHEMA,
             MULTIPLE_COLUMN,
+            CATALOG,
         };
 
     /**
@@ -263,6 +287,7 @@ public enum AnalysisType implements Enumerator {
             case CONNECTION_VALUE: return CONNECTION;
             case SCHEMA_VALUE: return SCHEMA;
             case MULTIPLE_COLUMN_VALUE: return MULTIPLE_COLUMN;
+            case CATALOG_VALUE: return CATALOG;
         }
         return null;
     }

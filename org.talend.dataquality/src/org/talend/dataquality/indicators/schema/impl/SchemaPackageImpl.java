@@ -40,6 +40,7 @@ import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
 
+import org.talend.dataquality.indicators.schema.AbstractTableIndicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
@@ -47,6 +48,7 @@ import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 
 import org.talend.dataquality.indicators.schema.TableIndicator;
+import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl;
 import org.talend.dataquality.reports.ReportsPackage;
@@ -148,6 +150,20 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      * @generated
      */
     private EClass catalogIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass viewIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass abstractTableIndicatorEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -314,6 +330,15 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EReference getSchemaIndicator_ViewIndicators() {
+        return (EReference)schemaIndicatorEClass.getEStructuralFeatures().get(8);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getTableIndicator() {
         return tableIndicatorEClass;
     }
@@ -323,8 +348,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getTableIndicator_RowCount() {
+    public EAttribute getTableIndicator_KeyCount() {
         return (EAttribute)tableIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTableIndicator_IndexCount() {
+        return (EAttribute)tableIndicatorEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -379,6 +413,42 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
      */
     public EReference getCatalogIndicator_SchemaIndicators() {
         return (EReference)catalogIndicatorEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getViewIndicator() {
+        return viewIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getAbstractTableIndicator() {
+        return abstractTableIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getAbstractTableIndicator_RowCount() {
+        return (EAttribute)abstractTableIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getAbstractTableIndicator_TableName() {
+        return (EAttribute)abstractTableIndicatorEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -472,9 +542,11 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         createEAttribute(schemaIndicatorEClass, SCHEMA_INDICATOR__TABLE_ROW_COUNT);
         createEReference(schemaIndicatorEClass, SCHEMA_INDICATOR__TABLE_INDICATORS);
         createEAttribute(schemaIndicatorEClass, SCHEMA_INDICATOR__VIEW_ROW_COUNT);
+        createEReference(schemaIndicatorEClass, SCHEMA_INDICATOR__VIEW_INDICATORS);
 
         tableIndicatorEClass = createEClass(TABLE_INDICATOR);
-        createEAttribute(tableIndicatorEClass, TABLE_INDICATOR__ROW_COUNT);
+        createEAttribute(tableIndicatorEClass, TABLE_INDICATOR__KEY_COUNT);
+        createEAttribute(tableIndicatorEClass, TABLE_INDICATOR__INDEX_COUNT);
 
         connectionIndicatorEClass = createEClass(CONNECTION_INDICATOR);
         createEReference(connectionIndicatorEClass, CONNECTION_INDICATOR__CATALOG_INDICATORS);
@@ -483,6 +555,12 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         catalogIndicatorEClass = createEClass(CATALOG_INDICATOR);
         createEAttribute(catalogIndicatorEClass, CATALOG_INDICATOR__SCHEMA_COUNT);
         createEReference(catalogIndicatorEClass, CATALOG_INDICATOR__SCHEMA_INDICATORS);
+
+        viewIndicatorEClass = createEClass(VIEW_INDICATOR);
+
+        abstractTableIndicatorEClass = createEClass(ABSTRACT_TABLE_INDICATOR);
+        createEAttribute(abstractTableIndicatorEClass, ABSTRACT_TABLE_INDICATOR__ROW_COUNT);
+        createEAttribute(abstractTableIndicatorEClass, ABSTRACT_TABLE_INDICATOR__TABLE_NAME);
     }
 
     /**
@@ -517,9 +595,11 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
         // Add supertypes to classes
         schemaIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
-        tableIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
+        tableIndicatorEClass.getESuperTypes().add(this.getAbstractTableIndicator());
         connectionIndicatorEClass.getESuperTypes().add(this.getCatalogIndicator());
         catalogIndicatorEClass.getESuperTypes().add(this.getSchemaIndicator());
+        viewIndicatorEClass.getESuperTypes().add(this.getAbstractTableIndicator());
+        abstractTableIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(schemaIndicatorEClass, SchemaIndicator.class, "SchemaIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -531,12 +611,17 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
         initEAttribute(getSchemaIndicator_TableRowCount(), ecorePackage.getELong(), "tableRowCount", null, 0, 1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getSchemaIndicator_TableIndicators(), this.getTableIndicator(), null, "tableIndicators", null, 0, -1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getSchemaIndicator_ViewRowCount(), ecorePackage.getELong(), "viewRowCount", null, 0, 1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSchemaIndicator_ViewIndicators(), this.getViewIndicator(), null, "viewIndicators", null, 0, -1, SchemaIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(schemaIndicatorEClass, ecorePackage.getEBoolean(), "addTableIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, this.getTableIndicator(), "tableIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+        op = addEOperation(schemaIndicatorEClass, ecorePackage.getEBoolean(), "addViewIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, this.getViewIndicator(), "viewIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
+
         initEClass(tableIndicatorEClass, TableIndicator.class, "TableIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getTableIndicator_RowCount(), ecorePackage.getELong(), "rowCount", null, 0, 1, TableIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTableIndicator_KeyCount(), ecorePackage.getEInt(), "keyCount", null, 0, 1, TableIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTableIndicator_IndexCount(), ecorePackage.getEInt(), "indexCount", null, 0, 1, TableIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(connectionIndicatorEClass, ConnectionIndicator.class, "ConnectionIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getConnectionIndicator_CatalogIndicators(), this.getCatalogIndicator(), null, "catalogIndicators", null, 0, -1, ConnectionIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -551,6 +636,12 @@ public class SchemaPackageImpl extends EPackageImpl implements SchemaPackage {
 
         op = addEOperation(catalogIndicatorEClass, ecorePackage.getEBoolean(), "addSchemaIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, this.getSchemaIndicator(), "schemaIndicator", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(viewIndicatorEClass, ViewIndicator.class, "ViewIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(abstractTableIndicatorEClass, AbstractTableIndicator.class, "AbstractTableIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getAbstractTableIndicator_RowCount(), ecorePackage.getELong(), "rowCount", null, 0, 1, AbstractTableIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAbstractTableIndicator_TableName(), ecorePackage.getEString(), "tableName", null, 0, 1, AbstractTableIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     }
 
 } //SchemaPackageImpl

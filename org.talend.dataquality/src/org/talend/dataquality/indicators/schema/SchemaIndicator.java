@@ -26,6 +26,7 @@ import org.talend.dataquality.indicators.Indicator;
  *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableRowCount <em>Table Row Count</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableIndicators <em>Table Indicators</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getViewRowCount <em>View Row Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getViewIndicators <em>View Indicators</em>}</li>
  * </ul>
  * </p>
  *
@@ -76,12 +77,36 @@ public interface SchemaIndicator extends CompositeIndicator {
     void setViewRowCount(long value);
 
     /**
+     * Returns the value of the '<em><b>View Indicators</b></em>' containment reference list.
+     * The list contents are of type {@link org.talend.dataquality.indicators.schema.ViewIndicator}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>View Indicators</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>View Indicators</em>' containment reference list.
+     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getSchemaIndicator_ViewIndicators()
+     * @model containment="true"
+     * @generated
+     */
+    EList<ViewIndicator> getViewIndicators();
+
+    /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @model
      * @generated
      */
     boolean addTableIndicator(TableIndicator tableIndicator);
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model
+     * @generated
+     */
+    boolean addViewIndicator(ViewIndicator viewIndicator);
 
     /**
      * Returns the value of the '<em><b>Table Count</b></em>' attribute.

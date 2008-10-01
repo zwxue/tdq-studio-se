@@ -222,6 +222,7 @@ public class ConnectionIndicatorImpl extends CatalogIndicatorImpl implements Con
         boolean ok = super.reset();
         this.catalogCount = CATALOG_COUNT_EDEFAULT;
         this.getCatalogIndicators().clear();
+        this.getSchemaIndicators().clear();
         return ok;
     }
 

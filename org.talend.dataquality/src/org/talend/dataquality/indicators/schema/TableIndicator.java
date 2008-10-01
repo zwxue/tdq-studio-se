@@ -16,7 +16,8 @@ import org.talend.dataquality.indicators.CompositeIndicator;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.schema.TableIndicator#getRowCount <em>Row Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.schema.TableIndicator#getKeyCount <em>Key Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.schema.TableIndicator#getIndexCount <em>Index Count</em>}</li>
  * </ul>
  * </p>
  *
@@ -24,31 +25,55 @@ import org.talend.dataquality.indicators.CompositeIndicator;
  * @model
  * @generated
  */
-public interface TableIndicator extends CompositeIndicator {
+public interface TableIndicator extends AbstractTableIndicator {
     /**
-     * Returns the value of the '<em><b>Row Count</b></em>' attribute.
+     * Returns the value of the '<em><b>Key Count</b></em>' attribute.
      * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Row Count</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Row Count</em>' attribute.
-     * @see #setRowCount(long)
-     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getTableIndicator_RowCount()
+     * <!-- begin-model-doc -->
+     * Number of Primary keys
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Key Count</em>' attribute.
+     * @see #setKeyCount(int)
+     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getTableIndicator_KeyCount()
      * @model
      * @generated
      */
-    long getRowCount();
+    int getKeyCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.schema.TableIndicator#getRowCount <em>Row Count</em>}' attribute.
+     * Sets the value of the '{@link org.talend.dataquality.indicators.schema.TableIndicator#getKeyCount <em>Key Count</em>}' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Row Count</em>' attribute.
-     * @see #getRowCount()
+     * @param value the new value of the '<em>Key Count</em>' attribute.
+     * @see #getKeyCount()
      * @generated
      */
-    void setRowCount(long value);
+    void setKeyCount(int value);
+
+    /**
+     * Returns the value of the '<em><b>Index Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * Number of indices
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Index Count</em>' attribute.
+     * @see #setIndexCount(int)
+     * @see org.talend.dataquality.indicators.schema.SchemaPackage#getTableIndicator_IndexCount()
+     * @model
+     * @generated
+     */
+    int getIndexCount();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.schema.TableIndicator#getIndexCount <em>Index Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Index Count</em>' attribute.
+     * @see #getIndexCount()
+     * @generated
+     */
+    void setIndexCount(int value);
 
 } // TableIndicator

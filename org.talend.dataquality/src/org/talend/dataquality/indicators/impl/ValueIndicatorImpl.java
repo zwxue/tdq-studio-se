@@ -36,9 +36,9 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
     private static Logger log = Logger.getLogger(ValueIndicatorImpl.class);
 
     /**
-     * The default value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getValue()
      * @generated
      * @ordered
@@ -56,9 +56,9 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
     protected String value = VALUE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getDatatype() <em>Datatype</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getDatatype()
      * @generated
      * @ordered
@@ -66,9 +66,9 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
     protected static final int DATATYPE_EDEFAULT = 0;
 
     /**
-     * The cached value of the '{@link #getDatatype() <em>Datatype</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getDatatype() <em>Datatype</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getDatatype()
      * @generated
      * @ordered
@@ -77,7 +77,6 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected ValueIndicatorImpl() {
@@ -86,7 +85,6 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -96,7 +94,6 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public String getValue() {
@@ -105,7 +102,6 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setValue(String newValue) {
@@ -117,7 +113,6 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public int getDatatype() {
@@ -126,94 +121,86 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setDatatype(int newDatatype) {
         int oldDatatype = datatype;
         datatype = newDatatype;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.VALUE_INDICATOR__DATATYPE, oldDatatype,
-                    datatype));
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.VALUE_INDICATOR__DATATYPE, oldDatatype, datatype));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.VALUE_INDICATOR__VALUE:
-            return getValue();
-        case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
-            return new Integer(getDatatype());
+            case IndicatorsPackage.VALUE_INDICATOR__VALUE:
+                return getValue();
+            case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
+                return new Integer(getDatatype());
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.VALUE_INDICATOR__VALUE:
-            setValue((String) newValue);
-            return;
-        case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
-            setDatatype(((Integer) newValue).intValue());
-            return;
+            case IndicatorsPackage.VALUE_INDICATOR__VALUE:
+                setValue((String)newValue);
+                return;
+            case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
+                setDatatype(((Integer)newValue).intValue());
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.VALUE_INDICATOR__VALUE:
-            setValue(VALUE_EDEFAULT);
-            return;
-        case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
-            setDatatype(DATATYPE_EDEFAULT);
-            return;
+            case IndicatorsPackage.VALUE_INDICATOR__VALUE:
+                setValue(VALUE_EDEFAULT);
+                return;
+            case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
+                setDatatype(DATATYPE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.VALUE_INDICATOR__VALUE:
-            return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
-        case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
-            return datatype != DATATYPE_EDEFAULT;
+            case IndicatorsPackage.VALUE_INDICATOR__VALUE:
+                return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
+            case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
+                return datatype != DATATYPE_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy())
-            return super.toString();
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (value: ");

@@ -378,13 +378,22 @@ public interface SchemaPackage extends EPackage {
     int SCHEMA_INDICATOR__VIEW_ROW_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 7;
 
     /**
+     * The feature id for the '<em><b>View Indicators</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SCHEMA_INDICATOR__VIEW_INDICATORS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 8;
+
+    /**
      * The number of structural features of the '<em>Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEMA_INDICATOR_FEATURE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 8;
+    int SCHEMA_INDICATOR_FEATURE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 9;
 
 
     /**
@@ -396,258 +405,6 @@ public interface SchemaPackage extends EPackage {
      * @generated
      */
     int TABLE_INDICATOR = 1;
-
-    /**
-     * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__NAME = IndicatorsPackage.COMPOSITE_INDICATOR__NAME;
-
-    /**
-     * The feature id for the '<em><b>Visibility</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__VISIBILITY = IndicatorsPackage.COMPOSITE_INDICATOR__VISIBILITY;
-
-    /**
-     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__CLIENT_DEPENDENCY = IndicatorsPackage.COMPOSITE_INDICATOR__CLIENT_DEPENDENCY;
-
-    /**
-     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__SUPPLIER_DEPENDENCY = IndicatorsPackage.COMPOSITE_INDICATOR__SUPPLIER_DEPENDENCY;
-
-    /**
-     * The feature id for the '<em><b>Constraint</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__CONSTRAINT = IndicatorsPackage.COMPOSITE_INDICATOR__CONSTRAINT;
-
-    /**
-     * The feature id for the '<em><b>Namespace</b></em>' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__NAMESPACE = IndicatorsPackage.COMPOSITE_INDICATOR__NAMESPACE;
-
-    /**
-     * The feature id for the '<em><b>Importer</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__IMPORTER = IndicatorsPackage.COMPOSITE_INDICATOR__IMPORTER;
-
-    /**
-     * The feature id for the '<em><b>Stereotype</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__STEREOTYPE = IndicatorsPackage.COMPOSITE_INDICATOR__STEREOTYPE;
-
-    /**
-     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__TAGGED_VALUE = IndicatorsPackage.COMPOSITE_INDICATOR__TAGGED_VALUE;
-
-    /**
-     * The feature id for the '<em><b>Document</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__DOCUMENT = IndicatorsPackage.COMPOSITE_INDICATOR__DOCUMENT;
-
-    /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__DESCRIPTION = IndicatorsPackage.COMPOSITE_INDICATOR__DESCRIPTION;
-
-    /**
-     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__RESPONSIBLE_PARTY = IndicatorsPackage.COMPOSITE_INDICATOR__RESPONSIBLE_PARTY;
-
-    /**
-     * The feature id for the '<em><b>Element Node</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__ELEMENT_NODE = IndicatorsPackage.COMPOSITE_INDICATOR__ELEMENT_NODE;
-
-    /**
-     * The feature id for the '<em><b>Set</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__SET = IndicatorsPackage.COMPOSITE_INDICATOR__SET;
-
-    /**
-     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__RENDERED_OBJECT = IndicatorsPackage.COMPOSITE_INDICATOR__RENDERED_OBJECT;
-
-    /**
-     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__VOCABULARY_ELEMENT = IndicatorsPackage.COMPOSITE_INDICATOR__VOCABULARY_ELEMENT;
-
-    /**
-     * The feature id for the '<em><b>Measurement</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__MEASUREMENT = IndicatorsPackage.COMPOSITE_INDICATOR__MEASUREMENT;
-
-    /**
-     * The feature id for the '<em><b>Change Request</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__CHANGE_REQUEST = IndicatorsPackage.COMPOSITE_INDICATOR__CHANGE_REQUEST;
-
-    /**
-     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__DASDL_PROPERTY = IndicatorsPackage.COMPOSITE_INDICATOR__DASDL_PROPERTY;
-
-    /**
-     * The feature id for the '<em><b>Count</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__COUNT = IndicatorsPackage.COMPOSITE_INDICATOR__COUNT;
-
-    /**
-     * The feature id for the '<em><b>Null Count</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__NULL_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR__NULL_COUNT;
-
-    /**
-     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__PARAMETERS = IndicatorsPackage.COMPOSITE_INDICATOR__PARAMETERS;
-
-    /**
-     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__ANALYZED_ELEMENT = IndicatorsPackage.COMPOSITE_INDICATOR__ANALYZED_ELEMENT;
-
-    /**
-     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__DATAMINING_TYPE = IndicatorsPackage.COMPOSITE_INDICATOR__DATAMINING_TYPE;
-
-    /**
-     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__INDICATOR_DEFINITION = IndicatorsPackage.COMPOSITE_INDICATOR__INDICATOR_DEFINITION;
-
-    /**
-     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__INSTANTIATED_EXPRESSIONS = IndicatorsPackage.COMPOSITE_INDICATOR__INSTANTIATED_EXPRESSIONS;
-
-    /**
-     * The feature id for the '<em><b>Row Count</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR__ROW_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 0;
-
-    /**
-     * The number of structural features of the '<em>Table Indicator</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TABLE_INDICATOR_FEATURE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 1;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.schema.impl.ConnectionIndicatorImpl <em>Connection Indicator</em>}' class.
@@ -668,6 +425,556 @@ public interface SchemaPackage extends EPackage {
      * @generated
      */
     int CATALOG_INDICATOR = 3;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.schema.impl.AbstractTableIndicatorImpl <em>Abstract Table Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.schema.impl.AbstractTableIndicatorImpl
+     * @see org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl#getAbstractTableIndicator()
+     * @generated
+     */
+    int ABSTRACT_TABLE_INDICATOR = 5;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__NAME = IndicatorsPackage.INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__VISIBILITY = IndicatorsPackage.INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__CLIENT_DEPENDENCY = IndicatorsPackage.INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__SUPPLIER_DEPENDENCY = IndicatorsPackage.INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__CONSTRAINT = IndicatorsPackage.INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__NAMESPACE = IndicatorsPackage.INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__IMPORTER = IndicatorsPackage.INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__STEREOTYPE = IndicatorsPackage.INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__TAGGED_VALUE = IndicatorsPackage.INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__DOCUMENT = IndicatorsPackage.INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__DESCRIPTION = IndicatorsPackage.INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__RESPONSIBLE_PARTY = IndicatorsPackage.INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__ELEMENT_NODE = IndicatorsPackage.INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__SET = IndicatorsPackage.INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__RENDERED_OBJECT = IndicatorsPackage.INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__VOCABULARY_ELEMENT = IndicatorsPackage.INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__MEASUREMENT = IndicatorsPackage.INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__CHANGE_REQUEST = IndicatorsPackage.INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__DASDL_PROPERTY = IndicatorsPackage.INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__COUNT = IndicatorsPackage.INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__NULL_COUNT = IndicatorsPackage.INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__PARAMETERS = IndicatorsPackage.INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__ANALYZED_ELEMENT = IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__DATAMINING_TYPE = IndicatorsPackage.INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__INDICATOR_DEFINITION = IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__INSTANTIATED_EXPRESSIONS = IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__ROW_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Table Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__TABLE_NAME = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The number of structural features of the '<em>Abstract Table Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 2;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__NAME = ABSTRACT_TABLE_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__VISIBILITY = ABSTRACT_TABLE_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__CLIENT_DEPENDENCY = ABSTRACT_TABLE_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__SUPPLIER_DEPENDENCY = ABSTRACT_TABLE_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__CONSTRAINT = ABSTRACT_TABLE_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__NAMESPACE = ABSTRACT_TABLE_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__IMPORTER = ABSTRACT_TABLE_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__STEREOTYPE = ABSTRACT_TABLE_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__TAGGED_VALUE = ABSTRACT_TABLE_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__DOCUMENT = ABSTRACT_TABLE_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__DESCRIPTION = ABSTRACT_TABLE_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__RESPONSIBLE_PARTY = ABSTRACT_TABLE_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__ELEMENT_NODE = ABSTRACT_TABLE_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__SET = ABSTRACT_TABLE_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__RENDERED_OBJECT = ABSTRACT_TABLE_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__VOCABULARY_ELEMENT = ABSTRACT_TABLE_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__MEASUREMENT = ABSTRACT_TABLE_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__CHANGE_REQUEST = ABSTRACT_TABLE_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__DASDL_PROPERTY = ABSTRACT_TABLE_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__COUNT = ABSTRACT_TABLE_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__NULL_COUNT = ABSTRACT_TABLE_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__PARAMETERS = ABSTRACT_TABLE_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__ANALYZED_ELEMENT = ABSTRACT_TABLE_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__DATAMINING_TYPE = ABSTRACT_TABLE_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__INDICATOR_DEFINITION = ABSTRACT_TABLE_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__INSTANTIATED_EXPRESSIONS = ABSTRACT_TABLE_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__ROW_COUNT = ABSTRACT_TABLE_INDICATOR__ROW_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Table Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__TABLE_NAME = ABSTRACT_TABLE_INDICATOR__TABLE_NAME;
+
+    /**
+     * The feature id for the '<em><b>Key Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__KEY_COUNT = ABSTRACT_TABLE_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Index Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__INDEX_COUNT = ABSTRACT_TABLE_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The number of structural features of the '<em>Table Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR_FEATURE_COUNT = ABSTRACT_TABLE_INDICATOR_FEATURE_COUNT + 2;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -974,6 +1281,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CATALOG_INDICATOR__VIEW_ROW_COUNT = SCHEMA_INDICATOR__VIEW_ROW_COUNT;
+
+    /**
+     * The feature id for the '<em><b>View Indicators</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CATALOG_INDICATOR__VIEW_INDICATORS = SCHEMA_INDICATOR__VIEW_INDICATORS;
 
     /**
      * The feature id for the '<em><b>Schema Count</b></em>' attribute.
@@ -1309,6 +1625,15 @@ public interface SchemaPackage extends EPackage {
     int CONNECTION_INDICATOR__VIEW_ROW_COUNT = CATALOG_INDICATOR__VIEW_ROW_COUNT;
 
     /**
+     * The feature id for the '<em><b>View Indicators</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__VIEW_INDICATORS = CATALOG_INDICATOR__VIEW_INDICATORS;
+
+    /**
      * The feature id for the '<em><b>Schema Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1353,6 +1678,277 @@ public interface SchemaPackage extends EPackage {
      */
     int CONNECTION_INDICATOR_FEATURE_COUNT = CATALOG_INDICATOR_FEATURE_COUNT + 2;
 
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.schema.impl.ViewIndicatorImpl <em>View Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.schema.impl.ViewIndicatorImpl
+     * @see org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl#getViewIndicator()
+     * @generated
+     */
+    int VIEW_INDICATOR = 4;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__NAME = ABSTRACT_TABLE_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__VISIBILITY = ABSTRACT_TABLE_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__CLIENT_DEPENDENCY = ABSTRACT_TABLE_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__SUPPLIER_DEPENDENCY = ABSTRACT_TABLE_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__CONSTRAINT = ABSTRACT_TABLE_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__NAMESPACE = ABSTRACT_TABLE_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__IMPORTER = ABSTRACT_TABLE_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__STEREOTYPE = ABSTRACT_TABLE_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__TAGGED_VALUE = ABSTRACT_TABLE_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__DOCUMENT = ABSTRACT_TABLE_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__DESCRIPTION = ABSTRACT_TABLE_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__RESPONSIBLE_PARTY = ABSTRACT_TABLE_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__ELEMENT_NODE = ABSTRACT_TABLE_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__SET = ABSTRACT_TABLE_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__RENDERED_OBJECT = ABSTRACT_TABLE_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__VOCABULARY_ELEMENT = ABSTRACT_TABLE_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__MEASUREMENT = ABSTRACT_TABLE_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__CHANGE_REQUEST = ABSTRACT_TABLE_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__DASDL_PROPERTY = ABSTRACT_TABLE_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__COUNT = ABSTRACT_TABLE_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__NULL_COUNT = ABSTRACT_TABLE_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__PARAMETERS = ABSTRACT_TABLE_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__ANALYZED_ELEMENT = ABSTRACT_TABLE_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__DATAMINING_TYPE = ABSTRACT_TABLE_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__INDICATOR_DEFINITION = ABSTRACT_TABLE_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__INSTANTIATED_EXPRESSIONS = ABSTRACT_TABLE_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Row Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__ROW_COUNT = ABSTRACT_TABLE_INDICATOR__ROW_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Table Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__TABLE_NAME = ABSTRACT_TABLE_INDICATOR__TABLE_NAME;
+
+    /**
+     * The number of structural features of the '<em>View Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR_FEATURE_COUNT = ABSTRACT_TABLE_INDICATOR_FEATURE_COUNT + 0;
+
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.schema.SchemaIndicator <em>Indicator</em>}'.
@@ -1387,6 +1983,17 @@ public interface SchemaPackage extends EPackage {
     EAttribute getSchemaIndicator_ViewRowCount();
 
     /**
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getViewIndicators <em>View Indicators</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>View Indicators</em>'.
+     * @see org.talend.dataquality.indicators.schema.SchemaIndicator#getViewIndicators()
+     * @see #getSchemaIndicator()
+     * @generated
+     */
+    EReference getSchemaIndicator_ViewIndicators();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.schema.TableIndicator <em>Table Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1397,15 +2004,26 @@ public interface SchemaPackage extends EPackage {
     EClass getTableIndicator();
 
     /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.TableIndicator#getRowCount <em>Row Count</em>}'.
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.TableIndicator#getKeyCount <em>Key Count</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Row Count</em>'.
-     * @see org.talend.dataquality.indicators.schema.TableIndicator#getRowCount()
+     * @return the meta object for the attribute '<em>Key Count</em>'.
+     * @see org.talend.dataquality.indicators.schema.TableIndicator#getKeyCount()
      * @see #getTableIndicator()
      * @generated
      */
-    EAttribute getTableIndicator_RowCount();
+    EAttribute getTableIndicator_KeyCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.TableIndicator#getIndexCount <em>Index Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Index Count</em>'.
+     * @see org.talend.dataquality.indicators.schema.TableIndicator#getIndexCount()
+     * @see #getTableIndicator()
+     * @generated
+     */
+    EAttribute getTableIndicator_IndexCount();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.schema.ConnectionIndicator <em>Connection Indicator</em>}'.
@@ -1470,6 +2088,48 @@ public interface SchemaPackage extends EPackage {
      * @generated
      */
     EReference getCatalogIndicator_SchemaIndicators();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.schema.ViewIndicator <em>View Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>View Indicator</em>'.
+     * @see org.talend.dataquality.indicators.schema.ViewIndicator
+     * @generated
+     */
+    EClass getViewIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.schema.AbstractTableIndicator <em>Abstract Table Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Abstract Table Indicator</em>'.
+     * @see org.talend.dataquality.indicators.schema.AbstractTableIndicator
+     * @generated
+     */
+    EClass getAbstractTableIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.AbstractTableIndicator#getRowCount <em>Row Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Row Count</em>'.
+     * @see org.talend.dataquality.indicators.schema.AbstractTableIndicator#getRowCount()
+     * @see #getAbstractTableIndicator()
+     * @generated
+     */
+    EAttribute getAbstractTableIndicator_RowCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.AbstractTableIndicator#getTableName <em>Table Name</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Table Name</em>'.
+     * @see org.talend.dataquality.indicators.schema.AbstractTableIndicator#getTableName()
+     * @see #getAbstractTableIndicator()
+     * @generated
+     */
+    EAttribute getAbstractTableIndicator_TableName();
 
     /**
      * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.schema.SchemaIndicator#getTableCount <em>Table Count</em>}'.
@@ -1586,6 +2246,14 @@ public interface SchemaPackage extends EPackage {
         EAttribute SCHEMA_INDICATOR__VIEW_ROW_COUNT = eINSTANCE.getSchemaIndicator_ViewRowCount();
 
         /**
+         * The meta object literal for the '<em><b>View Indicators</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference SCHEMA_INDICATOR__VIEW_INDICATORS = eINSTANCE.getSchemaIndicator_ViewIndicators();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.schema.impl.TableIndicatorImpl <em>Table Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -1596,12 +2264,20 @@ public interface SchemaPackage extends EPackage {
         EClass TABLE_INDICATOR = eINSTANCE.getTableIndicator();
 
         /**
-         * The meta object literal for the '<em><b>Row Count</b></em>' attribute feature.
+         * The meta object literal for the '<em><b>Key Count</b></em>' attribute feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
-        EAttribute TABLE_INDICATOR__ROW_COUNT = eINSTANCE.getTableIndicator_RowCount();
+        EAttribute TABLE_INDICATOR__KEY_COUNT = eINSTANCE.getTableIndicator_KeyCount();
+
+        /**
+         * The meta object literal for the '<em><b>Index Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TABLE_INDICATOR__INDEX_COUNT = eINSTANCE.getTableIndicator_IndexCount();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.schema.impl.ConnectionIndicatorImpl <em>Connection Indicator</em>}' class.
@@ -1654,6 +2330,42 @@ public interface SchemaPackage extends EPackage {
          * @generated
          */
         EReference CATALOG_INDICATOR__SCHEMA_INDICATORS = eINSTANCE.getCatalogIndicator_SchemaIndicators();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.schema.impl.ViewIndicatorImpl <em>View Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.schema.impl.ViewIndicatorImpl
+         * @see org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl#getViewIndicator()
+         * @generated
+         */
+        EClass VIEW_INDICATOR = eINSTANCE.getViewIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.schema.impl.AbstractTableIndicatorImpl <em>Abstract Table Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.schema.impl.AbstractTableIndicatorImpl
+         * @see org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl#getAbstractTableIndicator()
+         * @generated
+         */
+        EClass ABSTRACT_TABLE_INDICATOR = eINSTANCE.getAbstractTableIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Row Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ABSTRACT_TABLE_INDICATOR__ROW_COUNT = eINSTANCE.getAbstractTableIndicator_RowCount();
+
+        /**
+         * The meta object literal for the '<em><b>Table Name</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ABSTRACT_TABLE_INDICATOR__TABLE_NAME = eINSTANCE.getAbstractTableIndicator_TableName();
 
         /**
          * The meta object literal for the '<em><b>Table Count</b></em>' attribute feature.

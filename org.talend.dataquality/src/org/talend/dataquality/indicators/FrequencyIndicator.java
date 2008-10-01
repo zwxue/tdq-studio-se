@@ -41,14 +41,14 @@ public interface FrequencyIndicator extends Indicator {
     public static final String OTHER = "Other";
 
     /**
-     * Returns the value of the '<em><b>Unique Values</b></em>' attribute list. The list contents are of type
-     * {@link java.lang.Object}. <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Unique Values</b></em>' attribute list.
+     * The list contents are of type {@link java.lang.Object}.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Unique Values</em>' attribute list isn't clear, there really should be more of a
      * description here...
      * </p>
      * <!-- end-user-doc -->
-     * 
      * @return the value of the '<em>Unique Values</em>' attribute list.
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getFrequencyIndicator_UniqueValues()
      * @model
@@ -76,16 +76,15 @@ public interface FrequencyIndicator extends Indicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @model kind="operation" dataType="org.talend.dataquality.indicators.JavaSet"
      * @generated
      */
     Set<Object> getDistinctValues();
 
     /**
-     * Returns the value of the '<em><b>Distinct Value Count</b></em>' attribute. <!-- begin-user-doc --> <!--
+     * Returns the value of the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @return the value of the '<em>Distinct Value Count</em>' attribute.
      * @see #setDistinctValueCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getFrequencyIndicator_DistinctValueCount()
@@ -95,9 +94,8 @@ public interface FrequencyIndicator extends Indicator {
     Long getDistinctValueCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.FrequencyIndicator#getDistinctValueCount
-     * <em>Distinct Value Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * Sets the value of the '{@link org.talend.dataquality.indicators.FrequencyIndicator#getDistinctValueCount <em>Distinct Value Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @param value the new value of the '<em>Distinct Value Count</em>' attribute.
      * @see #getDistinctValueCount()
      * @generated
@@ -105,9 +103,9 @@ public interface FrequencyIndicator extends Indicator {
     void setDistinctValueCount(Long value);
 
     /**
-     * Returns the value of the '<em><b>Unique Value Count</b></em>' attribute. <!-- begin-user-doc --> <!--
+     * Returns the value of the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @return the value of the '<em>Unique Value Count</em>' attribute.
      * @see #setUniqueValueCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getFrequencyIndicator_UniqueValueCount()
@@ -117,9 +115,8 @@ public interface FrequencyIndicator extends Indicator {
     Long getUniqueValueCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.FrequencyIndicator#getUniqueValueCount
-     * <em>Unique Value Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * Sets the value of the '{@link org.talend.dataquality.indicators.FrequencyIndicator#getUniqueValueCount <em>Unique Value Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @param value the new value of the '<em>Unique Value Count</em>' attribute.
      * @see #getUniqueValueCount()
      * @generated
@@ -127,13 +124,13 @@ public interface FrequencyIndicator extends Indicator {
     void setUniqueValueCount(Long value);
 
     /**
-     * Returns the value of the '<em><b>Duplicate Value Count</b></em>' attribute. <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Duplicate Value Count</em>' attribute isn't clear, there really should be more of a
      * description here...
      * </p>
      * <!-- end-user-doc -->
-     * 
      * @return the value of the '<em>Duplicate Value Count</em>' attribute.
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getFrequencyIndicator_DuplicateValueCount()
      * @model transient="true" changeable="false" volatile="true"
@@ -142,13 +139,13 @@ public interface FrequencyIndicator extends Indicator {
     Long getDuplicateValueCount();
 
     /**
-     * Returns the value of the '<em><b>Value To Freq</b></em>' attribute. <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Value To Freq</em>' attribute isn't clear, there really should be more of a
      * description here...
      * </p>
      * <!-- end-user-doc -->
-     * 
      * @return the value of the '<em>Value To Freq</em>' attribute.
      * @see #setValueToFreq(HashMap)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getFrequencyIndicator_ValueToFreq()
@@ -158,9 +155,8 @@ public interface FrequencyIndicator extends Indicator {
     HashMap<Object, Long> getValueToFreq();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.FrequencyIndicator#getValueToFreq
-     * <em>Value To Freq</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * Sets the value of the '{@link org.talend.dataquality.indicators.FrequencyIndicator#getValueToFreq <em>Value To Freq</em>}' attribute.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @param value the new value of the '<em>Value To Freq</em>' attribute.
      * @see #getValueToFreq()
      * @generated
