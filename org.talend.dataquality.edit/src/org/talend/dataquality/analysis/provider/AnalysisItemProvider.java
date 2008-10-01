@@ -385,6 +385,11 @@ public class AnalysisItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 SchemaFactory.eINSTANCE.createAbstractTableIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  SchemaFactory.eINSTANCE.createTableIndicator()));
 
         newChildDescriptors.add
@@ -396,6 +401,11 @@ public class AnalysisItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  SchemaFactory.eINSTANCE.createConnectionIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 SchemaFactory.eINSTANCE.createViewIndicator()));
 
         newChildDescriptors.add
             (createChildParameter

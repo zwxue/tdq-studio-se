@@ -168,6 +168,52 @@ public class SchemaItemProviderAdapterFactory extends SchemaAdapterFactory imple
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.schema.ViewIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected ViewIndicatorItemProvider viewIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.schema.ViewIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createViewIndicatorAdapter() {
+        if (viewIndicatorItemProvider == null) {
+            viewIndicatorItemProvider = new ViewIndicatorItemProvider(this);
+        }
+
+        return viewIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.schema.AbstractTableIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AbstractTableIndicatorItemProvider abstractTableIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.schema.AbstractTableIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAbstractTableIndicatorAdapter() {
+        if (abstractTableIndicatorItemProvider == null) {
+            abstractTableIndicatorItemProvider = new AbstractTableIndicatorItemProvider(this);
+        }
+
+        return abstractTableIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -270,6 +316,8 @@ public class SchemaItemProviderAdapterFactory extends SchemaAdapterFactory imple
         if (tableIndicatorItemProvider != null) tableIndicatorItemProvider.dispose();
         if (connectionIndicatorItemProvider != null) connectionIndicatorItemProvider.dispose();
         if (catalogIndicatorItemProvider != null) catalogIndicatorItemProvider.dispose();
+        if (viewIndicatorItemProvider != null) viewIndicatorItemProvider.dispose();
+        if (abstractTableIndicatorItemProvider != null) abstractTableIndicatorItemProvider.dispose();
     }
 
 }

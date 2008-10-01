@@ -27,24 +27,24 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
-import org.talend.dataquality.indicators.provider.CompositeIndicatorItemProvider;
+import org.talend.dataquality.indicators.provider.IndicatorItemProvider;
 
+import org.talend.dataquality.indicators.schema.AbstractTableIndicator;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
-import org.talend.dataquality.indicators.schema.TableIndicator;
 
 /**
- * This is the item provider adapter for a {@link org.talend.dataquality.indicators.schema.TableIndicator} object.
+ * This is the item provider adapter for a {@link org.talend.dataquality.indicators.schema.AbstractTableIndicator} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class TableIndicatorItemProvider
-    extends AbstractTableIndicatorItemProvider
-    implements	
-        IEditingDomainItemProvider,	
-        IStructuredItemContentProvider,	
-        ITreeItemContentProvider,	
-        IItemLabelProvider,	
+public class AbstractTableIndicatorItemProvider
+    extends IndicatorItemProvider
+    implements
+        IEditingDomainItemProvider,
+        IStructuredItemContentProvider,
+        ITreeItemContentProvider,
+        IItemLabelProvider,
         IItemPropertySource {
     /**
      * This constructs an instance from a factory and a notifier.
@@ -52,7 +52,7 @@ public class TableIndicatorItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public TableIndicatorItemProvider(AdapterFactory adapterFactory) {
+    public AbstractTableIndicatorItemProvider(AdapterFactory adapterFactory) {
         super(adapterFactory);
     }
 
@@ -67,26 +67,26 @@ public class TableIndicatorItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
-            addKeyCountPropertyDescriptor(object);
-            addIndexCountPropertyDescriptor(object);
+            addRowCountPropertyDescriptor(object);
+            addTableNamePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
 
     /**
-     * This adds a property descriptor for the Key Count feature.
+     * This adds a property descriptor for the Row Count feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void addKeyCountPropertyDescriptor(Object object) {
+    protected void addRowCountPropertyDescriptor(Object object) {
         itemPropertyDescriptors.add
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_TableIndicator_keyCount_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_TableIndicator_keyCount_feature", "_UI_TableIndicator_type"),
-                 SchemaPackage.Literals.TABLE_INDICATOR__KEY_COUNT,
+                 getString("_UI_AbstractTableIndicator_rowCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AbstractTableIndicator_rowCount_feature", "_UI_AbstractTableIndicator_type"),
+                 SchemaPackage.Literals.ABSTRACT_TABLE_INDICATOR__ROW_COUNT,
                  true,
                  false,
                  false,
@@ -96,36 +96,36 @@ public class TableIndicatorItemProvider
     }
 
     /**
-     * This adds a property descriptor for the Index Count feature.
+     * This adds a property descriptor for the Table Name feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void addIndexCountPropertyDescriptor(Object object) {
+    protected void addTableNamePropertyDescriptor(Object object) {
         itemPropertyDescriptors.add
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_TableIndicator_indexCount_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_TableIndicator_indexCount_feature", "_UI_TableIndicator_type"),
-                 SchemaPackage.Literals.TABLE_INDICATOR__INDEX_COUNT,
+                 getString("_UI_AbstractTableIndicator_tableName_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AbstractTableIndicator_tableName_feature", "_UI_AbstractTableIndicator_type"),
+                 SchemaPackage.Literals.ABSTRACT_TABLE_INDICATOR__TABLE_NAME,
                  true,
                  false,
                  false,
-                 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
                  null,
                  null));
     }
 
     /**
-     * This returns TableIndicator.gif.
+     * This returns AbstractTableIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/TableIndicator"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/AbstractTableIndicator"));
     }
 
     /**
@@ -136,10 +136,10 @@ public class TableIndicatorItemProvider
      */
     @Override
     public String getText(Object object) {
-        String label = ((TableIndicator)object).getName();
+        String label = ((AbstractTableIndicator)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_TableIndicator_type") :
-            getString("_UI_TableIndicator_type") + " " + label;
+            getString("_UI_AbstractTableIndicator_type") :
+            getString("_UI_AbstractTableIndicator_type") + " " + label;
     }
 
     /**
@@ -153,9 +153,9 @@ public class TableIndicatorItemProvider
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
 
-        switch (notification.getFeatureID(TableIndicator.class)) {
-            case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
-            case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
+        switch (notification.getFeatureID(AbstractTableIndicator.class)) {
+            case SchemaPackage.ABSTRACT_TABLE_INDICATOR__ROW_COUNT:
+            case SchemaPackage.ABSTRACT_TABLE_INDICATOR__TABLE_NAME:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }
@@ -172,6 +172,17 @@ public class TableIndicatorItemProvider
     @Override
     protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
+
+    /**
+     * Return the resource locator for this item provider's resources.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public ResourceLocator getResourceLocator() {
+        return DataqualityEditPlugin.INSTANCE;
     }
 
 }

@@ -94,6 +94,7 @@ public class SchemaIndicatorItemProvider
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
             childrenFeatures.add(SchemaPackage.Literals.SCHEMA_INDICATOR__TABLE_INDICATORS);
+            childrenFeatures.add(SchemaPackage.Literals.SCHEMA_INDICATOR__VIEW_INDICATORS);
         }
         return childrenFeatures;
     }
@@ -312,6 +313,7 @@ public class SchemaIndicatorItemProvider
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_INDICATORS:
+            case SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -333,6 +335,11 @@ public class SchemaIndicatorItemProvider
             (createChildParameter
                 (SchemaPackage.Literals.SCHEMA_INDICATOR__TABLE_INDICATORS,
                  SchemaFactory.eINSTANCE.createTableIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (SchemaPackage.Literals.SCHEMA_INDICATOR__VIEW_INDICATORS,
+                 SchemaFactory.eINSTANCE.createViewIndicator()));
     }
 
     /**
