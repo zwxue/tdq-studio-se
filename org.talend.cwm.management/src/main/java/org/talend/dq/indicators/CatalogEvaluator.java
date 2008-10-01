@@ -12,14 +12,14 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
+public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
 
     /*
      * (non-Javadoc)
@@ -28,12 +28,8 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
      */
     @Override
     protected TdDataProvider getDataManager() {
-        DataProvider dp = this.getAnalyzedElements().iterator().next();
-        if (dp != null) {
-            TdDataProvider tdp = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(dp);
-            return tdp;
-        }
-        return null;
+        Catalog catalog = this.getAnalyzedElements().iterator().next();
+        return catalog != null ? DataProviderHelper.getTdDataProvider(catalog) : null;
     }
 
 }

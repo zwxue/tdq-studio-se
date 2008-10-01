@@ -14,16 +14,16 @@ package org.talend.dq.analysis;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.indicators.ConnectionEvaluator;
+import org.talend.dq.indicators.CatalogEvaluator;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class ConnectionAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
+public class CatalogAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
 
     /*
      * (non-Javadoc)
@@ -33,7 +33,7 @@ public class ConnectionAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
      */
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        ConnectionEvaluator eval = new ConnectionEvaluator();
+        CatalogEvaluator eval = new CatalogEvaluator();
         // // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
@@ -41,11 +41,12 @@ public class ConnectionAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
             if (analyzedElement == null) {
                 continue;
             }
-            TdDataProvider dataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analyzedElement);
-            if (dataProvider == null) {
+
+            TdCatalog cat = SwitchHelpers.CATALOG_SWITCH.doSwitch(analyzedElement);
+            if (cat == null) {
                 continue;
             }
-            eval.storeIndicator(dataProvider, indicator);
+            eval.storeIndicator(cat, indicator);
             // ADDED rli 2008-07-10 fixed for the SchemaIndicator will increased after connection analysis running.
             indicator.reset();
         }

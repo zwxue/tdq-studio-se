@@ -51,6 +51,12 @@ public final class AnalysisExecutorSelector {
         case CONNECTION:
             exec = new ConnectionAnalysisExecutor();
             break;
+        case SCHEMA:
+            exec = new SchemaAnalysisExecutor();
+            break;
+        case CATALOG:
+            exec = new CatalogAnalysisExecutor();
+            break;
         default:
             // this should not happen. This executor has not been tested for a long time.
             exec = null;
