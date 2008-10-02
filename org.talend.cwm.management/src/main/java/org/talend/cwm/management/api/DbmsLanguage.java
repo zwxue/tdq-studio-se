@@ -16,7 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -80,8 +80,12 @@ public class DbmsLanguage {
 
     private static final String LIMIT_REGEXP = ".*(LIMIT){1}\\p{Blank}+\\p{Digit}+,?\\p{Digit}?.*";
 
-    // private static final String EXTRACT_REGEXP =
-    // ".*\\(\\p{Blank}(EXTRACT){1}\\p{Blank}+(FROM){1}\\p{BLANK}+\\)?\\p{Blank}?.*";
+    /**
+     * Temporary table name for replacement before ZQL parsing.
+     */
+    private static final String TMP_TABLE_NAME = "from TMPTABLENAME_ZZ";
+
+    private String invalidZqlQualifiedTableName;
 
     private String[] withoutLimit;
 
@@ -136,10 +140,6 @@ public class DbmsLanguage {
      * @return the sqlIdentifier quoted.
      */
     public String quote(String sqlIdentifier) {
-        // do not quote SQL identifier on MySQL database because ZQLParser does not understand "`"
-        if (is(MYSQL)) {
-            return sqlIdentifier;
-        }
         return dbQuoteString + sqlIdentifier + dbQuoteString;
     }
 
@@ -235,21 +235,21 @@ public class DbmsLanguage {
     // TODO scorreia move this method in a utility class
     public String toQualifiedName(String catalog, String schema, String table) {
         if (is(MSSQL)) {
-            // schema = "dbo";
+            schema = quote("dbo");
             // Bug fixed: 5118. ZQL parser does not understand statement like
             // select count(*) from Talend.dbo.departement
             // hence remove catalog and try statement like
             // select count(*) from dbo.departement
-            catalog = "dbo";
+            // catalog = "dbo";
         }
         if (is(SYBASE_ASE)) {
-            // schema = "dbo";
+            schema = quote("dbo");
             // Bug fixed: 5118. ZQL parser does not understand statement with full qualified name
-            catalog = "dbo";
+            // catalog = "dbo";
         }
 
         StringBuffer qualName = new StringBuffer();
-        if (catalog != null && catalog.length() > 0) {
+        if (catalog != null && catalog.length() > 0 && !is(POSTGRESQL)) {
             qualName.append(catalog);
             qualName.append(DOT);
         }
@@ -265,6 +265,12 @@ public class DbmsLanguage {
         return qualName.toString();
     }
 
+    private String getFromQualifiedTablePattern() {
+        final String dot = "\\.";
+        final String alnum = quote("\\w[\\w\\d_-]*");
+        return new StringBuilder().append("FROM ").append(alnum).append(dot).append(alnum).append(dot).append(alnum).toString();
+    }
+
     /**
      * Method "parseQuery".
      * 
@@ -275,8 +281,15 @@ public class DbmsLanguage {
      * @throws ParseException
      */
     private ZQuery parseQuery(final String queryString) throws ParseException {
-        // String query = removeSemiColumn(queryString);
-        String safeZqlString = queryString;
+        // check here whether the table name is of type Catalog.Schema.Table
+        invalidZqlQualifiedTableName = get2dotTableName(queryString);
+
+        // remove qualified names unsupported by ZQL
+        String safeZqlString = invalidZqlQualifiedTableName != null ? queryString.replace(invalidZqlQualifiedTableName,
+                TMP_TABLE_NAME) : queryString;
+
+        safeZqlString = replaceUnsupportedQuotes(safeZqlString);
+
         // extractClause = removeExtractFromClause(safeZqlString);
         safeZqlString = closeStatement(safeZqlString);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(safeZqlString.getBytes());
@@ -287,6 +300,39 @@ public class DbmsLanguage {
         }
         ZQuery zQuery = (ZQuery) parser.readStatement();
         return zQuery;
+    }
+
+    /**
+     * DOC scorreia Comment method "replaceUnsupportedQuotes".
+     * 
+     * @param safeZqlString
+     * @return
+     */
+    private String replaceUnsupportedQuotes(String safeZqlString) {
+        // ZQL does not support MySQL identifier quote string: `
+        if (is(MYSQL)) {
+            return safeZqlString.replace("`", "");
+        }
+        // for other DB, it's ok
+        return safeZqlString;
+    }
+
+    /**
+     * DOC scorreia Comment method "get2dotTableName".
+     * 
+     * @param queryString
+     * @return
+     */
+    private String get2dotTableName(String queryString) {
+        // queryString.matches(queryString)
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(this.getFromQualifiedTablePattern());
+        Matcher matcher = p.matcher(queryString);
+        if (!matcher.find()) {
+            return null;
+        }
+        // else
+        String matched = matcher.group();
+        return matched;
     }
 
     /**
@@ -328,8 +374,14 @@ public class DbmsLanguage {
             buf.append(" " + withoutLimit[1]);
         }
         containsLimitClause = false;
-        return buf.toString();
-        // return closeStatement(buf.toString());
+        String fquery = buf.toString();
+
+        // replace tmp table name if needed
+        if (invalidZqlQualifiedTableName != null) {
+            return fquery.replace(TMP_TABLE_NAME, this.invalidZqlQualifiedTableName);
+        }
+        return fquery;
+
     }
 
     /**
@@ -449,6 +501,11 @@ public class DbmsLanguage {
         return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") AS " + alias;
     }
 
+    /**
+     * Method "getDbQuoteString".
+     * 
+     * @return the quote identifier string set in this object.
+     */
     public String getDbQuoteString() {
         return this.dbQuoteString;
     }
@@ -758,32 +815,6 @@ public class DbmsLanguage {
         return " DESC ";
     }
 
-    /**
-     * DOC scorreia Comment method "getOrderBy".
-     * 
-     * @param sqlStatement
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public String getOrderBy(String sqlStatement) {
-        ZqlParser zqlParser = getZqlParser();
-        zqlParser.initParser(new ByteArrayInputStream(sqlStatement.getBytes()));
-        try {
-            ZQuery zQuery = (ZQuery) zqlParser.readStatement();
-            if (zQuery == null) {
-                return null;
-            }
-            Vector orderBy = zQuery.getOrderBy();
-            if (orderBy == null || orderBy.size() != 1) {
-                return null;
-            }
-            return orderBy.get(0).toString();
-        } catch (ParseException e) {
-            log.error(e, e);
-        }
-        return null;
-    }
-
     public String orderBy() {
         return " ORDER BY ";
     }
@@ -1003,7 +1034,8 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "getQuoteIdentifier".
+     * Method "getQuoteIdentifier" returns the hard coded quote identifier string. You should call
+     * {@link #getDbQuoteString()} instead.
      * 
      * @return hard coded quote identifier string.
      */
