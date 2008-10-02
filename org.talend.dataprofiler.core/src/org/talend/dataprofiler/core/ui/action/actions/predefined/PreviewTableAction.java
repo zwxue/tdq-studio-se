@@ -20,14 +20,18 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.api.DbmsLanguage;
 import org.talend.cwm.management.api.DbmsLanguageFactory;
+import org.talend.cwm.relational.RelationalPackage;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
@@ -43,6 +47,8 @@ import orgomg.cwm.objectmodel.core.Package;
  * 
  */
 public class PreviewTableAction extends Action {
+
+    private static Logger log = Logger.getLogger(PreviewTableAction.class);
 
     private TdTable table;
 
@@ -86,7 +92,7 @@ public class PreviewTableAction extends Action {
                     ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
                     execSQLAction.run();
                 } catch (PartInitException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
         }
@@ -101,7 +107,22 @@ public class PreviewTableAction extends Action {
     private String getTableQualifiedName(TdDataProvider tdDataProvider) {
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
         Package catalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(table);
-        String schemaname = catalogOrSchema != null ? catalogOrSchema.getName() : null;
-        return dbmsLanguage.toQualifiedName(null, schemaname, table.getName());
+        if (catalogOrSchema == null) {
+            return table.getName();
+        }
+        // else
+        String catalogName = null;
+        String schemaName = null;
+        if (catalogOrSchema != null && RelationalPackage.eINSTANCE.getTdSchema().equals(catalogOrSchema.eClass())) {
+            schemaName = catalogOrSchema.getName();
+            TdCatalog parentCatalog = CatalogHelper.getParentCatalog(catalogOrSchema);
+            if (parentCatalog != null) {
+                catalogName = parentCatalog.getName();
+            }
+        } else {
+            catalogName = catalogOrSchema.getName();
+        }
+
+        return dbmsLanguage.toQualifiedName(catalogName, schemaName, table.getName());
     }
 }
