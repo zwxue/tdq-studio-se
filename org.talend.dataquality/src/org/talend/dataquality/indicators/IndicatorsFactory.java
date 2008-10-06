@@ -314,6 +314,15 @@ public interface IndicatorsFactory extends EFactory {
     RegexpMatchingIndicator createRegexpMatchingIndicator();
 
     /**
+     * Returns a new object of class '<em>Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Low Frequency Indicator</em>'.
+     * @generated
+     */
+    LowFrequencyIndicator createLowFrequencyIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

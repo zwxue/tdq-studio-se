@@ -48,6 +48,7 @@ import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LengthIndicator;
+import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MatchingAlgorithm;
 import org.talend.dataquality.indicators.MatchingIndicator;
@@ -327,6 +328,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass matchingIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass lowFrequencyIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1257,6 +1265,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getLowFrequencyIndicator() {
+        return lowFrequencyIndicatorEClass;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1477,6 +1494,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(matchingIndicatorEClass, MATCHING_INDICATOR__MATCHING_VALUE_COUNT);
         createEAttribute(matchingIndicatorEClass, MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT);
 
+        lowFrequencyIndicatorEClass = createEClass(LOW_FREQUENCY_INDICATOR);
+
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
         dataminingTypeEEnum = createEEnum(DATAMINING_TYPE);
@@ -1562,6 +1581,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         sqlPatternMatchingIndicatorEClass.getESuperTypes().add(this.getPatternMatchingIndicator());
         regexpMatchingIndicatorEClass.getESuperTypes().add(this.getPatternMatchingIndicator());
         matchingIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        lowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1746,6 +1766,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEClass(matchingIndicatorEClass, MatchingIndicator.class, "MatchingIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getMatchingIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1, MatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getMatchingIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null, 0, 1, MatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(lowFrequencyIndicatorEClass, LowFrequencyIndicator.class, "LowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

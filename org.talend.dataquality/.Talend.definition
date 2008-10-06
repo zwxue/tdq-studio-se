@@ -94,6 +94,14 @@
     <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
     <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="PostgreSQL"/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_-0C00JOtEd2Iyo0dtkB9pA" name="Low Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Low Frequency Table">
+    <taggedValue xmi:id="_Hhd38JOuEd2Iyo0dtkB9pA" tag="Description" value="counts the number of records for each distinct record"/>
+    <taggedValue xmi:id="_Hhd38ZOuEd2Iyo0dtkB9pA" tag="Purpose" value="evaluates the less frequent records"/>
+    <sqlGenericExpression xmi:id="_Ol0rgJOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="SQL"/>
+    <sqlGenericExpression xmi:id="_Ol0rgZOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_Ol1SkJOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_Ol1SkZOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="PostgreSQL"/>
+  </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48BF2Ed2PKb6nEJEvhw" name="Summary Statistics" categories="_ccKuIRF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI48xF2Ed2PKb6nEJEvhw _ccI48RF2Ed2PKb6nEJEvhw _ccI48hF2Ed2PKb6nEJEvhw _ccI49hF2Ed2PKb6nEJEvhw" label="Summary Statistics">
     <taggedValue xmi:id="_ybyLoDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average, the median and the extent of the data (range, interquartile range)"/>
     <taggedValue xmi:id="_ybyLoTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="give a simple overview of the distribution of the data"/>
@@ -220,6 +228,10 @@
   <categories xmi:id="_ccKuIRF2Ed2PKb6nEJEvhw" name="Advanced Statistics" label="Advanced Statistics">
     <taggedValue xmi:id="_ycBcMDh8Ed2XmO7pl5Yuyg" tag="Description" value="some advanced statistics"/>
     <taggedValue xmi:id="_ycBcMTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="Advanced Statistics"/>
+  </categories>
+  <categories xmi:id="_as5yEJOuEd2Iyo0dtkB9pA" name="Row Comparison" label="Row Comparison">
+    <taggedValue xmi:id="_cZDx4JOuEd2Iyo0dtkB9pA" tag="Description" value="Counts the number of records identical to a set of records"/>
+    <taggedValue xmi:id="_cZDx4ZOuEd2Iyo0dtkB9pA" tag="Purpose" value="Compare rows of data"/>
   </categories>
   <categories xmi:id="_ccKuIhF2Ed2PKb6nEJEvhw" name="Mode" label="Mode">
     <taggedValue xmi:id="_ycBcMjh8Ed2XmO7pl5Yuyg" tag="Description" value="Mode"/>

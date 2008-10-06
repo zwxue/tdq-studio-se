@@ -413,6 +413,16 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.LOW_FREQUENCY_INDICATOR: {
+                LowFrequencyIndicator lowFrequencyIndicator = (LowFrequencyIndicator)theEObject;
+                T result = caseLowFrequencyIndicator(lowFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(lowFrequencyIndicator);
+                if (result == null) result = caseIndicator(lowFrequencyIndicator);
+                if (result == null) result = caseModelElement(lowFrequencyIndicator);
+                if (result == null) result = caseElement(lowFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -832,6 +842,21 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseMatchingIndicator(MatchingIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Low Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Low Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseLowFrequencyIndicator(LowFrequencyIndicator object) {
         return null;
     }
 

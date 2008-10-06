@@ -540,6 +540,7 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="notMatchingValueCount"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
     </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eOperations name="addTableIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">

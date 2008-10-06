@@ -98,6 +98,7 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.DATE_PARAMETERS: return createDateParameters();
             case IndicatorsPackage.SQL_PATTERN_MATCHING_INDICATOR: return createSqlPatternMatchingIndicator();
             case IndicatorsPackage.REGEXP_MATCHING_INDICATOR: return createRegexpMatchingIndicator();
+            case IndicatorsPackage.LOW_FREQUENCY_INDICATOR: return createLowFrequencyIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -483,6 +484,16 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public RegexpMatchingIndicator createRegexpMatchingIndicator() {
         RegexpMatchingIndicatorImpl regexpMatchingIndicator = new RegexpMatchingIndicatorImpl();
         return regexpMatchingIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public LowFrequencyIndicator createLowFrequencyIndicator() {
+        LowFrequencyIndicatorImpl lowFrequencyIndicator = new LowFrequencyIndicatorImpl();
+        return lowFrequencyIndicator;
     }
 
     /**
