@@ -55,6 +55,8 @@ public final class TaggedValueHelper {
 
     public static final String COMMENT = "Comment";
 
+    public static final String DB_IDENTIFIER_QUOTE_STRING = "DB IdentifierQuoteString";
+
     /**
      * A status to tell that the object is valid or invalid.
      */
@@ -80,6 +82,27 @@ public final class TaggedValueHelper {
      */
     public static Boolean getValidStatus(ModelElement element) {
         return Boolean.valueOf(getValue(VALID_STATUS, element));
+    }
+
+    /**
+     * Method "setIdentifierQuoteString" sets a comment on the given element.
+     * 
+     * @param identifierQuoteString the quote to set
+     * @param element the element
+     * @return true if the value was not set before.
+     */
+    public static boolean setIdentifierQuoteString(String identifierQuoteString, ModelElement element) {
+        return setTaggedValue(element, DB_IDENTIFIER_QUOTE_STRING, identifierQuoteString);
+    }
+
+    /**
+     * Method "getIdentifierQuoteString".
+     * 
+     * @param element
+     * @return the identifier quote string
+     */
+    public static String getIdentifierQuoteString(ModelElement element) {
+        return getValue(DB_IDENTIFIER_QUOTE_STRING, element);
     }
 
     /**

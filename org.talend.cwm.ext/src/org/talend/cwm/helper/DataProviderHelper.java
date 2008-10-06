@@ -65,6 +65,27 @@ public final class DataProviderHelper {
     }
 
     /**
+     * Method "setIdentifierQuoteString" sets a comment on the given element.
+     * 
+     * @param identifierQuoteString the quote to set
+     * @param dataProvider the data provider
+     * @return true if the value was not set before.
+     */
+    public static boolean setIdentifierQuoteString(String identifierQuoteString, TdDataProvider dataProvider) {
+        return TaggedValueHelper.setIdentifierQuoteString(identifierQuoteString, dataProvider);
+    }
+
+    /**
+     * Method "getIdentifierQuoteString".
+     * 
+     * @param dataProvider
+     * @return the identifier quote string
+     */
+    public static String getIdentifierQuoteString(TdDataProvider dataProvider) {
+        return TaggedValueHelper.getIdentifierQuoteString(dataProvider);
+    }
+
+    /**
      * Method "getTdDataProvider" returns the data provider when the catalog (or schema) is associated to only one data
      * provider. It returns null if there is no data provider or more than one data provider.
      * 
