@@ -12,11 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +25,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.utils.files.CsvWriter;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -42,6 +43,8 @@ public class ExportPatternsWizard extends Wizard {
     private IFolder folder;
 
     private ExportPatternsWizardPage page;
+
+    private static final char CURRENT_SEPARATOR = '\t';
 
     /**
      * DOC zqin ExportPatternsWizard constructor comment.
@@ -63,66 +66,31 @@ public class ExportPatternsWizard extends Wizard {
 
         List<Pattern> seletedPatterns = new ArrayList<Pattern>();
         for (Object element : elements) {
-            if (element instanceof Pattern) {
-                seletedPatterns.add((Pattern) element);
+            if (element instanceof IFile) {
+                IFile file = (IFile) element;
+                if (file.getFileExtension().equalsIgnoreCase(FactoriesUtil.PATTERN)) {
+                    seletedPatterns.add(PatternResourceFileHelper.getInstance().findPattern(file));
+                }
             }
         }
-
-        // try {
-        // File file = new File(xlsFile);
-        // WorkbookSettings settings = new WorkbookSettings();
-        // settings.setEncoding("UTF-8");
-        //
-        // // create new sheet
-        // WritableWorkbook wwb = Workbook.createWorkbook(file, settings);
-        // WritableSheet mainSheet = wwb.createSheet("Test Sheet 1", 0);
-        //
-        // // create header
-        // for (int i = 0; i < PatternToExcelEnum.VALUES.size(); i++) {
-        // WritableFont wf = new WritableFont(WritableFont.TAHOMA, 12, WritableFont.BOLD, true);
-        // WritableCellFormat wcfF = new WritableCellFormat(wf);
-        // wcfF.setBackground(Colour.GRAY_25);
-        //
-        // String literal = PatternToExcelEnum.VALUES.get(i).getLiteral();
-        // Label label = new Label(i, 0, literal, wcfF);
-        // mainSheet.addCell(label);
-        // }
-        //
-        // // create content
-        // for (int i = 1; i < seletedPatterns.size() + 1; i++) {
-        // Pattern pattern = seletedPatterns.get(i - 1);
-        //
-        // }
-        //
-        // wwb.write();
-        //
-        // wwb.close();
-        //
-        // return true;
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        FileOutputStream fos = null;
-        OutputStreamWriter osw = null;
-        BufferedWriter out = null;
 
         File file = new File(xlsFile);
         try {
 
-            fos = new FileOutputStream(file);
-            osw = new OutputStreamWriter(fos);
-            out = new BufferedWriter(osw);
+            CsvWriter out = new CsvWriter(new FileOutputStream(file), CURRENT_SEPARATOR, Charset.defaultCharset());
+            out.setEscapeMode(CsvWriter.ESCAPE_MODE_BACKSLASH);
+            out.setTextQualifier('"');
+            out.setForceQualifier(true);
+            out.setLineFieldLimited(PatternToExcelEnum.VALUES.size());
 
             for (int i = 0; i < seletedPatterns.size() + 1; i++) {
                 for (PatternToExcelEnum enmu : PatternToExcelEnum.VALUES) {
                     if (i == 0) {
-                        out.write(enmu.getLiteral() + ",");
+                        out.write(enmu.getLiteral());
                     } else {
-                        out.write(getRelatedValueFromPattern(seletedPatterns.get(i - 1)).get(enmu) + ",");
+                        out.write(getRelatedValueFromPattern(seletedPatterns.get(i - 1)).get(enmu));
                     }
                 }
-
-                out.newLine();
             }
 
             out.flush();
