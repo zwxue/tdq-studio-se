@@ -30,6 +30,7 @@ import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
+import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
@@ -48,6 +49,8 @@ import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
@@ -220,7 +223,7 @@ public final class DefinitionHandler {
      * @return true when set, false when not set.
      */
     public boolean setDefaultIndicatorDefinition(Indicator indicator) {
-        return mySwitch.doSwitch(indicator);
+        return indicatorSwitch.doSwitch(indicator);
     }
 
     /**
@@ -240,17 +243,59 @@ public final class DefinitionHandler {
         return null;
     }
 
+ 
+    
     /**
      * Note: scorreia. All indicator definitions defined in .Talend.definition file must be implemented here.
      * 
      * WARNING: The label of the indicator definition in .Talend.definition must be exactly the same as the strings used
      * here.
      */
-    private final IndicatorsSwitch<Boolean> mySwitch = new IndicatorsSwitch<Boolean>() {
+    private final IndicatorsSwitch<Boolean>  indicatorSwitch = new IndicatorsSwitch<Boolean>()   {
+        private final ColumnsetSwitch<Boolean> columnIndicatorSwitch = new ColumnsetSwitch<Boolean>() {
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch#caseRowMatchingIndicator(org.talend.
+             * dataquality.indicators.columnset.RowMatchingIndicator)
+             */
+            @Override
+            public Boolean caseRowMatchingIndicator(RowMatchingIndicator object) {
+                return setIndicatorDefinition(object, "Row Comparison");
+            }
+            
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch#defaultCase(org.eclipse.emf.ecore.EObject
+             * )
+             */
+            @Override
+            public Boolean defaultCase(EObject object) {
+                return false;
+            }
+
+        };
+        
         @Override
         public Boolean defaultCase(EObject object) {
-            return false;
+            // try with columnSetSwitch
+            return columnIndicatorSwitch.doSwitch(object);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * org.talend.dataquality.indicators.util.IndicatorsSwitch#caseLowFrequencyIndicator(org.talend.dataquality.
+         * indicators.LowFrequencyIndicator)
+         */
+        @Override
+        public Boolean caseLowFrequencyIndicator(LowFrequencyIndicator object) {
+            return setIndicatorDefinition(object, "Low Frequency Table");
         }
 
         /*
@@ -409,16 +454,19 @@ public final class DefinitionHandler {
             return setIndicatorDefinition(object, "Upper Quartile");
         }
 
-        private Boolean setIndicatorDefinition(Indicator indicator, String definitionLabel) {
-            // get the definition
-            IndicatorDefinition indicatorDefinition = DefinitionHandler.this.getIndicatorDefinition(definitionLabel);
-            if (indicatorDefinition == null) {
-                return false;
-            }
-            // else
-            indicator.setIndicatorDefinition(indicatorDefinition);
-            return true;
-        }
 
     };
+    
+    private Boolean setIndicatorDefinition(Indicator indicator, String definitionLabel) {
+        // get the definition
+        IndicatorDefinition indicatorDefinition = this.getIndicatorDefinition(definitionLabel);
+        if (indicatorDefinition == null) {
+            return false;
+        }
+        // else
+        indicator.setIndicatorDefinition(indicatorDefinition);
+        return true;
+    }
+    
+ 
 }
