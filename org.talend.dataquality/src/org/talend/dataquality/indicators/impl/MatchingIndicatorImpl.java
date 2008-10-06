@@ -7,11 +7,8 @@
 package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MatchingIndicator;
 
@@ -216,5 +213,19 @@ public abstract class MatchingIndicatorImpl extends IndicatorImpl implements Mat
         result.append(')');
         return result.toString();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#reset()
+     */
+    @Override
+    public boolean reset() {
+        this.matchingValueCount = MATCHING_VALUE_COUNT_EDEFAULT;
+        this.notMatchingValueCount = NOT_MATCHING_VALUE_COUNT_EDEFAULT;
+        return super.reset();
+    }
+    
+    
 
 } //MatchingIndicatorImpl
