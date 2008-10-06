@@ -812,6 +812,29 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.LowFrequencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected LowFrequencyIndicatorItemProvider lowFrequencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.LowFrequencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createLowFrequencyIndicatorAdapter() {
+        if (lowFrequencyIndicatorItemProvider == null) {
+            lowFrequencyIndicatorItemProvider = new LowFrequencyIndicatorItemProvider(this);
+        }
+
+        return lowFrequencyIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -942,6 +965,7 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (dateParametersItemProvider != null) dateParametersItemProvider.dispose();
         if (sqlPatternMatchingIndicatorItemProvider != null) sqlPatternMatchingIndicatorItemProvider.dispose();
         if (regexpMatchingIndicatorItemProvider != null) regexpMatchingIndicatorItemProvider.dispose();
+        if (lowFrequencyIndicatorItemProvider != null) lowFrequencyIndicatorItemProvider.dispose();
     }
 
 }

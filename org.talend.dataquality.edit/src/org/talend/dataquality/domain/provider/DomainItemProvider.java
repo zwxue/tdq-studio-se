@@ -406,6 +406,11 @@ public class DomainItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 IndicatorsFactory.eINSTANCE.createLowFrequencyIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  SchemaFactory.eINSTANCE.createSchemaIndicator()));
 
         newChildDescriptors.add
