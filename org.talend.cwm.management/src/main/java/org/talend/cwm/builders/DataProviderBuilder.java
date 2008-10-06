@@ -17,6 +17,7 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 
@@ -40,6 +41,8 @@ public class DataProviderBuilder extends CwmBuilder {
             throws SQLException {
         super(conn);
         this.dataProvider = DatabaseContentRetriever.getDataProvider(driver, databaseUrl, driverProperties);
+        String identifierQuote = conn.getMetaData().getIdentifierQuoteString();
+        DataProviderHelper.setIdentifierQuoteString(identifierQuote, dataProvider);
     }
 
     // TODO scorreia ctor with TdProviderConnection

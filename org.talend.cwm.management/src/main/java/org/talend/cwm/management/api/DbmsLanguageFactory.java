@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
@@ -41,19 +42,22 @@ public final class DbmsLanguageFactory {
      * @return a new DbmsLanguage even if the data manager did not allow to get the correct language
      */
     public static DbmsLanguage createDbmsLanguage(DataManager dataManager) {
+        DbmsLanguage dbmsLanguage = new DbmsLanguage();
         if (dataManager == null) {
-            return new DbmsLanguage();
+            return dbmsLanguage;
         }
         TdDataProvider dataprovider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(dataManager);
         if (dataprovider == null) {
-            return new DbmsLanguage();
+            return dbmsLanguage;
         }
 
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
-        if (softwareSystem == null) {
-            return new DbmsLanguage();
+        if (softwareSystem != null) {
+            dbmsLanguage = new DbmsLanguage(softwareSystem.getSubtype());
         }
-        return new DbmsLanguage(softwareSystem.getSubtype());
+        String identifierQuoteString = DataProviderHelper.getIdentifierQuoteString(dataprovider);
+        dbmsLanguage.setDbQuoteString(identifierQuoteString);
+        return dbmsLanguage;
     }
 
     /**
@@ -67,7 +71,9 @@ public final class DbmsLanguageFactory {
         String databaseProductName;
         try {
             databaseProductName = connection.getMetaData().getDatabaseProductName();
-            return new DbmsLanguage(databaseProductName);
+            DbmsLanguage dbmsLanguage = new DbmsLanguage(databaseProductName);
+            dbmsLanguage.setDbQuoteString(connection.getMetaData().getIdentifierQuoteString());
+            return dbmsLanguage;
         } catch (SQLException e) {
             log.warn("Exception when retrieving database informations:" + e + ". Creating a default DbmsLanguage.", e);
             return new DbmsLanguage();

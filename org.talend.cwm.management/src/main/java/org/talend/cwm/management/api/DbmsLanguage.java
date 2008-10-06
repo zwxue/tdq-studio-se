@@ -28,6 +28,7 @@ import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -171,6 +172,15 @@ public class DbmsLanguage {
      */
     public String isNotNull() {
         return surroundWithSpaces(SqlPredicate.IS_NOT_NULL.getLiteral());
+    }
+
+    /**
+     * Method "equal".
+     * 
+     * @return the = sign
+     */
+    public String equal() {
+        return surroundWithSpaces(SqlPredicate.EQUAL.getLiteral());
     }
 
     /**
@@ -1107,6 +1117,22 @@ public class DbmsLanguage {
             return "SELECT COMMENTS FROM USER_COL_COMMENTS WHERE COLUMN_NAME='" + columnName + "'";
         }
         return null;
+    }
+
+    /**
+     * Method "getInstantiatedExpression".
+     * 
+     * @param indicator
+     * @return the appropriate expression or the default one (or null when it does not exists)
+     */
+    public Expression getInstantiatedExpression(Indicator indicator) {
+        Expression query = indicator.getInstantiatedExpressions(this.getDbmsName());
+        if (query == null) {
+            // try to get a default sql expression
+            query = indicator.getInstantiatedExpressions(this.getDefaultLanguage());
+        }
+        return query;
+
     }
 
 }
