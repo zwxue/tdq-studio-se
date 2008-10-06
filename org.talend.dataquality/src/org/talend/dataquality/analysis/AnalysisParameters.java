@@ -11,6 +11,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwmx.analysis.informationreporting.ReportGroup;
 
 /**
@@ -25,6 +26,7 @@ import orgomg.cwmx.analysis.informationreporting.ReportGroup;
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getIndicatorValidationDomains <em>Indicator Validation Domains</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getDataValidationDomains <em>Data Validation Domains</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getAnalysisType <em>Analysis Type</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getDeactivatedIndicators <em>Deactivated Indicators</em>}</li>
  * </ul>
  * </p>
  *
@@ -112,5 +114,20 @@ public interface AnalysisParameters extends ReportGroup {
      * @generated
      */
     void setAnalysisType(AnalysisType value);
+
+    /**
+     * Returns the value of the '<em><b>Deactivated Indicators</b></em>' reference list.
+     * The list contents are of type {@link org.talend.dataquality.indicators.Indicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * Gives a list of indicators that must not be evaluated. This is mainly useful in Comparison analyses when two indicators are always created but only one needs to be computed sometimes. 
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Deactivated Indicators</em>' reference list.
+     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisParameters_DeactivatedIndicators()
+     * @model
+     * @generated
+     */
+    EList<Indicator> getDeactivatedIndicators();
 
 } // AnalysisParameters

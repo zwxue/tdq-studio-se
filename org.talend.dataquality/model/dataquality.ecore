@@ -43,6 +43,12 @@
       </eStructuralFeatures>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="analysisType" eType="#//analysis/AnalysisType"
           defaultValueLiteral=""/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="deactivatedIndicators"
+          upperBound="-1" eType="#//indicators/Indicator">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="Gives a list of indicators that must not be evaluated. This is mainly useful in Comparison analyses when two indicators are always created but only one needs to be computed sometimes. "/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AnalysisResult" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwmx/analysis/informationreporting/ReportGroup">
       <eStructuralFeatures xsi:type="ecore:EReference" name="analysis" eType="#//analysis/Analysis"
@@ -517,11 +523,7 @@
           eType="#//indicators/DateGrain" defaultValueLiteral="year"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="PatternMatchingIndicator" abstract="true"
-        eSuperTypes="#//indicators/Indicator">
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="matchingValueCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="notMatchingValueCount"
-          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
-    </eClassifiers>
+        eSuperTypes="#//indicators/MatchingIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="SqlPatternMatchingIndicator" eSuperTypes="#//indicators/PatternMatchingIndicator">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This indicator handles &quot;SQL patterns&quot;. These patterns are expressions that can be placed in like clauses."/>
@@ -531,6 +533,12 @@
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="This indicator handles regular expressions. These expressions need the database support of regular expressions."/>
       </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MatchingIndicator" abstract="true"
+        eSuperTypes="#//indicators/Indicator">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="matchingValueCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="notMatchingValueCount"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
     </eClassifiers>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">
@@ -629,6 +637,26 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="creationDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastModificationDate"
             eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="columnset" nsURI="http://dataquality.indicators.columnset"
+        nsPrefix="dataquality.indicators.columnset">
+      <eClassifiers xsi:type="ecore:EClass" name="ColumnsCompareIndicator" abstract="true"
+          eSuperTypes="#//indicators/MatchingIndicator">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="columnSetA" upperBound="-1"
+            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="columnSetB" upperBound="-1"
+            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ValueMatchingIndicator" eSuperTypes="#//indicators/columnset/ColumnsCompareIndicator">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="counts the number of value matching or not matching when comparing two or more columns"/>
+        </eAnnotations>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="RowMatchingIndicator" eSuperTypes="#//indicators/columnset/ColumnsCompareIndicator">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="counts the number of rows matching or not matching when comparing two or more columns"/>
+        </eAnnotations>
       </eClassifiers>
     </eSubpackages>
   </eSubpackages>

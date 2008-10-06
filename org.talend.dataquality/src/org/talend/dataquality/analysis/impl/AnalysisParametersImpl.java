@@ -23,6 +23,7 @@ import org.talend.dataquality.analysis.AnalysisParameters;
 
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
 
 /**
@@ -36,6 +37,7 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getIndicatorValidationDomains <em>Indicator Validation Domains</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getDataValidationDomains <em>Data Validation Domains</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getAnalysisType <em>Analysis Type</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getDeactivatedIndicators <em>Deactivated Indicators</em>}</li>
  * </ul>
  * </p>
  *
@@ -91,6 +93,16 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * @ordered
      */
     protected AnalysisType analysisType = ANALYSIS_TYPE_EDEFAULT;
+
+    /**
+     * The cached value of the '{@link #getDeactivatedIndicators() <em>Deactivated Indicators</em>}' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDeactivatedIndicators()
+     * @generated
+     * @ordered
+     */
+    protected EList<Indicator> deactivatedIndicators;
 
     /**
      * <!-- begin-user-doc -->
@@ -173,6 +185,18 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * <!-- end-user-doc -->
      * @generated
      */
+    public EList<Indicator> getDeactivatedIndicators() {
+        if (deactivatedIndicators == null) {
+            deactivatedIndicators = new EObjectResolvingEList<Indicator>(Indicator.class, this, AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS);
+        }
+        return deactivatedIndicators;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -184,6 +208,8 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 return getDataValidationDomains();
             case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
                 return getAnalysisType();
+            case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
+                return getDeactivatedIndicators();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -212,6 +238,10 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
             case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
                 setAnalysisType((AnalysisType)newValue);
                 return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
+                getDeactivatedIndicators().clear();
+                getDeactivatedIndicators().addAll((Collection<? extends Indicator>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -236,6 +266,9 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
             case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
                 setAnalysisType(ANALYSIS_TYPE_EDEFAULT);
                 return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
+                getDeactivatedIndicators().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -256,6 +289,8 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 return dataValidationDomains != null && !dataValidationDomains.isEmpty();
             case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
                 return analysisType != ANALYSIS_TYPE_EDEFAULT;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
+                return deactivatedIndicators != null && !deactivatedIndicators.isEmpty();
         }
         return super.eIsSet(featureID);
     }

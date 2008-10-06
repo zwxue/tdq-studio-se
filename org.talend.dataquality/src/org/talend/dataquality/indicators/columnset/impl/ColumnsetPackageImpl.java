@@ -4,11 +4,9 @@
  *
  * $Id$
  */
-package org.talend.dataquality.domain.pattern.impl;
+package org.talend.dataquality.indicators.columnset.impl;
 
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -17,38 +15,47 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.talend.dataquality.analysis.AnalysisPackage;
 
 import org.talend.dataquality.analysis.category.CategoryPackage;
+
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;
+
 import org.talend.dataquality.analysis.impl.AnalysisPackageImpl;
 
 import org.talend.dataquality.domain.DomainPackage;
 
 import org.talend.dataquality.domain.impl.DomainPackageImpl;
 
-import org.talend.dataquality.domain.pattern.AttributeReference;
-import org.talend.dataquality.domain.pattern.ComponentReference;
-import org.talend.dataquality.domain.pattern.ExpressionType;
-import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.domain.pattern.PatternComponent;
-import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.PatternPackage;
-import org.talend.dataquality.domain.pattern.RegularExpression;
+
+import org.talend.dataquality.domain.pattern.impl.PatternPackageImpl;
 
 import org.talend.dataquality.domain.sql.SQLPackage;
+
 import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
+
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
 
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
+import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
-import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
+
+import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
+
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
+
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
 
 import org.talend.dataquality.indicators.schema.SchemaPackage;
+
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
+
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
+
 import org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl;
+
 import org.talend.dataquality.reports.ReportsPackage;
 
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
@@ -121,48 +128,26 @@ import orgomg.mof.model.ModelPackage;
  * <!-- end-user-doc -->
  * @generated
  */
-public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
+public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPackage {
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass patternEClass = null;
+    private EClass columnsCompareIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass patternComponentEClass = null;
-
+    private EClass valueMatchingIndicatorEClass = null;
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass regularExpressionEClass = null;
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    private EClass attributeReferenceEClass = null;
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    private EClass componentReferenceEClass = null;
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    private EEnum expressionTypeEEnum = null;
+    private EClass rowMatchingIndicatorEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -175,12 +160,12 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see org.eclipse.emf.ecore.EPackage.Registry
-     * @see org.talend.dataquality.domain.pattern.PatternPackage#eNS_URI
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#eNS_URI
      * @see #init()
      * @generated
      */
-    private PatternPackageImpl() {
-        super(eNS_URI, PatternFactory.eINSTANCE);
+    private ColumnsetPackageImpl() {
+        super(eNS_URI, ColumnsetFactory.eINSTANCE);
     }
 
     /**
@@ -212,11 +197,11 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * @see #initializePackageContents()
      * @generated
      */
-    public static PatternPackage init() {
-        if (isInited) return (PatternPackage)EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI);
+    public static ColumnsetPackage init() {
+        if (isInited) return (ColumnsetPackage)EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI);
 
         // Obtain or create and register package
-        PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new PatternPackageImpl());
+        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new ColumnsetPackageImpl());
 
         isInited = true;
 
@@ -261,13 +246,13 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
-        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
         ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
+        PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
         SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
 
         // Create package meta-data objects
-        thePatternPackage.createPackageContents();
+        theColumnsetPackage.createPackageContents();
         theAnalysisPackage.createPackageContents();
         theCategoryPackage.createPackageContents();
         theReportsPackage.createPackageContents();
@@ -275,13 +260,13 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         theSchemaPackage.createPackageContents();
         theDefinitionPackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
-        theColumnsetPackage.createPackageContents();
         theExpressionsPackage_1.createPackageContents();
         theDomainPackage.createPackageContents();
+        thePatternPackage.createPackageContents();
         theSQLPackage.createPackageContents();
 
         // Initialize created meta-data
-        thePatternPackage.initializePackageContents();
+        theColumnsetPackage.initializePackageContents();
         theAnalysisPackage.initializePackageContents();
         theCategoryPackage.initializePackageContents();
         theReportsPackage.initializePackageContents();
@@ -289,15 +274,15 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         theSchemaPackage.initializePackageContents();
         theDefinitionPackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
-        theColumnsetPackage.initializePackageContents();
         theExpressionsPackage_1.initializePackageContents();
         theDomainPackage.initializePackageContents();
+        thePatternPackage.initializePackageContents();
         theSQLPackage.initializePackageContents();
 
         // Mark meta-data to indicate it can't be changed
-        thePatternPackage.freeze();
+        theColumnsetPackage.freeze();
 
-        return thePatternPackage;
+        return theColumnsetPackage;
     }
 
     /**
@@ -305,8 +290,8 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getPattern() {
-        return patternEClass;
+    public EClass getColumnsCompareIndicator() {
+        return columnsCompareIndicatorEClass;
     }
 
     /**
@@ -314,8 +299,8 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getPattern_Components() {
-        return (EReference)patternEClass.getEStructuralFeatures().get(0);
+    public EReference getColumnsCompareIndicator_ColumnSetA() {
+        return (EReference)columnsCompareIndicatorEClass.getEStructuralFeatures().get(0);
     }
 
     /**
@@ -323,8 +308,8 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getPatternComponent() {
-        return patternComponentEClass;
+    public EReference getColumnsCompareIndicator_ColumnSetB() {
+        return (EReference)columnsCompareIndicatorEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -332,8 +317,8 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getRegularExpression() {
-        return regularExpressionEClass;
+    public EClass getValueMatchingIndicator() {
+        return valueMatchingIndicatorEClass;
     }
 
     /**
@@ -341,8 +326,8 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EReference getRegularExpression_Expression() {
-        return (EReference)regularExpressionEClass.getEStructuralFeatures().get(0);
+    public EClass getRowMatchingIndicator() {
+        return rowMatchingIndicatorEClass;
     }
 
     /**
@@ -350,62 +335,8 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getRegularExpression_ExpressionType() {
-        return (EAttribute)regularExpressionEClass.getEStructuralFeatures().get(1);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EClass getAttributeReference() {
-        return attributeReferenceEClass;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EReference getAttributeReference_ReferencedAttribute() {
-        return (EReference)attributeReferenceEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EClass getComponentReference() {
-        return componentReferenceEClass;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EReference getComponentReference_ReferencedComponent() {
-        return (EReference)componentReferenceEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EEnum getExpressionType() {
-        return expressionTypeEEnum;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public PatternFactory getPatternFactory() {
-        return (PatternFactory)getEFactoryInstance();
+    public ColumnsetFactory getColumnsetFactory() {
+        return (ColumnsetFactory)getEFactoryInstance();
     }
 
     /**
@@ -427,23 +358,13 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         isCreated = true;
 
         // Create classes and their features
-        patternEClass = createEClass(PATTERN);
-        createEReference(patternEClass, PATTERN__COMPONENTS);
+        columnsCompareIndicatorEClass = createEClass(COLUMNS_COMPARE_INDICATOR);
+        createEReference(columnsCompareIndicatorEClass, COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A);
+        createEReference(columnsCompareIndicatorEClass, COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B);
 
-        patternComponentEClass = createEClass(PATTERN_COMPONENT);
+        valueMatchingIndicatorEClass = createEClass(VALUE_MATCHING_INDICATOR);
 
-        regularExpressionEClass = createEClass(REGULAR_EXPRESSION);
-        createEReference(regularExpressionEClass, REGULAR_EXPRESSION__EXPRESSION);
-        createEAttribute(regularExpressionEClass, REGULAR_EXPRESSION__EXPRESSION_TYPE);
-
-        attributeReferenceEClass = createEClass(ATTRIBUTE_REFERENCE);
-        createEReference(attributeReferenceEClass, ATTRIBUTE_REFERENCE__REFERENCED_ATTRIBUTE);
-
-        componentReferenceEClass = createEClass(COMPONENT_REFERENCE);
-        createEReference(componentReferenceEClass, COMPONENT_REFERENCE__REFERENCED_COMPONENT);
-
-        // Create enums
-        expressionTypeEEnum = createEEnum(EXPRESSION_TYPE);
+        rowMatchingIndicatorEClass = createEClass(ROW_MATCHING_INDICATOR);
     }
 
     /**
@@ -470,38 +391,26 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         setNsURI(eNS_URI);
 
         // Obtain other dependent packages
-        CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+        IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
+        RelationalPackage theRelationalPackage = (RelationalPackage)EPackage.Registry.INSTANCE.getEPackage(RelationalPackage.eNS_URI);
 
         // Create type parameters
 
         // Set bounds for type parameters
 
         // Add supertypes to classes
-        patternEClass.getESuperTypes().add(theCorePackage.getModelElement());
-        regularExpressionEClass.getESuperTypes().add(this.getPatternComponent());
-        attributeReferenceEClass.getESuperTypes().add(this.getPatternComponent());
-        componentReferenceEClass.getESuperTypes().add(this.getPatternComponent());
+        columnsCompareIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getMatchingIndicator());
+        valueMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
+        rowMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
 
         // Initialize classes and features; add operations and parameters
-        initEClass(patternEClass, Pattern.class, "Pattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getPattern_Components(), this.getPatternComponent(), null, "components", null, 0, -1, Pattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(columnsCompareIndicatorEClass, ColumnsCompareIndicator.class, "ColumnsCompareIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getColumnsCompareIndicator_ColumnSetA(), theRelationalPackage.getColumn(), null, "columnSetA", null, 0, -1, ColumnsCompareIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnsCompareIndicator_ColumnSetB(), theRelationalPackage.getColumn(), null, "columnSetB", null, 0, -1, ColumnsCompareIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(patternComponentEClass, PatternComponent.class, "PatternComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEClass(valueMatchingIndicatorEClass, ValueMatchingIndicator.class, "ValueMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-        initEClass(regularExpressionEClass, RegularExpression.class, "RegularExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getRegularExpression_Expression(), theCorePackage.getExpression(), null, "expression", null, 0, 1, RegularExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getRegularExpression_ExpressionType(), ecorePackage.getEString(), "expressionType", null, 0, 1, RegularExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-        initEClass(attributeReferenceEClass, AttributeReference.class, "AttributeReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getAttributeReference_ReferencedAttribute(), theCorePackage.getAttribute(), null, "referencedAttribute", null, 0, 1, AttributeReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-        initEClass(componentReferenceEClass, ComponentReference.class, "ComponentReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getComponentReference_ReferencedComponent(), this.getPatternComponent(), null, "referencedComponent", null, 0, 1, ComponentReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-        // Initialize enums and add enum literals
-        initEEnum(expressionTypeEEnum, ExpressionType.class, "ExpressionType");
-        addEEnumLiteral(expressionTypeEEnum, ExpressionType.REGEXP);
-        addEEnumLiteral(expressionTypeEEnum, ExpressionType.SQL_LIKE);
+        initEClass(rowMatchingIndicatorEClass, RowMatchingIndicator.class, "RowMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     }
 
-} //PatternPackageImpl
+} //ColumnsetPackageImpl

@@ -190,6 +190,13 @@
     <sqlGenericExpression xmi:id="_GrBFEzh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="MySQL"/>
     <sqlGenericExpression xmi:id="_GrBFFDh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="Oracle"/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_jMh4gJE3Ed2HGNmGoaS-_w" name="Row Comparison" label="Row Comparison">
+    <taggedValue xmi:id="_l9ZdoJE3Ed2HGNmGoaS-_w" tag="Purpose" value="Compare content of two column sets"/>
+    <taggedValue xmi:id="_txkkkJE3Ed2HGNmGoaS-_w" tag="Description" value="Counts the number of data from a column set A that match data of a column set B"/>
+    <sqlGenericExpression xmi:id="_4xpm0JE3Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})" language="SQL"/>
+    <sqlGenericExpression xmi:id="_cTtKEJE4Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_YcFTcZGUEd2YurbR54yDfQ" body="SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})" language="MySQL"/>
+  </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>

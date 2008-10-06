@@ -1497,13 +1497,22 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS_PARAMETERS__ANALYSIS_TYPE = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 3;
 
     /**
+     * The feature id for the '<em><b>Deactivated Indicators</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 4;
+
+    /**
      * The number of structural features of the '<em>Parameters</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_PARAMETERS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 4;
+    int ANALYSIS_PARAMETERS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 5;
 
 
     /**
@@ -2219,6 +2228,17 @@ public interface AnalysisPackage extends EPackage {
     EAttribute getAnalysisParameters_AnalysisType();
 
     /**
+     * Returns the meta object for the reference list '{@link org.talend.dataquality.analysis.AnalysisParameters#getDeactivatedIndicators <em>Deactivated Indicators</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference list '<em>Deactivated Indicators</em>'.
+     * @see org.talend.dataquality.analysis.AnalysisParameters#getDeactivatedIndicators()
+     * @see #getAnalysisParameters()
+     * @generated
+     */
+    EReference getAnalysisParameters_DeactivatedIndicators();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.analysis.AnalysisResult <em>Result</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2489,6 +2509,14 @@ public interface AnalysisPackage extends EPackage {
          * @generated
          */
         EAttribute ANALYSIS_PARAMETERS__ANALYSIS_TYPE = eINSTANCE.getAnalysisParameters_AnalysisType();
+
+        /**
+         * The meta object literal for the '<em><b>Deactivated Indicators</b></em>' reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS = eINSTANCE.getAnalysisParameters_DeactivatedIndicators();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl <em>Result</em>}' class.

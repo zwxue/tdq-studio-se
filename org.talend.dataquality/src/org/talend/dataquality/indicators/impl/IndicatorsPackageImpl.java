@@ -50,6 +50,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MatchingAlgorithm;
+import org.talend.dataquality.indicators.MatchingIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
@@ -69,6 +70,8 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
@@ -319,6 +322,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     private EClass regexpMatchingIndicatorEClass = null;
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass matchingIndicatorEClass = null;
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -465,6 +475,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
+        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
         ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
@@ -478,6 +489,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         theSchemaPackage.createPackageContents();
         theDefinitionPackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
+        theColumnsetPackage.createPackageContents();
         theExpressionsPackage_1.createPackageContents();
         theDomainPackage.createPackageContents();
         thePatternPackage.createPackageContents();
@@ -491,6 +503,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         theSchemaPackage.initializePackageContents();
         theDefinitionPackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
+        theColumnsetPackage.initializePackageContents();
         theExpressionsPackage_1.initializePackageContents();
         theDomainPackage.initializePackageContents();
         thePatternPackage.initializePackageContents();
@@ -1203,24 +1216,6 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getPatternMatchingIndicator_MatchingValueCount() {
-        return (EAttribute)patternMatchingIndicatorEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EAttribute getPatternMatchingIndicator_NotMatchingValueCount() {
-        return (EAttribute)patternMatchingIndicatorEClass.getEStructuralFeatures().get(1);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     public EClass getSqlPatternMatchingIndicator() {
         return sqlPatternMatchingIndicatorEClass;
     }
@@ -1232,6 +1227,33 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      */
     public EClass getRegexpMatchingIndicator() {
         return regexpMatchingIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getMatchingIndicator() {
+        return matchingIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getMatchingIndicator_MatchingValueCount() {
+        return (EAttribute)matchingIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getMatchingIndicator_NotMatchingValueCount() {
+        return (EAttribute)matchingIndicatorEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -1446,12 +1468,14 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(dateParametersEClass, DATE_PARAMETERS__DATE_AGGREGATION_TYPE);
 
         patternMatchingIndicatorEClass = createEClass(PATTERN_MATCHING_INDICATOR);
-        createEAttribute(patternMatchingIndicatorEClass, PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT);
-        createEAttribute(patternMatchingIndicatorEClass, PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT);
 
         sqlPatternMatchingIndicatorEClass = createEClass(SQL_PATTERN_MATCHING_INDICATOR);
 
         regexpMatchingIndicatorEClass = createEClass(REGEXP_MATCHING_INDICATOR);
+
+        matchingIndicatorEClass = createEClass(MATCHING_INDICATOR);
+        createEAttribute(matchingIndicatorEClass, MATCHING_INDICATOR__MATCHING_VALUE_COUNT);
+        createEAttribute(matchingIndicatorEClass, MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT);
 
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
@@ -1492,6 +1516,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         SchemaPackage theSchemaPackage = (SchemaPackage)EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI);
         DefinitionPackage theDefinitionPackage = (DefinitionPackage)EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI);
         IndicatorSqlPackage theIndicatorSqlPackage = (IndicatorSqlPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI);
+        ColumnsetPackage theColumnsetPackage = (ColumnsetPackage)EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI);
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
         DomainPackage theDomainPackage = (DomainPackage)EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI);
 
@@ -1499,6 +1524,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         getESubpackages().add(theSchemaPackage);
         getESubpackages().add(theDefinitionPackage);
         getESubpackages().add(theIndicatorSqlPackage);
+        getESubpackages().add(theColumnsetPackage);
 
         // Create type parameters
 
@@ -1532,9 +1558,10 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         lowerQuartileIndicatorEClass.getESuperTypes().add(this.getMinValueIndicator());
         upperQuartileIndicatorEClass.getESuperTypes().add(this.getMaxValueIndicator());
         countsIndicatorEClass.getESuperTypes().add(this.getCompositeIndicator());
-        patternMatchingIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        patternMatchingIndicatorEClass.getESuperTypes().add(this.getMatchingIndicator());
         sqlPatternMatchingIndicatorEClass.getESuperTypes().add(this.getPatternMatchingIndicator());
         regexpMatchingIndicatorEClass.getESuperTypes().add(this.getPatternMatchingIndicator());
+        matchingIndicatorEClass.getESuperTypes().add(this.getIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1711,12 +1738,14 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getDateParameters_DateAggregationType(), this.getDateGrain(), "dateAggregationType", "year", 0, 1, DateParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(patternMatchingIndicatorEClass, PatternMatchingIndicator.class, "PatternMatchingIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getPatternMatchingIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1, PatternMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getPatternMatchingIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null, 0, 1, PatternMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(sqlPatternMatchingIndicatorEClass, SqlPatternMatchingIndicator.class, "SqlPatternMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(regexpMatchingIndicatorEClass, RegexpMatchingIndicator.class, "RegexpMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(matchingIndicatorEClass, MatchingIndicator.class, "MatchingIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getMatchingIndicator_MatchingValueCount(), ecorePackage.getELongObject(), "matchingValueCount", null, 0, 1, MatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchingIndicator_NotMatchingValueCount(), ecorePackage.getELongObject(), "notMatchingValueCount", null, 0, 1, MatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

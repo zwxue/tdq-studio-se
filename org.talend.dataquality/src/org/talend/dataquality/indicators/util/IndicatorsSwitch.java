@@ -375,6 +375,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.PATTERN_MATCHING_INDICATOR: {
                 PatternMatchingIndicator patternMatchingIndicator = (PatternMatchingIndicator)theEObject;
                 T result = casePatternMatchingIndicator(patternMatchingIndicator);
+                if (result == null) result = caseMatchingIndicator(patternMatchingIndicator);
                 if (result == null) result = caseIndicator(patternMatchingIndicator);
                 if (result == null) result = caseModelElement(patternMatchingIndicator);
                 if (result == null) result = caseElement(patternMatchingIndicator);
@@ -385,6 +386,7 @@ public class IndicatorsSwitch<T> {
                 SqlPatternMatchingIndicator sqlPatternMatchingIndicator = (SqlPatternMatchingIndicator)theEObject;
                 T result = caseSqlPatternMatchingIndicator(sqlPatternMatchingIndicator);
                 if (result == null) result = casePatternMatchingIndicator(sqlPatternMatchingIndicator);
+                if (result == null) result = caseMatchingIndicator(sqlPatternMatchingIndicator);
                 if (result == null) result = caseIndicator(sqlPatternMatchingIndicator);
                 if (result == null) result = caseModelElement(sqlPatternMatchingIndicator);
                 if (result == null) result = caseElement(sqlPatternMatchingIndicator);
@@ -395,9 +397,19 @@ public class IndicatorsSwitch<T> {
                 RegexpMatchingIndicator regexpMatchingIndicator = (RegexpMatchingIndicator)theEObject;
                 T result = caseRegexpMatchingIndicator(regexpMatchingIndicator);
                 if (result == null) result = casePatternMatchingIndicator(regexpMatchingIndicator);
+                if (result == null) result = caseMatchingIndicator(regexpMatchingIndicator);
                 if (result == null) result = caseIndicator(regexpMatchingIndicator);
                 if (result == null) result = caseModelElement(regexpMatchingIndicator);
                 if (result == null) result = caseElement(regexpMatchingIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.MATCHING_INDICATOR: {
+                MatchingIndicator matchingIndicator = (MatchingIndicator)theEObject;
+                T result = caseMatchingIndicator(matchingIndicator);
+                if (result == null) result = caseIndicator(matchingIndicator);
+                if (result == null) result = caseModelElement(matchingIndicator);
+                if (result == null) result = caseElement(matchingIndicator);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -805,6 +817,21 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseRegexpMatchingIndicator(RegexpMatchingIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Matching Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Matching Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMatchingIndicator(MatchingIndicator object) {
         return null;
     }
 

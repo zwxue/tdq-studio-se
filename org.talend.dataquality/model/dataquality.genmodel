@@ -39,6 +39,8 @@
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
             ecoreFeature="ecore:EReference dataquality.ecore#//analysis/AnalysisParameters/dataValidationDomains"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/AnalysisParameters/analysisType"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference dataquality.ecore#//analysis/AnalysisParameters/deactivatedIndicators"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//analysis/AnalysisResult">
         <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference dataquality.ecore#//analysis/AnalysisResult/analysis"/>
@@ -319,12 +321,13 @@
       <genClasses ecoreClass="dataquality.ecore#//indicators/DateParameters">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/DateParameters/dateAggregationType"/>
       </genClasses>
-      <genClasses ecoreClass="dataquality.ecore#//indicators/PatternMatchingIndicator">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/PatternMatchingIndicator/matchingValueCount"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/PatternMatchingIndicator/notMatchingValueCount"/>
-      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/PatternMatchingIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/SqlPatternMatchingIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/RegexpMatchingIndicator"/>
+      <genClasses image="false" ecoreClass="dataquality.ecore#//indicators/MatchingIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/MatchingIndicator/matchingValueCount"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/MatchingIndicator/notMatchingValueCount"/>
+      </genClasses>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">
@@ -394,6 +397,17 @@
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/SqlIndicator/creationDate"/>
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/SqlIndicator/lastModificationDate"/>
         </genClasses>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="Columnset" basePackage="org.talend.dataquality.indicators"
+          disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/columnset">
+        <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/ColumnsCompareIndicator">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnsCompareIndicator/columnSetA"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnsCompareIndicator/columnSetB"/>
+        </genClasses>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/ValueMatchingIndicator"/>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/RowMatchingIndicator"/>
       </nestedGenPackages>
     </nestedGenPackages>
     <nestedGenPackages prefix="Expressions" basePackage="org.talend.dataquality" disposableProviderFactory="true"

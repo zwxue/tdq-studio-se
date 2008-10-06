@@ -39,6 +39,8 @@ import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
 
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
@@ -258,6 +260,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
+        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
         ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
@@ -271,6 +274,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         theSchemaPackage.createPackageContents();
         theDefinitionPackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
+        theColumnsetPackage.createPackageContents();
         theExpressionsPackage_1.createPackageContents();
         theDomainPackage.createPackageContents();
         thePatternPackage.createPackageContents();
@@ -284,6 +288,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         theSchemaPackage.initializePackageContents();
         theDefinitionPackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
+        theColumnsetPackage.initializePackageContents();
         theExpressionsPackage_1.initializePackageContents();
         theDomainPackage.initializePackageContents();
         thePatternPackage.initializePackageContents();
@@ -410,6 +415,15 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
      */
     public EAttribute getAnalysisParameters_AnalysisType() {
         return (EAttribute)analysisParametersEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getAnalysisParameters_DeactivatedIndicators() {
+        return (EReference)analysisParametersEClass.getEStructuralFeatures().get(4);
     }
 
     /**
@@ -572,6 +586,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         createEReference(analysisParametersEClass, ANALYSIS_PARAMETERS__INDICATOR_VALIDATION_DOMAINS);
         createEReference(analysisParametersEClass, ANALYSIS_PARAMETERS__DATA_VALIDATION_DOMAINS);
         createEAttribute(analysisParametersEClass, ANALYSIS_PARAMETERS__ANALYSIS_TYPE);
+        createEReference(analysisParametersEClass, ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS);
 
         analysisResultEClass = createEClass(ANALYSIS_RESULT);
         createEReference(analysisResultEClass, ANALYSIS_RESULT__ANALYSIS);
@@ -651,6 +666,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         initEReference(getAnalysisParameters_IndicatorValidationDomains(), theDomainPackage.getDomain(), null, "indicatorValidationDomains", null, 0, -1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getAnalysisParameters_DataValidationDomains(), theDomainPackage.getDomain(), null, "dataValidationDomains", null, 0, -1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getAnalysisParameters_AnalysisType(), this.getAnalysisType(), "analysisType", "", 0, 1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getAnalysisParameters_DeactivatedIndicators(), theIndicatorsPackage.getIndicator(), null, "deactivatedIndicators", null, 0, -1, AnalysisParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(analysisResultEClass, AnalysisResult.class, "AnalysisResult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getAnalysisResult_Analysis(), this.getAnalysis(), this.getAnalysis_Results(), "analysis", null, 0, 1, AnalysisResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

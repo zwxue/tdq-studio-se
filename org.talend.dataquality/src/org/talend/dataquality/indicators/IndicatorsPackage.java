@@ -7529,6 +7529,277 @@ public interface IndicatorsPackage extends EPackage {
     int DATE_PARAMETERS_FEATURE_COUNT = 1;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.MatchingIndicatorImpl <em>Matching Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.MatchingIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingIndicator()
+     * @generated
+     */
+    int MATCHING_INDICATOR = 33;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__NAME = INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__SET = INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__COUNT = INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__MATCHING_VALUE_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The number of structural features of the '<em>Matching Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 2;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.PatternMatchingIndicatorImpl <em>Pattern Matching Indicator</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7545,7 +7816,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__NAME = INDICATOR__NAME;
+    int PATTERN_MATCHING_INDICATOR__NAME = MATCHING_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -7554,7 +7825,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+    int PATTERN_MATCHING_INDICATOR__VISIBILITY = MATCHING_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -7563,7 +7834,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+    int PATTERN_MATCHING_INDICATOR__CLIENT_DEPENDENCY = MATCHING_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -7572,7 +7843,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+    int PATTERN_MATCHING_INDICATOR__SUPPLIER_DEPENDENCY = MATCHING_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -7581,7 +7852,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+    int PATTERN_MATCHING_INDICATOR__CONSTRAINT = MATCHING_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -7590,7 +7861,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+    int PATTERN_MATCHING_INDICATOR__NAMESPACE = MATCHING_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -7599,7 +7870,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+    int PATTERN_MATCHING_INDICATOR__IMPORTER = MATCHING_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -7608,7 +7879,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+    int PATTERN_MATCHING_INDICATOR__STEREOTYPE = MATCHING_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -7617,7 +7888,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+    int PATTERN_MATCHING_INDICATOR__TAGGED_VALUE = MATCHING_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -7626,7 +7897,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+    int PATTERN_MATCHING_INDICATOR__DOCUMENT = MATCHING_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -7635,7 +7906,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+    int PATTERN_MATCHING_INDICATOR__DESCRIPTION = MATCHING_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7644,7 +7915,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+    int PATTERN_MATCHING_INDICATOR__RESPONSIBLE_PARTY = MATCHING_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -7653,7 +7924,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+    int PATTERN_MATCHING_INDICATOR__ELEMENT_NODE = MATCHING_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -7662,7 +7933,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__SET = INDICATOR__SET;
+    int PATTERN_MATCHING_INDICATOR__SET = MATCHING_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -7671,7 +7942,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+    int PATTERN_MATCHING_INDICATOR__RENDERED_OBJECT = MATCHING_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -7680,7 +7951,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+    int PATTERN_MATCHING_INDICATOR__VOCABULARY_ELEMENT = MATCHING_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -7689,7 +7960,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+    int PATTERN_MATCHING_INDICATOR__MEASUREMENT = MATCHING_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -7698,7 +7969,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+    int PATTERN_MATCHING_INDICATOR__CHANGE_REQUEST = MATCHING_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -7707,7 +7978,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+    int PATTERN_MATCHING_INDICATOR__DASDL_PROPERTY = MATCHING_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -7716,7 +7987,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__COUNT = INDICATOR__COUNT;
+    int PATTERN_MATCHING_INDICATOR__COUNT = MATCHING_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -7725,7 +7996,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+    int PATTERN_MATCHING_INDICATOR__NULL_COUNT = MATCHING_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -7734,7 +8005,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+    int PATTERN_MATCHING_INDICATOR__PARAMETERS = MATCHING_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -7743,7 +8014,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+    int PATTERN_MATCHING_INDICATOR__ANALYZED_ELEMENT = MATCHING_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -7752,7 +8023,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+    int PATTERN_MATCHING_INDICATOR__DATAMINING_TYPE = MATCHING_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -7761,7 +8032,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+    int PATTERN_MATCHING_INDICATOR__INDICATOR_DEFINITION = MATCHING_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -7770,7 +8041,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int PATTERN_MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS = MATCHING_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
@@ -7779,7 +8050,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT = INDICATOR_FEATURE_COUNT + 0;
+    int PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT = MATCHING_INDICATOR__MATCHING_VALUE_COUNT;
 
     /**
      * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
@@ -7788,7 +8059,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+    int PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT;
 
     /**
      * The number of structural features of the '<em>Pattern Matching Indicator</em>' class.
@@ -7797,7 +8068,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int PATTERN_MATCHING_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 2;
+    int PATTERN_MATCHING_INDICATOR_FEATURE_COUNT = MATCHING_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.SqlPatternMatchingIndicatorImpl <em>Sql Pattern Matching Indicator</em>}' class.
@@ -8349,7 +8620,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getEnumStatistics()
      * @generated
      */
-    int ENUM_STATISTICS = 33;
+    int ENUM_STATISTICS = 34;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DataminingType <em>Datamining Type</em>}' enum.
@@ -8359,7 +8630,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDataminingType()
      * @generated
      */
-    int DATAMINING_TYPE = 34;
+    int DATAMINING_TYPE = 35;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DateGrain <em>Date Grain</em>}' enum.
@@ -8369,7 +8640,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateGrain()
      * @generated
      */
-    int DATE_GRAIN = 35;
+    int DATE_GRAIN = 36;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.MatchingAlgorithm <em>Matching Algorithm</em>}' enum.
@@ -8379,7 +8650,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingAlgorithm()
      * @generated
      */
-    int MATCHING_ALGORITHM = 36;
+    int MATCHING_ALGORITHM = 37;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.IndicatorValueType <em>Indicator Value Type</em>}' enum.
@@ -8389,7 +8660,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getIndicatorValueType()
      * @generated
      */
-    int INDICATOR_VALUE_TYPE = 37;
+    int INDICATOR_VALUE_TYPE = 38;
 
     /**
      * The meta object id for the '<em>Java Set</em>' data type.
@@ -8399,7 +8670,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaSet()
      * @generated
      */
-    int JAVA_SET = 38;
+    int JAVA_SET = 39;
 
     /**
      * The meta object id for the '<em>Java Hash Map</em>' data type.
@@ -8409,7 +8680,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaHashMap()
      * @generated
      */
-    int JAVA_HASH_MAP = 39;
+    int JAVA_HASH_MAP = 40;
 
     /**
      * The meta object id for the '<em>Java Tree Map</em>' data type.
@@ -8419,7 +8690,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaTreeMap()
      * @generated
      */
-    int JAVA_TREE_MAP = 40;
+    int JAVA_TREE_MAP = 41;
 
     /**
      * The meta object id for the '<em>Object Array</em>' data type.
@@ -8428,7 +8699,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getObjectArray()
      * @generated
      */
-    int OBJECT_ARRAY = 41;
+    int OBJECT_ARRAY = 42;
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
@@ -9335,28 +9606,6 @@ public interface IndicatorsPackage extends EPackage {
     EClass getPatternMatchingIndicator();
 
     /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.PatternMatchingIndicator#getMatchingValueCount <em>Matching Value Count</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Matching Value Count</em>'.
-     * @see org.talend.dataquality.indicators.PatternMatchingIndicator#getMatchingValueCount()
-     * @see #getPatternMatchingIndicator()
-     * @generated
-     */
-    EAttribute getPatternMatchingIndicator_MatchingValueCount();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.PatternMatchingIndicator#getNotMatchingValueCount <em>Not Matching Value Count</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Not Matching Value Count</em>'.
-     * @see org.talend.dataquality.indicators.PatternMatchingIndicator#getNotMatchingValueCount()
-     * @see #getPatternMatchingIndicator()
-     * @generated
-     */
-    EAttribute getPatternMatchingIndicator_NotMatchingValueCount();
-
-    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.SqlPatternMatchingIndicator <em>Sql Pattern Matching Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -9375,6 +9624,38 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      */
     EClass getRegexpMatchingIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.MatchingIndicator <em>Matching Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Matching Indicator</em>'.
+     * @see org.talend.dataquality.indicators.MatchingIndicator
+     * @generated
+     */
+    EClass getMatchingIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.MatchingIndicator#getMatchingValueCount <em>Matching Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Matching Value Count</em>'.
+     * @see org.talend.dataquality.indicators.MatchingIndicator#getMatchingValueCount()
+     * @see #getMatchingIndicator()
+     * @generated
+     */
+    EAttribute getMatchingIndicator_MatchingValueCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.MatchingIndicator#getNotMatchingValueCount <em>Not Matching Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Not Matching Value Count</em>'.
+     * @see org.talend.dataquality.indicators.MatchingIndicator#getNotMatchingValueCount()
+     * @see #getMatchingIndicator()
+     * @generated
+     */
+    EAttribute getMatchingIndicator_NotMatchingValueCount();
 
     /**
      * Returns the meta object for enum '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}'.
@@ -10234,22 +10515,6 @@ public interface IndicatorsPackage extends EPackage {
         EClass PATTERN_MATCHING_INDICATOR = eINSTANCE.getPatternMatchingIndicator();
 
         /**
-         * The meta object literal for the '<em><b>Matching Value Count</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute PATTERN_MATCHING_INDICATOR__MATCHING_VALUE_COUNT = eINSTANCE.getPatternMatchingIndicator_MatchingValueCount();
-
-        /**
-         * The meta object literal for the '<em><b>Not Matching Value Count</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute PATTERN_MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = eINSTANCE.getPatternMatchingIndicator_NotMatchingValueCount();
-
-        /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.SqlPatternMatchingIndicatorImpl <em>Sql Pattern Matching Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -10268,6 +10533,32 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass REGEXP_MATCHING_INDICATOR = eINSTANCE.getRegexpMatchingIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.MatchingIndicatorImpl <em>Matching Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.MatchingIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingIndicator()
+         * @generated
+         */
+        EClass MATCHING_INDICATOR = eINSTANCE.getMatchingIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Matching Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute MATCHING_INDICATOR__MATCHING_VALUE_COUNT = eINSTANCE.getMatchingIndicator_MatchingValueCount();
+
+        /**
+         * The meta object literal for the '<em><b>Not Matching Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute MATCHING_INDICATOR__NOT_MATCHING_VALUE_COUNT = eINSTANCE.getMatchingIndicator_NotMatchingValueCount();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

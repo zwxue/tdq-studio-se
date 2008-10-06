@@ -213,6 +213,10 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
                 return createRegexpMatchingIndicatorAdapter();
             }
             @Override
+            public Adapter caseMatchingIndicator(MatchingIndicator object) {
+                return createMatchingIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -699,6 +703,20 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createRegexpMatchingIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.MatchingIndicator <em>Matching Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.MatchingIndicator
+     * @generated
+     */
+    public Adapter createMatchingIndicatorAdapter() {
         return null;
     }
 
