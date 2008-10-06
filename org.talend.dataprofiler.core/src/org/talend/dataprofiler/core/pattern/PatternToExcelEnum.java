@@ -37,6 +37,10 @@ public enum PatternToExcelEnum {
 
     private int index;
 
+    public int getIndex() {
+        return index;
+    }
+
     public String getLiteral() {
         return literal;
     }

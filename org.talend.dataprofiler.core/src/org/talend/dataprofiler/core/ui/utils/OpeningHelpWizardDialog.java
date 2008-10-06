@@ -104,7 +104,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
     private void showHelp() {
         getShell().setFocus();
 
-        IContext context = HelpSystem.getContext(HelpPlugin.INDICATOR_OPTION_HELP_ID);
+        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorHelpContextID());
         IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
         helpSystem.displayHelp(context);
 

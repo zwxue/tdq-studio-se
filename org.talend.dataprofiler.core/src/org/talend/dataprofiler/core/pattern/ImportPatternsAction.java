@@ -52,7 +52,7 @@ public class ImportPatternsAction extends Action {
     public void run() {
         ImportPatternsWizard wizard = new ImportPatternsWizard(folder);
 
-        IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getPatternHelpContextID());
         IHelpResource[] relatedTopics = context.getRelatedTopics();
         String href = relatedTopics[2].getHref();
 

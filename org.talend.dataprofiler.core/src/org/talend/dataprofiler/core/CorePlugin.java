@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
@@ -28,6 +29,7 @@ import org.osgi.framework.BundleContext;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.help.BookMarkEnum;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -77,6 +79,15 @@ public class CorePlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
         getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
+
+        try {
+            for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
+                BaseHelpSystem.getInstance().getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /*

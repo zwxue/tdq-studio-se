@@ -678,7 +678,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             @Override
             public void shellActivated(ShellEvent e) {
                 dialog.getShell().setFocus();
-                IContext context = HelpSystem.getContext(HelpPlugin.INDICATOR_SELECTOR_HELP_ID);
+                IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
                 PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
             }
         });

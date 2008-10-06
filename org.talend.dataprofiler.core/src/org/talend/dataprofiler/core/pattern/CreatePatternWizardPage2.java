@@ -87,7 +87,8 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         });
         if (getControl() != null) {
             try {
-                PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+                PlatformUI.getWorkbench().getHelpSystem()
+                        .setHelp(getControl(), HelpPlugin.getDefault().getPatternHelpContextID());
             } catch (Exception e) {
                 e.printStackTrace();
             }

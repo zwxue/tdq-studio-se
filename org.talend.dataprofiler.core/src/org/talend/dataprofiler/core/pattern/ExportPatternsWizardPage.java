@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -21,8 +19,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -35,7 +31,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
-import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider;
 
 /**
@@ -91,22 +87,7 @@ public class ExportPatternsWizardPage extends WizardPage {
         fileText = new Text(fileComp, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gridData);
-        fileText.addModifyListener(new ModifyListener() {
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-             */
-            public void modifyText(ModifyEvent e) {
-                File file = new File(fileText.getText());
-                if (file.exists()) {
-                    setPageComplete(true);
-                } else {
-                    setPageComplete(false);
-                }
-            }
-        });
         Button button = new Button(fileComp, SWT.PUSH);
         button.setText("Browse...");
         button.addSelectionListener(new SelectionAdapter() {
@@ -125,6 +106,10 @@ public class ExportPatternsWizardPage extends WizardPage {
                 }
                 String path = dialog.open();
                 if (path != null) {
+                    if (!path.endsWith(".csv")) {
+                        path = path + ".csv";
+                    }
+
                     fileText.setText(path);
                 }
             }
@@ -139,7 +124,7 @@ public class ExportPatternsWizardPage extends WizardPage {
         GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedPatternsTree.getTree());
 
         selectedPatternsTree.setLabelProvider(new ResourceViewLabelProvider());
-        selectedPatternsTree.setContentProvider(new ResourceViewContentProvider() {
+        selectedPatternsTree.setContentProvider(new WorkbenchContentProvider() {
 
             @Override
             public boolean hasChildren(Object element) {

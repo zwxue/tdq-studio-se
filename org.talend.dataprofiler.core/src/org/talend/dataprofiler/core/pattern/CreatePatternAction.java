@@ -79,7 +79,7 @@ public class CreatePatternAction extends Action {
         parameter.setFolderProvider(folderProvider);
 
         CreatePatternWizard fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter);
-        IContext context = HelpSystem.getContext(HelpPlugin.PATTERN_CONTEXT_HELP_ID);
+        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getPatternHelpContextID());
         IHelpResource[] relatedTopics = context.getRelatedTopics();
         String href = relatedTopics[0].getHref();
         switch (type) {
