@@ -57,6 +57,9 @@ public final class AnalysisExecutorSelector {
         case CATALOG:
             exec = new CatalogAnalysisExecutor();
             break;
+        case COLUMNS_COMPARISON:
+            exec = new RowMatchingAnalysisExecutor();
+            break;
         default:
             // this should not happen. This executor has not been tested for a long time.
             exec = null;

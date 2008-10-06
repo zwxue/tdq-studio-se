@@ -58,9 +58,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     private static Logger log = Logger.getLogger(AbstractSchemaEvaluator.class);
 
-    // --- indicators for the connection (sum of all indicators)
-    // private ConnectionIndicator connectionIndicator;
-
     /**
      * The maximum number of exception before we restart the connection in order to release correctly the cursors.
      */

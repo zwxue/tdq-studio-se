@@ -473,7 +473,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     private String getAlias(String colName, DateGrain dateAggregationType) {
         if (dbms().supportAliasesInGroupBy()) {
-        return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
+            return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
         } else {
             return "";
         }
@@ -748,10 +748,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * 
      * @return the DBMS language (not null)
      */
-    private DbmsLanguage dbms() {
+    protected DbmsLanguage dbms() {
         if (this.dbmsLanguage == null) {
             this.dbmsLanguage = createDbmsLanguage();
-            this.dbmsLanguage.setDbQuoteString(this.getDbQuoteString(cachedAnalysis));
+            // this.dbmsLanguage.setDbQuoteString(this.getDbQuoteString(cachedAnalysis));
         }
         return this.dbmsLanguage;
     }
@@ -778,7 +778,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return replaceVariablesLow(sqlGenericString, arguments);
     }
 
-    private String replaceVariablesLow(String sqlGenericString, Object... arguments) {
+    protected String replaceVariablesLow(String sqlGenericString, Object... arguments) {
         String toFormat = surroundSingleQuotes(sqlGenericString);
         return MessageFormat.format(toFormat, arguments);
     }
@@ -845,7 +845,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param error the message to set in errorMessage
      * @return always false
      */
-    private boolean traceError(String error) {
+    protected boolean traceError(String error) {
         this.errorMessage = error;
         log.error(this.errorMessage);
         return false;
@@ -884,11 +884,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     changeCatalog(catalogName, connection);
                 }
 
-                Expression query = indicator.getInstantiatedExpressions(dbms().getDbmsName());
-                if (query == null) {
-                    // try to get a default sql expression
-                    query = indicator.getInstantiatedExpressions(dbms().getDefaultLanguage());
-                }
+                Expression query = dbms().getInstantiatedExpression(indicator);
                 if (query == null || !executeQuery(indicator, connection, query.getBody())) {
                     ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
                             + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
@@ -1023,7 +1019,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return
      * @throws SQLException
      */
-    private List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
+    protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
 
         if (catalogName != null) { // check whether null argument can be given
             changeCatalog(catalogName, connection);
@@ -1069,7 +1065,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param connection
      * @throws SQLException
      */
-    private boolean changeCatalog(String catalogName, Connection connection) {
+    protected boolean changeCatalog(String catalogName, Connection connection) {
         try {
             // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
             connection.setCatalog(catalogName);
