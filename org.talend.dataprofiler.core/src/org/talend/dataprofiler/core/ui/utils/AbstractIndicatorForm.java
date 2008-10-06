@@ -40,6 +40,8 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     public static final String MSG_OK = UIMessages.MSG_VALID_FIELD;
 
+    protected final String limitResultsGrp = "Limit result";
+    
     /**
      * DOC zqin AbstractIndicatorForm constructor comment.
      * 

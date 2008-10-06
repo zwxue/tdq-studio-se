@@ -82,7 +82,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
     protected void addFields() {
 
         Group group = new Group(this, SWT.NONE);
-        group.setText("show the most frequent occurences");
+        group.setText(limitResultsGrp);
         group.setLayout(new GridLayout(2, false));
 
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);

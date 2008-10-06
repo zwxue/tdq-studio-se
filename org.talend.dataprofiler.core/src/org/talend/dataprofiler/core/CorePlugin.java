@@ -82,7 +82,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
         try {
             for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
-                BaseHelpSystem.getInstance().getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
+                BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
             }
         } catch (Exception e) {
             e.printStackTrace();

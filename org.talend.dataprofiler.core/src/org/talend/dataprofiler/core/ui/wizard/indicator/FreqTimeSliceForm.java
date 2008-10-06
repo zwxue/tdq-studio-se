@@ -41,7 +41,7 @@ public class FreqTimeSliceForm extends TimeSlicesForm {
         super.addFields();
 
         Group group = new Group(this, SWT.NONE);
-        group.setText("Show the most frequent occurences");
+        group.setText(limitResultsGrp);
         group.setLayout(new GridLayout(2, false));
 
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
