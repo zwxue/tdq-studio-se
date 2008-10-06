@@ -169,6 +169,7 @@ import org.talend.dataquality.domain.provider.DomainItemProviderAdapterFactory;
 
 import org.talend.dataquality.expressions.provider.ExpressionsItemProviderAdapterFactory;
 
+import org.talend.dataquality.indicators.columnset.provider.ColumnsetItemProviderAdapterFactory;
 import org.talend.dataquality.indicators.definition.provider.DefinitionItemProviderAdapterFactory;
 import org.talend.dataquality.indicators.provider.IndicatorsItemProviderAdapterFactory;
 
@@ -779,6 +780,7 @@ public class AnalysisEditor
         adapterFactory.addAdapterFactory(new SchemaItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new DefinitionItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new IndicatorSqlItemProviderAdapterFactory());
+        adapterFactory.addAdapterFactory(new ColumnsetItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ExpressionsItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new DomainItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new PatternItemProviderAdapterFactory());

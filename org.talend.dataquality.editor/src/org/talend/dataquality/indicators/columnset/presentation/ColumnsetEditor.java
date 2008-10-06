@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.talend.dataquality.domain.presentation;
+package org.talend.dataquality.indicators.columnset.presentation;
 
 
 import java.io.IOException;
@@ -157,7 +157,7 @@ import org.eclipse.emf.edit.ui.util.EditUIUtil;
 
 import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
-import org.talend.dataquality.domain.provider.DomainItemProviderAdapterFactory;
+import org.talend.dataquality.indicators.columnset.provider.ColumnsetItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
@@ -169,15 +169,18 @@ import org.talend.dataquality.analysis.provider.AnalysisItemProviderAdapterFacto
 
 import org.talend.dataquality.domain.pattern.provider.PatternItemProviderAdapterFactory;
 
+import org.talend.dataquality.domain.provider.DomainItemProviderAdapterFactory;
+
 import org.talend.dataquality.expressions.provider.ExpressionsItemProviderAdapterFactory;
 
-import org.talend.dataquality.indicators.columnset.provider.ColumnsetItemProviderAdapterFactory;
 import org.talend.dataquality.indicators.definition.provider.DefinitionItemProviderAdapterFactory;
+
 import org.talend.dataquality.indicators.provider.IndicatorsItemProviderAdapterFactory;
 
 import org.talend.dataquality.indicators.schema.provider.SchemaItemProviderAdapterFactory;
 
 import org.talend.dataquality.indicators.sql.provider.IndicatorSqlItemProviderAdapterFactory;
+
 import org.talend.dataquality.reports.provider.ReportsItemProviderAdapterFactory;
 
 import orgomg.cwm.analysis.businessnomenclature.provider.BusinessnomenclatureItemProviderAdapterFactory;
@@ -244,12 +247,12 @@ import orgomg.mof.model.provider.ModelItemProviderAdapterFactory;
 
 
 /**
- * This is an example of a Domain model editor.
+ * This is an example of a Columnset model editor.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class DomainEditor
+public class ColumnsetEditor
     extends MultiPageEditorPart
     implements IEditingDomainProvider, ISelectionProvider, IMenuListener, IViewerProvider, IGotoMarker {
     /**
@@ -411,18 +414,18 @@ public class DomainEditor
             public void partActivated(IWorkbenchPart p) {
                 if (p instanceof ContentOutline) {
                     if (((ContentOutline)p).getCurrentPage() == contentOutlinePage) {
-                        getActionBarContributor().setActiveEditor(DomainEditor.this);
+                        getActionBarContributor().setActiveEditor(ColumnsetEditor.this);
 
                         setCurrentViewer(contentOutlineViewer);
                     }
                 }
                 else if (p instanceof PropertySheet) {
                     if (((PropertySheet)p).getCurrentPage() == propertySheetPage) {
-                        getActionBarContributor().setActiveEditor(DomainEditor.this);
+                        getActionBarContributor().setActiveEditor(ColumnsetEditor.this);
                         handleActivate();
                     }
                 }
-                else if (p == DomainEditor.this) {
+                else if (p == ColumnsetEditor.this) {
                     handleActivate();
                 }
             }
@@ -585,7 +588,7 @@ public class DomainEditor
                             getSite().getShell().getDisplay().asyncExec
                                 (new Runnable() {
                                      public void run() {
-                                         getSite().getPage().closeEditor(DomainEditor.this, false);
+                                         getSite().getPage().closeEditor(ColumnsetEditor.this, false);
                                      }
                                  });
                         }
@@ -593,7 +596,7 @@ public class DomainEditor
 
                     if (!visitor.getChangedResources().isEmpty()) {
                         changedResources.addAll(visitor.getChangedResources());
-                        if (getSite().getPage().getActiveEditor() == DomainEditor.this) {
+                        if (getSite().getPage().getActiveEditor() == ColumnsetEditor.this) {
                             getSite().getShell().getDisplay().asyncExec
                                 (new Runnable() {
                                      public void run() {
@@ -628,7 +631,7 @@ public class DomainEditor
 
         if (!removedResources.isEmpty()) {
             if (handleDirtyConflict()) {
-                getSite().getPage().closeEditor(DomainEditor.this, false);
+                getSite().getPage().closeEditor(ColumnsetEditor.this, false);
             }
             else {
                 removedResources.clear();
@@ -758,7 +761,7 @@ public class DomainEditor
      * <!-- end-user-doc -->
      * @generated
      */
-    public DomainEditor() {
+    public ColumnsetEditor() {
         super();
         initializeEditingDomain();
     }
@@ -1136,7 +1139,7 @@ public class DomainEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), DomainEditor.this) {
+                    new ViewerPane(getSite().getPage(), ColumnsetEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             Tree tree = new Tree(composite, SWT.MULTI);
@@ -1170,7 +1173,7 @@ public class DomainEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), DomainEditor.this) {
+                    new ViewerPane(getSite().getPage(), ColumnsetEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             Tree tree = new Tree(composite, SWT.MULTI);
@@ -1199,7 +1202,7 @@ public class DomainEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), DomainEditor.this) {
+                    new ViewerPane(getSite().getPage(), ColumnsetEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             return new ListViewer(composite);
@@ -1224,7 +1227,7 @@ public class DomainEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), DomainEditor.this) {
+                    new ViewerPane(getSite().getPage(), ColumnsetEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             return new TreeViewer(composite);
@@ -1251,7 +1254,7 @@ public class DomainEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), DomainEditor.this) {
+                    new ViewerPane(getSite().getPage(), ColumnsetEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             return new TableViewer(composite);
@@ -1294,7 +1297,7 @@ public class DomainEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), DomainEditor.this) {
+                    new ViewerPane(getSite().getPage(), ColumnsetEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             return new TreeViewer(composite);
@@ -1515,8 +1518,8 @@ public class DomainEditor
                 new ExtendedPropertySheetPage(editingDomain) {
                     @Override
                     public void setSelectionToViewer(List<?> selection) {
-                        DomainEditor.this.setSelectionToViewer(selection);
-                        DomainEditor.this.setFocus();
+                        ColumnsetEditor.this.setSelectionToViewer(selection);
+                        ColumnsetEditor.this.setFocus();
                     }
 
                     @Override
