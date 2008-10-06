@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.talend.dataquality.indicators.provider;
+package org.talend.dataquality.indicators.columnset.provider;
 
 
 import java.util.Collection;
@@ -13,9 +13,6 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.common.util.ResourceLocator;
-
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -23,26 +20,21 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
-import org.eclipse.emf.edit.provider.ViewerNotification;
-import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
-
-import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
 
 /**
- * This is the item provider adapter for a {@link org.talend.dataquality.indicators.PatternMatchingIndicator} object.
+ * This is the item provider adapter for a {@link org.talend.dataquality.indicators.columnset.ValueMatchingIndicator} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class PatternMatchingIndicatorItemProvider
-    extends MatchingIndicatorItemProvider
-    implements	
-        IEditingDomainItemProvider,	
-        IStructuredItemContentProvider,	
-        ITreeItemContentProvider,	
-        IItemLabelProvider,	
+public class ValueMatchingIndicatorItemProvider
+    extends ColumnsCompareIndicatorItemProvider
+    implements
+        IEditingDomainItemProvider,
+        IStructuredItemContentProvider,
+        ITreeItemContentProvider,
+        IItemLabelProvider,
         IItemPropertySource {
     /**
      * This constructs an instance from a factory and a notifier.
@@ -50,7 +42,7 @@ public class PatternMatchingIndicatorItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public PatternMatchingIndicatorItemProvider(AdapterFactory adapterFactory) {
+    public ValueMatchingIndicatorItemProvider(AdapterFactory adapterFactory) {
         super(adapterFactory);
     }
 
@@ -70,14 +62,14 @@ public class PatternMatchingIndicatorItemProvider
     }
 
     /**
-     * This returns PatternMatchingIndicator.gif.
+     * This returns ValueMatchingIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/PatternMatchingIndicator"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/ValueMatchingIndicator"));
     }
 
     /**
@@ -88,10 +80,10 @@ public class PatternMatchingIndicatorItemProvider
      */
     @Override
     public String getText(Object object) {
-        String label = ((PatternMatchingIndicator)object).getName();
+        String label = ((ValueMatchingIndicator)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_PatternMatchingIndicator_type") :
-            getString("_UI_PatternMatchingIndicator_type") + " " + label;
+            getString("_UI_ValueMatchingIndicator_type") :
+            getString("_UI_ValueMatchingIndicator_type") + " " + label;
     }
 
     /**

@@ -33,6 +33,7 @@ import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
@@ -81,6 +82,7 @@ public class AnalysisParametersItemProvider
             addIndicatorValidationDomainsPropertyDescriptor(object);
             addDataValidationDomainsPropertyDescriptor(object);
             addAnalysisTypePropertyDescriptor(object);
+            addDeactivatedIndicatorsPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -169,6 +171,28 @@ public class AnalysisParametersItemProvider
                  false,
                  false,
                  ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Deactivated Indicators feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDeactivatedIndicatorsPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AnalysisParameters_deactivatedIndicators_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AnalysisParameters_deactivatedIndicators_feature", "_UI_AnalysisParameters_type"),
+                 AnalysisPackage.Literals.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS,
+                 true,
+                 false,
+                 true,
+                 null,
                  null,
                  null));
     }
@@ -452,6 +476,16 @@ public class AnalysisParametersItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  IndicatorSqlFactory.eINSTANCE.createSqlIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 ColumnsetFactory.eINSTANCE.createValueMatchingIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 ColumnsetFactory.eINSTANCE.createRowMatchingIndicator()));
 
         newChildDescriptors.add
             (createChildParameter

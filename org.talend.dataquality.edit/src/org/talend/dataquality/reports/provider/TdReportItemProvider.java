@@ -34,6 +34,7 @@ import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.expressions.ExpressionsFactory;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
@@ -496,6 +497,16 @@ public class TdReportItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  IndicatorSqlFactory.eINSTANCE.createSqlIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 ColumnsetFactory.eINSTANCE.createValueMatchingIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 ColumnsetFactory.eINSTANCE.createRowMatchingIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
