@@ -73,6 +73,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param indicator
      */
     private void instantiateQuery(Indicator indicator) {
+        indicator.reset();
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator().equals(indicator.eClass())) {
             RowMatchingIndicator rowMatchingIndicator = (RowMatchingIndicator) indicator;
             EList<Column> columnSetA = rowMatchingIndicator.getColumnSetA();
@@ -224,8 +225,11 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
             // execute the sql statement for each indicator
             EList<Indicator> indicators = analysis.getResults().getIndicators();
+            EList<Indicator> deactivatedIndicators = analysis.getParameters().getDeactivatedIndicators();
             for (Indicator indicator : indicators) {
-
+                if (deactivatedIndicators.contains(indicator)) {
+                    continue; // do not evaluate this indicator
+                }
                 // set the connection's catalog
                 if (this.catalogOrSchema != null) { // check whether null argument can be given
                     changeCatalog(this.catalogOrSchema, connection);
