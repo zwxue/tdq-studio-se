@@ -1,43 +1,63 @@
-// ============================================================================
-//
-// Copyright (C) 2006-2007 Talend Inc. - www.talend.com
-//
-// This source code is available under agreement available at
-// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
-//
-// You should have received a copy of the agreement
-// along with this program; if not, write to Talend SA
-// 9 rue Pages 92150 Suresnes, France
-//
-// ============================================================================
 package org.talend.dataprofiler.help;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
- * DOC zqin class global comment. Detailled comment <br/>
- * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ * The activator class controls the plug-in life cycle
  */
 public class HelpPlugin extends AbstractUIPlugin {
 
+    // The plug-in ID
     public static final String PLUGIN_ID = "org.talend.dataprofiler.help";
 
-    public static final String INDICATOR_OPTION_HELP_ID = PLUGIN_ID + ".mycontexthelpid";
-
-    public static final String INDICATOR_SELECTOR_HELP_ID = PLUGIN_ID + ".indicatorhelpcontext";
-
-    public static final String PATTERN_CONTEXT_HELP_ID = PLUGIN_ID + ".helpPatternContext";
-
+    // The shared instance
     private static HelpPlugin plugin;
 
     /**
-     * Returns the shared instance.
+     * The constructor
+     */
+    public HelpPlugin() {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+     */
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        plugin = this;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+     */
+    public void stop(BundleContext context) throws Exception {
+        plugin = null;
+        super.stop(context);
+    }
+
+    /**
+     * Returns the shared instance
      * 
      * @return the shared instance
      */
     public static HelpPlugin getDefault() {
         return plugin;
+    }
+
+    public String getIndicatorHelpContextID() {
+        return PLUGIN_ID + ".mycontexthelpid";
+    }
+
+    public String getIndicatorSelectorHelpContextID() {
+        return PLUGIN_ID + ".indicatorhelpcontext";
+    }
+
+    public String getPatternHelpContextID() {
+        return PLUGIN_ID + ".helpPatternContext";
     }
 }
