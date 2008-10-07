@@ -540,7 +540,7 @@ public class DbmsLanguage {
 
     private String extract(DateGrain dateGrain, String colName) {
         // DBMS_SUPPORT how to extract date parts
-        if (is(MYSQL)) {
+        if (is(MYSQL) || is(DB2)) {
             return dateGrain.getName() + surroundWith('(', colName, ')');
         }
 
