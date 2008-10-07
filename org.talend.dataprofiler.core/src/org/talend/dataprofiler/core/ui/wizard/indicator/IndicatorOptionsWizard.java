@@ -236,7 +236,7 @@ public class IndicatorOptionsWizard extends Wizard {
                     case ExpectedValueForm:
                         ExpectedValueParameter expectedParam = (ExpectedValueParameter) formParam;
                         IndicatorHelper.setIndicatorExpectedValue(parameters, expectedParam.getExpectedValue());
-
+                        break;
                     default:
 
                     }

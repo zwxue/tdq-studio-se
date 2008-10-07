@@ -188,14 +188,16 @@ public class ChartTableFactory {
         switch (indicatorEnum) {
         case ModeIndicatorEnum:
             String expectedValue = IndicatorHelper.getExpectedValue(indicator);
-            // ignore case when options is set
-            Boolean ignoreCaseOption = IndicatorHelper.ignoreCaseOption(indicator) == null ? false : IndicatorHelper
-                    .ignoreCaseOption(indicator);
+            if (expectedValue != null) {
+                // ignore case when options is set
+                Boolean ignoreCaseOption = IndicatorHelper.ignoreCaseOption(indicator) == null ? false : IndicatorHelper
+                        .ignoreCaseOption(indicator);
 
-            boolean areSame = StringUtils.equals(currentValue, expectedValue)
-                    || (ignoreCaseOption && StringUtils.equalsIgnoreCase(currentValue, expectedValue));
-            if (!areSame) {
-                msg.append("This value differs from the expected value: \"" + expectedValue + "\"");
+                boolean areSame = StringUtils.equals(currentValue, expectedValue)
+                        || (ignoreCaseOption && StringUtils.equalsIgnoreCase(currentValue, expectedValue));
+                if (!areSame) {
+                    msg.append("This value differs from the expected value: \"" + expectedValue + "\"");
+                }
             }
             break;
         default:
