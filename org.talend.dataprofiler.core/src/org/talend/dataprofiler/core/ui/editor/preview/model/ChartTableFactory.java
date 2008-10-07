@@ -484,6 +484,9 @@ public class ChartTableFactory {
                                     editorPart.setText(query);
                                     ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
                                     execSQLAction.run();
+                                    // MOD scorreia bug 4736 fixed: execute action only once when several connections
+                                    // exist
+                                    break;
                                 } catch (PartInitException e) {
                                     e.printStackTrace();
                                 }
