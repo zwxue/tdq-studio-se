@@ -28,6 +28,11 @@ import orgomg.cwm.objectmodel.core.Expression;
 public class BooleanExpressionHelper {
 
     /**
+     * Default language used in expressions.
+     */
+    public static final String DEFAULT_LANGUAGE = "SQL";
+
+    /**
      * Method "createBooleanExpressionNode".
      * 
      * @param body the body of the Expression
@@ -35,7 +40,7 @@ public class BooleanExpressionHelper {
      */
     public static BooleanExpressionNode createBooleanExpressionNode(String body) {
         BooleanExpressionNode expr = ExpressionsFactory.eINSTANCE.createBooleanExpressionNode();
-        Expression expression = createExpression("SQL", body);
+        Expression expression = createExpression(DEFAULT_LANGUAGE, body);
         expr.setExpression(expression);
         return expr;
     }
@@ -43,7 +48,7 @@ public class BooleanExpressionHelper {
     public static Expression createExpression(String language, String body) {
         Expression expression = CoreFactory.eINSTANCE.createExpression();
         expression.setBody(body);
-        expression.setLanguage("SQL");
+        expression.setLanguage(language);
         return expression;
     }
 

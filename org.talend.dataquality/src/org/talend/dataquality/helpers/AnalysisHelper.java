@@ -139,7 +139,8 @@ public class AnalysisHelper {
             } else {
                 Expression expression = expressions.getExpression();
                 if (expression == null) {
-                    expression = BooleanExpressionHelper.createExpression("SQL", datafilterString);
+                    expression = BooleanExpressionHelper.createExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
+                            datafilterString);
                     expressions.setExpression(expression);
                 } else {
                     expression.setBody(datafilterString);
