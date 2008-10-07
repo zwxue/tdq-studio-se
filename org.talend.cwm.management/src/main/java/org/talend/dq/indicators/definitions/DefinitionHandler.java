@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
@@ -55,6 +56,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * @author scorreia
@@ -62,6 +64,11 @@ import org.talend.dataquality.indicators.util.IndicatorsSwitch;
  * This class contains the singleton instance for the default indicator' definitions.
  */
 public final class DefinitionHandler {
+
+    /**
+     * The label of the Regular Expression Matching indicator definition.
+     */
+    private static final String REGULAR_EXPRESSION_MATCHING = "Regular Expression Matching";
 
     private static Logger log = Logger.getLogger(DefinitionHandler.class);
 
@@ -227,6 +234,15 @@ public final class DefinitionHandler {
     }
 
     /**
+     * Method "saveResource" saves the indicator definitions (in .Talend.definition file).
+     * 
+     * @return true if no problem
+     */
+    public boolean saveResource() {
+        return EMFUtil.saveSingleResource(this.indicatorDefinitions.eResource());
+    }
+    
+    /**
      * Method "getIndicatorDefinition".
      * 
      * @param label the label of the definition to get
@@ -242,9 +258,50 @@ public final class DefinitionHandler {
         }
         return null;
     }
-
- 
     
+    public boolean updateRegex(String dbmsName, String regexpFunction) {
+        boolean ok = true;
+        boolean replaced = false;
+        IndicatorDefinition regexIndDef = this.getIndicatorDefinition(REGULAR_EXPRESSION_MATCHING);
+        EList<Expression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
+        for (Expression expression : sqlGenericExpression) {
+            if (dbmsName.equals(expression.getLanguage())) {
+                replaced = replaceBodyWith(expression, regexpFunction);
+            }
+        }
+        if (!replaced) {
+            // add new expression
+            String genericSQL = getGenericSQL(dbmsName, regexpFunction);
+            Expression createdExpression = BooleanExpressionHelper.createExpression(dbmsName, genericSQL);
+            sqlGenericExpression.add(createdExpression);
+        }
+        return ok;
+    }
+
+    /**
+     * DOC scorreia Comment method "getGenericSQL".
+     * 
+     * @param dbmsName
+     * @param regexpFunction
+     * @return
+     */
+    private String getGenericSQL(String dbmsName, String regexpFunction) {
+        String sqlExpr = "SELECT COUNT(CASE WHEN " + regexpFunction + "({0},{2}) THEN 1 END), COUNT(*) FROM {1}";
+        return sqlExpr;
+    }
+
+    /**
+     * DOC scorreia Comment method "replaceBodyWith".
+     * 
+     * @param expression
+     * @param regexpFunction
+     * @return
+     */
+    private boolean replaceBodyWith(Expression expression, String regexpFunction) {
+        expression.setBody(this.getGenericSQL(expression.getLanguage(), regexpFunction));
+        return true;
+    }
+
     /**
      * Note: scorreia. All indicator definitions defined in .Talend.definition file must be implemented here.
      * 
@@ -307,7 +364,7 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean caseRegexpMatchingIndicator(RegexpMatchingIndicator object) {
-            return setIndicatorDefinition(object, "Regular Expression Matching");
+            return setIndicatorDefinition(object, REGULAR_EXPRESSION_MATCHING);
         }
 
         /*

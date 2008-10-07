@@ -234,6 +234,17 @@ public class DbmsLanguage {
     }
 
     /**
+     * Method "addDatabaseFunction" adds or replaces the function.
+     * 
+     * @param functionName the function name
+     * @param nbParameter the number of parameters of this function
+     * @return true if the function is new, false if it already existed.
+     */
+    public boolean addDatabaseFunction(String functionName, Integer nbParameter) {
+        return this.dbmsFunctions.put(functionName, nbParameter) != null;
+    }
+    
+    /**
      * Method "getDefaultLanguage".
      * 
      * @return the default String to use when no dbms is defined.
@@ -648,7 +659,7 @@ public class DbmsLanguage {
             functions.put("SOUNDEX", 1);
             functions.put("SPACE", 1);
             functions.put("SUBSTRING", 2);
-            functions.put("SUBSTRING", 3);
+            functions.put(" SUBSTRING", 3); // whitespace added
             functions.put("LEFT", 2);
             functions.put("OCTET_LENGTH", 1);
             functions.put("CONCAT", 2);
@@ -749,7 +760,7 @@ public class DbmsLanguage {
                 ZQuery query = this.parseQuery(statement);
                 if (whereClause != null) {
                     if (StringUtils.isNotBlank(whereClause)) {
-                        ZqlParser filterParser = new ZqlParser();
+                        ZqlParser filterParser = getZqlParser();
                         filterParser.initParser(new ByteArrayInputStream(whereClause.getBytes()));
                         ZExp currentWhere = query.getWhere();
                         ZExp whereExpression = filterParser.readExpression();
@@ -837,7 +848,7 @@ public class DbmsLanguage {
      * Method "getSqlExpression".
      * 
      * @param indicatorDefinition contains a list of possible expression (one for each supported database)
-     * @return the expression for this database language or null when not found
+     * @return the expression for this database language or for the default SQL or null when not found
      */
     public Expression getSqlExpression(IndicatorDefinition indicatorDefinition) {
         Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName);
