@@ -82,7 +82,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        String[] supportTypes = SupportDBUrlStore.getInstance().getDBTypes();
+        String[] supportTypes = SupportDBUrlStore.getInstance().getDBLanguages();
         String[] allDBTypes = new String[supportTypes.length + 1];
         System.arraycopy(supportTypes, 0, allDBTypes, 0, supportTypes.length);
         allDBTypes[supportTypes.length] = ALL_DATABASE_TYPE;

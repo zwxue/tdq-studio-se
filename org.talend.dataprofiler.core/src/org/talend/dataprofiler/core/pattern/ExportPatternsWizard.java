@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -24,6 +25,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -32,8 +34,9 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
-import org.talend.utils.files.CsvWriter;
 import orgomg.cwm.objectmodel.core.Expression;
+
+import com.csvreader.CsvWriter;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -75,32 +78,51 @@ public class ExportPatternsWizard extends Wizard {
         }
 
         File file = new File(xlsFile);
-        try {
 
-            CsvWriter out = new CsvWriter(new FileOutputStream(file), CURRENT_SEPARATOR, Charset.defaultCharset());
-            out.setEscapeMode(CsvWriter.ESCAPE_MODE_BACKSLASH);
-            out.setTextQualifier('"');
-            out.setForceQualifier(true);
-            out.setLineFieldLimited(PatternToExcelEnum.VALUES.size());
+        boolean isContinue = true;
 
-            for (int i = 0; i < seletedPatterns.size() + 1; i++) {
-                for (PatternToExcelEnum enmu : PatternToExcelEnum.VALUES) {
-                    if (i == 0) {
-                        out.write(enmu.getLiteral());
-                    } else {
-                        out.write(getRelatedValueFromPattern(seletedPatterns.get(i - 1)).get(enmu));
-                    }
-                }
-            }
-
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (file.exists()) {
+            isContinue = MessageDialogWithToggle.openConfirm(null, "Warning",
+                    "Warning: this file already exist, do you want to overwrite it?");
         }
 
-        return true;
+        if (isContinue) {
+            try {
+
+                CsvWriter out = new CsvWriter(new FileOutputStream(file), CURRENT_SEPARATOR, Charset.defaultCharset());
+                out.setEscapeMode(CsvWriter.ESCAPE_MODE_BACKSLASH);
+                out.setTextQualifier('"');
+                out.setForceQualifier(true);
+
+                List<PatternToExcelEnum> values = PatternToExcelEnum.VALUES;
+                String[] temp = new String[values.size()];
+
+                for (int i = 0; i < seletedPatterns.size() + 1; i++) {
+
+                    for (int j = 0; j < values.size(); j++) {
+                        if (i == 0) {
+                            temp[j] = values.get(j).getLiteral();
+                        } else {
+                            temp[j] = getRelatedValueFromPattern(seletedPatterns.get(i - 1)).get(values.get(j));
+                        }
+                    }
+
+                    out.writeRecord(temp);
+                }
+
+                out.flush();
+                out.close();
+
+            } catch (FileNotFoundException fe) {
+                MessageDialogWithToggle.openError(null, "Error", "File Not Found : some processes maybe occupied current file!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -129,7 +151,7 @@ public class ExportPatternsWizard extends Wizard {
         for (PatternLanguageType type : PatternLanguageType.VALUES) {
             for (PatternComponent component : pattern.getComponents()) {
                 Expression expression = ((RegularExpression) component).getExpression();
-                if (expression != null && expression.getLanguage().equals(type.getDbType().getDBKey())) {
+                if (expression != null && expression.getLanguage().equalsIgnoreCase(type.getLiteral())) {
                     patternMap.put(type.getExcelEnum(), expression.getBody());
                 }
             }

@@ -16,31 +16,23 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.talend.dataprofiler.core.model.dburl.SupportDBUrlType;
-
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public enum PatternLanguageType {
 
-    ALL_DATABASE_TYPE(0, "ALL_DATABASE_TYPE", SupportDBUrlType.ALL, PatternToExcelEnum.AllDBRegularexpression),
-    MYSQL(1, "MYSQL", SupportDBUrlType.MYSQLDEFAULTURL, PatternToExcelEnum.MySQLRegexp),
-    ORACLE(2, "ORACLE", SupportDBUrlType.ORACLEWITHSIDDEFAULTURL, PatternToExcelEnum.OracleRegexp),
-    SQLSERVER(3, "SQLSERVER", SupportDBUrlType.MSSQLDEFAULTURL, PatternToExcelEnum.SQLServerRegexp),
-    DB2(4, "DB2", SupportDBUrlType.DB2DEFAULTURL, PatternToExcelEnum.DB2Regexp),
-    POSTGRESQL(5, "POSTGRESQL", SupportDBUrlType.POSTGRESQLEFAULTURL, PatternToExcelEnum.PostgreSQLRegexp);
+    ALL_DATABASE_TYPE(0, "SQL", PatternToExcelEnum.AllDBRegularexpression),
+    MYSQL(1, "MYSQL", PatternToExcelEnum.MySQLRegexp),
+    ORACLE(2, "ORACLE", PatternToExcelEnum.OracleRegexp),
+    SQLSERVER(3, "SQL SERVER", PatternToExcelEnum.SQLServerRegexp),
+    DB2(4, "DB2", PatternToExcelEnum.DB2Regexp),
+    POSTGRESQL(5, "POSTGRESQL", PatternToExcelEnum.PostgreSQLRegexp);
 
     private int index;
 
     private String literal;
 
     private PatternToExcelEnum excelEnum;
-
-    private SupportDBUrlType dbType;
-
-    public SupportDBUrlType getDbType() {
-        return dbType;
-    }
 
     public PatternToExcelEnum getExcelEnum() {
         return excelEnum;
@@ -54,10 +46,9 @@ public enum PatternLanguageType {
         return literal;
     }
 
-    PatternLanguageType(int index, String literal, SupportDBUrlType dbType, PatternToExcelEnum excelEnum) {
+    PatternLanguageType(int index, String literal, PatternToExcelEnum excelEnum) {
         this.index = index;
         this.literal = literal;
-        this.dbType = dbType;
         this.excelEnum = excelEnum;
     }
 

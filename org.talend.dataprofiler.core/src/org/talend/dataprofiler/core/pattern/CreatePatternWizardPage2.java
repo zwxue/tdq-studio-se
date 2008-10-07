@@ -95,7 +95,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         }
         nameLab = new Label(container, SWT.NONE);
         nameLab.setText("Language Selection:");
-        String[] types = SupportDBUrlStore.getInstance().getDBTypes();
+        String[] types = SupportDBUrlStore.getInstance().getDBLanguages();
         comboLang = new Combo(container, SWT.BORDER);
         comboLang.setItems(types);
         comboLang.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
