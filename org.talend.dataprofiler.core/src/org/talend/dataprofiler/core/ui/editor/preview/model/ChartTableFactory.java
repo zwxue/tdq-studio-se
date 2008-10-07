@@ -495,6 +495,9 @@ public class ChartTableFactory {
             }
 
         });
+
+        // Enforce the menu visible when first right click in TableItem(@see bug 4736)
+        menu.setVisible(true);
     }
 
     static void addTooltipOnTableItem(final Table table) {
