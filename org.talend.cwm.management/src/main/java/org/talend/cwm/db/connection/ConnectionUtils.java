@@ -15,13 +15,16 @@ package org.talend.cwm.db.connection;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
@@ -107,22 +110,27 @@ public final class ConnectionUtils {
                 Collection<ManagedDriver> drivers = driverModel.getDrivers();
                 for (ManagedDriver managedDriver : drivers) {
                     LinkedList<String> jars = managedDriver.getJars();
-                    for (String string : jars) {
-                        File file = new File(string);
+                    List<URL> urls = new ArrayList<URL>();
+                    for (int i = 0; i < jars.size(); i++) {
+                        File file = new File(jars.get(i));
                         if (file.exists()) {
-                            MyURLClassLoader cl;
-                            cl = new MyURLClassLoader(file.toURL());
-                            try {
-                                Class clazz = cl.findClass(driverClassName);
-                                if (clazz != null) {
-                                    driver = (Driver) clazz.newInstance();
-                                    break; // driver is found
-                                }
-                            } catch (ClassNotFoundException e) {
-                                // do nothings
-                            }
+                            urls.add(file.toURL());
                         }
                     }
+                    if (!urls.isEmpty()) {
+                        try {
+                            MyURLClassLoader cl;
+                            cl = new MyURLClassLoader(urls.toArray(new URL[0]));
+                            Class clazz = cl.findClass(driverClassName);
+                            if (clazz != null) {
+                                driver = (Driver) clazz.newInstance();
+                                return driver; // driver is found
+                            }
+                        } catch (ClassNotFoundException e) {
+                            // do nothings
+                        }
+                    }
+
                 }
             } catch (MalformedURLException e) {
                 // do nothings

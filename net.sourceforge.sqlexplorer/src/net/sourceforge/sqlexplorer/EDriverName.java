@@ -52,6 +52,7 @@ public enum EDriverName {
                   "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
                   "-24",
                   "lib/db2jcc_license_cu.jar",
+                  "lib/db2jcc_license_cisuz.jar",
                   "lib/db2jcc.jar"),
     POSTGRESQLEFAULTURL("PostgreSQL", //$NON-NLS-1$
                         "org.postgresql.Driver", //$NON-NLS-1$
