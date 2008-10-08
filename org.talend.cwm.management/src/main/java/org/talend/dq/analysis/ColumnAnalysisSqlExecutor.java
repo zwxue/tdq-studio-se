@@ -462,6 +462,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         case NONE:
             result = colName;
             nbExtractedColumns++;
+            aliases = colName; // bug 5336 fixed aliases must not be empty otherwise, the group by clause is empty.
             break;
         default:
             break;
