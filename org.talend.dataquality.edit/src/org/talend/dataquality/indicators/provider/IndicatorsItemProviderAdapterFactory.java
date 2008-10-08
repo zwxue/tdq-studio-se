@@ -835,6 +835,52 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.PatternFreqIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected PatternFreqIndicatorItemProvider patternFreqIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.PatternFreqIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createPatternFreqIndicatorAdapter() {
+        if (patternFreqIndicatorItemProvider == null) {
+            patternFreqIndicatorItemProvider = new PatternFreqIndicatorItemProvider(this);
+        }
+
+        return patternFreqIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.PatternLowFreqIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected PatternLowFreqIndicatorItemProvider patternLowFreqIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.PatternLowFreqIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createPatternLowFreqIndicatorAdapter() {
+        if (patternLowFreqIndicatorItemProvider == null) {
+            patternLowFreqIndicatorItemProvider = new PatternLowFreqIndicatorItemProvider(this);
+        }
+
+        return patternLowFreqIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -966,6 +1012,8 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (sqlPatternMatchingIndicatorItemProvider != null) sqlPatternMatchingIndicatorItemProvider.dispose();
         if (regexpMatchingIndicatorItemProvider != null) regexpMatchingIndicatorItemProvider.dispose();
         if (lowFrequencyIndicatorItemProvider != null) lowFrequencyIndicatorItemProvider.dispose();
+        if (patternFreqIndicatorItemProvider != null) patternFreqIndicatorItemProvider.dispose();
+        if (patternLowFreqIndicatorItemProvider != null) patternLowFreqIndicatorItemProvider.dispose();
     }
 
 }
