@@ -85,6 +85,7 @@
     <sqlGenericExpression xmi:id="_ybvIUjh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="SQL"/>
     <sqlGenericExpression xmi:id="_ybvIUzh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY 1 ORDER BY 2 DESC " language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybvIVDh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="Oracle"/>
+    <sqlGenericExpression xmi:id="_NI3bsJRmEd2PFJoogKUukg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4hF2Ed2PKb6nEJEvhw" name="Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Frequency Table">
     <taggedValue xmi:id="_ybvvYDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of records for each distinct record"/>
@@ -93,6 +94,7 @@
     <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
     <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_C4G9kJRmEd2PFJoogKUukg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_-0C00JOtEd2Iyo0dtkB9pA" name="Low Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Low Frequency Table">
     <taggedValue xmi:id="_Hhd38JOuEd2Iyo0dtkB9pA" tag="Description" value="counts the number of records for each distinct record"/>
@@ -101,6 +103,7 @@
     <sqlGenericExpression xmi:id="_Ol0rgZOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="MySQL"/>
     <sqlGenericExpression xmi:id="_Ol1SkJOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="Oracle"/>
     <sqlGenericExpression xmi:id="_Ol1SkZOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_FR8iwJRmEd2PFJoogKUukg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48BF2Ed2PKb6nEJEvhw" name="Summary Statistics" categories="_ccKuIRF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI48xF2Ed2PKb6nEJEvhw _ccI48RF2Ed2PKb6nEJEvhw _ccI48hF2Ed2PKb6nEJEvhw _ccI49hF2Ed2PKb6nEJEvhw" label="Summary Statistics">
     <taggedValue xmi:id="_ybyLoDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average, the median and the extent of the data (range, interquartile range)"/>
@@ -205,6 +208,24 @@
     <sqlGenericExpression xmi:id="_cTtKEJE4Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_YcFTcZGUEd2YurbR54yDfQ" body="SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})" language="MySQL"/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_kQzTsJR-Ed2XO-JvLwVAwg" name="Pattern Frequency Table" categories="_0n3BsJR-Ed2XO-JvLwVAwg" label="Pattern Frequency Table">
+    <taggedValue xmi:id="_kQz6wJR-Ed2XO-JvLwVAwg" tag="Description" value="counts the number of records for each distinct pattern"/>
+    <taggedValue xmi:id="_kQz6wZR-Ed2XO-JvLwVAwg" tag="Purpose" value="evaluates the most frequent patterns"/>
+    <sqlGenericExpression xmi:id="_kQz6w5R-Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_kQz6xJR-Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_kQz6xZR-Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_kQz6xpR-Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_M26GwJUbEd2dPK5T9pO-YA" body="SELECT {0} , COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="Microsoft SQL Server"/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_OCTbwJR_Ed2XO-JvLwVAwg" name="Pattern Low Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Pattern Low Frequency Table">
+    <taggedValue xmi:id="_OCTbwZR_Ed2XO-JvLwVAwg" tag="Description" value="counts the number of patterns for each distinct pattern"/>
+    <taggedValue xmi:id="_OCTbwpR_Ed2XO-JvLwVAwg" tag="Purpose" value="evaluates the less frequent patterns"/>
+    <sqlGenericExpression xmi:id="_OCTbxJR_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_OCTbxZR_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_OCTbxpR_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_OCTbx5R_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_UHAQQZUbEd2dPK5T9pO-YA" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="Microsoft SQL Server"/>
+  </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>
@@ -240,6 +261,10 @@
   <categories xmi:id="_ccKuIxF2Ed2PKb6nEJEvhw" name="Frequency" label="Frequency">
     <taggedValue xmi:id="_ycBcNDh8Ed2XmO7pl5Yuyg" tag="Description" value="for each distinct record, counts the number of records."/>
     <taggedValue xmi:id="_ycCDQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the most frequent records"/>
+  </categories>
+  <categories xmi:id="_0n3BsJR-Ed2XO-JvLwVAwg" name="Pattern Finder" label="Pattern Finder">
+    <taggedValue xmi:id="_3MEq4JR-Ed2XO-JvLwVAwg" tag="Description" value="for each distinct pattern, counts the number of patterns."/>
+    <taggedValue xmi:id="_3MEq4ZR-Ed2XO-JvLwVAwg" tag="Purpose" value="evaluate the frequencies of patterns"/>
   </categories>
   <categories xmi:id="_ccKuJBF2Ed2PKb6nEJEvhw" name="Count" label="Count">
     <taggedValue xmi:id="_ycCDQTh8Ed2XmO7pl5Yuyg" tag="Description" value="contains several count indicators"/>

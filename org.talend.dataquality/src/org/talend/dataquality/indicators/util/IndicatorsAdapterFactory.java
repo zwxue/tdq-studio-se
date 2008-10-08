@@ -221,6 +221,14 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
                 return createLowFrequencyIndicatorAdapter();
             }
             @Override
+            public Adapter casePatternFreqIndicator(PatternFreqIndicator object) {
+                return createPatternFreqIndicatorAdapter();
+            }
+            @Override
+            public Adapter casePatternLowFreqIndicator(PatternLowFreqIndicator object) {
+                return createPatternLowFreqIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -735,6 +743,34 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createLowFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.PatternFreqIndicator <em>Pattern Freq Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.PatternFreqIndicator
+     * @generated
+     */
+    public Adapter createPatternFreqIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.PatternLowFreqIndicator <em>Pattern Low Freq Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.PatternLowFreqIndicator
+     * @generated
+     */
+    public Adapter createPatternLowFreqIndicatorAdapter() {
         return null;
     }
 

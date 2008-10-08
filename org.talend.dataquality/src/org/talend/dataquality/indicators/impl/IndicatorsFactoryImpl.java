@@ -99,6 +99,8 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.SQL_PATTERN_MATCHING_INDICATOR: return createSqlPatternMatchingIndicator();
             case IndicatorsPackage.REGEXP_MATCHING_INDICATOR: return createRegexpMatchingIndicator();
             case IndicatorsPackage.LOW_FREQUENCY_INDICATOR: return createLowFrequencyIndicator();
+            case IndicatorsPackage.PATTERN_FREQ_INDICATOR: return createPatternFreqIndicator();
+            case IndicatorsPackage.PATTERN_LOW_FREQ_INDICATOR: return createPatternLowFreqIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -494,6 +496,26 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public LowFrequencyIndicator createLowFrequencyIndicator() {
         LowFrequencyIndicatorImpl lowFrequencyIndicator = new LowFrequencyIndicatorImpl();
         return lowFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public PatternFreqIndicator createPatternFreqIndicator() {
+        PatternFreqIndicatorImpl patternFreqIndicator = new PatternFreqIndicatorImpl();
+        return patternFreqIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public PatternLowFreqIndicator createPatternLowFreqIndicator() {
+        PatternLowFreqIndicatorImpl patternLowFreqIndicator = new PatternLowFreqIndicatorImpl();
+        return patternLowFreqIndicator;
     }
 
     /**

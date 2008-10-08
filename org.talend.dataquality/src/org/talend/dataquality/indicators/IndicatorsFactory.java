@@ -323,6 +323,24 @@ public interface IndicatorsFactory extends EFactory {
     LowFrequencyIndicator createLowFrequencyIndicator();
 
     /**
+     * Returns a new object of class '<em>Pattern Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Pattern Freq Indicator</em>'.
+     * @generated
+     */
+    PatternFreqIndicator createPatternFreqIndicator();
+
+    /**
+     * Returns a new object of class '<em>Pattern Low Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Pattern Low Freq Indicator</em>'.
+     * @generated
+     */
+    PatternLowFreqIndicator createPatternLowFreqIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

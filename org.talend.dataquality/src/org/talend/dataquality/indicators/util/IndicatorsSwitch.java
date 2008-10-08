@@ -423,6 +423,27 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.PATTERN_FREQ_INDICATOR: {
+                PatternFreqIndicator patternFreqIndicator = (PatternFreqIndicator)theEObject;
+                T result = casePatternFreqIndicator(patternFreqIndicator);
+                if (result == null) result = caseFrequencyIndicator(patternFreqIndicator);
+                if (result == null) result = caseIndicator(patternFreqIndicator);
+                if (result == null) result = caseModelElement(patternFreqIndicator);
+                if (result == null) result = caseElement(patternFreqIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.PATTERN_LOW_FREQ_INDICATOR: {
+                PatternLowFreqIndicator patternLowFreqIndicator = (PatternLowFreqIndicator)theEObject;
+                T result = casePatternLowFreqIndicator(patternLowFreqIndicator);
+                if (result == null) result = caseLowFrequencyIndicator(patternLowFreqIndicator);
+                if (result == null) result = caseFrequencyIndicator(patternLowFreqIndicator);
+                if (result == null) result = caseIndicator(patternLowFreqIndicator);
+                if (result == null) result = caseModelElement(patternLowFreqIndicator);
+                if (result == null) result = caseElement(patternLowFreqIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -857,6 +878,36 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseLowFrequencyIndicator(LowFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Pattern Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Pattern Freq Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T casePatternFreqIndicator(PatternFreqIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Pattern Low Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Pattern Low Freq Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T casePatternLowFreqIndicator(PatternLowFreqIndicator object) {
         return null;
     }
 

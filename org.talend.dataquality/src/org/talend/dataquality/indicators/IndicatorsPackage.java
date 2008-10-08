@@ -8911,6 +8911,602 @@ public interface IndicatorsPackage extends EPackage {
     int LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.PatternFreqIndicatorImpl <em>Pattern Freq Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.PatternFreqIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPatternFreqIndicator()
+     * @generated
+     */
+    int PATTERN_FREQ_INDICATOR = 35;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Pattern Freq Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.PatternLowFreqIndicatorImpl <em>Pattern Low Freq Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.PatternLowFreqIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPatternLowFreqIndicator()
+     * @generated
+     */
+    int PATTERN_LOW_FREQ_INDICATOR = 36;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__NAME = LOW_FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__VISIBILITY = LOW_FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__CLIENT_DEPENDENCY = LOW_FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__SUPPLIER_DEPENDENCY = LOW_FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__CONSTRAINT = LOW_FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__NAMESPACE = LOW_FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__IMPORTER = LOW_FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__STEREOTYPE = LOW_FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__TAGGED_VALUE = LOW_FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__DOCUMENT = LOW_FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__DESCRIPTION = LOW_FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__RESPONSIBLE_PARTY = LOW_FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__ELEMENT_NODE = LOW_FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__SET = LOW_FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__RENDERED_OBJECT = LOW_FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__VOCABULARY_ELEMENT = LOW_FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__MEASUREMENT = LOW_FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__CHANGE_REQUEST = LOW_FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__DASDL_PROPERTY = LOW_FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__COUNT = LOW_FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__NULL_COUNT = LOW_FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__PARAMETERS = LOW_FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__ANALYZED_ELEMENT = LOW_FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__DATAMINING_TYPE = LOW_FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__INDICATOR_DEFINITION = LOW_FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__INSTANTIATED_EXPRESSIONS = LOW_FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__UNIQUE_VALUES = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__DISTINCT_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__UNIQUE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__DUPLICATE_VALUE_COUNT = LOW_FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__VALUE_TO_FREQ = LOW_FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The number of structural features of the '<em>Pattern Low Freq Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR_FEATURE_COUNT = LOW_FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -8918,7 +9514,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getEnumStatistics()
      * @generated
      */
-    int ENUM_STATISTICS = 35;
+    int ENUM_STATISTICS = 37;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DataminingType <em>Datamining Type</em>}' enum.
@@ -8928,7 +9524,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDataminingType()
      * @generated
      */
-    int DATAMINING_TYPE = 36;
+    int DATAMINING_TYPE = 38;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DateGrain <em>Date Grain</em>}' enum.
@@ -8938,7 +9534,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateGrain()
      * @generated
      */
-    int DATE_GRAIN = 37;
+    int DATE_GRAIN = 39;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.MatchingAlgorithm <em>Matching Algorithm</em>}' enum.
@@ -8948,7 +9544,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingAlgorithm()
      * @generated
      */
-    int MATCHING_ALGORITHM = 38;
+    int MATCHING_ALGORITHM = 40;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.IndicatorValueType <em>Indicator Value Type</em>}' enum.
@@ -8958,7 +9554,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getIndicatorValueType()
      * @generated
      */
-    int INDICATOR_VALUE_TYPE = 39;
+    int INDICATOR_VALUE_TYPE = 41;
 
     /**
      * The meta object id for the '<em>Java Set</em>' data type.
@@ -8968,7 +9564,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaSet()
      * @generated
      */
-    int JAVA_SET = 40;
+    int JAVA_SET = 42;
 
     /**
      * The meta object id for the '<em>Java Hash Map</em>' data type.
@@ -8978,7 +9574,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaHashMap()
      * @generated
      */
-    int JAVA_HASH_MAP = 41;
+    int JAVA_HASH_MAP = 43;
 
     /**
      * The meta object id for the '<em>Java Tree Map</em>' data type.
@@ -8988,7 +9584,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaTreeMap()
      * @generated
      */
-    int JAVA_TREE_MAP = 42;
+    int JAVA_TREE_MAP = 44;
 
     /**
      * The meta object id for the '<em>Object Array</em>' data type.
@@ -8997,7 +9593,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getObjectArray()
      * @generated
      */
-    int OBJECT_ARRAY = 43;
+    int OBJECT_ARRAY = 45;
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
@@ -9966,6 +10562,26 @@ public interface IndicatorsPackage extends EPackage {
     EClass getLowFrequencyIndicator();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.PatternFreqIndicator <em>Pattern Freq Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Pattern Freq Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PatternFreqIndicator
+     * @generated
+     */
+    EClass getPatternFreqIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.PatternLowFreqIndicator <em>Pattern Low Freq Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Pattern Low Freq Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PatternLowFreqIndicator
+     * @generated
+     */
+    EClass getPatternLowFreqIndicator();
+
+    /**
      * Returns the meta object for enum '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -10877,6 +11493,26 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass LOW_FREQUENCY_INDICATOR = eINSTANCE.getLowFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.PatternFreqIndicatorImpl <em>Pattern Freq Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.PatternFreqIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPatternFreqIndicator()
+         * @generated
+         */
+        EClass PATTERN_FREQ_INDICATOR = eINSTANCE.getPatternFreqIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.PatternLowFreqIndicatorImpl <em>Pattern Low Freq Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.PatternLowFreqIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPatternLowFreqIndicator()
+         * @generated
+         */
+        EClass PATTERN_LOW_FREQ_INDICATOR = eINSTANCE.getPatternLowFreqIndicator();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

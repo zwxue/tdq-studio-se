@@ -329,6 +329,8 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/MatchingIndicator/notMatchingValueCount"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/LowFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/PatternFreqIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/PatternLowFreqIndicator"/>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">
