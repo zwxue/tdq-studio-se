@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
@@ -170,16 +171,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
+        final EClass indicatorEclass = indicator.eClass();
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
             // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
             // expressions.
-            if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicator.eClass())) {
+            if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
                 return traceError("Unsupported use of regular expressions on this database (" + language
                         + "). Remove all Pattern indicators from this analysis, please.");
             }
 
             return traceError("No SQL expression found for indicator "
-                    + (indicator.getName() != null ? indicator.getName() : indicator.eClass().getName()) + " (Pattern id: "
+                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (Pattern id: "
                     + ResourceHelper.getUUID(indicatorDefinition) + ")");
         }
 
@@ -228,21 +230,22 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         // ZExp dataFilterExpression = null;
         // --- handle case when indicator is a quantile
-        if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getMedianIndicator())
-                || indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getLowerQuartileIndicator())
-                || indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getUpperQuartileIndicator())) {
+        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMedianIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getLowerQuartileIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getUpperQuartileIndicator())) {
             // TODO scorreia test type of column and cast when needed
             completedSqlString = getCompletedStringForQuantiles(indicator, sqlGenericExpression, colName, table, whereExpression);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
         } else
 
         // --- handle case when frequency indicator
-        if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
-                || indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
+        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
+                || indicatorEclass.isSuperTypeOf(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
             // TODO scorreia test type of column and cast when needed
             // with ranges (frequencies of numerical intervals)
 
-            int topN = indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getModeIndicator()) ? 1 : getTopN(indicator);
+            int topN = indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator()) ? 1 : getTopN(indicator);
             if (topN <= 0) {
                 topN = TOP_N;
             }
@@ -250,7 +253,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (rangeStrings != null) {
                 completedSqlString = getUnionCompletedString(indicator, sqlGenericExpression, colName, table, whereExpression,
                         rangeStrings);
-                if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
+                if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
                     // now order by second column (get the order by clause of generic expression and replace)
                     String genericSQL = sqlGenericExpression.getBody();
                     int beginIndex = genericSQL.indexOf(dbms().orderBy());
@@ -262,14 +265,21 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     // and get the best row
                     completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
                 }
-            } else if ((dateAggregationType != null)
+            } else if (dateAggregationType != null && !dateAggregationType.equals(DateGrain.NONE)
             // MOD scorreia 2008-06-23 check column type (robustness against bug 4287)
-                    && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                    && Java2SqlType.isDateInSQL(tdColumn.getJavaType())
+                    ) {
                 // frequencies with date aggregation
                 completedSqlString = getDateAggregatedCompletedString(sqlGenericExpression, colName, table, dateAggregationType);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             } else { // usual nominal frequencies
+                // wrap column name into a function for pattern finder indicator
+                if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternFreqIndicator())
+                        || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternLowFreqIndicator())) {
+                    colName = dbms().getPatternFinderDefaultFunction(colName);
+                }
+                
                 completedSqlString = replaceVariablesLow(sqlGenericExpression.getBody(), colName, table, colName);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
@@ -277,14 +287,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } else
 
         // --- handle case of unique count
-        if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getUniqueCountIndicator())) {
+        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getUniqueCountIndicator())) {
             completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
             completedSqlString = dbms().countRowInSubquery(completedSqlString, "myquery");
         } else
 
         // --- handle case of duplicate count
-        if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getDuplicateCountIndicator())) {
+        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getDuplicateCountIndicator())) {
             completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
             // duplicate is the number of rows having more than one identical instance
@@ -296,7 +306,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } else
 
         // --- handle case of matching pattern count
-        if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicator.eClass())) {
+        if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)) {
             List<String> patterns = getPatterns(indicator);
             if (patterns.isEmpty()) {
                 return traceError("No pattern found for database type: " + language + " for indicator " + indicator.getName());

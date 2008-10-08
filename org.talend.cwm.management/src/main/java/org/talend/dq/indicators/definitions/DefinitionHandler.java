@@ -41,6 +41,8 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
+import org.talend.dataquality.indicators.PatternFreqIndicator;
+import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
@@ -353,6 +355,29 @@ public final class DefinitionHandler {
         @Override
         public Boolean caseLowFrequencyIndicator(LowFrequencyIndicator object) {
             return setIndicatorDefinition(object, "Low Frequency Table");
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @seeorg.talend.dataquality.indicators.util.IndicatorsSwitch#casePatternFreqIndicator(org.talend.dataquality.
+         * indicators.PatternFreqIndicator)
+         */
+        @Override
+        public Boolean casePatternFreqIndicator(PatternFreqIndicator object) {
+            return setIndicatorDefinition(object, "Pattern Frequency Table");
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * org.talend.dataquality.indicators.util.IndicatorsSwitch#casePatternLowFreqIndicator(org.talend.dataquality
+         * .indicators.PatternLowFreqIndicator)
+         */
+        @Override
+        public Boolean casePatternLowFreqIndicator(PatternLowFreqIndicator object) {
+            return setIndicatorDefinition(object, "Pattern Low Frequency Table");
         }
 
         /*

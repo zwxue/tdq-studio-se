@@ -404,6 +404,39 @@ public class DbmsLanguage {
         return fquery;
 
     }
+    
+    /**
+     * Method "getPatternFinderDefaultFunction".
+     * 
+     * @param expression a column name or a string
+     * @return a default SQL expression which can be used as pattern finder
+     */
+    public String getPatternFinderDefaultFunction(String expression) {
+        if (is(MYSQL) || is(MSSQL)) {            
+            return StringUtils.repeat("REPLACE(", 59) 
+                    + expression
+                    + ",'B','A'),'C','A'),'D','A'),'E','A'),'F','A'),'G','A'),'H','A')"
+                    + ",'I','A'),'J','A'),'K','A'),'L','A'),'M','A'),'N','A'),'O','A')"
+                    + ",'P','A'),'Q','A'),'R','A'),'S','A'),'T','A'),'U','A'),'V','A')"
+                    + ",'W','A'),'X','A'),'Y','A'),'Z','A'),'b','a'),'c','a'),'d','a')"
+                    + ",'e','a'),'f','a'),'g','a'),'h','a'),'i','a'),'j','a'),'k','a')"
+                    + ",'l','a'),'m','a'),'n','a'),'o','a'),'p','a'),'q','a'),'r','a')"
+                    + ",'s','a'),'t','a'),'u','a'),'v','a'),'w','a'),'x','a'),'y','a')"
+                    + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9')";
+        }
+        if (is(DB2)) {
+            return "TRANSLATE(CHAR(" + expression + ") ,VARCHAR(REPEAT('9',10) || REPEAT('A',25)||REPEAT('a',25)), "
+                    + " '1234567890BCDEFGHIJKLMNOPQRSTUVWXYZbcdefghijklmnopqrstuvwxyz')"; // cannot put accents
+        }
+        if (is(ORACLE) || is(POSTGRESQL)) {
+            return "TRANSLATE("
+                    + expression
+                    + " ,'1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZÂÊÎÔÛÄËÏÖÜabcdefghijklmnopqrstuvwxyzçâêîôûéèùïöü' "
+                    + ",RPAD('9',10,'9') || RPAD('A',36,'A')||RPAD('a',38,'a'))";
+        }
+       
+        return null;
+    }
 
     /**
      * Method "getZqlParser".
@@ -687,6 +720,8 @@ public class DbmsLanguage {
             functions.put("PERCENTILE_DISC", 1);
             functions.put("PERCENTILE_CONT", 1);
             functions.put("REPLACE", 3);
+            functions.put("RPAD", 3);
+            functions.put("TRANSLATE", 3);
         }
 
         if (is(POSTGRESQL)) {
@@ -705,6 +740,8 @@ public class DbmsLanguage {
             functions.put("SQRT", 1);
             functions.put("BIT_LENGTH", 1);
             functions.put("DECODE", 2);
+            functions.put("RPAD", 3);
+            functions.put("TRANSLATE", 3);
         }
 
         if (is(MSSQL)) {
@@ -714,11 +751,16 @@ public class DbmsLanguage {
             // divided by 2 in order to get the actual number of characters.
             // Do not use "LEN" since it right-trims the strings.
             functions.put("DATALENGTH", 1);
+            functions.put("REPLACE", 3);
         }
 
         if (is(DB2)) {
             functions.put("TRIM", 1);
+            functions.put("CHAR", 1);
+            functions.put("VARCHAR", 1);
             functions.put("LENGTH", 1);
+            functions.put("REPEAT", 2);
+            functions.put("TRANSLATE", 3);
         }
 
         if (is(SYBASE_ASE)) {
@@ -858,7 +900,9 @@ public class DbmsLanguage {
 
         // else try with default language (ANSI SQL)
         log.warn("The indicator SQL expression has not been found for the database type " + this.dbmsName + " for the indicator"
-                + indicatorDefinition.getName());
+                + indicatorDefinition.getName()
+                        + ". This is not necessarily a problem since the default SQL expression will be used. "
+                + "Nevertheless, if an SQL error during the analysis, this could be the cause.");
         if (log.isInfoEnabled()) {
             log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
         }
