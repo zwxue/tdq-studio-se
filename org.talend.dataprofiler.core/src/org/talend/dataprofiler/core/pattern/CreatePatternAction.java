@@ -55,10 +55,10 @@ public class CreatePatternAction extends Action {
     public CreatePatternAction(IFolder folder, ExpressionType type) {
         switch (type) {
         case SQL_LIKE:
-            setText("Create a new sql pattern");
+            setText("New SQL Pattern");
             break;
         default:
-            setText("Create a new regular pattern");
+            setText("New Regular Pattern");
             break;
         }
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));

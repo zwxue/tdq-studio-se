@@ -38,7 +38,7 @@ public class ImportPatternsAction extends Action {
      * DOC qzhang ImportPatternsAction constructor comment.
      */
     public ImportPatternsAction(IFolder folder) {
-        setText("import patterns");
+        setText("Import Patterns");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
     }

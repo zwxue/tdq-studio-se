@@ -40,7 +40,7 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
     private IFolder folder;
 
     public CreateConnectionAction() {
-        super("Create a new connection");
+        super("New connection");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
     }
 

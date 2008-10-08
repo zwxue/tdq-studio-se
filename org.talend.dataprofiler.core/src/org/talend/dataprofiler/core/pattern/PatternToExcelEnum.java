@@ -21,7 +21,7 @@ import java.util.List;
  */
 public enum PatternToExcelEnum {
 
-    Label(0, "Laebl"),
+    Label(0, "Label"),
     Purpose(1, "Purpose"),
     Description(2, "Description"),
     Author(3, "Author"),

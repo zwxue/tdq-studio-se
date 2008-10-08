@@ -30,7 +30,7 @@ public class ExportPatternsAction extends Action {
      * DOC zqin ExportPatternsAction constructor comment.
      */
     public ExportPatternsAction(IFolder folder) {
-        setText("export patterns");
+        setText("Export Patterns");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
     }
