@@ -12,9 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -24,6 +29,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -79,15 +85,11 @@ public final class PatternUtilities {
         for (int i = 0; i < components.size(); i++) {
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
             String body = regularExpress.getExpression().getBody();
-            valid = ((body != null) && (body.matches("^.*'")));
-            if (!valid) {
+            valid = ((body != null) && (CheckValueUtils.isPatternValue(body)));
+            if (valid) {
                 break;
             } else {
-                // if (body.charAt(0) == '^') {
-                // body = "'" + body.substring(1);
-                // } else {
                 body = "'" + body;
-                // }
                 regularExpress.getExpression().setBody(body);
             }
         }
@@ -117,5 +119,35 @@ public final class PatternUtilities {
         IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
         return addIndicatorUnit;
+    }
+
+    public static Set<String> getAllPatternNames(IFolder folder) {
+
+        Set<String> list = new HashSet<String>();
+        return getNestFolderPatternNames(list, folder);
+    }
+
+    /**
+     * DOC zqin Comment method "getNestFolderPatternNames".
+     * 
+     * @param folder
+     * @return
+     */
+    private static Set<String> getNestFolderPatternNames(Set<String> list, IFolder folder) {
+        try {
+            for (IResource resource : folder.members()) {
+                if (resource instanceof IFile) {
+                    Pattern fr = PatternResourceFileHelper.getInstance().findPattern((IFile) resource);
+                    if (fr != null) {
+                        list.add(fr.getName());
+                    }
+                } else {
+                    getNestFolderPatternNames(list, (IFolder) resource);
+                }
+            }
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

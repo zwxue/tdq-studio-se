@@ -74,7 +74,7 @@ public class ImportPatternsWizardPage extends WizardPage {
         fileComp.setLayout(layout);
         fileComp.setLayoutData(gridData);
         Label label = new Label(fileComp, SWT.NONE);
-        label.setText("Select File (xls):");
+        label.setText("Select File :");
         fileText = new Text(fileComp, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gridData);
@@ -106,7 +106,7 @@ public class ImportPatternsWizardPage extends WizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
-                dialog.setFilterExtensions(new String[] { "*.xls" });
+                dialog.setFilterExtensions(new String[] { "*.csv", "*.xls" });
                 if (fileText.getText() != null) {
                     dialog.setFileName(fileText.getText());
                 }
@@ -139,7 +139,7 @@ public class ImportPatternsWizardPage extends WizardPage {
      * 
      * @return
      */
-    public String getXLSFile() {
+    public String getSourceFile() {
         return fileText.getText();
     }
 

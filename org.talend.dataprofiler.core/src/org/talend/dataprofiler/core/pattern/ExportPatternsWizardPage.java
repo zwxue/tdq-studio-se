@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
@@ -43,13 +44,19 @@ public class ExportPatternsWizardPage extends WizardPage {
 
     private Text fileText;
 
+    private ProgressBar progressBar;
+
     private CheckboxTreeViewer selectedPatternsTree;
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
 
     public CheckboxTreeViewer getSelectedPatternsTree() {
         return selectedPatternsTree;
     }
 
-    public String getXLSFile() {
+    public String getTargetFile() {
         return fileText.getText();
     }
 
@@ -143,6 +150,14 @@ public class ExportPatternsWizardPage extends WizardPage {
         } catch (CoreException e1) {
             e1.printStackTrace();
         }
+
+        Composite monitorComp = new Composite(container, SWT.NONE);
+        monitorComp.setLayout(new GridLayout());
+        monitorComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        ProgressBar bar = new ProgressBar(monitorComp, SWT.NONE);
+        bar.setLayoutData(new GridData(GridData.FILL_BOTH));
+        bar.setVisible(false);
 
         setControl(container);
     }
