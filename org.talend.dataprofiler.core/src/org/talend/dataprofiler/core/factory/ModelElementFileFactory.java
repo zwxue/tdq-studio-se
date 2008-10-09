@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -35,7 +34,7 @@ public final class ModelElementFileFactory {
 
     }
 
-    private static Logger log = Logger.getLogger(ModelElementFileFactory.class);
+    // private static Logger log = Logger.getLogger(ModelElementFileFactory.class);
 
     public static ModelElement getModelElement(IFile file) {
         ModelElement modelElement = null;
@@ -47,7 +46,8 @@ public final class ModelElementFileFactory {
         } else if (file.getName().endsWith(PluginConstant.REP_SUFFIX)) {
             modelElement = RepResourceFileHelper.getInstance().findReport(file);
         } else {
-            log.info("The file \"" + file.getFullPath() + "\" has no corresponding ModelElement!");
+            return modelElement;
+            // log.info("The file \"" + file.getFullPath() + "\" has no corresponding ModelElement!");
         }
         return modelElement;
     }
