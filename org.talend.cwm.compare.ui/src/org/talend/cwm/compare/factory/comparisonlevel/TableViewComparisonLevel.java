@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,8 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         if (findCorrespondingFile == null) {
             throw new ReloadCompareException("Can't find the file of dataprovider:" + oldDataProvider.getName());
         }
-        IFile tempConnectionFile = DQStructureComparer.copyCurrentResourceFile(findCorrespondingFile);
+        IFile tempConnectionFile = DQStructureComparer.copyedToDestinationFile(findCorrespondingFile, DQStructureComparer
+                .getTempRefreshFile());
 
         URI uri = URI.createPlatformResourceURI(tempConnectionFile.getFullPath().toString(), false);
         Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
@@ -79,23 +81,14 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected boolean compareWithReloadObject(EObject reloadedObj) throws ReloadCompareException {
-        ColumnSet columnSet = (ColumnSet) reloadedObj;
-
-        List<TdColumn> columns = null;
-        try {
-            columns = DqRepositoryViewService.getColumns(tempReloadProvider, columnSet, null, true);
-        } catch (TalendException e1) {
-            throw new ReloadCompareException(e1);
-        }
-        ColumnSetHelper.setColumns(columnSet, columns);
+    protected boolean compareWithReloadObject() throws ReloadCompareException {
 
         // add option for ignoring some elements
         Map<String, Object> options = new HashMap<String, Object>();
         options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
         MatchModel match = null;
         try {
-            match = MatchService.doContentMatch((ColumnSet) selectedObj, columnSet, options);
+            match = MatchService.doContentMatch((ColumnSet) selectedObj, getSavedReloadObject(), options);
         } catch (InterruptedException e) {
             e.printStackTrace();
             return false;
@@ -118,36 +111,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         } else {
             handleDiffPackageElement(de);
         }
-    }
-
-    @Override
-    protected EObject getSavedReloadObject() throws ReloadCompareException {
-        ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
-        Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema((ColumnSet) selectedObj);
-
-        // find the corresponding package from reloaded object.
-        Package toReloadPackage = findMatchPackage(parentCatalogOrSchema);
-
-        // find the corresponding columnSet from reloaded object.
-        TdTable oldTable = SwitchHelpers.TABLE_SWITCH.doSwitch(selectedColumnSet);
-        if (oldTable != null) {
-            List<TdTable> tables = PackageHelper.getTables(toReloadPackage);
-            for (TdTable table : tables) {
-                if (oldTable.getName().equals(table.getName())) {
-                    return table;
-                }
-            }
-
-        } else {
-            List<TdView> views = PackageHelper.getViews(toReloadPackage);
-            for (TdView view : views) {
-                if (selectedColumnSet.getName().equals(view.getName())) {
-                    return view;
-                }
-            }
-        }
-        throw new ReloadCompareException("Can't find out the corresponding reload table/view node for current selected node:"
-                + selectedColumnSet.getName());
     }
 
     @Override
@@ -175,31 +138,109 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         ColumnSet columnSet = (ColumnSet) selectedObj;
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
         TdDataProvider provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
-        // IFile file = PrvResourceFileHelper.getInstance().findCorrespondingFile(provider);
-        // TdDataProvider synchronizedProvider = PrvResourceFileHelper.getInstance().readFromFile(file).getObject();
-        //
-        // // re-assign the value of synchronizedProvider to selectedObj.
-        // List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(synchronizedProvider);
-        // TdCatalog newCatalog = null;
-        // for (TdCatalog catalog : tdCatalogs) {
-        // if (parentCatalogOrSchema.getName().equals(catalog.getName())) {
-        // newCatalog = catalog;
-        // }
-        // }
-        // List<TdTable> tables = CatalogHelper.getTables(newCatalog);
-        // for (TdTable table : tables) {
-        // if (columnSet.getName().equals(table.getName())) {
-        // selectedObj = table;
-        // }
-        // }
-        // List<TdView> views = CatalogHelper.getViews(newCatalog);
-        // for (TdView view : views) {
-        // if (columnSet.getName().equals(view.getName())) {
-        // selectedObj = view;
-        // }
-        // }
-        // return synchronizedProvider;
         return provider;
     }
 
+    @Override
+    protected EObject getSavedReloadObject() throws ReloadCompareException {
+        ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
+        ColumnSet toReloadcolumnSet = findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
+        List<TdColumn> columns = null;
+        try {
+            columns = DqRepositoryViewService.getColumns(tempReloadProvider, toReloadcolumnSet, null, true);
+        } catch (TalendException e1) {
+            throw new ReloadCompareException(e1);
+        }
+        ColumnSetHelper.setColumns(toReloadcolumnSet, columns);
+        return toReloadcolumnSet;
+    }
+
+    @Override
+    protected Resource getLeftResource() throws ReloadCompareException {
+        ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
+        ColumnSet findMatchedColumnSet = findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
+        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        columnList.addAll(ColumnSetHelper.getColumns(findMatchedColumnSet));
+
+        // URI uri = URI.createPlatformResourceURI(copyedFile.getFullPath().toString(), false);
+        Resource leftResource = copyedDataProvider.eResource();
+        // leftResource = EMFSharedResources.getInstance().getResource(uri, true);
+        // if (leftResource == null) {
+        // throw new ReloadCompareException("No factory has been found for URI: " + uri);
+        // }
+        leftResource.getContents().clear();
+        for (TdColumn column : columnList) {
+            this.clearSubNode(column);
+            leftResource.getContents().add(column);
+        }
+        EMFSharedResources.getInstance().saveResource(leftResource);
+        return leftResource;
+    }
+
+    @Override
+    protected Resource getRightResource() throws ReloadCompareException {
+        ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
+        ColumnSet findMatchedColumnSet = findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
+        List<TdColumn> columns = null;
+        try {
+            columns = DqRepositoryViewService.getColumns(tempReloadProvider, findMatchedColumnSet, null, true);
+        } catch (TalendException e1) {
+            throw new ReloadCompareException(e1);
+        }
+        ColumnSetHelper.setColumns(findMatchedColumnSet, columns);
+
+        URI uri = tempReloadProvider.eResource().getURI();
+        Resource rightResource = null;
+        rightResource = EMFSharedResources.getInstance().getResource(uri, true);
+        if (rightResource == null) {
+            throw new ReloadCompareException("No factory has been found for URI: " + uri);
+        }
+        rightResource.getContents().clear();
+        for (TdColumn column : columns) {
+            this.clearSubNode(column);
+            rightResource.getContents().add(column);
+        }
+        EMFSharedResources.getInstance().saveResource(rightResource);
+        return rightResource;
+    }
+
+    /**
+     * Find the matched columnSet of matchDataProvider.
+     * 
+     * @param selectedColumnSet
+     * @return
+     * @throws ReloadCompareException
+     */
+    private ColumnSet findMatchedColumnSet(ColumnSet selectedColumnSet, TdDataProvider toMatchDataProvider)
+            throws ReloadCompareException {
+        Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema((ColumnSet) selectedObj);
+
+        // find the corresponding package from reloaded object.
+        Package toReloadPackage = findMatchedPackage(parentCatalogOrSchema, toMatchDataProvider);
+
+        // find the corresponding columnSet from reloaded object.
+        TdTable oldTable = SwitchHelpers.TABLE_SWITCH.doSwitch(selectedColumnSet);
+        ColumnSet toReloadcolumnSet = null;
+        if (oldTable != null) {
+            List<TdTable> tables = PackageHelper.getTables(toReloadPackage);
+            for (TdTable table : tables) {
+                if (oldTable.getName().equals(table.getName())) {
+                    toReloadcolumnSet = table;
+                }
+            }
+
+        } else {
+            List<TdView> views = PackageHelper.getViews(toReloadPackage);
+            for (TdView view : views) {
+                if (selectedColumnSet.getName().equals(view.getName())) {
+                    toReloadcolumnSet = view;
+                }
+            }
+        }
+        if (toReloadcolumnSet == null) {
+            throw new ReloadCompareException("Can't find out the corresponding reload table/view node for current selected node:"
+                    + selectedColumnSet.getName());
+        }
+        return toReloadcolumnSet;
+    }
 }

@@ -12,11 +12,16 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -26,27 +31,14 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.util.RelationalSwitch;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
 public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
-    private RelationalSwitch<Package> packageSwitch;
-
     public DataProviderComparisonLevel(Object selectedObj) {
         super(selectedObj);
-    }
-
-    protected void initSwitchValue() {
-        super.initSwitchValue();
-        packageSwitch = new RelationalSwitch<Package>() {
-
-            public Package casePackage(Package object) {
-                return object;
-            }
-        };
     }
 
     protected void handleRemoveElement(RemoveModelElement removeElement) {
@@ -87,15 +79,60 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected void saveReloadResult() {
         DqRepositoryViewService.saveOpenDataProvider(oldDataProvider, true);
-        // IFile selectedFile = (IFile) selectedObj;
-        // DqRepositoryViewService.saveDataProviderAndStructure(oldDataProvider, true);
-        // PrvResourceFileHelper.getInstance().remove(selectedFile);
-        // PrvResourceFileHelper.getInstance().register(selectedFile, oldDataProvider.eResource());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#getSavedReloadObject()
+     */
+    protected EObject getSavedReloadObject() throws ReloadCompareException {
+        return this.tempReloadProvider;
     }
 
     @Override
-    protected EObject getSavedReloadObject() {
-        return this.tempReloadProvider;
+    protected Resource getLeftResource() throws ReloadCompareException {
+        this.clearSubNode(copyedDataProvider);
+        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(copyedDataProvider);
+        // URI uri = URI.createPlatformResourceURI(copyedFile.getFullPath().toString(), false);
+        Resource leftResource = null;
+        leftResource = copyedDataProvider.eResource();
+        // if (tdCatalogs.size() != 0) {
+        // leftResource = EMFSharedResources.getInstance().getResource(copyedDataProvider.eResource().getURI(),
+        // true);
+        // if (leftResource == null) {
+        // throw new ReloadCompareException("No factory has been found for URI: " +
+        // copyedDataProvider.eResource().getURI());
+        // }
+        leftResource.getContents().clear();
+        for (TdCatalog catalog : tdCatalogs) {
+            catalog.getDataManager().clear();
+            leftResource.getContents().add(catalog);
+        }
+        // }
+        EMFSharedResources.getInstance().saveResource(leftResource);
+        return leftResource;
+    }
+
+    @Override
+    protected Resource getRightResource() throws ReloadCompareException {
+        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tempReloadProvider);
+        // URI uri = tempReloadProvider.eResource().getURI();
+        Resource reloadResource = null;
+        reloadResource = tempReloadProvider.eResource();
+        // if (tdCatalogs.size() != 0) {
+        // reloadResource = EMFSharedResources.getInstance().getResource(uri, true);
+        // if (reloadResource == null) {
+        // throw new ReloadCompareException("No factory has been found for URI: " + uri);
+        // }
+        reloadResource.getContents().clear();
+        for (TdCatalog catalog : tdCatalogs) {
+            catalog.getDataManager().clear();
+            reloadResource.getContents().add(catalog);
+        }
+        // }
+        EMFSharedResources.getInstance().saveResource(reloadResource);
+        return reloadResource;
     }
 
 }

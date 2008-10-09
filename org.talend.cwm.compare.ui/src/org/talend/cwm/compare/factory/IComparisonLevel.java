@@ -15,9 +15,12 @@ package org.talend.cwm.compare.factory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 
 /**
- * The class use to reload the current level element, after that it will save the updated elements.
+ * The class use to display the current level comparison's result(EMF file model and database model comparison) , or
+ * reload the current level element and save the updated elements.
  */
 public interface IComparisonLevel {
 
     public void reloadCurrentLevelElement() throws ReloadCompareException;
+
+    public void popComparisonUI() throws ReloadCompareException;
 }
