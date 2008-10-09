@@ -34,8 +34,13 @@ public class PatternExplorer extends DataExplorer {
      * (non-Javadoc)
      * 
      * @see org.talend.dq.analysis.explore.IDataExplorer#getInvalidRowsStatement()
+     * 
+     * MOD Zqin throws TalendException
      */
-    public String getInvalidRowsStatement() {
+    public String getInvalidRowsStatement() throws TalendException {
+        if (this.indicator == null || !(this.indicator instanceof PatternMatchingIndicator)) {
+            throw new TalendException("No indicator exist in analysis " + analysis.getName());
+        }
         String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
         String columnName = indicator.getAnalyzedElement().getName();
         String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString);

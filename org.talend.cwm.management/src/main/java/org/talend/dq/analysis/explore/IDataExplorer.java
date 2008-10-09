@@ -43,8 +43,10 @@ public interface IDataExplorer {
      * Method "getInvalidRowsStatement".
      * 
      * @return a SQL statement which will return the invalid rows.
+     * 
+     * MOD Zqin throws TalendException, see getValidRowsStatement()
      */
-    public String getInvalidRowsStatement();
+    public String getInvalidRowsStatement() throws TalendException;
 
     /**
      * Method "getValidRowsStatement".
