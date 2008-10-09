@@ -107,6 +107,10 @@ public final class EMFSharedResources {
         return this.emfUtil.save();
     }
 
+    public boolean saveResource(Resource resource) {
+        return EMFUtil.saveResource(resource);
+    }
+
     /**
      * Save the resource to destinationUri and saved the related resources.
      * 
