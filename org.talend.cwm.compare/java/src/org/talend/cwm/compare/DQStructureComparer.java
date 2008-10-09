@@ -27,12 +27,11 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
  */
 public final class DQStructureComparer {
 
+    private static final String NEED_RELOAD_ELEMENTS_PRV = ".needReloadElements.comp";
+
     private static final String RESULT_EMFDIFF_FILE = ".result.emfdiff";
 
-    /**
-     * 
-     */
-    private static final String TEMP_PRV_FILE = ".refresh.prv";
+    private static final String TEMP_REFRESH_FILE = ".refresh.comp";
 
     private static final Class<DQStructureComparer> THAT = DQStructureComparer.class;
 
@@ -49,32 +48,43 @@ public final class DQStructureComparer {
     }
 
     /**
-     * Method "copyCurrentResourceFile" copies the given file into the temporary file ".refresh.prv".
+     * Method "getCopyedFile" copies the source file into the destination file .
      * 
-     * @param f the file to copy
-     * @return the copy
+     * @param sourceFile
+     * @param destinationFile
+     * @return
      */
-    @SuppressWarnings("restriction")
-    public static IFile copyCurrentResourceFile(IFile f) {
+    public static IFile copyedToDestinationFile(IFile sourceFile, IFile destinationFile) {
+        IFile desFile = destinationFile;
+        try {
+            if (destinationFile.exists()) {
+                IFolder parentFolder = (IFolder) destinationFile.getParent();
+                String fileName = desFile.getName();
+                deleteFile(destinationFile);
+                desFile = parentFolder.getFile(fileName);
+            }
+
+            sourceFile.copy(desFile.getFullPath(), true, new NullProgressMonitor());
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+        return desFile;
+    }
+
+    public static IFile getTempRefreshFile() {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
 
-        String fileName = TEMP_PRV_FILE;
+        String fileName = TEMP_REFRESH_FILE;
         IFile file = folder.getFile(fileName);
-        try {
-            f.copy(file.getFullPath(), true, new NullProgressMonitor());
-        } catch (CoreException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         return file;
     }
 
-    public static IFile createTempConnectionFile() {
+    public static IFile getNeedReloadElementsFile() {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
 
-        String fileName = TEMP_PRV_FILE;
+        String fileName = NEED_RELOAD_ELEMENTS_PRV;
         IFile file = folder.getFile(fileName);
         return file;
     }
@@ -86,12 +96,30 @@ public final class DQStructureComparer {
      */
     public static boolean deleteCopiedResourceFile() {
 
-        boolean retValue = false;
+        return deleteFile(getTempRefreshFile());
+    }
+
+    public static boolean deleteNeedReloadElementFile() {
+
+        return deleteFile(getNeedReloadElementsFile());
+    }
+
+    public static IFile getDiffResourceFile() {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
 
-        String fileName = TEMP_PRV_FILE;
+        String fileName = RESULT_EMFDIFF_FILE;
         IFile file = folder.getFile(fileName);
+        return file;
+    }
+
+    /**
+     * To delete the file of "DB Connections" folder by the specific fileName.
+     * 
+     * @return
+     */
+    private static boolean deleteFile(IFile file) {
+        boolean retValue = false;
         if (file.exists()) {
             URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
             EMFSharedResources.getInstance().unloadResource(uri.toString());
@@ -99,21 +127,12 @@ public final class DQStructureComparer {
                 file.delete(true, new NullProgressMonitor());
                 retValue = true;
             } catch (CoreException e) {
-                log.warn("Problem while trying to delete temp file" + fileName, e);
+                log.warn("Problem while trying to delete temp file:" + file.getFullPath().toOSString(), e);
                 retValue = false;
             }
         } else {
             retValue = true;
         }
         return retValue;
-    }
-
-    public static IFile createDiffResourceFile() {
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
-                DQStructureManager.DB_CONNECTIONS);
-
-        String fileName = RESULT_EMFDIFF_FILE;
-        IFile file = folder.getFile(fileName);
-        return file;
     }
 }
