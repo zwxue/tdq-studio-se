@@ -49,6 +49,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.ColumnAnalysisHandler;
 
 /**
@@ -209,7 +210,8 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                                 composite.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
                                 // create table
-                                ChartTableFactory.createTable(composite, chartData);
+                                Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
+                                ChartTableFactory.createTable(composite, chartData, analysis);
                                 // carete image
                                 ImageDescriptor imageDescriptor = chartData.getImageDescriptor();
                                 if (imageDescriptor != null) {

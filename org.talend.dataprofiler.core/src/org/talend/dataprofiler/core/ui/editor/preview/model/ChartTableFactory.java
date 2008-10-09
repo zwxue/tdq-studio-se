@@ -49,10 +49,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -60,8 +60,6 @@ import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
-import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataquality.analysis.Analysis;
@@ -75,7 +73,7 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class ChartTableFactory {
 
-    public static void createTable(Composite parent, ChartWithData inputObject) {
+    public static void createTable(Composite parent, ChartWithData inputObject, final Analysis analysis) {
         TableViewer tbViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 
         final Table table = tbViewer.getTable();
@@ -154,7 +152,7 @@ public class ChartTableFactory {
                     PatternChartDataEntity entity = (PatternChartDataEntity) selection.getFirstElement();
                     Indicator indicator = entity.getIndicator();
 
-                    addMenuToTableItem(table, indicator);
+                    addMenuToTableItem(table, analysis, indicator);
                 }
 
             });
@@ -444,65 +442,85 @@ public class ChartTableFactory {
 
     }
 
-    static void addMenuToTableItem(final Table table, final Indicator indicaotr) {
+    static void addMenuToTableItem(final Table table, final Analysis analysis, final Indicator indicaotr) {
         Menu menu = new Menu(table.getShell(), SWT.POP_UP);
         table.setMenu(menu);
 
-        MenuItem item = new MenuItem(menu, SWT.PUSH);
-        item.setText("View invalid rows");
-        item.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        MenuItem itemInvalid = new MenuItem(menu, SWT.PUSH);
+        itemInvalid.setText("View invalid rows");
+        itemInvalid.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
 
-        item.addListener(SWT.Selection, new Listener() {
+        itemInvalid.addListener(SWT.Selection, new Listener() {
 
             public void handleEvent(Event event) {
-
-                IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                AnalysisEditor editor = (AnalysisEditor) activeEditor;
-                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
-                Analysis analysis = page.getAnalysisHandler().getAnalysis();
-                if (analysis != null) {
-                    PatternExplorer patternExplorer = new PatternExplorer();
-                    patternExplorer.setIndicator(indicaotr);
-                    patternExplorer.setAnalysis(analysis);
+                PatternExplorer patternExplorer = new PatternExplorer();
+                patternExplorer.setIndicator(indicaotr);
+                patternExplorer.setAnalysis(analysis);
+                try {
                     String query = patternExplorer.getInvalidRowsStatement();
-                    new ChangePerspectiveAction(PluginConstant.SE_ID).run();
-
-                    Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
-                    TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis.getContext()
-                            .getConnection());
-                    if (tdDataProvider != null) {
-                        TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-                        TdProviderConnection providerConnection = tdPc.getObject();
-                        String url = providerConnection.getConnectionString();
-                        for (Alias alias : aliases) {
-                            if (alias.getUrl().equals(url)) {
-                                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + indicaotr.getName() + ").sql");
-                                input.setUser(alias.getDefaultUser());
-                                try {
-                                    IWorkbenchPage workPage = SQLExplorerPlugin.getDefault().getWorkbench()
-                                            .getActiveWorkbenchWindow().getActivePage();
-                                    SQLEditor editorPart = (SQLEditor) workPage.openEditor((IEditorInput) input, SQLEditor.class
-                                            .getName());
-                                    editorPart.setText(query);
-                                    ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
-                                    execSQLAction.run();
-                                    // MOD scorreia bug 4736 fixed: execute action only once when several connections
-                                    // exist
-                                    break;
-                                } catch (PartInitException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-
+                    viewRecordInDataExplorer(analysis, indicaotr, query);
+                } catch (TalendException e) {
+                    e.printStackTrace();
                 }
             }
 
         });
 
+        MenuItem itemValid = new MenuItem(menu, SWT.PUSH);
+        itemValid.setText("View valid rows");
+        itemValid.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+
+        itemValid.addListener(SWT.Selection, new Listener() {
+
+            public void handleEvent(Event event) {
+
+                PatternExplorer patternExplorer = new PatternExplorer();
+                patternExplorer.setIndicator(indicaotr);
+                patternExplorer.setAnalysis(analysis);
+
+                try {
+                    String query = patternExplorer.getValidRowsStatement();
+                    viewRecordInDataExplorer(analysis, indicaotr, query);
+                } catch (TalendException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
         // Enforce the menu visible when first right click in TableItem(@see bug 4736)
         menu.setVisible(true);
+    }
+
+    static void viewRecordInDataExplorer(Analysis analysis, Indicator indicaotr, String query) {
+        new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+
+        Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
+        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis.getContext().getConnection());
+        if (tdDataProvider != null) {
+            TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
+            TdProviderConnection providerConnection = tdPc.getObject();
+            String url = providerConnection.getConnectionString();
+            for (Alias alias : aliases) {
+                if (alias.getUrl().equals(url)) {
+                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + indicaotr.getName() + ").sql");
+                    input.setUser(alias.getDefaultUser());
+                    try {
+                        IWorkbenchPage workPage = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+                                .getActivePage();
+                        SQLEditor editorPart = (SQLEditor) workPage.openEditor((IEditorInput) input, SQLEditor.class.getName());
+                        editorPart.setText(query);
+                        ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
+                        execSQLAction.run();
+                        // MOD scorreia bug 4736 fixed: execute action only once when several connections
+                        // exist
+                        break;
+                    } catch (PartInitException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     static void addTooltipOnTableItem(final Table table) {
