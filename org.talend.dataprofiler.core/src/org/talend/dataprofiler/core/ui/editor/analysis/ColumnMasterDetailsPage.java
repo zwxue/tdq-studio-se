@@ -69,7 +69,7 @@ import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
-import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.EIndicatorChartType;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataquality.analysis.Analysis;
@@ -334,7 +334,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
                                     if (chart.getImageDescriptor() != null) {
                                         ImageHyperlink image = toolkit.createImageHyperlink(comp, SWT.WRAP);
                                         image.setImage(chart.getImageDescriptor().createImage());
-                                        if (chart.getChartNamedType().equals(CompositeIndicator.SUMMARY_STATISTICS)) {
+                                        if (chart.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS) {
                                             ColumnAnalysisResultPage.addShowDefinition(image);
                                         }
                                     }

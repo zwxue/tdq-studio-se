@@ -60,7 +60,6 @@ import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
-import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -81,67 +80,49 @@ public class ChartTableFactory {
         table.setLinesVisible(true);
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (inputObject.getChartNamedType().equals(CompositeIndicator.SIMPLE_STATISTICS)) {
-            TableColumn column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Label");
-            column1.setWidth(200);
-            TableColumn column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("Count");
-            column2.setWidth(150);
-            TableColumn column3 = new TableColumn(table, SWT.NONE);
-            column3.setText("%");
-            column3.setWidth(150);
+        TableColumn column1, column2, column3, column4, column5;
 
-            tbViewer.setLabelProvider(new SimpleLabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
-        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.TEXT_STATISTICS)) {
-            TableColumn column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Label");
-            column1.setWidth(200);
-            TableColumn column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("Value");
-            column2.setWidth(300);
-
-            tbViewer.setLabelProvider(new SimpleLabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
-        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.FREQUENCE_STATISTICS)) {
-            TableColumn column1 = new TableColumn(table, SWT.NONE);
+        switch (inputObject.getChartType()) {
+        case FREQUENCE_STATISTICS:
+            column1 = new TableColumn(table, SWT.NONE);
             column1.setText("Value");
             column1.setWidth(200);
-            TableColumn column2 = new TableColumn(table, SWT.NONE);
+            column2 = new TableColumn(table, SWT.NONE);
             column2.setText("Count");
             column2.setWidth(150);
-            TableColumn column3 = new TableColumn(table, SWT.NONE);
+            column3 = new TableColumn(table, SWT.NONE);
             column3.setText("%");
             column3.setWidth(150);
 
             tbViewer.setLabelProvider(new FrequencyLabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());
-        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.SUMMARY_STATISTICS)) {
-            TableColumn column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Label");
-            column1.setWidth(200);
-            TableColumn column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("Value");
-            column2.setWidth(300);
+            break;
+        case MODE_INDICATOR:
+            column1 = new TableColumn(table, SWT.NONE);
+            column1.setText("Mode");
+            column1.setAlignment(SWT.CENTER);
+            column1.setWidth(500);
 
-            tbViewer.setLabelProvider(new SummaryLabelProvider());
+            tbViewer.setLabelProvider(new ModeLabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());
-        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.PATTERN_MATCHING)
-                || inputObject.getChartNamedType().equals(CompositeIndicator.SQL_PATTERN_MATCHING)) {
-            TableColumn column1 = new TableColumn(table, SWT.NONE);
+            break;
+
+        case SQL_PATTERN_MATCHING:
+        case PATTERN_MATCHING:
+
+            column1 = new TableColumn(table, SWT.NONE);
             column1.setText("Label");
             column1.setWidth(200);
-            TableColumn column2 = new TableColumn(table, SWT.NONE);
+            column2 = new TableColumn(table, SWT.NONE);
             column2.setText("%Match");
             column2.setWidth(75);
-            TableColumn column3 = new TableColumn(table, SWT.NONE);
+            column3 = new TableColumn(table, SWT.NONE);
             column3.setText("%No Match");
             column3.setWidth(75);
-            TableColumn column4 = new TableColumn(table, SWT.NONE);
+            column4 = new TableColumn(table, SWT.NONE);
             column4.setText("#Match");
             column4.setWidth(75);
-            TableColumn column5 = new TableColumn(table, SWT.NONE);
+            column5 = new TableColumn(table, SWT.NONE);
             column5.setText("#No Match");
             column5.setWidth(75);
 
@@ -159,15 +140,45 @@ public class ChartTableFactory {
 
             tbViewer.setLabelProvider(new PatternLabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());
-        } else if (inputObject.getChartNamedType().equals(CompositeIndicator.MODE_INDICATOR)) {
-            TableColumn column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Mode");
-            column1.setAlignment(SWT.CENTER);
-            column1.setWidth(500);
+            break;
 
-            tbViewer.setLabelProvider(new ModeLabelProvider());
+        case SIMPLE_STATISTICS:
+            column1 = new TableColumn(table, SWT.NONE);
+            column1.setText("Label");
+            column1.setWidth(200);
+            column2 = new TableColumn(table, SWT.NONE);
+            column2.setText("Count");
+            column2.setWidth(150);
+            column3 = new TableColumn(table, SWT.NONE);
+            column3.setText("%");
+            column3.setWidth(150);
+
+            tbViewer.setLabelProvider(new SimpleLabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());
-        } else {
+            break;
+        case TEXT_STATISTICS:
+            column1 = new TableColumn(table, SWT.NONE);
+            column1.setText("Label");
+            column1.setWidth(200);
+            column2 = new TableColumn(table, SWT.NONE);
+            column2.setText("Value");
+            column2.setWidth(300);
+
+            tbViewer.setLabelProvider(new SimpleLabelProvider());
+            tbViewer.setContentProvider(new CommonContenteProvider());
+            break;
+        case SUMMARY_STATISTICS:
+            column1 = new TableColumn(table, SWT.NONE);
+            column1.setText("Label");
+            column1.setWidth(200);
+            column2 = new TableColumn(table, SWT.NONE);
+            column2.setText("Value");
+            column2.setWidth(300);
+
+            tbViewer.setLabelProvider(new SummaryLabelProvider());
+            tbViewer.setContentProvider(new CommonContenteProvider());
+            break;
+        default:
 
             tbViewer.setLabelProvider(new LabelProvider());
             tbViewer.setContentProvider(new CommonContenteProvider());

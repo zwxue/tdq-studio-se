@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.talend.dataprofiler.core.ui.editor.preview.EIndicatorChartType;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -23,10 +24,10 @@ public class ChartWithData {
 
     private ChartDataEntity[] enity;
 
-    private String chartNamedType;
+    private EIndicatorChartType chartType;
 
-    public ChartWithData(String chartNamedType, ImageDescriptor imageDescriptor, ChartDataEntity[] enity) {
-        this.chartNamedType = chartNamedType;
+    public ChartWithData(EIndicatorChartType chartType, ImageDescriptor imageDescriptor, ChartDataEntity[] enity) {
+        this.chartType = chartType;
         this.imageDescriptor = imageDescriptor;
         this.enity = enity;
     }
@@ -39,8 +40,8 @@ public class ChartWithData {
         return enity;
     }
 
-    public String getChartNamedType() {
-        return chartNamedType;
+    public EIndicatorChartType getChartType() {
+        return chartType;
     }
 
 }

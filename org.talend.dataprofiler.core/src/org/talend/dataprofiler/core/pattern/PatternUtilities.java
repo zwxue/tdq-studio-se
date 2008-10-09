@@ -29,7 +29,6 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -85,12 +84,9 @@ public final class PatternUtilities {
         for (int i = 0; i < components.size(); i++) {
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
             String body = regularExpress.getExpression().getBody();
-            valid = ((body != null) && (CheckValueUtils.isPatternValue(body)));
-            if (valid) {
+            valid = ((body != null) && body.matches("'.*'"));
+            if (!valid) {
                 break;
-            } else {
-                body = "'" + body;
-                regularExpress.getExpression().setBody(body);
             }
         }
         return valid;

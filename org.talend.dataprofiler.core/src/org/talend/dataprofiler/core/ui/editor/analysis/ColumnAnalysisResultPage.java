@@ -45,7 +45,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
-import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.EIndicatorChartType;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
@@ -203,7 +203,7 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
 
                                 ExpandableComposite subComp = toolkit.createExpandableComposite(comp, ExpandableComposite.TWISTIE
                                         | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-                                subComp.setText(chartData.getChartNamedType());
+                                subComp.setText(chartData.getChartType().getLiteral());
 
                                 Composite composite = toolkit.createComposite(subComp);
                                 composite.setLayout(new GridLayout(2, false));
@@ -217,7 +217,7 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                                 if (imageDescriptor != null) {
                                     ImageHyperlink image = toolkit.createImageHyperlink(composite, SWT.WRAP);
                                     image.setImage(imageDescriptor.createImage());
-                                    if (chartData.getChartNamedType().equals(CompositeIndicator.SUMMARY_STATISTICS)) {
+                                    if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS) {
                                         addShowDefinition(image);
                                     }
                                 }

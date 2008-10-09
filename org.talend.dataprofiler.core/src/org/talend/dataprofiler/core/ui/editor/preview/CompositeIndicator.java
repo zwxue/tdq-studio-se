@@ -27,29 +27,15 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
  */
 public class CompositeIndicator {
 
-    public static final String SIMPLE_STATISTICS = "Simple Statistics";
-
-    public static final String TEXT_STATISTICS = "Text Statistics";
-
-    public static final String FREQUENCE_STATISTICS = "Frequency Statistics";
-
-    public static final String SUMMARY_STATISTICS = "Summary Statistics";
-
-    public static final String PATTERN_MATCHING = "Pattern Matching";
-
-    public static final String SQL_PATTERN_MATCHING = "SQL Pattern Matching";
-
-    public static final String MODE_INDICATOR = "Mode Indicator";
-
     private IndicatorUnit[] indicatorUnits;
 
-    private Map<String, List<IndicatorUnit>> separatedMap;
+    private Map<EIndicatorChartType, List<IndicatorUnit>> separatedMap;
 
     private List<IndicatorUnit> tempList = new ArrayList<IndicatorUnit>();
 
     public CompositeIndicator(ColumnIndicator columnIndicator) {
 
-        this.separatedMap = new HashMap<String, List<IndicatorUnit>>();
+        this.separatedMap = new HashMap<EIndicatorChartType, List<IndicatorUnit>>();
         this.indicatorUnits = initIndicatorUnits(columnIndicator.getIndicatorUnits());
     }
 
@@ -66,7 +52,7 @@ public class CompositeIndicator {
         return tempList.toArray(new IndicatorUnit[tempList.size()]);
     }
 
-    public Map<String, List<IndicatorUnit>> getIndicatorComposite() {
+    public Map<EIndicatorChartType, List<IndicatorUnit>> getIndicatorComposite() {
 
         List<IndicatorUnit> simpleList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> textList = new ArrayList<IndicatorUnit>();
@@ -119,13 +105,13 @@ public class CompositeIndicator {
             }
         }
 
-        separatedMap.put(SIMPLE_STATISTICS, simpleList);
-        separatedMap.put(TEXT_STATISTICS, textList);
-        separatedMap.put(FREQUENCE_STATISTICS, frequencyList);
-        separatedMap.put(SUMMARY_STATISTICS, summaryList);
-        separatedMap.put(PATTERN_MATCHING, patternList);
-        separatedMap.put(SQL_PATTERN_MATCHING, sqlPatternList);
-        separatedMap.put(MODE_INDICATOR, modelIndicatorList);
+        separatedMap.put(EIndicatorChartType.SIMPLE_STATISTICS, simpleList);
+        separatedMap.put(EIndicatorChartType.TEXT_STATISTICS, textList);
+        separatedMap.put(EIndicatorChartType.FREQUENCE_STATISTICS, frequencyList);
+        separatedMap.put(EIndicatorChartType.SUMMARY_STATISTICS, summaryList);
+        separatedMap.put(EIndicatorChartType.PATTERN_MATCHING, patternList);
+        separatedMap.put(EIndicatorChartType.SQL_PATTERN_MATCHING, sqlPatternList);
+        separatedMap.put(EIndicatorChartType.MODE_INDICATOR, modelIndicatorList);
 
         return separatedMap;
     }
