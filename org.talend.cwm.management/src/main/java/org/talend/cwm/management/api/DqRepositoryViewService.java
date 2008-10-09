@@ -672,7 +672,7 @@ public final class DqRepositoryViewService {
      * @param file the file to read
      * @return the Data provider if found.
      */
-    private static TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
+    public static TypedReturnCode<TdDataProvider> readFromFile(IFile file) {
         TypedReturnCode<TdDataProvider> rc = new TypedReturnCode<TdDataProvider>();
         Resource r = EMFSharedResources.getInstance().getResource(
                 URI.createPlatformResourceURI(file.getFullPath().toString(), false), true);
