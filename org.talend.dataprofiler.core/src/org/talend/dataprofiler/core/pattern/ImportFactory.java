@@ -180,30 +180,29 @@ public class ImportFactory {
         boolean validStatus = PatternUtilities.isPatternValid(pattern);
         TaggedValueHelper.setValidStatus(validStatus, pattern);
 
-        String fname = DqRepositoryViewService.createFilename(parameters.relativePath, parameters.name,
-                NewSourcePatternActionProvider.EXTENSION_PATTERN);
-        IFile pfile = selectionFolder.getFile(fname);
+        String fname = DqRepositoryViewService.createFilename(parameters.name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
 
-        EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), pattern);
-        EMFSharedResources.getInstance().saveLastResource();
-
-        // add the persistence property to the new folder
         try {
 
             String[] folderNames = parameters.relativePath.split("/");
 
             for (String folderName : folderNames) {
                 IFolder folder = selectionFolder.getFolder(folderName);
-                if (folder.exists()) {
-                    folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
-                            DQStructureManager.PATTERNS_FOLDER_PROPERTY);
-                    selectionFolder = folder;
+                if (!folder.exists()) {
+                    folder.create(false, true, null);
                 }
+
+                folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, DQStructureManager.PATTERNS_FOLDER_PROPERTY);
+                selectionFolder = folder;
             }
         } catch (CoreException e) {
             e.printStackTrace();
         }
 
+        IFile pfile = selectionFolder.getFile(fname);
+
+        EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), pattern);
+        EMFSharedResources.getInstance().saveLastResource();
     }
 
     private static String getFileExtName(File file) {

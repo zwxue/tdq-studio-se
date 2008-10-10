@@ -106,7 +106,7 @@ public class ImportPatternsWizardPage extends WizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
-                dialog.setFilterExtensions(new String[] { "*.csv", "*.xls" });
+                dialog.setFilterExtensions(new String[] { "*.csv" });
                 if (fileText.getText() != null) {
                     dialog.setFileName(fileText.getText());
                 }

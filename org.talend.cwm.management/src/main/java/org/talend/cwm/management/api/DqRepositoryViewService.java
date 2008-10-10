@@ -499,18 +499,6 @@ public final class DqRepositoryViewService {
     }
 
     /**
-     * Method "createFilename".
-     * 
-     * @param folder the folder
-     * @param basename the filename without extension
-     * @param extension the extension of the file
-     * @return the path "folder/basename.extension"
-     */
-    public static String createFilename(String folder, String basename, String extension) {
-        return folder + "\\" + createTechnicalName(basename) + "." + extension;
-    }
-
-    /**
      * Method "loadTables".
      * 
      * @param dataProvider
