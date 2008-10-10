@@ -254,15 +254,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 completedSqlString = getUnionCompletedString(indicator, sqlGenericExpression, colName, table, whereExpression,
                         rangeStrings);
                 if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
-                    // now order by second column (get the order by clause of generic expression and replace)
-                    String genericSQL = sqlGenericExpression.getBody();
-                    int beginIndex = genericSQL.indexOf(dbms().orderBy());
-                    if (beginIndex != -1) {
-                        int lastIndex = genericSQL.lastIndexOf(dbms().desc());
-                        String orderByClause = genericSQL.substring(beginIndex, lastIndex);
-                        completedSqlString = completedSqlString + orderByClause + dbms().desc();
-                    }
-                    // and get the best row
+                    // get the best row
                     completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
                 }
             } else if (dateAggregationType != null && !dateAggregationType.equals(DateGrain.NONE)
@@ -277,6 +269,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 // wrap column name into a function for pattern finder indicator
                 if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternFreqIndicator())
                         || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternLowFreqIndicator())) {
+                    // TODO scorreia get user defined functions for pattern finder
                     colName = dbms().getPatternFinderDefaultFunction(colName);
                 }
                 
@@ -822,32 +815,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private String quote(String input) {
         return dbms().quote(input);
-    }
-
-    /**
-     * Method "getDbQuoteString".
-     * 
-     * @param analysis
-     * @return the database identifier quote string
-     */
-    private String getDbQuoteString(Analysis analysis) {
-        if (dbQuote != null) {
-            return dbQuote;
-        }
-        TypedReturnCode<Connection> trc = this.getConnection(analysis);
-        if (!trc.isOk()) {
-            traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
-            return DEFAULT_QUOTE_STRING;
-        }
-        try {
-            dbQuote = DEFAULT_QUOTE_STRING;
-            dbQuote = trc.getObject().getMetaData().getIdentifierQuoteString();
-            trc.getObject().close();
-            return dbQuote;
-        } catch (SQLException e) {
-            log.warn("Could not get identifier quote string from database for analysis " + analysis.getName());
-            return DEFAULT_QUOTE_STRING;
-        }
     }
 
     /**
