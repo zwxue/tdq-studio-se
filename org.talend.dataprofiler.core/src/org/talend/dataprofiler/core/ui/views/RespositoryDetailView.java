@@ -23,7 +23,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -89,9 +88,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * DOC qzhang Comment method "createDefault".
      */
     private void createDefault() {
-        Text text = new Text(container, SWT.NONE);
-        text.setEditable(false);
-        text.setText("No detail available");
+        newText(container, "No detail available");
     }
 
     @Override
@@ -188,27 +185,19 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createPurpose(pattern);
         createDescription(pattern);
         Label label;
-        Text text;
-        GridData data;
+        
         label = new Label(container, SWT.NONE);
         label.setText("Type: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
+        
         EList<PatternComponent> components = pattern.getComponents();
-        String description = "";
+        StringBuilder description = new StringBuilder();
         for (PatternComponent poc : components) {
             if (poc instanceof RegularExpression) {
                 RegularExpression expression = (RegularExpression) poc;
-                description += "  " + expression.getExpression().getLanguage();
+                description.append("  ").append(expression.getExpression().getLanguage());
             }
         }
-        boolean b = description.length() == 0;
-        if (b) {
-            text.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-        }
-        text.setText(b ? "none" : description);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, description.toString());        
     }
 
     /**
@@ -226,42 +215,44 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createPurpose(ana);
         createDescription(ana);
         Label label;
-        Text text;
-        GridData data;
         label = new Label(container, SWT.NONE);
         label.setText("Type: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
-        String description = ana.getParameters().getAnalysisType().getName();
-        text.setText(description == null ? "" : description);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        String description = ana.getParameters().getAnalysisType().getLiteral();
+        newText(container, description);
 
         label = new Label(container, SWT.NONE);
         label.setText("Number of analyzed elements: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
         AnalysisContext context = ana.getContext();
         int numn = context.getAnalysedElements().size();
-        text.setText("" + numn);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, String.valueOf(numn));
 
         label = new Label(container, SWT.NONE);
         label.setText("Connection: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
         DataManager connection = context.getConnection();
         if (connection == null) {
             description = null;
         } else {
             description = connection.getName();
         }
-        text.setText(description == null ? "" : description);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, description);
     }
 
+    private void newText(Composite composite, String inputText) {
+       newText(composite, inputText, "none");
+    }
+
+    private void newText(Composite composite, String inputText, String defaultText) {
+        Text text = new Text(composite, SWT.NONE);
+        text.setEditable(false);
+        if (inputText == null || inputText.trim().length() == 0) {
+            text.setForeground(text.getDisplay().getSystemColor(SWT.COLOR_RED));
+            text.setText(defaultText);
+        } else {
+            text.setText(inputText);
+        }
+        GridData data = new GridData(GridData.FILL_HORIZONTAL);
+        text.setLayoutData(data);
+    }
     /**
      * DOC qzhang Comment method "createSqlFileDetail".
      * 
@@ -269,26 +260,17 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private void createSqlFileDetail(IFile fe2) {
         Label label;
-        Text text;
-        GridData data;
         label = new Label(container, SWT.NONE);
         label.setText("Filename: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
-        text.setText(fe2.getFullPath().toPortableString());
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, fe2.getFullPath().toPortableString());
 
         label = new Label(container, SWT.NONE);
         label.setText("Modification date: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
+        
         // MODSCA 20080728 changed to getLocalTimeStamp() because modificationStamp was 1 or 2 (=> year 1970)
         // long modificationStamp = fe2.getModificationStamp();
         long modificationStamp = fe2.getLocalTimeStamp();
-        text.setText(new Date(modificationStamp).toString());
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, new Date(modificationStamp).toString());
     }
 
     /**
@@ -300,17 +282,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(rep);
         createPurpose(rep);
         createDescription(rep);
-        Label label;
-        Text text;
-        GridData data;
+        Label label;        
         label = new Label(container, SWT.NONE);
         label.setText("Number of analyses: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
         int description = ReportHelper.getAnalyses(rep).size();
-        text.setText("" + description);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, String.valueOf(description));
     }
 
     /**
@@ -322,24 +298,12 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createTdTVDetail(column);
         Label label = new Label(container, SWT.NONE);
         label.setText("Type: ");
-        Text text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
-        text.setText(column.getSqlDataType().getName());
-        GridData data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, column.getSqlDataType().getName());
 
         label = new Label(container, SWT.NONE);
         label.setText("Nullable: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
         String purpose = column.getIsNullable().isNullable();
-        boolean b = purpose == null;
-        if (b) {
-            text.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-        }
-        text.setText(b ? "null" : purpose);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, purpose);
     }
 
     /**
@@ -349,21 +313,12 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private void createTdTVDetail(ModelElement element) {
         Label label;
-        Text text;
         createName(element);
 
         label = new Label(container, SWT.NONE);
         label.setText("Remarks: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
-        String purpose = TaggedValueHelper.getComment(element);
-        boolean b = (purpose == null || purpose.trim().length() == 0);
-        if (b) {
-            text.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-        }
-        text.setText(b ? "No remark" : purpose);
-        GridData data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        String purpose = TaggedValueHelper.getComment(element);        
+        newText(container, purpose);
     }
 
     /**
@@ -372,14 +327,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * @param element
      */
     private void createName(ModelElement element) {
-        GridData data;
         Label label = new Label(container, SWT.NONE);
         label.setText("Name: ");
-        Text text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
-        text.setText(element.getName());
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, element.getName());
     }
 
     /**
@@ -407,29 +357,19 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(dataProvider);
 
         Label label;
-        Text text;
-        GridData data;
         createPurpose(dataProvider);
         createDescription(dataProvider);
 
         label = new Label(container, SWT.NONE);
         label.setText("URL: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
         String connectionString = DataProviderHelper.getTdProviderConnection(dataProvider).getObject().getConnectionString();
-        text.setText(connectionString == null ? "" : connectionString);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, connectionString);
 
         label = new Label(container, SWT.NONE);
         label.setText("Type: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
         String subtype = softwareSystem.getSubtype();
-        text.setText(subtype == null ? "" : subtype);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, subtype);
     }
 
     /**
@@ -439,16 +379,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private void createDescription(ModelElement dataProvider) {
         Label label;
-        Text text;
-        GridData data;
         label = new Label(container, SWT.NONE);
         label.setText("Description: ");
-        text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
         String description = TaggedValueHelper.getDescription(dataProvider);
-        text.setText(description == null ? "" : description);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, description);
     }
 
     /**
@@ -459,12 +393,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private void createPurpose(ModelElement dataProvider) {
         Label label = new Label(container, SWT.NONE);
         label.setText("Purpose: ");
-        Text text = new Text(container, SWT.WRAP);
-        text.setEditable(false);
         String purpose = TaggedValueHelper.getPurpose(dataProvider);
-        text.setText(purpose == null ? "" : purpose);
-        GridData data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
+        newText(container, purpose);
     }
 
     /**
