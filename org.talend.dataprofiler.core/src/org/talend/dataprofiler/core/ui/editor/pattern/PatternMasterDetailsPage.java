@@ -115,8 +115,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         creatPatternDefinitionSection(form, topComp);
     }
 
-    private void creatPatternDefinitionSection(ScrolledForm form, Composite topComp) {
-        Section section = createSection(form, topComp, "Pattern Definition", false, null);
+    private void creatPatternDefinitionSection(ScrolledForm form, Composite topCmp) {
+        Section section = createSection(form, topCmp, "Pattern Definition", false, null);
         sectionComp = toolkit.createComposite(section);
         sectionComp.setLayout(new GridLayout());
         Label label = new Label(sectionComp, SWT.WRAP);
@@ -198,8 +198,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         combo.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                String language = combo.getText().equalsIgnoreCase(ALL_DATABASE_TYPE) ? SQL : combo.getText();
-                finalRegExpress.getExpression().setLanguage(language);
+                String lang = combo.getText().equalsIgnoreCase(ALL_DATABASE_TYPE) ? SQL : combo.getText();
+                finalRegExpress.getExpression().setLanguage(lang);
                 setDirty(true);
             }
         });
@@ -272,7 +272,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             String language = regularExpress.getExpression().getLanguage();
             if ((regularExpress.getExpression().getBody() == null) || (!regularExpress.getExpression().getBody().matches("'.*'"))) {
                 MessageDialog.openWarning(null, "Warning",
-                        "The pattern's expression starts and ends must has a single quote \"'\"");
+                        "The pattern's expression for "
+                        + language
+                        + " must be enclosed by single quotes \"'\"");
                 return false;
             }
             if (existLanguage.contains(language)) {

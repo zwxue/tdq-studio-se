@@ -54,7 +54,9 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
                     if (DQStructureManager.PATTERNS_FOLDER_PROPERTY.equals(folder
                             .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
                         type = ExpressionType.REGEXP;
-                        menu.add(new ImportPatternsAction((IFolder) obj));
+                        if (DQStructureManager.PATTERNS.equals(folder.getName())) {
+                            menu.add(new ImportPatternsAction((IFolder) obj));
+                        }
                         menu.add(new ExportPatternsAction((IFolder) obj));
                     } else if (DQStructureManager.SQLPATTERNS_FOLDER_PROPERTY.equals(folder
                             .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
