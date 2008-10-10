@@ -266,7 +266,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         snapshot.setDiff(diff);
         IFile createDiffResourceFile = DQStructureComparer.getDiffResourceFile();
         try {
-            ModelUtils.save(snapshot, createDiffResourceFile.getFullPath().toString());
+            final String fullPath = createDiffResourceFile.getLocation().toOSString();
+            ModelUtils.save(snapshot, fullPath);
         } catch (IOException e) {
             throw new ReloadCompareException(e);
         }
