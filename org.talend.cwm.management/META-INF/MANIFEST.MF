@@ -31,7 +31,12 @@ Export-Package: org.talend.cwm.db.connection,
  org.talend.dq.analysis.category,
  org.talend.dq.analysis.explore,
  org.talend.dq.analysis.parameters,
- org.talend.dq.indicators.definitions
+ org.talend.dq.helper,
+ org.talend.dq.indicators.definitions,
+ org.talend.dq.nodes.analysis,
+ org.talend.dq.nodes.foldernode,
+ org.talend.dq.nodes.indicator,
+ org.talend.dq.nodes.indicator.type
 Bundle-ClassPath: .
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
