@@ -37,13 +37,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ConnectionsContentProvider;
 import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
 

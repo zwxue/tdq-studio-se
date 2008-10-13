@@ -100,9 +100,12 @@ public class ExportFactory {
 
         Map<PatternToExcelEnum, String> patternMap = new HashMap<PatternToExcelEnum, String>();
 
-        IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern);
         IFolder patternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
                 DQStructureManager.PATTERNS);
+        IFolder sqlPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+                DQStructureManager.SQL_PATTERNS);
+        IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
+                new IFolder[] { patternFolder, sqlPatternFolder });
         URI relativeURI = patternFolder.getLocationURI().relativize(file.getParent().getLocationURI());
 
         // get the basic information

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -41,7 +43,8 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
@@ -54,6 +57,7 @@ import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.views.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.views.filters.ReportingFilter;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
@@ -159,7 +163,9 @@ public class DQRespositoryView extends CommonNavigator {
                         Analysis analysis = (Analysis) obj;
                         List<RenderedObject> tempList = new ArrayList<RenderedObject>();
                         tempList.add(analysis);
-                        IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList).get(0);
+                        IFolder analysesFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
+                                PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
+                        IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList, analysesFolder).get(0);
 
                         CorePlugin.getDefault()
                                 .openEditor(file, "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor");

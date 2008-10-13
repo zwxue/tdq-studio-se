@@ -33,16 +33,16 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.utils.DateFormatUtils;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**

@@ -18,10 +18,10 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

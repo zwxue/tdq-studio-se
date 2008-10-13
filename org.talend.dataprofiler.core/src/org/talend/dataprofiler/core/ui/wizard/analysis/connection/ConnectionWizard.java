@@ -26,7 +26,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
-import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
@@ -39,6 +38,7 @@ import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisWriter;
 import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 

@@ -60,7 +60,6 @@ import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
@@ -72,6 +71,7 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

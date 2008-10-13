@@ -42,13 +42,13 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.factory.ModelElementFileFactory;
-import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 
 /**
  * DOC rli class global comment. Detailled comment

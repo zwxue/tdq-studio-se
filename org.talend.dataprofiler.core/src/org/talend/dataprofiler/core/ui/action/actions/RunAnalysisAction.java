@@ -33,12 +33,12 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.AnalysisExecutorSelector;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**

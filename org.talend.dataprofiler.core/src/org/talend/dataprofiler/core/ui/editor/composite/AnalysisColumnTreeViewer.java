@@ -227,10 +227,15 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                         IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                         PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit.getIndicator();
                         Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
-                        IFile patternFile = PatternResourceFileHelper.getInstance().getPatternFile(pattern);
+                        IFolder patternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
+                                .getFolder(DQStructureManager.PATTERNS);
+                        IFolder sqlPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
+                                DQStructureManager.LIBRARIES).getFolder(DQStructureManager.SQL_PATTERNS);
+                        IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
+                                new IFolder[] { patternFolder, sqlPatternFolder });
                         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                         try {
-                            activePage.openEditor(new FileEditorInput(patternFile),
+                            activePage.openEditor(new FileEditorInput(file),
                                     "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor");
                         } catch (PartInitException e1) {
                             e1.printStackTrace();

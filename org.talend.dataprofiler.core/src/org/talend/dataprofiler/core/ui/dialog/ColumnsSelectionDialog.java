@@ -58,9 +58,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
-import org.talend.dataprofiler.core.helper.EObjectHelper;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
@@ -69,6 +67,8 @@ import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;

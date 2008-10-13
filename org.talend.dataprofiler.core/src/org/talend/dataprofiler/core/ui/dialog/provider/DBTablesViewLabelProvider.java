@@ -22,8 +22,8 @@ import org.eclipse.swt.graphics.Image;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
 

@@ -22,7 +22,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
-import org.talend.dataprofiler.core.helper.NeedSaveDataProviderHelper;
+import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;

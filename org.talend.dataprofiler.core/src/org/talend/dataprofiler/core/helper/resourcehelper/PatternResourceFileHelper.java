@@ -34,6 +34,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -185,17 +186,13 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
      * 
      * @param pattern
      */
-    public IFile getPatternFile(Pattern pattern) {
+    public IFile getPatternFile(Pattern pattern, IFolder[] folders) {
         IFile file = null;
         if (resourcesNumberChanged) {
-            // patternsMap.clear();
-            IFolder defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
-                    .getFolder(DQStructureManager.PATTERNS);
             try {
-                searchAllPatternes(defaultPatternFolder);
-                defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
-                        .getFolder(DQStructureManager.SQL_PATTERNS);
-                searchAllPatternes(defaultPatternFolder);
+                for (int i = 0; i < folders.length; i++) {
+                    searchAllPatternes(folders[i]);
+                }
             } catch (CoreException e) {
                 e.printStackTrace();
             }

@@ -22,11 +22,11 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
