@@ -19,9 +19,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
-import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
+import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**

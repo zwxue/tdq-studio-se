@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
@@ -48,6 +47,7 @@ import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
 
 /**

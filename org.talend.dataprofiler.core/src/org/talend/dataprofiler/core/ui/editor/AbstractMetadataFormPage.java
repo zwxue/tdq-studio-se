@@ -31,7 +31,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

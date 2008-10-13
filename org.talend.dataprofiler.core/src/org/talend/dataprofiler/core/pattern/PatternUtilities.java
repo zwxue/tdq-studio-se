@@ -27,7 +27,6 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -38,6 +37,7 @@ import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>

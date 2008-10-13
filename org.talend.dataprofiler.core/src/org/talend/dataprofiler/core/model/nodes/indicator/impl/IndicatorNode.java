@@ -12,9 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.nodes.indicator.impl;
 
-import org.talend.dataprofiler.core.model.nodes.indicator.AbstractIndicatorNode;
-import org.talend.dataprofiler.core.model.nodes.indicator.IIndicatorNode;
-import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
+import org.talend.dq.nodes.indicator.AbstractIndicatorNode;
+import org.talend.dq.nodes.indicator.IIndicatorNode;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * @author rli

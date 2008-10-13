@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 import java.awt.Color;
 import java.util.Set;
 
-import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataprofiler.core.ui.utils.TextFormatFactory;
@@ -38,6 +37,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>

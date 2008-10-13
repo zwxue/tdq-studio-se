@@ -16,10 +16,10 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.model.nodes.foldernode.AbstractFolderNode;
-import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dq.nodes.foldernode.AbstractFolderNode;
+import org.talend.dq.nodes.foldernode.IFolderNode;
 
 /**
  * @author rli

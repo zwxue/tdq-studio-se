@@ -34,13 +34,13 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.nodes.indicator.IIndicatorNode;
-import org.talend.dataprofiler.core.model.nodes.indicator.IndicatorTreeModelBuilder;
-import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.nodes.indicator.IIndicatorNode;
+import org.talend.dq.nodes.indicator.IndicatorTreeModelBuilder;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * This dialog use to select the indictor object for different columns.

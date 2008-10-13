@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.talend.dataprofiler.core.model.nodes.analysis.AbstractAnalysisNode;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
+import org.talend.dq.nodes.analysis.AbstractAnalysisNode;
 
 /**
  * @author huangssssx

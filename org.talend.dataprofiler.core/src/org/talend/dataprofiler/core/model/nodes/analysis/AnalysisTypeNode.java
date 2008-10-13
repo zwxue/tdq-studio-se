@@ -12,10 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.nodes.analysis;
 
+import org.talend.dq.nodes.analysis.AbstractAnalysisNode;
 
 /**
  * @author zqin
- *
+ * 
  */
 public class AnalysisTypeNode extends AbstractAnalysisNode {
 

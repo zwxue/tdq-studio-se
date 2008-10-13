@@ -20,6 +20,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 
 /**
  * This folder container will store all the analyses related with special report.

@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 
 /**
  * DOC rli class global comment. Detailled comment

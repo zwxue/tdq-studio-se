@@ -15,8 +15,8 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 import java.awt.Color;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.nodes.indicator.tpye.IndicatorEnum;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>

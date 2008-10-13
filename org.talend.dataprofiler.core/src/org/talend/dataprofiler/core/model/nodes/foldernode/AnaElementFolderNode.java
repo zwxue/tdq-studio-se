@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
