@@ -16,7 +16,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
-import org.talend.dataprofiler.core.model.nodes.foldernode.IFolderNode;
+import org.talend.dq.nodes.foldernode.IFolderNode;
 
 /**
  * DOC rli class global comment. Detailled comment
