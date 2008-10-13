@@ -92,6 +92,12 @@ public class ImageLib {
 
     public static final String LEVEL_WARNING = "level_warning.gif";
 
+    public static final String EMOTICON_SMILE = "emoticon_smile.png";
+
+    public static final String EXCLAMATION = "exclamation.png";
+
+    public static final String CATALOG = "catalog.jpg";
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 

@@ -22,7 +22,14 @@
             class="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
             icon="icons/newspaper.png"
             id="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
-            name="Detail View">
+            name="Detail View">`
+      </view>
+       <view
+            category="org.talend.dataprofiler.view.category"
+            class="org.talend.dataprofiler.core.ui.views.PatternTestView"
+            icon="icons/new_alias.gif"
+            id="org.talend.dataprofiler.core.ui.views.PatternTestView"
+            name="Pattern Test View">`
       </view>
       <!-- view
             category="org.talend.dataprofiler.view.category"
