@@ -325,8 +325,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         Properties properties = new Properties();
         properties.setProperty(PluginConstant.USER_PROPERTY, TaggedValueHelper.getValue(PluginConstant.USER_PROPERTY,
                 tdProviderConnection.getObject()));
-        properties.setProperty(PluginConstant.PASSWORD_PROPERTY, TaggedValueHelper.getValue(PluginConstant.PASSWORD_PROPERTY,
-                tdProviderConnection.getObject()));
+        properties.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, TaggedValueHelper.getValue(
+                org.talend.dq.PluginConstant.PASSWORD_PROPERTY, tdProviderConnection.getObject()));
         DBConnectionParameter connectionParameters = new DBConnectionParameter();
 
         connectionParameters.setName(oldDataProvider.getName());
