@@ -21,8 +21,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment

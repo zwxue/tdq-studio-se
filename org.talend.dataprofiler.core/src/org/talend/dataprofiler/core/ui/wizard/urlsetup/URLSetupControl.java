@@ -20,9 +20,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.talend.cwm.dburl.SupportDBUrlStore;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
-import org.talend.dataprofiler.core.model.dburl.SupportDBUrlType;
 
 
 /**

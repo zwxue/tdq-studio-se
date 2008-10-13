@@ -26,11 +26,11 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import orgomg.cwm.objectmodel.core.Expression;
 
 import com.csvreader.CsvWriter;

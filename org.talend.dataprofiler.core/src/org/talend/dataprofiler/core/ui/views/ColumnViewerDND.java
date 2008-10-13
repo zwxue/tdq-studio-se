@@ -33,7 +33,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
@@ -41,6 +40,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment

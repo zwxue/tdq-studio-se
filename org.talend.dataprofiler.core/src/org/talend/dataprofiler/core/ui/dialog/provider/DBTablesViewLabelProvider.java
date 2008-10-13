@@ -80,7 +80,7 @@ public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
         }
 
         String text = super.getText(element);
-        if (text.endsWith(PluginConstant.PRV_SUFFIX)) {
+        if (text.endsWith(org.talend.dq.PluginConstant.PRV_SUFFIX)) {
             IFile file = (IFile) element;
             TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(file);
             String decorateText = PluginConstant.EMPTY_STRING;

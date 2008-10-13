@@ -24,9 +24,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.cwm.dburl.SupportDBUrlStore;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
-import org.talend.dataprofiler.core.model.dburl.SupportDBUrlType;
 
 /**
  * 
@@ -90,7 +90,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
         final Text parameterText = new Text(parent, SWT.BORDER | SWT.SINGLE);
         parameterText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         if (dbType.getParamSeprator() != null) {
-            parameterText.setText(PluginConstant.DEFAULT_PARAMETERS);
+            parameterText.setText(org.talend.dq.PluginConstant.DEFAULT_PARAMETERS);
         } else {
             parameterText.setText(PluginConstant.EMPTY_STRING);
         }

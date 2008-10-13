@@ -29,10 +29,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.cwm.dburl.SupportDBUrlStore;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
-import org.talend.dataprofiler.core.model.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControlFactory;
@@ -178,7 +178,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
             userid = tempUserid;
             username.setText(userid);
         }
-        String tempPassword = connectionParam.getParameters().getProperty(PluginConstant.PASSWORD_PROPERTY);
+        String tempPassword = connectionParam.getParameters().getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
         if (tempPassword != null) {
             password = tempPassword;
             passwordText.setText(password);

@@ -39,14 +39,13 @@ import org.eclipse.ui.part.ResourceTransfer;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.factory.ModelElementFileFactory;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 
@@ -211,7 +210,8 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                     } catch (CoreException e) {
                         e.printStackTrace();
                     }
-                } else if (res.getName().endsWith(PluginConstant.ANA_SUFFIX) && (targetRes.getType() == IResource.FILE)) {
+                } else if (res.getName().endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)
+                        && (targetRes.getType() == IResource.FILE)) {
                     // if (targetRes instanceof IFile) {
                     IFile tfile = (IFile) targetRes;
                     if (tfile.getFileExtension().equals(FactoriesUtil.REP)) {

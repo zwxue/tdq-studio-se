@@ -18,7 +18,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
@@ -90,7 +89,7 @@ public class AnalysisEditor extends CommonFormEditor {
     protected void translateInput(IEditorInput input) {
         FileEditorInput fileEditorInput = (FileEditorInput) input;
         String name = fileEditorInput.getFile().getName();
-        if (name.endsWith(PluginConstant.ANA_SUFFIX)) {
+        if (name.endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)) {
             Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(fileEditorInput.getFile());
             analysisType = findAnalysis.getParameters().getAnalysisType();
         }

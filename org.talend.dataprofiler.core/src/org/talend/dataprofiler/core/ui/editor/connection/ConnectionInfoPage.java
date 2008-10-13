@@ -132,7 +132,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         String loginValue = TaggedValueHelper.getValue(PluginConstant.USER_PROPERTY, connection);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
 
-        String passwordValue = TaggedValueHelper.getValue(PluginConstant.PASSWORD_PROPERTY, connection);
+        String passwordValue = TaggedValueHelper.getValue(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, connection);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
@@ -160,7 +160,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private ReturnCode checkDBConnection() {
         Properties props = new Properties();
         props.put(PluginConstant.USER_PROPERTY, loginText.getText());
-        props.put(PluginConstant.PASSWORD_PROPERTY, passwordText.getText());
+        props.put(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, passwordText.getText());
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
         ReturnCode returnCode = ConnectionService.checkConnection(this.urlText.getText(), connection.getDriverClassName(), props);
         return returnCode;
@@ -176,7 +176,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
         TaggedValueHelper.setTaggedValue(connection, PluginConstant.USER_PROPERTY, loginText.getText());
-        TaggedValueHelper.setTaggedValue(connection, PluginConstant.PASSWORD_PROPERTY, passwordText.getText());
+        TaggedValueHelper.setTaggedValue(connection, org.talend.dq.PluginConstant.PASSWORD_PROPERTY, passwordText.getText());
     }
 
     @Override

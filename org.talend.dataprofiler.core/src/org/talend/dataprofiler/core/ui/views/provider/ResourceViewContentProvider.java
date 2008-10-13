@@ -22,11 +22,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 
 /**
  * DOC rli class global comment. Detailled comment

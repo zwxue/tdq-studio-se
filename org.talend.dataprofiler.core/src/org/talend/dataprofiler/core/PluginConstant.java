@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 
 /**
@@ -34,8 +33,6 @@ public final class PluginConstant {
 
     public static final int DEFAULT_INT_VALUE = 0;
 
-    public static final String DEFAULT_PARAMETERS = "noDatetimeStringSync=true";
-
     public static final String SPACE_STRING = " ";
 
     public static final String PROJECTCREATED_FLAG = "PROJECTCREATED_FLAG";
@@ -45,14 +42,6 @@ public final class PluginConstant {
     public static final String CONNECTION_DBNAME_PROPERTY = "CONNECTION_DBNAME_PROPERTY";
 
     public static final String HTML_SUFFIX = "html";
-
-    public static final String PRV_SUFFIX = "." + FactoriesUtil.PROV;
-
-    public static final String ANA_SUFFIX = "." + FactoriesUtil.ANA;
-
-    public static final String REP_SUFFIX = "." + FactoriesUtil.REP;
-
-    public static final String PATTERN_SUFFIX = "*.pattern";
 
     public static final String SQL_SUFFIX = "*.sql";
 
@@ -81,14 +70,6 @@ public final class PluginConstant {
     public static final String FOLDER_PATTERN = "^[a-zA-Z]+[a-zA-Z0-9\\_]*$"; //$NON-NLS-1$
 
     public static final String USER_PROPERTY = "user";
-
-    public static final String PASSWORD_PROPERTY = "password";
-
-    public static final String HOSTNAME_PROPERTY = "hostname";
-
-    public static final String PORT_PROPERTY = "port";
-
-    public static final String DBTYPE_PROPERTY = "dbtype";
 
     public static final String LESS_OR_EQUAL = (Character.isDefined('\u2264')) ? "\u2264" : "<=";
 

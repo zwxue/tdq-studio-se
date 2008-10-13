@@ -20,9 +20,9 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.talend.dataprofiler.core.factory.ModelElementFileFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dq.factory.ModelElementFileFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

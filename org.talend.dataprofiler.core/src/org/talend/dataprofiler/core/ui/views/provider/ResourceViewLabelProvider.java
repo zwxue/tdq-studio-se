@@ -33,7 +33,6 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.analysis.Analysis;
@@ -41,6 +40,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.utils.DateFormatUtils;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -109,7 +109,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     }
 
     protected String decorateText(String input, Object element) {
-        if (input.endsWith(PluginConstant.PRV_SUFFIX)) {
+        if (input.endsWith(org.talend.dq.PluginConstant.PRV_SUFFIX)) {
             IFile fileElement = (IFile) element;
             TypedReturnCode<TdDataProvider> rc = PrvResourceFileHelper.getInstance().findProvider(fileElement);
             String decorateText = PluginConstant.EMPTY_STRING;
@@ -119,7 +119,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 log.warn(rc.getMessage());
             }
             return decorateText;
-        } else if (input.endsWith(PluginConstant.ANA_SUFFIX)) {
+        } else if (input.endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)) {
             IFile fileElement = (IFile) element;
             if (log.isDebugEnabled()) {
                 log.debug("Loading file " + (fileElement).getLocation());
@@ -135,7 +135,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             IFile file = (IFile) element;
             Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
             return pattern.getName();
-        } else if (input.endsWith(PluginConstant.REP_SUFFIX)) {
+        } else if (input.endsWith(org.talend.dq.PluginConstant.REP_SUFFIX)) {
             IFile fileElement = (IFile) element;
             TdReport findReport = RepResourceFileHelper.getInstance().findReport(fileElement);
             return findReport.getName();

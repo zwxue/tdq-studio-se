@@ -70,7 +70,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
@@ -93,6 +92,7 @@ import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**

@@ -20,7 +20,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
@@ -46,7 +45,7 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof IFile) {
             IFile file = (IFile) parentElement;
-            if (file.getName().endsWith(PluginConstant.ANA_SUFFIX)) {
+            if (file.getName().endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)) {
                 Analysis analysis = (Analysis) AnaResourceFileHelper.getInstance().findAnalysis(file);
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 AnaElementFolderNode folderNode = new AnaElementFolderNode(analysedElements);

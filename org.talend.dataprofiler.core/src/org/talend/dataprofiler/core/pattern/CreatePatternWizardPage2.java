@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataprofiler.core.model.dburl.SupportDBUrlStore;
+import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
