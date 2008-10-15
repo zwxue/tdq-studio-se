@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.cwm.management.api;
+package org.talend.dq.dbms;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
@@ -45,6 +45,11 @@ import Zql.ZqlParser;
  * @author scorreia
  * 
  * This class handle DBMS specific SQL terms and functions.
+ * 
+ * TODO scorreia split this class into specific subclasses for each DBMS and let the factory choose the appropriate
+ * instance.
+ * 
+ * TODO use SupportDBUrlType
  */
 public class DbmsLanguage {
 
@@ -55,29 +60,29 @@ public class DbmsLanguage {
 
     // --- add here other supported systems (always in uppercase) // DBMS_SUPPORT
 
-    private static final String ORACLE = "ORACLE";
+    static final String ORACLE = "ORACLE";
 
-    private static final String MYSQL = "MYSQL";
+    static final String MYSQL = "MYSQL";
 
-    private static final String POSTGRESQL = "POSTGRESQL";
+    static final String POSTGRESQL = "POSTGRESQL";
 
-    private static final String MSSQL = "MICROSOFT SQL SERVER";
+    static final String MSSQL = "MICROSOFT SQL SERVER";
 
-    private static final String DB2 = "DB2";
+    static final String DB2 = "DB2";
 
-    private static final String SYBASE_ASE = "ADAPTIVE SERVER ENTERPRISE";
+    static final String SYBASE_ASE = "ADAPTIVE SERVER ENTERPRISE";
 
     /**
      * Ansi SQL.
      */
-    private static final String SQL = "SQL";
+    static final String SQL = "SQL";
 
     private static final String DOT = ".";
 
     /**
      * End of Statement: ";".
      */
-    private static final String EOS = ";";
+    protected static final String EOS = ";";
 
     private static final String LIMIT_REGEXP = ".*(LIMIT){1}\\p{Blank}+\\p{Digit}+,?\\p{Digit}?.*";
 
@@ -191,12 +196,6 @@ public class DbmsLanguage {
     public String notEqual() {
         // --- add the DBMS that do not allow <> operator
 
-        // "!=" seem to be more performant on Oracle than "<>". See
-        // http://www.freelists.org/archives/oracle-l/09-2006/msg01005.html
-        if (is(ORACLE)) {
-            return surroundWithSpaces(SqlPredicate.NOT_EQUAL2.getLiteral());
-        }
-
         // ANSI SQL, MySQL,
         return surroundWithSpaces(SqlPredicate.NOT_EQUAL.getLiteral());
 
@@ -243,7 +242,7 @@ public class DbmsLanguage {
     public boolean addDatabaseFunction(String functionName, Integer nbParameter) {
         return this.dbmsFunctions.put(functionName, nbParameter) != null;
     }
-    
+
     /**
      * Method "getDefaultLanguage".
      * 
@@ -253,24 +252,9 @@ public class DbmsLanguage {
         return SQL;
     }
 
-    // TODO scorreia move this method in a utility class
     public String toQualifiedName(String catalog, String schema, String table) {
-        if (is(MSSQL)) {
-            schema = quote("dbo");
-            // Bug fixed: 5118. ZQL parser does not understand statement like
-            // select count(*) from Talend.dbo.departement
-            // hence remove catalog and try statement like
-            // select count(*) from dbo.departement
-            // catalog = "dbo";
-        }
-        if (is(SYBASE_ASE)) {
-            schema = quote("dbo");
-            // Bug fixed: 5118. ZQL parser does not understand statement with full qualified name
-            // catalog = "dbo";
-        }
-
         StringBuffer qualName = new StringBuffer();
-        if (catalog != null && catalog.length() > 0 && !is(POSTGRESQL)) {
+        if (catalog != null && catalog.length() > 0) {
             qualName.append(catalog);
             qualName.append(DOT);
         }
@@ -324,18 +308,15 @@ public class DbmsLanguage {
     }
 
     /**
-     * DOC scorreia Comment method "replaceUnsupportedQuotes".
+     * Method "replaceUnsupportedQuotes".
      * 
-     * @param safeZqlString
-     * @return
+     * Override this method when the identifier quotes are not supported by the ZQL Parser (e.g. MySQL `).
+     * 
+     * @param sqlString
+     * @return the input without the quotes
      */
-    private String replaceUnsupportedQuotes(String safeZqlString) {
-        // ZQL does not support MySQL identifier quote string: `
-        if (is(MYSQL)) {
-            return safeZqlString.replace("`", "");
-        }
-        // for other DB, it's ok
-        return safeZqlString;
+    protected String replaceUnsupportedQuotes(String sqlString) {
+        return sqlString;
     }
 
     /**
@@ -404,37 +385,14 @@ public class DbmsLanguage {
         return fquery;
 
     }
-    
+
     /**
      * Method "getPatternFinderDefaultFunction".
      * 
      * @param expression a column name or a string
-     * @return a default SQL expression which can be used as pattern finder
+     * @return a default SQL expression which can be used as pattern finder or null
      */
     public String getPatternFinderDefaultFunction(String expression) {
-        if (is(MYSQL) || is(MSSQL)) {            
-            return StringUtils.repeat("REPLACE(", 59) 
-                    + expression
-                    + ",'B','A'),'C','A'),'D','A'),'E','A'),'F','A'),'G','A'),'H','A')"
-                    + ",'I','A'),'J','A'),'K','A'),'L','A'),'M','A'),'N','A'),'O','A')"
-                    + ",'P','A'),'Q','A'),'R','A'),'S','A'),'T','A'),'U','A'),'V','A')"
-                    + ",'W','A'),'X','A'),'Y','A'),'Z','A'),'b','a'),'c','a'),'d','a')"
-                    + ",'e','a'),'f','a'),'g','a'),'h','a'),'i','a'),'j','a'),'k','a')"
-                    + ",'l','a'),'m','a'),'n','a'),'o','a'),'p','a'),'q','a'),'r','a')"
-                    + ",'s','a'),'t','a'),'u','a'),'v','a'),'w','a'),'x','a'),'y','a')"
-                    + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9')";
-        }
-        if (is(DB2)) {
-            return "TRANSLATE(CHAR(" + expression + ") ,VARCHAR(REPEAT('9',10) || REPEAT('A',25)||REPEAT('a',25)), "
-                    + " '1234567890BCDEFGHIJKLMNOPQRSTUVWXYZbcdefghijklmnopqrstuvwxyz')"; // cannot put accents
-        }
-        if (is(ORACLE) || is(POSTGRESQL)) {
-            return "TRANSLATE("
-                    + expression
-                    + " ,'1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZÂÊÎÔÛÄËÏÖÜabcdefghijklmnopqrstuvwxyzçâêîôûéèùïöü' "
-                    + ",RPAD('9',10,'9') || RPAD('A',36,'A')||RPAD('a',38,'a'))";
-        }
-       
         return null;
     }
 
@@ -452,14 +410,6 @@ public class DbmsLanguage {
     }
 
     public String replaceNullsWithString(String colName, String replacement) {
-        if (is(MYSQL)) {
-            return " IFNULL(" + colName + "," + replacement + ")";
-        }
-
-        if (is(ORACLE)) {
-            return " NVL(" + colName + "," + replacement + ")";
-        }
-        // default
         return " CASE WHEN " + colName + isNull() + " THEN " + replacement + " ELSE " + colName + " END ";
     }
 
@@ -470,13 +420,6 @@ public class DbmsLanguage {
      * @return the expression saying that the given column is not blank.
      */
     public String isNotBlank(String colName) {
-        if (is(MSSQL)) {
-            return " LTRIM(RTRIM(" + colName + ")) " + notEqual() + " '' ";
-        }
-        // oracle does not currently distinguish between blank and null
-        if (is(ORACLE)) {
-            return " TRIM(" + colName + ") " + isNotNull();
-        }
         // default is OK for MySQL
         return " TRIM(" + colName + ") " + notEqual() + " '' ";
     }
@@ -519,15 +462,6 @@ public class DbmsLanguage {
      * @return the n first row of the given query
      */
     public String getTopNQuery(String query, int n) {
-        if (is(ORACLE)) {
-            return "SELECT * FROM (" + query + ") WHERE ROWNUM <= " + n;
-        }
-        if (is(MYSQL) || is(POSTGRESQL)) {
-            return query + " LIMIT " + n;
-        }
-        if (is(DB2)) {
-            return query + " FETCH FIRST " + n + " ROWS ONLY ";
-        }
         // default: I don't know, simply return the query
         return query; // FIXME find how to get top n in generic SQL or maybe return null
     }
@@ -540,17 +474,11 @@ public class DbmsLanguage {
      * @return the select count(*) from aliased subquery
      */
     public String countRowInSubquery(String subquery, String alias) {
-        if (is(ORACLE)) { // does not support "AS"
-            return " SELECT COUNT(*) FROM (" + subquery + ") " + alias;
-        }
         // ANSI SQL, MySQL
         return " SELECT COUNT(*) FROM (" + subquery + ") AS " + alias;
     }
 
     public String sumRowInSubquery(String colToSum, String subquery, String alias) {
-        if (is(ORACLE)) { // does not support "AS"
-            return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") " + alias;
-        }
         // ANSI SQL, MySQL
         return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") AS " + alias;
     }
@@ -571,38 +499,7 @@ public class DbmsLanguage {
         this.dbQuoteString = dbQuoteString;
     }
 
-    private String extract(DateGrain dateGrain, String colName) {
-        // DBMS_SUPPORT how to extract date parts
-        if (is(MYSQL) || is(DB2)) {
-            return dateGrain.getName() + surroundWith('(', colName, ')');
-        }
-
-        if (is(ORACLE)) {
-            String toNumberToChar = "TO_NUMBER(TO_CHAR(";
-            switch (dateGrain.getValue()) {
-            case DateGrain.DAY_VALUE:
-                return toNumberToChar + colName + ", 'DD'))";
-            case DateGrain.WEEK_VALUE:
-                return toNumberToChar + colName + ", 'IW'))";
-            case DateGrain.MONTH_VALUE:
-                return toNumberToChar + colName + ",'MM'))";
-            case DateGrain.QUARTER_VALUE:
-                return toNumberToChar + colName + ",'Q'))";
-            case DateGrain.YEAR_VALUE:
-                return toNumberToChar + colName + ", 'YYYY'))";
-            default:
-            }
-        }
-
-        if (is(MSSQL)) {
-            return "DATEPART(" + dateGrain.getName() + " , " + colName + ") ";
-        }
-
-        // TODO sybase, DB2, Postgresql
-        if (is(POSTGRESQL)) {
-            return " CAST( EXTRACT(" + dateGrain + from() + colName + ") AS INTEGER )";
-        }
-
+    protected String extract(DateGrain dateGrain, String colName) {
         // ANSI SQL, MySQL, Oracle
         return " EXTRACT(" + dateGrain + from() + colName + ") ";
     }
@@ -648,8 +545,7 @@ public class DbmsLanguage {
      * @return true if this DBMS is given string
      */
     private boolean is(String dbName) {
-        // DBMS_SUPPORT check all caller methods to set database specific code.
-        return compareDbmsLanguage(dbName, this.dbmsName);
+        return DbmsLanguageFactory.compareDbmsLanguage(dbName, this.dbmsName);
     }
 
     /**
@@ -659,7 +555,7 @@ public class DbmsLanguage {
      * @param dbms
      * @return the initialized map of functions with their number of parameters.
      */
-    private Map<String, Integer> initDbmsFunctions(String dbms) {
+    protected Map<String, Integer> initDbmsFunctions(String dbms) {
         Map<String, Integer> functions = new HashMap<String, Integer>();
 
         // --- functions common to all databases // DBMS_SUPPORT
@@ -672,109 +568,19 @@ public class DbmsLanguage {
         // --- set here functions specific to some databases // DBMS_SUPPORT
         // TODO as the user can write any function in the data filter, we must write all possible functions for all
         // systems.
-        if (is(SQL)) {
-            functions.put("TRIM", 1);
-            functions.put("CHAR_LENGTH", 1);
-        }
-
-        if (is(MYSQL)) {
-            functions.put("TRIM", 1);
-            functions.put("RTRIM", 1);
-            functions.put("LTRIM", 1);
-            functions.put("LCASE", 1);
-            functions.put("UCASE", 1);
-            functions.put("REPLACE", 3);
-            functions.put("CHAR_LENGTH", 1);
-            functions.put("CHARACTER_LENGTH", 1);
-            functions.put("BIT_LENGTH", 1);
-            functions.put("IFNULL", 2);
-            functions.put("LENGTH", 1);
-            functions.put("SOUNDEX", 1);
-            functions.put("SPACE", 1);
-            functions.put("SUBSTRING", 2);
-            functions.put(" SUBSTRING", 3); // whitespace added
-            functions.put("LEFT", 2);
-            functions.put("OCTET_LENGTH", 1);
-            functions.put("CONCAT", 2);
-            for (DateGrain grain : DateGrain.values()) {
-                functions.put(grain.getName(), 1);
-            }
-
-        }
-
-        if (is(ORACLE)) {
-            functions.put("TRIM", 1);
-            functions.put("LENGTH", 1);
-            functions.put("LENGTHB", 1);
-            functions.put("TO_CHAR", 2);
-            functions.put("TO_NUMBER", 1);
-            functions.put("NVL", 2);
-            functions.put("CEIL", 1);
-            functions.put("FLOOR", 1);
-            functions.put("ROUND", 2);
-            functions.put("TRUNC", 2);
-            functions.put("SIGN", 1);
-            functions.put("CONVERT", 3);
-            functions.put("REPLACE", 2);
-            functions.put("CONCAT", 2);
-            functions.put("PERCENTILE_DISC", 1);
-            functions.put("PERCENTILE_CONT", 1);
-            functions.put("REPLACE", 3);
-            functions.put("RPAD", 3);
-            functions.put("TRANSLATE", 3);
-        }
-
-        if (is(POSTGRESQL)) {
-            functions.put("TRIM", 1);
-            functions.put("LTRIM", 1);
-            functions.put("RTRIM", 1);
-            functions.put("LENGTH", 1);
-            functions.put("CHAR_LENGTH", 1);
-            functions.put("CHARACTER_LENGTH", 1);
-            functions.put("OCTET_LENGTH", 1);
-            functions.put("CEIL", 1);
-            functions.put("FLOOR", 1);
-            functions.put("ROUND", 1);
-            functions.put("ROUND", 2);
-            functions.put("SIGN", 1);
-            functions.put("SQRT", 1);
-            functions.put("BIT_LENGTH", 1);
-            functions.put("DECODE", 2);
-            functions.put("RPAD", 3);
-            functions.put("TRANSLATE", 3);
-        }
-
-        if (is(MSSQL)) {
-            functions.put("LTRIM", 1);
-            functions.put("RTRIM", 1);
-            // Note: datalength gives the length of any object, but in the case of unicode, this length should be
-            // divided by 2 in order to get the actual number of characters.
-            // Do not use "LEN" since it right-trims the strings.
-            functions.put("DATALENGTH", 1);
-            functions.put("REPLACE", 3);
-        }
-
-        if (is(DB2)) {
-            functions.put("TRIM", 1);
-            functions.put("CHAR", 1);
-            functions.put("VARCHAR", 1);
-            functions.put("LENGTH", 1);
-            functions.put("REPEAT", 2);
-            functions.put("TRANSLATE", 3);
-        }
-
-        if (is(SYBASE_ASE)) {
-            // TODO
-        }
+        // if (is(SQL)) {
+        // functions.put("TRIM", 1);
+        // functions.put("CHAR_LENGTH", 1);
+        // }
 
         return functions;
     }
 
-    private String surroundWithSpaces(String toSurround) {
+    protected String surroundWithSpaces(String toSurround) {
         return surroundWith(' ', toSurround, ' ');
     }
 
-    private String surroundWith(char left, String toSurround, char right) {
+    protected String surroundWith(char left, String toSurround, char right) {
         return left + toSurround + right;
     }
 
@@ -901,7 +707,7 @@ public class DbmsLanguage {
         // else try with default language (ANSI SQL)
         log.warn("The indicator SQL expression has not been found for the database type " + this.dbmsName + " for the indicator"
                 + indicatorDefinition.getName()
-                        + ". This is not necessarily a problem since the default SQL expression will be used. "
+                + ". This is not necessarily a problem since the default SQL expression will be used. "
                 + "Nevertheless, if an SQL error during the analysis, this could be the cause.");
         if (log.isInfoEnabled()) {
             log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
@@ -941,23 +747,11 @@ public class DbmsLanguage {
     private static Expression getSqlExpression(IndicatorDefinition indicatorDefinition, String language) {
         EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
         for (Expression sqlGenExpr : sqlGenericExpression) {
-            if (compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
+            if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
                 return sqlGenExpr; // language found
             }
         }
         return null;
-    }
-
-    private static boolean compareDbmsLanguage(String lang1, String lang2) {
-        if (lang1 == null || lang2 == null) {
-            return false;
-        }
-        // MOD 2008-08-04 scorreia: for DB2 database, dbName can be "DB2/NT" or "DB2/6000" or "DB2"...
-        if (lang1.startsWith(DB2)) {
-            return StringUtils.upperCase(lang1).startsWith(StringUtils.upperCase(lang2))
-                    || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
-        }
-        return StringUtils.equalsIgnoreCase(lang1, lang2);
     }
 
     /**
@@ -1054,15 +848,11 @@ public class DbmsLanguage {
         if (regexLikeExpression == null) {
             return null;
         }
-        if (is(MYSQL) || is(POSTGRESQL)) {
-            return "SELECT " + regexLikeExpression + " AS OK" + EOS;
-        }
+        return getSelectRegexp(regexLikeExpression);
+    }
 
-        if (is(ORACLE)) {
-            return "SELECT " + regexLikeExpression + EOS;
-        }
-
-        return null;
+    protected String getSelectRegexp(String regexLikeExpression) {
+        return "SELECT " + regexLikeExpression + EOS;
     }
 
     /**
@@ -1073,28 +863,10 @@ public class DbmsLanguage {
      * @return the regular expression according to the DBMS syntax or null if not supported.
      */
     public String regexLike(String element, String regex) {
-        if (is(MYSQL)) {
-            return surroundWithSpaces(element + " REGEXP " + regex);
-        }
-        if (is(ORACLE)) {
-            return surroundWithSpaces("REGEXP_LIKE(" + element + " , " + regex + " )");
-        }
-        if (is(POSTGRESQL)) {
-            return surroundWithSpaces(element + " ~ " + regex);
-        }
         return null;
     }
 
     public String regexNotLike(String element, String regex) {
-        if (is(MYSQL)) {
-            return surroundWithSpaces(element + " NOT REGEXP " + regex);
-        }
-        if (is(ORACLE)) {
-            return surroundWithSpaces("NOT REGEXP_LIKE(" + element + " , " + regex + " )");
-        }
-        if (is(POSTGRESQL)) {
-            return surroundWithSpaces(element + " !~ " + regex);
-        }
         return null;
     }
 
@@ -1105,15 +877,6 @@ public class DbmsLanguage {
      * @return hard coded quote identifier string.
      */
     public String getQuoteIdentifier() {
-        if (is(MYSQL)) {
-            return "`";
-        }
-        if (is(ORACLE)) {
-            return "\"";
-        }
-        if (is(POSTGRESQL)) {
-            return "\"";
-        }
         return "";
     }
 
@@ -1123,10 +886,6 @@ public class DbmsLanguage {
      * @return true when the DB supports aliases in group by clause
      */
     public boolean supportAliasesInGroupBy() {
-        // DBMS_SUPPORT
-        if (is(MYSQL)) {
-            return true;
-        }
         // else Oracle, MSSQL, DB2, Postgresql
         return false;
     }
@@ -1138,9 +897,6 @@ public class DbmsLanguage {
      */
     public boolean supportNonIntegerConstantInGroupBy() {
         // DBMS_SUPPORT
-        if (is(POSTGRESQL) || is(MSSQL)) {
-            return false;
-        }
         // else MySQL, Oracle
         return true;
     }
@@ -1152,12 +908,6 @@ public class DbmsLanguage {
      * @return the select statement to execute to get the comment on the table, or null
      */
     public String getSelectRemarkOnTable(String tableName) {
-        if (is(ORACLE)) {
-            return "SELECT COMMENTS FROM USER_TAB_COMMENTS WHERE TABLE_NAME='" + tableName + "'";
-        }
-        if (is(MYSQL)) {
-            return "SELECT TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_NAME='" + tableName + "'";
-        }
         return null;
     }
 
@@ -1168,9 +918,6 @@ public class DbmsLanguage {
      * @return the select statement to execute to get the comment on the column, or null
      */
     public String getSelectRemarkOnColumn(String columnName) {
-        if (is(ORACLE)) {
-            return "SELECT COMMENTS FROM USER_COL_COMMENTS WHERE COLUMN_NAME='" + columnName + "'";
-        }
         return null;
     }
 
@@ -1187,7 +934,6 @@ public class DbmsLanguage {
             query = indicator.getInstantiatedExpressions(this.getDefaultLanguage());
         }
         return query;
-
     }
 
 }

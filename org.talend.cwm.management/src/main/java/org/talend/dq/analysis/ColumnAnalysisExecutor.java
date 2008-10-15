@@ -50,7 +50,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
 
-    protected Map<ModelElement, orgomg.cwm.objectmodel.core.Package> schemata = new HashMap<ModelElement, orgomg.cwm.objectmodel.core.Package>();
+    protected Map<ModelElement, Package> schemata = new HashMap<ModelElement, Package>();
 
     protected boolean isAccessWith(TdDataProvider dp) {
         if (dataprovider == null) {

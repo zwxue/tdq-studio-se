@@ -13,12 +13,13 @@
 package org.talend.dq.analysis.explore;
 
 import org.apache.log4j.Logger;
-import org.talend.cwm.management.api.DbmsLanguage;
-import org.talend.cwm.management.api.DbmsLanguageFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 

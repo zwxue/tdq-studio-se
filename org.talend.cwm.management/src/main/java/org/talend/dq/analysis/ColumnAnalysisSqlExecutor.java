@@ -34,8 +34,6 @@ import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.api.DbmsLanguage;
-import org.talend.cwm.management.api.DbmsLanguageFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -55,6 +53,8 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -79,11 +79,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     private static Logger log = Logger.getLogger(ColumnAnalysisSqlExecutor.class);
 
-    private static final String DEFAULT_QUOTE_STRING = "";
-
     private DbmsLanguage dbmsLanguage;
-
-    private String dbQuote;
 
     private Analysis cachedAnalysis;
 

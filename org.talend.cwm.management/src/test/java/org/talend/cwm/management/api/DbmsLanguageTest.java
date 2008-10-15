@@ -22,7 +22,7 @@ import org.junit.Test;
 public class DbmsLanguageTest {
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#DbmsLanguage()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#DbmsLanguage()}.
      */
     @Test
     public void testDbmsLanguage() {
@@ -30,7 +30,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#DbmsLanguage(java.lang.String)}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#DbmsLanguage(java.lang.String)}.
      */
     @Test
     public void testDbmsLanguageString() {
@@ -38,7 +38,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#DbmsLanguage(java.lang.String, int, int)}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#DbmsLanguage(java.lang.String, int, int)}.
      */
     @Test
     public void testDbmsLanguageStringIntInt() {
@@ -46,7 +46,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#and()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#and()}.
      */
     @Test
     public void testAnd() {
@@ -54,7 +54,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#or()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#or()}.
      */
     @Test
     public void testOr() {
@@ -62,7 +62,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#between()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#between()}.
      */
     @Test
     public void testBetween() {
@@ -70,7 +70,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#notEqual()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#notEqual()}.
      */
     @Test
     public void testNotEqual() {
@@ -78,7 +78,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#eos()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#eos()}.
      */
     @Test
     public void testEos() {
@@ -86,7 +86,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#getDbmsName()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#getDbmsName()}.
      */
     @Test
     public void testGetDbmsName() {
@@ -94,7 +94,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#getDefaultLanguage()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#getDefaultLanguage()}.
      */
     @Test
     public void testGetDefaultLanguage() {
@@ -103,7 +103,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for
-     * {@link org.talend.cwm.management.api.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String, java.lang.String)}.
+     * {@link org.talend.dq.dbms.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String, java.lang.String)}.
      */
     @Test
     public void testToQualifiedName() {
@@ -113,7 +113,7 @@ public class DbmsLanguageTest {
     static final String LIMIT = "LIMIT";
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#parseQuery(java.lang.String)}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#parseQuery(java.lang.String)}.
      */
     @Test
     public void testParseQuery() {
@@ -127,7 +127,7 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.management.api.DbmsLanguage#getZqlParser()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#getZqlParser()}.
      */
     @Test
     public void testGetZqlParser() {

@@ -10,14 +10,16 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.cwm.management.api;
+package org.talend.dq.dbms;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -53,11 +55,45 @@ public final class DbmsLanguageFactory {
 
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
         if (softwareSystem != null) {
-            dbmsLanguage = new DbmsLanguage(softwareSystem.getSubtype());
+            final String dbmsSubtype = softwareSystem.getSubtype();
+            if (log.isInfoEnabled()) {
+                log.info("Software system subtype (Database type): " + dbmsSubtype);
+            }
+            if (StringUtils.isNotBlank(dbmsSubtype)) {
+                dbmsLanguage = getDbmsLanguage(dbmsSubtype);
+            }
         }
         String identifierQuoteString = DataProviderHelper.getIdentifierQuoteString(dataprovider);
         dbmsLanguage.setDbQuoteString(identifierQuoteString);
         return dbmsLanguage;
+    }
+
+    /**
+     * DOC scorreia Comment method "getDbmsLanguage".
+     * 
+     * @param dbmsSubtype
+     * @return
+     */
+    private static DbmsLanguage getDbmsLanguage(String dbmsSubtype) {
+        if (isMySQL(dbmsSubtype)) {
+            return new MySQLDbmsLanguage();
+        }
+        if (isOracle(dbmsSubtype)) {
+            return new OracleDbmsLanguage();
+        }
+        if (isDB2(dbmsSubtype)) {
+            return new DB2DbmsLanguage();
+        }
+        if (isMSSQL(dbmsSubtype)) {
+            return new MSSqlDbmsLanguage();
+        }
+        if (isPostgresql(dbmsSubtype)) {
+            return new PostgresqlDbmsLanguage();
+        }
+        if (isSybaseASE(dbmsSubtype)) {
+            return new SybaseASEDbmsLanguage();
+        }
+        return new DbmsLanguage();
     }
 
     /**
@@ -78,6 +114,44 @@ public final class DbmsLanguageFactory {
             log.warn("Exception when retrieving database informations:" + e + ". Creating a default DbmsLanguage.", e);
             return new DbmsLanguage();
         }
+    }
+    
+    private static boolean isMySQL(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.MYSQL, dbms);
+    }
+    
+    private static boolean isOracle(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.ORACLE, dbms);
+    }
 
+    private static boolean isPostgresql(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.POSTGRESQL, dbms);
+    }
+
+    private static boolean isMSSQL(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.MSSQL, dbms);
+    }
+
+    private static boolean isDB2(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.DB2, dbms);
+    }
+
+    private static boolean isSybaseASE(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.SYBASE_ASE, dbms);
+    }
+
+
+    // TODO add other types
+    
+    static boolean compareDbmsLanguage(String lang1, String lang2) {
+        if (lang1 == null || lang2 == null) {
+            return false;
+        }
+        // MOD 2008-08-04 scorreia: for DB2 database, dbName can be "DB2/NT" or "DB2/6000" or "DB2"...
+        if (lang1.startsWith(DbmsLanguage.DB2)) {
+            return StringUtils.upperCase(lang1).startsWith(StringUtils.upperCase(lang2))
+                    || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
+        }
+        return StringUtils.equalsIgnoreCase(lang1, lang2);
     }
 }
