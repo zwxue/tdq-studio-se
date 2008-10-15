@@ -49,14 +49,14 @@ public enum SupportDBUrlType {
                                     "oracle.jdbc.OracleDriver", //$NON-NLS-1$ 
                                     null,
                                     "Oracle"), //$NON-NLS-1$
-    MSSQLDEFAULTURL("SQL Server", //$NON-NLS-1$
+    MSSQLDEFAULTURL("Microsoft SQL Server", //$NON-NLS-1$
                     "localhost", //$NON-NLS-1$
                     "1433", //$NON-NLS-1$
                     "dbname", //$NON-NLS-1$
                     ";", //$NON-NLS-1$
                     "net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
                     null,
-                    "SQL Server"), //$NON-NLS-1$
+                    "Microsoft SQL Server"), //$NON-NLS-1$
     DB2DEFAULTURL("DB2", //$NON-NLS-1$
                   "localhost", //$NON-NLS-1$
                   "50000", //$NON-NLS-1$
@@ -121,6 +121,18 @@ public enum SupportDBUrlType {
 
     private final String language;
 
+    /**
+     * SupportDBUrlType constructor.
+     * 
+     * @param dbKey the key identifying the connection string in dburl.properties file
+     * @param hostName the hostname
+     * @param port the port
+     * @param dbName the database name
+     * @param paramSeprator the seperator of parameters
+     * @param dbDriver the driver
+     * @param datasource the data source
+     * @param language the specific language used by the database
+     */
     SupportDBUrlType(String dbKey, String hostName, String port, String dbName, String paramSeprator, String dbDriver,
             String datasource, String language) {
         this.dbKey = dbKey;
