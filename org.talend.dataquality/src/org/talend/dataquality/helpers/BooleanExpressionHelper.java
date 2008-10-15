@@ -70,15 +70,15 @@ public class BooleanExpressionHelper {
     }
 
     /**
-     * Mmethod "createRegularExpression".
+     * Method "createRegularExpression".
      * 
-     * @param string
+     * @param language
      * @param expression
      * @return
      */
-    public static RegularExpression createRegularExpression(String string, String expression) {
+    public static RegularExpression createRegularExpression(String language, String expression) {
         RegularExpression regexp = PatternFactory.eINSTANCE.createRegularExpression();
-        regexp.setExpression(createExpression(string, expression));
+        regexp.setExpression(createExpression(language, expression));
         return regexp;
     }
 }

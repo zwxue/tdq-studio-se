@@ -344,6 +344,20 @@ public class DomainHelper {
         return getPattern(dataFilters, DomainType.INDICATOR_EXPECTED_VALUE, PatternType.EXPECTED_VALUE);
     }
 
+    /**
+     * Method "createPattern".
+     * 
+     * @param language
+     * @param regexp
+     * @return a new pattern from the given regular expression
+     */
+    public static Pattern createPattern(String language, String regexp) {
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
+        pattern.getComponents().add(BooleanExpressionHelper.createRegularExpression(language, regexp));
+        return pattern;
+    }
+
+    
     private static String getPattern(final Collection<Domain> dataFilters, DomainType domainType, PatternType patternType) {
         if (dataFilters == null) {
             return null;
