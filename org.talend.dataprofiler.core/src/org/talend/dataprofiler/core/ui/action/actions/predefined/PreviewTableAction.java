@@ -28,8 +28,6 @@ import org.eclipse.ui.PartInitException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.management.api.DbmsLanguage;
-import org.talend.cwm.management.api.DbmsLanguageFactory;
 import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdTable;
@@ -37,6 +35,8 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 
