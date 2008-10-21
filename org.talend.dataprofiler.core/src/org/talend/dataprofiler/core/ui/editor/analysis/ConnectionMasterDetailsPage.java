@@ -360,10 +360,17 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         if (this.connectionAnalysis.getResults().getIndicators().size() > 0) {
             ConnectionIndicator conIndicator = (ConnectionIndicator) connectionAnalysis.getResults().getIndicators().get(0);
             indicatorList = conIndicator.getCatalogIndicators();
+            if (indicatorList.size() == 0) {
+                statisticalViewer.setInput(conIndicator.getSchemaIndicators());
+            } else {
+                List<SchemaIndicator> schemaIndicators = new ArrayList<SchemaIndicator>();
+                schemaIndicators.addAll(conIndicator.getSchemaIndicators());
+                schemaIndicators.addAll(indicatorList);
+                statisticalViewer.setInput(schemaIndicators);
+            }
         } else {
             indicatorList = new ArrayList<CatalogIndicator>();
         }
-        statisticalViewer.setInput(indicatorList);
         refreshSumSection();
     }
 
