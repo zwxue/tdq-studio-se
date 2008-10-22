@@ -42,7 +42,7 @@ public class PatternExplorer extends DataExplorer {
             throw new TalendException("No indicator exist in analysis " + analysis.getName());
         }
         String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
-        String columnName = indicator.getAnalyzedElement().getName();
+        String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
         String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString);
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
@@ -59,7 +59,8 @@ public class PatternExplorer extends DataExplorer {
             throw new TalendException("No indicator exist in analysis " + analysis.getName());
         }
         String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
-        String regexCmp = dbmsLanguage.regexLike(indicator.getAnalyzedElement().getName(), regexPatternString);
+        final String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
+        String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString);
         return getRowsStatement(regexCmp);
     }
 
