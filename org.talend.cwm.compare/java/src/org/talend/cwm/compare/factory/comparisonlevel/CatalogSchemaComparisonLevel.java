@@ -1,0 +1,201 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2007 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.cwm.compare.factory.comparisonlevel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.service.DiffService;
+import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.EMFSharedResources;
+import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.exception.TalendException;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.PackageHelper;
+import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdSchema;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
+
+/**
+ * DOC rli class global comment. Detailled comment
+ */
+public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
+
+    public CatalogSchemaComparisonLevel(Object selectedObj) {
+        super(selectedObj);
+    }
+
+    @Override
+    protected TdDataProvider findDataProvider() {
+        TdDataProvider provider = DataProviderHelper.getTdDataProvider((Package) selectedObj);
+        return provider;
+    }
+
+    @Override
+    protected boolean compareWithReloadObject() throws ReloadCompareException {
+
+        // add option for ignoring some elements
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        MatchModel match = null;
+        try {
+            match = MatchService.doContentMatch((Package) selectedObj, getSavedReloadObject(), options);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+        final DiffModel diff = DiffService.doDiff(match, false);
+        EList<DiffElement> ownedElements = diff.getOwnedElements();
+        for (DiffElement de : ownedElements) {
+            handleSubDiffElement(de);
+        }
+        return true;
+    }
+
+    private void handleSubDiffElement(DiffElement de) {
+        if (de.getSubDiffElements().size() > 0) {
+            EList<DiffElement> subDiffElements = de.getSubDiffElements();
+            for (DiffElement difElement : subDiffElements) {
+                handleSubDiffElement(difElement);
+            }
+
+        } else {
+            handleDiffPackageElement(de);
+        }
+    }
+
+    @Override
+    protected void handleAddElement(AddModelElement addElement) {
+        EObject rightElement = addElement.getRightElement();
+        ColumnSet columnSetSwitch = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(rightElement);
+        if (columnSetSwitch != null) {
+            Package catalog = (Package) selectedObj;
+            PackageHelper.addColumnSet(columnSetSwitch, catalog);
+        }
+    }
+
+    @Override
+    protected void handleRemoveElement(RemoveModelElement removeElement) {
+        ColumnSet removeColumnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(removeElement.getLeftElement());
+        if (removeColumnSet == null) {
+            return;
+        }
+        popRemoveElementConfirm();
+        PackageHelper.removeColumnSet(removeColumnSet, (Package) selectedObj);
+    }
+
+    @Override
+    protected EObject getSavedReloadObject() throws ReloadCompareException {
+        Package selectedPackage = (Package) selectedObj;
+        Package findMatchPackage = findMatchedPackage(selectedPackage, tempReloadProvider);
+        reloadElementOfPackage(findMatchPackage);
+        return findMatchPackage;
+    }
+
+    @Override
+    protected Resource getLeftResource() throws ReloadCompareException {
+        Package selectedPackage = (Package) selectedObj;
+        Package findMatchPackage = findMatchedPackage(selectedPackage, copyedDataProvider);
+        List<ColumnSet> columnSets = new ArrayList<ColumnSet>();
+        columnSets.addAll(PackageHelper.getTables(findMatchPackage));
+        columnSets.addAll(PackageHelper.getViews(findMatchPackage));
+        Resource leftResource = copyedDataProvider.eResource();
+
+        // ComparatorsFactory.sort(columnSets, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+        leftResource.getContents().clear();
+        for (ColumnSet columnSet : columnSets) {
+            this.clearSubNode(columnSet);
+            leftResource.getContents().add(columnSet);
+        }
+        // }
+        EMFSharedResources.getInstance().saveResource(leftResource);
+        return leftResource;
+    }
+
+    @Override
+    protected Resource getRightResource() throws ReloadCompareException {
+        Package selectedPackage = (Package) selectedObj;
+        Package toReloadObj = findMatchedPackage(selectedPackage, tempReloadProvider);
+        List<ColumnSet> columnSetList = reloadElementOfPackage(toReloadObj);
+        Resource rightResource = null;
+        rightResource = tempReloadProvider.eResource();
+        rightResource.getContents().clear();
+        for (ColumnSet columnset : columnSetList) {
+            this.clearSubNode(columnset);
+            rightResource.getContents().add(columnset);
+        }
+        EMFSharedResources.getInstance().saveResource(rightResource);
+        return rightResource;
+    }
+
+    /**
+     * DOC rli Comment method "reloadElementOfPackage".
+     * 
+     * @param toReloadObj
+     * @return
+     * @throws ReloadCompareException
+     */
+    private List<ColumnSet> reloadElementOfPackage(Package toReloadObj) throws ReloadCompareException {
+        List<ColumnSet> columnSetList = new ArrayList<ColumnSet>();
+        try {
+            TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(toReloadObj);
+            TdSchema schemaObj = SwitchHelpers.SCHEMA_SWITCH.doSwitch(toReloadObj);
+            if (catalogObj != null) {
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
+                CatalogHelper.addTables(tables, catalogObj);
+                columnSetList.addAll(tables);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
+                CatalogHelper.addViews(views, catalogObj);
+                columnSetList.addAll(views);
+            } else if (schemaObj != null) {
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, schemaObj, null, true);
+                SchemaHelper.addTables(tables, schemaObj);
+                columnSetList.addAll(tables);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, schemaObj, null, true);
+                SchemaHelper.addViews(views, schemaObj);
+                columnSetList.addAll(views);
+            } else {
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, (Schema) toReloadObj, null, true);
+                SchemaHelper.addTables(tables, (Schema) toReloadObj);
+                columnSetList.addAll(tables);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, (Schema) toReloadObj, null, true);
+                SchemaHelper.addViews(views, (Schema) toReloadObj);
+                columnSetList.addAll(views);
+            }
+        } catch (TalendException e1) {
+            throw new ReloadCompareException(e1);
+        }
+        return columnSetList;
+    }
+
+}

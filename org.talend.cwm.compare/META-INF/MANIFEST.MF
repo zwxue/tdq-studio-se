@@ -12,8 +12,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.match;bundle-version="0.8.0",
  org.apache.log4j;bundle-version="1.2.13",
  org.eclipse.core.resources;bundle-version="3.4.0",
- org.talend.dataprofiler.core
+ org.talend.dataprofiler.core,
+ org.talend.utils
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
-Export-Package: org.talend.cwm.compare
+Export-Package: org.talend.cwm.compare,
+ org.talend.cwm.compare.exception,
+ org.talend.cwm.compare.factory,
+ org.talend.cwm.compare.factory.comparisonlevel
