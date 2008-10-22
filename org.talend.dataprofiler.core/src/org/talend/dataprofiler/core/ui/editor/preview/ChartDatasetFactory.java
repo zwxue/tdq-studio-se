@@ -17,15 +17,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
+import org.jfree.data.xy.DefaultXYZDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.utils.collections.MultiMapHelper;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -155,6 +160,249 @@ public class ChartDatasetFactory {
         return dataset;
     }
 
+    /**
+     * DOC scorreia Comment method "createXYZDatasets".
+     * 
+     * @param indicator
+     * @param numericColumn a numeric column which is in the list of numeric column of the indicator
+     * @return a series of datasets for the given numeric column
+     */
+    static Map<String, ValueAggregator> createXYZDatasets(ColumnSetMultiValueIndicator indicator, Column numericColumn) {
+
+        final EList<Column> nominalColumns = indicator.getNominalColumns();
+        final EList<Column> numericColumns = indicator.getNumericColumns();
+        final EList<String> numericFunctions = indicator.getNumericFunctions();
+
+        final int indexOfNumericCol = numericColumns.indexOf(numericColumn);
+        assert indexOfNumericCol != -1;
+
+        final int nbNumericFunctions = numericFunctions.size();
+        assert nbNumericFunctions == 3 : "we expect only 3 functions to apply on numerical data";
+
+        final List<Object[]> listRows = indicator.getListRows();
+
+        final int nbNominalColumns = nominalColumns.size();
+
+        return fillDataset(nominalColumns, listRows, nbNominalColumns + indexOfNumericCol);
+    }
+
+    /**
+     * DOC scorreia MultipleKey class global comment. Detailled comment
+     */
+    private static class MultipleKey implements Comparable<MultipleKey> {
+
+        private Object[] internalKey;
+
+        MultipleKey(Object[] key, int nbElements) {
+            this.internalKey = new Object[nbElements];
+            for (int i = 0; i < nbElements; i++) {
+                internalKey[i] = key[i];
+            }
+        }
+
+        
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (!(obj instanceof MultipleKey)) {
+                return false;
+            }
+            MultipleKey other = (MultipleKey) obj;
+            return this.compareTo(other) == 0;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode() {
+            int hash = 0;
+            for (Object obj : internalKey) {
+                hash += 13 * obj.hashCode();
+            }
+            return hash;
+        }
+
+
+        public int compareTo(MultipleKey o) {
+            if (o == null) {
+                return -1;
+            }
+            int diff = this.internalKey.length - o.internalKey.length;
+            if (diff != 0) {
+                return diff;
+            }
+            for (int i = 0; i < internalKey.length; i++) {
+                String internalObj = String.valueOf(internalKey[i]);
+                String otherObj = String.valueOf(o.internalKey[i]);
+                diff = internalObj.compareTo(otherObj);
+                if (diff != 0) {
+                    return diff;
+                }
+            }
+
+            return diff;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < internalKey.length; i++) {
+                Object obj = internalKey[i];
+                builder.append(obj);
+                if (i < internalKey.length - 1) {
+                    builder.append(" | ");
+                }
+            }            
+            return builder.toString();
+        }
+
+    }
+
+    /**
+     * DOC scorreia ValueAggregator class global comment. Detailled comment
+     */
+    public static class ValueAggregator {
+
+        private Map<MultipleKey, Double[]> keyToVal = new HashMap<MultipleKey, Double[]>();
+        private Map<String, List<String>> seriesKeyToLabel = new HashMap<String, List<String>>();
+
+        void addValue(MultipleKey key, Double x, Double y, Double z) {
+            Double[] doubles = keyToVal.get(key);
+            if (doubles == null) {
+                doubles = new Double[] { 0.0, 0.0, 0.0 };
+            }
+            doubles[0] = doubles[0] + x;
+            doubles[1] = doubles[1] + y;
+            doubles[2] = doubles[2] + z;
+            keyToVal.put(key, doubles);
+        }
+
+        /**
+         * Method "getLabels". Must not be called before the {@link #addSeriesToXYZDataset(DefaultXYZDataset, String)}
+         * method.
+         * 
+         * @param seriesKey
+         * @return the label for each item of the dataset
+         */
+        public List<String> getLabels(String seriesKey) {
+            return seriesKeyToLabel.get(seriesKey);
+        }
+
+        /**
+         * Method "addSeriesToXYZDataset" adds a new series of data to the given dataset.
+         * 
+         * @param dataset a dataset
+         * @param keyOfDataset the series key of the data series
+         */
+        public void addSeriesToXYZDataset(DefaultXYZDataset dataset, String keyOfDataset) {
+
+            final int size = keyToVal.size();
+            double[] xDouble = new double[size];
+            double[] yDouble = new double[size];
+            double[] zDouble = new double[size];
+
+            int i = 0;
+            for (MultipleKey key : keyToVal.keySet()) {
+                final Double[] doubles = keyToVal.get(key);
+                xDouble[i] = doubles[0] / doubles[1]; // FIXME how to know this is the avg !!
+                yDouble[i] = doubles[1];
+                zDouble[i] = doubles[2];
+                MultiMapHelper.addUniqueObjectToListMap(keyOfDataset, key.toString(), this.seriesKeyToLabel);                
+                i++;
+            }
+
+            double[][] data = new double[][] { xDouble, yDouble, zDouble };
+            dataset.addSeries(keyOfDataset, data);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            for (MultipleKey key : keyToVal.keySet()) {
+                builder.append(key.toString()).append(": ");
+                final Double[] doubles = keyToVal.get(key);
+                for (Double d : doubles) {
+                    builder.append(d).append(" ");
+                }
+                builder.append('\n');
+            }
+            return builder.toString();
+        }
+
+    }
+
+    /**
+     * DOC scorreia Comment method "fillDataset".
+     * 
+     * @param nominalColumns
+     * @param listRows
+     * @param firstNumericColumnIdx
+     * @param dataset
+     */
+    private static Map<String, ValueAggregator> fillDataset(final EList<Column> nominalColumns, final List<Object[]> listRows,
+            final int firstNumericColumnIdx) {
+        Map<String, ValueAggregator> valueAggregators = new HashMap<String, ValueAggregator>();
+
+        int xPos = firstNumericColumnIdx;
+        int yPos = firstNumericColumnIdx + 1;
+        int zPos = firstNumericColumnIdx + 2;
+
+        for (int i = nominalColumns.size(); i > 0; i--) {
+            String key = createKey(nominalColumns, i);
+            for (Object[] row : listRows) {
+                final Double xValue = Double.valueOf(String.valueOf(row[xPos]));
+                final Double yValue = Double.valueOf(String.valueOf(row[yPos]));
+                final Double zValue = Double.valueOf(String.valueOf(row[zPos]));
+
+                ValueAggregator valueAggregator = valueAggregators.get(key);
+                if (valueAggregator == null) {
+                    valueAggregator = new ValueAggregator();
+                    valueAggregators.put(key, valueAggregator);
+                }
+                MultipleKey multipleKey = new MultipleKey(row, i);
+                valueAggregator.addValue(multipleKey, xValue, yValue, zValue);
+            }
+
+        }
+
+        return valueAggregators;
+
+    }
+
+    /**
+     * DOC scorreia Comment method "createKey".
+     * 
+     * @param nominalColumns
+     * @return
+     */
+    private static String createKey(EList<Column> nominalColumns, int idx) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < idx; i++) {
+            builder.append(nominalColumns.get(i).getName()).append(" ");
+        }
+        return builder.toString();
+    }
+
     private static BoxAndWhiskerItem createBoxAndWhiskerItem(Double mean, Double median, Double q1, Double q3,
             Double minRegularValue, Double maxRegularValue, List outliers) {
         // MOD scorreia 2008-06-05 automatic computation of outliers limits
@@ -174,4 +422,5 @@ public class ChartDatasetFactory {
                 maxOutlier, outliers);
         return item;
     }
+
 }
