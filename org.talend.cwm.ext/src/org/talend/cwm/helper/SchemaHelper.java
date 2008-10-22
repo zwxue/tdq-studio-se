@@ -21,6 +21,7 @@ import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -70,7 +71,8 @@ public final class SchemaHelper {
         if (element == null) {
             return null;
         }
-        return SwitchHelpers.SCHEMA_SWITCH.doSwitch(element.getNamespace());
+        final Namespace namespace = element.getNamespace();
+        return (namespace != null) ? SwitchHelpers.SCHEMA_SWITCH.doSwitch(namespace) : null;
     }
 
 }
