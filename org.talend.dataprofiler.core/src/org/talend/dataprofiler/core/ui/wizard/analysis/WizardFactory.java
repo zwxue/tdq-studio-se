@@ -85,6 +85,14 @@ public class WizardFactory {
         return new CreatePatternWizard(parameter, type);
     }
 
+    public static Wizard createPatternWizard(ExpressionType type, ConnectionParameter parameter, String expression,
+            String language) {
+        if (parameter == null) {
+            parameter = new ConnectionParameter();
+        }
+        return new CreatePatternWizard(parameter, type, expression, language);
+    }
+
     public static Wizard createDatabaseConnectionWizard(DBConnectionParameter connectionParam) {
 
         return new DatabaseConnectionWizard(connectionParam);

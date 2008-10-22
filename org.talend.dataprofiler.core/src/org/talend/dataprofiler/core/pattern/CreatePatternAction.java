@@ -46,6 +46,10 @@ public class CreatePatternAction extends Action {
 
     private ExpressionType type;
 
+    private String expression;
+
+    private String lanuage;
+
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
      * 
@@ -66,6 +70,12 @@ public class CreatePatternAction extends Action {
         this.type = type;
     }
 
+    public CreatePatternAction(IFolder folder, ExpressionType type, String expression, String lanuage) {
+        this(folder, type);
+        this.expression = expression;
+        this.lanuage = lanuage;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -78,7 +88,12 @@ public class CreatePatternAction extends Action {
         folderProvider.setFolderResource(folder);
         parameter.setFolderProvider(folderProvider);
 
-        CreatePatternWizard fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter);
+        CreatePatternWizard fileWizard;
+        if (this.expression != null && this.lanuage != null) {
+            fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter, expression, lanuage);
+        } else {
+            fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter);
+        }
         IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getPatternHelpContextID());
         IHelpResource[] relatedTopics = context.getRelatedTopics();
         String href = relatedTopics[0].getHref();

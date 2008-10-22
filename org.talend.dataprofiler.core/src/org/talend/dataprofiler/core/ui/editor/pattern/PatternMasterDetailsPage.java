@@ -43,9 +43,11 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -206,7 +208,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         final Text patternText = new Text(expressComp, SWT.BORDER);
         patternText.setText(regularExpress.getExpression().getBody() == null ? PluginConstant.EMPTY_STRING : regularExpress
                 .getExpression().getBody());
-        GridDataFactory.fillDefaults().span(7, 1).grab(true, false).applyTo(patternText);
+        GridDataFactory.fillDefaults().span(6, 1).grab(true, false).applyTo(patternText);
         patternText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -227,6 +229,19 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 sectionComp.layout();
                 form.reflow(true);
                 setDirty(true);
+            }
+        });
+        Button testPatternButton = new Button(expressComp, SWT.NONE);
+        // testPatternButton.setImage(ImageLib.getImage(ImageLib.));
+        testPatternButton.setText("Test");
+        testPatternButton.setToolTipText("Pattern Test");
+        GridDataFactory.fillDefaults().span(1, 1).grab(true, false).applyTo(testPatternButton);
+        testPatternButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                // Open test pattern viewer
+                PatternTestView patternTestView = (PatternTestView) CorePlugin.getDefault().findView(PatternTestView.ID);
+                patternTestView.setPatternExpression(pattern, finalRegExpress);
             }
         });
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
@@ -271,9 +286,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
             String language = regularExpress.getExpression().getLanguage();
             if ((regularExpress.getExpression().getBody() == null) || (!regularExpress.getExpression().getBody().matches("'.*'"))) {
-                MessageDialog.openWarning(null, "Warning",
-                        "The pattern's expression for "
-                        + language
+                MessageDialog.openWarning(null, "Warning", "The pattern's expression for " + language
                         + " must be enclosed by single quotes \"'\"");
                 return false;
             }

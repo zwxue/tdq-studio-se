@@ -50,6 +50,10 @@ public class CreatePatternWizard extends AbstractWizard {
 
     private ConnectionParameter parameter;
 
+    private String expression;
+
+    private String language;
+
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
      * 
@@ -59,6 +63,13 @@ public class CreatePatternWizard extends AbstractWizard {
     public CreatePatternWizard(ConnectionParameter parameter, ExpressionType type) {
         this.type = type;
         this.parameter = parameter;
+    }
+
+    public CreatePatternWizard(ConnectionParameter parameter, ExpressionType type, String expression, String language) {
+        this.type = type;
+        this.parameter = parameter;
+        this.expression = expression;
+        this.language = language;
     }
 
     /*
@@ -79,10 +90,14 @@ public class CreatePatternWizard extends AbstractWizard {
         mPage.setDescription("Define the properties");
         mPage.setPageComplete(false);
 
-        mPage2 = new CreatePatternWizardPage2(type);
+        if (expression != null && language != null) {
+            mPage2 = new CreatePatternWizardPage2(type, expression, language);
+        } else {
+
+            mPage2 = new CreatePatternWizardPage2(type);
+        }
         mPage2.setTitle(s + " Creation Page2/2");
         mPage2.setDescription("Define the properties");
-        mPage2.setPageComplete(false);
         addPage(mPage);
         addPage(mPage2);
     }
@@ -107,7 +122,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
         Expression expression = CoreFactory.eINSTANCE.createExpression();
-        String expr = mPage2.getNameText().getText();
+        String expr = mPage2.getExpressionText().getText();
         expression.setBody(expr);
         String cl = mPage2.getComboLang();
         expression.setLanguage(cl); // qzhang fixed bug 4259.save language from selected db type

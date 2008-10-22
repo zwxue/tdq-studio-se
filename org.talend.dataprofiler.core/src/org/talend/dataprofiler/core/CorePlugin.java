@@ -175,6 +175,8 @@ public class CorePlugin extends AbstractUIPlugin {
             } catch (Exception e) {
                 ExceptionHandler.process(e, Level.ERROR);
             }
+        } else {
+            page.bringToTop(part);
         }
         return part;
     }
