@@ -77,6 +77,7 @@ public class IndicatorDefinitionItemProvider
             addAggregatedDefinitionsPropertyDescriptor(object);
             addLabelPropertyDescriptor(object);
             addSubCategoriesPropertyDescriptor(object);
+            addNumeric1argFunctionsPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -170,6 +171,28 @@ public class IndicatorDefinitionItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Numeric1arg Functions feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addNumeric1argFunctionsPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_IndicatorDefinition_numeric1argFunctions_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_IndicatorDefinition_numeric1argFunctions_feature", "_UI_IndicatorDefinition_type"),
+                 DefinitionPackage.Literals.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -237,6 +260,7 @@ public class IndicatorDefinitionItemProvider
 
         switch (notification.getFeatureID(IndicatorDefinition.class)) {
             case DefinitionPackage.INDICATOR_DEFINITION__LABEL:
+            case DefinitionPackage.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:

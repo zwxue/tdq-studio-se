@@ -122,6 +122,52 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected ColumnSetMultiValueIndicatorItemProvider columnSetMultiValueIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createColumnSetMultiValueIndicatorAdapter() {
+        if (columnSetMultiValueIndicatorItemProvider == null) {
+            columnSetMultiValueIndicatorItemProvider = new ColumnSetMultiValueIndicatorItemProvider(this);
+        }
+
+        return columnSetMultiValueIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected CountAvgNullIndicatorItemProvider countAvgNullIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createCountAvgNullIndicatorAdapter() {
+        if (countAvgNullIndicatorItemProvider == null) {
+            countAvgNullIndicatorItemProvider = new CountAvgNullIndicatorItemProvider(this);
+        }
+
+        return countAvgNullIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -222,6 +268,8 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
     public void dispose() {
         if (valueMatchingIndicatorItemProvider != null) valueMatchingIndicatorItemProvider.dispose();
         if (rowMatchingIndicatorItemProvider != null) rowMatchingIndicatorItemProvider.dispose();
+        if (columnSetMultiValueIndicatorItemProvider != null) columnSetMultiValueIndicatorItemProvider.dispose();
+        if (countAvgNullIndicatorItemProvider != null) countAvgNullIndicatorItemProvider.dispose();
     }
 
 }
