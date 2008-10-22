@@ -31,10 +31,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
@@ -63,6 +67,7 @@ import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 import Zql.ParseException;
 
@@ -81,7 +86,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     private DbmsLanguage dbmsLanguage;
 
-    private Analysis cachedAnalysis;
+    protected Analysis cachedAnalysis;
 
     /*
      * (non-Javadoc)
@@ -215,11 +220,21 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         }
 
+        final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(tdColumn);
+        String schemaName = getQuotedSchemaName(columnSetOwner);
+        
         String table = quote(ColumnHelper.getColumnSetFullName(tdColumn));
 
         // --- normalize table name
-        String catalogName = getQuotedCatalogName(tdColumn);
-        table = dbms().toQualifiedName(catalogName, null, table);
+        String catalogName = getQuotedCatalogName(columnSetOwner);
+        if (catalogName == null && schemaName != null) {
+            // try to get catalog above schema
+            final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+            catalogName = parentCatalog != null ? parentCatalog.getName() : null;
+        }
+        
+        table = dbms().toQualifiedName(catalogName, schemaName, table);
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
@@ -319,6 +334,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Expression instantiateSqlExpression = instantiateSqlExpression(language, finalQuery);
         indicator.setInstantiatedExpression(instantiateSqlExpression);
         return true;
+    }
+
+    /**
+     * DOC scorreia Comment method "getSchemaName".
+     * 
+     * @param columnSetOwner
+     * @return
+     */
+    private String getQuotedSchemaName(ColumnSet columnSetOwner) {
+        final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+        return (parentSchema == null) ? null : quote(parentSchema.getName());
     }
 
     /**
@@ -962,7 +988,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return the catalog or schema quoted name
      */
     private String getQuotedCatalogName(ModelElement analyzedElement) {
-        return quote(this.getCatalogOrSchemaName(analyzedElement));
+        final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
+        return parentCatalog == null ? null : quote(parentCatalog.getName());
     }
 
     /**
