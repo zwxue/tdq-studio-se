@@ -26,7 +26,7 @@
     <sqlGenericExpression xmi:id="_ybq24jh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybq24zh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybq25Dh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_poEbQEbKEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_poEbQEbKEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_dinuIGIuEd2g_c7Yce15OA" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Duplicate Count">
@@ -35,7 +35,7 @@
     <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybrd8zh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_vYa-YEbMEd2QPKsejnYyXQ" body="SELECT {0} AS col, COUNT(*) AS mycount FROM {1}  m GROUP BY col HAVING count(*) > 1" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_vYa-YEbMEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) FROM {1}  m GROUP BY 1 HAVING count(*) > 1" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_L6ZBQGIwEd2cR9NG8PSw3w" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0xF2Ed2PKb6nEJEvhw" name="Blank Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Blank Count">
@@ -92,8 +92,8 @@
     <taggedValue xmi:id="_ybvvYTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the most frequent records"/>
     <sqlGenericExpression xmi:id="_ybwWcDh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) FROM {1} t GROUP BY {2} ORDER BY COUNT(*) DESC" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_C4G9kJRmEd2PFJoogKUukg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_-0C00JOtEd2Iyo0dtkB9pA" name="Low Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Low Frequency Table">
