@@ -59,10 +59,9 @@ public class PopComparisonUIAction extends Action {
 
                     public void run() {
                         try {
-                            creatComparisonLevel.popComparisonUI();
+                            creatComparisonLevel.popComparisonUI(new UiHandler());
                         } catch (ReloadCompareException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            log.error(e, e);
                         }
 
                     }
