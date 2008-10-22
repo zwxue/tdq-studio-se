@@ -296,8 +296,12 @@ class DatabaseWizardPage extends AbstractWizardPage {
      */
     private void updateButtonState() {
         boolean complete = true;
-        complete &= (this.connectionURL != null && this.connectionURL.trim().length() > 0 && this.userid != null && this.userid
-                .trim().length() > 0);
+        complete &= (this.connectionURL != null && this.connectionURL.trim().length() > 0 && ((this.userid != null && this.userid
+                .trim().length() > 0)
+        // MOD scorreia bug 5366 fixed: allow MSSQL user to connect without setting a login/password
+        || SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(
+                SupportDBUrlStore.getInstance().getDBPameterProperties(connectionURL).getProperty(
+                        org.talend.dq.PluginConstant.DBTYPE_PROPERTY))));
         if (checkButton != null) {
             checkButton.setEnabled(complete);
         }
