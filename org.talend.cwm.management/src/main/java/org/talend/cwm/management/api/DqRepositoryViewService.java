@@ -79,10 +79,6 @@ public final class DqRepositoryViewService {
 
     private static Logger log = Logger.getLogger(DqRepositoryViewService.class);
 
-    private static final Base64 CODEC = new Base64();
-
-    private static final String B64ID = "\\[B@";
-
     /**
      * if true, the catalogs (and schemas) are stored in the same file as the data provider. Used for tests only.
      * 
@@ -93,8 +89,6 @@ public final class DqRepositoryViewService {
      * provider). Check also that old files (.prv) are still readable by the application.
      */
     private static final boolean CAT_WITH_PRV = true;
-
-    private static final String PREFIX = "tdq_";
 
     private DqRepositoryViewService() {
     }
@@ -136,8 +130,7 @@ public final class DqRepositoryViewService {
             String date = SMPL_DATE_FMT.format(new Date(System.currentTimeMillis()));
             techname = AsciiUtils.replaceCharacters(b64, CHARS_TO_REMOVE, REPLACEMENT_CHARS) + date;
         } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } // .replaceAll(B64ID, PREFIX);
         if (log.isDebugEnabled()) {
             log.debug("Functional name: " + functionalName + " -> techname: " + techname);
@@ -195,15 +188,6 @@ public final class DqRepositoryViewService {
     public static boolean refreshDataProvider(TdDataProvider dataProvider, String catalogPattern, String schemaPattern) {
         // TODO scorreia implement me
         return false;
-    }
-
-    /**
-     * DOC scorreia Comment method "refreshCatalog".
-     * 
-     * @param tdCatalog
-     */
-    private static void refreshCatalog(TdCatalog tdCatalog, Connection connection) {
-
     }
 
     /**
@@ -265,7 +249,8 @@ public final class DqRepositoryViewService {
     public static List<TdTable> getTables(TdDataProvider dataProvider, Schema schema, String tablePattern, boolean loadFromDB)
             throws TalendException {
         if (loadFromDB) {
-            return loadTables(dataProvider, schema, tablePattern);
+            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schema);
+            return loadTables(dataProvider, parentCatalog, schema, tablePattern);
         } else {
             return SchemaHelper.getTables(schema);
         }
@@ -283,7 +268,9 @@ public final class DqRepositoryViewService {
     public static List<TdView> getViews(TdDataProvider dataProvider, Schema schema, String viewPattern, boolean loadFromDB)
             throws TalendException {
         if (loadFromDB) {
-            return loadViews(dataProvider, schema, viewPattern);
+            // get catalog is exists
+            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schema);
+            return loadViews(dataProvider, parentCatalog, schema, viewPattern);
         } else {
             return SchemaHelper.getViews(schema);
         }
@@ -411,19 +398,6 @@ public final class DqRepositoryViewService {
             resource.getContents().addAll(catalogs);
         }
 
-        // // get all content
-        // try {
-        // TreeIterator<EObject> it = EcoreUtil.getAllContents(dataProvider, true);
-        // while (it.hasNext()) {
-        // EObject nextObj = it.next();
-        // resource.getContents().add(nextObj);
-        // }
-        // } catch (RuntimeException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // System.out.println("Sortie");
-
         ReturnCode rc = new ReturnCode();
         if (resource == null) {
             rc.setReturnCode("No resource in given Data provider " + dataProvider.getName()
@@ -432,18 +406,6 @@ public final class DqRepositoryViewService {
             rc.setOk(EMFUtil.saveResource(resource));
         }
         return rc;
-    }
-
-    /**
-     * Method "getRelatedElements" returns all the elements in the repository related to the given connection: Analysis,
-     * Reports... This method can be called before deleting a data provider.
-     * 
-     * @param dataProvider a data provider
-     * @return the elements linked to the given data provider.
-     */
-    public static List<ModelElement> getRelatedElements(TdDataProvider dataProvider) {
-        // TODO scorreia implement me
-        return null;
     }
 
     private static String getName(ModelElement element) {
@@ -468,7 +430,7 @@ public final class DqRepositoryViewService {
     }
 
     private static boolean saveDomain(Domain domain, IFile file) {
-        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+        EMFUtil util = new EMFUtil();
         Resource resource = util.getResourceSet().createResource(
                 URI.createPlatformResourceURI(file.getFullPath().toString(), false));
         assert resource != null;
@@ -521,20 +483,6 @@ public final class DqRepositoryViewService {
         return loadTables(dataProvider, catalog, null, tablePattern);
     }
 
-    private static List<TdTable> loadTables(TdDataProvider dataProvider, Schema schema, String tablePattern)
-            throws TalendException {
-        assert dataProvider != null;
-        assert schema != null;
-
-        String schemaName = schema.getName();
-        if (schemaName == null) {
-            log.error("No schema given. Cannot retrieve tables!");
-            return new ArrayList<TdTable>();
-        }
-        return loadTables(dataProvider, null, schema, tablePattern);
-    }
-
-    @SuppressWarnings("unchecked")
     private static List<TdTable> loadTables(TdDataProvider dataProvider, Catalog catalog, Schema schema, String tablePattern)
             throws TalendException {
         List<TdTable> tables = new ArrayList<TdTable>();
@@ -543,11 +491,12 @@ public final class DqRepositoryViewService {
         return tables;
     }
 
-    private static List<TdView> loadViews(TdDataProvider dataProvider, Schema schema, String viewPattern) throws TalendException {
+    private static List<TdView> loadViews(TdDataProvider dataProvider, Catalog catalog, Schema schema, String viewPattern)
+            throws TalendException {
         assert schema != null : "could not load views. No schema given.";
         List<TdView> views = new ArrayList<TdView>();
         // PTODO scorreia check return code
-        loadColumnSets(dataProvider, null, schema, viewPattern, RelationalPackage.TD_VIEW, views);
+        loadColumnSets(dataProvider, catalog, schema, viewPattern, RelationalPackage.TD_VIEW, views);
         return views;
     }
 
@@ -575,7 +524,7 @@ public final class DqRepositoryViewService {
         List<TdColumn> columns = new ArrayList<TdColumn>();
         TypedReturnCode<Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
         if (!rcConn.isOk()) {
-            log.error(rcConn.getMessage()); // FIXME scorreia show error to the user
+            log.error(rcConn.getMessage()); // scorreia show error to the user
             throw new TalendException(rcConn.getMessage());
         }
         Connection connection = rcConn.getObject();
