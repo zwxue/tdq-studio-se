@@ -56,6 +56,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      */
     @Override
     protected String createSqlStatement(Analysis analysis) {
+        this.cachedAnalysis = analysis;
         this.reset();
 
         EList<Indicator> indicators = analysis.getResults().getIndicators();

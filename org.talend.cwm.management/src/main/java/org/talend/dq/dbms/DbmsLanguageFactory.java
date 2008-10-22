@@ -60,21 +60,26 @@ public final class DbmsLanguageFactory {
                 log.info("Software system subtype (Database type): " + dbmsSubtype);
             }
             if (StringUtils.isNotBlank(dbmsSubtype)) {
-                dbmsLanguage = getDbmsLanguage(dbmsSubtype);
+                dbmsLanguage = createDbmsLanguage(dbmsSubtype);
             }
         }
         String identifierQuoteString = DataProviderHelper.getIdentifierQuoteString(dataprovider);
+        if (identifierQuoteString.length() == 0) {
+            // given data provider has not stored the identifier quote (version 1.1.0 of TOP)
+            // we must set it by hand
+            identifierQuoteString = dbmsLanguage.getQuoteIdentifier();
+        }
         dbmsLanguage.setDbQuoteString(identifierQuoteString);
         return dbmsLanguage;
     }
 
     /**
-     * DOC scorreia Comment method "getDbmsLanguage".
+     * Method "createDbmsLanguage".
      * 
      * @param dbmsSubtype
-     * @return
+     * @return the appropriate DbmsLanguage
      */
-    private static DbmsLanguage getDbmsLanguage(String dbmsSubtype) {
+    private static DbmsLanguage createDbmsLanguage(String dbmsSubtype) {
         if (isMySQL(dbmsSubtype)) {
             return new MySQLDbmsLanguage();
         }
@@ -107,7 +112,7 @@ public final class DbmsLanguageFactory {
         String databaseProductName;
         try {
             databaseProductName = connection.getMetaData().getDatabaseProductName();
-            DbmsLanguage dbmsLanguage = new DbmsLanguage(databaseProductName);
+            DbmsLanguage dbmsLanguage = createDbmsLanguage(databaseProductName);
             dbmsLanguage.setDbQuoteString(connection.getMetaData().getIdentifierQuoteString());
             return dbmsLanguage;
         } catch (SQLException e) {

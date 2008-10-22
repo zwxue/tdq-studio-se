@@ -218,6 +218,15 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             return false;
         }
 
+        return checkAnalyzedElements(analysis, context);
+    }
+
+    /**
+     * DOC scorreia Comment method "checkAnalyzedElements".
+     * @param analysis
+     * @param context
+     */
+    protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {
         ColumnAnalysisHandler analysisHandler = new ColumnAnalysisHandler();
         analysisHandler.setAnalysis(analysis);
 
@@ -239,7 +248,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
                 return false;
             }
         }
-
         return true;
     }
 

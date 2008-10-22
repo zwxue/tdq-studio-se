@@ -52,6 +52,7 @@ import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -325,6 +326,18 @@ public final class DefinitionHandler {
                 return setIndicatorDefinition(object, "Row Comparison");
             }
             
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch#caseColumnSetMultiValueIndicator(org
+             * .talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator)
+             */
+            @Override
+            public Boolean caseColumnSetMultiValueIndicator(ColumnSetMultiValueIndicator object) {
+                return setIndicatorDefinition(object, "Multiple Column Frequency Table");
+            }
+
             /*
              * (non-Javadoc)
              * 

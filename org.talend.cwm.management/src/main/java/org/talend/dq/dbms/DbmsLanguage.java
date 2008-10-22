@@ -366,7 +366,7 @@ public class DbmsLanguage {
     /**
      * Method "finalizeQuery" must be called after prepareQuery().
      * 
-     * @param query the query to finalize
+     * @param query the query to finalize (returned by the prepareQuery() method)
      * @return the final query.
      */
     public String finalizeQuery(String query) {
