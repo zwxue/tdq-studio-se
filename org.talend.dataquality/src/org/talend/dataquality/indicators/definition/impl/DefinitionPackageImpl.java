@@ -371,6 +371,15 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getIndicatorDefinition_Numeric1argFunctions() {
+        return (EAttribute)indicatorDefinitionEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getIndicatorCategory() {
         return indicatorCategoryEClass;
     }
@@ -422,6 +431,7 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
         createEAttribute(indicatorDefinitionEClass, INDICATOR_DEFINITION__LABEL);
         createEReference(indicatorDefinitionEClass, INDICATOR_DEFINITION__SUB_CATEGORIES);
         createEReference(indicatorDefinitionEClass, INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION);
+        createEAttribute(indicatorDefinitionEClass, INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS);
 
         indicatorCategoryEClass = createEClass(INDICATOR_CATEGORY);
         createEAttribute(indicatorCategoryEClass, INDICATOR_CATEGORY__LABEL);
@@ -473,6 +483,7 @@ public class DefinitionPackageImpl extends EPackageImpl implements DefinitionPac
         initEAttribute(getIndicatorDefinition_Label(), ecorePackage.getEString(), "label", null, 0, 1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicatorDefinition_SubCategories(), this.getIndicatorCategory(), null, "subCategories", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicatorDefinition_SqlGenericExpression(), theCorePackage.getExpression(), null, "sqlGenericExpression", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getIndicatorDefinition_Numeric1argFunctions(), ecorePackage.getEString(), "numeric1argFunctions", null, 0, -1, IndicatorDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(indicatorCategoryEClass, IndicatorCategory.class, "IndicatorCategory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getIndicatorCategory_Label(), ecorePackage.getEString(), "label", null, 0, 1, IndicatorCategory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

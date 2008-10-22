@@ -90,6 +90,14 @@ public class ColumnsetAdapterFactory extends AdapterFactoryImpl {
                 return createRowMatchingIndicatorAdapter();
             }
             @Override
+            public Adapter caseColumnSetMultiValueIndicator(ColumnSetMultiValueIndicator object) {
+                return createColumnSetMultiValueIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseCountAvgNullIndicator(CountAvgNullIndicator object) {
+                return createCountAvgNullIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -164,6 +172,34 @@ public class ColumnsetAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createRowMatchingIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator <em>Column Set Multi Value Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator
+     * @generated
+     */
+    public Adapter createColumnSetMultiValueIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator <em>Count Avg Null Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.columnset.CountAvgNullIndicator
+     * @generated
+     */
+    public Adapter createCountAvgNullIndicatorAdapter() {
         return null;
     }
 

@@ -458,7 +458,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             if (expression == null) {
                 continue;
             }
-            if (language.compareTo(expression.getLanguage()) == 0) {
+            if (language.toUpperCase().compareTo(expression.getLanguage().toUpperCase()) == 0) {
                 return expression;
             }
         }

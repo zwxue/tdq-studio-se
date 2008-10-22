@@ -125,6 +125,25 @@ public class ColumnsetSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR: {
+                ColumnSetMultiValueIndicator columnSetMultiValueIndicator = (ColumnSetMultiValueIndicator)theEObject;
+                T result = caseColumnSetMultiValueIndicator(columnSetMultiValueIndicator);
+                if (result == null) result = caseIndicator(columnSetMultiValueIndicator);
+                if (result == null) result = caseModelElement(columnSetMultiValueIndicator);
+                if (result == null) result = caseElement(columnSetMultiValueIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case ColumnsetPackage.COUNT_AVG_NULL_INDICATOR: {
+                CountAvgNullIndicator countAvgNullIndicator = (CountAvgNullIndicator)theEObject;
+                T result = caseCountAvgNullIndicator(countAvgNullIndicator);
+                if (result == null) result = caseColumnSetMultiValueIndicator(countAvgNullIndicator);
+                if (result == null) result = caseIndicator(countAvgNullIndicator);
+                if (result == null) result = caseModelElement(countAvgNullIndicator);
+                if (result == null) result = caseElement(countAvgNullIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -171,6 +190,36 @@ public class ColumnsetSwitch<T> {
      * @generated
      */
     public T caseRowMatchingIndicator(RowMatchingIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Column Set Multi Value Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Column Set Multi Value Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseColumnSetMultiValueIndicator(ColumnSetMultiValueIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Count Avg Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Count Avg Null Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseCountAvgNullIndicator(CountAvgNullIndicator object) {
         return null;
     }
 

@@ -24,6 +24,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getLabel <em>Label</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getSubCategories <em>Sub Categories</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getSqlGenericExpression <em>Sql Generic Expression</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getNumeric1argFunctions <em>Numeric1arg Functions</em>}</li>
  * </ul>
  * </p>
  *
@@ -121,5 +122,21 @@ public interface IndicatorDefinition extends ModelElement {
      * @generated
      */
     EList<Expression> getSqlGenericExpression();
+
+    /**
+     * Returns the value of the '<em><b>Numeric1arg Functions</b></em>' attribute list.
+     * The list contents are of type {@link java.lang.String}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * list of numeric functions to be used by this indicator definition (e.g. AVG({0)}, SUM({0}), COUNT({0})...)
+     * 
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Numeric1arg Functions</em>' attribute list.
+     * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorDefinition_Numeric1argFunctions()
+     * @model
+     * @generated
+     */
+    EList<String> getNumeric1argFunctions();
 
 } // IndicatorDefinition

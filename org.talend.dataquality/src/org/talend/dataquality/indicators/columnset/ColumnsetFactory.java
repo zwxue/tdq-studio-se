@@ -44,6 +44,24 @@ public interface ColumnsetFactory extends EFactory {
     RowMatchingIndicator createRowMatchingIndicator();
 
     /**
+     * Returns a new object of class '<em>Column Set Multi Value Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Column Set Multi Value Indicator</em>'.
+     * @generated
+     */
+    ColumnSetMultiValueIndicator createColumnSetMultiValueIndicator();
+
+    /**
+     * Returns a new object of class '<em>Count Avg Null Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Count Avg Null Indicator</em>'.
+     * @generated
+     */
+    CountAvgNullIndicator createCountAvgNullIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

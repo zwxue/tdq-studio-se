@@ -692,6 +692,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         addEEnumLiteral(analysisTypeEEnum, AnalysisType.SCHEMA);
         addEEnumLiteral(analysisTypeEEnum, AnalysisType.MULTIPLE_COLUMN);
         addEEnumLiteral(analysisTypeEEnum, AnalysisType.CATALOG);
+        addEEnumLiteral(analysisTypeEEnum, AnalysisType.COLUMN_CORRELATION);
 
         // Create resource
         createResource(eNS_URI);

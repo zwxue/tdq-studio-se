@@ -92,7 +92,15 @@ public enum AnalysisType implements Enumerator {
      * @generated
      * @ordered
      */
-    CATALOG(7, "CATALOG", "Catalog Analysis");
+    CATALOG(7, "CATALOG", "Catalog Analysis"), /**
+     * The '<em><b>COLUMN CORRELATION</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #COLUMN_CORRELATION_VALUE
+     * @generated
+     * @ordered
+     */
+    COLUMN_CORRELATION(8, "COLUMN_CORRELATION", "Column Correlation Analysis");
 
     /**
      * The '<em><b>COLUMN</b></em>' literal value.
@@ -215,6 +223,21 @@ public enum AnalysisType implements Enumerator {
     public static final int CATALOG_VALUE = 7;
 
     /**
+     * The '<em><b>COLUMN CORRELATION</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>COLUMN CORRELATION</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #COLUMN_CORRELATION
+     * @model literal="Column Correlation Analysis"
+     * @generated
+     * @ordered
+     */
+    public static final int COLUMN_CORRELATION_VALUE = 8;
+
+    /**
      * An array of all the '<em><b>Type</b></em>' enumerators.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -230,6 +253,7 @@ public enum AnalysisType implements Enumerator {
             SCHEMA,
             MULTIPLE_COLUMN,
             CATALOG,
+            COLUMN_CORRELATION,
         };
 
     /**
@@ -288,6 +312,7 @@ public enum AnalysisType implements Enumerator {
             case SCHEMA_VALUE: return SCHEMA;
             case MULTIPLE_COLUMN_VALUE: return MULTIPLE_COLUMN;
             case CATALOG_VALUE: return CATALOG;
+            case COLUMN_CORRELATION_VALUE: return COLUMN_CORRELATION;
         }
         return null;
     }

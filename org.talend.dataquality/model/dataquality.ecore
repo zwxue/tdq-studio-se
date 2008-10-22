@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="dataquality"
@@ -94,6 +94,7 @@
       <eLiterals name="SCHEMA" value="5" literal="Schema Analysis"/>
       <eLiterals name="MULTIPLE_COLUMN" value="6" literal="Multiple Column Analysis"/>
       <eLiterals name="CATALOG" value="7" literal="Catalog Analysis"/>
+      <eLiterals name="COLUMN_CORRELATION" value="8" literal="Column Correlation Analysis"/>
     </eClassifiers>
     <eSubpackages name="category" nsURI="http://org.talend.dataquality.category" nsPrefix="dataquality.category">
       <eClassifiers xsi:type="ecore:EClass" name="AnalysisCategory">
@@ -629,6 +630,12 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="sqlGenericExpression"
             upperBound="-1" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/Expression"
             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="numeric1argFunctions"
+            upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="list of numeric functions to be used by this indicator definition (e.g. AVG({0)}, SUM({0}), COUNT({0})...)&#xA;"/>
+          </eAnnotations>
+        </eStructuralFeatures>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="IndicatorCategory" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -661,6 +668,21 @@
           <details key="documentation" value="counts the number of rows matching or not matching when comparing two or more columns"/>
         </eAnnotations>
       </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ColumnSetMultiValueIndicator" eSuperTypes="#//indicators/Indicator">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="analyzedColumns" upperBound="-1"
+            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="listRows" eType="#//indicators/ObjectArray"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="numericFunctions" upperBound="-1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="nominalColumns" upperBound="-1"
+            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"
+            changeable="false" volatile="true" transient="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="numericColumns" upperBound="-1"
+            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"
+            changeable="false" volatile="true" transient="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="CountAvgNullIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
+      <eClassifiers xsi:type="ecore:EDataType" name="ListObject" instanceClassName="java.util.List&lt;Object>"/>
     </eSubpackages>
   </eSubpackages>
   <eSubpackages name="expressions" nsURI="http://dataquality.expressions" nsPrefix="dataquality.expressions">
