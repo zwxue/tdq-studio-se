@@ -63,7 +63,6 @@
              viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
           <includes>
              <actionExtension pattern="org.talend.dataprofiler.core.ui.action.provider.*" />
-             <actionExtension pattern="org.talend.cwm.compare.ui.actions.provider.*" />
           </includes>
        </viewerActionBinding>  
         <dragAssistant
