@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +30,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -52,6 +54,8 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -66,7 +70,6 @@ import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
-import org.talend.dataprofiler.core.ui.editor.preview.EIndicatorChartType;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataquality.analysis.Analysis;
@@ -77,6 +80,7 @@ import org.talend.dq.analysis.ColumnAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -322,7 +326,7 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
                 IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
                         monitor.beginTask("Creating preview for " + column.getName(), IProgressMonitor.UNKNOWN);
 
@@ -330,13 +334,27 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
                             public void run() {
 
-                                for (ChartWithData chart : IndicatorChartFactory.createChart(columnIndicator, isCreate)) {
-                                    if (chart.getImageDescriptor() != null) {
-                                        ImageHyperlink image = toolkit.createImageHyperlink(comp, SWT.WRAP);
-                                        image.setImage(chart.getImageDescriptor().createImage());
-                                        if (chart.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS) {
-                                            ColumnAnalysisResultPage.addShowDefinition(image);
+                                for (ChartWithData chartData : IndicatorChartFactory.createChart(columnIndicator, isCreate)) {
+                                    // carete chart
+                                    final JFreeChart chart = chartData.getChart();
+                                    if (chart != null) {
+                                        Composite frameComp = toolkit.createComposite(composite, SWT.EMBEDDED);
+                                        frameComp.setLayout(new GridLayout());
+                                        GridData gd = new GridData();
+                                        gd.heightHint = 230;
+                                        gd.widthHint = 460;
+                                        if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS) {
+                                            gd = new GridData();
+                                            gd.heightHint = 500;
+                                            gd.widthHint = 150;
                                         }
+                                        frameComp.setLayoutData(gd);
+
+                                        Frame frame = SWT_AWT.new_Frame(frameComp);
+                                        frame.setLayout(new java.awt.GridLayout());
+
+                                        frame.add(new ChartPanel(chart));
+                                        frame.validate();
                                     }
                                 }
                             }

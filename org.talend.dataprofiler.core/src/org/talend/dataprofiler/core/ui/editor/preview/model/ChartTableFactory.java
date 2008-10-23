@@ -22,17 +22,10 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITableColorProvider;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -52,18 +45,17 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
-import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.analysis.explore.PatternExplorer;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -76,121 +68,106 @@ public class ChartTableFactory {
         TableViewer tbViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 
         final Table table = tbViewer.getTable();
+
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        TableColumn column1, column2, column3, column4, column5;
+        String[] names = null;
+        Integer[] widths = null;
 
-        switch (inputObject.getChartType()) {
+        final EIndicatorChartType chartTableType = inputObject.getChartType();
+
+        switch (chartTableType) {
         case FREQUENCE_STATISTICS:
-            column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Value");
-            column1.setWidth(200);
-            column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("Count");
-            column2.setWidth(150);
-            column3 = new TableColumn(table, SWT.NONE);
-            column3.setText("%");
-            column3.setWidth(150);
+            names = new String[] { "value", "count", "%" };
+            widths = new Integer[] { 200, 150, 150 };
 
-            tbViewer.setLabelProvider(new FrequencyLabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
             break;
         case MODE_INDICATOR:
-            column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Mode");
-            column1.setAlignment(SWT.CENTER);
-            column1.setWidth(500);
+            names = new String[] { "Mode" };
+            widths = new Integer[] { 500 };
 
-            tbViewer.setLabelProvider(new ModeLabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
             break;
-
         case SQL_PATTERN_MATCHING:
         case PATTERN_MATCHING:
+            names = new String[] { "Label", "%Match", "%No Match", "#Match", "#No Match" };
+            widths = new Integer[] { 200, 75, 75, 75, 75 };
 
-            column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Label");
-            column1.setWidth(200);
-            column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("%Match");
-            column2.setWidth(75);
-            column3 = new TableColumn(table, SWT.NONE);
-            column3.setText("%No Match");
-            column3.setWidth(75);
-            column4 = new TableColumn(table, SWT.NONE);
-            column4.setText("#Match");
-            column4.setWidth(75);
-            column5 = new TableColumn(table, SWT.NONE);
-            column5.setText("#No Match");
-            column5.setWidth(75);
-
-            tbViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-                public void selectionChanged(SelectionChangedEvent event) {
-                    StructuredSelection selection = (StructuredSelection) event.getSelection();
-                    PatternChartDataEntity entity = (PatternChartDataEntity) selection.getFirstElement();
-                    Indicator indicator = entity.getIndicator();
-
-                    addMenuToTableItem(table, analysis, indicator);
-                }
-
-            });
-
-            tbViewer.setLabelProvider(new PatternLabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
             break;
-
         case SIMPLE_STATISTICS:
-            column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Label");
-            column1.setWidth(200);
-            column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("Count");
-            column2.setWidth(150);
-            column3 = new TableColumn(table, SWT.NONE);
-            column3.setText("%");
-            column3.setWidth(150);
+            names = new String[] { "Label", "Count", "%" };
+            widths = new Integer[] { 200, 150, 150 };
 
-            tbViewer.setLabelProvider(new SimpleLabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
             break;
         case TEXT_STATISTICS:
-            column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Label");
-            column1.setWidth(200);
-            column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("Value");
-            column2.setWidth(300);
+            names = new String[] { "Label", "Value" };
+            widths = new Integer[] { 200, 300 };
 
-            tbViewer.setLabelProvider(new SimpleLabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
             break;
         case SUMMARY_STATISTICS:
-            column1 = new TableColumn(table, SWT.NONE);
-            column1.setText("Label");
-            column1.setWidth(200);
-            column2 = new TableColumn(table, SWT.NONE);
-            column2.setText("Value");
-            column2.setWidth(300);
+            names = new String[] { "Label", "Value" };
+            widths = new Integer[] { 200, 300 };
 
-            tbViewer.setLabelProvider(new SummaryLabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
             break;
         default:
 
-            tbViewer.setLabelProvider(new LabelProvider());
-            tbViewer.setContentProvider(new CommonContenteProvider());
         }
+
+        createTableColumnStructure(names, widths, table);
+
+        tbViewer.setLabelProvider(ChartTableProviderFactory.createLabelProvider(chartTableType));
+
+        tbViewer.setContentProvider(ChartTableProviderFactory.createContentProvider(chartTableType));
 
         tbViewer.setInput(inputObject);
 
-        addTooltipOnTableItem(table);
+        tbViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
+            public void selectionChanged(SelectionChangedEvent event) {
+                StructuredSelection selection = (StructuredSelection) event.getSelection();
+                ChartDataEntity dataEntity = (ChartDataEntity) selection.getFirstElement();
+
+                final Indicator indicator = dataEntity.getIndicator();
+                Menu menu = new Menu(table.getShell(), SWT.POP_UP);
+                table.setMenu(menu);
+
+                MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartTableType, analysis, dataEntity);
+                for (final MenuItemEntity itemEntity : itemEntities) {
+                    MenuItem item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(itemEntity.getLabel());
+                    item.setImage(itemEntity.getIcon());
+
+                    item.addListener(SWT.Selection, new Listener() {
+
+                        public void handleEvent(Event event) {
+
+                            viewRecordInDataExplorer(analysis, indicator, itemEntity.getQuery());
+                        }
+
+                    });
+                }
+
+                menu.setVisible(true);
+            }
+
+        });
+
+        // add tool tip
+        addTooltipOnTableItem(table);
     }
 
-    private static String getToolTipMsg(Indicator indicator, String currentValue) {
+    private static void createTableColumnStructure(String[] columNames, Integer[] columnWidths, Table table) {
+        if (columNames.length == columnWidths.length) {
+            for (int i = 0; i < columNames.length; i++) {
+                TableColumn column = new TableColumn(table, SWT.NONE);
+                column.setText(columNames[i]);
+                column.setWidth(columnWidths[i]);
+            }
+        }
+    }
+
+    static String getToolTipMsg(Indicator indicator, String currentValue) {
         IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
         StringBuilder msg = new StringBuilder();
 
@@ -267,243 +244,7 @@ public class ChartTableFactory {
         return msg;
     }
 
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class BaseChartTableLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
-
-        public Image getColumnImage(Object element, int columnIndex) {
-
-            if (isOutsideValueRange(element) && isOutsideValue(element, columnIndex)) {
-                return ImageLib.getImage(ImageLib.LEVEL_WARNING);
-            }
-
-            return null;
-        }
-
-        public String getColumnText(Object element, int columnIndex) {
-
-            return "";
-        }
-
-        public Color getBackground(Object element, int columnIndex) {
-
-            return null;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
-         */
-        public Color getForeground(Object element, int columnIndex) {
-
-            if (isOutsideValueRange(element) && isOutsideValue(element, columnIndex)) {
-                return Display.getDefault().getSystemColor(SWT.COLOR_RED);
-            }
-
-            return null;
-        }
-
-        private boolean isOutsideValueRange(Object element) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-            Indicator indicator = entity.getIndicator();
-            String currentValue = entity.getValue();
-
-            return ChartTableFactory.getToolTipMsg(indicator, currentValue) != null;
-        }
-
-        private boolean isOutsideValue(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-            String currentValue = entity.getValue();
-
-            if (currentValue.endsWith(getColumnText(element, columnIndex))) {
-                return true;
-            }
-
-            return false;
-        }
-
-    }
-
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class SimpleLabelProvider extends BaseChartTableLabelProvider {
-
-        public String getColumnText(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-
-            switch (columnIndex) {
-            case 0:
-                return entity.getLabel();
-            case 1:
-                return entity.getValue();
-            case 2:
-                return entity.getPersent();
-            default:
-                return "";
-            }
-        }
-
-    }
-
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class FrequencyLabelProvider extends BaseChartTableLabelProvider {
-
-        public String getColumnText(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-
-            switch (columnIndex) {
-            case 0:
-                return entity.getLabel();
-            case 1:
-                return entity.getValue();
-            case 2:
-                return entity.getPersent();
-            default:
-                return "";
-            }
-        }
-
-    }
-
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class SummaryLabelProvider extends BaseChartTableLabelProvider {
-
-        public String getColumnText(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-
-            switch (columnIndex) {
-            case 0:
-                return entity.getLabel();
-            case 1:
-                return entity.getValue();
-
-            default:
-                return "";
-            }
-        }
-
-    }
-
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class PatternLabelProvider extends BaseChartTableLabelProvider {
-
-        public String getColumnText(Object element, int columnIndex) {
-            PatternChartDataEntity entity = (PatternChartDataEntity) element;
-
-            switch (columnIndex) {
-            case 0:
-                return entity.getLabel();
-            case 1:
-                return entity.getPerMatch();
-            case 2:
-                return entity.getPerNoMatch();
-            case 3:
-                return entity.getNumMatch();
-            case 4:
-                return entity.getNumNoMatch();
-
-            default:
-                return "";
-            }
-        }
-
-    }
-
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class ModeLabelProvider extends BaseChartTableLabelProvider {
-
-        @Override
-        public String getColumnText(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-
-            return entity.getValue();
-        }
-
-    }
-
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class CommonContenteProvider implements IStructuredContentProvider {
-
-        public Object[] getElements(Object inputElement) {
-            if (inputElement instanceof ChartWithData) {
-                return ((ChartWithData) inputElement).getEnity();
-            } else {
-                return new Object[0];
-            }
-        }
-
-        public void dispose() {
-        }
-
-        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        }
-
-    }
-
-    static void addMenuToTableItem(final Table table, final Analysis analysis, final Indicator indicaotr) {
-        Menu menu = new Menu(table.getShell(), SWT.POP_UP);
-        table.setMenu(menu);
-
-        MenuItem itemInvalid = new MenuItem(menu, SWT.PUSH);
-        itemInvalid.setText("View invalid rows");
-        itemInvalid.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-
-        itemInvalid.addListener(SWT.Selection, new Listener() {
-
-            public void handleEvent(Event event) {
-                PatternExplorer patternExplorer = new PatternExplorer();
-                patternExplorer.setIndicator(indicaotr);
-                patternExplorer.setAnalysis(analysis);
-                try {
-                    String query = patternExplorer.getInvalidRowsStatement();
-                    viewRecordInDataExplorer(analysis, indicaotr, query);
-                } catch (TalendException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        });
-
-        MenuItem itemValid = new MenuItem(menu, SWT.PUSH);
-        itemValid.setText("View valid rows");
-        itemValid.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-
-        itemValid.addListener(SWT.Selection, new Listener() {
-
-            public void handleEvent(Event event) {
-
-                PatternExplorer patternExplorer = new PatternExplorer();
-                patternExplorer.setIndicator(indicaotr);
-                patternExplorer.setAnalysis(analysis);
-
-                try {
-                    String query = patternExplorer.getValidRowsStatement();
-                    viewRecordInDataExplorer(analysis, indicaotr, query);
-                } catch (TalendException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-        // Enforce the menu visible when first right click in TableItem(@see bug 4736)
-        menu.setVisible(true);
-    }
-
-    static void viewRecordInDataExplorer(Analysis analysis, Indicator indicaotr, String query) {
+    public static void viewRecordInDataExplorer(Analysis analysis, Indicator indicaotr, String query) {
         new ChangePerspectiveAction(PluginConstant.SE_ID).run();
 
         Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
@@ -534,7 +275,7 @@ public class ChartTableFactory {
         }
     }
 
-    static void addTooltipOnTableItem(final Table table) {
+    private static void addTooltipOnTableItem(final Table table) {
         table.setToolTipText("");
 
         final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());

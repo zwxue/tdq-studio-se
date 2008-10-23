@@ -12,6 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.awt.Frame;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -21,8 +26,8 @@ import java.net.URL;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -40,17 +45,28 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.browser.WebBrowserEditor;
 import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.entity.CategoryItemEntity;
+import org.jfree.chart.entity.ChartEntity;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
-import org.talend.dataprofiler.core.ui.editor.preview.EIndicatorChartType;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenerator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.ColumnAnalysisHandler;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -155,7 +171,7 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
         Section section = createSection(form, parent, "Analysis Results", true, null);
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout());
-        sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         for (final ColumnIndicator columnIndicator : masterPage.getTreeViewer().getColumnIndicator()) {
 
@@ -163,7 +179,7 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                     | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
             exComp.setText("Column: " + columnIndicator.getTdColumn().getName());
             exComp.setLayout(new GridLayout());
-            exComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             final Composite comp = toolkit.createComposite(exComp);
             comp.setLayout(new GridLayout());
@@ -204,22 +220,40 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                                 ExpandableComposite subComp = toolkit.createExpandableComposite(comp, ExpandableComposite.TWISTIE
                                         | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
                                 subComp.setText(chartData.getChartType().getLiteral());
+                                subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-                                Composite composite = toolkit.createComposite(subComp);
+                                final Composite composite = toolkit.createComposite(subComp, SWT.NULL);
                                 composite.setLayout(new GridLayout(2, false));
-                                composite.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+                                composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
                                 // create table
-                                Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
+                                final Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
                                 ChartTableFactory.createTable(composite, chartData, analysis);
-                                // carete image
-                                ImageDescriptor imageDescriptor = chartData.getImageDescriptor();
-                                if (imageDescriptor != null) {
-                                    ImageHyperlink image = toolkit.createImageHyperlink(composite, SWT.WRAP);
-                                    image.setImage(imageDescriptor.createImage());
+                                // carete chart
+                                final JFreeChart chart = chartData.getChart();
+                                final EIndicatorChartType chartType = chartData.getChartType();
+                                if (chart != null) {
+                                    Composite frameComp = toolkit.createComposite(composite, SWT.EMBEDDED);
+                                    frameComp.setLayout(new GridLayout());
+                                    GridData gd = new GridData();
+                                    gd.heightHint = 230;
+                                    gd.widthHint = 460;
                                     if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS) {
-                                        addShowDefinition(image);
+                                        gd = new GridData();
+                                        gd.heightHint = 500;
+                                        gd.widthHint = 150;
                                     }
+                                    frameComp.setLayoutData(gd);
+
+                                    Frame frame = SWT_AWT.new_Frame(frameComp);
+                                    frame.setLayout(new java.awt.GridLayout());
+
+                                    ChartPanel chartPanel = new ChartPanel(chart);
+                                    addMouseListenerForChart(chartPanel, chartType, analysis);
+
+                                    frame.add(chartPanel);
+                                    frame.pack();
+                                    frame.validate();
                                 }
 
                                 subComp.setClient(composite);
@@ -300,4 +334,62 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
         });
     }
 
+    private void addMouseListenerForChart(final ChartPanel chartPanel, final EIndicatorChartType chartType,
+            final Analysis analysis) {
+        chartPanel.addChartMouseListener(new ChartMouseListener() {
+
+            public void chartMouseClicked(ChartMouseEvent event) {
+                ChartEntity chartEntity = event.getEntity();
+                if (chartEntity != null) {
+                    CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
+                    IDataEntity dataEntity = (IDataEntity) cateEntity.getDataset();
+
+                    ChartDataEntity currentDataEntity = null;
+                    for (ChartDataEntity entity : dataEntity.getDataEntities()) {
+                        if (chartType == EIndicatorChartType.FREQUENCE_STATISTICS) {
+                            if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
+                                currentDataEntity = entity;
+                            }
+                        } else {
+                            if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
+                                currentDataEntity = entity;
+                            }
+                        }
+                    }
+
+                    PopupMenu menu = new PopupMenu("view action");
+                    if (currentDataEntity != null) {
+                        final Indicator currentIndicator = currentDataEntity.getIndicator();
+                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartType, analysis, currentDataEntity);
+                        for (final MenuItemEntity itemEntity : itemEntities) {
+                            MenuItem item = new MenuItem(itemEntity.getLabel());
+                            item.addActionListener(new ActionListener() {
+
+                                public void actionPerformed(ActionEvent arg0) {
+                                    Display.getDefault().asyncExec(new Runnable() {
+
+                                        public void run() {
+                                            ChartTableFactory.viewRecordInDataExplorer(analysis, currentIndicator, itemEntity
+                                                    .getQuery());
+                                        }
+
+                                    });
+                                }
+
+                            });
+                            menu.add(item);
+                        }
+
+                        chartPanel.add(menu);
+                        menu.show(chartPanel, event.getTrigger().getX(), event.getTrigger().getY());
+                    }
+                }
+            }
+
+            public void chartMouseMoved(ChartMouseEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+    }
 }

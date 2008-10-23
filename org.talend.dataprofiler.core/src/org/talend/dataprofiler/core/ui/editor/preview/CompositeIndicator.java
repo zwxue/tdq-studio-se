@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>

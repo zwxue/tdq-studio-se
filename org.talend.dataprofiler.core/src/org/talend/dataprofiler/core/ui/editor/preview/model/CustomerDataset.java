@@ -12,36 +12,33 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
-import org.jfree.chart.JFreeChart;
-import org.talend.dq.indicators.preview.EIndicatorChartType;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
- * DOC zqin class global comment. Detailled comment
+ * DOC Administrator class global comment. Detailled comment
  */
-public class ChartWithData {
+public class CustomerDataset extends DefaultCategoryDataset implements IDataEntity {
 
-    private JFreeChart chart;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-    private ChartDataEntity[] entity;
+    private List<ChartDataEntity> dataEnities;
 
-    private EIndicatorChartType chartType;
-
-    public ChartWithData(EIndicatorChartType chartType, JFreeChart chart, ChartDataEntity[] entity) {
-        this.chartType = chartType;
-        this.chart = chart;
-        this.entity = entity;
+    public CustomerDataset() {
+        dataEnities = new ArrayList<ChartDataEntity>();
     }
 
-    public ChartDataEntity[] getEnity() {
-        return entity;
+    public void addDataEntity(ChartDataEntity dataEntity) {
+        dataEnities.add(dataEntity);
     }
 
-    public EIndicatorChartType getChartType() {
-        return chartType;
-    }
-
-    public JFreeChart getChart() {
-        return chart;
+    public ChartDataEntity[] getDataEntities() {
+        return dataEnities.toArray(new ChartDataEntity[dataEnities.size()]);
     }
 }

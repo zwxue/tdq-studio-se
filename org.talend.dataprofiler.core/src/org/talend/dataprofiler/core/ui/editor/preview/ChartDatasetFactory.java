@@ -21,13 +21,18 @@ import org.eclipse.emf.common.util.EList;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
-import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
+import org.talend.dataprofiler.core.ui.editor.preview.model.CustomerBoxDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.model.CustomerDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.collections.MultiMapHelper;
 import orgomg.cwm.resource.relational.Column;
@@ -39,9 +44,9 @@ public class ChartDatasetFactory {
 
     private static final double OUTLIER_FACTOR = 3;
 
-    static CategoryDataset createDataset(EIndicatorChartType chartType, List<IndicatorUnit> indicatorUnitList) {
+    static IDataEntity createDataset(EIndicatorChartType chartType, List<IndicatorUnit> indicatorUnitList) {
 
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        CustomerDataset dataset = new CustomerDataset();
 
         for (int index = 0; index < indicatorUnitList.size(); index++) {
             IndicatorUnit unit = indicatorUnitList.get(index);
@@ -65,6 +70,13 @@ public class ChartDatasetFactory {
 
                     for (int i = 0; i < numOfShown; i++) {
                         dataset.addValue(frequencyExt[i].getValue(), "", String.valueOf(frequencyExt[i].getKey()));
+
+                        ChartDataEntity entity = new ChartDataEntity();
+                        entity.setIndicator(unit.getIndicator());
+                        entity.setLabel(String.valueOf(frequencyExt[i].getKey()));
+                        entity.setValue(String.valueOf(frequencyExt[i].getValue()));
+
+                        dataset.addDataEntity(entity);
                     }
                 }
             }
@@ -81,6 +93,14 @@ public class ChartDatasetFactory {
 
                     dataset.addValue(machCount, "matching", label);
                     dataset.addValue(notMathCount, "not matching", label);
+
+                    PatternChartDataEntity patternEntity = new PatternChartDataEntity();
+                    patternEntity.setIndicator(unit.getIndicator());
+                    patternEntity.setLabel(unit.getIndicatorName());
+                    patternEntity.setNumMatch(String.valueOf(machCount));
+                    patternEntity.setNumNoMatch(String.valueOf(notMathCount));
+
+                    dataset.addDataEntity(patternEntity);
                 }
             }
             break;
@@ -92,13 +112,20 @@ public class ChartDatasetFactory {
                 if (unit.isExcuted()) {
                     double value = Double.parseDouble(unit.getValue().toString());
                     String label = unit.getIndicatorName();
-                    // renderer3d.setSeriesPaint(index, unit.getColor());
+
                     dataset.addValue(value, label, "");
+
+                    ChartDataEntity entity = new ChartDataEntity();
+                    entity.setIndicator(unit.getIndicator());
+                    entity.setLabel(label);
+                    entity.setValue(String.valueOf(value));
+
+                    dataset.addDataEntity(entity);
                 }
             }
             break;
         case SUMMARY_STATISTICS:
-            DefaultBoxAndWhiskerCategoryDataset defaultDataset = new DefaultBoxAndWhiskerCategoryDataset();
+            CustomerBoxDataset defaultDataset = new CustomerBoxDataset();
             Map<IndicatorEnum, Double> map = new HashMap<IndicatorEnum, Double>();
 
             for (IndicatorUnit unit : indicatorUnitList) {
@@ -106,6 +133,12 @@ public class ChartDatasetFactory {
                     double doubleValue = Double.parseDouble(unit.getValue().toString());
                     map.put(unit.getType(), doubleValue);
 
+                    ChartDataEntity entity = new ChartDataEntity();
+                    entity.setIndicator(unit.getIndicator());
+                    entity.setLabel(unit.getIndicatorName());
+                    entity.setValue(String.valueOf(unit.getValue()));
+                    dataset.addDataEntity(entity);
+                    defaultDataset.addDataEntity(entity);
                 }
             }
 
@@ -115,8 +148,6 @@ public class ChartDatasetFactory {
                     dataset.addValue(map.get(indicatorEnum), "", indicatorEnum.getLabel());
                 }
 
-                // renderer3d.setSeriesPaint(0, Color.RED);
-                break;
             } else {
                 BoxAndWhiskerItem item = createBoxAndWhiskerItem(map.get(IndicatorEnum.MeanIndicatorEnum), map
                         .get(IndicatorEnum.MedianIndicatorEnum), map.get(IndicatorEnum.LowerQuartileIndicatorEnum), map
@@ -136,7 +167,7 @@ public class ChartDatasetFactory {
         return dataset;
     }
 
-    static CategoryDataset createExampleDataset(EIndicatorChartType chartType) {
+    static IDataEntity createExampleDataset(EIndicatorChartType chartType) {
         CategoryDataset dataset = new DefaultCategoryDataset();
 
         switch (chartType) {
@@ -157,7 +188,7 @@ public class ChartDatasetFactory {
         default:
         }
 
-        return dataset;
+        return null;
     }
 
     /**
@@ -200,7 +231,6 @@ public class ChartDatasetFactory {
             }
         }
 
-        
         /*
          * (non-Javadoc)
          * 
@@ -231,7 +261,6 @@ public class ChartDatasetFactory {
             }
             return hash;
         }
-
 
         public int compareTo(MultipleKey o) {
             if (o == null) {
@@ -267,7 +296,7 @@ public class ChartDatasetFactory {
                 if (i < internalKey.length - 1) {
                     builder.append(" | ");
                 }
-            }            
+            }
             return builder.toString();
         }
 
@@ -279,6 +308,7 @@ public class ChartDatasetFactory {
     public static class ValueAggregator {
 
         private Map<MultipleKey, Double[]> keyToVal = new HashMap<MultipleKey, Double[]>();
+
         private Map<String, List<String>> seriesKeyToLabel = new HashMap<String, List<String>>();
 
         void addValue(MultipleKey key, Double x, Double y, Double z) {
@@ -322,7 +352,7 @@ public class ChartDatasetFactory {
                 xDouble[i] = doubles[0] / doubles[1]; // FIXME how to know this is the avg !!
                 yDouble[i] = doubles[1];
                 zDouble[i] = doubles[2];
-                MultiMapHelper.addUniqueObjectToListMap(keyOfDataset, key.toString(), this.seriesKeyToLabel);                
+                MultiMapHelper.addUniqueObjectToListMap(keyOfDataset, key.toString(), this.seriesKeyToLabel);
                 i++;
             }
 
