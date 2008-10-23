@@ -16,10 +16,10 @@ import org.apache.log4j.Logger;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -34,11 +34,19 @@ public abstract class DataExplorer implements IDataExplorer {
 
     private static final String SELECT = "SELECT * ";
 
+    private static final String VALUE_SELECT = "SELECT ";
+
     protected Analysis analysis;
 
     protected Indicator indicator;
 
     protected DbmsLanguage dbmsLanguage;
+
+    protected IndicatorEnum indicatorEnum;
+
+    protected String columnName;
+
+    protected ChartDataEntity entity;
 
     /**
      * DOC scorreia DataExplorer constructor comment.
@@ -54,6 +62,31 @@ public abstract class DataExplorer implements IDataExplorer {
      * @return the full SELECT statement with the WHERE clause
      */
     protected String getRowsStatement(String whereClause) {
+        String fromClause = getFromClause();
+        if (whereClause != null) {
+            String where = fromClause.contains(dbmsLanguage.where()) ? dbmsLanguage.and() : dbmsLanguage.where();
+            return SELECT + fromClause + where + whereClause;
+        } else {
+            return SELECT + fromClause;
+        }
+    }
+
+    protected String getRowsStatement() {
+        return getRowsStatement(null);
+    }
+
+    protected String getValuesStatement(String columnName) {
+        String fromClause = getFromClause();
+
+        return VALUE_SELECT + columnName + fromClause;
+    }
+
+    /**
+     * DOC zqin Comment method "getFromClause".
+     * 
+     * @return
+     */
+    private String getFromClause() {
         String lang = dbmsLanguage.getDbmsName();
         Expression instantiatedExpression = this.indicator.getInstantiatedExpressions(lang);
         String instantiatedSQL = instantiatedExpression.getBody();
@@ -63,8 +96,7 @@ public abstract class DataExplorer implements IDataExplorer {
         }
         int b = instantiatedSQL.indexOf(this.dbmsLanguage.from());
         String fromClause = instantiatedSQL.substring(b);
-        String where = fromClause.contains(dbmsLanguage.where()) ? dbmsLanguage.and() : dbmsLanguage.where();
-        return SELECT + fromClause + where + whereClause;
+        return fromClause;
     }
 
     public boolean setAnalysis(Analysis analysis) {
@@ -83,9 +115,11 @@ public abstract class DataExplorer implements IDataExplorer {
         return true;
     }
 
-    public boolean setIndicator(Indicator indicator) {
-        this.indicator = indicator;
-        return indicator instanceof PatternMatchingIndicator;
+    public void setEnitty(ChartDataEntity entity) {
+        this.entity = entity;
+        this.indicator = entity.getIndicator();
+        this.indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
+        this.columnName = indicator.getAnalyzedElement().getName();
     }
 
 }

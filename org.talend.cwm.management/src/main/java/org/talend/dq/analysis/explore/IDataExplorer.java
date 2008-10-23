@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import org.talend.cwm.exception.TalendException;
+import java.util.Map;
+
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * @author scorreia
@@ -31,28 +32,7 @@ public interface IDataExplorer {
      */
     public boolean setAnalysis(Analysis analysis);
 
-    /**
-     * Method "setIndicator".
-     * 
-     * @param indicator the indicator from which the exploration must be done.
-     * @return false if the given indicator cannot be explored
-     */
-    public boolean setIndicator(Indicator indicator);
+    public void setEnitty(ChartDataEntity entity);
 
-    /**
-     * Method "getInvalidRowsStatement".
-     * 
-     * @return a SQL statement which will return the invalid rows.
-     * 
-     * MOD Zqin throws TalendException, see getValidRowsStatement()
-     */
-    public String getInvalidRowsStatement() throws TalendException;
-
-    /**
-     * Method "getValidRowsStatement".
-     * 
-     * @return a SQL statement which will return the valid rows.
-     * @throws TalendException
-     */
-    public String getValidRowsStatement() throws TalendException;
+    public Map<String, String> getQueryMap();
 }

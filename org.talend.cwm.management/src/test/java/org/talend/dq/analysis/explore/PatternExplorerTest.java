@@ -40,7 +40,7 @@ public class PatternExplorerTest {
         try {
             analysis = creator.createAndRunAnalysis();
             PatternExplorer patternExplorer = new PatternExplorer();
-            Assert.assertTrue(patternExplorer.setIndicator(analysis.getResults().getIndicators().iterator().next()));
+            // Assert.assertTrue(patternExplorer.setIndicator(analysis.getResults().getIndicators().iterator().next()));
             Assert.assertTrue(patternExplorer.setAnalysis(analysis));
             String validRowsStatement = patternExplorer.getInvalidRowsStatement();
             System.out.println(validRowsStatement);
@@ -61,7 +61,7 @@ public class PatternExplorerTest {
         try {
             analysis = creator.createAndRunAnalysis();
             PatternExplorer patternExplorer = new PatternExplorer();
-            Assert.assertTrue(patternExplorer.setIndicator(analysis.getResults().getIndicators().iterator().next()));
+            // Assert.assertTrue(patternExplorer.setIndicator(analysis.getResults().getIndicators().iterator().next()));
             Assert.assertTrue(patternExplorer.setAnalysis(analysis));
             String validRowsStatement = patternExplorer.getValidRowsStatement();
             System.out.println(validRowsStatement);

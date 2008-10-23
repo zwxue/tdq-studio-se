@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import org.talend.cwm.exception.TalendException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 
 /**
@@ -34,13 +36,8 @@ public class PatternExplorer extends DataExplorer {
      * (non-Javadoc)
      * 
      * @see org.talend.dq.analysis.explore.IDataExplorer#getInvalidRowsStatement()
-     * 
-     * MOD Zqin throws TalendException
      */
-    public String getInvalidRowsStatement() throws TalendException {
-        if (this.indicator == null || !(this.indicator instanceof PatternMatchingIndicator)) {
-            throw new TalendException("No indicator exist in analysis " + analysis.getName());
-        }
+    public String getInvalidRowsStatement() {
         String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
         String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
         String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString);
@@ -54,14 +51,19 @@ public class PatternExplorer extends DataExplorer {
      * 
      * @see org.talend.dq.analysis.explore.IDataExplorer#getValidRowsStatement()
      */
-    public String getValidRowsStatement() throws TalendException {
-        if (this.indicator == null || !(this.indicator instanceof PatternMatchingIndicator)) {
-            throw new TalendException("No indicator exist in analysis " + analysis.getName());
-        }
+    public String getValidRowsStatement() {
         String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
         final String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
         String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString);
         return getRowsStatement(regexCmp);
+    }
+
+    public Map<String, String> getQueryMap() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("view valid rows", getValidRowsStatement());
+        map.put("view invalid rows", getInvalidRowsStatement());
+
+        return map;
     }
 
 }
