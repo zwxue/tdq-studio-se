@@ -9,7 +9,16 @@
 -->
 
 <plugin>
-   
+
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+       <viewerActionBinding
+             viewerId="org.talend.dataprofiler.core.ui.views.DQRespositoryView">
+          <includes>
+             <actionExtension pattern="org.talend.cwm.compare.ui.actions.provider.*" />
+          </includes>
+       </viewerActionBinding>  
+   </extension>
    <extension  
          point="org.eclipse.ui.navigator.navigatorContent">
      <actionProvider
@@ -18,7 +27,7 @@
          <enablement>
           <or>
             <instanceof
-                     value="org.talend.dataprofiler.core.model.nodes.foldernode.AbstractDatabaseFolderNode">
+                     value="org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode">
             </instanceof>
             <and>
                <instanceof
@@ -38,7 +47,7 @@
          <enablement>
           <or>
             <instanceof
-                     value="org.talend.dataprofiler.core.model.nodes.foldernode.AbstractDatabaseFolderNode">
+                     value="org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode">
             </instanceof>
             <and>
                <instanceof
