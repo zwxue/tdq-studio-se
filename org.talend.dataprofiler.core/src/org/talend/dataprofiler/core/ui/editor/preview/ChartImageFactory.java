@@ -29,8 +29,8 @@ import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.BarRenderer3D;
+import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.ui.TextAnchor;
@@ -141,10 +141,11 @@ public class ChartImageFactory {
                 false, false);
 
         CategoryPlot plot = chart.getCategoryPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        StackedBarRenderer3D renderer = (StackedBarRenderer3D) plot.getRenderer();
         renderer.setSeriesPaint(0, Color.GREEN);
         renderer.setSeriesPaint(1, Color.RED);
         renderer.setBaseItemLabelsVisible(true);
+        renderer.setRenderAsPercentages(true);
         renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(),
                 new DecimalFormat("0.0%")));
         renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
