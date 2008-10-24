@@ -128,7 +128,7 @@
     <sqlGenericExpression xmi:id="_n-8v0GI-Ed2QlOgtjAaunA" body="SELECT AVG({0}) FROM ( SELECT {0}, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY {0}) rn FROM {1} ) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="DB2"/>
     <sqlGenericExpression xmi:id="_yBfLcGOhEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_qebsAaGiEd2ad6QSUasUIA" body="SELECT AVG(cast ({0} AS NUMERIC)) AS MEDIANE FROM (SELECT distinct {0} FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1} ) STT WHERE (SELECT COUNT({0}) FROM {1}) &lt;= (SELECT COUNT({0}) FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1} ) AS SOU WHERE SOU.{0} &lt;= STT.{0}) AND (SELECT COUNT({0}) FROM {1}) &lt;= (SELECT COUNT({0}) FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1}) AS SUR WHERE SUR.{0} >= STT.{0}) ) T" language="Adaptive Server Enterprise"/>
-    <sqlGenericExpression xmi:id="_2kuWIKGnEd2ad6QSUasUIA" body="SELECT AVG(cast ({0} AS NUMERIC)) AS MEDIANE FROM (SELECT distinct {0} FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1} ) STT WHERE (SELECT COUNT({0}) FROM {1}) &lt;= (SELECT COUNT({0}) FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1} ) AS SOU WHERE SOU.{0} &lt;= STT.{0}) AND (SELECT COUNT({0}) FROM {1}) &lt;= (SELECT COUNT({0}) FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1}) AS SUR WHERE SUR.{0} >= STT.{0}) ) T" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_2kuWIKGnEd2ad6QSUasUIA" body="SELECT * FROM (SELECT TOP {3} {0} FROM (SELECT TOP {4} {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} ASC ) AS FOO ORDER BY {0} DESC ) AS BAR ORDER BY {0} ASC " language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48xF2Ed2PKb6nEJEvhw" name="Inter Quartile Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI49BF2Ed2PKb6nEJEvhw _ccI49RF2Ed2PKb6nEJEvhw" label="IQR">
     <taggedValue xmi:id="_yb2dEDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the spread of the main half data. This measure is more stable than the range"/>
@@ -137,20 +137,20 @@
   <indicatorDefinitions xmi:id="_ccI49BF2Ed2PKb6nEJEvhw" name="Lower Quartile" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Lower Quartile">
     <taggedValue xmi:id="_yb3EIDh8Ed2XmO7pl5Yuyg" tag="Description" value="1/4th of the records are below this value and 3/4th are above"/>
     <taggedValue xmi:id="_yb3EITh8Ed2XmO7pl5Yuyg" tag="Purpose" value="indiquates the threshold of the lowest 1/4th records"/>
-    <sqlGenericExpression xmi:id="_yb3EIjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
     <sqlGenericExpression xmi:id="_yb3EIzh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb3EJDh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_DISC(0.25) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_2SZ8cGJAEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
     <sqlGenericExpression xmi:id="_NsBY0GOiEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_yOvpAKHWEd2d7N68szQ08Q" body="SELECT * FROM (SELECT TOP {3} {0} FROM (SELECT TOP {4} {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} ASC ) AS FOO ORDER BY {0} DESC ) AS BAR ORDER BY {0} ASC " language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49RF2Ed2PKb6nEJEvhw" name="Upper Quartile" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Upper Quartile">
     <taggedValue xmi:id="_yb3rMDh8Ed2XmO7pl5Yuyg" tag="Description" value="1/4th of the records are above this value and 3/4th are below"/>
     <taggedValue xmi:id="_yb4SQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="indiquates the threshold of the highest 1/4th records"/>
-    <sqlGenericExpression xmi:id="_yb4SQTh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="SQL"/>
     <sqlGenericExpression xmi:id="_yb4SQjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb4SQzh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
     <sqlGenericExpression xmi:id="_P044MGJBEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  3 * INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
     <sqlGenericExpression xmi:id="_S33yoGOiEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_y4H9MKHWEd2d7N68szQ08Q" body="SELECT * FROM (SELECT TOP {3} {0} FROM (SELECT TOP {4} {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} ASC ) AS FOO ORDER BY {0} DESC ) AS BAR ORDER BY {0} ASC " language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49hF2Ed2PKb6nEJEvhw" name="Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccJgABF2Ed2PKb6nEJEvhw _ccJgARF2Ed2PKb6nEJEvhw" label="Range">
     <taggedValue xmi:id="_yb6HcDh8Ed2XmO7pl5Yuyg" tag="Description" value="is the difference between the highest record and the lowest record"/>
@@ -227,6 +227,11 @@
     <sqlGenericExpression xmi:id="_OCTbxpR_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_OCTbx5R_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="DB2"/>
     <sqlGenericExpression xmi:id="_UHAQQZUbEd2dPK5T9pO-YA" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="Microsoft SQL Server"/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_10gx4JxcEd2YicTszQEJLA" name="Multiple Column Frequency Table" label="Multiple Column Frequency Table">
+    <taggedValue xmi:id="_ByME0JxdEd2YicTszQEJLA" tag="Description" value="TODO"/>
+    <taggedValue xmi:id="_ByME0ZxdEd2YicTszQEJLA" tag="Purpose" value="TODO"/>
+    <sqlGenericExpression xmi:id="_2CtwgJxdEd2YicTszQEJLA" body="SELECT {0} FROM {1} GROUP BY {2}" language="SQL"/>
   </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
