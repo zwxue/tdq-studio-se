@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.indicators.preview.table;
 
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -40,12 +41,12 @@ public class PatternChartDataEntity extends ChartDataEntity {
 
     public String getPerMatch() {
         Double match = Double.parseDouble(getNumMatch());
-        return String.valueOf(match / getSum());
+        return StringFormatUtil.format(match / getSum(), StringFormatUtil.PERCENT).toString();
     }
 
     public String getPerNoMatch() {
         Double nomatch = Double.parseDouble(getNumNoMatch());
-        return String.valueOf(nomatch / getSum());
+        return StringFormatUtil.format(nomatch / getSum(), StringFormatUtil.PERCENT).toString();
     }
 
     private Double getSum() {

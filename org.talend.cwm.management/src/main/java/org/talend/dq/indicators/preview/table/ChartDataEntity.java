@@ -13,6 +13,7 @@
 package org.talend.dq.indicators.preview.table;
 
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -36,7 +37,7 @@ public class ChartDataEntity {
     }
 
     public String getValue() {
-        return value;
+        return StringFormatUtil.format(value, StringFormatUtil.NUMBER).toString();
     }
 
     public void setValue(String value) {
@@ -44,13 +45,7 @@ public class ChartDataEntity {
     }
 
     public String getPersent() {
-
-        if (percent != null) {
-            return percent;
-        } else {
-            Double d = Double.parseDouble(getValue()) / indicator.getCount().doubleValue();
-            return String.valueOf(d);
-        }
+        return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
     }
 
     public void setPercent(String percent) {
