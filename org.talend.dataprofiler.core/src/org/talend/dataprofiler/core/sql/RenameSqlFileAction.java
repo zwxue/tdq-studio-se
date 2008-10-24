@@ -116,7 +116,8 @@ public class RenameSqlFileAction extends Action {
         if (exists) {
             IResource[] members = sourceFiles.members();
             for (IResource resource : members) {
-                if (resource instanceof IFile && resource.getFileExtension().equals(folder.getFileExtension())) {
+                if (resource instanceof IFile && resource.getFileExtension() != null
+                        && resource.getFileExtension().equals(folder.getFileExtension())) {
                     IPath removeFileExtension = resource.getFullPath().removeFileExtension();
                     existNames.add(removeFileExtension.lastSegment());
                 } else if (resource instanceof IFolder) {
