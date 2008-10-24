@@ -67,7 +67,7 @@ public final class DbmsLanguageFactory {
         if (identifierQuoteString.length() == 0) {
             // given data provider has not stored the identifier quote (version 1.1.0 of TOP)
             // we must set it by hand
-            identifierQuoteString = dbmsLanguage.getQuoteIdentifier();
+            identifierQuoteString = dbmsLanguage.getSupportedQuoteIdentifier();
         }
         dbmsLanguage.setDbQuoteString(identifierQuoteString);
         return dbmsLanguage;

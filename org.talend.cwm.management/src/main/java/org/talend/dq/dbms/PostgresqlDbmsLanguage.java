@@ -149,7 +149,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
-    public String getQuoteIdentifier() {
+    public String getSupportedQuoteIdentifier() {
         return "\"";
     }
 

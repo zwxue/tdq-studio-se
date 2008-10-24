@@ -592,6 +592,7 @@ public class DbmsLanguage {
         if (where != null && where.trim().length() != 0) {
             query = this.addWhereToStatement(query, where);
         }
+        this.finalizeQuery(query);
         return query;
     }
 
@@ -608,8 +609,9 @@ public class DbmsLanguage {
                 ZQuery query = this.parseQuery(statement);
                 if (whereClause != null) {
                     if (StringUtils.isNotBlank(whereClause)) {
+                        String safeWhereClause = replaceUnsupportedQuotes(whereClause);
                         ZqlParser filterParser = getZqlParser();
-                        filterParser.initParser(new ByteArrayInputStream(whereClause.getBytes()));
+                        filterParser.initParser(new ByteArrayInputStream(safeWhereClause.getBytes()));
                         ZExp currentWhere = query.getWhere();
                         ZExp whereExpression = filterParser.readExpression();
                         if (currentWhere != null && whereExpression != null) {
@@ -874,9 +876,9 @@ public class DbmsLanguage {
      * Method "getQuoteIdentifier" returns the hard coded quote identifier string. You should call
      * {@link #getDbQuoteString()} instead.
      * 
-     * @return hard coded quote identifier string.
+     * @return hard coded quote identifier string supported by the internal SQL parser (ZQL)
      */
-    public String getQuoteIdentifier() {
+    public String getSupportedQuoteIdentifier() {
         return "";
     }
 

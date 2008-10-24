@@ -23,6 +23,11 @@ import org.talend.dataquality.indicators.DateGrain;
 public class MySQLDbmsLanguage extends DbmsLanguage {
 
     /**
+     * 
+     */
+    private static final String MYSQL_IDENTIFIER_QUOTE = "`";
+
+    /**
      * DOC scorreia MySQLDbmsLanguage constructor comment.
      */
     public MySQLDbmsLanguage() {
@@ -81,7 +86,7 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
     @Override
     protected String replaceUnsupportedQuotes(String safeZqlString) {
         // ZQL does not support MySQL identifier quote string: `
-        return safeZqlString.replace("`", "");
+        return safeZqlString.replace(MYSQL_IDENTIFIER_QUOTE, "");
     }
 
     /*
@@ -169,8 +174,8 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
-    public String getQuoteIdentifier() {
-        return "`";
+    public String getSupportedQuoteIdentifier() {
+        return MYSQL_IDENTIFIER_QUOTE;
     }
 
     /*
