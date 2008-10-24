@@ -71,7 +71,11 @@ public class ChartTableFactory {
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        table.setLayoutData(new GridData(GridData.FILL_BOTH));
+        GridData gd = new GridData();
+        gd.heightHint = 220;
+        gd.widthHint = 500;
+        gd.verticalAlignment = SWT.BEGINNING;
+        table.setLayoutData(gd);
 
         String[] names = null;
         Integer[] widths = null;

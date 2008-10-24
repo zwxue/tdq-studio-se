@@ -75,6 +75,7 @@ public class ChartDatasetFactory {
                         entity.setIndicator(unit.getIndicator());
                         entity.setLabel(String.valueOf(frequencyExt[i].getKey()));
                         entity.setValue(String.valueOf(frequencyExt[i].getValue()));
+                        entity.setPercent(String.valueOf(frequencyExt[i].getFrequency()));
 
                         dataset.addDataEntity(entity);
                     }
@@ -119,6 +120,21 @@ public class ChartDatasetFactory {
                     entity.setIndicator(unit.getIndicator());
                     entity.setLabel(label);
                     entity.setValue(String.valueOf(value));
+                    entity.setPercent(String.valueOf(value / unit.getIndicator().getCount()));
+
+                    dataset.addDataEntity(entity);
+                }
+            }
+            break;
+        case MODE_INDICATOR:
+            for (IndicatorUnit unit : indicatorUnitList) {
+                if (unit.isExcuted()) {
+                    String label = unit.getIndicatorName();
+
+                    ChartDataEntity entity = new ChartDataEntity();
+                    entity.setIndicator(unit.getIndicator());
+                    entity.setLabel(label);
+                    entity.setValue(unit.getValue().toString());
 
                     dataset.addDataEntity(entity);
                 }

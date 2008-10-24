@@ -17,6 +17,7 @@ import java.awt.Color;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -45,7 +46,7 @@ public class IndicatorUnit {
     public IndicatorUnit(IndicatorEnum type, Indicator indicator, ColumnIndicator parentColumn) {
         this.type = type;
         this.indicator = indicator;
-        this.indicatorName = type.getLabel();
+        this.indicatorName = indicator.getName();
         this.parentColumn = parentColumn;
     }
 
@@ -100,7 +101,7 @@ public class IndicatorUnit {
      * @return the value
      */
     public Object getValue() {
-        return this.value;
+        return StringFormatUtil.format(this.value, StringFormatUtil.NUMBER);
     }
 
     /**

@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.utils.TextFormatFactory;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.domain.RangeRestriction;
@@ -133,8 +132,8 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
             Domain userDomain = DomainHelper.createDomain("test");
             for (SliceEntity entity : tableData) {
                 try {
-                    double min = TextFormatFactory.createLocalFormatValue(entity.getLowValue()).doubleValue();
-                    double max = TextFormatFactory.createLocalFormatValue(entity.getHighValue()).doubleValue();
+                    double min = Double.valueOf(entity.getLowValue());
+                    double max = Double.valueOf(entity.getHighValue());
                     RangeRestriction rangeRestriction = DomainHelper.createRealRangeRestriction(min, max);
                     userDomain.getRanges().add(rangeRestriction);
                 } catch (Exception e) {

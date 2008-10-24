@@ -22,7 +22,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.ui.utils.TextFormatFactory;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -119,7 +118,7 @@ public class ChartTableProviderFactory {
             case 1:
                 return entity.getValue();
             case 2:
-                return TextFormatFactory.createStandardPercent(entity.getPersent());
+                return entity.getPersent();
             default:
                 return "";
             }
@@ -141,7 +140,7 @@ public class ChartTableProviderFactory {
             case 1:
                 return entity.getValue();
             case 2:
-                return TextFormatFactory.createStandardPercent(entity.getPersent());
+                return entity.getPersent();
             default:
                 return "";
             }
@@ -182,9 +181,9 @@ public class ChartTableProviderFactory {
             case 0:
                 return entity.getLabel();
             case 1:
-                return TextFormatFactory.createStandardPercent(entity.getPerMatch());
+                return entity.getPerMatch();
             case 2:
-                return TextFormatFactory.createStandardPercent(entity.getPerNoMatch());
+                return entity.getPerNoMatch();
             case 3:
                 return entity.getNumMatch();
             case 4:

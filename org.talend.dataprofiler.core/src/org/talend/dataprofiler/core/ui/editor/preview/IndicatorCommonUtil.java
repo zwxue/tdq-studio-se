@@ -17,7 +17,6 @@ import java.util.Set;
 
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
-import org.talend.dataprofiler.core.ui.utils.TextFormatFactory;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
@@ -123,7 +122,7 @@ public class IndicatorCommonUtil {
 
             case AverageLengthIndicatorEnum:
                 tempColor = COLOR_AVERAGE_LENGTH;
-                tempObject = TextFormatFactory.createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
+                tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
                 break;
 
             case FrequencyIndicatorEnum:
@@ -150,12 +149,12 @@ public class IndicatorCommonUtil {
 
             case MeanIndicatorEnum:
                 tempColor = null;
-                tempObject = TextFormatFactory.createStandardNumber(((MeanIndicator) indicator).getMean());
+                tempObject = ((MeanIndicator) indicator).getMean();
                 break;
 
             case MedianIndicatorEnum:
                 tempColor = null;
-                tempObject = TextFormatFactory.createStandardNumber(((MedianIndicator) indicator).getMedian());
+                tempObject = ((MedianIndicator) indicator).getMedian();
                 break;
 
             case MinValueIndicatorEnum:

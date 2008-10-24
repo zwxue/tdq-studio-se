@@ -240,7 +240,7 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                                     gd.widthHint = 460;
                                     if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS) {
                                         gd = new GridData();
-                                        gd.heightHint = 500;
+                                        gd.heightHint = 450;
                                         gd.widthHint = 150;
                                     }
                                     frameComp.setLayoutData(gd);
@@ -345,14 +345,19 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                     IDataEntity dataEntity = (IDataEntity) cateEntity.getDataset();
 
                     ChartDataEntity currentDataEntity = null;
-                    for (ChartDataEntity entity : dataEntity.getDataEntities()) {
-                        if (chartType == EIndicatorChartType.FREQUENCE_STATISTICS) {
-                            if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
-                                currentDataEntity = entity;
-                            }
-                        } else {
-                            if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
-                                currentDataEntity = entity;
+                    ChartDataEntity[] dataEntities = dataEntity.getDataEntities();
+                    if (dataEntities.length == 1) {
+                        currentDataEntity = dataEntities[0];
+                    } else {
+                        for (ChartDataEntity entity : dataEntities) {
+                            if (chartType == EIndicatorChartType.FREQUENCE_STATISTICS) {
+                                if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
+                                    currentDataEntity = entity;
+                                }
+                            } else {
+                                if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
+                                    currentDataEntity = entity;
+                                }
                             }
                         }
                     }

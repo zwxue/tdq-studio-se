@@ -56,17 +56,20 @@ public class ChartTableMenuGenerator {
 
         }
 
-        explorer.setAnalysis(analysis);
-        explorer.setEnitty(entity);
+        if (explorer != null) {
+            explorer.setAnalysis(analysis);
+            explorer.setEnitty(entity);
+            Map<String, String> queryMap = explorer.getQueryMap();
+            List<MenuItemEntity> retrunList = new ArrayList<MenuItemEntity>();
+            for (String key : queryMap.keySet()) {
+                MenuItemEntity itemEntity = new MenuItemEntity(key, null, queryMap.get(key));
 
-        Map<String, String> queryMap = explorer.getQueryMap();
-        List<MenuItemEntity> retrunList = new ArrayList<MenuItemEntity>();
-        for (String key : queryMap.keySet()) {
-            MenuItemEntity itemEntity = new MenuItemEntity(key, null, queryMap.get(key));
+                retrunList.add(itemEntity);
+            }
 
-            retrunList.add(itemEntity);
+            return retrunList.toArray(new MenuItemEntity[queryMap.size()]);
+        } else {
+            return new MenuItemEntity[0];
         }
-
-        return retrunList.toArray(new MenuItemEntity[queryMap.size()]);
     }
 }

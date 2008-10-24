@@ -47,7 +47,6 @@ import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.utils.TextFormatFactory;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
 
@@ -430,10 +429,9 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 parameter.setBinsData(tableViewer.getInput());
             }
 
-            try {
-                TextFormatFactory.createLocalFormatValue(value);
+            if (CheckValueUtils.isRealNumberValue(value.toString())) {
                 updateStatus(IStatus.OK, MSG_OK);
-            } catch (Exception e) {
+            } else {
                 updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
             }
 
