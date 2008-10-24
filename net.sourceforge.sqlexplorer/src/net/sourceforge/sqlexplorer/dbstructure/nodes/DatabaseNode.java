@@ -76,8 +76,14 @@ public class DatabaseNode extends AbstractNode {
                 _supportsSchemas = true;
             }
             _databaseProductName = metadata.getDatabaseProductName();
-            _databaseVersion = " [v" + metadata.getJDBCMetaData().getDatabaseMajorVersion() + "." 
-                + metadata.getJDBCMetaData().getDatabaseMinorVersion() + "]";
+            try { // MOD scorreia 2008-10-23 surround with try/catch to caught error when the getDatabaseMajorVersion()
+                // method is not implemented by the driver (e.g. for sybase).
+                _databaseVersion = " [v" + metadata.getJDBCMetaData().getDatabaseMajorVersion() + "." 
+                    + metadata.getJDBCMetaData().getDatabaseMinorVersion() + "]";
+            } catch (Exception e) {
+                SQLExplorerPlugin.error("Cannot get database version", e);
+                _databaseVersion = " undefined ";
+            }
             
         } catch (AbstractMethodError e) {
             SQLExplorerPlugin.error("Error loading database product name.", e);
