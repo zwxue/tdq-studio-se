@@ -644,6 +644,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         writer.write(content, 0, content.length());
         writer.close();
 
+        // PTODO rli fixed feature 5186: synchronized the resource.
         IFile[] findFile = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(file.toURI());
         if (findFile == null) {
             return;
