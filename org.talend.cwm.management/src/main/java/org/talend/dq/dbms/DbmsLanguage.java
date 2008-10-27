@@ -58,6 +58,8 @@ public class DbmsLanguage {
     /** Functions of the system. [Function name, number of parameters] */
     private final Map<String, Integer> dbmsFunctions;
 
+    private static final String AND_WHERE_CLAUSE = "<%AND_WHERE_CLAUSE%>";
+
     // --- add here other supported systems (always in uppercase) // DBMS_SUPPORT
 
     static final String ORACLE = "ORACLE";
@@ -584,12 +586,12 @@ public class DbmsLanguage {
         return left + toSurround + right;
     }
 
-    public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) throws ParseException {
+    public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) throws ParseException {      
         TypedReturnCode<String> trc = this.prepareQuery(completedSqlString);
         String query = trc.getObject();
 
         String where = this.buildWhereExpression(whereExpressions);
-        if (where != null && where.trim().length() != 0) {
+        if ((where != null && where.trim().length() != 0) || completedSqlString.contains(AND_WHERE_CLAUSE)) {
             query = this.addWhereToStatement(query, where);
         }
         this.finalizeQuery(query);
@@ -637,6 +639,10 @@ public class DbmsLanguage {
                     surroundWithSpaces(whereClause)).append(statement.substring(insertIdx));
             return finalQuery.toString();
         }
+        if (statement.contains(AND_WHERE_CLAUSE)) {
+            whereClause = whereClause.length() != 0 ? and() + whereClause : whereClause;
+            return statement.replaceAll(AND_WHERE_CLAUSE, whereClause);
+        }
         // else
 
         // FIXME scorreia need to parse statement here and then to add the where clause correctly
@@ -653,7 +659,7 @@ public class DbmsLanguage {
      * @return
      */
     private boolean isTooComplexForZql(String statement) {
-        return statement.contains("OVER ( ORDER BY ") && statement.contains(") x");
+        return statement.contains("OVER ( ORDER BY ") && statement.contains(") x") || statement.contains(AND_WHERE_CLAUSE);
     }
 
     public String where() {

@@ -181,8 +181,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         + "). Remove all Pattern indicators from this analysis, please.");
             }
 
-            return traceError("No SQL expression found for indicator "
-                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (Pattern id: "
+            return traceError("Unsupported Indicator. No SQL expression found for indicator "
+                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (UUID: "
                     + ResourceHelper.getUUID(indicatorDefinition) + ")");
         }
 
@@ -222,7 +222,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(tdColumn);
         String schemaName = getQuotedSchemaName(columnSetOwner);
-        
+
         String table = quote(ColumnHelper.getColumnSetFullName(tdColumn));
 
         // --- normalize table name
@@ -233,7 +233,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
-        
+
         table = dbms().toQualifiedName(catalogName, schemaName, table);
 
         // ### evaluate SQL Statement depending on indicators ###
@@ -270,8 +270,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 }
             } else if (dateAggregationType != null && !dateAggregationType.equals(DateGrain.NONE)
             // MOD scorreia 2008-06-23 check column type (robustness against bug 4287)
-                    && Java2SqlType.isDateInSQL(tdColumn.getJavaType())
-                    ) {
+                    && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
                 // frequencies with date aggregation
                 completedSqlString = getDateAggregatedCompletedString(sqlGenericExpression, colName, table, dateAggregationType);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
@@ -283,7 +282,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     // TODO scorreia get user defined functions for pattern finder
                     colName = dbms().getPatternFinderDefaultFunction(colName);
                 }
-                
+
                 completedSqlString = replaceVariablesLow(sqlGenericExpression.getBody(), colName, table, colName);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
@@ -396,7 +395,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
         EList<Pattern> patterns = dataValidDomain.getPatterns();
         for (Pattern pattern : patterns) {
-            String regexp = this.dbmsLanguage.getRegexp(pattern);
+            String regexp = this.dbms().getRegexp(pattern);
             if (regexp != null) {
                 patternStrings.add(regexp);
             }
@@ -536,16 +535,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws ParseException
      */
     private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString) throws ParseException {
-        // return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpression);
-        TypedReturnCode<String> trc = dbms().prepareQuery(completedSqlString);
-        String query = trc.getObject();
-
-        String where = dbms().buildWhereExpression(whereExpressions);
-        if (where != null && where.trim().length() != 0) {
-            query = dbms().addWhereToStatement(query, where);
-        }
-        query = dbms().finalizeQuery(query);
-        return query;
+        return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions);
     }
 
     /**
@@ -683,9 +673,18 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     + dbms().toQualifiedName(catalogOrSchema, null, colName));
         }
 
+        if (count == 0) {
+            this.errorMessage = "Cannot compute a quantile because there is no row for column "
+                    + dbms().toQualifiedName(catalogOrSchema, null, colName);
+            throw new AnalysisExecutionException(errorMessage);
+        }
+
         Long midleCount = getLimitFirstArg(indicator, count);
         Integer nbRow = getNbReturnedRows(indicator, count);
-        return MessageFormat.format(sqlExpression.getBody(), colName, table, String.valueOf(midleCount), String.valueOf(nbRow));
+
+        long nPlusSkip = midleCount + nbRow; // needed for MSSQL query with TOP clause
+        return MessageFormat.format(sqlExpression.getBody(), colName, table, String.valueOf(midleCount), String.valueOf(nbRow),
+                nPlusSkip);
     }
 
     /**
