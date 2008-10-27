@@ -32,6 +32,7 @@ import net.sourceforge.sqlexplorer.sqleditor.results.ResultsTab;
 import net.sourceforge.sqlexplorer.sqlpanel.AbstractSQLExecution;
 import net.sourceforge.sqlexplorer.util.PartAdapter2;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -304,7 +305,8 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
             /*
              * (non-JavaDoc)
              * 
-             * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+             * @see
+             * org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
              */
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
@@ -641,6 +643,16 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         writer.write(content, 0, content.length());
         writer.close();
+
+        IFile[] findFile = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(file.toURI());
+        if (findFile == null) {
+            return;
+        }
+        try {
+            findFile[0].getParent().refreshLocal(IResource.DEPTH_ONE, null);
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
