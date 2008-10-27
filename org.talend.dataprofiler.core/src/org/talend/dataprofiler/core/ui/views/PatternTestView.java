@@ -18,10 +18,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -36,6 +40,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -66,7 +76,11 @@ import org.talend.utils.sugars.TypedReturnCode;
 
 public class PatternTestView extends ViewPart {
 
+    private static final String NO_DATABASE_SELECTEDED = "No database is selected!";
+
     public static final String ID = "org.talend.dataprofiler.core.ui.views.PatternTestView";
+
+    public static final String VIEW_CONTEXT_ID = "org.talend.dataprofiler.core.ui.views.PatternTestView.viewScope"; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(PatternTestView.class);
 
@@ -190,17 +204,7 @@ public class PatternTestView extends ViewPart {
         sqlButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                IFolder sourceFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
-                        .getFolder(DQStructureManager.SOURCE_FILES);
-                IFile sqlFile = sourceFolder.getFile("SQL Editor.sql");
-                int i = 0;
-                while (sqlFile.exists()) {
-                    sqlFile = sourceFolder.getFile("SQL Editor (" + i + ").sql");
-                    i++;
-                }
-                List<IFile> arrayList = new ArrayList<IFile>(2);
-                arrayList.add(sqlFile);
-                new OpenSqlFileAction(arrayList).run();
+                openSQLEditor();
             }
         });
         createPatternButton = new Button(centerPane, SWT.PUSH);
@@ -212,10 +216,20 @@ public class PatternTestView extends ViewPart {
         createPatternButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-
+                String language = null;
+                if (regularExpression != null) {
+                    language = regularExpression.getExpression().getLanguage();
+                } else {
+                    for (TdDataProvider tddataprovider : listTdDataProviders) {
+                        if (tddataprovider.getName().equals(dbCombo.getText())) {
+                            createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
+                            language = createDbmsLanguage.getDbmsName();
+                            break;
+                        }
+                    }
+                }
                 new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
-                        .getFolder(DQStructureManager.PATTERNS), ExpressionType.REGEXP, regularText.getText(), createDbmsLanguage
-                        .getDbmsName()).run();
+                        .getFolder(DQStructureManager.PATTERNS), ExpressionType.REGEXP, regularText.getText(), language).run();
             }
         });
         createPatternButton.setEnabled(false);
@@ -248,6 +262,35 @@ public class PatternTestView extends ViewPart {
             }
 
         });
+        activateContext();
+    }
+
+    /**
+     * Activate a context that this view uses. It will be tied to this view activation events and will be removed when
+     * the view is disposed.
+     */
+    private void activateContext() {
+        IContextService contextService = (IContextService) getSite().getService(IContextService.class);
+        contextService.activateContext(VIEW_CONTEXT_ID);
+
+        TestRegularAction testRegularAction = new TestRegularAction();
+        IHandlerService service = (IHandlerService) getViewSite().getService(IHandlerService.class);
+        service.activateHandler(testRegularAction.getActionDefinitionId(), new ActionHandler(testRegularAction));
+    }
+
+    /**
+     * DOC rli PatternTestView class global comment. Detailled comment
+     */
+    public class TestRegularAction extends Action {
+
+        public TestRegularAction() {
+            this.setActionDefinitionId("org.talend.dataprofiler.core.testRegular");
+        }
+
+        @Override
+        public void run() {
+            testRegularText();
+        }
     }
 
     /**
@@ -286,162 +329,9 @@ public class PatternTestView extends ViewPart {
                 }
             }
         }
-        MessageDialog.openWarning(new Shell(), "", "No database is selected!");
+        MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED);
     }
 
-    /**
-     * 
-     * DOC autumn PatternTestView class global comment. Detailled comment
-     */
-    // class TreeSelectDialog extends SelectionDialog {
-    //
-    // TreeViewer treeViewer;
-    //
-    // List<Object> tdCatalogItemList = new ArrayList();
-    //
-    // String title;
-    //
-    // protected TreeSelectDialog(Shell parentShell) {
-    //
-    // super(parentShell);
-    // }
-    //
-    // public TreeSelectDialog(TdDataProvider tdDataProvider, Shell parentShell) {
-    // super(parentShell);
-    // title = tdDataProvider.getName();
-    // this.setTitle(title);
-    // tdCatalogItemList.addAll(CatalogHelper.getTdCatalogs(tdDataProvider.getDataPackage()));
-    // }
-    //
-    // private void createTreeViewer(Composite parent) {
-    // // treeViewer = new CheckboxTreeViewer(parent);
-    // treeViewer = new TreeViewer(parent, SWT.BORDER);
-    // treeViewer.setContentProvider(new TableViewContentProvider());
-    // treeViewer.setLabelProvider(new TableTreeLabelProvider());
-    // treeViewer.setInput(tdCatalogItemList);
-    // treeViewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-    // }
-    //
-    // @Override
-    // protected Control createDialogArea(Composite parent) {
-    // Composite composite = (Composite) super.createDialogArea(parent);
-    // GridLayout layout = new GridLayout();
-    // layout.numColumns = 1;
-    // composite.setLayout(layout);
-    // composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-    // createTreeViewer(composite);
-    // return composite;
-    // }
-    //
-    // /**
-    // *
-    // */
-    // protected void initializeBounds() {
-    // this.getShell().setSize(400, 300);
-    // }
-    //
-    // /**
-    // * @since 3.4
-    // */
-    // protected boolean isResizable() {
-    // return false;
-    // }
-    // }
-    /**
-     * 
-     * qwei SelectRepositoryContextDialog class global comment. Detailled comment
-     */
-    // class TableViewContentProvider implements ITreeContentProvider {
-    //
-    // public Object[] getChildren(Object parentElement) {
-    // if (parentElement instanceof TdCatalog) {
-    // // TdCatalog item = (TdCatalog) parentElement;
-    //
-    // }
-    // return null;
-    // }
-    //
-    // public Object getParent(Object element) {
-    //
-    // return element;
-    // }
-    //
-    // public boolean hasChildren(Object element) {
-    // return false;
-    // }
-    //
-    // @SuppressWarnings("unchecked")
-    // public Object[] getElements(Object inputElement) {
-    // return ((List) inputElement).toArray();
-    // }
-    //
-    // public void dispose() {
-    //
-    // }
-    //
-    // public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-    //
-    // }
-    //
-    // }
-    /**
-     * 
-     * qwei TableSelectionDialog class global comment. Detailled comment
-     */
-    // class TableTreeLabelProvider implements ILabelProvider {
-    //
-    // public final Image getImage(Object element) {
-    // // obtain the base image by querying the element
-    //
-    // if (element instanceof TdCatalog) {
-    // return ImageLib.getImage(ImageLib.CATALOG);
-    // }
-    // return null;
-    // }
-    //
-    // public final String getText(Object element) {
-    // // query the element for its label
-    // String label = "";
-    // if (element instanceof TdCatalog) {
-    // TdCatalog tdCatalog = (TdCatalog) element;
-    // label = tdCatalog.getName();
-    // }
-    // return label;
-    // }
-    //
-    // public void addListener(ILabelProviderListener listener) {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    //
-    // public void dispose() {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    //
-    // public boolean isLabelProperty(Object element, String property) {
-    // // TODO Auto-generated method stub
-    // return false;
-    // }
-    //
-    // public void removeListener(ILabelProviderListener listener) {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    // }
-    /**
-     * add DBCombo selectionListener DOC autumn Comment method "initDBComboLister".
-     */
-    // private void initDBComboListener() {
-    // dbCombo.addSelectionListener(new SelectionAdapter() {
-    //
-    // public void widgetSelected(SelectionEvent e) {
-    // // TODO Auto-generated method stub
-    // String strDBName = dbCombo.getText();
-    // }
-    //
-    // });
-    // }
     /**
      * Set the pattern and regularExpression value to the corresponding field, it can be called after the control
      * created.
@@ -466,6 +356,40 @@ public class PatternTestView extends ViewPart {
 
     @Override
     public void setFocus() {
+
+    }
+
+    /**
+     * DOC rli Comment method "openSQLEditor".
+     */
+    private void openSQLEditor() {
+        IFolder sourceFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+                DQStructureManager.SOURCE_FILES);
+        IFile sqlFile = sourceFolder.getFile("SQL Editor.sql");
+        int i = 0;
+        while (sqlFile.exists()) {
+            sqlFile = sourceFolder.getFile("SQL Editor (" + i + ").sql");
+            i++;
+        }
+        List<IFile> arrayList = new ArrayList<IFile>(2);
+        arrayList.add(sqlFile);
+        OpenSqlFileAction openSqlFileAction = new OpenSqlFileAction(arrayList);
+        openSqlFileAction.run();
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
+        IEditorPart findEditor = page.findEditor(openSqlFileAction.getEditorInput());
+
+        for (TdDataProvider tddataprovider : listTdDataProviders) {
+            if (tddataprovider.getName().equals(dbCombo.getText())) {
+                createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
+                String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText
+                        .getText());
+
+                ((SQLEditor) findEditor).setText(selectRegexpTestString);
+                return;
+            }
+        }
+        MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED);
 
     }
 }

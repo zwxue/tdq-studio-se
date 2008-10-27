@@ -23,7 +23,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -41,6 +41,8 @@ import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 public class OpenSqlFileAction extends Action {
 
     private List<IFile> folder;
+
+    private IEditorInput editorInput;
 
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
@@ -68,11 +70,15 @@ public class OpenSqlFileAction extends Action {
         for (IFile file : folder) {
             String portableString = location.append(file.getFullPath()).toPortableString();
             try {
-                ap.openEditor(new SQLEditorInput(new File(portableString)),
-                        "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor");
+                editorInput = new SQLEditorInput(new File(portableString));
+                ap.openEditor(editorInput, "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor");
             } catch (PartInitException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public IEditorInput getEditorInput() {
+        return editorInput;
     }
 }

@@ -527,6 +527,12 @@
 		id="org.talend.dataprofiler.core.ui.views.DQRespositoryView.viewScope"
 		parentId="org.eclipse.ui.contexts.window">
 	</context>
+	<context
+		name="Pattern Test ViewScope"
+		description="The context of PatternTestView"
+		id="org.talend.dataprofiler.core.ui.views.PatternTestView.viewScope"
+		parentId="org.eclipse.ui.contexts.window">
+	</context>
   </extension>  
   
   <extension
@@ -538,6 +544,10 @@
      <command
            id="org.talend.dataprofiler.core.runAnalysis"
            name="runAnalysis">
+     </command>
+     <command
+           id="org.talend.dataprofiler.core.testRegular"
+           name="testRegular">
      </command>
   </extension>
   <extension
@@ -552,6 +562,12 @@
            commandId="org.talend.dataprofiler.core.runAnalysis"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
            sequence="F6">
+     </key>
+     <key
+           commandId="org.talend.dataprofiler.core.testRegular"
+           contextId="org.talend.dataprofiler.core.ui.views.PatternTestView.viewScope"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="Ctrl+Enter">
      </key>
   </extension>
 
