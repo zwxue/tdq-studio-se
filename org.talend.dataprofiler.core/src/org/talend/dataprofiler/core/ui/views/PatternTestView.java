@@ -28,6 +28,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -35,7 +37,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -84,7 +85,7 @@ public class PatternTestView extends ViewPart {
 
     private static Logger log = Logger.getLogger(PatternTestView.class);
 
-    private Combo dbCombo;
+    private CCombo dbCombo;
 
     private Text testText, regularText;
 
@@ -108,9 +109,14 @@ public class PatternTestView extends ViewPart {
 
     @Override
     public void createPartControl(final Composite parent) {
+        ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL);
+        scrolledComposite.setExpandHorizontal(true);
+        scrolledComposite.setExpandVertical(true);
+        Composite mainComposite = new Composite(scrolledComposite, SWT.NONE);
+        scrolledComposite.setContent(mainComposite);
         BorderLayout blay = new BorderLayout();
-        parent.setLayout(blay);
-        final Composite composite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(blay);
+        final Composite composite = new Composite(mainComposite, SWT.NONE);
         composite.setLayoutData(BorderLayout.NORTH);
         GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
@@ -126,10 +132,11 @@ public class PatternTestView extends ViewPart {
         coboCom.setLayoutData(data);
         Label dbLabel = new Label(coboCom, SWT.NONE);
         dbLabel.setText("DB Connections");
-        dbCombo = new Combo(coboCom, SWT.DROP_DOWN);
+        dbCombo = new CCombo(coboCom, SWT.DROP_DOWN | SWT.BORDER);
+        dbCombo.setEditable(false);
         data = new GridData();
-        data.widthHint = 80;
-        data.heightHint = 100;
+        data.widthHint = 100;
+        // data.heightHint = 100;
         dbCombo.setLayoutData(data);
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
@@ -153,6 +160,7 @@ public class PatternTestView extends ViewPart {
         emoticonLabel = new Label(imgCom, SWT.NONE);
         GridData gd = new GridData();
         gd.heightHint = 18;
+        gd.widthHint = 18;
         emoticonLabel.setLayoutData(gd);
         emoticonLabel.setText(PluginConstant.SPACE_STRING + PluginConstant.SPACE_STRING + PluginConstant.SPACE_STRING);
 
@@ -181,7 +189,7 @@ public class PatternTestView extends ViewPart {
         });
 
         BorderLayout blayout = new BorderLayout();
-        Composite bottom = new Composite(parent, SWT.NONE);
+        Composite bottom = new Composite(mainComposite, SWT.NONE);
         bottom.setLayout(blayout);
         bottom.setLayoutData(BorderLayout.CENTER);
         Composite centerPane = new Composite(bottom, SWT.NONE);
@@ -262,6 +270,9 @@ public class PatternTestView extends ViewPart {
             }
 
         });
+
+        scrolledComposite.setMinSize(mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        mainComposite.layout();
         activateContext();
     }
 
