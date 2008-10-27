@@ -586,7 +586,7 @@ public class DbmsLanguage {
         return left + toSurround + right;
     }
 
-    public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) throws ParseException {      
+    public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) throws ParseException {
         TypedReturnCode<String> trc = this.prepareQuery(completedSqlString);
         String query = trc.getObject();
 
@@ -594,8 +594,7 @@ public class DbmsLanguage {
         if ((where != null && where.trim().length() != 0) || completedSqlString.contains(AND_WHERE_CLAUSE)) {
             query = this.addWhereToStatement(query, where);
         }
-        this.finalizeQuery(query);
-        return query;
+        return this.finalizeQuery(query);
     }
 
     /**
