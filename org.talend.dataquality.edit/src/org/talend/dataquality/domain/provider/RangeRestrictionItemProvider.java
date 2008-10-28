@@ -27,6 +27,8 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
 import org.talend.dataquality.domain.DomainPackage;
+import org.talend.dataquality.domain.RangeRestriction;
+import orgomg.cwm.objectmodel.core.provider.ModelElementItemProvider;
 
 /**
  * This is the item provider adapter for a {@link org.talend.dataquality.domain.RangeRestriction} object.
@@ -35,7 +37,7 @@ import org.talend.dataquality.domain.DomainPackage;
  * @generated
  */
 public class RangeRestrictionItemProvider
-    extends ItemProviderAdapter
+    extends ModelElementItemProvider
     implements	
         IEditingDomainItemProvider,	
         IStructuredItemContentProvider,	
@@ -155,7 +157,10 @@ public class RangeRestrictionItemProvider
      */
     @Override
     public String getText(Object object) {
-        return getString("_UI_RangeRestriction_type");
+        String label = ((RangeRestriction)object).getName();
+        return label == null || label.length() == 0 ?
+            getString("_UI_RangeRestriction_type") :
+            getString("_UI_RangeRestriction_type") + " " + label;
     }
 
     /**
