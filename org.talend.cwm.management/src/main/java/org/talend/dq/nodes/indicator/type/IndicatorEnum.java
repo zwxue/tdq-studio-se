@@ -84,6 +84,21 @@ public enum IndicatorEnum {
                            IndicatorsPackage.Literals.FREQUENCY_INDICATOR,
                            "frequency table",
                            null),
+    LowFrequencyIndicatorEnum(
+                              IndicatorsPackage.LOW_FREQUENCY_INDICATOR,
+                              IndicatorsPackage.Literals.LOW_FREQUENCY_INDICATOR,
+                              "low frequency table",
+                              null),
+    PatternFreqIndicatorEnum(
+                             IndicatorsPackage.PATTERN_FREQ_INDICATOR,
+                             IndicatorsPackage.Literals.PATTERN_FREQ_INDICATOR,
+                             "pattern frequency table",
+                             null),
+    PatternLowFreqIndicatorEnum(
+                                IndicatorsPackage.PATTERN_LOW_FREQ_INDICATOR,
+                                IndicatorsPackage.Literals.PATTERN_LOW_FREQ_INDICATOR,
+                                "pattern low frequency table",
+                                null),
 
     MeanIndicatorEnum(IndicatorsPackage.MEAN_INDICATOR, IndicatorsPackage.Literals.MEAN_INDICATOR, "mean", null),
     MedianIndicatorEnum(IndicatorsPackage.MEDIAN_INDICATOR, IndicatorsPackage.Literals.MEDIAN_INDICATOR, "median", null),
@@ -257,6 +272,8 @@ public enum IndicatorEnum {
             returnEnum = RangeIndicatorEnum;
         } else if (indicatorType == FrequencyIndicatorEnum.getIndicatorType()) {
             returnEnum = FrequencyIndicatorEnum;
+        } else if (indicatorType == LowFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = LowFrequencyIndicatorEnum;
         } else if (indicatorType == TextIndicatorEnum.getIndicatorType()) {
             returnEnum = TextIndicatorEnum;
         } else if (indicatorType == BoxIIndicatorEnum.getIndicatorType()) {

@@ -32,7 +32,17 @@ public interface IDataExplorer {
      */
     public boolean setAnalysis(Analysis analysis);
 
+    /**
+     * DOC Zqin Comment method "setEnitty".
+     * 
+     * @param entity
+     */
     public void setEnitty(ChartDataEntity entity);
 
+    /**
+     * DOC Zqin Comment method "getQueryMap".
+     * 
+     * @return
+     */
     public Map<String, String> getQueryMap();
 }
