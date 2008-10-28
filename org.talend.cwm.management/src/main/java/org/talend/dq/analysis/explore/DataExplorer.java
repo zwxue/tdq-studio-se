@@ -13,6 +13,8 @@
 package org.talend.dq.analysis.explore;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
@@ -22,6 +24,8 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author scorreia
@@ -29,6 +33,8 @@ import orgomg.cwm.objectmodel.core.Expression;
  * Abstract class to be used by data explorer subclasses.
  */
 public abstract class DataExplorer implements IDataExplorer {
+
+    protected static final String VIEW_ROWS = "View rows";
 
     private static Logger log = Logger.getLogger(PatternExplorer.class);
 
@@ -44,6 +50,9 @@ public abstract class DataExplorer implements IDataExplorer {
 
     protected IndicatorEnum indicatorEnum;
 
+    /**
+     * Column name with quotes.
+     */
     protected String columnName;
 
     protected ChartDataEntity entity;
@@ -119,7 +128,12 @@ public abstract class DataExplorer implements IDataExplorer {
         this.entity = entity;
         this.indicator = entity.getIndicator();
         this.indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
-        this.columnName = indicator.getAnalyzedElement().getName();
+        this.columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
     }
 
+    protected String getFullyQualifiedTableName(Column column) {
+        final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+        return dbmsLanguage.toQualifiedName(null, dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner)
+                .getName()), dbmsLanguage.quote(columnSetOwner.getName()));
+    }
 }

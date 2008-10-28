@@ -42,7 +42,7 @@ public class TextStatisticsExplorer extends DataExplorer {
         switch (this.indicatorEnum) {
         case MinLengthIndicatorEnum:
         case MaxLengthIndicatorEnum:
-            map.put("View rows", getTextRowsStatement());
+            map.put(VIEW_ROWS, getTextRowsStatement());
             break;
         default:
         }

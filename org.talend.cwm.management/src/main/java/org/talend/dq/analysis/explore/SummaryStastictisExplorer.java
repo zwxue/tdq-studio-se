@@ -15,7 +15,6 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -26,22 +25,72 @@ import org.talend.dataquality.indicators.IndicatorParameters;
  */
 public class SummaryStastictisExplorer extends DataExplorer {
 
-    private String getSummaryRowsStatement() {
+    /**
+     * Method "getMatchingRowsStatement".
+     * 
+     * @return the query to get the rows with a matching value
+     */
+    private String getMatchingRowsStatement() {
         double value = Double.valueOf(entity.getValue());
-        String clause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + value;
+        String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + value;
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        return "select * from " + getFullyQualifiedTableName(column) + whereClause;
+    }
+
+    /**
+     * TODO zqin use this method in a menu ".
+     * 
+     * View invalid rows" Method "getInvalidRowsStatement".
+     * 
+     * @return the query to get the invalid rows (or null when all rows are valid)
+     */
+    private String getInvalidRowsStatement() {
+        double value = Double.valueOf(entity.getValue());
+        String whereClause = null;
 
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         IndicatorParameters parameters = indicator.getParameters();
         if (parameters != null) {
+            String where1 = null;
             Domain domain = parameters.getIndicatorValidDomain();
-            double max = Double.valueOf(DomainHelper.getMaxValue(domain.getRanges().get(0)));
-            double min = Double.valueOf(DomainHelper.getMinValue(domain.getRanges().get(0)));
-            if (value < min || value > max) {
-                clause = dbmsLanguage.where() + this.columnName + "<" + min + dbmsLanguage.and() + this.columnName + ">" + max;
+            if (domain != null) {
+                where1 = getWhereInvalidClause(value, where1, domain);
+            }
+            String where2 = null;
+            domain = parameters.getDataValidDomain();
+            if (domain != null) {
+                where2 = getWhereInvalidClause(value, where2, domain);
+            }
+            
+            if (where1 != null) {
+                whereClause = where1;
+                if (where2 != null) {
+                    whereClause += dbmsLanguage.or() + where2;
+                }
+            } else if (where2 != null) {
+                whereClause = where2;
             }
         }
 
-        return "select * from " + ColumnHelper.getColumnSetFullName(column) + clause;
+        return whereClause != null ? "select * from " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + whereClause
+                : null;
+    }
+
+    /**
+     * DOC scorreia Comment method "getWhereInvalidClause".
+     * @param value
+     * @param whereClause
+     * @param domain
+     * @return
+     */
+    private String getWhereInvalidClause(double value, String whereClause, Domain domain) {
+        double max = Double.valueOf(DomainHelper.getMaxValue(domain.getRanges().get(0)));
+        double min = Double.valueOf(DomainHelper.getMinValue(domain.getRanges().get(0)));
+        if (value < min || value > max) {
+            whereClause = dbmsLanguage.where() + columnName + dbmsLanguage.less() + min + dbmsLanguage.or() + columnName
+                    + dbmsLanguage.greater() + max;
+        }
+        return whereClause;
     }
 
     /*
@@ -56,7 +105,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         case MeanIndicatorEnum:
             break;
         default:
-            map.put("View rows", getSummaryRowsStatement());
+            map.put(VIEW_ROWS, getMatchingRowsStatement());
         }
 
         return map;

@@ -32,7 +32,7 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         case RowCountIndicatorEnum:
         case NullCountIndicatorEnum:
         case BlankCountIndicatorEnum:
-            map.put("View rows", getRowsStatement());
+            map.put(VIEW_ROWS, getRowsStatement());
             break;
 
         case UniqueIndicatorEnum:
@@ -41,7 +41,7 @@ public class SimpleStatisticsExplorer extends DataExplorer {
             break;
 
         case DuplicateCountIndicatorEnum:
-            map.put("View rows", getRowsStatement());
+            map.put(VIEW_ROWS, getRowsStatement());
             map.put("View values", getValuesStatement("col"));
             break;
         default:
