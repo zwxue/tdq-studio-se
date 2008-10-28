@@ -126,6 +126,7 @@ public class IndicatorCommonUtil {
                 break;
 
             case FrequencyIndicatorEnum:
+            case LowFrequencyIndicatorEnum:
                 FrequencyIndicator frequency = (FrequencyIndicator) indicator;
                 Set<Object> valueSet = frequency.getDistinctValues();
                 if (valueSet == null) {

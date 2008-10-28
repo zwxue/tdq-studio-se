@@ -335,14 +335,15 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                                     // carete chart
                                     final JFreeChart chart = chartData.getChart();
                                     if (chart != null) {
-                                        Composite frameComp = toolkit.createComposite(composite, SWT.EMBEDDED);
+                                        Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
                                         frameComp.setLayout(new GridLayout());
                                         GridData gd = new GridData();
                                         gd.heightHint = 230;
                                         gd.widthHint = 460;
-                                        if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS) {
+                                        if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS
+                                                && chartData.getEnity().length == 6) {
                                             gd = new GridData();
-                                            gd.heightHint = 500;
+                                            gd.heightHint = 400;
                                             gd.widthHint = 150;
                                         }
                                         frameComp.setLayoutData(gd);

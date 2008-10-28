@@ -111,6 +111,7 @@ public enum FormEnum {
 
             break;
         case FrequencyIndicatorEnum:
+        case LowFrequencyIndicatorEnum:
             if (dataminingType == DataminingType.INTERVAL) {
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
 

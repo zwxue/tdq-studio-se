@@ -55,6 +55,7 @@ public class ChartDatasetFactory {
 
         switch (chartType) {
         case FREQUENCE_STATISTICS:
+        case LOW_FREQUENCE_STATISTICS:
             for (IndicatorUnit unit : indicatorUnitList) {
                 if (unit.isExcuted()) {
                     FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
@@ -175,6 +176,7 @@ public class ChartDatasetFactory {
                 return defaultDataset;
             }
 
+            break;
         default:
 
             return null;

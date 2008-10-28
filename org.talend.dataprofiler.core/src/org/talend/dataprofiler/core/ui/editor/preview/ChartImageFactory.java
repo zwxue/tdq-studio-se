@@ -90,7 +90,7 @@ public class ChartImageFactory {
                 return createBoxAndWhiskerChart(chartType.getLiteral(), bDataset);
             }
 
-            return create3DBarChart(chartType.getLiteral(), cDataset, true);
+            return create3DBarChart(chartType.getLiteral(), cDataset, false);
 
         case SIMPLE_STATISTICS:
         case TEXT_STATISTICS:

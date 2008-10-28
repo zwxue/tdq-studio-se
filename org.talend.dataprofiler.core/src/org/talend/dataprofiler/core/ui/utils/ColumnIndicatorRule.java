@@ -90,6 +90,7 @@ public final class ColumnIndicatorRule {
 
         case ModeIndicatorEnum:
         case FrequencyIndicatorEnum:
+        case LowFrequencyIndicatorEnum:
             if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL) {
                 return true;
             }

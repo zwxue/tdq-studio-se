@@ -58,6 +58,7 @@ public class CompositeIndicator {
         List<IndicatorUnit> simpleList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> textList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> frequencyList = new ArrayList<IndicatorUnit>();
+        List<IndicatorUnit> lowFrequencyList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> summaryList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> patternList = new ArrayList<IndicatorUnit>();
         List<IndicatorUnit> sqlPatternList = new ArrayList<IndicatorUnit>();
@@ -81,6 +82,9 @@ public class CompositeIndicator {
                 break;
             case FrequencyIndicatorEnum:
                 frequencyList.add(one);
+                break;
+            case LowFrequencyIndicatorEnum:
+                lowFrequencyList.add(one);
                 break;
             case MeanIndicatorEnum:
             case MinValueIndicatorEnum:
@@ -109,6 +113,7 @@ public class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.SIMPLE_STATISTICS, simpleList);
         separatedMap.put(EIndicatorChartType.TEXT_STATISTICS, textList);
         separatedMap.put(EIndicatorChartType.FREQUENCE_STATISTICS, frequencyList);
+        separatedMap.put(EIndicatorChartType.LOW_FREQUENCE_STATISTICS, lowFrequencyList);
         separatedMap.put(EIndicatorChartType.SUMMARY_STATISTICS, summaryList);
         separatedMap.put(EIndicatorChartType.PATTERN_MATCHING, patternList);
         separatedMap.put(EIndicatorChartType.SQL_PATTERN_MATCHING, sqlPatternList);
