@@ -710,7 +710,7 @@
           eType="#//domain/Domain"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="enumeration" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/foundation/datatypes/Enumeration"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="RangeRestriction">
+    <eClassifiers xsi:type="ecore:EClass" name="RangeRestriction" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement">
       <eStructuralFeatures xsi:type="ecore:EReference" name="lowerValue" eType="#//domain/LiteralValue"
           containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="upperValue" eType="#//domain/LiteralValue"

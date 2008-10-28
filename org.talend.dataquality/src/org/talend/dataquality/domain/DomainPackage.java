@@ -343,13 +343,184 @@ public interface DomainPackage extends EPackage {
     int RANGE_RESTRICTION = 2;
 
     /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__NAME = CorePackage.MODEL_ELEMENT__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__VISIBILITY = CorePackage.MODEL_ELEMENT__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__CLIENT_DEPENDENCY = CorePackage.MODEL_ELEMENT__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__SUPPLIER_DEPENDENCY = CorePackage.MODEL_ELEMENT__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__CONSTRAINT = CorePackage.MODEL_ELEMENT__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__NAMESPACE = CorePackage.MODEL_ELEMENT__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__IMPORTER = CorePackage.MODEL_ELEMENT__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__STEREOTYPE = CorePackage.MODEL_ELEMENT__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__TAGGED_VALUE = CorePackage.MODEL_ELEMENT__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__RESPONSIBLE_PARTY = CorePackage.MODEL_ELEMENT__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__ELEMENT_NODE = CorePackage.MODEL_ELEMENT__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__SET = CorePackage.MODEL_ELEMENT__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__RENDERED_OBJECT = CorePackage.MODEL_ELEMENT__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__VOCABULARY_ELEMENT = CorePackage.MODEL_ELEMENT__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__MEASUREMENT = CorePackage.MODEL_ELEMENT__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__CHANGE_REQUEST = CorePackage.MODEL_ELEMENT__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_RESTRICTION__DASDL_PROPERTY = CorePackage.MODEL_ELEMENT__DASDL_PROPERTY;
+
+    /**
      * The feature id for the '<em><b>Lower Value</b></em>' containment reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RANGE_RESTRICTION__LOWER_VALUE = 0;
+    int RANGE_RESTRICTION__LOWER_VALUE = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 0;
 
     /**
      * The feature id for the '<em><b>Upper Value</b></em>' containment reference.
@@ -358,7 +529,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int RANGE_RESTRICTION__UPPER_VALUE = 1;
+    int RANGE_RESTRICTION__UPPER_VALUE = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 1;
 
     /**
      * The feature id for the '<em><b>Expressions</b></em>' containment reference.
@@ -367,7 +538,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int RANGE_RESTRICTION__EXPRESSIONS = 2;
+    int RANGE_RESTRICTION__EXPRESSIONS = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 2;
 
     /**
      * The number of structural features of the '<em>Range Restriction</em>' class.
@@ -376,7 +547,7 @@ public interface DomainPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int RANGE_RESTRICTION_FEATURE_COUNT = 3;
+    int RANGE_RESTRICTION_FEATURE_COUNT = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 3;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.domain.impl.LiteralValueImpl <em>Literal Value</em>}' class.

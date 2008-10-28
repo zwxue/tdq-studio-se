@@ -670,6 +670,7 @@ public class DomainPackageImpl extends EPackageImpl implements DomainPackage {
 
         // Add supertypes to classes
         domainEClass.getESuperTypes().add(theCorePackage.getNamespace());
+        rangeRestrictionEClass.getESuperTypes().add(theCorePackage.getModelElement());
         numericValueEClass.getESuperTypes().add(this.getLiteralValue());
         textValueEClass.getESuperTypes().add(this.getLiteralValue());
         integerValueEClass.getESuperTypes().add(this.getNumericValue());

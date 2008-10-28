@@ -131,16 +131,14 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
+     * 
+     * @generated NOT
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
-
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (uniqueValueCount: ");
+        StringBuffer result = new StringBuffer(this.getName());
+        result.append("= ");
         result.append(uniqueValueCount);
-        result.append(')');
         return result.toString();
     }
 

@@ -108,6 +108,8 @@ public class DomainSwitch<T> {
             case DomainPackage.RANGE_RESTRICTION: {
                 RangeRestriction rangeRestriction = (RangeRestriction)theEObject;
                 T result = caseRangeRestriction(rangeRestriction);
+                if (result == null) result = caseModelElement(rangeRestriction);
+                if (result == null) result = caseElement(rangeRestriction);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }

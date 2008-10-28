@@ -131,16 +131,14 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
+     * 
+     * @generated NOT
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
-
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (distinctValueCount: ");
+        StringBuffer result = new StringBuffer(this.getName());
+        result.append("= ");
         result.append(distinctValueCount);
-        result.append(')');
         return result.toString();
     }
 

@@ -20,6 +20,7 @@ import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.domain.RangeRestriction;
 
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -36,7 +37,7 @@ import org.talend.dataquality.expressions.BooleanExpressionNode;
  *
  * @generated
  */
-public class RangeRestrictionImpl extends EObjectImpl implements RangeRestriction {
+public class RangeRestrictionImpl extends ModelElementImpl implements RangeRestriction {
     /**
      * The cached value of the '{@link #getLowerValue() <em>Lower Value</em>}' containment reference.
      * <!-- begin-user-doc -->

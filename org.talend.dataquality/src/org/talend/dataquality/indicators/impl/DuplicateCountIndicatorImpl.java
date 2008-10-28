@@ -131,16 +131,14 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
+     * 
+     * @generated NOT
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
-
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (duplicateValueCount: ");
+        StringBuffer result = new StringBuffer(this.getName());
+        result.append("= ");
         result.append(duplicateValueCount);
-        result.append(')');
         return result.toString();
     }
 

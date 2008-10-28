@@ -9,6 +9,7 @@ package org.talend.dataquality.domain;
 import org.eclipse.emf.ecore.EObject;
 
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +29,7 @@ import org.talend.dataquality.expressions.BooleanExpressionNode;
  * @model
  * @generated
  */
-public interface RangeRestriction extends EObject {
+public interface RangeRestriction extends ModelElement {
     /**
      * Returns the value of the '<em><b>Lower Value</b></em>' containment reference.
      * <!-- begin-user-doc -->
