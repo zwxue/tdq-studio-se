@@ -20,6 +20,7 @@ public enum EIndicatorChartType {
     SIMPLE_STATISTICS("Simple Statistics"),
     TEXT_STATISTICS("Text Statistics"),
     FREQUENCE_STATISTICS("Frequency Statistics"),
+    LOW_FREQUENCE_STATISTICS("Low Frequency Statistics"),
     SUMMARY_STATISTICS("Summary Statistics"),
     PATTERN_MATCHING("Pattern Matching"),
     SQL_PATTERN_MATCHING("SQL Pattern Matching"),
