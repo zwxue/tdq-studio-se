@@ -43,6 +43,12 @@ public class WizardFactory {
             }
             parameter.setAnalysisTypeName(type.getLiteral());
             return new ColumnWizard(parameter);
+        case COLUMNS_COMPARISON:
+            if (parameter == null) {
+                parameter = new AnalysisParameter();
+            }
+            parameter.setAnalysisTypeName(type.getLiteral());
+            return new ColumnWizard(parameter);
         case CONNECTION:
             if (parameter == null) {
                 parameter = new ConnectionAnalysisParameter();

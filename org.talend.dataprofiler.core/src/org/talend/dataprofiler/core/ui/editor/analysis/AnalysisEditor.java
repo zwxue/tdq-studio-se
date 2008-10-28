@@ -30,6 +30,10 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
  */
 public class AnalysisEditor extends CommonFormEditor {
 
+    private static final String MASTER_PAGE = "MasterPage";
+
+    private static final String ANALYSIS_SETTINGS = "Analysis Settings";
+
     private IFormPage masterPage;
 
     private IFormPage columnResultPage;
@@ -47,7 +51,7 @@ public class AnalysisEditor extends CommonFormEditor {
     protected void addPages() {
         switch (analysisType) {
         case MULTIPLE_COLUMN:
-            masterPage = new ColumnMasterDetailsPage(this, "MasterPage", "Analysis Settings");
+            masterPage = new ColumnMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             setPartName("Column Analysis Editor");
             columnResultPage = new ColumnAnalysisResultPage(this, "secondpage", "Analysis Results");
             try {
@@ -58,8 +62,17 @@ public class AnalysisEditor extends CommonFormEditor {
             }
             break;
         case CONNECTION:
-            masterPage = new ConnectionMasterDetailsPage(this, "MasterPage", "Analysis Settings");
+            masterPage = new ConnectionMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             setPartName("Connection Analysis Editor");
+            try {
+                addPage(masterPage);
+            } catch (PartInitException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
+            break;
+        case COLUMNS_COMPARISON:
+            masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, "Analysis Setttings");
+            setPartName("Columns Comparison Analysis Editor");
             try {
                 addPage(masterPage);
             } catch (PartInitException e) {

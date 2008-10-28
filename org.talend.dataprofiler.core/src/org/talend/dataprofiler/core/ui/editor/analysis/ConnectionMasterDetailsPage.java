@@ -20,9 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -49,7 +47,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -60,11 +57,8 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
-import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -79,7 +73,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implements IRuningStatusListener {
+public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage implements IRuningStatusListener {
 
     private static final String SCHEMA = "schema";
 
@@ -97,8 +91,6 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
 
     private static Logger log = Logger.getLogger(ConnectionMasterDetailsPage.class);
 
-    Analysis connectionAnalysis;
-
     private Text tableFilterText;
 
     private Text viewFilterText;
@@ -115,13 +107,6 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
 
     public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
-    }
-
-    @Override
-    protected ModelElement getCurrentModelElement(FormEditor editor) {
-        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-        connectionAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
-        return connectionAnalysis;
     }
 
     @Override
@@ -173,7 +158,7 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         tableFilterLabel.setText("Filter on tables:");
         tableFilterLabel.setLayoutData(new GridData());
         tableFilterText = new Text(sectionClient, SWT.BORDER);
-        EList<Domain> dataFilters = connectionAnalysis.getParameters().getDataFilter();
+        EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
         String tablePattern = DomainHelper.getTablePattern(dataFilters);
         latestTableFilterValue = tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern;
         tableFilterText.setText(latestTableFilterValue);
@@ -229,7 +214,7 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         Composite rightComp = new Composite(sumSectionClient, SWT.NONE);
         rightComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(rightComp);
-        EList<ModelElement> analysedElements = this.connectionAnalysis.getContext().getAnalysedElements();
+        EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
         tdDataProvider = null;
         if (analysedElements.size() > 0) {
             tdDataProvider = (TdDataProvider) analysedElements.get(0);
@@ -263,10 +248,10 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
         leftLabel.setText("Schemata: " + tdSchema.size());
         leftLabel.setLayoutData(new GridData());
 
-        ExecutionInformations resultMetadata = connectionAnalysis.getResults().getResultMetadata();
+        ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
 
         Label rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText("Creation date: " + getFormatDateStr(connectionAnalysis.getCreationDate()));
+        rightLabel.setText("Creation date: " + getFormatDateStr(analysis.getCreationDate()));
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
         rightLabel.setText("Execution date: " + getFormatDateStr(resultMetadata.getExecutionDate()));
@@ -357,8 +342,8 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
      */
     public void doSetInput() {
         List<CatalogIndicator> indicatorList = null;
-        if (this.connectionAnalysis.getResults().getIndicators().size() > 0) {
-            ConnectionIndicator conIndicator = (ConnectionIndicator) connectionAnalysis.getResults().getIndicators().get(0);
+        if (this.analysis.getResults().getIndicators().size() > 0) {
+            ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
             indicatorList = conIndicator.getCatalogIndicators();
             if (indicatorList.size() == 0) {
                 statisticalViewer.setInput(conIndicator.getSchemaIndicators());
@@ -469,7 +454,7 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
     }
 
     public void saveAnalysis() throws DataprofilerCoreException {
-        EList<Domain> dataFilters = connectionAnalysis.getParameters().getDataFilter();
+        EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
         if (!this.tableFilterText.getText().equals(latestTableFilterValue)) {
             DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());
             latestTableFilterValue = this.tableFilterText.getText();
@@ -479,9 +464,9 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             latestViewFilterValue = this.viewFilterText.getText();
         }
 
-        ReturnCode save = AnaResourceFileHelper.getInstance().save(connectionAnalysis);
+        ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
-            log.info("Success to save connection analysis:" + connectionAnalysis.getFileName());
+            log.info("Success to save connection analysis:" + analysis.getFileName());
         }
     }
 
@@ -490,35 +475,6 @@ public class ConnectionMasterDetailsPage extends AbstractMetadataFormPage implem
             ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
         }
 
-    }
-
-    @Override
-    public void doSave(IProgressMonitor monitor) {
-        super.doSave(monitor);
-        try {
-            saveAnalysis();
-            this.isDirty = false;
-        } catch (DataprofilerCoreException e) {
-            ExceptionHandler.process(e, Level.ERROR);
-            e.printStackTrace();
-        }
-    }
-
-    public void setDirty(boolean isDirty) {
-        if (this.isDirty != isDirty) {
-            this.isDirty = isDirty;
-            ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
-        }
-    }
-
-    @Override
-    public boolean isDirty() {
-        return super.isDirty();
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
     }
 
     /**

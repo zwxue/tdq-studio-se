@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -53,7 +52,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.part.FileEditorInput;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -62,12 +60,10 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
-import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
@@ -88,7 +84,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements IRuningStatusListener, PropertyChangeListener {
+public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implements IRuningStatusListener,
+        PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
 
@@ -139,13 +136,13 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         currentColumnIndicators = columnIndicatorList.toArray(new ColumnIndicator[columnIndicatorList.size()]);
     }
 
-    @Override
-    protected ModelElement getCurrentModelElement(FormEditor editor) {
-
-        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-        Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
-        return findAnalysis;
-    }
+    // @Override
+    // protected ModelElement getCurrentModelElement(FormEditor editor) {
+    //
+    // FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+    // Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
+    // return findAnalysis;
+    // }
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
@@ -497,6 +494,8 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
         // FolderProvider folderProvider = new FolderProvider();
         // folderProvider.setFolder(new File(outputFolder));
         // DqRepositoryViewService.saveDomain(dataFilter, folderProvider);
+        treeViewer.setDirty(false);
+        dataFilterComp.setDirty(false);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -508,26 +507,12 @@ public class ColumnMasterDetailsPage extends AbstractMetadataFormPage implements
 
     }
 
-    @Override
-    public void doSave(IProgressMonitor monitor) {
-        super.doSave(monitor);
-        try {
-            saveAnalysis();
-            this.isDirty = false;
-            treeViewer.setDirty(false);
-            dataFilterComp.setDirty(false);
-        } catch (DataprofilerCoreException e) {
-            ExceptionHandler.process(e, Level.ERROR);
-            e.printStackTrace();
-        }
-    }
-
-    public void setDirty(boolean isDirty) {
-        if (this.isDirty != isDirty) {
-            this.isDirty = isDirty;
-            ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
-        }
-    }
+    // public void setDirty(boolean isDirty) {
+    // if (this.isDirty != isDirty) {
+    // this.isDirty = isDirty;
+    // ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+    // }
+    // }
 
     @Override
     public boolean isDirty() {
