@@ -362,7 +362,7 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                         }
                     }
 
-                    PopupMenu menu = new PopupMenu("view action");
+                    PopupMenu menu = new PopupMenu("Available actions");
                     if (currentDataEntity != null) {
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartType, analysis, currentDataEntity);
