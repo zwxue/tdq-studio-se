@@ -3,107 +3,86 @@
   <indicatorDefinitions xmi:id="_ccFOkBF2Ed2PKb6nEJEvhw" name="Row Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Row Count">
     <taggedValue xmi:id="_yboaoDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of rows"/>
     <taggedValue xmi:id="_yboaoTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of records"/>
-    <sqlGenericExpression xmi:id="_ccHDwBF2Ed2PKb6nEJEvhw" body="SELECT COUNT(*) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_wmX5MGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_xrl00GoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_yrS-UGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="Microsoft SQL Server"/>
-    <sqlGenericExpression xmi:id="_0S51UGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="DB2"/>
-    <sqlGenericExpression xmi:id="_1JPAYGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM {1}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_wmX5MGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0BF2Ed2PKb6nEJEvhw" name="Distinct Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Distinct Count">
     <taggedValue xmi:id="_ybpowDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of distinct rows"/>
     <taggedValue xmi:id="_ybqP0Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of distinct records"/>
-    <sqlGenericExpression xmi:id="_ybqP0Th8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybqP0zh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_5DU3YGoAEd20k7biVpOSRw" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_6OtFYGoAEd20k7biVpOSRw" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="DB2"/>
-    <sqlGenericExpression xmi:id="_7OCbcGoAEd20k7biVpOSRw" body="SELECT COUNT(DISTINCT {0}) FROM {1}" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0RF2Ed2PKb6nEJEvhw" name="Unique Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Unique Count">
     <taggedValue xmi:id="_ybq24Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of unique rows (i.e. rows that are not duplicated)"/>
     <taggedValue xmi:id="_ybq24Th8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of unique records"/>
-    <sqlGenericExpression xmi:id="_ybq24jh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybq24zh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING mycount = 1" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybq25Dh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_poEbQEbKEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_dinuIGIuEd2g_c7Yce15OA" body="SELECT {0}, COUNT(*) mycount FROM {1}  GROUP BY {0} HAVING COUNT(*) = 1" language="DB2"/>
+    <sqlGenericExpression xmi:id="_ybq24jh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybq24zh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount = 1) AS myquery" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybq25Dh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_dinuIGIuEd2g_c7Yce15OA" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Duplicate Count">
     <taggedValue xmi:id="_ybrd8Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of duplicate rows. This number and the number of unique data equals the number of distinct rows"/>
     <taggedValue xmi:id="_ybrd8Th8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of duplicated records"/>
-    <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybrd8zh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY col HAVING mycount > 1" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_vYa-YEbMEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) FROM {1}  m GROUP BY 1 HAVING count(*) > 1" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_L6ZBQGIwEd2cR9NG8PSw3w" body="SELECT {0} col, COUNT(*) mycount FROM {1}  m GROUP BY {0} HAVING COUNT(*) > 1" language="DB2"/>
+    <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybrd8zh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%> col, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY col HAVING mycount > 1) AS myquery" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%> col, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_L6ZBQGIwEd2cR9NG8PSw3w" body="SELECT &lt;%=__COLUMN_NAMES__%> col, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0xF2Ed2PKb6nEJEvhw" name="Blank Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Blank Count">
     <taggedValue xmi:id="_ybsFADh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of blank rows. A blank is a non null textual data that contains only white spaces (or nothing). Note that Oracle does not distinguish between the empty string and the null value"/>
     <taggedValue xmi:id="_ybsFATh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of blank records"/>
-    <sqlGenericExpression xmi:id="_ybsFAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybsFAzh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybsFBDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) IS NULL" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_8IFvYGOeEd2-SIyfZ_Vx6A" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_4Vq50GVjEd2wJomsB-uicA" body="SELECT COUNT({0}) FROM {1}  WHERE LTRIM(RTRIM({0})) = ''" language="Microsoft SQL Server"/>
-    <sqlGenericExpression xmi:id="_Gm-CkGoBEd20k7biVpOSRw" body="SELECT COUNT({0}) FROM {1}  WHERE TRIM({0}) = ''" language="DB2"/>
-    <sqlGenericExpression xmi:id="_RjJMMHLIEd29UNvGybxJUw" body="SELECT COUNT({0}) FROM {1}  WHERE LTRIM(RTRIM({0})) = ''" language="Adaptive Server Enterprise"/>
+    <sqlGenericExpression xmi:id="_ybsFAzh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> WHERE TRIM(&lt;%=__COLUMN_NAMES__%>) = '' &lt;%=__AND_WHERE_CLAUSE__%>" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybsFBDh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>  WHERE TRIM(&lt;%=__COLUMN_NAMES__%>) IS NULL &lt;%=__AND_WHERE_CLAUSE__%>" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_4Vq50GVjEd2wJomsB-uicA" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>  WHERE LTRIM(RTRIM(&lt;%=__COLUMN_NAMES__%>)) = '' &lt;%=__AND_WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_RjJMMHLIEd29UNvGybxJUw" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>  WHERE LTRIM(RTRIM(&lt;%=__COLUMN_NAMES__%>)) = '' &lt;%=__AND_WHERE_CLAUSE__%>" language="Adaptive Server Enterprise"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1BF2Ed2PKb6nEJEvhw" name="Minimal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Minimal Length">
     <taggedValue xmi:id="_ybssEDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the minimal length of a text field. Parameters can be set to avoid counting blank data or null data"/>
     <taggedValue xmi:id="_ybssETh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the length of the smallest textual record"/>
-    <sqlGenericExpression xmi:id="_ybssEjh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybssEzh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybtTIDh8Ed2XmO7pl5Yuyg" body="SELECT MIN(LENGTH(TRIM('XX' || {0}))) - LENGTH('XX') FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_dNWDkGOgEd2-SIyfZ_Vx6A" body="SELECT MIN(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_Z3slMGe4Ed2m7a3evIL7Lg" body="SELECT MIN(DATALENGTH({0})) FROM {1}" language="Microsoft SQL Server"/>
-    <sqlGenericExpression xmi:id="_Td74UGndEd2IVfUQFXDwvw" body="SELECT MIN(LENGTH({0})) FROM {1}" language="DB2"/>
+    <sqlGenericExpression xmi:id="_ybssEzh8Ed2XmO7pl5Yuyg" body="SELECT MIN(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybtTIDh8Ed2XmO7pl5Yuyg" body="SELECT MIN(LENGTH(TRIM('XX' || &lt;%=__COLUMN_NAMES__%>))) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_Z3slMGe4Ed2m7a3evIL7Lg" body="SELECT MIN(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_Td74UGndEd2IVfUQFXDwvw" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq1RF2Ed2PKb6nEJEvhw" name="Maximal Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Maximal Length">
     <taggedValue xmi:id="_ybtTITh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the maximal length of a text field. Parameters can be set to avoid counting blank data or null data"/>
     <taggedValue xmi:id="_ybtTIjh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the length of the longest textual record"/>
-    <sqlGenericExpression xmi:id="_ybt6MDh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybt6MTh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybt6Mjh8Ed2XmO7pl5Yuyg" body="SELECT MAX(LENGTH(TRIM('XX' || {0}))) - LENGTH('XX') FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_hi5ukGOgEd2-SIyfZ_Vx6A" body="SELECT MAX(CHAR_LENGTH({0})) FROM {1}" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_frLmwGe4Ed2m7a3evIL7Lg" body="SELECT MAX(DATALENGTH({0})) FROM {1}" language="Microsoft SQL Server"/>
-    <sqlGenericExpression xmi:id="_Wg8WUGndEd2IVfUQFXDwvw" body="SELECT MAX(LENGTH({0})) FROM {1}" language="DB2"/>
+    <sqlGenericExpression xmi:id="_ybt6MTh8Ed2XmO7pl5Yuyg" body="SELECT MAX(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybt6Mjh8Ed2XmO7pl5Yuyg" body="SELECT MAX(LENGTH(TRIM('XX' || &lt;%=__COLUMN_NAMES__%>))) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_frLmwGe4Ed2m7a3evIL7Lg" body="SELECT MAX(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_Wg8WUGndEd2IVfUQFXDwvw" body="SELECT MAX(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4BF2Ed2PKb6nEJEvhw" name="Average Length" categories="_ccKHERF2Ed2PKb6nEJEvhw" label="Average Length">
     <taggedValue xmi:id="_ybt6Mzh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average length of the field. Parameters can be set to avoid counting blank data or null data"/>
     <taggedValue xmi:id="_ybuhQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the average length of the textual record"/>
-    <sqlGenericExpression xmi:id="_ybuhQTh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybuhQjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybuhQzh8Ed2XmO7pl5Yuyg" body="SELECT SUM(LENGTH({0})), COUNT({0}) FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_lSoIoGOgEd2-SIyfZ_Vx6A" body="SELECT SUM(CHAR_LENGTH({0})), COUNT({0}) FROM {1}" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_kQeW4Ge4Ed2m7a3evIL7Lg" body="SELECT SUM(DATALENGTH({0})), COUNT({0}) FROM {1}" language="Microsoft SQL Server"/>
-    <sqlGenericExpression xmi:id="_aPEN4GndEd2IVfUQFXDwvw" body="SELECT SUM(LENGTH({0})), COUNT({0}) FROM {1}" language="DB2"/>
+    <sqlGenericExpression xmi:id="_ybuhQTh8Ed2XmO7pl5Yuyg" body="SELECT SUM(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybuhQzh8Ed2XmO7pl5Yuyg" body="SELECT SUM(LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_kQeW4Ge4Ed2m7a3evIL7Lg" body="SELECT SUM(DATALENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_aPEN4GndEd2IVfUQFXDwvw" body="SELECT SUM(LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4RF2Ed2PKb6nEJEvhw" name="Mode" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Mode">
     <taggedValue xmi:id="_ybvIUDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the mode (most probable value). For numerical data or continuous data, bins can be set in the parameters of this indicator. It is different from the average and from the median. Generalization of it is an histogram. It is good for addressing categorical attributes"/>
     <taggedValue xmi:id="_ybvIUTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the most frequent value"/>
-    <sqlGenericExpression xmi:id="_ybvIUjh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybvIUzh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY 1 ORDER BY 2 DESC " language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybvIVDh8Ed2XmO7pl5Yuyg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="Oracle"/>
-    <sqlGenericExpression xmi:id="_NI3bsJRmEd2PFJoogKUukg" body="SELECT  {0}, COUNT(*) FROM {1} m GROUP BY {0} ORDER BY COUNT(*) DESC " language="DB2"/>
+    <sqlGenericExpression xmi:id="_ybvIUjh8Ed2XmO7pl5Yuyg" body="SELECT  &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY COUNT(*) DESC " language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybvIVDh8Ed2XmO7pl5Yuyg" body="SELECT  &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY COUNT(*) DESC " language="Oracle"/>
+    <sqlGenericExpression xmi:id="_NI3bsJRmEd2PFJoogKUukg" body="SELECT  &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY COUNT(*) DESC " language="DB2"/>
+    <sqlGenericExpression xmi:id="_Xn4ngKQ5Ed2C36cPvTLBDA" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c DESC" language="MySQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccIR4hF2Ed2PKb6nEJEvhw" name="Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Frequency Table">
     <taggedValue xmi:id="_ybvvYDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of records for each distinct record"/>
     <taggedValue xmi:id="_ybvvYTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the most frequent records"/>
-    <sqlGenericExpression xmi:id="_ybwWcDh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT {0}, COUNT(*) FROM {1} t GROUP BY {2} ORDER BY COUNT(*) DESC" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_C4G9kJRmEd2PFJoogKUukg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_ybwWcDh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybwWcTh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c DESC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY COUNT(*) DESC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_C4G9kJRmEd2PFJoogKUukg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_-0C00JOtEd2Iyo0dtkB9pA" name="Low Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Low Frequency Table">
     <taggedValue xmi:id="_Hhd38JOuEd2Iyo0dtkB9pA" tag="Description" value="counts the number of records for each distinct record"/>
     <taggedValue xmi:id="_Hhd38ZOuEd2Iyo0dtkB9pA" tag="Purpose" value="evaluates the less frequent records"/>
-    <sqlGenericExpression xmi:id="_Ol0rgJOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="SQL"/>
-    <sqlGenericExpression xmi:id="_Ol0rgZOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_Ol1SkJOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_Ol1SkZOuEd2Iyo0dtkB9pA" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_FR8iwJRmEd2PFJoogKUukg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_Ol0rgJOuEd2Iyo0dtkB9pA" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c ASC" language="SQL"/>
+    <sqlGenericExpression xmi:id="_Ol0rgZOuEd2Iyo0dtkB9pA" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c ASC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_Ol1SkJOuEd2Iyo0dtkB9pA" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) AS c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c ASC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_Ol1SkZOuEd2Iyo0dtkB9pA" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) AS c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c ASC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_FR8iwJRmEd2PFJoogKUukg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c ASC" language="DB2"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48BF2Ed2PKb6nEJEvhw" name="Summary Statistics" categories="_ccKuIRF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI48xF2Ed2PKb6nEJEvhw _ccI48RF2Ed2PKb6nEJEvhw _ccI48hF2Ed2PKb6nEJEvhw _ccI49hF2Ed2PKb6nEJEvhw" label="Summary Statistics">
     <taggedValue xmi:id="_ybyLoDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the average, the median and the extent of the data (range, interquartile range)"/>
@@ -112,23 +91,23 @@
   <indicatorDefinitions xmi:id="_ccI48RF2Ed2PKb6nEJEvhw" name="Mean" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccFOkBF2Ed2PKb6nEJEvhw _ccJgAhF2Ed2PKb6nEJEvhw" label="Mean">
     <taggedValue xmi:id="_ybzZwDh8Ed2XmO7pl5Yuyg" tag="Description" value="computes the mean (average) of the records"/>
     <taggedValue xmi:id="_ybzZwTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the mean value of numerical records"/>
-    <sqlGenericExpression xmi:id="_ybzZwjh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_ybzZwzh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb0A0Dh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_VO37sGOhEd2-SIyfZ_Vx6A" body="SELECT SUM({0}), COUNT({0}) FROM {1}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_ybzZwjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(&lt;%=__COLUMN_NAMES__%>), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+    <sqlGenericExpression xmi:id="_ybzZwzh8Ed2XmO7pl5Yuyg" body="SELECT SUM(&lt;%=__COLUMN_NAMES__%>), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb0A0Dh8Ed2XmO7pl5Yuyg" body="SELECT SUM(&lt;%=__COLUMN_NAMES__%>), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_VO37sGOhEd2-SIyfZ_Vx6A" body="SELECT SUM(&lt;%=__COLUMN_NAMES__%>), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48hF2Ed2PKb6nEJEvhw" name="Median" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Median">
     <taggedValue xmi:id="_yb0A0Th8Ed2XmO7pl5Yuyg" tag="Description" value="The median is the value separating the higher half of a sample, a population or a probability distribution from the lower half"/>
     <taggedValue xmi:id="_yb0n4Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the median of the records"/>
-    <sqlGenericExpression xmi:id="_yb0n4Th8Ed2XmO7pl5Yuyg" body="SELECT AVG({0}) AS MEDIANE FROM (SELECT distinct {0} FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1} ) STT WHERE (SELECT COUNT({0}) FROM {1}) &lt;= (SELECT COUNT({0}) FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1} ) AS SOU WHERE SOU.{0} &lt;= STT.{0}) AND (SELECT COUNT({0}) FROM {1}) &lt;= (SELECT COUNT({0}) FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1}) AS SUR WHERE SUR.{0} >= STT.{0}) ) T" language="SQL"/>
-    <sqlGenericExpression xmi:id="_yb0n4jh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb0n4zh8Ed2XmO7pl5Yuyg" body="SELECT AVG({0}) FROM ( SELECT {0}, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY {0}) rn FROM {1} ) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_yb0n5Dh8Ed2XmO7pl5Yuyg" body="SELECT MEDIAN({0}) FROM {1}" language="Oracle 10g"/>
-    <sqlGenericExpression xmi:id="_yb0n5Th8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle 9i"/>
-    <sqlGenericExpression xmi:id="_n-8v0GI-Ed2QlOgtjAaunA" body="SELECT AVG({0}) FROM ( SELECT {0}, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY {0}) rn FROM {1} ) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="DB2"/>
-    <sqlGenericExpression xmi:id="_yBfLcGOhEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_qebsAaGiEd2ad6QSUasUIA" body="SELECT AVG(cast ({0} AS NUMERIC)) AS MEDIANE FROM (SELECT distinct {0} FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1} ) STT WHERE (SELECT COUNT({0}) FROM {1}) &lt;= (SELECT COUNT({0}) FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1} ) AS SOU WHERE SOU.{0} &lt;= STT.{0}) AND (SELECT COUNT({0}) FROM {1}) &lt;= (SELECT COUNT({0}) FROM (SELECT {0} FROM {1} UNION ALL SELECT {0} FROM {1}) AS SUR WHERE SUR.{0} >= STT.{0}) ) T" language="Adaptive Server Enterprise"/>
-    <sqlGenericExpression xmi:id="_2kuWIKGnEd2ad6QSUasUIA" body="SELECT * FROM (SELECT TOP {3} {0} FROM (SELECT TOP {4} {0} FROM {1} WHERE {0} IS NOT NULL &lt;%AND_WHERE_CLAUSE%> ORDER BY {0} ASC ) AS FOO ORDER BY {0} DESC ) AS BAR ORDER BY {0} ASC " language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_yb0n4Th8Ed2XmO7pl5Yuyg" body="SELECT AVG(&lt;%=__COLUMN_NAMES__%>) AS MEDIANE FROM (SELECT distinct &lt;%=__COLUMN_NAMES__%> FROM (SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> UNION ALL SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> ) STT WHERE (SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>) &lt;= (SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM (SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> UNION ALL SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> ) AS SOU WHERE SOU.&lt;%=__COLUMN_NAMES__%> &lt;= STT.&lt;%=__COLUMN_NAMES__%>) AND (SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>) &lt;= (SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM (SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> UNION ALL SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%>) AS SUR WHERE SUR.&lt;%=__COLUMN_NAMES__%> >= STT.&lt;%=__COLUMN_NAMES__%>) ) T" language="SQL"/>
+    <sqlGenericExpression xmi:id="_yb0n4jh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> LIMIT &lt;%=__LIMIT_OFFSET__%>,&lt;%=__LIMIT_ROW__%>" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb0n4zh8Ed2XmO7pl5Yuyg" body="SELECT AVG(&lt;%=__COLUMN_NAMES__%>) FROM ( SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY &lt;%=__COLUMN_NAMES__%>) rn FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_yb0n5Dh8Ed2XmO7pl5Yuyg" body="SELECT MEDIAN(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%>" language="Oracle 10g"/>
+    <sqlGenericExpression xmi:id="_yb0n5Th8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%>" language="Oracle 9i"/>
+    <sqlGenericExpression xmi:id="_n-8v0GI-Ed2QlOgtjAaunA" body="SELECT AVG(&lt;%=__COLUMN_NAMES__%>) FROM ( SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY &lt;%=__COLUMN_NAMES__%>) rn FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%>) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )" language="DB2"/>
+    <sqlGenericExpression xmi:id="_yBfLcGOhEd2-SIyfZ_Vx6A" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> LIMIT &lt;%=__LIMIT_ROW__%> OFFSET &lt;%=__LIMIT_OFFSET__%>" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_qebsAaGiEd2ad6QSUasUIA" body="SELECT AVG(cast (&lt;%=__COLUMN_NAMES__%> AS NUMERIC)) AS MEDIANE FROM (SELECT distinct &lt;%=__COLUMN_NAMES__%> FROM (SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> UNION ALL SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> ) STT WHERE (SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>) &lt;= (SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM (SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> UNION ALL SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> ) AS SOU WHERE SOU.&lt;%=__COLUMN_NAMES__%> &lt;= STT.&lt;%=__COLUMN_NAMES__%>) AND (SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>) &lt;= (SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM (SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> UNION ALL SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%>) AS SUR WHERE SUR.&lt;%=__COLUMN_NAMES__%> >= STT.&lt;%=__COLUMN_NAMES__%>) ) T" language="Adaptive Server Enterprise"/>
+    <sqlGenericExpression xmi:id="_2kuWIKGnEd2ad6QSUasUIA" body="SELECT * FROM (SELECT TOP &lt;%=__LIMIT_ROW__%> &lt;%=__COLUMN_NAMES__%> FROM (SELECT TOP &lt;%=__LIMIT_ROW_PLUS_OFFSET__%> &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> ASC ) AS FOO ORDER BY &lt;%=__COLUMN_NAMES__%> DESC ) AS BAR ORDER BY &lt;%=__COLUMN_NAMES__%> ASC " language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48xF2Ed2PKb6nEJEvhw" name="Inter Quartile Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccI49BF2Ed2PKb6nEJEvhw _ccI49RF2Ed2PKb6nEJEvhw" label="IQR">
     <taggedValue xmi:id="_yb2dEDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the spread of the main half data. This measure is more stable than the range"/>
@@ -137,20 +116,20 @@
   <indicatorDefinitions xmi:id="_ccI49BF2Ed2PKb6nEJEvhw" name="Lower Quartile" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Lower Quartile">
     <taggedValue xmi:id="_yb3EIDh8Ed2XmO7pl5Yuyg" tag="Description" value="1/4th of the records are below this value and 3/4th are above"/>
     <taggedValue xmi:id="_yb3EITh8Ed2XmO7pl5Yuyg" tag="Purpose" value="indiquates the threshold of the lowest 1/4th records"/>
-    <sqlGenericExpression xmi:id="_yb3EIzh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb3EJDh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_DISC(0.25) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_2SZ8cGJAEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
-    <sqlGenericExpression xmi:id="_NsBY0GOiEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_yOvpAKHWEd2d7N68szQ08Q" body="SELECT * FROM (SELECT TOP {3} {0} FROM (SELECT TOP {4} {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} ASC ) AS FOO ORDER BY {0} DESC ) AS BAR ORDER BY {0} ASC " language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_yb3EIzh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> LIMIT &lt;%=__LIMIT_OFFSET__%>,&lt;%=__LIMIT_ROW__%>" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb3EJDh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_DISC(0.25) WITHIN GROUP (ORDER BY &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_2SZ8cGJAEd2vMMHSjRMsqA" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM ( SELECT &lt;%=__COLUMN_NAMES__%>, ROW_NUMBER() OVER(ORDER BY &lt;%=__COLUMN_NAMES__%>) AS NUMBER FROM &lt;%=__TABLE_NAME__%> ) T1 WHERE ( NUMBER =  INTEGER((SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> ) /4) )" language="DB2"/>
+    <sqlGenericExpression xmi:id="_NsBY0GOiEd2-SIyfZ_Vx6A" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> LIMIT &lt;%=__LIMIT_ROW__%> OFFSET &lt;%=__LIMIT_OFFSET__%>" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_yOvpAKHWEd2d7N68szQ08Q" body="SELECT * FROM (SELECT TOP &lt;%=__LIMIT_ROW__%> &lt;%=__COLUMN_NAMES__%> FROM (SELECT TOP &lt;%=__LIMIT_ROW_PLUS_OFFSET__%> &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> ASC ) AS FOO ORDER BY &lt;%=__COLUMN_NAMES__%> DESC ) AS BAR ORDER BY &lt;%=__COLUMN_NAMES__%> ASC " language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49RF2Ed2PKb6nEJEvhw" name="Upper Quartile" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Upper Quartile">
     <taggedValue xmi:id="_yb3rMDh8Ed2XmO7pl5Yuyg" tag="Description" value="1/4th of the records are above this value and 3/4th are below"/>
     <taggedValue xmi:id="_yb4SQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="indiquates the threshold of the highest 1/4th records"/>
-    <sqlGenericExpression xmi:id="_yb4SQjh8Ed2XmO7pl5Yuyg" body="SELECT {0} FROM {1}  WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {2},{3}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb4SQzh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY {0}) FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_P044MGJBEd2vMMHSjRMsqA" body="SELECT {0} FROM ( SELECT {0}, ROW_NUMBER() OVER(ORDER BY {0}) AS NUMBER FROM {1} ) T1 WHERE ( NUMBER =  3 * INTEGER((SELECT COUNT(*) FROM {1} ) /4) )" language="DB2"/>
-    <sqlGenericExpression xmi:id="_S33yoGOiEd2-SIyfZ_Vx6A" body="SELECT {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} LIMIT {3} OFFSET {2}" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_y4H9MKHWEd2d7N68szQ08Q" body="SELECT * FROM (SELECT TOP {3} {0} FROM (SELECT TOP {4} {0} FROM {1} WHERE {0} IS NOT NULL ORDER BY {0} ASC ) AS FOO ORDER BY {0} DESC ) AS BAR ORDER BY {0} ASC " language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_yb4SQjh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> LIMIT &lt;%=__LIMIT_OFFSET__%>,&lt;%=__LIMIT_ROW__%>" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb4SQzh8Ed2XmO7pl5Yuyg" body=" SELECT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_P044MGJBEd2vMMHSjRMsqA" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM ( SELECT &lt;%=__COLUMN_NAMES__%>, ROW_NUMBER() OVER(ORDER BY &lt;%=__COLUMN_NAMES__%>) AS NUMBER FROM &lt;%=__TABLE_NAME__%> ) T1 WHERE ( NUMBER =  3 * INTEGER((SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> ) /4) )" language="DB2"/>
+    <sqlGenericExpression xmi:id="_S33yoGOiEd2-SIyfZ_Vx6A" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> LIMIT &lt;%=__LIMIT_ROW__%> OFFSET &lt;%=__LIMIT_OFFSET__%>" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_y4H9MKHWEd2d7N68szQ08Q" body="SELECT * FROM (SELECT TOP &lt;%=__LIMIT_ROW__%> &lt;%=__COLUMN_NAMES__%> FROM (SELECT TOP &lt;%=__LIMIT_ROW_PLUS_OFFSET__%> &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NOT NULL &lt;%=__AND_WHERE_CLAUSE__%> ORDER BY &lt;%=__COLUMN_NAMES__%> ASC ) AS FOO ORDER BY &lt;%=__COLUMN_NAMES__%> DESC ) AS BAR ORDER BY &lt;%=__COLUMN_NAMES__%> ASC " language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI49hF2Ed2PKb6nEJEvhw" name="Range" categories="_ccKuIBF2Ed2PKb6nEJEvhw" aggregatedDefinitions="_ccJgABF2Ed2PKb6nEJEvhw _ccJgARF2Ed2PKb6nEJEvhw" label="Range">
     <taggedValue xmi:id="_yb6HcDh8Ed2XmO7pl5Yuyg" tag="Description" value="is the difference between the highest record and the lowest record"/>
@@ -159,22 +138,17 @@
   <indicatorDefinitions xmi:id="_ccJgABF2Ed2PKb6nEJEvhw" name="Minimum" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Minimum">
     <taggedValue xmi:id="_yb6ugDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the minimal record"/>
     <taggedValue xmi:id="_yb6ugTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the minimal record"/>
-    <sqlGenericExpression xmi:id="_yb6ugjh8Ed2XmO7pl5Yuyg" body="SELECT MIN({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_yb6ugzh8Ed2XmO7pl5Yuyg" body="SELECT MIN({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb7VkDh8Ed2XmO7pl5Yuyg" body="SELECT MIN({0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_yb6ugjh8Ed2XmO7pl5Yuyg" body="SELECT MIN(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccJgARF2Ed2PKb6nEJEvhw" name="Maximum" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Maximum">
     <taggedValue xmi:id="_yb78oDh8Ed2XmO7pl5Yuyg" tag="Description" value="gives the maximal record"/>
     <taggedValue xmi:id="_yb78oTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the maximal record"/>
-    <sqlGenericExpression xmi:id="_yb78ojh8Ed2XmO7pl5Yuyg" body="SELECT MAX({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_yb78ozh8Ed2XmO7pl5Yuyg" body="SELECT MAX({0}) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb78pDh8Ed2XmO7pl5Yuyg" body="SELECT MAX({0}) FROM {1}" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_yb78ojh8Ed2XmO7pl5Yuyg" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccJgAhF2Ed2PKb6nEJEvhw" name="Sum" label="Sum">
     <taggedValue xmi:id="_yb8jsDh8Ed2XmO7pl5Yuyg" tag="Description" value="sums all the records"/>
     <taggedValue xmi:id="_yb8jsTh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the sum of the records"/>
-    <sqlGenericExpression xmi:id="_yb8jsjh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}) FROM {1}" language="SQL"/>
-    <sqlGenericExpression xmi:id="_yb8jszh8Ed2XmO7pl5Yuyg" body="SELECT SUM({0}) FROM {1}" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb8jsjh8Ed2XmO7pl5Yuyg" body="SELECT SUM(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_yb9x0zh8Ed2XmO7pl5Yuyg" name="Text Statistics" aggregatedDefinitions="_ccIR4BF2Ed2PKb6nEJEvhw _ccHq1RF2Ed2PKb6nEJEvhw _ccHq1BF2Ed2PKb6nEJEvhw" label="Text Statistics">
     <taggedValue xmi:id="_yb9x1Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze textual fields"/>
@@ -187,51 +161,47 @@
   <indicatorDefinitions xmi:id="_yb-_8Dh8Ed2XmO7pl5Yuyg" name="Regular Expression Matching" categories="_tJjIwIDEEd2nDvn5vy_C5A" label="Regular Expression Matching">
     <taggedValue xmi:id="_yb-_8Th8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of records matching the given pattern against the number of records that do not match the given pattern"/>
     <taggedValue xmi:id="_yb-_8jh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of records that match a regular pattern"/>
-    <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN {0} REGEXP {2} THEN 1 END), COUNT(*) FROM {1}" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN REGEXP_LIKE({0},{2}) THEN 1 END), COUNT(*) FROM {1}" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_XXDn0GOvEd2-SIyfZ_Vx6A" body="SELECT COUNT(CASE WHEN {0} ~ {2} THEN 1 END), COUNT(*) FROM {1}" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_yb_nATh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN &lt;%=__COLUMN_NAMES__%> REGEXP &lt;%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_yb_nAjh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(CASE WHEN REGEXP_LIKE(&lt;%=__COLUMN_NAMES__%>,&lt;%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_XXDn0GOvEd2-SIyfZ_Vx6A" body="SELECT COUNT(CASE WHEN &lt;%=__COLUMN_NAMES__%> ~ &lt;%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="PostgreSQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_Z4vXcERgEd2RSqFSgXiIfA" name="SQL Pattern Matching" categories="_tJjIwIDEEd2nDvn5vy_C5A" label="SQL Pattern Matching">
     <taggedValue xmi:id="_hzXEoERgEd2RSqFSgXiIfA" tag="Description" value="counts the number of records matching the given SQL pattern against the number of records that do not match the given SQL pattern"/>
     <taggedValue xmi:id="_hzXEoURgEd2RSqFSgXiIfA" tag="Purpose" value="evaluate the number of records that match a SQL pattern (entering in LIKE clause)"/>
-    <sqlGenericExpression xmi:id="_vIt8MERgEd2RSqFSgXiIfA" body="SELECT COUNT(CASE WHEN {0} LIKE {2} THEN 1 END), COUNT(*) FROM {1}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_vIt8MERgEd2RSqFSgXiIfA" body="SELECT COUNT(CASE WHEN &lt;%=__COLUMN_NAMES__%> LIKE &lt;%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_GrAeADh9Ed2XmO7pl5Yuyg" name="Null Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Null Count">
     <taggedValue xmi:id="_GrBFEDh9Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the number of missing data (null records)"/>
     <taggedValue xmi:id="_GrBFETh9Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of null rows"/>
-    <sqlGenericExpression xmi:id="_GrBFEjh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="SQL"/>
-    <sqlGenericExpression xmi:id="_GrBFEzh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_GrBFFDh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM {1} WHERE {0} IS NULL" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_GrBFEjh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NULL &lt;%=__AND_WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_jMh4gJE3Ed2HGNmGoaS-_w" name="Row Comparison" label="Row Comparison">
     <taggedValue xmi:id="_l9ZdoJE3Ed2HGNmGoaS-_w" tag="Purpose" value="Compare content of two column sets"/>
     <taggedValue xmi:id="_txkkkJE3Ed2HGNmGoaS-_w" tag="Description" value="Counts the number of data from a column set A that match data of a column set B"/>
-    <sqlGenericExpression xmi:id="_4xpm0JE3Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})" language="SQL"/>
-    <sqlGenericExpression xmi:id="_cTtKEJE4Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_YcFTcZGUEd2YurbR54yDfQ" body="SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_4xpm0JE3Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM &lt;%=__COLUMN_NAMES__%> LEFT JOIN &lt;%=__TABLE_NAME__%> ON (&lt;%=__JOIN_CLAUSE__%>) WHERE (&lt;%=__WHERE_CLAUSE__%>)" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_kQzTsJR-Ed2XO-JvLwVAwg" name="Pattern Frequency Table" categories="_0n3BsJR-Ed2XO-JvLwVAwg" label="Pattern Frequency Table">
     <taggedValue xmi:id="_kQz6wJR-Ed2XO-JvLwVAwg" tag="Description" value="counts the number of records for each distinct pattern"/>
     <taggedValue xmi:id="_kQz6wZR-Ed2XO-JvLwVAwg" tag="Purpose" value="evaluates the most frequent patterns"/>
-    <sqlGenericExpression xmi:id="_kQz6w5R-Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_kQz6xJR-Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_kQz6xZR-Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_kQz6xpR-Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c DESC" language="DB2"/>
-    <sqlGenericExpression xmi:id="_M26GwJUbEd2dPK5T9pO-YA" body="SELECT {0} , COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c DESC" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_kQz6w5R-Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c DESC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_kQz6xJR-Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) AS c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_kQz6xZR-Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) AS c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c DESC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_kQz6xpR-Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_M26GwJUbEd2dPK5T9pO-YA" body="SELECT &lt;%=__COLUMN_NAMES__%> , COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c DESC" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_OCTbwJR_Ed2XO-JvLwVAwg" name="Pattern Low Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Pattern Low Frequency Table">
     <taggedValue xmi:id="_OCTbwZR_Ed2XO-JvLwVAwg" tag="Description" value="counts the number of patterns for each distinct pattern"/>
     <taggedValue xmi:id="_OCTbwpR_Ed2XO-JvLwVAwg" tag="Purpose" value="evaluates the less frequent patterns"/>
-    <sqlGenericExpression xmi:id="_OCTbxJR_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="MySQL"/>
-    <sqlGenericExpression xmi:id="_OCTbxZR_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="Oracle"/>
-    <sqlGenericExpression xmi:id="_OCTbxpR_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) AS c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="PostgreSQL"/>
-    <sqlGenericExpression xmi:id="_OCTbx5R_Ed2XO-JvLwVAwg" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {0} ORDER BY c ASC" language="DB2"/>
-    <sqlGenericExpression xmi:id="_UHAQQZUbEd2dPK5T9pO-YA" body="SELECT {0}, COUNT(*) c FROM {1} t GROUP BY {2} ORDER BY c ASC" language="Microsoft SQL Server"/>
+    <sqlGenericExpression xmi:id="_OCTbxJR_Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c ASC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_OCTbxZR_Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) AS c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c ASC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_OCTbxpR_Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) AS c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c ASC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_OCTbx5R_Ed2XO-JvLwVAwg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c ASC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_UHAQQZUbEd2dPK5T9pO-YA" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c ASC" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_10gx4JxcEd2YicTszQEJLA" name="Multiple Column Frequency Table" label="Multiple Column Frequency Table">
     <taggedValue xmi:id="_ByME0JxdEd2YicTszQEJLA" tag="Description" value="TODO"/>
     <taggedValue xmi:id="_ByME0ZxdEd2YicTszQEJLA" tag="Purpose" value="TODO"/>
-    <sqlGenericExpression xmi:id="_2CtwgJxdEd2YicTszQEJLA" body="SELECT {0} FROM {1} GROUP BY {2}" language="SQL"/>
+    <sqlGenericExpression xmi:id="_2CtwgJxdEd2YicTszQEJLA" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>" language="SQL"/>
   </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
