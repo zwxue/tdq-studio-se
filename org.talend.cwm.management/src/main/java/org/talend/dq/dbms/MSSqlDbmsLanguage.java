@@ -95,14 +95,15 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
                 + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9')";
     }
 
+
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#isNotBlank(java.lang.String)
+     * @see org.talend.dq.dbms.DbmsLanguage#trim(java.lang.String)
      */
     @Override
-    public String isNotBlank(String colName) {
-        return " LTRIM(RTRIM(" + colName + ")) " + notEqual() + " '' ";
+    public String trim(String colName) {
+        return " LTRIM(RTRIM(" + colName + ")) ";
     }
 
     /*
@@ -126,4 +127,16 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
         return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getTopNQuery(java.lang.String, int)
+     */
+    @Override
+    public String getTopNQuery(String query, int n) {
+        // FIXME scorreia check this
+        return super.getTopNQuery(query, n);
+    }
+
+    
 }

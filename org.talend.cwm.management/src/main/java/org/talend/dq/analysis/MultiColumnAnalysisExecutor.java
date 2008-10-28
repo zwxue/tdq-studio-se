@@ -94,8 +94,10 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             String grpByClause = createGroupBy(nominalColumns);
             // all columns must belong to the same table
             String tableName = getTableName(analyzedColumns);
-            // definition is SELECT {0} FROM {1} GROUP BY {2}
-            String slqExpr = replaceVariablesLow(sqlGenericExpression.getBody(), selectItems, tableName, grpByClause);
+            // definition is SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> GROUP BY
+            // &lt;%=__GROUP_BY_ALIAS__%>
+            String slqExpr = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), selectItems,
+                    tableName, grpByClause);
 
             indicator.setInstantiatedExpression(BooleanExpressionHelper.createExpression(sqlGenericExpression.getLanguage(),
                     slqExpr));

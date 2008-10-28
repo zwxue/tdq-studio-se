@@ -113,7 +113,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     @Override
     public String isNotBlank(String colName) {
         // oracle does not currently distinguish between blank and null
-        return " TRIM(" + colName + ") " + isNotNull();
+        return trim(colName) + isNotNull();
     }
 
     /*

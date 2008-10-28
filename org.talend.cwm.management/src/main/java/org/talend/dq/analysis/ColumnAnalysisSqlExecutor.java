@@ -160,7 +160,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         // get correct language for current database
         String language = dbms().getDbmsName();
-        Expression sqlGenericExpression = null; // SqlIndicatorHandler.getSqlCwmExpression(indicator, language);
+        Expression sqlGenericExpression = null;
 
         // --- create select statement
         // get indicator's sql columnS (generate the real SQL statement from its definition)
@@ -198,7 +198,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // handle bins
             Domain bins = parameters.getBins();
             if (bins != null) {
-                rangeStrings = getBinsAsGenericString(bins.getRanges());
+                rangeStrings = getBinsAsGenericString(bins.getRanges(), colName);
             }
 
             DateParameters dateParameters = parameters.getDateParameters();
@@ -214,8 +214,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (textParameter.isIgnoreCase()) {
                     colName = dbms().toUpperCase(colName);
                 }
-                if (!textParameter.isUseBlank()) {
+                if (!textParameter.isUseBlank() && IndicatorsPackage.eINSTANCE.getTextIndicator().isSuperTypeOf(indicatorEclass)) {
                     whereExpression.add(dbms().isNotBlank(colName));
+                } else if (textParameter.isUseBlank()
+                        && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {
+                    colName = dbms().trim(colName);
                 }
             }
         }
@@ -239,7 +242,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
 
-        // ZExp dataFilterExpression = null;
         // --- handle case when indicator is a quantile
         if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMedianIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getLowerQuartileIndicator())
@@ -283,29 +285,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     colName = dbms().getPatternFinderDefaultFunction(colName);
                 }
 
-                completedSqlString = replaceVariablesLow(sqlGenericExpression.getBody(), colName, table, colName);
+                completedSqlString = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), colName,
+                        table, colName);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             }
-        } else
-
-        // --- handle case of unique count
-        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getUniqueCountIndicator())) {
-            completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table);
-            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
-            completedSqlString = dbms().countRowInSubquery(completedSqlString, "myquery");
-        } else
-
-        // --- handle case of duplicate count
-        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getDuplicateCountIndicator())) {
-            completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table);
-            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
-            // duplicate is the number of rows having more than one identical instance
-            completedSqlString = dbms().countRowInSubquery(completedSqlString, "myquery");
-            // duplicate (with sumRowInSubquery) means that the number of instances that are duplicated
-            // completedSqlString = dbms().sumRowInSubquery("mycount", completedSqlString, "myquery");
-            // scorreia hard coded "mycount" string must be the same as the alias in the TalendDefinition file!
-            // PTODO scorreia avoid hard coded "mycount" string
         } else
 
         // --- handle case of matching pattern count
@@ -319,12 +303,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } else {
 
             // --- default case
-            completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table);
+            completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(sqlGenericExpression.getBody(), colName, table);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Completed SQL expression for language " + language + ": " + completedSqlString);
         }
 
         // completedSqlString is the final query
@@ -368,17 +348,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * 
      */
     private String replaceVariables(String sqlGenericString, String colName, String table, List<String> patterns) {
-        Object[] arguments = new Object[patterns.size() + 2];
-        arguments[0] = colName;
-        arguments[1] = table;
-        int i = 2;
-        for (String string : patterns) {
-            arguments[i++] = string;
-        }
-
-        String toFormat = surroundSingleQuotes(sqlGenericString);
-        // No problem if pattern contains something like {1} because it is in the arguments
-        return MessageFormat.format(toFormat, arguments);
+        assert (patterns.size() != 1);
+        return dbms().fillGenericQueryWithColumnTablePattern(sqlGenericString, colName, table, patterns.get(0));
     }
 
     /**
@@ -486,13 +457,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         case NONE:
             result = colName;
             nbExtractedColumns++;
-            aliases = colName; // bug 5336 fixed aliases must not be empty otherwise, the group by clause is empty.
+            aliases = colName; // bug 5336 fixed aliases must not be empty otherwise the group by clause is empty.
             break;
         default:
             break;
         }
         String groupByAliases = dbms().supportAliasesInGroupBy() ? aliases : result;
-        String sql = replaceVariablesLow(sqlExpression.getBody(), result, table, groupByAliases);
+        String sql = dbms().fillGenericQueryWithColumnTableAndAlias(sqlExpression.getBody(), result, table, groupByAliases);
         return sql;
     }
 
@@ -505,10 +476,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "unquote".
+     * Method "unquote" remove surrounding identifier quotes.
      * 
-     * @param colName
-     * @return
+     * @param colName a name with quotes (or without)
+     * @return the name without the quotes.
      */
     private String unquote(String colName) {
         String dbQuoteString = dbms().getDbQuoteString();
@@ -596,11 +567,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private String getCompletedSingleSelect(Indicator indicator, String sqlGenericExpression, String colName, String table,
             List<String> whereExpression, String range) throws ParseException {
-        String completedRange = replaceVariables(range, colName, table);
+        String completedRange = this.unquote(range); // replaceVariablesLow(range, this.unquote(colName),
+                                                     // this.unquote(table));
         String rangeColumn = "'" + completedRange + "'";
 
         String singleQuery = removeGroupBy(sqlGenericExpression);
-        String completedSqlString = replaceVariablesLow(singleQuery, rangeColumn, table);
+        String completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(singleQuery, rangeColumn, table);
 
         List<String> allWheresForSingleSelect = new ArrayList<String>(whereExpression);
 
@@ -643,11 +615,15 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param ranges
      * @return
      */
-    private List<String> getBinsAsGenericString(EList<RangeRestriction> ranges) {
+    private List<String> getBinsAsGenericString(EList<RangeRestriction> ranges, String colName) {
         List<String> bins = new ArrayList<String>();
         for (RangeRestriction rangeRestriction : ranges) {
-            String bin = "{0} >= " + DomainHelper.getMinValue(rangeRestriction) + " AND {0} < "
+            String bin = colName + dbms().greaterOrEqual() + DomainHelper.getMinValue(rangeRestriction) + dbms().and() + colName
+                    + dbms().less() 
                     + DomainHelper.getMaxValue(rangeRestriction);
+            // set the name of the RangeRestriction here
+            // TODO range name should be set at the construction (in the bins designer wizard)
+            rangeRestriction.setName(this.unquote(bin));
             bins.add(bin);
         }
         return bins;
@@ -683,8 +659,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Integer nbRow = getNbReturnedRows(indicator, count);
 
         long nPlusSkip = midleCount + nbRow; // needed for MSSQL query with TOP clause
-        return MessageFormat.format(sqlExpression.getBody(), colName, table, String.valueOf(midleCount), String.valueOf(nbRow),
-                nPlusSkip);
+        return dbms().fillGenericQueryWithColumnTableLimitOffset(sqlExpression.getBody(), colName, table,
+                String.valueOf(nbRow),
+                String.valueOf(midleCount), 
+                String.valueOf(nPlusSkip));
     }
 
     /**
@@ -776,12 +754,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     protected DbmsLanguage dbms() {
         if (this.dbmsLanguage == null) {
             this.dbmsLanguage = createDbmsLanguage();
-            // this.dbmsLanguage.setDbQuoteString(this.getDbQuoteString(cachedAnalysis));
         }
         return this.dbmsLanguage;
     }
-
-    // private static final String DEFAULT_SQL = "SQL";
 
     private Expression instantiateSqlExpression(String language, String body) {
         Expression expression = CoreFactory.eINSTANCE.createExpression();
@@ -790,19 +765,16 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return expression;
     }
 
-    /**
-     * Method "replaceVariables".
-     * 
-     * @param sqlGenericString a string with 2 parameters {0} and {1}
-     * @param column the string that replaces the {0} parameter
-     * @param table the string that replaces the {1} parameter
-     * @return the string with the given parameters
-     */
-    private String replaceVariables(String sqlGenericString, String column, String table) {
-        Object[] arguments = { column, table };
-        return replaceVariablesLow(sqlGenericString, arguments);
-    }
 
+    /**
+     * 
+     * 
+     * DOC scorreia Comment method "replaceVariablesLow".
+     * 
+     * @param sqlGenericString
+     * @param arguments
+     * @return
+     */
     protected String replaceVariablesLow(String sqlGenericString, Object... arguments) {
         String toFormat = surroundSingleQuotes(sqlGenericString);
         return MessageFormat.format(toFormat, arguments);
@@ -1004,6 +976,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+        if (log.isInfoEnabled()) {
+            log.info("Computing indicator: " + indicator.getName());
+        }
         List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
 
         // give result to indicator so that it handles the results
@@ -1025,8 +1000,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             changeCatalog(catalogName, connection);
         }
         // create query statement
-        // Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY,
-        // ResultSet.CLOSE_CURSORS_AT_COMMIT);
         Statement statement = connection.createStatement();
         // statement.setFetchSize(fetchSize);
         if (log.isInfoEnabled()) {

@@ -106,12 +106,13 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String tableNameB = getTableName(columnSetB);
 
         // Generic SQL expression is something like:
-        // SELECT COUNT(*) FROM {0} LEFT JOIN {1} ON ({2} ) WHERE ({3})
+        // SELECT COUNT(*) FROM <%=__COLUMN_NAMES__%> LEFT JOIN <%=__TABLE_NAME__%> ON (<%=__JOIN_CLAUSE__%>) WHERE
+        // (<%=__WHERE_CLAUSE__%>)
         String genericSQL = sqlGenericExpression.getBody();
         String joinClause = createJoinClause(tableNameA, columnSetA, tableNameB, columnSetB);
         String whereClause = createWhereClause(tableNameB, columnSetB);
 
-        String instantiatedSQL = replaceVariablesLow(genericSQL, tableNameA, tableNameB, joinClause, whereClause);
+        String instantiatedSQL = dbms().fillGenericQueryWithJoin(genericSQL, tableNameA, tableNameB, joinClause, whereClause);
         Expression instantiatedExpression = CoreFactory.eINSTANCE.createExpression();
         instantiatedExpression.setLanguage(sqlGenericExpression.getLanguage());
         instantiatedExpression.setBody(instantiatedSQL);

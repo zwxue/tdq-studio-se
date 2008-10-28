@@ -12,13 +12,10 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.domain.Domain;
@@ -32,14 +29,9 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 
 import Zql.ParseException;
-import Zql.ZExp;
-import Zql.ZExpression;
-import Zql.ZQuery;
-import Zql.ZqlParser;
 
 /**
  * @author scorreia
@@ -58,7 +50,27 @@ public class DbmsLanguage {
     /** Functions of the system. [Function name, number of parameters] */
     private final Map<String, Integer> dbmsFunctions;
 
-    private static final String AND_WHERE_CLAUSE = "<%AND_WHERE_CLAUSE%>";
+    private static final String AND_WHERE_CLAUSE = "<%=__AND_WHERE_CLAUSE__%>";
+
+    private static final String WHERE_CLAUSE = "<%=__WHERE_CLAUSE__%>";
+
+    private static final String TABLE_NAME = "<%=__TABLE_NAME__%>";
+
+    private static final String TABLE_NAME2 = "<%=__TABLE_NAME_2__%>";
+
+    private static final String COLUMN_NAMES = "<%=__COLUMN_NAMES__%>";
+
+    private static final String GROUP_BY_ALIAS = "<%=__GROUP_BY_ALIAS__%>";
+
+    private static final String LIMIT_ROW = "<%=__LIMIT_ROW__%>";
+
+    private static final String PATTERN_EXPRESSION = "<%=__PATTERN_EXPR__%>";
+
+    private static final String JOIN_CLAUSE = "<%=__JOIN_CLAUSE__%>";
+
+    private static final String LIMIT_OFFSET = "<%=__LIMIT_OFFSET__%>";
+
+    private static final String LIMIT_ROW_PLUS_OFFSET = "<%=__LIMIT_ROW_PLUS_OFFSET__%>";
 
     // --- add here other supported systems (always in uppercase) // DBMS_SUPPORT
 
@@ -86,18 +98,9 @@ public class DbmsLanguage {
      */
     protected static final String EOS = ";";
 
-    private static final String LIMIT_REGEXP = ".*(LIMIT){1}\\p{Blank}+\\p{Digit}+,?\\p{Digit}?.*";
-
     /**
      * Temporary table name for replacement before ZQL parsing.
      */
-    private static final String TMP_TABLE_NAME = "from TMPTABLENAME_ZZ";
-
-    private String invalidZqlQualifiedTableName;
-
-    private String[] withoutLimit;
-
-    private boolean containsLimitClause;
 
     /**
      * in upper case.
@@ -159,6 +162,21 @@ public class DbmsLanguage {
         return surroundWithSpaces(SqlPredicate.OR.getLiteral());
     }
 
+    public String greater() {
+        return surroundWithSpaces(SqlPredicate.GREATER.getLiteral());
+    }
+
+    public String greaterOrEqual() {
+        return surroundWithSpaces(SqlPredicate.GREATER_EQUAL.getLiteral());
+    }
+
+    public String less() {
+        return surroundWithSpaces(SqlPredicate.LESS.getLiteral());
+    }
+
+    public String lessOrEqual() {
+        return surroundWithSpaces(SqlPredicate.LESS_EQUAL.getLiteral());
+    }
     public String between() {
         return surroundWithSpaces(SqlPredicate.BETWEEN.getLiteral());
     }
@@ -272,43 +290,6 @@ public class DbmsLanguage {
         return qualName.toString();
     }
 
-    private String getFromQualifiedTablePattern() {
-        final String dot = "\\.";
-        final String alnum = quote("\\w[\\w\\d_-]*");
-        return new StringBuilder().append("FROM ").append(alnum).append(dot).append(alnum).append(dot).append(alnum).toString();
-    }
-
-    /**
-     * Method "parseQuery".
-     * 
-     * @param queryString
-     * @return the parsed query. When boolean isOk() is true, this means that the finalizeQuery must called (for example
-     * for handling the MySQL LIMIT clause). When false, calling finalizeQuery() is not needed (but it won't hurt to
-     * call it).
-     * @throws ParseException
-     */
-    private ZQuery parseQuery(final String queryString) throws ParseException {
-        // check here whether the table name is of type Catalog.Schema.Table
-        invalidZqlQualifiedTableName = get2dotTableName(queryString);
-
-        // remove qualified names unsupported by ZQL
-        String safeZqlString = invalidZqlQualifiedTableName != null ? queryString.replace(invalidZqlQualifiedTableName,
-                TMP_TABLE_NAME) : queryString;
-
-        safeZqlString = replaceUnsupportedQuotes(safeZqlString);
-
-        // extractClause = removeExtractFromClause(safeZqlString);
-        safeZqlString = closeStatement(safeZqlString);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(safeZqlString.getBytes());
-        ZqlParser parser = getZqlParser();
-        parser.initParser(byteArrayInputStream);
-        if (log.isDebugEnabled()) {
-            log.debug("Parsing query: " + safeZqlString);
-        }
-        ZQuery zQuery = (ZQuery) parser.readStatement();
-        return zQuery;
-    }
-
     /**
      * Method "replaceUnsupportedQuotes".
      * 
@@ -321,72 +302,6 @@ public class DbmsLanguage {
         return sqlString;
     }
 
-    /**
-     * DOC scorreia Comment method "get2dotTableName".
-     * 
-     * @param queryString
-     * @return
-     */
-    private String get2dotTableName(String queryString) {
-        // queryString.matches(queryString)
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile(this.getFromQualifiedTablePattern());
-        Matcher matcher = p.matcher(queryString);
-        if (!matcher.find()) {
-            return null;
-        }
-        // else
-        String matched = matcher.group();
-        return matched;
-    }
-
-    /**
-     * Method "prepareQuery" prepares the query for being parsed without exception (remove LIMIT clause...). It will
-     * remove all elements that cannot be currently parsed by ZQL.
-     * 
-     * @param queryString
-     * @return a query string safe to be parsed (whatever the boolean in returnCode is). When boolean isOk() is true,
-     * this means that the finalizeQuery must called (for example for handling the MySQL LIMIT clause). When false,
-     * calling finalizeQuery() is not needed (but it won't hurt to call it).
-     * @throws ParseException
-     */
-    public TypedReturnCode<String> prepareQuery(final String queryString) throws ParseException {
-        if (log.isDebugEnabled()) {
-            log.debug("Preparing query: " + queryString);
-        }
-        // LIMIT clause is specific to MySQL, it is not understood by ZQL. remove it and add only at the end
-        withoutLimit = removeLimitClause(queryString);
-        containsLimitClause = (withoutLimit != null);
-        String safeSqlString = containsLimitClause ? withoutLimit[0] : queryString;
-        // extractClause = removeExtractFromClause(safeZqlString);
-
-        TypedReturnCode<String> trc = new TypedReturnCode<String>();
-        trc.setObject(safeSqlString);
-        trc.setOk(mustCallFinalize());
-        return trc;
-    }
-
-    /**
-     * Method "finalizeQuery" must be called after prepareQuery().
-     * 
-     * @param query the query to finalize (returned by the prepareQuery() method)
-     * @return the final query.
-     */
-    public String finalizeQuery(String query) {
-        StringBuffer buf = new StringBuffer();
-        buf.append(query.toString());
-        if (containsLimitClause) {
-            buf.append(" " + withoutLimit[1]);
-        }
-        containsLimitClause = false;
-        String fquery = buf.toString();
-
-        // replace tmp table name if needed
-        if (invalidZqlQualifiedTableName != null) {
-            return fquery.replace(TMP_TABLE_NAME, this.invalidZqlQualifiedTableName);
-        }
-        return fquery;
-
-    }
 
     /**
      * Method "getPatternFinderDefaultFunction".
@@ -396,19 +311,6 @@ public class DbmsLanguage {
      */
     public String getPatternFinderDefaultFunction(String expression) {
         return null;
-    }
-
-    /**
-     * Method "getZqlParser".
-     * 
-     * @return a new parser with predefined functions.
-     */
-    private ZqlParser getZqlParser() {
-        ZqlParser parser = new ZqlParser();
-        for (String fnct : this.dbmsFunctions.keySet()) {
-            parser.addCustomFunction(fnct, this.dbmsFunctions.get(fnct));
-        }
-        return parser;
     }
 
     public String replaceNullsWithString(String colName, String replacement) {
@@ -423,7 +325,12 @@ public class DbmsLanguage {
      */
     public String isNotBlank(String colName) {
         // default is OK for MySQL
-        return " TRIM(" + colName + ") " + notEqual() + " '' ";
+        return trim(colName) + notEqual() + " '' ";
+    }
+
+    public String trim(String colName) {
+        // default is OK for MySQL
+        return " TRIM(" + colName + ") ";
     }
 
     public String toUpperCase(String colName) {
@@ -507,40 +414,6 @@ public class DbmsLanguage {
     }
 
     /**
-     * DOC scorreia Comment method "removeLimitClause".
-     * 
-     * @param completedSqlString
-     * @return
-     */
-    private String[] removeLimitClause(String completedSqlString) {
-        if (completedSqlString == null) {
-            return null;
-        }
-        String upperCased = completedSqlString.toUpperCase();
-        if (upperCased.matches(LIMIT_REGEXP)) {
-            String[] res = new String[2];
-            int lastIndexOf = upperCased.lastIndexOf("LIMIT");
-            res[0] = completedSqlString.substring(0, lastIndexOf);
-            res[1] = completedSqlString.substring(lastIndexOf);
-            return res;
-        }
-        return null;
-    }
-
-    /**
-     * Method "closeStatement" coses the statement with ';' if needed.
-     * 
-     * @param safeZqlString
-     * @return
-     */
-    private String closeStatement(String safeZqlString) {
-        if (!safeZqlString.trim().endsWith(eos())) {
-            safeZqlString += eos();
-        }
-        return safeZqlString;
-    }
-
-    /**
      * Method "is".
      * 
      * @param dbName a DBMS name
@@ -587,14 +460,12 @@ public class DbmsLanguage {
     }
 
     public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) throws ParseException {
-        TypedReturnCode<String> trc = this.prepareQuery(completedSqlString);
-        String query = trc.getObject();
-
+        String query = completedSqlString;
         String where = this.buildWhereExpression(whereExpressions);
-        if ((where != null && where.trim().length() != 0) || completedSqlString.contains(AND_WHERE_CLAUSE)) {
+        if (where != null) {
             query = this.addWhereToStatement(query, where);
         }
-        return this.finalizeQuery(query);
+        return query;
     }
 
     /**
@@ -605,60 +476,51 @@ public class DbmsLanguage {
      * @return the new statement
      */
     public String addWhereToStatement(String statement, String whereClause) {
-        if (!isTooComplexForZql(statement)) {
-            try {
-                ZQuery query = this.parseQuery(statement);
-                if (whereClause != null) {
-                    if (StringUtils.isNotBlank(whereClause)) {
-                        String safeWhereClause = replaceUnsupportedQuotes(whereClause);
-                        ZqlParser filterParser = getZqlParser();
-                        filterParser.initParser(new ByteArrayInputStream(safeWhereClause.getBytes()));
-                        ZExp currentWhere = query.getWhere();
-                        ZExp whereExpression = filterParser.readExpression();
-                        if (currentWhere != null && whereExpression != null) {
-                            ZExpression finalWhereExpression = new ZExpression(and(), currentWhere, whereExpression);
-                            query.addWhere(finalWhereExpression);
-                        } else {
-                            if (whereExpression != null) {
-                                query.addWhere(whereExpression);
-                            }
-                        }
-                    }
-                }
-                return query.toString();
-            } catch (ParseException e) {
-                log.warn("Given statement cannot be parsed: " + statement + ". Error message: " + e, e);
-            }
+        // if (!isTooComplexForZql(statement)) {
+        // try {
+        // ZQuery query = this.parseQuery(statement);
+        // if (whereClause != null) {
+        // if (StringUtils.isNotBlank(whereClause)) {
+        // String safeWhereClause = replaceUnsupportedQuotes(whereClause);
+        // ZqlParser filterParser = getZqlParser();
+        // filterParser.initParser(new ByteArrayInputStream(safeWhereClause.getBytes()));
+        // ZExp currentWhere = query.getWhere();
+        // ZExp whereExpression = filterParser.readExpression();
+        // if (currentWhere != null && whereExpression != null) {
+        // ZExpression finalWhereExpression = new ZExpression(and(), currentWhere, whereExpression);
+        // query.addWhere(finalWhereExpression);
+        // } else {
+        // if (whereExpression != null) {
+        // query.addWhere(whereExpression);
+        // }
+        // }
+        // }
+        // }
+        // return query.toString();
+        // } catch (ParseException e) {
+        // log.warn("Given statement cannot be parsed: " + statement + ". Error message: " + e, e);
+        // }
+        // }
+        // // else
+        // // bug 4979 fix (add where to internal query for Oracle and DB2...)
+        // if (statement.contains("OVER ( ORDER BY ") && statement.contains(") x")) { // awkward piece of code!!
+        // int insertIdx = statement.indexOf(") x");
+        // StringBuilder finalQuery = new StringBuilder().append(statement.substring(0,
+        // insertIdx)).append(where()).append(
+        // surroundWithSpaces(whereClause)).append(statement.substring(insertIdx));
+        // return finalQuery.toString();
+        // }
+
+        if (statement.contains(WHERE_CLAUSE)) {
+            whereClause = whereClause.length() != 0 ? where() + whereClause : whereClause;
+            statement = statement.replaceAll(WHERE_CLAUSE, whereClause);
         }
-        // else
-        // bug 4979 fix (add where to internal query for Oracle and DB2...)
-        if (statement.contains("OVER ( ORDER BY ") && statement.contains(") x")) { // awkward piece of code!!
-            int insertIdx = statement.indexOf(") x");
-            StringBuilder finalQuery = new StringBuilder().append(statement.substring(0, insertIdx)).append(where()).append(
-                    surroundWithSpaces(whereClause)).append(statement.substring(insertIdx));
-            return finalQuery.toString();
-        }
+
         if (statement.contains(AND_WHERE_CLAUSE)) {
             whereClause = whereClause.length() != 0 ? and() + whereClause : whereClause;
-            return statement.replaceAll(AND_WHERE_CLAUSE, whereClause);
+            statement = statement.replaceAll(AND_WHERE_CLAUSE, whereClause);
         }
-        // else
-
-        // FIXME scorreia need to parse statement here and then to add the where clause correctly
-        String op = statement.toUpperCase().contains(where()) ? and() : where();
-        String finalQuery = statement + op + whereClause;
-        log.warn("Query parsing failed. Returning simple concatenated string: " + finalQuery);
-        return finalQuery;
-    }
-
-    /**
-     * DOC scorreia Comment method "isTooComplexForZql".
-     * 
-     * @param statement
-     * @return
-     */
-    private boolean isTooComplexForZql(String statement) {
-        return statement.contains("OVER ( ORDER BY ") && statement.contains(") x") || statement.contains(AND_WHERE_CLAUSE);
+        return statement;
     }
 
     public String where() {
@@ -681,10 +543,6 @@ public class DbmsLanguage {
             }
         }
         return buf.toString();
-    }
-
-    private boolean mustCallFinalize() {
-        return containsLimitClause;
     }
 
     public String desc() {
@@ -712,11 +570,11 @@ public class DbmsLanguage {
         }
 
         // else try with default language (ANSI SQL)
-        log.warn("The indicator SQL expression has not been found for the database type " + this.dbmsName + " for the indicator"
-                + indicatorDefinition.getName()
-                + ". This is not necessarily a problem since the default SQL expression will be used. "
-                + "Nevertheless, if an SQL error during the analysis, this could be the cause.");
-        if (log.isInfoEnabled()) {
+        if (log.isDebugEnabled()) {
+            log.warn("The indicator SQL expression has not been found for the database type " + this.dbmsName
+                    + " for the indicator" + indicatorDefinition.getName()
+                    + ". This is not necessarily a problem since the default SQL expression will be used. "
+                    + "Nevertheless, if an SQL error during the analysis, this could be the cause.");
             log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
         }
         return getSqlExpression(indicatorDefinition, getDefaultLanguage());
@@ -941,6 +799,51 @@ public class DbmsLanguage {
             query = indicator.getInstantiatedExpressions(this.getDefaultLanguage());
         }
         return query;
+    }
+
+    /**
+     * DOC scorreia Comment method "fillGenericQueryWithColumnTableAndAlias".
+     * 
+     * @param genericSQL
+     * @param columns
+     * @param table
+     * @param groupByAliases
+     */
+    public String fillGenericQueryWithColumnTableAndAlias(String genericSQL, String columns, String table, String groupByAliases) {
+        return genericSQL.replaceAll(TABLE_NAME, table).replaceAll(COLUMN_NAMES, columns).replaceAll(GROUP_BY_ALIAS,
+                groupByAliases);
+
+    }
+
+    public String fillGenericQueryWithColumnsAndTable(String genericQuery, String columns, String table) {
+        return this.fillGenericQueryWithColumnTableAndAlias(genericQuery, columns, table, "");
+    }
+
+    public String fillGenericQueryWithColumnTablePattern(String genericQuery, String columns, String table, String regexp) {
+        return this.fillGenericQueryWithColumnsAndTable(genericQuery, columns, table).replaceAll(PATTERN_EXPRESSION, regexp);
+    }
+
+    /**
+     * DOC scorreia Comment method "fillGenericQueryWithColumnTableLimitOffset".
+     * 
+     * @param genericQuery
+     * @param colName
+     * @param table
+     * @param limitRow
+     * @param offset
+     * @param limitRowPlusOffset
+     * @return
+     */
+    public String fillGenericQueryWithColumnTableLimitOffset(String genericQuery, String colName, String table, String limitRow,
+            String offset, String limitRowPlusOffset) {
+        return this.fillGenericQueryWithColumnsAndTable(genericQuery, colName, table).replaceAll(LIMIT_ROW, limitRow).replaceAll(
+                LIMIT_OFFSET, offset).replaceAll(LIMIT_ROW_PLUS_OFFSET, limitRowPlusOffset);
+    }
+
+    public String fillGenericQueryWithJoin(String genericSQL, String tableNameA, String tableNameB, String joinClause,
+            String whereClause) {
+        return genericSQL.replaceAll(TABLE_NAME, tableNameA).replaceAll(TABLE_NAME2, tableNameB).replaceAll(JOIN_CLAUSE,
+                joinClause).replaceAll(WHERE_CLAUSE, whereClause);
     }
 
 }
