@@ -5,6 +5,7 @@
   </categories>
  <!--<categories label="Table Analysis">
     <subCategories analysisType="Table Analysis" label="Default Analysis"/>
+    <subCategories analysisType="Table Analysis" label="Column Analysis"/>
   </categories-->
   <categories label="Multiple Column Analysis">
     <!--subCategories label="Default Analysis"/-->
@@ -14,11 +15,11 @@
     <subCategories label="Default Analysis"/>
     <subCategories label="Nominal values analysis"/>
     <subCategories label="Numerical values analysis"/>
-    <subCategories label="Date column analysis"/>
+    <subCategories label="Time analysis"/>
   </categories>-->
-  <categories label="Columns Comparison Analysis">
-    <!--<subCategories analysisType="Table Comparison" label="Table comparison"/>
-    <subCategories analysisType="Columns Comparison Analysis" label="Column Set Comparison"/>-->
+  <categories label="Comparison Analysis">
+    <!-- <subCategories analysisType="Table Comparison" label="Table comparison"/>
+    <subCategories analysisType="Columns Comparison Analysis" label="Column Set Comparison"/> -->
     <subCategories analysisType="Columns Comparison Analysis" label="column comparison"/>
   </categories>
 </dataquality.category:AnalysisCategories>
