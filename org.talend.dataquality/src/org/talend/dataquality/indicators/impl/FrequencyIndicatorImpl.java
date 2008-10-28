@@ -541,7 +541,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
             Object month = String.valueOf(value2freq[2]);
             buf.append(format2digit(month));
             String week = String.valueOf(value2freq[3]);
-            buf.append(format1digit(week));
+            buf.append(format2digit(week));
             return buf.toString();
         }
 
@@ -558,20 +558,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         return null;
     }
 
-    /**
-     * DOC scorreia Comment method "format1digit".
-     * 
-     * @param week
-     * @return
-     */
-    private String format1digit(String week) {
-        if (week != null) {
-            return "0";
-        }
-        // else
-        return String.valueOf(week);
-    }
-
+   
     /**
      * DOC scorreia Comment method "format2digit".
      * 
