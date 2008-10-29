@@ -10,7 +10,7 @@
 		<param name="SymbolicName" value="org.talend.platform.logging"/>
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="%d{yyyy-MM-dd HH:mm:ss} %c{1} %x - %m%n" />
+				value="%x - %m%n" />
 		</layout>
 	</appender>
 	
@@ -18,7 +18,7 @@
             <param name="Threshold" value="debug" />	    	
 		<layout class="org.apache.log4j.PatternLayout">
                    <param name="ConversionPattern"
-		          value="%-5p %c{1} - %m%n"/>
+		          value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"/>
 		</layout>		
 	</appender>
 
