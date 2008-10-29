@@ -253,7 +253,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         // --- handle case when frequency indicator
         if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
-                || indicatorEclass.isSuperTypeOf(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
                 || IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
             // TODO scorreia test type of column and cast when needed
