@@ -69,13 +69,12 @@ public class SummaryStastictisExplorer extends DataExplorer {
                 }
             } else if (where2 != null) {
                 whereClause = where2;
-            }
-            whereClause = dbmsLanguage.where() + "(" + whereClause + ")";
+            }            
         }
 
         // add the data filter where clause
-        return whereClause != null ? "SELECT * FROM " + getFullyQualifiedTableName(column) + whereClause + dbmsLanguage.and()
-                + "(" + getDataFilterClause() + ")" : null;
+        return whereClause != null ? "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where()
+                + inBrackets(whereClause) + dbmsLanguage.and() + inBrackets(getDataFilterClause()) : null;
     }
 
     /**

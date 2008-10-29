@@ -94,7 +94,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             clause = getDefaultQuotedStatement(""); // no quote here
         }
 
-        return "select * from " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + clause;
+        return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause)
+                + dbmsLanguage.and() + inBrackets(getDataFilterClause());
     }
 
  

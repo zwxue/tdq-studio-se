@@ -154,8 +154,8 @@ public abstract class DataExplorer implements IDataExplorer {
         String fromClause = getFromClause();
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         String table = getFullyQualifiedTableName(column);
-        return " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in() + "( SELECT " + columnName
-                + fromClause + ") ";
+        return " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in()
+                + inBrackets("SELECT " + columnName + fromClause);
     }
 
     protected String getDistinctValuesStatement(String columnName) {
@@ -172,6 +172,16 @@ public abstract class DataExplorer implements IDataExplorer {
     protected String getDataFilterClause() {
         String where = AnalysisHelper.getStringDataFilter(analysis);
         return where != null ? where : "";
+    }
+
+    /**
+     * Method "inBrackets".
+     * 
+     * @param clause
+     * @return the given clause surrounded by parenthesis.
+     */
+    public String inBrackets(String clause) {
+        return " (" + clause + ") ";
     }
 
 }
