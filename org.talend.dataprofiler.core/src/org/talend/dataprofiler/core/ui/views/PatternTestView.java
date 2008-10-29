@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -98,8 +99,6 @@ public class PatternTestView extends ViewPart {
     private Button saveButton;
 
     private Label emoticonLabel;
-
-    private DbmsLanguage createDbmsLanguage;
 
     private Pattern pattern;
 
@@ -228,12 +227,9 @@ public class PatternTestView extends ViewPart {
                 if (regularExpression != null) {
                     language = regularExpression.getExpression().getLanguage();
                 } else {
-                    for (TdDataProvider tddataprovider : listTdDataProviders) {
-                        if (tddataprovider.getName().equals(dbCombo.getText())) {
-                            createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
-                            language = createDbmsLanguage.getDbmsName();
-                            break;
-                        }
+                    DbmsLanguage dbmsLanguage = getDbmsLanguage();
+                    if (dbmsLanguage != null) {
+                        language = dbmsLanguage.getDbmsName();
                     }
                 }
                 new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
@@ -251,13 +247,7 @@ public class PatternTestView extends ViewPart {
         saveButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                if (pattern != null) {
-                    regularExpression.getExpression().setBody(regularText.getText());
-                    EMFUtil.saveSingleResource(pattern.eResource());
-                    MessageDialog.openInformation(new Shell(), "Success", "Success to save the pattern '" + pattern.getName()
-                            + "'");
-                }
-                saveButton.setEnabled(false);
+                savePattern();
             }
         });
         testButton = new Button(rightPane, SWT.PUSH);
@@ -310,7 +300,7 @@ public class PatternTestView extends ViewPart {
     private void testRegularText() {
         for (TdDataProvider tddataprovider : listTdDataProviders) {
             if (tddataprovider.getName().equals(dbCombo.getText())) {
-                createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
+                DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
                 String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText
                         .getText());
                 TypedReturnCode<Connection> rcConn = JavaSqlFactory.createConnection(tddataprovider);
@@ -390,17 +380,58 @@ public class PatternTestView extends ViewPart {
         IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
         IEditorPart findEditor = page.findEditor(openSqlFileAction.getEditorInput());
 
+        DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
+        if (dbmsLanguage != null) {
+            String selectRegexpTestString = dbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText.getText());
+
+            ((SQLEditor) findEditor).setText(selectRegexpTestString);
+        } else {
+            MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED);
+        }
+
+    }
+
+    /**
+     * DOC rli Comment method "savePattern".
+     */
+    private void savePattern() {
+        if (pattern != null) {
+            String expressionLanguage = this.regularExpression.getExpression().getLanguage();
+            DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
+            if (dbmsLanguage != null && (!dbmsLanguage.getDbmsName().equalsIgnoreCase(expressionLanguage))) {
+                String messageInfo = "You have modified the regular expression for " + expressionLanguage
+                        + " but did the tests on a " + dbmsLanguage.getDbmsName() + " connection. Do you still want to save the "
+                        + expressionLanguage + " regular expression? \n" + "Answer 'Yes' to save the " + expressionLanguage
+                        + " regular expression. \n" + "Answer 'No' to save the " + dbmsLanguage.getDbmsName()
+                        + " regular expression.";
+                MessageDialog messageDialog = new MessageDialog(new Shell(), "Warning", null, messageInfo, MessageDialog.WARNING,
+                        new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
+                int result = messageDialog.open();
+                if (result != MessageDialog.OK) {
+                    regularExpression.getExpression().setLanguage(dbmsLanguage.getDbmsName());
+                }
+            }
+
+            regularExpression.getExpression().setBody(regularText.getText());
+            EMFUtil.saveSingleResource(pattern.eResource());
+            // MessageDialog.openInformation(new Shell(), "Success", "Success to save the pattern '" + pattern.getName()
+            // + "'");
+        }
+        saveButton.setEnabled(false);
+    }
+
+    /**
+     * DOC rli Comment method "getDbmsLanguage".
+     * 
+     * @param language
+     * @return
+     */
+    private DbmsLanguage getDbmsLanguage() {
         for (TdDataProvider tddataprovider : listTdDataProviders) {
             if (tddataprovider.getName().equals(dbCombo.getText())) {
-                createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
-                String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText
-                        .getText());
-
-                ((SQLEditor) findEditor).setText(selectRegexpTestString);
-                return;
+                return DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
             }
         }
-        MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED);
-
+        return null;
     }
 }
