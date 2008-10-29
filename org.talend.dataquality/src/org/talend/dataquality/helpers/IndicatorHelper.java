@@ -253,7 +253,12 @@ public final class IndicatorHelper {
             BoxIndicator boxIndicator = (BoxIndicator) indicator;
             String[] dataThreshold = IndicatorHelper.getDataThreshold(boxIndicator);
             if (dataThreshold == null) {
-                dataThreshold = new String[2];
+                // clear all data thresholds
+                final EList<Indicator> allChildIndicators = boxIndicator.getAllChildIndicators();
+                for (Indicator ind : allChildIndicators) {
+                    clearDataThresholds(ind);
+                }
+                return;
             }
 
             // --- add thresholds in min and max indicators
@@ -269,6 +274,18 @@ public final class IndicatorHelper {
             setDataThreshold(boxIndicator.getMedianIndicator(), dataThreshold[0], dataThreshold[1]);
         }
 
+    }
+
+    /**
+     * DOC scorreia Comment method "clearDataThresholds".
+     * 
+     * @param ind
+     */
+    private static void clearDataThresholds(Indicator ind) {
+        final IndicatorParameters parameters = ind.getParameters();
+        if (parameters != null) {
+            parameters.setDataValidDomain(null);
+        }
     }
 
     /**
