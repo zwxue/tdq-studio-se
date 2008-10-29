@@ -18,6 +18,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -41,12 +42,14 @@ public abstract class DataExplorer implements IDataExplorer {
 
     protected static final String MENU_VIEW_ROWS = "View rows";
 
+    protected static final String MENU_VIEW_INVALID_ROWS = "View invalid rows";
+
     private static final String SELECT_ALL = "SELECT * ";
 
     private static final String SELECT = "SELECT ";
-    
+
     private static final String SELECT_DISTINCT = "SELECT DISTINCT ";
-    
+
     protected Analysis analysis;
 
     protected Indicator indicator;
@@ -141,7 +144,7 @@ public abstract class DataExplorer implements IDataExplorer {
         return dbmsLanguage.toQualifiedName(null, dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner)
                 .getName()), dbmsLanguage.quote(columnSetOwner.getName()));
     }
-    
+
     /**
      * DOC scorreia Comment method "getRowsStatementWithSubQuery".
      * 
@@ -160,4 +163,15 @@ public abstract class DataExplorer implements IDataExplorer {
 
         return SELECT_DISTINCT + columnName + fromClause;
     }
+
+    /**
+     * Method "getDataFilterClause".
+     * 
+     * @return the data filter string which represents a where clause (without the where keyword)
+     */
+    protected String getDataFilterClause() {
+        String where = AnalysisHelper.getStringDataFilter(analysis);
+        return where != null ? where : "";
+    }
+
 }

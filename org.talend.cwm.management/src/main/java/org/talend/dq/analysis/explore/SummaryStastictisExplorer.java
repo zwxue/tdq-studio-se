@@ -54,14 +54,14 @@ public class SummaryStastictisExplorer extends DataExplorer {
             String where1 = null;
             Domain domain = parameters.getIndicatorValidDomain();
             if (domain != null) {
-                where1 = getWhereInvalidClause(value, where1, domain);
+                where1 = getWhereInvalidClause(value, domain);
             }
             String where2 = null;
             domain = parameters.getDataValidDomain();
             if (domain != null) {
-                where2 = getWhereInvalidClause(value, where2, domain);
+                where2 = getWhereInvalidClause(value, domain);
             }
-            
+
             if (where1 != null) {
                 whereClause = where1;
                 if (where2 != null) {
@@ -70,26 +70,27 @@ public class SummaryStastictisExplorer extends DataExplorer {
             } else if (where2 != null) {
                 whereClause = where2;
             }
+            whereClause = dbmsLanguage.where() + "(" + whereClause + ")";
         }
 
-        return whereClause != null ? "select * from " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + whereClause
-                : null;
+        // add the data filter where clause
+        return whereClause != null ? "SELECT * FROM " + getFullyQualifiedTableName(column) + whereClause + dbmsLanguage.and()
+                + "(" + getDataFilterClause() + ")" : null;
     }
 
     /**
      * DOC scorreia Comment method "getWhereInvalidClause".
+     * 
      * @param value
      * @param whereClause
      * @param domain
      * @return
      */
-    private String getWhereInvalidClause(double value, String whereClause, Domain domain) {
+    private String getWhereInvalidClause(double value, Domain domain) {
         double max = Double.valueOf(DomainHelper.getMaxValue(domain.getRanges().get(0)));
         double min = Double.valueOf(DomainHelper.getMinValue(domain.getRanges().get(0)));
-        if (value < min || value > max) {
-            whereClause = dbmsLanguage.where() + columnName + dbmsLanguage.less() + min + dbmsLanguage.or() + columnName
-                    + dbmsLanguage.greater() + max;
-        }
+        String whereClause = (value < min || value > max) ? columnName + dbmsLanguage.less() + min + dbmsLanguage.or()
+                + columnName + dbmsLanguage.greater() + max : null;
         return whereClause;
     }
 
@@ -106,6 +107,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
             break;
         default:
             map.put(MENU_VIEW_ROWS, getMatchingRowsStatement());
+            map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement());
         }
 
         return map;
