@@ -131,6 +131,7 @@ public class PatternTestView extends ViewPart {
         coboCom.setLayoutData(data);
         Label dbLabel = new Label(coboCom, SWT.NONE);
         dbLabel.setText("DB Connections");
+        dbLabel.setToolTipText("Choose here on which database the tests will be executed");
         dbCombo = new CCombo(coboCom, SWT.DROP_DOWN | SWT.BORDER);
         dbCombo.setEditable(false);
         data = new GridData();
@@ -169,11 +170,15 @@ public class PatternTestView extends ViewPart {
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 40;
         testText.setLayoutData(data);
+        testText.setToolTipText("Enter here the character sequence to test");
 
         Label regularLabel = new Label(composite, SWT.NONE);
         regularLabel.setText("Regular Expression");
         this.regularText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         this.regularText.setLayoutData(data);
+        regularText
+                .setToolTipText("Enter here the regular expression against which the test will be done. Single quotes are required around the expression.");
+        
         regularText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -207,6 +212,7 @@ public class PatternTestView extends ViewPart {
         data.widthHint = 92;
         sqlButton = new Button(centerPane, SWT.PUSH);
         sqlButton.setText("SQL");
+        sqlButton.setToolTipText("View the generated SQL statement in Data Explorer perspective");
         sqlButton.setLayoutData(data);
         sqlButton.addSelectionListener(new SelectionAdapter() {
 
@@ -216,6 +222,7 @@ public class PatternTestView extends ViewPart {
         });
         createPatternButton = new Button(centerPane, SWT.PUSH);
         createPatternButton.setText("Create Pattern");
+        createPatternButton.setToolTipText("Create a new pattern from this regular expression");
         data = new GridData();
         data.heightHint = 25;
         data.widthHint = 92;
@@ -240,6 +247,7 @@ public class PatternTestView extends ViewPart {
         saveButton = new Button(centerPane, SWT.PUSH);
         saveButton.setText("Save");
         saveButton.setEnabled(false);
+        saveButton.setToolTipText("Save the regular expression of the edited pattern");
         data = new GridData();
         data.heightHint = 25;
         data.widthHint = 92;
@@ -252,6 +260,7 @@ public class PatternTestView extends ViewPart {
         });
         testButton = new Button(rightPane, SWT.PUSH);
         testButton.setText("Test");
+        testButton.setToolTipText("Validate entered string against regular expression");
         testButton.setLayoutData(data);
         testButton.addSelectionListener(new SelectionAdapter() {
 
