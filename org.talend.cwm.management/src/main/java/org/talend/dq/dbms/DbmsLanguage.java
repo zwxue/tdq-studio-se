@@ -51,27 +51,7 @@ public class DbmsLanguage {
     /** Functions of the system. [Function name, number of parameters] */
     private final Map<String, Integer> dbmsFunctions;
 
-    private static final String AND_WHERE_CLAUSE = "<%=__AND_WHERE_CLAUSE__%>";
-
-    private static final String WHERE_CLAUSE = "<%=__WHERE_CLAUSE__%>";
-
-    private static final String TABLE_NAME = "<%=__TABLE_NAME__%>";
-
-    private static final String TABLE_NAME2 = "<%=__TABLE_NAME_2__%>";
-
-    private static final String COLUMN_NAMES = "<%=__COLUMN_NAMES__%>";
-
-    private static final String GROUP_BY_ALIAS = "<%=__GROUP_BY_ALIAS__%>";
-
-    private static final String LIMIT_ROW = "<%=__LIMIT_ROW__%>";
-
-    private static final String PATTERN_EXPRESSION = "<%=__PATTERN_EXPR__%>";
-
-    private static final String JOIN_CLAUSE = "<%=__JOIN_CLAUSE__%>";
-
-    private static final String LIMIT_OFFSET = "<%=__LIMIT_OFFSET__%>";
-
-    private static final String LIMIT_ROW_PLUS_OFFSET = "<%=__LIMIT_ROW_PLUS_OFFSET__%>";
+    // TODO scorreia put this into its own class and offer simple methods to replace tokens.
 
     // --- add here other supported systems (always in uppercase) // DBMS_SUPPORT
 
@@ -98,7 +78,6 @@ public class DbmsLanguage {
      * End of Statement: ";".
      */
     protected static final String EOS = ";";
-    
 
     /**
      * in upper case.
@@ -175,6 +154,7 @@ public class DbmsLanguage {
     public String lessOrEqual() {
         return surroundWithSpaces(SqlPredicate.LESS_EQUAL.getLiteral());
     }
+
     public String between() {
         return surroundWithSpaces(SqlPredicate.BETWEEN.getLiteral());
     }
@@ -300,7 +280,6 @@ public class DbmsLanguage {
         return sqlString;
     }
 
-
     /**
      * Method "getPatternFinderDefaultFunction".
      * 
@@ -390,6 +369,14 @@ public class DbmsLanguage {
         return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") AS " + alias;
     }
 
+    public String selectAllRowsWhereColumnIn(String column, String table, String subquery) {
+        return " SELECT * FROM " + table + where() + column + in() + "( SELECT " + column + from() + "(" + subquery + ") AS mysubquery )";
+    }
+
+    public String in() {
+        return " IN ";
+    }
+    
     /**
      * Method "getDbQuoteString".
      * 
@@ -474,49 +461,15 @@ public class DbmsLanguage {
      * @return the new statement
      */
     public String addWhereToStatement(String statement, String whereClause) {
-        // if (!isTooComplexForZql(statement)) {
-        // try {
-        // ZQuery query = this.parseQuery(statement);
-        // if (whereClause != null) {
-        // if (StringUtils.isNotBlank(whereClause)) {
-        // String safeWhereClause = replaceUnsupportedQuotes(whereClause);
-        // ZqlParser filterParser = getZqlParser();
-        // filterParser.initParser(new ByteArrayInputStream(safeWhereClause.getBytes()));
-        // ZExp currentWhere = query.getWhere();
-        // ZExp whereExpression = filterParser.readExpression();
-        // if (currentWhere != null && whereExpression != null) {
-        // ZExpression finalWhereExpression = new ZExpression(and(), currentWhere, whereExpression);
-        // query.addWhere(finalWhereExpression);
-        // } else {
-        // if (whereExpression != null) {
-        // query.addWhere(whereExpression);
-        // }
-        // }
-        // }
-        // }
-        // return query.toString();
-        // } catch (ParseException e) {
-        // log.warn("Given statement cannot be parsed: " + statement + ". Error message: " + e, e);
-        // }
-        // }
-        // // else
-        // // bug 4979 fix (add where to internal query for Oracle and DB2...)
-        // if (statement.contains("OVER ( ORDER BY ") && statement.contains(") x")) { // awkward piece of code!!
-        // int insertIdx = statement.indexOf(") x");
-        // StringBuilder finalQuery = new StringBuilder().append(statement.substring(0,
-        // insertIdx)).append(where()).append(
-        // surroundWithSpaces(whereClause)).append(statement.substring(insertIdx));
-        // return finalQuery.toString();
-        // }
-
-        if (statement.contains(WHERE_CLAUSE)) {
+        final GenericSQLHandler genericSQLHandler = new GenericSQLHandler(statement);
+        if (genericSQLHandler.containsWhereClause()) {
             whereClause = whereClause.length() != 0 ? where() + whereClause : whereClause;
-            statement = statement.replaceAll(WHERE_CLAUSE, whereClause);
+            statement = genericSQLHandler.replaceWhere(whereClause).getSqlString();
         }
 
-        if (statement.contains(AND_WHERE_CLAUSE)) {
+        if (genericSQLHandler.containsAndClause()) {
             whereClause = whereClause.length() != 0 ? and() + whereClause : whereClause;
-            statement = statement.replaceAll(AND_WHERE_CLAUSE, whereClause);
+            statement = genericSQLHandler.replaceAndClause(whereClause).getSqlString();
         }
         return statement;
     }
@@ -802,23 +755,22 @@ public class DbmsLanguage {
     /**
      * DOC scorreia Comment method "fillGenericQueryWithColumnTableAndAlias".
      * 
-     * @param genericSQL
+     * @param genericQuery
      * @param columns
      * @param table
      * @param groupByAliases
      */
-    public String fillGenericQueryWithColumnTableAndAlias(String genericSQL, String columns, String table, String groupByAliases) {
-        return genericSQL.replaceAll(TABLE_NAME, table).replaceAll(COLUMN_NAMES, columns).replaceAll(GROUP_BY_ALIAS,
-                groupByAliases);
+    public String fillGenericQueryWithColumnTableAndAlias(String genericQuery, String columns, String table, String groupByAliases) {
+        return new GenericSQLHandler(genericQuery).replaceColumnTableAlias(columns, table, groupByAliases).getSqlString();
 
     }
 
     public String fillGenericQueryWithColumnsAndTable(String genericQuery, String columns, String table) {
-        return this.fillGenericQueryWithColumnTableAndAlias(genericQuery, columns, table, "");
+        return new GenericSQLHandler(genericQuery).replaceColumnTable(columns, table).getSqlString();
     }
 
     public String fillGenericQueryWithColumnTablePattern(String genericQuery, String columns, String table, String regexp) {
-        return this.fillGenericQueryWithColumnsAndTable(genericQuery, columns, table).replaceAll(PATTERN_EXPRESSION, regexp);
+        return new GenericSQLHandler(genericQuery).replaceColumnTablePattern(columns, table, regexp).getSqlString();
     }
 
     /**
@@ -834,14 +786,13 @@ public class DbmsLanguage {
      */
     public String fillGenericQueryWithColumnTableLimitOffset(String genericQuery, String colName, String table, String limitRow,
             String offset, String limitRowPlusOffset) {
-        return this.fillGenericQueryWithColumnsAndTable(genericQuery, colName, table).replaceAll(LIMIT_ROW, limitRow).replaceAll(
-                LIMIT_OFFSET, offset).replaceAll(LIMIT_ROW_PLUS_OFFSET, limitRowPlusOffset);
+        return new GenericSQLHandler(genericQuery).replaceLimitOffset(colName, table, limitRow, offset, limitRowPlusOffset)
+                .getSqlString();
     }
 
     public String fillGenericQueryWithJoin(String genericSQL, String tableNameA, String tableNameB, String joinClause,
             String whereClause) {
-        return genericSQL.replaceAll(TABLE_NAME, tableNameA).replaceAll(TABLE_NAME2, tableNameB).replaceAll(JOIN_CLAUSE,
-                joinClause).replaceAll(WHERE_CLAUSE, whereClause);
+        return new GenericSQLHandler(genericSQL).replaceWithJoin(tableNameA, tableNameB, joinClause, whereClause).getSqlString();
     }
 
 }

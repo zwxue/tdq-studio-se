@@ -120,11 +120,11 @@ public final class DbmsLanguageFactory {
             return new DbmsLanguage();
         }
     }
-    
+
     private static boolean isMySQL(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.MYSQL, dbms);
     }
-    
+
     private static boolean isOracle(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.ORACLE, dbms);
     }
@@ -145,9 +145,6 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.SYBASE_ASE, dbms);
     }
 
-
-    // TODO add other types
-    
     static boolean compareDbmsLanguage(String lang1, String lang2) {
         if (lang1 == null || lang2 == null) {
             return false;

@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class SimpleStatisticsExplorer extends DataExplorer {
 
-    /*
+     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
@@ -32,22 +32,26 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         case RowCountIndicatorEnum:
         case NullCountIndicatorEnum:
         case BlankCountIndicatorEnum:
-            map.put(VIEW_ROWS, getRowsStatement());
+            map.put(MENU_VIEW_ROWS, getRowsStatement());
             break;
 
         case UniqueIndicatorEnum:
+            map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
+            map.put(MENU_VIEW_VALUES, getValuesStatement(this.columnName));
+            break;
         case DistinctCountIndicatorEnum:
-            map.put("View values", getValuesStatement(this.columnName));
+            map.put(MENU_VIEW_VALUES, getDistinctValuesStatement(this.columnName));
             break;
 
         case DuplicateCountIndicatorEnum:
-            map.put(VIEW_ROWS, getRowsStatement());
-            map.put("View values", getValuesStatement("col"));
+            map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
+            map.put(MENU_VIEW_VALUES, getValuesStatement("col"));
             break;
         default:
         }
 
         return map;
     }
+
 
 }

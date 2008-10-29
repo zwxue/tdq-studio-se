@@ -15,6 +15,7 @@ package org.talend.dq.analysis.explore;
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
@@ -34,14 +35,18 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public abstract class DataExplorer implements IDataExplorer {
 
-    protected static final String VIEW_ROWS = "View rows";
-
     private static Logger log = Logger.getLogger(PatternExplorer.class);
 
-    private static final String SELECT = "SELECT * ";
+    protected static final String MENU_VIEW_VALUES = "View values";
 
-    private static final String VALUE_SELECT = "SELECT ";
+    protected static final String MENU_VIEW_ROWS = "View rows";
 
+    private static final String SELECT_ALL = "SELECT * ";
+
+    private static final String SELECT = "SELECT ";
+    
+    private static final String SELECT_DISTINCT = "SELECT DISTINCT ";
+    
     protected Analysis analysis;
 
     protected Indicator indicator;
@@ -74,9 +79,9 @@ public abstract class DataExplorer implements IDataExplorer {
         String fromClause = getFromClause();
         if (whereClause != null) {
             String where = fromClause.contains(dbmsLanguage.where()) ? dbmsLanguage.and() : dbmsLanguage.where();
-            return SELECT + fromClause + where + whereClause;
+            return SELECT_ALL + fromClause + where + whereClause;
         } else {
-            return SELECT + fromClause;
+            return SELECT_ALL + fromClause;
         }
     }
 
@@ -87,7 +92,7 @@ public abstract class DataExplorer implements IDataExplorer {
     protected String getValuesStatement(String columnName) {
         String fromClause = getFromClause();
 
-        return VALUE_SELECT + columnName + fromClause;
+        return SELECT + columnName + fromClause;
     }
 
     /**
@@ -95,7 +100,7 @@ public abstract class DataExplorer implements IDataExplorer {
      * 
      * @return
      */
-    private String getFromClause() {
+    protected String getFromClause() {
         String lang = dbmsLanguage.getDbmsName();
         Expression instantiatedExpression = this.indicator.getInstantiatedExpressions(lang);
         String instantiatedSQL = instantiatedExpression.getBody();
@@ -135,5 +140,24 @@ public abstract class DataExplorer implements IDataExplorer {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         return dbmsLanguage.toQualifiedName(null, dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner)
                 .getName()), dbmsLanguage.quote(columnSetOwner.getName()));
+    }
+    
+    /**
+     * DOC scorreia Comment method "getRowsStatementWithSubQuery".
+     * 
+     * @return
+     */
+    protected String getRowsStatementWithSubQuery() {
+        String fromClause = getFromClause();
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        String table = getFullyQualifiedTableName(column);
+        return " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in() + "( SELECT " + columnName
+                + fromClause + ") ";
+    }
+
+    protected String getDistinctValuesStatement(String columnName) {
+        String fromClause = getFromClause();
+
+        return SELECT_DISTINCT + columnName + fromClause;
     }
 }

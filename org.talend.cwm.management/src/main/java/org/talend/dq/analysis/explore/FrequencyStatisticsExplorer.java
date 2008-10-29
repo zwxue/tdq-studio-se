@@ -210,7 +210,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
 
-        map.put(VIEW_ROWS, getFreqRowsStatement());
+        map.put(MENU_VIEW_ROWS, getFreqRowsStatement());
 
         return map;
     }

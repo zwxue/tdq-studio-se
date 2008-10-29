@@ -105,7 +105,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         case MeanIndicatorEnum:
             break;
         default:
-            map.put(VIEW_ROWS, getMatchingRowsStatement());
+            map.put(MENU_VIEW_ROWS, getMatchingRowsStatement());
         }
 
         return map;
