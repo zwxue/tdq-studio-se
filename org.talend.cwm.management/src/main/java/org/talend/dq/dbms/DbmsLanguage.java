@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -74,17 +75,17 @@ public class DbmsLanguage {
 
     // --- add here other supported systems (always in uppercase) // DBMS_SUPPORT
 
-    static final String ORACLE = "ORACLE";
+    static final String ORACLE = SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage();
 
-    static final String MYSQL = "MYSQL";
+    static final String MYSQL = SupportDBUrlType.MYSQLDEFAULTURL.getLanguage();
 
-    static final String POSTGRESQL = "POSTGRESQL";
+    static final String POSTGRESQL = SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage();
 
-    static final String MSSQL = "MICROSOFT SQL SERVER";
+    static final String MSSQL = SupportDBUrlType.MSSQLDEFAULTURL.getLanguage();
 
-    static final String DB2 = "DB2";
+    static final String DB2 = SupportDBUrlType.DB2DEFAULTURL.getLanguage();
 
-    static final String SYBASE_ASE = "ADAPTIVE SERVER ENTERPRISE";
+    static final String SYBASE_ASE = SupportDBUrlType.SYBASEDEFAULTURL.getLanguage();
 
     /**
      * Ansi SQL.
@@ -97,10 +98,7 @@ public class DbmsLanguage {
      * End of Statement: ";".
      */
     protected static final String EOS = ";";
-
-    /**
-     * Temporary table name for replacement before ZQL parsing.
-     */
+    
 
     /**
      * in upper case.
