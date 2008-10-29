@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
-import java.awt.Color;
 import java.util.Set;
 
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
@@ -46,32 +45,12 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  */
 public class IndicatorCommonUtil {
 
-    // Color Constants
-    private static final Color COLOR_ROW_COUNT = Color.RED;
-
-    private static final Color COLOR_NULL_COUNT = Color.GRAY;
-
-    private static final Color COLOR_DISTIN_CTCOUNT = Color.YELLOW;
-
-    private static final Color COLOR_UNIQUE_COUNT = Color.BLUE;
-
-    private static final Color COLOR_DUPLICATE_COUNT = Color.CYAN;
-
-    private static final Color COLOR_BLANKCOUNT = Color.GREEN;
-
-    private static final Color COLOR_MIN_LENGTH = Color.MAGENTA;
-
-    private static final Color COLOR_MAX_LENGTH = Color.ORANGE;
-
-    private static final Color COLOR_AVERAGE_LENGTH = Color.PINK;
-
     public IndicatorCommonUtil() {
 
     }
 
     public static void compositeIndicatorMap(IndicatorUnit indicatorUnit) {
 
-        Color tempColor = null;
         Object tempObject = null;
 
         IndicatorEnum type = indicatorUnit.getType();
@@ -81,47 +60,38 @@ public class IndicatorCommonUtil {
 
             switch (type) {
             case RowCountIndicatorEnum:
-                tempColor = COLOR_ROW_COUNT;
                 tempObject = ((RowCountIndicator) indicator).getCount();
                 break;
 
             case NullCountIndicatorEnum:
-                tempColor = COLOR_NULL_COUNT;
                 tempObject = ((NullCountIndicator) indicator).getNullCount();
                 break;
 
             case DistinctCountIndicatorEnum:
-                tempColor = COLOR_DISTIN_CTCOUNT;
                 tempObject = ((DistinctCountIndicator) indicator).getDistinctValueCount();
                 break;
 
             case UniqueIndicatorEnum:
-                tempColor = COLOR_UNIQUE_COUNT;
                 tempObject = (((UniqueCountIndicator) indicator).getUniqueValueCount());
                 break;
 
             case DuplicateCountIndicatorEnum:
-                tempColor = COLOR_DUPLICATE_COUNT;
                 tempObject = ((DuplicateCountIndicator) indicator).getDuplicateValueCount();
                 break;
 
             case BlankCountIndicatorEnum:
-                tempColor = COLOR_BLANKCOUNT;
                 tempObject = ((BlankCountIndicator) indicator).getBlankCount();
                 break;
 
             case MinLengthIndicatorEnum:
-                tempColor = COLOR_MIN_LENGTH;
                 tempObject = ((MinLengthIndicator) indicator).getLength();
                 break;
 
             case MaxLengthIndicatorEnum:
-                tempColor = COLOR_MAX_LENGTH;
                 tempObject = ((MaxLengthIndicator) indicator).getLength();
                 break;
 
             case AverageLengthIndicatorEnum:
-                tempColor = COLOR_AVERAGE_LENGTH;
                 tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
                 break;
 
@@ -144,50 +114,41 @@ public class IndicatorCommonUtil {
                     i++;
                 }
 
-                tempColor = null;
                 tempObject = frequencyExt;
                 break;
 
             case MeanIndicatorEnum:
-                tempColor = null;
                 tempObject = ((MeanIndicator) indicator).getMean();
                 break;
 
             case MedianIndicatorEnum:
-                tempColor = null;
                 tempObject = ((MedianIndicator) indicator).getMedian();
                 break;
 
             case MinValueIndicatorEnum:
-                tempColor = null;
                 tempObject = ((MinValueIndicator) indicator).getValue();
                 break;
 
             case MaxValueIndicatorEnum:
-                tempColor = null;
                 tempObject = ((MaxValueIndicator) indicator).getValue();
                 break;
 
             case LowerQuartileIndicatorEnum:
-                tempColor = null;
                 tempObject = ((LowerQuartileIndicator) indicator).getValue();
                 break;
 
             case UpperQuartileIndicatorEnum:
-                tempColor = null;
                 tempObject = ((UpperQuartileIndicator) indicator).getValue();
                 break;
 
             case RegexpMatchingIndicatorEnum:
             case SqlPatternMatchingIndicatorEnum:
-                tempColor = null;
                 PatternMatchingExt patternExt = new PatternMatchingExt();
                 patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());
                 patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());
                 tempObject = patternExt;
                 break;
             case ModeIndicatorEnum:
-                tempColor = null;
                 tempObject = ((ModeIndicator) indicator).getMode();
 
             default:
@@ -195,7 +156,6 @@ public class IndicatorCommonUtil {
             }
 
             indicatorUnit.setExcuted(true);
-            indicatorUnit.setColor(tempColor);
             indicatorUnit.setValue(tempObject);
         }
     }

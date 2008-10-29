@@ -12,13 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.ext;
 
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+
 /**
  * DOC zqin class global comment. Detailled comment <br/>
  * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  * 
  */
-public class FrequencyExt implements Comparable<FrequencyExt> {
+public class FrequencyExt {
 
     private Object key;
 
@@ -70,16 +72,4 @@ public class FrequencyExt implements Comparable<FrequencyExt> {
         this.frequency = frequency;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo(FrequencyExt that) {
-
-        if (this.getValue() < that.getValue()) {
-            return 1;
-        }
-        return -1;
-    }
 }

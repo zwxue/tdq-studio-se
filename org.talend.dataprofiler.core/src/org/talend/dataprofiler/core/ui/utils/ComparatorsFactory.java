@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dq.factory.ModelElementFileFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -43,6 +44,10 @@ public final class ComparatorsFactory {
     public static final int TEXT_STATISTICS_COMPARATOR_ID = 2;
 
     public static final int FILE_RESOURCE_COMPARATOR_ID = 3;
+
+    public static final int FREQUENCY_COMPARATOR_ID = 4;
+
+    public static final int LOW_FREQUENCY_COMPARATOR_ID = 5;
 
     /**
      * DOC zqin Comment method "sort".
@@ -87,6 +92,10 @@ public final class ComparatorsFactory {
             return new TextStatisticsComparator();
         case FILE_RESOURCE_COMPARATOR_ID:
             return new FileResourceComparator();
+        case FREQUENCY_COMPARATOR_ID:
+            return new FrequencyIndicatorComparator();
+        case LOW_FREQUENCY_COMPARATOR_ID:
+            return new LowFrequencyIndicatorComparator();
         default:
             return new ModelElementComparator();
         }
@@ -201,6 +210,34 @@ public final class ComparatorsFactory {
                 return 0;
             }
 
+        }
+
+    }
+
+    /**
+     * DOC Zqin ComparatorsFactory class global comment. Detailled comment
+     */
+    static class FrequencyIndicatorComparator implements Comparator<FrequencyExt> {
+
+        public int compare(FrequencyExt o1, FrequencyExt o2) {
+            if (o1.getValue() < o2.getValue()) {
+                return 1;
+            }
+            return -1;
+        }
+
+    }
+
+    /**
+     * DOC Zqin ComparatorsFactory class global comment. Detailled comment
+     */
+    static class LowFrequencyIndicatorComparator implements Comparator<FrequencyExt> {
+
+        public int compare(FrequencyExt o1, FrequencyExt o2) {
+            if (o1.getValue() > o2.getValue()) {
+                return 1;
+            }
+            return -1;
         }
 
     }

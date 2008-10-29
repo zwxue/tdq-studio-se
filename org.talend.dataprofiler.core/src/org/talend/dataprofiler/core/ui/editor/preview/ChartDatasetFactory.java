@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,14 @@ public class ChartDatasetFactory {
             for (IndicatorUnit unit : indicatorUnitList) {
                 if (unit.isExcuted()) {
                     FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
-                    Arrays.sort(frequencyExt);
+
+                    if (chartType == EIndicatorChartType.FREQUENCE_STATISTICS) {
+                        ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
+                    }
+
+                    if (chartType == EIndicatorChartType.LOW_FREQUENCE_STATISTICS) {
+                        ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.LOW_FREQUENCY_COMPARATOR_ID);
+                    }
 
                     int numOfShown = frequencyExt.length;
                     IndicatorParameters parameters = unit.getIndicator().getParameters();

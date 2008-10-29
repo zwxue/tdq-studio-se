@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
-import java.awt.Color;
-
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -32,8 +30,6 @@ public class IndicatorUnit {
     private IndicatorEnum type;
 
     private Indicator indicator;
-
-    private Color color;
 
     private ColumnIndicator parentColumn;
 
@@ -75,24 +71,6 @@ public class IndicatorUnit {
      */
     public ColumnIndicator getParentColumn() {
         return this.parentColumn;
-    }
-
-    /**
-     * Getter for color.
-     * 
-     * @return the color
-     */
-    public Color getColor() {
-        return this.color;
-    }
-
-    /**
-     * Sets the color.
-     * 
-     * @param color the color to set
-     */
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     /**

@@ -35,16 +35,11 @@ public class ChartTableProviderFactory {
     static ITableLabelProvider createLabelProvider(EIndicatorChartType chartType) {
 
         switch (chartType) {
-        case FREQUENCE_STATISTICS:
-            return new FrequencyLabelProvider();
         case MODE_INDICATOR:
             return new ModeLabelProvider();
         case SQL_PATTERN_MATCHING:
         case PATTERN_MATCHING:
             return new PatternLabelProvider();
-        case TEXT_STATISTICS:
-        case SIMPLE_STATISTICS:
-            return new SimpleLabelProvider();
         case SUMMARY_STATISTICS:
             return new SummaryLabelProvider();
         default:
@@ -71,8 +66,18 @@ public class ChartTableProviderFactory {
         }
 
         public String getColumnText(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
 
-            return "";
+            switch (columnIndex) {
+            case 0:
+                return entity.getLabel();
+            case 1:
+                return entity.getValue();
+            case 2:
+                return entity.getPersent();
+            default:
+                return "";
+            }
         }
 
         public Color getBackground(Object element, int columnIndex) {
@@ -102,50 +107,6 @@ public class ChartTableProviderFactory {
             String currentValue = getColumnText(element, columnIndex);
             return ChartTableFactory.getToolTipMsg(indicator, value) != null && value.equals(currentValue);
         }
-    }
-
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class SimpleLabelProvider extends BaseChartTableLabelProvider {
-
-        public String getColumnText(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-
-            switch (columnIndex) {
-            case 0:
-                return entity.getLabel();
-            case 1:
-                return entity.getValue();
-            case 2:
-                return entity.getPersent();
-            default:
-                return "";
-            }
-        }
-
-    }
-
-    /**
-     * DOC zqin ChartTableFactory class global comment. Detailled comment
-     */
-    static class FrequencyLabelProvider extends BaseChartTableLabelProvider {
-
-        public String getColumnText(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-
-            switch (columnIndex) {
-            case 0:
-                return entity.getLabel();
-            case 1:
-                return entity.getValue();
-            case 2:
-                return entity.getPersent();
-            default:
-                return "";
-            }
-        }
-
     }
 
     /**
