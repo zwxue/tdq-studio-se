@@ -204,6 +204,7 @@ public class IndicatorOptionsWizard extends Wizard {
 
                         if ("".equals(min1) && "".equals(max1)) {
                             parameters.setDataValidDomain(null);
+                            IndicatorHelper.propagateDataThresholdsInChildren(indicator);
                         } else {
                             IndicatorHelper.setDataThreshold(indicator, min1, max1);
                             IndicatorHelper.propagateDataThresholdsInChildren(indicator);
