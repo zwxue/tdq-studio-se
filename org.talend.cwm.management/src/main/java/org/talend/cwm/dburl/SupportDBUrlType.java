@@ -80,7 +80,7 @@ public enum SupportDBUrlType {
                         null,
                         "interbase.interclient.Driver", //$NON-NLS-1$
                         null,
-                        "Iterbase"), //$NON-NLS-1$
+                        "Interbase"), //$NON-NLS-1$
     SYBASEDEFAULTURL("Sybase", //$NON-NLS-1$
                      "localhost", //$NON-NLS-1$
                      "5007", //$NON-NLS-1$
@@ -88,7 +88,7 @@ public enum SupportDBUrlType {
                      null,
                      "com.sybase.jdbc3.jdbc.SybDriver", //$NON-NLS-1$
                      null,
-                     "Sybase"), //$NON-NLS-1$
+                     "Adaptive Server Enterprise"), //$NON-NLS-1$
     INFORMIXDEFAULTURL("Informix", //$NON-NLS-1$
                        "localhost", //$NON-NLS-1$
                        "1533", //$NON-NLS-1$
