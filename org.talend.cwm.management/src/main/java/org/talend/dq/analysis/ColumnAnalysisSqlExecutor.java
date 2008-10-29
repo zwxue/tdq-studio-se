@@ -254,6 +254,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // --- handle case when frequency indicator
         if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
                 || indicatorEclass.isSuperTypeOf(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
+                || IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
             // TODO scorreia test type of column and cast when needed
             // with ranges (frequencies of numerical intervals)
@@ -568,7 +569,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private String getCompletedSingleSelect(Indicator indicator, String sqlGenericExpression, String colName, String table,
             List<String> whereExpression, String range) throws ParseException {
         String completedRange = this.unquote(range); // replaceVariablesLow(range, this.unquote(colName),
-                                                     // this.unquote(table));
+        // this.unquote(table));
         String rangeColumn = "'" + completedRange + "'";
 
         String singleQuery = removeGroupBy(sqlGenericExpression);
@@ -619,8 +620,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         List<String> bins = new ArrayList<String>();
         for (RangeRestriction rangeRestriction : ranges) {
             String bin = colName + dbms().greaterOrEqual() + DomainHelper.getMinValue(rangeRestriction) + dbms().and() + colName
-                    + dbms().less() 
-                    + DomainHelper.getMaxValue(rangeRestriction);
+                    + dbms().less() + DomainHelper.getMaxValue(rangeRestriction);
             // set the name of the RangeRestriction here
             // TODO range name should be set at the construction (in the bins designer wizard)
             rangeRestriction.setName(this.unquote(bin));
@@ -659,10 +659,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Integer nbRow = getNbReturnedRows(indicator, count);
 
         long nPlusSkip = midleCount + nbRow; // needed for MSSQL query with TOP clause
-        return dbms().fillGenericQueryWithColumnTableLimitOffset(sqlExpression.getBody(), colName, table,
-                String.valueOf(nbRow),
-                String.valueOf(midleCount), 
-                String.valueOf(nPlusSkip));
+        return dbms().fillGenericQueryWithColumnTableLimitOffset(sqlExpression.getBody(), colName, table, String.valueOf(nbRow),
+                String.valueOf(midleCount), String.valueOf(nPlusSkip));
     }
 
     /**
@@ -764,7 +762,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         expression.setBody(body);
         return expression;
     }
-
 
     /**
      * 
