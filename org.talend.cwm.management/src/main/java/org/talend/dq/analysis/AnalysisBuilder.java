@@ -208,7 +208,9 @@ public class AnalysisBuilder {
         ReturnCode saved = writer.save(analysis, file);
         Assert.assertTrue(saved.getMessage(), saved.isOk());
         if (saved.isOk()) {
-            log.info("Saved in  " + file.getFullPath());
+            if (log.isDebugEnabled()) {
+                log.debug("Saved in  " + file.getFullPath());
+            }
         }
         return saved.isOk();
     }

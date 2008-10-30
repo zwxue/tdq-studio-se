@@ -141,8 +141,8 @@ public abstract class DataExplorer implements IDataExplorer {
 
     protected String getFullyQualifiedTableName(Column column) {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
-        return dbmsLanguage.toQualifiedName(null, dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner)
-                .getName()), dbmsLanguage.quote(columnSetOwner.getName()));
+        return dbmsLanguage.toQualifiedName(null, ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner).getName(),
+                columnSetOwner.getName());
     }
 
     /**

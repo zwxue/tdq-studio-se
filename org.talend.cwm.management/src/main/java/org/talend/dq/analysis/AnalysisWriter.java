@@ -150,7 +150,9 @@ public class AnalysisWriter {
         }
         ReturnCode saved = save(analysis, file);
         if (saved.isOk()) {
-            log.info("Saved in  " + file.getFullPath().toString());
+            if (log.isDebugEnabled()) {
+                log.debug("Saved in  " + file.getFullPath().toString());
+            }
             rc.setObject(file);
             analysis.setFileName(file.getFullPath().toString());
         } else {

@@ -128,7 +128,14 @@ public class DbmsLanguage {
      * @return the sqlIdentifier quoted.
      */
     public String quote(String sqlIdentifier) {
-        return dbQuoteString + sqlIdentifier + dbQuoteString;
+        String quotedSqlIdentifier = sqlIdentifier;
+        if (!quotedSqlIdentifier.startsWith(dbQuoteString)) {
+            quotedSqlIdentifier = dbQuoteString + quotedSqlIdentifier;
+        }
+        if (!quotedSqlIdentifier.endsWith(dbQuoteString)) {
+            quotedSqlIdentifier = quotedSqlIdentifier + dbQuoteString;
+        }
+        return quotedSqlIdentifier;
     }
 
     public String and() {
@@ -253,15 +260,15 @@ public class DbmsLanguage {
     public String toQualifiedName(String catalog, String schema, String table) {
         StringBuffer qualName = new StringBuffer();
         if (catalog != null && catalog.length() > 0) {
-            qualName.append(catalog);
+            qualName.append(this.quote(catalog));
             qualName.append(DOT);
         }
         if (schema != null && schema.length() > 0) {
-            qualName.append(schema);
+            qualName.append(this.quote(schema));
             qualName.append(DOT);
         }
 
-        qualName.append(table);
+        qualName.append(this.quote(table));
         if (log.isDebugEnabled()) {
             log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName));
         }

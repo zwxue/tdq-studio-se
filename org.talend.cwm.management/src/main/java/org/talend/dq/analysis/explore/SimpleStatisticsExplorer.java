@@ -45,7 +45,7 @@ public class SimpleStatisticsExplorer extends DataExplorer {
 
         case DuplicateCountIndicatorEnum:
             map.put(MENU_VIEW_ROWS, getRowsStatementWithSubQuery());
-            map.put(MENU_VIEW_VALUES, getValuesStatement("col"));
+            map.put(MENU_VIEW_VALUES, getValuesStatement(this.columnName));
             break;
         default:
         }
