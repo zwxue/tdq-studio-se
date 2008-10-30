@@ -108,44 +108,91 @@ public final class DatabaseContentRetriever {
     public static Map<String, List<TdSchema>> getSchemas(Connection connection) throws SQLException {
         Map<String, List<TdSchema>> catalogName2schemas = new HashMap<String, List<TdSchema>>();
         ResultSet schemas = getConnectionMetadata(connection).getSchemas();
-        if (schemas != null) {
-            // --- check whether the result set has two columns (Oracle and Sybase only return 1 column)
-            final int columnCount = schemas.getMetaData().getColumnCount();
+        try {
+            if (schemas != null) {
 
-            while (schemas.next()) {
+                // --- check whether the result set has two columns (Oracle and Sybase only return 1 column)
+                final int columnCount = schemas.getMetaData().getColumnCount();
 
-                // set link Catalog -> Schema if exists (e.g. MSSQL)
-                if (columnCount > 1) {
-                    // TODO scorreia handle sybase case: no catalog name, only one column in this result set.
+                while (schemas.next()) {
 
-                    String catName = schemas.getString(MetaDataConstants.TABLE_CATALOG.name());
-                    if (catName == null) {
-                        // happens for MSSQL where schemata (called "owners") must be added to all catalogs
-                        // TODO scorreia handle MSSQL case:
-                        // TODO loop on all existing catalogs and create a new Schema for each existing catalog
-                    } else {
-                        // create the schemata
-                        String schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
-                        TdSchema schema = createSchema(schemaName);
-                        MultiMapHelper.addUniqueObjectToListMap(catName, schema, catalogName2schemas);
+                    // set link Catalog -> Schema if exists
+                    String catName = null;
+                    if (columnCount > 1) {
+                        catName = schemas.getString(MetaDataConstants.TABLE_CATALOG.name());
+                        if (catName != null) { // standard case (Postgresql)
+                            createSchema(schemas, catName, catalogName2schemas);
+                        }
                     }
-                } else { // store schemata with a null key (meaning no catalog)
-                    // create the schemata
-                    String schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
-                    TdSchema schema = createSchema(schemaName);
 
-                    MultiMapHelper.addUniqueObjectToListMap(null, schema, catalogName2schemas);
+                    if (catName == null) { // MSSQL, Sybase, Oracle, Postgresql
+                        // loop on all existing catalogs and create a new Schema for each existing catalog
+                        final List<String> catalogNames = new ArrayList<String>();
+                        fillListOfCatalogs(connection, catalogNames);
+                        if (catalogNames.isEmpty()) {
+                            // store schemata with a null key (meaning no catalog -> e.g. Oracle)
+                            createSchema(schemas, null, catalogName2schemas);
+                        } else { // MSSQL, Sybase case
+                            for (String catalogName : catalogNames) {
+                                createSchema(schemas, catalogName, catalogName2schemas);
+                            }
+                        }
+                    }
                 }
             }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
 
             // --- release JDBC resources
-            schemas.close();
+            if (schemas != null) {
+                schemas.close();
+            }
         }
 
         // if no schema exist in catalog, do not create a default one.
         // The tables will be added directly to the catalog.
 
         return catalogName2schemas;
+    }
+
+    /**
+     * Method "fillListOfCatalogs" gets the list of catalogs only when the list is empty. When the list is not empty, no
+     * call is executed to the connection.
+     * 
+     * @param connection
+     * @param catalogNames the list of catalogs of the given connection
+     * @throws SQLException
+     */
+    private static void fillListOfCatalogs(Connection connection, List<String> catalogNames) throws SQLException {
+        if (catalogNames.isEmpty()) {
+            ResultSet catalogSet = getConnectionMetadata(connection).getCatalogs();
+            try {
+                if (catalogSet != null) {
+                    // DB support getCatalogs() method
+                    while (catalogSet.next()) {
+                        String catalogName = catalogSet.getString(MetaDataConstants.TABLE_CAT.name());
+                        if (catalogName != null) {
+                            catalogNames.add(catalogName);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                throw e;
+            } finally {
+                // --- release the result set.
+                if (catalogSet != null) {
+                    catalogSet.close();
+                }
+            }
+        }
+    }
+
+    private static void createSchema(ResultSet schemas, String catalogName, Map<String, List<TdSchema>> catalogName2schemas)
+            throws SQLException {
+        String schemaName = schemas.getString(MetaDataConstants.TABLE_SCHEM.name());
+        TdSchema schema = createSchema(schemaName);
+        MultiMapHelper.addUniqueObjectToListMap(catalogName, schema, catalogName2schemas);
     }
 
     /**

@@ -36,6 +36,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
@@ -945,6 +946,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return null;
         }
         // else
+        if (RelationalPackage.eINSTANCE.getTdSchema().equals(schema.eClass())) {
+            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schema);
+            if (parentCatalog != null) {
+                return parentCatalog.getName();
+            }
+        }
         return schema.getName();
     }
 
