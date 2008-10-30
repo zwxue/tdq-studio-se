@@ -60,7 +60,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
@@ -86,20 +85,20 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private List<ColumnSet> currentCheckedColumnSet = new ArrayList<ColumnSet>();
 
-    public ColumnsSelectionDialog(Shell parent, String title, ColumnIndicator[] columnIndicators, String message) {
+    public ColumnsSelectionDialog(Shell parent, String title, List<TdColumn> columnList, String message) {
         super(parent, message);
         addFirstPartFilters();
         this.setInput(ResourcesPlugin.getWorkspace().getRoot());
         columnSetCheckedMap = new HashMap<ColumnSetKey, ColumnCheckedMap>();
-        initCheckedColumn(columnIndicators);
+        initCheckedColumn(columnList);
         this.setTitle(title);
     }
 
-    private void initCheckedColumn(ColumnIndicator[] columnIndicators) {
+    private void initCheckedColumn(List<TdColumn> columnList) {
         List<ColumnSet> columnSetList = new ArrayList<ColumnSet>();
-        for (int i = 0; i < columnIndicators.length; i++) {
-            columnIndicators[i].getTdColumn().eContainer();
-            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(columnIndicators[i].getTdColumn());
+        for (int i = 0; i < columnList.size(); i++) {
+            columnList.get(i).eContainer();
+            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(columnList.get(i));
             if (!columnSetList.contains(columnSetOwner)) {
                 columnSetList.add(columnSetOwner);
             }
@@ -109,7 +108,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 columnCheckedMap = new ColumnCheckedMap();
                 this.columnSetCheckedMap.put(columnSetKey, columnCheckedMap);
             }
-            columnCheckedMap.putColumnChecked(columnIndicators[i].getTdColumn(), Boolean.TRUE);
+            columnCheckedMap.putColumnChecked(columnList.get(i), Boolean.TRUE);
         }
         // this.setExpandedElements(columnSetList.toArray());
         this.setInitialElementSelections(columnSetList);

@@ -231,8 +231,12 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * 
      */
     public void openColumnsSelectionDialog() {
-        ColumnIndicator[] columnIndicator = treeViewer.getColumnIndicator();
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, "Column Selection", columnIndicator, "Column Selection");
+        ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
+        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        for (ColumnIndicator columnIndicator : columnIndicators) {
+            columnList.add(columnIndicator.getTdColumn());
+        }
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, "Column Selection", columnList, "Column Selection");
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
