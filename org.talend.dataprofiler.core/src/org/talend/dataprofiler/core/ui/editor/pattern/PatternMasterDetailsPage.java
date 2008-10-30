@@ -68,7 +68,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     public static final String ALL_DATABASE_TYPE = "ALL_DATABASE_TYPE";
 
-    private Composite sectionComp;
+    private Composite patternDefinitionSectionComp;
 
     private Composite componentsComp;
 
@@ -78,12 +78,23 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     private List<String> remainDBTypeList;
 
+    private ScrolledForm form;
+
+    private Section patternDefinitionSection;
+
     public PatternMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 
     public void initialize(FormEditor editor) {
         super.initialize(editor);
+        reset();
+    }
+
+    /**
+     * DOC rli Comment method "reset".
+     */
+    private void reset() {
         String[] supportTypes = SupportDBUrlStore.getInstance().getDBLanguages();
         String[] allDBTypes = new String[supportTypes.length + 1];
         System.arraycopy(supportTypes, 0, allDBTypes, 0, supportTypes.length);
@@ -109,38 +120,58 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
-        final ScrolledForm form = managedForm.getForm();
+        form = managedForm.getForm();
 
         form.setText("Pattern Settings");
         metadataSection.setText("Pattern Metadata");
         metadataSection.setDescription("Set the properties of pattern.");
-        creatPatternDefinitionSection(form, topComp);
+        creatPatternDefinitionSection(topComp);
     }
 
-    private void creatPatternDefinitionSection(ScrolledForm form, Composite topCmp) {
-        Section section = createSection(form, topCmp, "Pattern Definition", false, null);
-        sectionComp = toolkit.createComposite(section);
-        sectionComp.setLayout(new GridLayout());
-        Label label = new Label(sectionComp, SWT.WRAP);
+    private void creatPatternDefinitionSection(Composite topCmp) {
+        patternDefinitionSection = createSection(form, topCmp, "Pattern Definition", false, null);
+        patternDefinitionSectionComp = createPatternDefinitionComp();
+
+    }
+
+    public void updatePatternDefinitonSection() {
+        patternDefinitionSectionComp.dispose();
+        reset();
+        patternDefinitionSectionComp = createPatternDefinitionComp();
+        patternDefinitionSection.layout();
+        // patternDefinitionSectionComp.layout();
+        form.reflow(true);
+    }
+
+    /**
+     * DOC rli Comment method "ceatePatternDefinitionComp".
+     * 
+     * @param form
+     * @param section
+     */
+    private Composite createPatternDefinitionComp() {
+        Composite newComp = toolkit.createComposite(patternDefinitionSection);
+        newComp.setLayout(new GridLayout());
+        Label label = new Label(newComp, SWT.WRAP);
         label.setText("Add here the definition of your pattern specific to a database. "
                 + " If the expression is simple enough to be used in all databases,"
                 + " use the \"ALL_DATABASE_TYPE\" type enumerate.");
-        componentsComp = new Composite(sectionComp, SWT.NONE);
+        componentsComp = new Composite(newComp, SWT.NONE);
         componentsComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(componentsComp);
         EList<PatternComponent> components = this.pattern.getComponents();
         for (int i = 0; i < components.size(); i++) {
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
-            creatNewExpressLine(form, regularExpress);
+            creatNewExpressLine(regularExpress);
         }
-        createAddButton(form);
+        createAddButton(newComp);
 
-        section.setClient(sectionComp);
-
+        patternDefinitionSection.setClient(newComp);
+        return newComp;
     }
 
-    private void createAddButton(final ScrolledForm form) {
-        final Button addButton = new Button(sectionComp, SWT.NONE);
+    private void createAddButton(Composite parent) {
+        final Button addButton = new Button(parent, SWT.NONE);
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
         addButton.setToolTipText("Add");
         GridData labelGd = new GridData();
@@ -170,7 +201,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 RegularExpressionImpl newRegularExpress = (RegularExpressionImpl) PatternFactory.eINSTANCE
                         .createRegularExpression();
                 newRegularExpress.setExpression(expression);
-                creatNewExpressLine(form, newRegularExpress);
+                creatNewExpressLine(newRegularExpress);
                 tempPatternComponents.add(newRegularExpress);
                 form.reflow(true);
                 setDirty(true);
@@ -178,7 +209,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         });
     }
 
-    private void creatNewExpressLine(final ScrolledForm form, RegularExpressionImpl regularExpress) {
+    private void creatNewExpressLine(RegularExpressionImpl regularExpress) {
         final Composite expressComp = new Composite(componentsComp, SWT.NONE);
         expressComp.setLayout(new GridLayout(10, true));
         final CCombo combo = new CCombo(expressComp, SWT.BORDER);
@@ -226,7 +257,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             public void widgetSelected(SelectionEvent e) {
                 tempPatternComponents.remove(finalRegExpress);
                 expressComp.dispose();
-                sectionComp.layout();
+                patternDefinitionSectionComp.layout();
                 form.reflow(true);
                 setDirty(true);
             }
@@ -241,7 +272,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             public void widgetSelected(SelectionEvent e) {
                 // Open test pattern viewer
                 PatternTestView patternTestView = (PatternTestView) CorePlugin.getDefault().findView(PatternTestView.ID);
-                patternTestView.setPatternExpression(pattern, finalRegExpress);
+                patternTestView.setPatternExpression(PatternMasterDetailsPage.this, pattern, finalRegExpress);
             }
         });
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);

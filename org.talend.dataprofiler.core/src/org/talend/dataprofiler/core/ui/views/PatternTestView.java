@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -61,14 +62,20 @@ import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.CreatePatternAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
+import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.CoreFactory;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * The View use to test the text whether match the specification regular text.
@@ -105,6 +112,8 @@ public class PatternTestView extends ViewPart {
     private Button createPatternButton;
 
     private RegularExpression regularExpression;
+
+    private PatternMasterDetailsPage editorPage;
 
     @Override
     public void createPartControl(final Composite parent) {
@@ -176,9 +185,9 @@ public class PatternTestView extends ViewPart {
         regularLabel.setText("Regular Expression");
         this.regularText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         this.regularText.setLayoutData(data);
-        regularText
-                .setToolTipText("Enter here the regular expression against which the test will be done. Single quotes are required around the expression.");
-        
+        regularText.setToolTipText("Enter here the regular expression against which the test will be done. "
+                + "Single quotes are required around the expression.");
+
         regularText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -349,8 +358,10 @@ public class PatternTestView extends ViewPart {
      * @param pattern
      * @param regularExpression
      */
-    public void setPatternExpression(Pattern pattern, RegularExpression regularExpression) {
-        this.pattern = pattern;
+    public void setPatternExpression(PatternMasterDetailsPage editorPage, Pattern editorPattern,
+            RegularExpression regularExpression) {
+        this.editorPage = editorPage;
+        pattern = editorPattern;
         this.regularExpression = regularExpression;
         if (PluginConstant.EMPTY_STRING.equals(regularText)) {
             return;
@@ -401,9 +412,10 @@ public class PatternTestView extends ViewPart {
     }
 
     /**
-     * DOC rli Comment method "savePattern".
+     * If the pattern is not null, will save it and update the corresponding pattern editor content.
      */
     private void savePattern() {
+        // If the pattern is not null, will update the pattern editor content.
         if (pattern != null) {
             String expressionLanguage = this.regularExpression.getExpression().getLanguage();
             DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
@@ -416,17 +428,43 @@ public class PatternTestView extends ViewPart {
                 MessageDialog messageDialog = new MessageDialog(new Shell(), "Warning", null, messageInfo, MessageDialog.WARNING,
                         new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
                 int result = messageDialog.open();
-                if (result != MessageDialog.OK) {
-                    regularExpression.getExpression().setLanguage(dbmsLanguage.getDbmsName());
+                if (result == MessageDialog.OK) {
+                    regularExpression.getExpression().setBody(regularText.getText());
+                } else {
+                    EList<PatternComponent> components = this.pattern.getComponents();
+                    boolean isContainLanguage = false;
+                    for (int i = 0; i < components.size(); i++) {
+                        RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
+                        // set the regular text to the corresponding regular expression
+                        if (dbmsLanguage.getDbmsName().equalsIgnoreCase(regularExpress.getExpression().getLanguage())) {
+                            regularExpress.getExpression().setBody(regularText.getText());
+                            isContainLanguage = true;
+                            break;
+                        }
+                    }
+
+                    // Not find the corresponding regular expression, will new a expression.
+                    if (!isContainLanguage) {
+                        Expression expression = CoreFactory.eINSTANCE.createExpression();
+                        expression.setLanguage(dbmsLanguage.getDbmsName());
+                        expression.setBody(regularText.getText());
+                        RegularExpressionImpl newRegularExpress = (RegularExpressionImpl) PatternFactory.eINSTANCE
+                                .createRegularExpression();
+                        newRegularExpress.setExpression(expression);
+                        this.pattern.getComponents().add(newRegularExpress);
+                    }
                 }
+            } else {
+                regularExpression.getExpression().setBody(regularText.getText());
             }
 
-            regularExpression.getExpression().setBody(regularText.getText());
             EMFUtil.saveSingleResource(pattern.eResource());
-            // MessageDialog.openInformation(new Shell(), "Success", "Success to save the pattern '" + pattern.getName()
+            editorPage.updatePatternDefinitonSection();
+            // MessageDialog.openInformation(new Shell(), "Success", "Success to save the pattern '" +
+            // pattern.getName()
             // + "'");
+            saveButton.setEnabled(false);
         }
-        saveButton.setEnabled(false);
     }
 
     /**
