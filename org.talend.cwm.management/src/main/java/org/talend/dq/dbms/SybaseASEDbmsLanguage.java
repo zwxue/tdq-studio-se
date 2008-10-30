@@ -44,9 +44,9 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String toQualifiedName(String catalog, String schema, String table) {
-        schema = quote("dbo");
-        // Bug fixed: 5118. ZQL parser does not understand statement with full qualified name
-        // catalog = "dbo";
+        if (schema == null) { // use default (backward compatibility with TOP 1.1.0
+            schema = quote("dbo");
+        }
         return super.toQualifiedName(catalog, schema, table);
     }
 

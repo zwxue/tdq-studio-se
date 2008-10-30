@@ -67,12 +67,9 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String toQualifiedName(String catalog, String schema, String table) {
-        schema = quote("dbo");
-        // Bug fixed: 5118. ZQL parser does not understand statement like
-        // select count(*) from Talend.dbo.departement
-        // hence remove catalog and try statement like
-        // select count(*) from dbo.departement
-        // catalog = "dbo";
+        if (schema == null) { // use default (backward compatibility with TOP 1.1.0
+            schema = quote("dbo");
+        }
 
         return super.toQualifiedName(catalog, schema, table);
     }
