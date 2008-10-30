@@ -216,7 +216,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private void saveConnectionInfo() throws DataprofilerCoreException {
         ReturnCode returnCode = PrvResourceFileHelper.getInstance().save(tdDataProvider);
         if (returnCode.isOk()) {
-            log.info("Saved in  " + tdDataProvider.eResource().getURI().toFileString() + " successful");
+            if (log.isDebugEnabled()) {
+                log.debug("Saved in  " + tdDataProvider.eResource().getURI().toFileString() + " successful");
+            }
         } else {
             throw new DataprofilerCoreException("Problem saving file: " + tdDataProvider.eResource().getURI().toFileString()
                     + ": " + returnCode.getMessage());

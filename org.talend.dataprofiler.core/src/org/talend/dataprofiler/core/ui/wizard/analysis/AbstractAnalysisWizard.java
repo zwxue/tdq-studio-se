@@ -104,7 +104,9 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
         TypedReturnCode<IFile> saved = writer.createAnalysisFile(analysis, folderResource);
         IFile file;
         if (saved.isOk()) {
-            log.info("Saved in  " + folderResource.getFullPath().toString());
+            if (log.isDebugEnabled()) {
+                log.debug("Saved in  " + folderResource.getFullPath().toString());
+            }
             file = saved.getObject();
             Resource anaResource = analysis.eResource();
             AnaResourceFileHelper.getInstance().register(file, anaResource);
