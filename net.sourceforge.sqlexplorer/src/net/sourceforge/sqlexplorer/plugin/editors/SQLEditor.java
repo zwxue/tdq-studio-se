@@ -220,7 +220,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
             // Create sash and attach it to 75% of the way down
             final Sash sash = createSash(myParent);
             data = new FormData();
-            data.top = new FormAttachment(75, 0);
+            // MOD scorreia 2008-10-30 enhance result tab height
+            // data.top = new FormAttachment(75, 0);
+            data.top = new FormAttachment(50, 0);
             data.left = new FormAttachment(0, 0);
             data.right = new FormAttachment(100, 0);
             sash.setLayoutData(data);
