@@ -79,6 +79,8 @@ public class ChartImageFactory {
         switch (chartType) {
         case FREQUENCE_STATISTICS:
         case LOW_FREQUENCE_STATISTICS:
+        case PATTERN_FREQUENCE_STATISTICS:
+        case PATTERN_LOW_FREQUENCE_STATISTICS:
             return createBarChart(chartType.getLiteral(), cDataset);
 
         case PATTERN_MATCHING:

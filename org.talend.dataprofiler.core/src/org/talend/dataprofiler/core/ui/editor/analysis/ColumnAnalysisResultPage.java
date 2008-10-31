@@ -350,11 +350,14 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                         currentDataEntity = dataEntities[0];
                     } else {
                         for (ChartDataEntity entity : dataEntities) {
-                            if (chartType == EIndicatorChartType.FREQUENCE_STATISTICS) {
+                            switch (chartType) {
+                            case FREQUENCE_STATISTICS:
+                            case LOW_FREQUENCE_STATISTICS:
                                 if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
                                     currentDataEntity = entity;
                                 }
-                            } else {
+                                break;
+                            default:
                                 if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
                                     currentDataEntity = entity;
                                 }

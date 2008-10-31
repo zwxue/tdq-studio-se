@@ -32,8 +32,8 @@ public class IndicatorChartFactory {
 
     public static List<ChartWithData> createChart(ColumnIndicator column, boolean isCreate) {
 
-        CompositeIndicator compositeIndicator = new CompositeIndicator(column);
-        Map<EIndicatorChartType, List<IndicatorUnit>> separatedMap = compositeIndicator.getIndicatorComposite();
+        Map<EIndicatorChartType, List<IndicatorUnit>> separatedMap = CompositeIndicator.getInstance().getIndicatorComposite(
+                column);
         List<ChartWithData> returnFiles = new ArrayList<ChartWithData>();
 
         for (EIndicatorChartType chartType : separatedMap.keySet()) {

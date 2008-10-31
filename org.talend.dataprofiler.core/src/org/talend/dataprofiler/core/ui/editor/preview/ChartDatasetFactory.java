@@ -55,15 +55,21 @@ public class ChartDatasetFactory {
         switch (chartType) {
         case FREQUENCE_STATISTICS:
         case LOW_FREQUENCE_STATISTICS:
+        case PATTERN_FREQUENCE_STATISTICS:
+        case PATTERN_LOW_FREQUENCE_STATISTICS:
             for (IndicatorUnit unit : indicatorUnitList) {
                 if (unit.isExcuted()) {
                     FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
 
-                    if (chartType == EIndicatorChartType.FREQUENCE_STATISTICS) {
+                    if (chartType == EIndicatorChartType.FREQUENCE_STATISTICS
+                            || chartType == EIndicatorChartType.PATTERN_FREQUENCE_STATISTICS) {
+
                         ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
                     }
 
-                    if (chartType == EIndicatorChartType.LOW_FREQUENCE_STATISTICS) {
+                    if (chartType == EIndicatorChartType.LOW_FREQUENCE_STATISTICS
+                            || chartType == EIndicatorChartType.PATTERN_LOW_FREQUENCE_STATISTICS) {
+
                         ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.LOW_FREQUENCY_COMPARATOR_ID);
                     }
 

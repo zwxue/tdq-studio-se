@@ -85,6 +85,8 @@ public class ChartTableFactory {
         switch (chartTableType) {
         case FREQUENCE_STATISTICS:
         case LOW_FREQUENCE_STATISTICS:
+        case PATTERN_FREQUENCE_STATISTICS:
+        case PATTERN_LOW_FREQUENCE_STATISTICS:
             names = new String[] { "value", "count", "%" };
             widths = new Integer[] { 200, 150, 150 };
 

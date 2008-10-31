@@ -26,25 +26,63 @@ import org.talend.dq.indicators.preview.EIndicatorChartType;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  * 
  */
-public class CompositeIndicator {
+public final class CompositeIndicator {
 
     private IndicatorUnit[] indicatorUnits;
 
     private Map<EIndicatorChartType, List<IndicatorUnit>> separatedMap;
 
-    private List<IndicatorUnit> tempList = new ArrayList<IndicatorUnit>();
+    private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, patternFrequencylist,
+            patternLowFrequencyList, summaryList, patternList, sqlPatternList, modelIndicatorList;
 
-    public CompositeIndicator(ColumnIndicator columnIndicator) {
+    private static CompositeIndicator instance;
 
-        this.separatedMap = new HashMap<EIndicatorChartType, List<IndicatorUnit>>();
-        this.indicatorUnits = initIndicatorUnits(columnIndicator.getIndicatorUnits());
+    private CompositeIndicator() {
+        init();
+
+        // this.separatedMap = new HashMap<EIndicatorChartType, List<IndicatorUnit>>();
+        // this.indicatorUnits = initIndicatorUnits(columnIndicator.getIndicatorUnits());
     }
 
-    private IndicatorUnit[] initIndicatorUnits(IndicatorUnit[] indicatorUnits) {
+    public static CompositeIndicator getInstance() {
+        if (instance == null) {
+            instance = new CompositeIndicator();
+        }
+        return instance;
+    }
 
+    private void init() {
+        simpleList = new ArrayList<IndicatorUnit>();
+        textList = new ArrayList<IndicatorUnit>();
+        frequencyList = new ArrayList<IndicatorUnit>();
+        lowFrequencyList = new ArrayList<IndicatorUnit>();
+        patternFrequencylist = new ArrayList<IndicatorUnit>();
+        patternLowFrequencyList = new ArrayList<IndicatorUnit>();
+        summaryList = new ArrayList<IndicatorUnit>();
+        patternList = new ArrayList<IndicatorUnit>();
+        sqlPatternList = new ArrayList<IndicatorUnit>();
+        modelIndicatorList = new ArrayList<IndicatorUnit>();
+        separatedMap = new HashMap<EIndicatorChartType, List<IndicatorUnit>>();
+    }
+
+    private void clear() {
+        simpleList.clear();
+        textList.clear();
+        frequencyList.clear();
+        lowFrequencyList.clear();
+        patternFrequencylist.clear();
+        patternLowFrequencyList.clear();
+        summaryList.clear();
+        patternList.clear();
+        sqlPatternList.clear();
+        modelIndicatorList.clear();
+        separatedMap.clear();
+    }
+
+    private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit unit : indicatorUnits) {
             if (unit.getChildren() != null) {
-                initIndicatorUnits(unit.getChildren());
+                initChildIndicatorUnits(tempList, unit.getChildren());
             } else {
                 tempList.add(unit);
             }
@@ -53,17 +91,10 @@ public class CompositeIndicator {
         return tempList.toArray(new IndicatorUnit[tempList.size()]);
     }
 
-    public Map<EIndicatorChartType, List<IndicatorUnit>> getIndicatorComposite() {
-
-        List<IndicatorUnit> simpleList = new ArrayList<IndicatorUnit>();
-        List<IndicatorUnit> textList = new ArrayList<IndicatorUnit>();
-        List<IndicatorUnit> frequencyList = new ArrayList<IndicatorUnit>();
-        List<IndicatorUnit> lowFrequencyList = new ArrayList<IndicatorUnit>();
-        List<IndicatorUnit> summaryList = new ArrayList<IndicatorUnit>();
-        List<IndicatorUnit> patternList = new ArrayList<IndicatorUnit>();
-        List<IndicatorUnit> sqlPatternList = new ArrayList<IndicatorUnit>();
-        List<IndicatorUnit> modelIndicatorList = new ArrayList<IndicatorUnit>();
-
+    public Map<EIndicatorChartType, List<IndicatorUnit>> getIndicatorComposite(ColumnIndicator columnIndicator) {
+        this.clear();
+        List<IndicatorUnit> tempList = new ArrayList<IndicatorUnit>();
+        this.indicatorUnits = initChildIndicatorUnits(tempList, columnIndicator.getIndicatorUnits());
         for (IndicatorUnit one : indicatorUnits) {
 
             switch (one.getType()) {
@@ -85,6 +116,12 @@ public class CompositeIndicator {
                 break;
             case LowFrequencyIndicatorEnum:
                 lowFrequencyList.add(one);
+                break;
+            case PatternFreqIndicatorEnum:
+                patternFrequencylist.add(one);
+                break;
+            case PatternLowFreqIndicatorEnum:
+                patternLowFrequencyList.add(one);
                 break;
             case MeanIndicatorEnum:
             case MinValueIndicatorEnum:
@@ -114,6 +151,8 @@ public class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.TEXT_STATISTICS, textList);
         separatedMap.put(EIndicatorChartType.FREQUENCE_STATISTICS, frequencyList);
         separatedMap.put(EIndicatorChartType.LOW_FREQUENCE_STATISTICS, lowFrequencyList);
+        separatedMap.put(EIndicatorChartType.PATTERN_FREQUENCE_STATISTICS, patternFrequencylist);
+        separatedMap.put(EIndicatorChartType.PATTERN_LOW_FREQUENCE_STATISTICS, patternLowFrequencyList);
         separatedMap.put(EIndicatorChartType.SUMMARY_STATISTICS, summaryList);
         separatedMap.put(EIndicatorChartType.PATTERN_MATCHING, patternList);
         separatedMap.put(EIndicatorChartType.SQL_PATTERN_MATCHING, sqlPatternList);
