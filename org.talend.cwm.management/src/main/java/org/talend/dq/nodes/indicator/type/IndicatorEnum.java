@@ -274,6 +274,10 @@ public enum IndicatorEnum {
             returnEnum = FrequencyIndicatorEnum;
         } else if (indicatorType == LowFrequencyIndicatorEnum.getIndicatorType()) {
             returnEnum = LowFrequencyIndicatorEnum;
+        } else if (indicatorType == PatternFreqIndicatorEnum.getIndicatorType()) {
+            returnEnum = PatternFreqIndicatorEnum;
+        } else if (indicatorType == PatternLowFreqIndicatorEnum.getIndicatorType()) {
+            returnEnum = PatternLowFreqIndicatorEnum;
         } else if (indicatorType == TextIndicatorEnum.getIndicatorType()) {
             returnEnum = TextIndicatorEnum;
         } else if (indicatorType == BoxIIndicatorEnum.getIndicatorType()) {
