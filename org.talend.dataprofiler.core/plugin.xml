@@ -348,6 +348,17 @@
          </enablement>
       </actionProvider>
       <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateSummaryStatisticsAnalysis"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateSummaryStatisticsAnalysis">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.talend.cwm.relational.TdColumn">
+               </instanceof>
+            </and>
+         </enablement>
+      </actionProvider>
+      <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.predefined.RunConnAnalysis"
             id="org.talend.dataprofiler.core.ui.action.provider.predefined.RunConnAnalysis">
          <enablement>
