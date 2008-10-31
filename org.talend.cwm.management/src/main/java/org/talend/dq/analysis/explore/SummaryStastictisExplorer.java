@@ -74,7 +74,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
         // add the data filter where clause
         return whereClause != null ? "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where()
-                + inBrackets(whereClause) + dbmsLanguage.and() + inBrackets(getDataFilterClause()) : null;
+                + inBrackets(whereClause) + andDataFilterClause() : null;
     }
 
     /**

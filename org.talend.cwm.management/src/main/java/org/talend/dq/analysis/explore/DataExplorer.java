@@ -174,6 +174,21 @@ public abstract class DataExplorer implements IDataExplorer {
         return where != null ? where : "";
     }
 
+
+    /**
+     * Method "andDataFilterClause".
+     * 
+     * @return the data filter string to add to a where clause. The returned string starts with AND if a clause exists.
+     * Otherwise it is empty.
+     */
+    protected String andDataFilterClause() {
+        String dataFilter = getDataFilterClause();
+        if (dataFilter.length() == 0) {
+            return "";
+        }
+        return dbmsLanguage.and() + inBrackets(dataFilter);
+    }
+
     /**
      * Method "inBrackets".
      * 

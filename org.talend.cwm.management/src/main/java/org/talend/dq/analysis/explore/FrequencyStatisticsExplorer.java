@@ -95,7 +95,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         }
 
         return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause)
-                + dbmsLanguage.and() + inBrackets(getDataFilterClause());
+                + andDataFilterClause();
     }
 
  
