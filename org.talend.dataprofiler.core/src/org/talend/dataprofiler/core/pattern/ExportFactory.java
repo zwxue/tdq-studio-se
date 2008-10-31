@@ -18,7 +18,6 @@ import java.io.FileOutputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -55,16 +54,16 @@ public class ExportFactory {
                 out.setTextQualifier('"');
                 out.setForceQualifier(true);
 
-                List<PatternToExcelEnum> values = PatternToExcelEnum.VALUES;
-                String[] temp = new String[values.size()];
+                PatternToExcelEnum[] values = PatternToExcelEnum.values();
+                String[] temp = new String[values.length];
 
                 for (int i = 0; i < patterns.length + 1; i++) {
 
-                    for (int j = 0; j < values.size(); j++) {
+                    for (int j = 0; j < values.length; j++) {
                         if (i == 0) {
-                            temp[j] = values.get(j).getLiteral();
+                            temp[j] = values[j].getLiteral();
                         } else {
-                            temp[j] = getRelatedValueFromPattern(patterns[i - 1]).get(values.get(j));
+                            temp[j] = getRelatedValueFromPattern(patterns[i - 1]).get(values[j]);
                         }
                     }
 
@@ -115,7 +114,7 @@ public class ExportFactory {
         patternMap.put(PatternToExcelEnum.Author, TaggedValueHelper.getAuthor(pattern));
         patternMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
 
-        for (PatternLanguageType type : PatternLanguageType.VALUES) {
+        for (PatternLanguageType type : PatternLanguageType.values()) {
             for (PatternComponent component : pattern.getComponents()) {
                 Expression expression = ((RegularExpression) component).getExpression();
                 if (expression != null && expression.getLanguage().equalsIgnoreCase(type.getLiteral())) {

@@ -90,7 +90,7 @@ public class ImportFactory {
                     patternParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
                     patternParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
 
-                    for (PatternLanguageType type : PatternLanguageType.VALUES) {
+                    for (PatternLanguageType type : PatternLanguageType.values()) {
                         String cellStr = reader.get(type.getExcelEnum().getLiteral());
                         if (cellStr != null && !cellStr.equals("")) {
                             patternParameters.regex.put(type.getLiteral(), cellStr);
@@ -139,7 +139,7 @@ public class ImportFactory {
                             patternParameters.purpose = row[1].getContents();
                             patternParameters.status = DevelopmentStatus.DRAFT.getLiteral();
 
-                            for (PatternLanguageType type : PatternLanguageType.VALUES) {
+                            for (PatternLanguageType type : PatternLanguageType.values()) {
                                 String cellStr = sheet.getCell(type.getExcelEnum().getLiteral()).getContents();
                                 if (cellStr != null && !cellStr.equals("")) {
                                     patternParameters.regex.put(type.getLiteral(), cellStr);

@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -31,7 +28,8 @@ public enum PatternToExcelEnum {
     MySQLRegexp(7, "MySQL Regexp"),
     OracleRegexp(8, "Oracle Regexp"),
     PostgreSQLRegexp(9, "PostgreSQL Regexp"),
-    SQLServerRegexp(10, "SQL Server Regexp");
+    SQLServerRegexp(10, "SQL Server Regexp"),
+    SybaseRegexp(11, "Sybase Regexp");
 
     private String literal;
 
@@ -49,9 +47,4 @@ public enum PatternToExcelEnum {
         this.index = index;
         this.literal = literal;
     }
-
-    private static final PatternToExcelEnum[] VALUES_ARRAY = new PatternToExcelEnum[] { Label, Purpose, Description, Author,
-            RelativePath, AllDBRegularexpression, DB2Regexp, MySQLRegexp, OracleRegexp, PostgreSQLRegexp, SQLServerRegexp };
-
-    public static final List<PatternToExcelEnum> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 }
