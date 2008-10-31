@@ -69,10 +69,10 @@ public class TextLengthForm extends AbstractIndicatorForm {
         group.setText("Options");
 
         nullBtn = new Button(group, SWT.CHECK);
-        nullBtn.setText("count nulls");
+        nullBtn.setText("aggregate nulls with blanks");
 
         blankBtn = new Button(group, SWT.CHECK);
-        blankBtn.setText("count blanks");
+        blankBtn.setText("aggregate blanks");
 
     }
 

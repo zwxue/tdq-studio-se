@@ -35,7 +35,7 @@ public enum FormEnum {
     FreqTimeSliceForm("Time Slices", "html/wizard/indicator/TimeSlice.html"),
     DataThresholdsForm("Data Thresholds", "html/wizard/indicator/DataThreshold.html"),
     IndicatorThresholdsForm("Indicator Thresholds", "html/wizard/indicator/IndicatorThresholds.html"),
-    TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"),
+    TextLengthForm("Blank Options", "html/wizard/indicator/TextLength.html"),
     NumbericNominalForm("Frequency Table Parameters", ""),
     ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html");
 
