@@ -373,6 +373,17 @@
                </instanceof>
             </and>
          </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewViewProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewViewProvider">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.talend.cwm.relational.TdView">
+               </instanceof>
+            </and>
+         </enablement>
       </actionProvider>        
   </extension>
     
