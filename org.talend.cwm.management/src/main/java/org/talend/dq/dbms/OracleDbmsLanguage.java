@@ -102,6 +102,9 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String replaceNullsWithString(String colName, String replacement) {
+        if ("''".equals(replacement)) {
+            return colName;
+        }
         return " NVL(" + colName + "," + replacement + ")";
     }
 
