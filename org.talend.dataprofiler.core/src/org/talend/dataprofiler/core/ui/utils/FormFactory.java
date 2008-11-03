@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.BinsDesignerForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.DataThresholdsForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.ExpectedValueForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqBinsDesignerForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTextLengthForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTextParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorThresholdsForm;
@@ -54,13 +55,13 @@ public final class FormFactory {
 
         List<AbstractIndicatorForm> list = new ArrayList<AbstractIndicatorForm>();
         AbstractIndicatorForm form = null;
-        AbstractIndicatorParameter parameter = null;
 
         for (FormEnum oneType : formTypes) {
+            AbstractIndicatorParameter parameter = paramMap.get(oneType);
 
             switch (oneType) {
             case BinsDesignerForm:
-                parameter = paramMap.get(FormEnum.BinsDesignerForm);
+
                 if (parameter == null) {
                     parameter = new BinsDesignerParameter();
                 }
@@ -68,15 +69,23 @@ public final class FormFactory {
 
                 break;
             case TextLengthForm:
-                parameter = paramMap.get(FormEnum.TextLengthForm);
+
                 if (parameter == null) {
                     parameter = new TextLengthParameter();
                 }
                 form = new TextLengthForm(parent, SWT.NONE, parameter);
 
                 break;
+            case FreqTextLengthForm:
+
+                if (parameter == null) {
+                    parameter = new TextLengthParameter();
+                }
+                form = new FreqTextLengthForm(parent, SWT.NONE, parameter);
+
+                break;
             case TextParametersForm:
-                parameter = paramMap.get(FormEnum.TextParametersForm);
+
                 if (parameter == null) {
                     parameter = new TextParameter();
                 }
@@ -85,7 +94,7 @@ public final class FormFactory {
 
                 break;
             case DataThresholdsForm:
-                parameter = paramMap.get(FormEnum.DataThresholdsForm);
+
                 if (parameter == null) {
                     parameter = new DataThresholdsParameter();
                 }
@@ -94,7 +103,7 @@ public final class FormFactory {
 
                 break;
             case TimeSlicesForm:
-                parameter = paramMap.get(FormEnum.TimeSlicesForm);
+
                 if (parameter == null) {
                     parameter = new TimeSlicesParameter();
                 }
@@ -103,7 +112,7 @@ public final class FormFactory {
 
                 break;
             case FreqBinsDesignerForm:
-                parameter = paramMap.get(FormEnum.BinsDesignerForm);
+
                 if (parameter == null) {
                     parameter = new BinsDesignerParameter();
                 }
@@ -112,7 +121,7 @@ public final class FormFactory {
 
                 break;
             case FreqTextParametersForm:
-                parameter = paramMap.get(FormEnum.TextParametersForm);
+
                 if (parameter == null) {
                     parameter = new TextParameter();
                 }
@@ -121,7 +130,7 @@ public final class FormFactory {
 
                 break;
             case FreqTimeSliceForm:
-                parameter = paramMap.get(FormEnum.TimeSlicesForm);
+
                 if (parameter == null) {
                     parameter = new TimeSlicesParameter();
                 }
@@ -131,7 +140,7 @@ public final class FormFactory {
                 break;
 
             case IndicatorThresholdsForm:
-                parameter = paramMap.get(FormEnum.IndicatorThresholdsForm);
+
                 if (parameter == null) {
                     parameter = new IndicatorThresholdsParameter();
                 }
@@ -141,7 +150,7 @@ public final class FormFactory {
                 break;
 
             case NumbericNominalForm:
-                parameter = paramMap.get(FormEnum.NumbericNominalForm);
+
                 if (parameter == null) {
                     parameter = new NumbericNominalParameter();
                 }
@@ -150,7 +159,7 @@ public final class FormFactory {
                 break;
 
             case ExpectedValueForm:
-                parameter = paramMap.get(FormEnum.ExpectedValueForm);
+
                 if (parameter == null) {
                     parameter = new ExpectedValueParameter();
                 }

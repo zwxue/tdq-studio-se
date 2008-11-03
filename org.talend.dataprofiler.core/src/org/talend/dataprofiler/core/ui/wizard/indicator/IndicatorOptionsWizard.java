@@ -97,6 +97,7 @@ public class IndicatorOptionsWizard extends Wizard {
 
                 paramMap.put(FormEnum.TextParametersForm, textParam);
                 paramMap.put(FormEnum.TextLengthForm, textLengthParam);
+                paramMap.put(FormEnum.FreqTextLengthForm, textLengthParam);
             }
 
             if (IndicatorHelper.getDataThreshold(indicator) != null) {
@@ -189,6 +190,7 @@ public class IndicatorOptionsWizard extends Wizard {
                         parameters.setTopN(textParam.getNumOfShown());
                         break;
                     case TextLengthForm:
+                    case FreqTextLengthForm:
                         if (textParameters == null) {
                             textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
                             parameters.setTextParameter(textParameters);

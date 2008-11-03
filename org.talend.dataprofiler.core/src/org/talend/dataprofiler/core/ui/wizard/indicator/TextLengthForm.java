@@ -31,7 +31,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextLengthPara
  */
 public class TextLengthForm extends AbstractIndicatorForm {
 
-    private Button nullBtn, blankBtn;
+    protected Button nullBtn, blankBtn;
 
     private TextLengthParameter parameter;
 
@@ -69,10 +69,10 @@ public class TextLengthForm extends AbstractIndicatorForm {
         group.setText("Options");
 
         nullBtn = new Button(group, SWT.CHECK);
-        nullBtn.setText("aggregate nulls with blanks");
+        nullBtn.setText("count nulls");
 
         blankBtn = new Button(group, SWT.CHECK);
-        blankBtn.setText("aggregate blanks");
+        blankBtn.setText("count blanks");
 
     }
 

@@ -35,7 +35,8 @@ public enum FormEnum {
     FreqTimeSliceForm("Time Slices", "html/wizard/indicator/TimeSlice.html"),
     DataThresholdsForm("Data Thresholds", "html/wizard/indicator/DataThreshold.html"),
     IndicatorThresholdsForm("Indicator Thresholds", "html/wizard/indicator/IndicatorThresholds.html"),
-    TextLengthForm("Blank Options", "html/wizard/indicator/TextLength.html"),
+    TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"),
+    FreqTextLengthForm("Blank Options", "html/wizard/indicator/BlankOptions.html"),
     NumbericNominalForm("Frequency Table Parameters", ""),
     ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html");
 
@@ -126,7 +127,7 @@ public enum FormEnum {
                 }
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                forms = new FormEnum[] { FreqTextParametersForm, TextLengthForm };
+                forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm };
             } else if (dataminingType == DataminingType.NOMINAL) {
 
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
