@@ -353,6 +353,8 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
                             switch (chartType) {
                             case FREQUENCE_STATISTICS:
                             case LOW_FREQUENCE_STATISTICS:
+                            case PATTERN_FREQUENCE_STATISTICS:
+                            case PATTERN_LOW_FREQUENCE_STATISTICS:
                                 if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
                                     currentDataEntity = entity;
                                 }
