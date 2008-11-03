@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -37,11 +36,8 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -50,8 +46,6 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * DOC zqin class global comment. Detailled comment
  */
 public abstract class AbstractPredefinedAnalysisAction extends Action {
-
-    private static Logger log = Logger.getLogger(AbstractPredefinedAnalysisAction.class);
 
     private TreeSelection selection;
 
@@ -154,30 +148,6 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         }
     }
 
-    protected List<Indicator> addIndicator(List<Indicator> predefinedIndicators, IndicatorEnum indicatorEnum, TdColumn column) {
-
-        IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
-
-        if (indicatorEnum.getChildren() != null) {
-            for (IndicatorEnum oneEnum : indicatorEnum.getChildren()) {
-                if (ColumnIndicatorRule.patternRule(oneEnum, column)) {
-                    Indicator indicator = (Indicator) factory.create(oneEnum.getIndicatorType());
-                    // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is
-                    // created.
-                    if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
-                        log.error("Could not set the definition of the given indicator : " + indicator.getName());
-                    }
-                    predefinedIndicators.add(indicator);
-                }
-            }
-        } else {
-            Indicator indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
-            predefinedIndicators.add(indicator);
-        }
-
-        return predefinedIndicators;
-    }
-
     protected ColumnIndicator[] composePredefinedColumnIndicator(IndicatorEnum[] allowedEnum) {
 
         ColumnIndicator[] predefinedColumnIndicator = new ColumnIndicator[getColumns().length];
@@ -185,14 +155,21 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         for (int i = 0; i < getColumns().length; i++) {
 
             TdColumn column = getColumns()[i];
-            List<Indicator> predefinedIndicators = new ArrayList<Indicator>();
             ColumnIndicator columnIndicator = new ColumnIndicator(column);
 
             for (IndicatorEnum oneEnum : allowedEnum) {
-                addIndicator(predefinedIndicators, oneEnum, column);
+                columnIndicator.addTempIndicatorEnum(oneEnum);
+                if (oneEnum.getChildren() != null) {
+                    for (IndicatorEnum childEnum : oneEnum.getChildren()) {
+                        if (ColumnIndicatorRule.patternRule(childEnum, column)) {
+                            columnIndicator.addTempIndicatorEnum(childEnum);
+                        }
+                    }
+                }
             }
 
-            columnIndicator.setIndicators(predefinedIndicators.toArray(new Indicator[predefinedIndicators.size()]));
+            columnIndicator.storeTempIndicator();
+
             predefinedColumnIndicator[i] = columnIndicator;
         }
 
