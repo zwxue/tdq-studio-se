@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>TextLength</title>
+<title>Blank Options</title>
 <style>
 	#title {font-size:11pt; font-faimily:Verdana; font-weight:bold}
 	#content {font-size:8pt; font-family:Verdana}
@@ -13,16 +13,16 @@
 </head>
 <body>
 	<span id ="content">
-	<span id = "title">Text Length:</span>
+	<span id = "title">Blank Options:</span>
 	<br>
 	-------------------------------------
 	<p>
 	
-	When computing the length of a text data, the following options are available:
+	When aggregating text data, the following options are available:
 	<p>
-	- count nulls: when selected, null data are counted as zero length text field. When not selected, null data are not taken into account in the results.
+	- aggregate blanks: when selected, blank texts (e.g. " ") are all grouped together and considered as an empty string. When not selected, blank texts are treated as any other text data.
 	<p>
-	- count blanks: when selected, blank texts (e.g. "  ") are counted as zero length text fields. When not selected, blank texts are not taken into account in the results.
+	- aggregate nulls with blanks: when selected, null data are counted as zero length text field. This means that they are treated as an empty string. When not selected, null data are treated as any other text data.
     <p>
     Note: On Oracle, empty strings and null strings are the same objects. Therefore, you need to check or uncheck both checkboxes here in order to get consistent results.
 	</span>
