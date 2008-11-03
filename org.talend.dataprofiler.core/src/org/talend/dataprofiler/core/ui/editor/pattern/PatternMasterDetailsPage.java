@@ -130,6 +130,13 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     private void creatPatternDefinitionSection(Composite topCmp) {
         patternDefinitionSection = createSection(form, topCmp, "Pattern Definition", false, null);
+
+        Label label = new Label(patternDefinitionSection, SWT.WRAP);
+        label.setText("Add here the definition of your pattern specific to a database."
+                + " If the expression is simple enough to be used in all databases,"
+                + " use the \"ALL_DATABASE_TYPE\" type enumerate.");
+        patternDefinitionSection.setDescriptionControl(label);
+
         patternDefinitionSectionComp = createPatternDefinitionComp();
 
     }
@@ -152,10 +159,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     private Composite createPatternDefinitionComp() {
         Composite newComp = toolkit.createComposite(patternDefinitionSection);
         newComp.setLayout(new GridLayout());
-        Label label = new Label(newComp, SWT.WRAP);
-        label.setText("Add here the definition of your pattern specific to a database. "
-                + " If the expression is simple enough to be used in all databases,"
-                + " use the \"ALL_DATABASE_TYPE\" type enumerate.");
+
         componentsComp = new Composite(newComp, SWT.NONE);
         componentsComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(componentsComp);
@@ -211,7 +215,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     private void creatNewExpressLine(RegularExpressionImpl regularExpress) {
         final Composite expressComp = new Composite(componentsComp, SWT.NONE);
-        expressComp.setLayout(new GridLayout(10, true));
+        expressComp.setLayout(new GridLayout(10, false));
         final CCombo combo = new CCombo(expressComp, SWT.BORDER);
         combo.setEditable(false);
         combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
@@ -227,7 +231,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             String supportLanguage = language.equalsIgnoreCase(SQL) ? ALL_DATABASE_TYPE : language;
             combo.setText(supportLanguage);
         }
-        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(combo);
+        GridDataFactory.fillDefaults().span(2, 1).grab(false, false).applyTo(combo);
         combo.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -251,7 +255,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         Button delButton = new Button(expressComp, SWT.NONE);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setToolTipText("Delete");
-        GridDataFactory.fillDefaults().span(1, 1).grab(true, false).applyTo(delButton);
+        GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(delButton);
         delButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -266,7 +270,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         // testPatternButton.setImage(ImageLib.getImage(ImageLib.));
         testPatternButton.setText("Test");
         testPatternButton.setToolTipText("Pattern Test");
-        GridDataFactory.fillDefaults().span(1, 1).grab(true, false).applyTo(testPatternButton);
+        GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(testPatternButton);
         testPatternButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
