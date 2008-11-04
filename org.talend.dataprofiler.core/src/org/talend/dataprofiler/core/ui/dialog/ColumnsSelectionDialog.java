@@ -70,6 +70,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -85,7 +86,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private List<ColumnSet> currentCheckedColumnSet = new ArrayList<ColumnSet>();
 
-    public ColumnsSelectionDialog(Shell parent, String title, List<TdColumn> columnList, String message) {
+    public ColumnsSelectionDialog(Shell parent, String title, List<Column> columnList, String message) {
         super(parent, message);
         addFirstPartFilters();
         this.setInput(ResourcesPlugin.getWorkspace().getRoot());
@@ -94,7 +95,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         this.setTitle(title);
     }
 
-    private void initCheckedColumn(List<TdColumn> columnList) {
+    private void initCheckedColumn(List<Column> columnList) {
         List<ColumnSet> columnSetList = new ArrayList<ColumnSet>();
         for (int i = 0; i < columnList.size(); i++) {
             columnList.get(i).eContainer();
@@ -357,15 +358,15 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         Map<String, Boolean> columnNameMap = new HashMap<String, Boolean>();
 
-        public void putColumnChecked(TdColumn column, Boolean isChecked) {
+        public void putColumnChecked(Column column, Boolean isChecked) {
             columnNameMap.put(column.getName(), isChecked);
         }
 
-        public Boolean getColumnChecked(TdColumn column) {
+        public Boolean getColumnChecked(Column column) {
             return columnNameMap.get(column.getName());
         }
 
-        public void putAllChecked(TdColumn[] columns, Boolean isChecked) {
+        public void putAllChecked(Column[] columns, Boolean isChecked) {
             for (int i = 0; i < columns.length; i++) {
                 columnNameMap.put(columns[i].getName(), isChecked);
             }

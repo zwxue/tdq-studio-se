@@ -55,7 +55,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenerator;
@@ -71,15 +70,15 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class ColumnAnalysisResultPage extends AbstractFormPage implements PropertyChangeListener {
+public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
     private Composite summaryComp;
 
     private Composite resultComp;
 
-    private ScrolledForm form;
+    ScrolledForm form;
 
-    private ColumnMasterDetailsPage masterPage;
+    ColumnMasterDetailsPage masterPage;
 
     /**
      * DOC zqin ColumnAnalysisResultPage constructor comment.
@@ -96,17 +95,9 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        this.form = managedForm.getForm();
-        this.form.setText("Analysis Result");
-        Composite body = form.getBody();
-        body.setLayout(new GridLayout());
+        super.createFormContent(managedForm);
 
-        summaryComp = toolkit.createComposite(body);
-        summaryComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        summaryComp.setLayout(new GridLayout());
-        createSummarySection(summaryComp);
-
-        resultComp = toolkit.createComposite(body);
+        resultComp = toolkit.createComposite(topComposite);
         resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         resultComp.setLayout(new GridLayout());
         createResultSection(resultComp);
@@ -114,60 +105,12 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
         form.reflow(true);
     }
 
-    private void createSummarySection(Composite parent) {
-        Section section = createSection(form, parent, "Analysis Summary", true, null);
-        Composite sectionClient = toolkit.createComposite(section);
-        sectionClient.setLayout(new GridLayout(2, false));
-        sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        Composite databaseComp = toolkit.createComposite(sectionClient);
-        databaseComp.setLayout(new GridLayout(2, false));
-        GridData databaseCompData = new GridData(GridData.FILL_HORIZONTAL);
-        databaseCompData.verticalAlignment = GridData.BEGINNING;
-        databaseComp.setLayoutData(databaseCompData);
-
-        ColumnAnalysisHandler handler = this.masterPage.getAnalysisHandler();
-        toolkit.createLabel(databaseComp, "Connection:");
-        toolkit.createLabel(databaseComp, handler.getConnectionName());
-        if (handler.isCatalogExisting()) {
-            toolkit.createLabel(databaseComp, "Catalog:");
-            toolkit.createLabel(databaseComp, handler.getCatalogNames());
-        }
-
-        if (handler.isSchemaExisting()) {
-            toolkit.createLabel(databaseComp, "Schema:");
-            toolkit.createLabel(databaseComp, handler.getSchemaNames());
-        }
-
-        toolkit.createLabel(databaseComp, "Table(s):");
-        toolkit.createLabel(databaseComp, handler.getTableNames());
-
-        Composite executionComp = toolkit.createComposite(sectionClient);
-        executionComp.setLayout(new GridLayout(2, false));
-        GridData executionCompData = new GridData(GridData.FILL_HORIZONTAL);
-        executionCompData.verticalAlignment = GridData.BEGINNING;
-        executionComp.setLayoutData(executionCompData);
-        toolkit.createLabel(executionComp, "Execution Date:");
-        toolkit.createLabel(executionComp, handler.getExecuteData());
-        toolkit.createLabel(executionComp, "Execution Duration:");
-        toolkit.createLabel(executionComp, handler.getExecuteDuration());
-        toolkit.createLabel(executionComp, "Execution Status:");
-        if (handler.getResultMetadata().isLastRunOk()) {
-            toolkit.createLabel(executionComp, "success");
-        } else {
-            toolkit.createLabel(executionComp, "failure:" + handler.getResultMetadata().getMessage()).setForeground(
-                    Display.getDefault().getSystemColor(SWT.COLOR_RED));
-        }
-
-        toolkit.createLabel(executionComp, "Number of Execution:");
-        toolkit.createLabel(executionComp, handler.getExecuteNumber());
-        toolkit.createLabel(executionComp, "Last Sucessful Execution:");
-        toolkit.createLabel(executionComp, handler.getLastExecutionNumberOk());
-
-        section.setClient(sectionClient);
+    @Override
+    protected ColumnAnalysisHandler getColumnAnalysisHandler() {
+        return this.masterPage.getAnalysisHandler();
     }
 
-    private void createResultSection(Composite parent) {
+    protected void createResultSection(Composite parent) {
         Section section = createSection(form, parent, "Analysis Results", true, null);
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout());
@@ -291,8 +234,6 @@ public class ColumnAnalysisResultPage extends AbstractFormPage implements Proper
      */
     @Override
     public void setDirty(boolean isDirty) {
-        // TODO Auto-generated method stub
-
     }
 
     /*

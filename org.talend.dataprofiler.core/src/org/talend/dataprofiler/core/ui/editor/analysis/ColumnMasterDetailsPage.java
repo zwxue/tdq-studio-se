@@ -79,6 +79,7 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * @author rli
@@ -232,7 +233,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      */
     public void openColumnsSelectionDialog() {
         ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
-        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        List<Column> columnList = new ArrayList<Column>();
         for (ColumnIndicator columnIndicator : columnIndicators) {
             columnList.add(columnIndicator.getTdColumn());
         }
