@@ -13,6 +13,7 @@
 package org.talend.dq.analysis;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -148,6 +149,28 @@ public class AnalysisBuilder {
 
     }
 
+    public boolean addElementsToAnalyze(List<ModelElement> elements, Indicator... indicators) {
+
+        for (int i = 0; i < elements.size(); i++) {
+            if (!isOfGoodType(elements.get(i), indicators)) {
+                log.error(elements.get(i).getName() + " cannot be analyzed in this analysis.");
+                continue;
+            }
+            // store element in context
+            addElementToContext(elements.get(i));
+        }
+        for (Indicator indicator : indicators) {
+            // do not attach element to indicators (because they should be attached outside in the case of a column
+            // set.)
+            // indicator.setAnalyzedElement(element);
+            // store indicators in results
+            analysis.getResults().getIndicators().add(indicator);
+        }
+
+        return true;
+
+    }
+
     /**
      * Method "addFilterOnData". Several filter can be added for one analysis.
      * 
@@ -181,6 +204,15 @@ public class AnalysisBuilder {
         // TODO scorreia use AnalysisType
         AnalysisType analysisType = this.analysis.getParameters().getAnalysisType();
         return true;
+    }
+
+    /**
+     * Set analysis.
+     * 
+     * @param analysis
+     */
+    public void setAnalysis(Analysis analysis) {
+        this.analysis = analysis;
     }
 
     /**
