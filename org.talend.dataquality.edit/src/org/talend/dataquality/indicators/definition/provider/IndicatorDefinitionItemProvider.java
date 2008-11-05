@@ -77,7 +77,6 @@ public class IndicatorDefinitionItemProvider
             addAggregatedDefinitionsPropertyDescriptor(object);
             addLabelPropertyDescriptor(object);
             addSubCategoriesPropertyDescriptor(object);
-            addNumeric1argFunctionsPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -171,28 +170,6 @@ public class IndicatorDefinitionItemProvider
     }
 
     /**
-     * This adds a property descriptor for the Numeric1arg Functions feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected void addNumeric1argFunctionsPropertyDescriptor(Object object) {
-        itemPropertyDescriptors.add
-            (createItemPropertyDescriptor
-                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-                 getResourceLocator(),
-                 getString("_UI_IndicatorDefinition_numeric1argFunctions_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_IndicatorDefinition_numeric1argFunctions_feature", "_UI_IndicatorDefinition_type"),
-                 DefinitionPackage.Literals.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS,
-                 true,
-                 false,
-                 false,
-                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-                 null,
-                 null));
-    }
-
-    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -205,6 +182,7 @@ public class IndicatorDefinitionItemProvider
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION);
+            childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS);
         }
         return childrenFeatures;
     }
@@ -260,10 +238,10 @@ public class IndicatorDefinitionItemProvider
 
         switch (notification.getFeatureID(IndicatorDefinition.class)) {
             case DefinitionPackage.INDICATOR_DEFINITION__LABEL:
-            case DefinitionPackage.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:
+            case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -300,6 +278,49 @@ public class IndicatorDefinitionItemProvider
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION,
                  DatatypesFactory.eINSTANCE.createQueryExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
+                 CoreFactory.eINSTANCE.createExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
+                 CoreFactory.eINSTANCE.createBooleanExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
+                 CoreFactory.eINSTANCE.createProcedureExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
+                 DatatypesFactory.eINSTANCE.createQueryExpression()));
+    }
+
+    /**
+     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+        Object childFeature = feature;
+        Object childObject = child;
+
+        boolean qualify =
+            childFeature == DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION ||
+            childFeature == DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS;
+
+        if (qualify) {
+            return getString
+                ("_UI_CreateChild_text2",
+                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+        }
+        return super.getCreateChildText(owner, feature, child, selection);
     }
 
     /**

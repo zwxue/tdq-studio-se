@@ -72,6 +72,7 @@ public class ColumnSetMultiValueIndicatorItemProvider
             addNumericFunctionsPropertyDescriptor(object);
             addNominalColumnsPropertyDescriptor(object);
             addNumericColumnsPropertyDescriptor(object);
+            addColumnHeadersPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -187,6 +188,28 @@ public class ColumnSetMultiValueIndicatorItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Column Headers feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addColumnHeadersPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ColumnSetMultiValueIndicator_columnHeaders_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_ColumnSetMultiValueIndicator_columnHeaders_feature", "_UI_ColumnSetMultiValueIndicator_type"),
+                 ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS,
+                 false,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns ColumnSetMultiValueIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -225,6 +248,7 @@ public class ColumnSetMultiValueIndicatorItemProvider
         switch (notification.getFeatureID(ColumnSetMultiValueIndicator.class)) {
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }
