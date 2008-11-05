@@ -43,6 +43,11 @@ public class GenericSQLHandler {
 
     private String sqlString;
 
+    /**
+     * GenericSQLHandler constructor comment.
+     * 
+     * @param genericString a generic string
+     */
     public GenericSQLHandler(final String genericString) {
         assert genericString != null;
         this.sqlString = new String(genericString);
@@ -124,5 +129,16 @@ public class GenericSQLHandler {
 
     public String getSqlString() {
         return this.sqlString;
+    }
+    
+    /**
+     *Method "createGenericSqlWithRegexFunction".
+     * 
+     * @param function a two arguments function.
+     * @return the full generic statement
+     */
+    public String createGenericSqlWithRegexFunction(String function) {
+        return "SELECT COUNT(CASE WHEN " + function + "(" + COLUMN_NAMES + "," + PATTERN_EXPRESSION
+                + ") THEN 1 END), COUNT(*) FROM " + TABLE_NAME + " " + WHERE_CLAUSE;
     }
 }

@@ -663,7 +663,7 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "getQuoteIdentifier" returns the hard coded quote identifier string. You should call
+     * Method "getHardCodedQuoteIdentifier" returns the hard coded quote identifier string. You should call
      * {@link #getDbQuoteString()} instead.
      * 
      * @return hard coded quote identifier string

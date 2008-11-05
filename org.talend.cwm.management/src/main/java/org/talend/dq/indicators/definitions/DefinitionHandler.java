@@ -60,6 +60,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
+import org.talend.dq.dbms.GenericSQLHandler;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -167,6 +168,24 @@ public final class DefinitionHandler {
         return definitionsFile;
     }
 
+    public boolean restaureDefaultRegexDefinitions() {
+        EMFUtil util = new EMFUtil();
+        Resource definitionsFile = null;
+        URI uri = URI.createPlatformPluginURI(PLUGIN_PATH, false);
+        // load from plugin path
+        definitionsFile = util.getResourceSet().getResource(uri, true);
+        EObject origDef = definitionsFile.getContents().get(0);
+        if (origDef != null) {
+            IndicatorDefinition origIndDefinition = getIndicatorDefinition((IndicatorsDefinitions) origDef,
+                    REGULAR_EXPRESSION_MATCHING);
+            IndicatorDefinition regexIndDef = this.getIndicatorDefinition(REGULAR_EXPRESSION_MATCHING);
+            regexIndDef.getSqlGenericExpression().clear();
+            regexIndDef.getSqlGenericExpression().addAll(origIndDefinition.getSqlGenericExpression());
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Method "getIndicatorsDefinitions".
      * 
@@ -245,7 +264,7 @@ public final class DefinitionHandler {
     public boolean saveResource() {
         return EMFUtil.saveSingleResource(this.indicatorDefinitions.eResource());
     }
-    
+
     /**
      * Method "getIndicatorDefinition".
      * 
@@ -253,7 +272,11 @@ public final class DefinitionHandler {
      * @return the definition with the given label
      */
     private IndicatorDefinition getIndicatorDefinition(String label) {
-        EList<IndicatorDefinition> definitions = this.indicatorDefinitions.getIndicatorDefinitions();
+        return this.getIndicatorDefinition(indicatorDefinitions, label);
+    }
+
+    private IndicatorDefinition getIndicatorDefinition(IndicatorsDefinitions indDefinitions, String label) {
+        EList<IndicatorDefinition> definitions = indDefinitions.getIndicatorDefinitions();
         for (IndicatorDefinition indicatorDefinition : definitions) {
             if (indicatorDefinition != null && indicatorDefinition.getLabel() != null
                     && indicatorDefinition.getLabel().compareTo(label) == 0) {
@@ -262,7 +285,7 @@ public final class DefinitionHandler {
         }
         return null;
     }
-    
+
     public boolean updateRegex(String dbmsName, String regexpFunction) {
         boolean ok = true;
         boolean replaced = false;
@@ -270,6 +293,7 @@ public final class DefinitionHandler {
         EList<Expression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
         for (Expression expression : sqlGenericExpression) {
             if (dbmsName.equals(expression.getLanguage())) {
+                // FIXME scorreia this comparison should be made by DbmsLanguageFactory?
                 replaced = replaceBodyWith(expression, regexpFunction);
             }
         }
@@ -290,8 +314,7 @@ public final class DefinitionHandler {
      * @return
      */
     private String getGenericSQL(String dbmsName, String regexpFunction) {
-        String sqlExpr = "SELECT COUNT(CASE WHEN " + regexpFunction + "({0},{2}) THEN 1 END), COUNT(*) FROM {1}";
-        return sqlExpr;
+        return new GenericSQLHandler("").createGenericSqlWithRegexFunction(regexpFunction);
     }
 
     /**
@@ -312,7 +335,8 @@ public final class DefinitionHandler {
      * WARNING: The label of the indicator definition in .Talend.definition must be exactly the same as the strings used
      * here.
      */
-    private final IndicatorsSwitch<Boolean>  indicatorSwitch = new IndicatorsSwitch<Boolean>()   {
+    private final IndicatorsSwitch<Boolean> indicatorSwitch = new IndicatorsSwitch<Boolean>() {
+
         private final ColumnsetSwitch<Boolean> columnIndicatorSwitch = new ColumnsetSwitch<Boolean>() {
 
             /*
@@ -326,7 +350,7 @@ public final class DefinitionHandler {
             public Boolean caseRowMatchingIndicator(RowMatchingIndicator object) {
                 return setIndicatorDefinition(object, "Row Comparison");
             }
-            
+
             /*
              * (non-Javadoc)
              * 
@@ -339,7 +363,6 @@ public final class DefinitionHandler {
                 return setIndicatorDefinition(object, "Multiple Column Frequency Table");
             }
 
-            
             /*
              * (non-Javadoc)
              * 
@@ -363,11 +386,9 @@ public final class DefinitionHandler {
             public Boolean defaultCase(EObject object) {
                 return false;
             }
-            
-            
 
         };
-        
+
         @Override
         public Boolean defaultCase(EObject object) {
             // try with columnSetSwitch
@@ -565,9 +586,8 @@ public final class DefinitionHandler {
             return setIndicatorDefinition(object, "Upper Quartile");
         }
 
-
     };
-    
+
     private Boolean setIndicatorDefinition(Indicator indicator, String definitionLabel) {
         // get the definition
         IndicatorDefinition indicatorDefinition = this.getIndicatorDefinition(definitionLabel);
@@ -578,6 +598,5 @@ public final class DefinitionHandler {
         indicator.setIndicatorDefinition(indicatorDefinition);
         return true;
     }
-    
- 
+
 }
