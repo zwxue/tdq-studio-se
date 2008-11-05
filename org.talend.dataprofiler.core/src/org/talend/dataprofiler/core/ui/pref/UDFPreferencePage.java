@@ -99,7 +99,7 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
             ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), entity.getFunction());
         }
         DefinitionHandler.getInstance().updateRegex("MySQL", "'A','type'");
-        // DefinitionHandler.getInstance().saveResource();
+        DefinitionHandler.getInstance().saveResource();
 
         return true;
     }
