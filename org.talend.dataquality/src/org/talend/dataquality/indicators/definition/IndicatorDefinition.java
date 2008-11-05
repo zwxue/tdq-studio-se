@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.definition;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -24,7 +23,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getLabel <em>Label</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getSubCategories <em>Sub Categories</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getSqlGenericExpression <em>Sql Generic Expression</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getNumeric1argFunctions <em>Numeric1arg Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getAggregate1argFunctions <em>Aggregate1arg Functions</em>}</li>
  * </ul>
  * </p>
  *
@@ -124,19 +123,20 @@ public interface IndicatorDefinition extends ModelElement {
     EList<Expression> getSqlGenericExpression();
 
     /**
-     * Returns the value of the '<em><b>Numeric1arg Functions</b></em>' attribute list.
-     * The list contents are of type {@link java.lang.String}.
-     * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Aggregate1arg Functions</b></em>' containment reference list. The list contents
+     * are of type {@link orgomg.cwm.objectmodel.core.Expression}. <!-- begin-user-doc -->
+     * <p>
+     * Contains a list of aggregate functions (specific to each database language). There is only one expression for
+     * each database language. The body of the expression can contain several functions. In that case, the functions are
+     * separated by a semi-column ';'.
+     * </p>
      * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * list of numeric functions to be used by this indicator definition (e.g. AVG({0)}, SUM({0}), COUNT({0})...)
      * 
-     * <!-- end-model-doc -->
-     * @return the value of the '<em>Numeric1arg Functions</em>' attribute list.
-     * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorDefinition_Numeric1argFunctions()
-     * @model
+     * @return the value of the '<em>Aggregate1arg Functions</em>' containment reference list.
+     * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorDefinition_Aggregate1argFunctions()
+     * @model containment="true"
      * @generated
      */
-    EList<String> getNumeric1argFunctions();
+    EList<Expression> getAggregate1argFunctions();
 
 } // IndicatorDefinition

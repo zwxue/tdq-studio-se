@@ -362,6 +362,15 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getColumnSetMultiValueIndicator_ColumnHeaders() {
+        return (EAttribute)columnSetMultiValueIndicatorEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getCountAvgNullIndicator() {
         return countAvgNullIndicatorEClass;
     }
@@ -417,6 +426,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS);
         createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS);
         createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS);
+        createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS);
 
         countAvgNullIndicatorEClass = createEClass(COUNT_AVG_NULL_INDICATOR);
 
@@ -477,6 +487,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         initEAttribute(getColumnSetMultiValueIndicator_NumericFunctions(), ecorePackage.getEString(), "numericFunctions", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getColumnSetMultiValueIndicator_NominalColumns(), theRelationalPackage.getColumn(), null, "nominalColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getColumnSetMultiValueIndicator_NumericColumns(), theRelationalPackage.getColumn(), null, "numericColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getColumnSetMultiValueIndicator_ColumnHeaders(), ecorePackage.getEString(), "columnHeaders", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(countAvgNullIndicatorEClass, CountAvgNullIndicator.class, "CountAvgNullIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

@@ -1221,13 +1221,22 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 4;
 
     /**
+     * The feature id for the '<em><b>Column Headers</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 5;
+
+    /**
      * The number of structural features of the '<em>Column Set Multi Value Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 5;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 6;
 
 
     /**
@@ -1520,6 +1529,15 @@ public interface ColumnsetPackage extends EPackage {
     int COUNT_AVG_NULL_INDICATOR__NUMERIC_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS;
 
     /**
+     * The feature id for the '<em><b>Column Headers</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__COLUMN_HEADERS = COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS;
+
+    /**
      * The number of structural features of the '<em>Count Avg Null Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1655,6 +1673,17 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      */
     EReference getColumnSetMultiValueIndicator_NumericColumns();
+
+    /**
+     * Returns the meta object for the attribute list '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getColumnHeaders <em>Column Headers</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute list '<em>Column Headers</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getColumnHeaders()
+     * @see #getColumnSetMultiValueIndicator()
+     * @generated
+     */
+    EAttribute getColumnSetMultiValueIndicator_ColumnHeaders();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator <em>Count Avg Null Indicator</em>}'.
@@ -1794,6 +1823,14 @@ public interface ColumnsetPackage extends EPackage {
          * @generated
          */
         EReference COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS = eINSTANCE.getColumnSetMultiValueIndicator_NumericColumns();
+
+        /**
+         * The meta object literal for the '<em><b>Column Headers</b></em>' attribute list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS = eINSTANCE.getColumnSetMultiValueIndicator_ColumnHeaders();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.columnset.impl.CountAvgNullIndicatorImpl <em>Count Avg Null Indicator</em>}' class.

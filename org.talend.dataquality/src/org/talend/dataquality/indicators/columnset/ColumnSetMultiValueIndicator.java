@@ -9,9 +9,7 @@ package org.talend.dataquality.indicators.columnset;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.talend.dataquality.indicators.Indicator;
-
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -27,6 +25,7 @@ import orgomg.cwm.resource.relational.Column;
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getNumericFunctions <em>Numeric Functions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getNominalColumns <em>Nominal Columns</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getNumericColumns <em>Numeric Columns</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getColumnHeaders <em>Column Headers</em>}</li>
  * </ul>
  * </p>
  *
@@ -55,8 +54,9 @@ public interface ColumnSetMultiValueIndicator extends Indicator {
      * Returns the value of the '<em><b>List Rows</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>List Rows</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * Returns the result set of the executed query. The size of the list is the number of rows returned by the query.
+     * The length of the array is the number of columns of the result set. The header of each column can be obtained
+     * with the {@link #getColumnHeaders()} method.
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>List Rows</em>' attribute.
@@ -124,5 +124,21 @@ public interface ColumnSetMultiValueIndicator extends Indicator {
      * @generated
      */
     EList<Column> getNumericColumns();
+
+    /**
+     * Returns the value of the '<em><b>Column Headers</b></em>' attribute list.
+     * The list contents are of type {@link java.lang.String}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * Returns the headers of the result set computed by this indicator. These headers are for presentation purpose
+     * only. It's not safe to use them in a real query.
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Column Headers</em>' attribute list.
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_ColumnHeaders()
+     * @model transient="true" changeable="false" volatile="true"
+     * @generated
+     */
+    EList<String> getColumnHeaders();
 
 } // ColumnSetMultiValueIndicator

@@ -6,6 +6,7 @@
  */
 package org.talend.dataquality.indicators.columnset.impl;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import orgomg.cwm.resource.relational.Column;
  *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericFunctions <em>Numeric Functions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNominalColumns <em>Nominal Columns</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericColumns <em>Numeric Columns</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getColumnHeaders <em>Column Headers</em>}</li>
  * </ul>
  * </p>
  *
@@ -184,6 +186,25 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
         return computedColumns;
     }
 
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    public EList<String> getColumnHeaders() {
+        EList<String> headers = new BasicEList<String>();
+        for (Column column : this.getNominalColumns()) {
+            headers.add(column.getName());
+        }
+        for (Column column : this.getNumericColumns()) {
+            // call functions for each column
+            for (String f : this.getNumericFunctions()) {
+                headers.add(MessageFormat.format(f, column.getName()));
+            }
+        }
+        return headers;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -226,6 +247,8 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
                 return getNominalColumns();
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
                 return getNumericColumns();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
+                return getColumnHeaders();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -293,6 +316,8 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
                 return !getNominalColumns().isEmpty();
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
                 return !getNumericColumns().isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
+                return !getColumnHeaders().isEmpty();
         }
         return super.eIsSet(featureID);
     }

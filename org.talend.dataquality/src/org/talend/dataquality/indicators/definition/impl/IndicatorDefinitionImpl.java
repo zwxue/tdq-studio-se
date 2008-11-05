@@ -43,7 +43,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getLabel <em>Label</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getSubCategories <em>Sub Categories</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getSqlGenericExpression <em>Sql Generic Expression</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getNumeric1argFunctions <em>Numeric1arg Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getAggregate1argFunctions <em>Aggregate1arg Functions</em>}</li>
  * </ul>
  * </p>
  *
@@ -111,14 +111,14 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
     protected EList<Expression> sqlGenericExpression;
 
     /**
-     * The cached value of the '{@link #getNumeric1argFunctions() <em>Numeric1arg Functions</em>}' attribute list.
+     * The cached value of the '{@link #getAggregate1argFunctions() <em>Aggregate1arg Functions</em>}' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getNumeric1argFunctions()
+     * @see #getAggregate1argFunctions()
      * @generated
      * @ordered
      */
-    protected EList<String> numeric1argFunctions;
+    protected EList<Expression> aggregate1argFunctions;
 
     /**
      * <!-- begin-user-doc -->
@@ -213,11 +213,11 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList<String> getNumeric1argFunctions() {
-        if (numeric1argFunctions == null) {
-            numeric1argFunctions = new EDataTypeUniqueEList<String>(String.class, this, DefinitionPackage.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS);
+    public EList<Expression> getAggregate1argFunctions() {
+        if (aggregate1argFunctions == null) {
+            aggregate1argFunctions = new EObjectContainmentEList<Expression>(Expression.class, this, DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS);
         }
-        return numeric1argFunctions;
+        return aggregate1argFunctions;
     }
 
     /**
@@ -230,6 +230,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
         switch (featureID) {
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:
                 return ((InternalEList<?>)getSqlGenericExpression()).basicRemove(otherEnd, msgs);
+            case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
+                return ((InternalEList<?>)getAggregate1argFunctions()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -252,8 +254,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return getSubCategories();
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:
                 return getSqlGenericExpression();
-            case DefinitionPackage.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS:
-                return getNumeric1argFunctions();
+            case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
+                return getAggregate1argFunctions();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -286,9 +288,9 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 getSqlGenericExpression().clear();
                 getSqlGenericExpression().addAll((Collection<? extends Expression>)newValue);
                 return;
-            case DefinitionPackage.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS:
-                getNumeric1argFunctions().clear();
-                getNumeric1argFunctions().addAll((Collection<? extends String>)newValue);
+            case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
+                getAggregate1argFunctions().clear();
+                getAggregate1argFunctions().addAll((Collection<? extends Expression>)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -317,8 +319,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:
                 getSqlGenericExpression().clear();
                 return;
-            case DefinitionPackage.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS:
-                getNumeric1argFunctions().clear();
+            case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
+                getAggregate1argFunctions().clear();
                 return;
         }
         super.eUnset(featureID);
@@ -342,8 +344,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return subCategories != null && !subCategories.isEmpty();
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:
                 return sqlGenericExpression != null && !sqlGenericExpression.isEmpty();
-            case DefinitionPackage.INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS:
-                return numeric1argFunctions != null && !numeric1argFunctions.isEmpty();
+            case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
+                return aggregate1argFunctions != null && !aggregate1argFunctions.isEmpty();
         }
         return super.eIsSet(featureID);
     }
@@ -360,8 +362,6 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (label: ");
         result.append(label);
-        result.append(", numeric1argFunctions: ");
-        result.append(numeric1argFunctions);
         result.append(')');
         return result.toString();
     }

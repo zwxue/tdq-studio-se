@@ -496,13 +496,13 @@ public interface DefinitionPackage extends EPackage {
     int INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 4;
 
     /**
-     * The feature id for the '<em><b>Numeric1arg Functions</b></em>' attribute list.
+     * The feature id for the '<em><b>Aggregate1arg Functions</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 5;
+    int INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 5;
 
     /**
      * The number of structural features of the '<em>Indicator Definition</em>' class.
@@ -811,15 +811,15 @@ public interface DefinitionPackage extends EPackage {
     EReference getIndicatorDefinition_SqlGenericExpression();
 
     /**
-     * Returns the meta object for the attribute list '{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getNumeric1argFunctions <em>Numeric1arg Functions</em>}'.
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getAggregate1argFunctions <em>Aggregate1arg Functions</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute list '<em>Numeric1arg Functions</em>'.
-     * @see org.talend.dataquality.indicators.definition.IndicatorDefinition#getNumeric1argFunctions()
+     * @return the meta object for the containment reference list '<em>Aggregate1arg Functions</em>'.
+     * @see org.talend.dataquality.indicators.definition.IndicatorDefinition#getAggregate1argFunctions()
      * @see #getIndicatorDefinition()
      * @generated
      */
-    EAttribute getIndicatorDefinition_Numeric1argFunctions();
+    EReference getIndicatorDefinition_Aggregate1argFunctions();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.definition.IndicatorCategory <em>Indicator Category</em>}'.
@@ -941,12 +941,12 @@ public interface DefinitionPackage extends EPackage {
         EReference INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION = eINSTANCE.getIndicatorDefinition_SqlGenericExpression();
 
         /**
-         * The meta object literal for the '<em><b>Numeric1arg Functions</b></em>' attribute list feature.
+         * The meta object literal for the '<em><b>Aggregate1arg Functions</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
-        EAttribute INDICATOR_DEFINITION__NUMERIC1ARG_FUNCTIONS = eINSTANCE.getIndicatorDefinition_Numeric1argFunctions();
+        EReference INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS = eINSTANCE.getIndicatorDefinition_Aggregate1argFunctions();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.definition.impl.IndicatorCategoryImpl <em>Indicator Category</em>}' class.

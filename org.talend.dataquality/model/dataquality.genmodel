@@ -390,7 +390,7 @@
           <genFeatures notify="false" createChild="false" propertySortChoices="true"
               ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/subCategories"/>
           <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/sqlGenericExpression"/>
-          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/IndicatorDefinition/numeric1argFunctions"/>
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/definition/IndicatorDefinition/aggregate1argFunctions"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/definition/IndicatorCategory">
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/definition/IndicatorCategory/label"/>
@@ -421,6 +421,7 @@
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/numericFunctions"/>
           <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/nominalColumns"/>
           <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/numericColumns"/>
+          <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/columnHeaders"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/CountAvgNullIndicator"/>
       </nestedGenPackages>
