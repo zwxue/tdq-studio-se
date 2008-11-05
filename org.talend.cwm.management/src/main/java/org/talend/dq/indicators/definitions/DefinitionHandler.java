@@ -53,6 +53,7 @@ import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
+import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -338,6 +339,19 @@ public final class DefinitionHandler {
                 return setIndicatorDefinition(object, "Multiple Column Frequency Table");
             }
 
+            
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch#caseCountAvgNullIndicator(org.talend
+             * .dataquality.indicators.columnset.CountAvgNullIndicator)
+             */
+            @Override
+            public Boolean caseCountAvgNullIndicator(CountAvgNullIndicator object) {
+                return setIndicatorDefinition(object, "Averaged Multiple Column Frequency Table");
+            }
+
             /*
              * (non-Javadoc)
              * 
@@ -349,6 +363,8 @@ public final class DefinitionHandler {
             public Boolean defaultCase(EObject object) {
                 return false;
             }
+            
+            
 
         };
         

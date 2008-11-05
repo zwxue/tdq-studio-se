@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -464,7 +466,7 @@ public class DbmsLanguage {
      * Method "addWhereToStatement".
      * 
      * @param statement a statement already prepared for parsing
-     * @param whereClause
+     * @param whereClause (must not be null, but can be empty when there is no where clause)
      * @return the new statement
      */
     public String addWhereToStatement(String statement, String whereClause) {
@@ -522,7 +524,9 @@ public class DbmsLanguage {
      * @return the expression for this database language or for the default SQL or null when not found
      */
     public Expression getSqlExpression(IndicatorDefinition indicatorDefinition) {
-        Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName);
+        EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
+
+        Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression);
         if (sqlGenExpr != null) {
             return sqlGenExpr; // language found
         }
@@ -535,9 +539,34 @@ public class DbmsLanguage {
                     + "Nevertheless, if an SQL error during the analysis, this could be the cause.");
             log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
         }
-        return getSqlExpression(indicatorDefinition, getDefaultLanguage());
+        return getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
     }
 
+    
+    /**
+     * Method "getAggregate1argFunctions".
+     * 
+     * @param indicatorDefinition
+     * @return the ordered list of aggregate functions
+     */
+    public List<String> getAggregate1argFunctions(IndicatorDefinition indicatorDefinition) {
+        final EList<Expression> aggregate1argFunctions = indicatorDefinition.getAggregate1argFunctions();
+        Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName, aggregate1argFunctions);
+        if (sqlGenExpr != null) {
+            final String body = sqlGenExpr.getBody();
+            final String[] fonc = body.split(";");
+            return Arrays.asList(fonc); // language found
+        }
+
+        // else try with default language (ANSI SQL)
+        sqlGenExpr = getSqlExpression(indicatorDefinition, getDefaultLanguage(), aggregate1argFunctions);
+        if (sqlGenExpr != null) {
+            final String body = sqlGenExpr.getBody();
+            final String[] fonc = body.split(";");
+            return Arrays.asList(fonc); // language found
+        }
+        return Collections.emptyList();
+    }
     /**
      * Method "getRegexPatternString".
      * 
@@ -567,8 +596,8 @@ public class DbmsLanguage {
      * @param defaultLanguage
      * @return
      */
-    private static Expression getSqlExpression(IndicatorDefinition indicatorDefinition, String language) {
-        EList<Expression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
+    private static Expression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
+            EList<Expression> sqlGenericExpression) {
         for (Expression sqlGenExpr : sqlGenericExpression) {
             if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
                 return sqlGenExpr; // language found

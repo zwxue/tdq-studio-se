@@ -26,10 +26,12 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -73,8 +75,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
             ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
             final EList<Column> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
-            final EList<String> numericFunctions = colSetMultValIndicator.getNumericFunctions();
-            // put
+            final EList<String> numericFunctions = initializeNumericFunctions(colSetMultValIndicator);
+            // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
             for (Column column : colSetMultValIndicator.getNominalColumns()) {
                 nominalColumns.add(column.getName());
@@ -96,12 +98,36 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             String tableName = getTableName(analyzedColumns);
             // definition is SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> GROUP BY
             // &lt;%=__GROUP_BY_ALIAS__%>
-            String slqExpr = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), selectItems,
+            String sqlExpr = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), selectItems,
                     tableName, grpByClause);
 
+            // handle data filter
+            String stringDataFilter = AnalysisHelper.getStringDataFilter(cachedAnalysis);
+            if (stringDataFilter == null) {
+                stringDataFilter = "";
+            }
+            sqlExpr = dbms().addWhereToStatement(sqlExpr, stringDataFilter);
+
             indicator.setInstantiatedExpression(BooleanExpressionHelper.createExpression(sqlGenericExpression.getLanguage(),
-                    slqExpr));
+                    sqlExpr));
         }
+    }
+
+    /**
+     * DOC scorreia Comment method "initializeNumericFunctions".
+     * 
+     * @param indicator
+     * @return
+     */
+    private EList<String> initializeNumericFunctions(ColumnSetMultiValueIndicator indicator) {
+        final EList<String> numericFunctions = indicator.getNumericFunctions();
+        if (!numericFunctions.isEmpty()) { // could be already set
+            return numericFunctions;
+        }
+        final IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+        final List<String> aggregate1argFunctions = dbms().getAggregate1argFunctions(indicatorDefinition);
+        numericFunctions.addAll(aggregate1argFunctions);
+        return numericFunctions;
     }
 
     /**
