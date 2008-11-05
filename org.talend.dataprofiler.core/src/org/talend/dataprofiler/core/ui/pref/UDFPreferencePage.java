@@ -96,9 +96,11 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
         super.performOk();
 
         for (FunctionEntity entity : entityList) {
-            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), entity.getFunction());
+            final String language = entity.getLanguage();
+            final String function = entity.getFunction();
+            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(language, function);
+            DefinitionHandler.getInstance().updateRegex(language, function);
         }
-        DefinitionHandler.getInstance().updateRegex("MySQL", "'A','type'");
         DefinitionHandler.getInstance().saveResource();
 
         return true;
