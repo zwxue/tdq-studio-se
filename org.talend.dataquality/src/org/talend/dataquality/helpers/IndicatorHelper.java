@@ -56,6 +56,26 @@ public final class IndicatorHelper {
 
     private static Logger log = Logger.getLogger(IndicatorHelper.class);
 
+    private static enum ThresholdType {
+        VALUE_THRESHOLD("Value Threshold"),
+        PERCENTAGE_THRESHOLD("Percentage Threshold");
+
+        private String label;
+
+        /**
+         * Getter for label.
+         * 
+         * @return the label
+         */
+        public String getLabel() {
+            return this.label;
+        }
+
+        ThresholdType(String label) {
+            this.label = label;
+        }
+    }
+
     private IndicatorHelper() {
     }
 
@@ -97,18 +117,47 @@ public final class IndicatorHelper {
         return getDataThreshold(parameters);
     }
 
+    /**
+     * Method "setIndicatorThreshold".
+     * 
+     * @param parameters
+     * @param min the minimal value of the threshold (can be null)
+     * @param max the maximal value of the threshold (can be null)
+     */
     public static void setIndicatorThreshold(IndicatorParameters parameters, String min, String max) {
+        setIndicatorThreshold(parameters, min, max, ThresholdType.VALUE_THRESHOLD);
+    }
+
+    /**
+     * Method "setIndicatorThresholdInPercent" set the threholds of the indicator in percentage of the row count value.
+     * 
+     * @param parameters
+     * @param min the minimal value of the threshold (can be null)
+     * @param max the minimal value of the threshold (can be null)
+     */
+    public static void setIndicatorThresholdInPercent(IndicatorParameters parameters, String min, String max) {
+        setIndicatorThreshold(parameters, min, max, ThresholdType.PERCENTAGE_THRESHOLD);
+    }
+
+    private static void setIndicatorThreshold(IndicatorParameters parameters, String min, String max, ThresholdType thresholdType) {
         assert parameters != null;
         Domain validDomain = parameters.getIndicatorValidDomain();
         if (validDomain == null) {
             validDomain = DomainHelper.createDomain("Indicator threshold");
             parameters.setIndicatorValidDomain(validDomain);
         }
-        // remove previous ranges
-        assert validDomain.getRanges().size() < 2;
-        validDomain.getRanges().clear();
+        EList<RangeRestriction> ranges = validDomain.getRanges();
+        for (RangeRestriction rangeRestriction : ranges) {
+            if (thresholdType.getLabel().equals(rangeRestriction.getName())) {
+                rangeRestriction.setLowerValue(DomainHelper.createStringValue(null, min));
+                rangeRestriction.setUpperValue(DomainHelper.createStringValue(null, max));
+                return;
+            }
+        }
+        // else no previous range found, create a new one
         RangeRestriction rangeRestriction = DomainHelper.createStringRangeRestriction(min, max);
-        validDomain.getRanges().add(rangeRestriction);
+        rangeRestriction.setName(thresholdType.getLabel());
+        ranges.add(rangeRestriction);
     }
 
     /**
@@ -123,24 +172,36 @@ public final class IndicatorHelper {
         if (parameters == null) {
             return null;
         }
-        return getIndicatorThreshold(parameters);
+        return getIndicatorThreshold(parameters, ThresholdType.VALUE_THRESHOLD);
     }
 
-    public static String[] getIndicatorThreshold(IndicatorParameters parameters) {
+    /**
+     * Method "getIndicatorThresholdInPercent" returns the threshold in percentage.
+     * 
+     * @param indicator
+     * @return an array of thresholds if any or null. When the array is not null, its size is 2 but its elements can be
+     * null. The first element is the lower threshold and the second element is the higher threshold.
+     */
+    public static String[] getIndicatorThresholdInPercent(Indicator indicator) {
+        IndicatorParameters parameters = indicator.getParameters();
+        if (parameters == null) {
+            return null;
+        }
+        return getIndicatorThreshold(parameters, ThresholdType.PERCENTAGE_THRESHOLD);
+    }
+
+    private static String[] getIndicatorThreshold(IndicatorParameters parameters, ThresholdType thresholdType) {
         Domain validDomain = parameters.getIndicatorValidDomain();
         if (validDomain == null) {
             return null;
         }
         EList<RangeRestriction> ranges = validDomain.getRanges();
-        if (ranges.size() != 1) {
-            log.warn("Indicator threshold contain too many ranges (or no range): " + ranges.size() + " range(s).");
-            return null;
+        for (RangeRestriction rangeRestriction : ranges) {
+            if (thresholdType.getLabel().equals(rangeRestriction.getName())) {
+                return new String[] { DomainHelper.getMinValue(rangeRestriction), DomainHelper.getMaxValue(rangeRestriction) };
+            }
         }
-        RangeRestriction rangeRestriction = ranges.get(0);
-        if (rangeRestriction == null) {
-            return new String[] { null, null };
-        }
-        return new String[] { DomainHelper.getMinValue(rangeRestriction), DomainHelper.getMaxValue(rangeRestriction) };
+        return null;
     }
 
     /**

@@ -16,10 +16,13 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
+import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsPackage;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -152,6 +155,26 @@ public class AnalysisHelper {
         return dataFilters.add(createDomain(analysis, datafilterString));
     }
 
+    /**
+     * Method "containsRowCount".
+     * 
+     * @param analysis
+     * @return true if this analysis contains the row count indicator
+     */
+    public static boolean containsRowCount(Analysis analysis) {
+        final AnalysisResult results = analysis.getResults();
+        if (results == null) {
+            return false;
+        }
+        final EList<Indicator> indicators = results.getIndicators();
+        for (Indicator indicator : indicators) {
+            if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     private static Domain createDomain(Analysis analysis, String datafilterString) {
         // by default use same name as the analysis. This is ok as long as there is only one datafilter.
         Domain domain = DomainHelper.createDomain(analysis.getName());
