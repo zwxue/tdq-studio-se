@@ -14,9 +14,7 @@ package org.talend.dq.dbms;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -34,8 +32,6 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import orgomg.cwm.objectmodel.core.Expression;
 
-import Zql.ParseException;
-
 /**
  * @author scorreia
  * 
@@ -49,9 +45,6 @@ import Zql.ParseException;
 public class DbmsLanguage {
 
     private static Logger log = Logger.getLogger(DbmsLanguage.class);
-
-    /** Functions of the system. [Function name, number of parameters] */
-    private final Map<String, Integer> dbmsFunctions;
 
     // TODO scorreia put this into its own class and offer simple methods to replace tokens.
 
@@ -96,7 +89,6 @@ public class DbmsLanguage {
      */
     DbmsLanguage() {
         this.dbmsName = SQL;
-        this.dbmsFunctions = initDbmsFunctions(dbmsName);
     }
 
     /**
@@ -107,7 +99,6 @@ public class DbmsLanguage {
     DbmsLanguage(String dbmsType) {
         assert dbmsType != null : "DBMS type must not be null!!";
         this.dbmsName = dbmsType;
-        this.dbmsFunctions = initDbmsFunctions(dbmsName);
     }
 
     /**
@@ -120,7 +111,6 @@ public class DbmsLanguage {
     DbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         this.dbmsName = dbmsType;
         // PTODO scorreia handle dbms versions if needed
-        this.dbmsFunctions = initDbmsFunctions(dbmsName);
     }
 
     /**
@@ -240,17 +230,6 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "addDatabaseFunction" adds or replaces the function.
-     * 
-     * @param functionName the function name
-     * @param nbParameter the number of parameters of this function
-     * @return true if the function is new, false if it already existed.
-     */
-    public boolean addDatabaseFunction(String functionName, Integer nbParameter) {
-        return this.dbmsFunctions.put(functionName, nbParameter) != null;
-    }
-
-    /**
      * Method "getDefaultLanguage".
      * 
      * @return the default String to use when no dbms is defined.
@@ -275,19 +254,7 @@ public class DbmsLanguage {
             log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName));
         }
         return qualName.toString();
-    }
-
-    /**
-     * Method "replaceUnsupportedQuotes".
-     * 
-     * Override this method when the identifier quotes are not supported by the ZQL Parser (e.g. MySQL `).
-     * 
-     * @param sqlString
-     * @return the input without the quotes
-     */
-    protected String replaceUnsupportedQuotes(String sqlString) {
-        return sqlString;
-    }
+    } 
 
     /**
      * Method "getPatternFinderDefaultFunction".
@@ -379,13 +346,14 @@ public class DbmsLanguage {
     }
 
     public String selectAllRowsWhereColumnIn(String column, String table, String subquery) {
-        return " SELECT * FROM " + table + where() + column + in() + "( SELECT " + column + from() + "(" + subquery + ") AS mysubquery )";
+        return " SELECT * FROM " + table + where() + column + in() + "( SELECT " + column + from() + "(" + subquery
+                + ") AS mysubquery )";
     }
 
     public String in() {
         return " IN ";
     }
-    
+
     /**
      * Method "getDbQuoteString".
      * 
@@ -417,34 +385,6 @@ public class DbmsLanguage {
         return DbmsLanguageFactory.compareDbmsLanguage(dbName, this.dbmsName);
     }
 
-    /**
-     * Method "initDbmsFunctions" initialize functions specific to DBMS. This is needed for ZQLParser which does not
-     * know all available functions.
-     * 
-     * @param dbms
-     * @return the initialized map of functions with their number of parameters.
-     */
-    protected Map<String, Integer> initDbmsFunctions(String dbms) {
-        Map<String, Integer> functions = new HashMap<String, Integer>();
-
-        // --- functions common to all databases // DBMS_SUPPORT
-        functions.put("SUM", 1);
-        functions.put("MIN", 1);
-        functions.put("MAX", 1);
-        functions.put("UPPER", 1);
-        functions.put("LOWER", 1);
-
-        // --- set here functions specific to some databases // DBMS_SUPPORT
-        // TODO as the user can write any function in the data filter, we must write all possible functions for all
-        // systems.
-        // if (is(SQL)) {
-        // functions.put("TRIM", 1);
-        // functions.put("CHAR_LENGTH", 1);
-        // }
-
-        return functions;
-    }
-
     protected String surroundWithSpaces(String toSurround) {
         return surroundWith(' ', toSurround, ' ');
     }
@@ -453,7 +393,7 @@ public class DbmsLanguage {
         return left + toSurround + right;
     }
 
-    public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) throws ParseException {
+    public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) {
         String query = completedSqlString;
         String where = this.buildWhereExpression(whereExpressions);
         if (where != null) {
@@ -542,7 +482,6 @@ public class DbmsLanguage {
         return getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
     }
 
-    
     /**
      * Method "getAggregate1argFunctions".
      * 
@@ -567,6 +506,7 @@ public class DbmsLanguage {
         }
         return Collections.emptyList();
     }
+
     /**
      * Method "getRegexPatternString".
      * 
@@ -726,9 +666,9 @@ public class DbmsLanguage {
      * Method "getQuoteIdentifier" returns the hard coded quote identifier string. You should call
      * {@link #getDbQuoteString()} instead.
      * 
-     * @return hard coded quote identifier string supported by the internal SQL parser (ZQL)
+     * @return hard coded quote identifier string
      */
-    public String getSupportedQuoteIdentifier() {
+    public String getHardCodedQuoteIdentifier() {
         return "";
     }
 

@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.util.Map;
-
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.indicators.DateGrain;
 
@@ -39,36 +37,6 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     public OracleDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         super(dbmsType, majorVersion, minorVersion);
         // TODO Auto-generated constructor stub
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#initDbmsFunctions(java.lang.String)
-     */
-    @Override
-    protected Map<String, Integer> initDbmsFunctions(String dbms) {
-        final Map<String, Integer> functions = super.initDbmsFunctions(dbms);
-        functions.put("TRIM", 1);
-        functions.put("LENGTH", 1);
-        functions.put("LENGTHB", 1);
-        functions.put("TO_CHAR", 2);
-        functions.put("TO_NUMBER", 1);
-        functions.put("NVL", 2);
-        functions.put("CEIL", 1);
-        functions.put("FLOOR", 1);
-        functions.put("ROUND", 2);
-        functions.put("TRUNC", 2);
-        functions.put("SIGN", 1);
-        functions.put("CONVERT", 3);
-        functions.put("REPLACE", 2);
-        functions.put("CONCAT", 2);
-        functions.put("PERCENTILE_DISC", 1);
-        functions.put("PERCENTILE_CONT", 1);
-        functions.put("REPLACE", 3);
-        functions.put("RPAD", 3);
-        functions.put("TRANSLATE", 3);
-        return functions;
     }
 
     /*
@@ -203,7 +171,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
-    public String getSupportedQuoteIdentifier() {
+    public String getHardCodedQuoteIdentifier() {
         return "\"";
     }
 

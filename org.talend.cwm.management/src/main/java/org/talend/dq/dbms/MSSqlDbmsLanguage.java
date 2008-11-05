@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.indicators.DateGrain;
 
@@ -39,24 +37,6 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     public MSSqlDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         super(dbmsType, majorVersion, minorVersion);
         // TODO Auto-generated constructor stub
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#initDbmsFunctions(java.lang.String)
-     */
-    @Override
-    protected Map<String, Integer> initDbmsFunctions(String dbms) {
-        Map<String, Integer> functions = super.initDbmsFunctions(dbms);
-        functions.put("LTRIM", 1);
-        functions.put("RTRIM", 1);
-        // Note: datalength gives the length of any object, but in the case of unicode, this length should be
-        // divided by 2 in order to get the actual number of characters.
-        // Do not use "LEN" since it right-trims the strings.
-        functions.put("DATALENGTH", 1);
-        functions.put("REPLACE", 3);
-        return functions;
     }
 
     /*
@@ -91,7 +71,6 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
                 + ",'s','a'),'t','a'),'u','a'),'v','a'),'w','a'),'x','a'),'y','a')"
                 + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9')";
     }
-
 
     /*
      * (non-Javadoc)
@@ -135,5 +114,4 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
         return super.getTopNQuery(query, n);
     }
 
-    
 }

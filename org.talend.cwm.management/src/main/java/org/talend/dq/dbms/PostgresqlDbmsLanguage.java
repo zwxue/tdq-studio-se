@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.util.Map;
-
 import org.talend.dataquality.indicators.DateGrain;
 
 /**
@@ -38,34 +36,6 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
     public PostgresqlDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         super(dbmsType, majorVersion, minorVersion);
         // TODO Auto-generated constructor stub
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#initDbmsFunctions(java.lang.String)
-     */
-    @Override
-    protected Map<String, Integer> initDbmsFunctions(String dbms) {
-        Map<String, Integer> functions = super.initDbmsFunctions(dbms);
-        functions.put("TRIM", 1);
-        functions.put("LTRIM", 1);
-        functions.put("RTRIM", 1);
-        functions.put("LENGTH", 1);
-        functions.put("CHAR_LENGTH", 1);
-        functions.put("CHARACTER_LENGTH", 1);
-        functions.put("OCTET_LENGTH", 1);
-        functions.put("CEIL", 1);
-        functions.put("FLOOR", 1);
-        functions.put("ROUND", 1);
-        functions.put("ROUND", 2);
-        functions.put("SIGN", 1);
-        functions.put("SQRT", 1);
-        functions.put("BIT_LENGTH", 1);
-        functions.put("DECODE", 2);
-        functions.put("RPAD", 3);
-        functions.put("TRANSLATE", 3);
-        return functions;
     }
 
     /*
@@ -149,7 +119,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
-    public String getSupportedQuoteIdentifier() {
+    public String getHardCodedQuoteIdentifier() {
         return "\"";
     }
 

@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.indicators.DateGrain;
 
@@ -44,49 +42,6 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
     public MySQLDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         super(dbmsType, majorVersion, minorVersion);
         // TODO Auto-generated constructor stub
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#initDbmsFunctions(java.lang.String)
-     */
-    @Override
-    protected Map<String, Integer> initDbmsFunctions(String dbms) {
-        final Map<String, Integer> functions = super.initDbmsFunctions(dbms);
-        functions.put("TRIM", 1);
-        functions.put("RTRIM", 1);
-        functions.put("LTRIM", 1);
-        functions.put("LCASE", 1);
-        functions.put("UCASE", 1);
-        functions.put("REPLACE", 3);
-        functions.put("CHAR_LENGTH", 1);
-        functions.put("CHARACTER_LENGTH", 1);
-        functions.put("BIT_LENGTH", 1);
-        functions.put("IFNULL", 2);
-        functions.put("LENGTH", 1);
-        functions.put("SOUNDEX", 1);
-        functions.put("SPACE", 1);
-        functions.put("SUBSTRING", 2);
-        functions.put(" SUBSTRING", 3); // whitespace added
-        functions.put("LEFT", 2);
-        functions.put("OCTET_LENGTH", 1);
-        functions.put("CONCAT", 2);
-        for (DateGrain grain : DateGrain.values()) {
-            functions.put(grain.getName(), 1);
-        }
-        return functions;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#replaceUnsupportedQuotes(java.lang.String)
-     */
-    @Override
-    protected String replaceUnsupportedQuotes(String safeZqlString) {
-        // ZQL does not support MySQL identifier quote string: `
-        return safeZqlString.replace(MYSQL_IDENTIFIER_QUOTE, "");
     }
 
     /*
@@ -174,7 +129,7 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
-    public String getSupportedQuoteIdentifier() {
+    public String getHardCodedQuoteIdentifier() {
         return MYSQL_IDENTIFIER_QUOTE;
     }
 
