@@ -25,6 +25,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -41,6 +43,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
@@ -52,6 +55,8 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
+import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
@@ -78,6 +83,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private List<Column> columnListA;
 
     private List<Column> columnListB;
+
+    private Button checkComputeButton;
 
     public ColumnsComparisonMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -112,11 +119,9 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         Analysis analysis = (Analysis) this.currentModelElement;
-
-        EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         columnListA = new ArrayList<Column>();
         columnListB = new ArrayList<Column>();
-        if (analysedElements.size() == 0) {
+        if (analysis.getResults().getIndicators().size() == 0) {
             ColumnsetFactory factory = ColumnsetFactory.eINSTANCE;
             IndicatorsFactory indicator = IndicatorsFactory.eINSTANCE;
             rowCountIndicator = indicator.createRowCountIndicator();
@@ -189,12 +194,19 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         // this.createSectionPart(form, sectionClient, "left Columns");
         // this.createSectionPart(form, sectionClient, "Right Columns");
 
-        Button checkComputeButton = new Button(sectionClient, SWT.CHECK);
+        checkComputeButton = new Button(sectionClient, SWT.CHECK);
         GridData layoutData = new GridData(GridData.FILL_BOTH);
         layoutData.horizontalAlignment = SWT.CENTER;
         checkComputeButton.setLayoutData(layoutData);
         checkComputeButton.setText("Compute only number of A rows not in B");
         checkComputeButton.setToolTipText("When unchecked, will compute also number of B rows not in A ");
+        checkComputeButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                setDirty(true);
+            }
+
+        });
 
         SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
         sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -311,6 +323,12 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         }
     }
 
+    public AnalysisHandler getAnalysisHandler() {
+        AnalysisHandler analysisHandler = new AnalysisHandler();
+        analysisHandler.setAnalysis(this.analysis);
+        return analysisHandler;
+    }
+
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
         List<ModelElement> analysedElements = new ArrayList<ModelElement>();
@@ -322,8 +340,19 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         for (int i = 0; i < columnListB.size(); i++) {
             analysedElements.add(columnListB.get(i));
         }
+        if (analysedElements.size() > 0) {
+            TdDataProvider tdDataProvider = EObjectHelper.getTdDataProvider((Column) analysedElements.get(0));
+            analysis.getContext().setConnection(tdDataProvider);
+        }
+        // rowCountIndicator.setAnalyzedElement(value)
+        // rowMatchingIndicatorA
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(this.analysis);
+        if (checkComputeButton.getSelection()) {
+            analysis.getParameters().getDeactivatedIndicators().add(rowMatchingIndicatorB);
+        } else {
+            analysis.getParameters().getDeactivatedIndicators().clear();
+        }
         anaBuilder.addElementsToAnalyze(analysedElements, new Indicator[] { rowCountIndicator, rowMatchingIndicatorA,
                 rowMatchingIndicatorB });
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);

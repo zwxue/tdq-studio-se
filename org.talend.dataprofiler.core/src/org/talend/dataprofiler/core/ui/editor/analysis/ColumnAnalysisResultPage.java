@@ -41,7 +41,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.browser.WebBrowserEditor;
 import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
@@ -63,7 +62,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.analysis.ColumnAnalysisHandler;
+import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
@@ -72,11 +71,7 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  */
 public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
-    private Composite summaryComp;
-
     private Composite resultComp;
-
-    ScrolledForm form;
 
     ColumnMasterDetailsPage masterPage;
 
@@ -101,12 +96,11 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         resultComp.setLayout(new GridLayout());
         createResultSection(resultComp);
-
         form.reflow(true);
     }
 
     @Override
-    protected ColumnAnalysisHandler getColumnAnalysisHandler() {
+    protected AnalysisHandler getColumnAnalysisHandler() {
         return this.masterPage.getAnalysisHandler();
     }
 
