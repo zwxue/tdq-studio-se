@@ -12,14 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.nodes.indicator.option;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class SliceEntity {
 
-    private String lowValue = "";
+    private String lowValue = ""; //$NON-NLS-1$
 
-    private String highValue = "";
+    private String highValue = ""; //$NON-NLS-1$
 
     public String getLowValue() {
         return lowValue;

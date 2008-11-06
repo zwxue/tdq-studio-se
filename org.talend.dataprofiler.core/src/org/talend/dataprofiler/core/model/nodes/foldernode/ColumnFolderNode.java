@@ -22,6 +22,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -37,7 +38,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
      * @param name
      */
     public ColumnFolderNode() {
-        super("Columns");
+        super(DefaultMessagesImpl.getString("ColumnFolderNode.columns")); //$NON-NLS-1$
     }
 
     /*

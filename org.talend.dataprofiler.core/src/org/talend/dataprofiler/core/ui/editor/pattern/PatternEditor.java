@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 
 /**
@@ -27,8 +28,8 @@ public class PatternEditor extends CommonFormEditor {
     private IFormPage masterPage;
 
     protected void addPages() {
-        masterPage = new PatternMasterDetailsPage(this, "MasterPage", "Pattern Settings");
-        setPartName("Pattern Editor");
+        masterPage = new PatternMasterDetailsPage(this, DefaultMessagesImpl.getString("PatternEditor.masterPage"), DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ //$NON-NLS-2$
+        setPartName(DefaultMessagesImpl.getString("PatternEditor.patternEditor")); //$NON-NLS-1$
         try {
             addPage(masterPage);
         } catch (PartInitException e) {

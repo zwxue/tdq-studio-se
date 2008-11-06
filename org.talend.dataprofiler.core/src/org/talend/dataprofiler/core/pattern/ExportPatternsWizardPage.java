@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider;
 
 /**
@@ -64,10 +65,10 @@ public class ExportPatternsWizardPage extends WizardPage {
      * DOC zqin ExportPatternsWizardPage constructor comment.
      */
     public ExportPatternsWizardPage(IFolder folder) {
-        super("ExportPatternsWizardPage");
+        super(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternWizardPage")); //$NON-NLS-1$
 
-        setTitle("Export Patterns to File");
-        setDescription("Choose a file to export patterns.");
+        setTitle(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternToFile")); //$NON-NLS-1$
+        setDescription(DefaultMessagesImpl.getString("ExportPatternsWizardPage.chooseFileToExportPattern")); //$NON-NLS-1$
 
         this.folder = folder;
     }
@@ -90,13 +91,13 @@ public class ExportPatternsWizardPage extends WizardPage {
         fileComp.setLayout(layout);
         fileComp.setLayoutData(gridData);
         Label label = new Label(fileComp, SWT.NONE);
-        label.setText("Select File (csv):");
+        label.setText(DefaultMessagesImpl.getString("ExportPatternsWizardPage.selectFile")); //$NON-NLS-1$
         fileText = new Text(fileComp, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gridData);
 
         Button button = new Button(fileComp, SWT.PUSH);
-        button.setText("Browse...");
+        button.setText(DefaultMessagesImpl.getString("ExportPatternsWizardPage.browse")); //$NON-NLS-1$
         button.addSelectionListener(new SelectionAdapter() {
 
             /*
@@ -107,14 +108,14 @@ public class ExportPatternsWizardPage extends WizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
-                dialog.setFilterExtensions(new String[] { "*.csv" });
+                dialog.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
                 if (fileText.getText() != null) {
                     dialog.setFileName(fileText.getText());
                 }
                 String path = dialog.open();
                 if (path != null) {
-                    if (!path.endsWith(".csv")) {
-                        path = path + ".csv";
+                    if (!path.endsWith(".csv")) { //$NON-NLS-1$
+                        path = path + ".csv"; //$NON-NLS-1$
                     }
 
                     fileText.setText(path);
@@ -123,7 +124,7 @@ public class ExportPatternsWizardPage extends WizardPage {
         });
 
         Group group = new Group(container, SWT.NONE);
-        group.setText("Selected patterns:");
+        group.setText(DefaultMessagesImpl.getString("ExportPatternsWizardPage.selectPatternss")); //$NON-NLS-1$
         group.setLayout(new GridLayout());
         group.setLayoutData(new GridData(GridData.FILL_BOTH));
 

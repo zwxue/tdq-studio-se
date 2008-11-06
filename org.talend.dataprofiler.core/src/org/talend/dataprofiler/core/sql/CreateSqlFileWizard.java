@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 
@@ -51,8 +52,8 @@ public class CreateSqlFileWizard extends AbstractWizard {
     @Override
     public void addPages() {
         mPage = new CreateSqlFileWizardPage();
-        mPage.setTitle("New SQL File in repository");
-        mPage.setDescription("Define the properties");
+        mPage.setTitle(DefaultMessagesImpl.getString("CreateSqlFileWizard.newSQLFile")); //$NON-NLS-1$
+        mPage.setDescription(DefaultMessagesImpl.getString("CreateSqlFileWizard.define")); //$NON-NLS-1$
         mPage.setPageComplete(false);
         addPage(mPage);
     }
@@ -65,7 +66,7 @@ public class CreateSqlFileWizard extends AbstractWizard {
     @Override
     public boolean performFinish() {
         IPath absolutePath = new Path(parameter.getFolderProvider().getFolder().getAbsolutePath());
-        String portableString = absolutePath.append(parameter.getName()).addFileExtension("sql").toPortableString();
+        String portableString = absolutePath.append(parameter.getName()).addFileExtension("sql").toPortableString(); //$NON-NLS-1$
         sqlFile = new File(portableString);
         try {
             sqlFile.createNewFile();

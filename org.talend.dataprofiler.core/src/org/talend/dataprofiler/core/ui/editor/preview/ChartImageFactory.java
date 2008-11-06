@@ -34,6 +34,7 @@ import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.ui.TextAnchor;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -106,7 +107,7 @@ public class ChartImageFactory {
 
     private static JFreeChart create3DBarChart(String titile, CategoryDataset dataset, boolean showLegend) {
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, titile, "Value", dataset, PlotOrientation.VERTICAL, showLegend,
+        JFreeChart chart = ChartFactory.createBarChart3D(null, titile, "Value", dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
                 false, true);
 
         CategoryPlot plot = chart.getCategoryPlot();
@@ -118,7 +119,7 @@ public class ChartImageFactory {
         renderer3d.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         renderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12));
+        renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
         renderer3d.setItemMargin(0.2);
         plot.setForegroundAlpha(0.50f);
 
@@ -130,17 +131,17 @@ public class ChartImageFactory {
 
     private static JFreeChart createBarChart(String titile, CategoryDataset dataset) {
 
-        return ChartFactory.createBarChart(null, titile, "Value", dataset, PlotOrientation.HORIZONTAL, false, false, false);
+        return ChartFactory.createBarChart(null, titile, "Value", dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
     }
 
     private static JFreeChart createBoxAndWhiskerChart(String title, BoxAndWhiskerCategoryDataset dataset) {
 
-        return ChartFactory.createBoxAndWhiskerChart(null, null, "value", dataset, false);
+        return ChartFactory.createBoxAndWhiskerChart(null, null, "value", dataset, false); //$NON-NLS-1$
     }
 
     private static JFreeChart createStacked3DBarChart(String titile, CategoryDataset dataset) {
 
-        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, "Value", dataset, PlotOrientation.VERTICAL, true,
+        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, "Value", dataset, PlotOrientation.VERTICAL, true, //$NON-NLS-1$
                 false, false);
 
         CategoryPlot plot = chart.getCategoryPlot();
@@ -149,8 +150,8 @@ public class ChartImageFactory {
         renderer.setSeriesPaint(1, Color.RED);
         renderer.setBaseItemLabelsVisible(true);
         renderer.setRenderAsPercentages(true);
-        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(),
-                new DecimalFormat("0.0%")));
+        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(), //$NON-NLS-1$
+                new DecimalFormat("0.0%"))); //$NON-NLS-1$
         renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
 
         NumberAxis axis = (NumberAxis) plot.getRangeAxis();

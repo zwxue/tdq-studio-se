@@ -19,6 +19,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
@@ -33,7 +34,7 @@ import org.talend.utils.sql.Java2SqlType;
 public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisAction {
 
     public CreateNominalAnalysisAction() {
-        super("Nominal value analysis", null);
+        super(DefaultMessagesImpl.getString("CreateNominalAnalysisAction.nominalAnalysis"), null); //$NON-NLS-1$
     }
 
     @Override
@@ -66,11 +67,8 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         if (!tempList.isEmpty()) {
             ElementListSelectionDialog dialog = new ElementListSelectionDialog(null, new DQRepositoryViewLabelProvider());
             dialog.setElements(tempList.toArray());
-            dialog.setTitle("Data type warning!");
-            dialog.setMessage("The following columns do not seem to be of nominal type.\n"
-                    + "Here is the list of non textual columns. \n"
-                    + "If you continue, these columns will be marked as of nominal type\n"
-                    + "and you will be allowed to run nominal analyses on these columns.\n" + "Do you still want to continue? ");
+            dialog.setTitle(DefaultMessagesImpl.getString("CreateNominalAnalysisAction.dataTypeWarning")); //$NON-NLS-1$
+            dialog.setMessage(DefaultMessagesImpl.getString("CreateNominalAnalysisAction.string")); //$NON-NLS-1$
             dialog.setSize(80, 20);
             dialog.create();
 

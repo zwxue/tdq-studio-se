@@ -45,6 +45,7 @@ import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -81,12 +82,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         final ScrolledForm form = managedForm.getForm();
-        form.setText("Connection Settings");
-        this.metadataSection.setText("Connection Metadata");
-        this.metadataSection.setDescription("Set the properties of connnection.");
+        form.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.connectionSettings")); //$NON-NLS-1$
+        this.metadataSection.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.connectionMetadata")); //$NON-NLS-1$
+        this.metadataSection.setDescription(DefaultMessagesImpl.getString("ConnectionInfoPage.propertiesOConnnection")); //$NON-NLS-1$
         createInformationSection(form, topComp);
 
-        Button checkBtn = toolkit.createButton(topComp, " Check ", SWT.NONE);
+        Button checkBtn = toolkit.createButton(topComp, DefaultMessagesImpl.getString("ConnectionInfoPage.check"), SWT.NONE); //$NON-NLS-1$
         GridData gd = new GridData();
         // gd.horizontalSpan = 2;
         gd.verticalSpan = 20;
@@ -99,9 +100,15 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
                 ReturnCode code = checkDBConnection();
                 if (code.isOk()) {
-                    MessageDialog.openInformation(null, "check connections", "Check connection successful.");
+                    MessageDialog
+                            .openInformation(
+                                    null,
+                                    DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
-                    MessageDialog.openInformation(null, "check connections", "Check connection failure:" + code.getMessage());
+                    MessageDialog
+                            .openInformation(
+                                    null,
+                                    DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionFailure") + code.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
 
@@ -114,17 +121,20 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     void createInformationSection(final ScrolledForm form, Composite topComp) {
-        Section section = createSection(form, topComp, "Connection informations", false, "The informations of connection.");
+        Section section = createSection(
+                form,
+                topComp,
+                DefaultMessagesImpl.getString("ConnectionInfoPage.connectionInformations"), false, DefaultMessagesImpl.getString("ConnectionInfoPage.informationsOfConnection")); //$NON-NLS-1$ //$NON-NLS-2$
 
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout(2, false));
         Label loginLabel = new Label(sectionClient, SWT.NONE);
-        loginLabel.setText("Login:");
+        loginLabel.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.Login")); //$NON-NLS-1$
 
         loginText = new Text(sectionClient, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(loginText);
         Label passwordLabel = new Label(sectionClient, SWT.NONE);
-        passwordLabel.setText("Password:");
+        passwordLabel.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.Password")); //$NON-NLS-1$
         passwordText = new Text(sectionClient, SWT.BORDER | SWT.PASSWORD);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
@@ -136,7 +146,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
-        urlLabel.setText("Url:");
+        urlLabel.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.Url")); //$NON-NLS-1$
         urlText = new Text(sectionClient, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(urlText);
         TypedReturnCode<TdProviderConnection> trc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
@@ -217,11 +227,13 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         ReturnCode returnCode = PrvResourceFileHelper.getInstance().save(tdDataProvider);
         if (returnCode.isOk()) {
             if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + tdDataProvider.eResource().getURI().toFileString() + " successful");
+                log.debug("Saved in  " + tdDataProvider.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         } else {
-            throw new DataprofilerCoreException("Problem saving file: " + tdDataProvider.eResource().getURI().toFileString()
-                    + ": " + returnCode.getMessage());
+            throw new DataprofilerCoreException(
+                    DefaultMessagesImpl
+                            .getString(
+                                    "ConnectionInfoPage.ProblemSavingFile", tdDataProvider.eResource().getURI().toFileString(), returnCode.getMessage())); //$NON-NLS-1$
         }
     }
 

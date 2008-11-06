@@ -22,6 +22,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
@@ -38,7 +39,7 @@ public class AnalyzeColumnAction extends Action {
     TreeSelection selection;
 
     public AnalyzeColumnAction() {
-        super("Analyze");
+        super(DefaultMessagesImpl.getString("AnalyzeColumnAction.analyze")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
 

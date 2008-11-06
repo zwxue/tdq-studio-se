@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeContentProvider;
@@ -45,8 +46,8 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
     private Wizard selectedWizard;
 
     public NewWizardSelectionPage() {
-        setTitle("Select a wizard");
-        setMessage("Create a new Analysis");
+        setTitle(DefaultMessagesImpl.getString("NewWizardSelectionPage.wizard")); //$NON-NLS-1$
+        setMessage(DefaultMessagesImpl.getString("NewWizardSelectionPage.Analysis")); //$NON-NLS-1$
         setCanFinishEarly(false);
         setPageComplete(false);
         setHasPages(true);

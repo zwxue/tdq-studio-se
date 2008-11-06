@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourceFileActionProvider;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -33,7 +34,7 @@ public class DeleteObjectsAction extends Action {
      * DOC rli DeleteObjectAction constructor comment.
      */
     public DeleteObjectsAction() {
-        this.setActionDefinitionId("org.talend.dataprofiler.core.removeAnalysis");
+        this.setActionDefinitionId("org.talend.dataprofiler.core.removeAnalysis"); //$NON-NLS-1$
     }
 
     /*

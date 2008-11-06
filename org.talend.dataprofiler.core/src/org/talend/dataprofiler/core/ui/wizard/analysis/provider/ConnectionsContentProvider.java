@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -43,7 +44,7 @@ public class ConnectionsContentProvider extends AdapterFactoryContentProvider {
             try {
                 return ((IContainer) parentElement).members();
             } catch (CoreException e) {
-                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation());
+                log.error(DefaultMessagesImpl.getString("ConnectionsContentProvider.cannotGetChildren") + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
             }
         }
         return super.getChildren(parentElement);

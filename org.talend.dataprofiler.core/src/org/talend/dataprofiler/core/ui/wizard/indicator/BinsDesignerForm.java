@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
@@ -95,17 +96,17 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         GridData gdText = new GridData(GridData.FILL_HORIZONTAL);
 
         Label minValueText = new Label(this, SWT.NONE);
-        minValueText.setText("minimal value");
+        minValueText.setText(DefaultMessagesImpl.getString("BinsDesignerForm.minimalValue")); //$NON-NLS-1$
         minValue = new Text(this, SWT.BORDER);
         minValue.setLayoutData(gdText);
 
         Label maxValueText = new Label(this, SWT.NONE);
-        maxValueText.setText("maximal value");
+        maxValueText.setText(DefaultMessagesImpl.getString("BinsDesignerForm.maximalValue")); //$NON-NLS-1$
         maxValue = new Text(this, SWT.BORDER);
         maxValue.setLayoutData(gdText);
 
         Label numOfBinsText = new Label(this, SWT.NONE);
-        numOfBinsText.setText("number of bins");
+        numOfBinsText.setText(DefaultMessagesImpl.getString("BinsDesignerForm.numberOfBins")); //$NON-NLS-1$
 
         GridData gdTxt = new GridData();
         gdTxt.widthHint = 50;
@@ -119,7 +120,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         rangeComp.setLayoutData(gdComp);
 
         isSetRange = new Button(rangeComp, SWT.CHECK);
-        isSetRange.setText("Set ranges manually");
+        isSetRange.setText(DefaultMessagesImpl.getString("BinsDesignerForm.setManually")); //$NON-NLS-1$
 
         tableViewer = new TableViewer(rangeComp, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
         tableViewer.setLabelProvider(new BinsLableProvider());
@@ -134,19 +135,19 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         table.setLayoutData(tableData);
 
         TableColumn column1 = new TableColumn(table, SWT.NONE);
-        column1.setText("Low");
+        column1.setText(DefaultMessagesImpl.getString("BinsDesignerForm.low")); //$NON-NLS-1$
         column1.setWidth(150);
         column1.setAlignment(SWT.CENTER);
         TableColumn column2 = new TableColumn(table, SWT.NONE);
         column2.setWidth(150);
-        column2.setText("Data");
+        column2.setText(DefaultMessagesImpl.getString("BinsDesignerForm.data")); //$NON-NLS-1$
         column2.setAlignment(SWT.CENTER);
         TableColumn column3 = new TableColumn(table, SWT.NONE);
         column3.setWidth(150);
-        column3.setText("High");
+        column3.setText(DefaultMessagesImpl.getString("BinsDesignerForm.high")); //$NON-NLS-1$
         column3.setAlignment(SWT.CENTER);
 
-        tableViewer.setColumnProperties(new String[] { "low", "data", "high" });
+        tableViewer.setColumnProperties(new String[] { "low", "data", "high" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         CellEditor[] cellEditor = new CellEditor[3];
         cellEditor[0] = new TextCellEditor(table);
@@ -184,7 +185,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             public void modifyText(ModifyEvent e) {
                 String min = minValue.getText();
 
-                if (min == "") {
+                if (min == "") { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
                 } else if (!CheckValueUtils.isRealNumberValue(min)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
@@ -201,7 +202,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             public void modifyText(ModifyEvent e) {
                 String max = maxValue.getText();
 
-                if (max == "") {
+                if (max == "") { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
                 } else if (!CheckValueUtils.isRealNumberValue(max)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
@@ -219,7 +220,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
                 String numb = numbOfBins.getText();
 
-                if (numb == "") {
+                if (numb == "") { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
                 } else if (!CheckValueUtils.isNumberValue(numb)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
@@ -260,7 +261,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     maxValue.setEnabled(true);
                     numbOfBins.setEnabled(true);
 
-                    tableViewer.setInput("");
+                    tableViewer.setInput(""); //$NON-NLS-1$
                 }
             }
 
@@ -358,11 +359,11 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             case 0:
                 return entity.getLowValue();
             case 1:
-                return PluginConstant.LESS_OR_EQUAL + " value <";
+                return PluginConstant.LESS_OR_EQUAL + " value <"; //$NON-NLS-1$
             case 2:
                 return entity.getHighValue();
             default:
-                return "";
+                return ""; //$NON-NLS-1$
             }
         }
 
@@ -396,7 +397,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     class SliceCellModifier implements ICellModifier {
 
         public boolean canModify(Object element, String property) {
-            if (property.equals("data")) {
+            if (property.equals("data")) { //$NON-NLS-1$
                 return false;
             }
 
@@ -406,24 +407,24 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         public Object getValue(Object element, String property) {
             SliceEntity entity = (SliceEntity) element;
 
-            if (property.equals("low")) {
+            if (property.equals("low")) { //$NON-NLS-1$
                 return entity.getLowValue();
-            } else if (property.equals("high")) {
+            } else if (property.equals("high")) { //$NON-NLS-1$
                 return entity.getHighValue();
             }
 
-            return "";
+            return ""; //$NON-NLS-1$
         }
 
         public void modify(Object element, String property, Object value) {
             TableItem item = (TableItem) element;
             SliceEntity entity = (SliceEntity) item.getData();
 
-            if (property.equals("low")) {
+            if (property.equals("low")) { //$NON-NLS-1$
                 entity.setLowValue(value.toString());
 
                 parameter.setBinsData(tableViewer.getInput());
-            } else if (property.equals("high")) {
+            } else if (property.equals("high")) { //$NON-NLS-1$
                 entity.setHighValue(value.toString());
 
                 parameter.setBinsData(tableViewer.getInput());

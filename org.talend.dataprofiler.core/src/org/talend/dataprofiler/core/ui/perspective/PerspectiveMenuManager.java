@@ -26,6 +26,7 @@ import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * Menu manager for perspective switching. <br/>
@@ -36,12 +37,12 @@ public class PerspectiveMenuManager extends MenuManager {
      * Constructs a new PerspectiveMenuManager.
      */
     public PerspectiveMenuManager() {
-        super("&Perspective", "perspective"); 
+        super("&Perspective", DefaultMessagesImpl.getString("PerspectiveMenuManager.perspective"));  //$NON-NLS-1$ //$NON-NLS-2$
         
         addMenuListener(new MenuFiller());
         
         setRemoveAllWhenShown(true);
-        add(new ChangePerspectiveAction("Dummy"));
+        add(new ChangePerspectiveAction(DefaultMessagesImpl.getString("PerspectiveMenuManager.dummy"))); //$NON-NLS-1$
     }
     
     /**
@@ -76,7 +77,7 @@ public class PerspectiveMenuManager extends MenuManager {
                 continue;
             } else {
 				talendPpList.add(new PerspectiveData(talendPpId,
-						talendPpElements[i].getAttribute("dataprofilerPerspectiveName")));
+						talendPpElements[i].getAttribute("dataprofilerPerspectiveName"))); //$NON-NLS-1$
 			}
         }
         return talendPpList.toArray(new PerspectiveData[talendPpList.size()]);

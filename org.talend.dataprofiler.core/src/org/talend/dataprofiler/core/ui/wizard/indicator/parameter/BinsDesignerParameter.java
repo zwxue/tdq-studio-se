@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataquality.domain.Domain;
@@ -129,7 +130,7 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
         if (getBinsData() != null) {
             List<SliceEntity> tableData = (List<SliceEntity>) getBinsData();
 
-            Domain userDomain = DomainHelper.createDomain("test");
+            Domain userDomain = DomainHelper.createDomain("test"); //$NON-NLS-1$
             for (SliceEntity entity : tableData) {
                 try {
                     double min = Double.valueOf(entity.getLowValue());
@@ -144,7 +145,7 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
             return userDomain;
         }
 
-        return DomainHelper.createContiguousClosedBinsIntoDomain("test", getNumOfBins(), getMinValue(), getMaxValue());
+        return DomainHelper.createContiguousClosedBinsIntoDomain("test", getNumOfBins(), getMinValue(), getMaxValue()); //$NON-NLS-1$
     }
 
     public void setDomain(Domain domain) {
@@ -172,7 +173,7 @@ public class BinsDesignerParameter extends AbstractIndicatorParameter {
     private double getRealValue(LiteralValue object) {
         RealNumberValue upperValue = DataqualitySwitchHelper.REAL_NB_VALUE_SWITCH.doSwitch(object);
         if (upperValue == null) {
-            throw new IllegalArgumentException(object + " does not contain real value.");
+            throw new IllegalArgumentException(object + DefaultMessagesImpl.getString("BinsDesignerParameter.doesNotContainRealValue")); //$NON-NLS-1$
         }
         return upperValue.getValue();
     }

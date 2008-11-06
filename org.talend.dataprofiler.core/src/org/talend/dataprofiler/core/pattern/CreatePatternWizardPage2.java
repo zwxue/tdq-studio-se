@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -42,9 +43,9 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     private Combo comboLang;
 
-    public static final String ERROR_MESSAGE = "Regular expression must start and end with '";
+    public static final String ERROR_MESSAGE = DefaultMessagesImpl.getString("CreatePatternWizardPage2.regularExpression"); //$NON-NLS-1$
 
-    public static final String SQLERROR_MESSAGE = "SQL expression must start and end with '";
+    public static final String SQLERROR_MESSAGE = DefaultMessagesImpl.getString("CreatePatternWizardPage2.sqlExpression"); //$NON-NLS-1$
 
     private ExpressionType type;
 
@@ -75,13 +76,13 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(2, false);
         container.setLayout(gdLayout);
-        String s = "Regular expression:";
+        String s = "Regular expression:"; //$NON-NLS-1$
         // Name
         Label nameLab = new Label(container, SWT.NONE);
         if (type != null) {
             switch (type) {
             case SQL_LIKE:
-                s = "SQL Like expression:";
+                s = "SQL Like expression:"; //$NON-NLS-1$
             default:
             }
         }
@@ -108,7 +109,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
             }
         }
         nameLab = new Label(container, SWT.NONE);
-        nameLab.setText("Language Selection:");
+        nameLab.setText(DefaultMessagesImpl.getString("CreatePatternWizardPage2.languageSelection")); //$NON-NLS-1$
         String[] types = SupportDBUrlStore.getInstance().getDBLanguages();
         comboLang = new Combo(container, SWT.BORDER);
         comboLang.setItems(types);
@@ -143,7 +144,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if (expressionText.getText() == "") {
+        if (expressionText.getText() == "") { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }

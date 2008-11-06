@@ -34,6 +34,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -58,7 +59,7 @@ public class PreviewTableAction extends Action {
      * @param table
      */
     public PreviewTableAction(TdTable table) {
-        super("Preview Table");
+        super(DefaultMessagesImpl.getString("PreviewTableAction.previewTable")); //$NON-NLS-1$
         this.table = table;
     }
 
@@ -80,9 +81,9 @@ public class PreviewTableAction extends Action {
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
                 String qualifiedName = getTableQualifiedName(tdDataProvider);
-                String query = "select * from " + qualifiedName;
-                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo()
-                        + ").sql");
+                String query = "select * from " + qualifiedName; //$NON-NLS-1$
+                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() //$NON-NLS-1$
+                        + ").sql"); //$NON-NLS-1$
                 input.setUser(alias.getDefaultUser());
                 try {
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()

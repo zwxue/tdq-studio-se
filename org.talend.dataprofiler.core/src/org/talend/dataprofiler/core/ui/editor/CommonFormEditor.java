@@ -29,6 +29,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
@@ -74,7 +75,7 @@ public abstract class CommonFormEditor extends FormEditor {
         try {
             updateDocumentProvider(input);
         } catch (CoreException e) {
-            log.error("Install the document provider is failture when created the editor of " + input.getName());
+            log.error(DefaultMessagesImpl.getString("CommonFormEditor.install") + input.getName()); //$NON-NLS-1$
         }
     }
 
@@ -143,7 +144,7 @@ public abstract class CommonFormEditor extends FormEditor {
     protected void refreshDQView() {
         IFile node = ((FileEditorInput) getEditorInput()).getFile();
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IViewPart findView = activePage.findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView");
+        IViewPart findView = activePage.findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
         DQRespositoryView view = (DQRespositoryView) findView;
         view.getCommonViewer().refresh(node);
     }

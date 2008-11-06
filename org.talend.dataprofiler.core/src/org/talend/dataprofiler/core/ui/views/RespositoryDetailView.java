@@ -41,6 +41,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -88,7 +89,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * DOC qzhang Comment method "createDefault".
      */
     private void createDefault() {
-        newText(container, "No detail available");
+        newText(container, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
     }
 
     @Override
@@ -187,14 +188,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         Label label;
         
         label = new Label(container, SWT.NONE);
-        label.setText("Type: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.type")); //$NON-NLS-1$
         
         EList<PatternComponent> components = pattern.getComponents();
         StringBuilder description = new StringBuilder();
         for (PatternComponent poc : components) {
             if (poc instanceof RegularExpression) {
                 RegularExpression expression = (RegularExpression) poc;
-                description.append("  ").append(expression.getExpression().getLanguage());
+                description.append("  ").append(expression.getExpression().getLanguage()); //$NON-NLS-1$
             }
         }
         newText(container, description.toString());        
@@ -216,18 +217,18 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createDescription(ana);
         Label label;
         label = new Label(container, SWT.NONE);
-        label.setText("Type: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.otherType")); //$NON-NLS-1$
         String description = ana.getParameters().getAnalysisType().getLiteral();
         newText(container, description);
 
         label = new Label(container, SWT.NONE);
-        label.setText("Number of analyzed elements: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyzedElements")); //$NON-NLS-1$
         AnalysisContext context = ana.getContext();
         int numn = context.getAnalysedElements().size();
         newText(container, String.valueOf(numn));
 
         label = new Label(container, SWT.NONE);
-        label.setText("Connection: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.connection")); //$NON-NLS-1$
         DataManager connection = context.getConnection();
         if (connection == null) {
             description = null;
@@ -238,7 +239,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void newText(Composite composite, String inputText) {
-       newText(composite, inputText, "none");
+       newText(composite, inputText, DefaultMessagesImpl.getString("RespositoryDetailView.none")); //$NON-NLS-1$
     }
 
     private void newText(Composite composite, String inputText, String defaultText) {
@@ -261,11 +262,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private void createSqlFileDetail(IFile fe2) {
         Label label;
         label = new Label(container, SWT.NONE);
-        label.setText("Filename: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.filename")); //$NON-NLS-1$
         newText(container, fe2.getFullPath().toPortableString());
 
         label = new Label(container, SWT.NONE);
-        label.setText("Modification date: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.modificationDate")); //$NON-NLS-1$
         
         // MODSCA 20080728 changed to getLocalTimeStamp() because modificationStamp was 1 or 2 (=> year 1970)
         // long modificationStamp = fe2.getModificationStamp();
@@ -284,7 +285,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createDescription(rep);
         Label label;        
         label = new Label(container, SWT.NONE);
-        label.setText("Number of analyses: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyses")); //$NON-NLS-1$
         int description = ReportHelper.getAnalyses(rep).size();
         newText(container, String.valueOf(description));
     }
@@ -297,11 +298,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private void createTdColumn(TdColumn column) {
         createTdTVDetail(column);
         Label label = new Label(container, SWT.NONE);
-        label.setText("Type: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.typex")); //$NON-NLS-1$
         newText(container, column.getSqlDataType().getName());
 
         label = new Label(container, SWT.NONE);
-        label.setText("Nullable: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.nullable")); //$NON-NLS-1$
         String purpose = column.getIsNullable().isNullable();
         newText(container, purpose);
     }
@@ -316,7 +317,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(element);
 
         label = new Label(container, SWT.NONE);
-        label.setText("Remarks: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.remarks")); //$NON-NLS-1$
         String purpose = TaggedValueHelper.getComment(element);        
         newText(container, purpose);
     }
@@ -328,7 +329,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private void createName(ModelElement element) {
         Label label = new Label(container, SWT.NONE);
-        label.setText("Name: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.name")); //$NON-NLS-1$
         newText(container, element.getName());
     }
 
@@ -361,12 +362,12 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createDescription(dataProvider);
 
         label = new Label(container, SWT.NONE);
-        label.setText("URL: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.URL")); //$NON-NLS-1$
         String connectionString = DataProviderHelper.getTdProviderConnection(dataProvider).getObject().getConnectionString();
         newText(container, connectionString);
 
         label = new Label(container, SWT.NONE);
-        label.setText("Type: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.type2")); //$NON-NLS-1$
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
         String subtype = softwareSystem.getSubtype();
         newText(container, subtype);
@@ -380,7 +381,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private void createDescription(ModelElement dataProvider) {
         Label label;
         label = new Label(container, SWT.NONE);
-        label.setText("Description: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.description")); //$NON-NLS-1$
         String description = TaggedValueHelper.getDescription(dataProvider);
         newText(container, description);
     }
@@ -392,7 +393,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private void createPurpose(ModelElement dataProvider) {
         Label label = new Label(container, SWT.NONE);
-        label.setText("Purpose: ");
+        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.purpose")); //$NON-NLS-1$
         String purpose = TaggedValueHelper.getPurpose(dataProvider);
         newText(container, purpose);
     }

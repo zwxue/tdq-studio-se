@@ -49,6 +49,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
@@ -75,7 +76,7 @@ public class RenameSqlFileAction extends Action {
      * @param folder
      */
     public RenameSqlFileAction(IFile folder) {
-        setText("Rename SQL File");
+        setText(DefaultMessagesImpl.getString("RenameSqlFileAction.renameSQLFile")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.folder = folder;
     }
@@ -154,7 +155,7 @@ public class RenameSqlFileAction extends Action {
         protected void configureShell(Shell newShell) {
             super.configureShell(newShell);
             newShell.setSize(300, 300);
-            newShell.setText("Rename SQL File");
+            newShell.setText(DefaultMessagesImpl.getString("RenameSqlFileAction.renameSQLFileTwo")); //$NON-NLS-1$
         }
 
         private Text pathText;
@@ -173,7 +174,7 @@ public class RenameSqlFileAction extends Action {
             GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
             composite.setLayoutData(gridData);
             Label label = new Label(composite, SWT.NONE);
-            label.setText("Set New Name:");
+            label.setText(DefaultMessagesImpl.getString("RenameSqlFileAction.setNewName")); //$NON-NLS-1$
             final Text text = new Text(composite, SWT.BORDER);
             if (folder != null) {
                 IPath removeFileExtension = folder.getFullPath().removeFileExtension();
@@ -193,10 +194,10 @@ public class RenameSqlFileAction extends Action {
                     newname = text.getText();
                     if (newname.length() == 0) {
                         getButton(IDialogConstants.OK_ID).setEnabled(false);
-                        setErrorMessage("The Sql File Name can't be empty.");
+                        setErrorMessage(DefaultMessagesImpl.getString("RenameSqlFileAction.sqlFileNameNotEmpty")); //$NON-NLS-1$
                     } else if (existNames.contains(newname)) {
                         getButton(IDialogConstants.OK_ID).setEnabled(false);
-                        setErrorMessage("The Sql File Name always exist, please input another name.");
+                        setErrorMessage(DefaultMessagesImpl.getString("RenameSqlFileAction.sqlFileAlwaysExist")); //$NON-NLS-1$
                     } else {
                         setErrorMessage(null);
                         getButton(IDialogConstants.OK_ID).setEnabled(true);
@@ -209,12 +210,12 @@ public class RenameSqlFileAction extends Action {
             gridData = new GridData(GridData.FILL_HORIZONTAL);
             pathcomposite.setLayoutData(gridData);
             Label label2 = new Label(pathcomposite, SWT.NONE);
-            label2.setText("Path:");
+            label2.setText(DefaultMessagesImpl.getString("RenameSqlFileAction.path")); //$NON-NLS-1$
             pathText = new Text(pathcomposite, SWT.BORDER);
             pathText.setEnabled(false);
             pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             Button button = new Button(pathcomposite, SWT.PUSH);
-            button.setText("Select..");
+            button.setText(DefaultMessagesImpl.getString("RenameSqlFileAction.select")); //$NON-NLS-1$
 
             pathText.setText(folder.getParent().getFullPath().toString());
             button.addSelectionListener(new SelectionAdapter() {
@@ -256,8 +257,8 @@ public class RenameSqlFileAction extends Action {
 
                     FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(), lp, cp);
                     // dialog.setValidator(validator);
-                    dialog.setTitle("Select folder");
-                    dialog.setMessage("Select the folder in which the item will be created");
+                    dialog.setTitle(DefaultMessagesImpl.getString("RenameSqlFileAction.selectFolder")); //$NON-NLS-1$
+                    dialog.setMessage(DefaultMessagesImpl.getString("RenameSqlFileAction.selectFolderInItem")); //$NON-NLS-1$
                     dialog.setInput(root);
                     dialog.addFilter(filter);
                     dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));

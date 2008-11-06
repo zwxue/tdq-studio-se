@@ -59,6 +59,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.CreatePatternAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
@@ -85,9 +86,9 @@ import orgomg.cwm.objectmodel.core.Expression;
 
 public class PatternTestView extends ViewPart {
 
-    private static final String NO_DATABASE_SELECTEDED = "No database is selected!";
+    private static final String NO_DATABASE_SELECTEDED = DefaultMessagesImpl.getString("PatternTestView.database"); //$NON-NLS-1$
 
-    public static final String ID = "org.talend.dataprofiler.core.ui.views.PatternTestView";
+    public static final String ID = "org.talend.dataprofiler.core.ui.views.PatternTestView"; //$NON-NLS-1$
 
     public static final String VIEW_CONTEXT_ID = "org.talend.dataprofiler.core.ui.views.PatternTestView.viewScope"; //$NON-NLS-1$
 
@@ -139,8 +140,8 @@ public class PatternTestView extends ViewPart {
         data.horizontalAlignment = GridData.CENTER;
         coboCom.setLayoutData(data);
         Label dbLabel = new Label(coboCom, SWT.NONE);
-        dbLabel.setText("DB Connections");
-        dbLabel.setToolTipText("Choose here on which database the tests will be executed");
+        dbLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Connections")); //$NON-NLS-1$
+        dbLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.databaseExecuted")); //$NON-NLS-1$
         dbCombo = new CCombo(coboCom, SWT.DROP_DOWN | SWT.BORDER);
         dbCombo.setEditable(false);
         data = new GridData();
@@ -156,7 +157,7 @@ public class PatternTestView extends ViewPart {
         }
         if (!items.isEmpty()) {
             dbCombo.setItems(items.toArray(new String[0]));
-            if (dbCombo.getText().equals("")) {
+            if (dbCombo.getText().equals("")) { //$NON-NLS-1$
                 dbCombo.setText(items.get(0));
             }
         }
@@ -174,20 +175,18 @@ public class PatternTestView extends ViewPart {
         emoticonLabel.setText(PluginConstant.SPACE_STRING + PluginConstant.SPACE_STRING + PluginConstant.SPACE_STRING);
 
         Label textAreaLabel = new Label(composite, SWT.NONE);
-        textAreaLabel.setText("Test Area");
+        textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$
         testText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 40;
         testText.setLayoutData(data);
-        testText.setToolTipText("Enter here the character sequence to test");
+        testText.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.enterHere")); //$NON-NLS-1$
 
         Label regularLabel = new Label(composite, SWT.NONE);
-        regularLabel.setText("Regular Expression");
+        regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$
         this.regularText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         this.regularText.setLayoutData(data);
-        regularText.setToolTipText("Enter here the regular expression against which the test will be done. "
-                + "Single quotes are required around the expression.");
-
+        regularText.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.enterHereAgainst")); //$NON-NLS-1$
         regularText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -220,8 +219,8 @@ public class PatternTestView extends ViewPart {
         data.heightHint = 25;
         data.widthHint = 92;
         sqlButton = new Button(centerPane, SWT.PUSH);
-        sqlButton.setText("SQL");
-        sqlButton.setToolTipText("View the generated SQL statement in Data Explorer perspective");
+        sqlButton.setText(DefaultMessagesImpl.getString("PatternTestView.SQL")); //$NON-NLS-1$
+        sqlButton.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.generatedSQLStatement")); //$NON-NLS-1$
         sqlButton.setLayoutData(data);
         sqlButton.addSelectionListener(new SelectionAdapter() {
 
@@ -230,8 +229,8 @@ public class PatternTestView extends ViewPart {
             }
         });
         createPatternButton = new Button(centerPane, SWT.PUSH);
-        createPatternButton.setText("Create Pattern");
-        createPatternButton.setToolTipText("Create a new pattern from this regular expression");
+        createPatternButton.setText(DefaultMessagesImpl.getString("PatternTestView.createPattern")); //$NON-NLS-1$
+        createPatternButton.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.CreateNewPattern")); //$NON-NLS-1$
         data = new GridData();
         data.heightHint = 25;
         data.widthHint = 92;
@@ -254,9 +253,9 @@ public class PatternTestView extends ViewPart {
         });
         createPatternButton.setEnabled(false);
         saveButton = new Button(centerPane, SWT.PUSH);
-        saveButton.setText("Save");
+        saveButton.setText(DefaultMessagesImpl.getString("PatternTestView.Save")); //$NON-NLS-1$
         saveButton.setEnabled(false);
-        saveButton.setToolTipText("Save the regular expression of the edited pattern");
+        saveButton.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.SaveRegularExpression")); //$NON-NLS-1$
         data = new GridData();
         data.heightHint = 25;
         data.widthHint = 92;
@@ -268,8 +267,8 @@ public class PatternTestView extends ViewPart {
             }
         });
         testButton = new Button(rightPane, SWT.PUSH);
-        testButton.setText("Test");
-        testButton.setToolTipText("Validate entered string against regular expression");
+        testButton.setText(DefaultMessagesImpl.getString("PatternTestView.test")); //$NON-NLS-1$
+        testButton.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.ValidateEnteredString")); //$NON-NLS-1$
         testButton.setLayoutData(data);
         testButton.addSelectionListener(new SelectionAdapter() {
 
@@ -303,7 +302,7 @@ public class PatternTestView extends ViewPart {
     public class TestRegularAction extends Action {
 
         public TestRegularAction() {
-            this.setActionDefinitionId("org.talend.dataprofiler.core.testRegular");
+            this.setActionDefinitionId("org.talend.dataprofiler.core.testRegular"); //$NON-NLS-1$
         }
 
         @Override
@@ -331,7 +330,7 @@ public class PatternTestView extends ViewPart {
                     ResultSet resultSet = createStatement.executeQuery(selectRegexpTestString);
                     while (resultSet.next()) {
                         String okString = resultSet.getString(1);
-                        if ("1".equalsIgnoreCase(okString)) {
+                        if ("1".equalsIgnoreCase(okString)) { //$NON-NLS-1$
                             emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
                             return;
                         }
@@ -348,7 +347,7 @@ public class PatternTestView extends ViewPart {
                 }
             }
         }
-        MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED);
+        MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED); //$NON-NLS-1$
     }
 
     /**
@@ -386,10 +385,10 @@ public class PatternTestView extends ViewPart {
     private void openSQLEditor() {
         IFolder sourceFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
                 DQStructureManager.SOURCE_FILES);
-        IFile sqlFile = sourceFolder.getFile("SQL Editor.sql");
+        IFile sqlFile = sourceFolder.getFile("SQL Editor.sql"); //$NON-NLS-1$
         int i = 0;
         while (sqlFile.exists()) {
-            sqlFile = sourceFolder.getFile("SQL Editor (" + i + ").sql");
+            sqlFile = sourceFolder.getFile("SQL Editor (" + i + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
             i++;
         }
         List<IFile> arrayList = new ArrayList<IFile>(2);
@@ -406,7 +405,7 @@ public class PatternTestView extends ViewPart {
 
             ((SQLEditor) findEditor).setText(selectRegexpTestString);
         } else {
-            MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED);
+            MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED); //$NON-NLS-1$
         }
 
     }
@@ -420,12 +419,11 @@ public class PatternTestView extends ViewPart {
             String expressionLanguage = this.regularExpression.getExpression().getLanguage();
             DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
             if (dbmsLanguage != null && (!dbmsLanguage.getDbmsName().equalsIgnoreCase(expressionLanguage))) {
-                String messageInfo = "You have modified the regular expression for " + expressionLanguage
-                        + " but did the tests on a " + dbmsLanguage.getDbmsName() + " connection. Do you still want to save the "
-                        + expressionLanguage + " regular expression? \n" + "Answer 'Yes' to save the " + expressionLanguage
-                        + " regular expression. \n" + "Answer 'No' to save the " + dbmsLanguage.getDbmsName()
-                        + " regular expression.";
-                MessageDialog messageDialog = new MessageDialog(new Shell(), "Warning", null, messageInfo, MessageDialog.WARNING,
+                String messageInfo = DefaultMessagesImpl
+                        .getString(
+                                "PatternTestView.modifiedTheRegularExpression", expressionLanguage, dbmsLanguage.getDbmsName(), expressionLanguage, expressionLanguage, dbmsLanguage.getDbmsName()); //$NON-NLS-1$
+                MessageDialog messageDialog = new MessageDialog(new Shell(), DefaultMessagesImpl
+                        .getString("PatternTestView.warning"), null, messageInfo, MessageDialog.WARNING, //$NON-NLS-1$
                         new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
                 int result = messageDialog.open();
                 if (result == MessageDialog.OK) {

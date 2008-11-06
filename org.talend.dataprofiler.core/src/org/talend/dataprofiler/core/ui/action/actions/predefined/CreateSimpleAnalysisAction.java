@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.wizard.WizardDialog;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -23,7 +24,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 public class CreateSimpleAnalysisAction extends AbstractPredefinedAnalysisAction {
 
     public CreateSimpleAnalysisAction() {
-        super("Simple analysis", null);
+        super(DefaultMessagesImpl.getString("CreateSimpleAnalysisAction.simpleAnalysis"), null); //$NON-NLS-1$
     }
 
     /*

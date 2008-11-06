@@ -57,6 +57,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataquality.analysis.ExecutionInformations;
@@ -75,9 +76,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage implements IRuningStatusListener {
 
-    private static final String SCHEMA = "schema";
+    private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema"); //$NON-NLS-1$
 
-    private static final String CATALOG = "catalog";
+    private static final String CATALOG = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog"); //$NON-NLS-1$
 
     /**
      * Width of the first column.
@@ -113,9 +114,9 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         final ScrolledForm form = managedForm.getForm();
-        form.setText("Connection Analysis");
-        this.metadataSection.setText("Analysis Metadata");
-        this.metadataSection.setDescription("Set the properties of analysis.");
+        form.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectionAnalysis")); //$NON-NLS-1$
+        this.metadataSection.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        this.metadataSection.setDescription(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.setAnalysisProp")); //$NON-NLS-1$
         createAnalysisParamSection(form, topComp);
         createAnalysisSummarySection(form, topComp);
         createStatisticalSection(form, topComp);
@@ -124,7 +125,8 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
         gdBtn.horizontalAlignment = SWT.CENTER;
         gdBtn.horizontalSpan = 2;
         gdBtn.widthHint = 120;
-        Button runBtn = toolkit.createButton(form.getBody(), " Run ", SWT.NONE);
+        Button runBtn = toolkit.createButton(form.getBody(),
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.run"), SWT.NONE); //$NON-NLS-1$
         runBtn.setLayoutData(gdBtn);
 
         runBtn.addSelectionListener(new SelectionAdapter() {
@@ -138,7 +140,8 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
     }
 
     private void createAnalysisParamSection(ScrolledForm form, Composite topComp) {
-        Section statisticalSection = this.createSection(form, topComp, "Analysis Parameters", false, null);
+        Section statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
+                .getString("ConnectionMasterDetailsPage.analysisParameter"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
         // Pattern tablePattern = null;
         // Pattern viewPattern = null;
@@ -155,7 +158,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
 
         sectionClient.setLayout(new GridLayout(2, false));
         Label tableFilterLabel = new Label(sectionClient, SWT.None);
-        tableFilterLabel.setText("Filter on tables:");
+        tableFilterLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.filterOnTable")); //$NON-NLS-1$
         tableFilterLabel.setLayoutData(new GridData());
         tableFilterText = new Text(sectionClient, SWT.BORDER);
         EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
@@ -171,7 +174,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
 
         });
         Label viewFilterLabel = new Label(sectionClient, SWT.None);
-        viewFilterLabel.setText("Filter on views: ");
+        viewFilterLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.filterOnView")); //$NON-NLS-1$
         viewFilterLabel.setLayoutData(new GridData());
         viewFilterText = new Text(sectionClient, SWT.BORDER);
         String viewPattern = DomainHelper.getViewPattern(dataFilters);
@@ -189,7 +192,8 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
     }
 
     private void createAnalysisSummarySection(ScrolledForm form, Composite topComp) {
-        Section summarySection = this.createSection(form, topComp, "Analysis Summary", false, null);
+        Section summarySection = this.createSection(form, topComp, DefaultMessagesImpl
+                .getString("ConnectionMasterDetailsPage.analysisSummary"), false, null); //$NON-NLS-1$
         sumSectionClient = toolkit.createComposite(summarySection);
         sumSectionClient.setLayout(new GridLayout(2, false));
         refreshSumSection();
@@ -224,55 +228,65 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
         Properties pameterProperties = SupportDBUrlStore.getInstance().getDBPameterProperties(connectionStr);
         String labelContent = pameterProperties.getProperty(org.talend.dq.PluginConstant.DBTYPE_PROPERTY);
         Label leftLabel = new Label(leftComp, SWT.NONE);
-        leftLabel.setText("DBMS: " + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent));
+        leftLabel
+                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.DBMS") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
         labelContent = pameterProperties.getProperty(org.talend.dq.PluginConstant.HOSTNAME_PROPERTY);
-        leftLabel.setText("Server: " + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent));
+        leftLabel
+                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.server") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
         labelContent = pameterProperties.getProperty(org.talend.dq.PluginConstant.PORT_PROPERTY);
-        leftLabel.setText("Port: " + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent));
+        leftLabel
+                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
         labelContent = TaggedValueHelper.getValue(PluginConstant.USER_PROPERTY, providerConnection);
-        leftLabel.setText("Connected as: " + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent));
+        leftLabel
+                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
 
         List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tdDataProvider);
         List<TdSchema> tdSchema = DataProviderHelper.getTdSchema(tdDataProvider);
         leftLabel = new Label(leftComp, SWT.NONE);
-        leftLabel.setText("Catalogs: " + tdCatalogs.size());
+        leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs") + tdCatalogs.size()); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        leftLabel.setText("Schemata: " + tdSchema.size());
+        leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata") + tdSchema.size()); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
 
         ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
 
         Label rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText("Creation date: " + getFormatDateStr(analysis.getCreationDate()));
+        rightLabel
+                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.createionDate") + getFormatDateStr(analysis.getCreationDate())); //$NON-NLS-1$
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText("Execution date: " + getFormatDateStr(resultMetadata.getExecutionDate()));
+        rightLabel
+                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.executionDate") + getFormatDateStr(resultMetadata.getExecutionDate())); //$NON-NLS-1$
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText("Execution Duration: " + resultMetadata.getExecutionDuration() / 1000.0d + " s");
+        rightLabel.setText(DefaultMessagesImpl.getString(
+                "ConnectionMasterDetailsPage.executionDuration", resultMetadata.getExecutionDuration() / 1000.0d)); //$NON-NLS-1$ //$NON-NLS-2$
         rightLabel.setLayoutData(new GridData());
 
         rightLabel = new Label(rightComp, SWT.NONE);
-        String executeStatus = (resultMetadata.isLastRunOk() ? "success" : "failure: " + resultMetadata.getMessage());
-        rightLabel.setText("Execution status: "
+        String executeStatus = (resultMetadata.isLastRunOk() ? DefaultMessagesImpl
+                .getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure") + resultMetadata.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+        rightLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.executionStatus") //$NON-NLS-1$
                 + (resultMetadata.getExecutionNumber() == 0 ? PluginConstant.EMPTY_STRING : executeStatus));
         if (!resultMetadata.isLastRunOk()) {
             rightLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         }
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText("Number of executions: " + resultMetadata.getExecutionNumber());
+        rightLabel
+                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.number") + resultMetadata.getExecutionNumber()); //$NON-NLS-1$
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText("Last successful execution: " + getFormatDateStr(resultMetadata.getExecutionDate()));
+        rightLabel
+                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.successExecution") + getFormatDateStr(resultMetadata.getExecutionDate())); //$NON-NLS-1$
         rightLabel.setLayoutData(new GridData());
         sumSectionClient.layout();
     }
@@ -286,7 +300,8 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
     }
 
     private void createStatisticalSection(ScrolledForm form, Composite topComp) {
-        Section statisticalSection = this.createSection(form, topComp, "Statistical informations", false, null);
+        Section statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
+                .getString("ConnectionMasterDetailsPage.statisticalinformations"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
         sectionClient.setLayout(new GridLayout());
 
@@ -400,8 +415,8 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
     private void createNbRowsCol(Table table, String container) {
         TableColumn tableColumn;
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#rows");
-        tableColumn.setToolTipText("Number of rows in " + container);
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.rows")); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberOfRows") + container); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
     }
 
@@ -411,11 +426,11 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
         tableColumn.setWidth(COL1_WIDTH);
         createNbRowsCol(table, CATALOG);
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#schemata");
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.otherSchemata")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#rows/schema");
-        tableColumn.setToolTipText("Number of rows per schema");
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.rows_schema")); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberofRow")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
         createCommonStatisticalColumns(table);
     }
@@ -428,28 +443,28 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
     private void createCommonStatisticalColumns(Table table) {
         TableColumn tableColumn;
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#tables");
-        tableColumn.setToolTipText("Number of tables");
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.table")); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberOfTable")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#rows/table");
-        tableColumn.setToolTipText("Number of rows per table");
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.rows_table")); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberOfRowPerTable")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#views");
-        tableColumn.setToolTipText("Number of views");
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.view")); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberOfViews")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#rows/view");
-        tableColumn.setToolTipText("Number of rows per view");
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.rows_view")); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.nubmerOfRowsPerView")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#keys");
-        tableColumn.setToolTipText("Number of primary keys");
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.key")); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberOfPrimaryKeys")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
         tableColumn = new TableColumn(table, SWT.RIGHT);
-        tableColumn.setText("#indexes");
-        tableColumn.setToolTipText("Number of indexes");
+        tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.indexes")); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberOfIndexes")); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
     }
 
@@ -466,7 +481,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
 
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
-            log.info("Success to save connection analysis:" + analysis.getFileName());
+            log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }
     }
 
@@ -592,7 +607,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
         if (frac.isNaN()) {
             return String.valueOf(Double.NaN);
         }
-        String formatValue = new DecimalFormat("0.00").format(frac);
+        String formatValue = new DecimalFormat("0.00").format(frac); //$NON-NLS-1$
         return formatValue;
     }
 

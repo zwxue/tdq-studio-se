@@ -46,6 +46,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -62,11 +63,11 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class PatternMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
-    private static final String SQL = "SQL";
+    private static final String SQL = "SQL"; //$NON-NLS-1$
 
     private Pattern pattern;
 
-    public static final String ALL_DATABASE_TYPE = "ALL_DATABASE_TYPE";
+    public static final String ALL_DATABASE_TYPE = "ALL_DATABASE_TYPE"; //$NON-NLS-1$
 
     private Composite patternDefinitionSectionComp;
 
@@ -122,19 +123,18 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         super.createFormContent(managedForm);
         form = managedForm.getForm();
 
-        form.setText("Pattern Settings");
-        metadataSection.setText("Pattern Metadata");
-        metadataSection.setDescription("Set the properties of pattern.");
+        form.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternSettings")); //$NON-NLS-1$
+        metadataSection.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternMetadata")); //$NON-NLS-1$
+        metadataSection.setDescription(DefaultMessagesImpl.getString("PatternMasterDetailsPage.setProperties")); //$NON-NLS-1$
         creatPatternDefinitionSection(topComp);
     }
 
     private void creatPatternDefinitionSection(Composite topCmp) {
-        patternDefinitionSection = createSection(form, topCmp, "Pattern Definition", false, null);
+        patternDefinitionSection = createSection(form, topCmp, DefaultMessagesImpl
+                .getString("PatternMasterDetailsPage.patternDefinition"), false, null); //$NON-NLS-1$
 
         Label label = new Label(patternDefinitionSection, SWT.WRAP);
-        label.setText("Add here the definition of your pattern specific to a database."
-                + " If the expression is simple enough to be used in all databases,"
-                + " use the \"ALL_DATABASE_TYPE\" type enumerate.");
+        label.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.text")); //$NON-NLS-1$
         patternDefinitionSection.setDescriptionControl(label);
 
         patternDefinitionSectionComp = createPatternDefinitionComp();
@@ -177,7 +177,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     private void createAddButton(Composite parent) {
         final Button addButton = new Button(parent, SWT.NONE);
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-        addButton.setToolTipText("Add");
+        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.CENTER;
         labelGd.widthHint = 65;
@@ -193,7 +193,10 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                     remainDBTypeList.remove(language);
                 }
                 if (remainDBTypeList.size() == 0) {
-                    MessageDialog.openWarning(null, "Warning", "No more pattern expression type available!");
+                    MessageDialog
+                            .openWarning(
+                                    null,
+                                    DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
                     return;
                 }
                 Expression expression = CoreFactory.eINSTANCE.createExpression();
@@ -254,7 +257,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         });
         Button delButton = new Button(expressComp, SWT.NONE);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        delButton.setToolTipText("Delete");
+        delButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.delete")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(delButton);
         delButton.addSelectionListener(new SelectionAdapter() {
 
@@ -268,8 +271,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         });
         Button testPatternButton = new Button(expressComp, SWT.NONE);
         // testPatternButton.setImage(ImageLib.getImage(ImageLib.));
-        testPatternButton.setText("Test");
-        testPatternButton.setToolTipText("Pattern Test");
+        testPatternButton.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.test")); //$NON-NLS-1$
+        testPatternButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternTest")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(testPatternButton);
         testPatternButton.addSelectionListener(new SelectionAdapter() {
 
@@ -306,8 +309,10 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     private boolean savePattern() {
         if (tempPatternComponents.size() == 0) {
-            MessageDialog.openError(null, "Error", "Can't save the pattern '" + pattern.getName()
-                    + "', there is no regular expression.");
+            MessageDialog
+                    .openError(
+                            null,
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.error"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.cannotSave", pattern.getName())); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
         this.pattern.getComponents().clear();
@@ -320,13 +325,18 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         for (int i = 0; i < components.size(); i++) {
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
             String language = regularExpress.getExpression().getLanguage();
-            if ((regularExpress.getExpression().getBody() == null) || (!regularExpress.getExpression().getBody().matches("'.*'"))) {
-                MessageDialog.openWarning(null, "Warning", "The pattern's expression for " + language
-                        + " must be enclosed by single quotes \"'\"");
+            if ((regularExpress.getExpression().getBody() == null) || (!regularExpress.getExpression().getBody().matches("'.*'"))) { //$NON-NLS-1$
+                MessageDialog
+                        .openWarning(
+                                null,
+                                DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpressions", language)); //$NON-NLS-1$ //$NON-NLS-2$
                 return false;
             }
             if (existLanguage.contains(language)) {
-                MessageDialog.openError(null, "Error", "The language type is not unique:" + language);
+                MessageDialog
+                        .openError(
+                                null,
+                                DefaultMessagesImpl.getString("PatternMasterDetailsPage.error"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.languageType", language)); //$NON-NLS-1$ //$NON-NLS-2$
                 return false;
             } else {
                 existLanguage.add(language);

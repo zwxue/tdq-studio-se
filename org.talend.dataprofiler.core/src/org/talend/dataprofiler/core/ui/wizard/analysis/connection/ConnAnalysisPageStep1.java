@@ -20,6 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
 import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
 
@@ -29,8 +30,7 @@ import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
  */
 public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
 
-    private String defaultInfor = "Set filter on tables and / or views if needed.\n"
-            + "By default, all tables and views will be used in the analysis.\n" + "Separate several filters with comma ','";
+    private String defaultInfor = DefaultMessagesImpl.getString("ConnAnalysisPageStep1.defaultInfor"); //$NON-NLS-1$
 
     private Text tableFilter;
 
@@ -40,8 +40,8 @@ public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
      * @param pageName
      */
     public ConnAnalysisPageStep1() {
-        setTitle("New Analysis");
-        setMessage("Add the filters for Connection Analysis");
+        setTitle(DefaultMessagesImpl.getString("ConnAnalysisPageStep1.newAnalysis")); //$NON-NLS-1$
+        setMessage(DefaultMessagesImpl.getString("ConnAnalysisPageStep1.addFiltersConnectionAnalysis")); //$NON-NLS-1$
     }
 
     /*
@@ -66,7 +66,7 @@ public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
         subContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Label labelTable = new Label(subContainer, SWT.NONE);
-        labelTable.setText("Table name filter");
+        labelTable.setText(DefaultMessagesImpl.getString("ConnAnalysisPageStep1.tableNameFilter")); //$NON-NLS-1$
         tableFilter = new Text(subContainer, SWT.BORDER);
         tableFilter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         tableFilter.addModifyListener(new ModifyListener() {
@@ -78,7 +78,7 @@ public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
         });
 
         Label labelView = new Label(subContainer, SWT.NONE);
-        labelView.setText("View name filter");
+        labelView.setText(DefaultMessagesImpl.getString("ConnAnalysisPageStep1.viewNameFilter")); //$NON-NLS-1$
         viewFilter = new Text(subContainer, SWT.BORDER);
         viewFilter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         viewFilter.addModifyListener(new ModifyListener() {

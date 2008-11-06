@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
@@ -90,7 +91,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
         group.setLayoutData(gd);
 
         Label lab = new Label(group, SWT.NONE);
-        lab.setText("Number of results shown:");
+        lab.setText(DefaultMessagesImpl.getString("NumbericNominalForm.numberOfResultsShown")); //$NON-NLS-1$
 
         numberTxt = new Text(group, SWT.BORDER);
         GridData gdTxt = new GridData();
@@ -139,7 +140,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        if (numberTxt.getText() == "") {
+        if (numberTxt.getText() == "") { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }

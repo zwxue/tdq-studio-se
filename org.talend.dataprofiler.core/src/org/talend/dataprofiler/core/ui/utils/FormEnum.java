@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -27,18 +28,18 @@ import org.talend.utils.sql.Java2SqlType;
  */
 public enum FormEnum {
 
-    BinsDesignerForm("Bins Designer", "html/wizard/indicator/BinsDesigner.html"),
-    FreqBinsDesignerForm("Bins Designer", "html/wizard/indicator/BinsDesigner.html"),
-    TextParametersForm("Text Parameters", "html/wizard/indicator/TextParameter.html"),
-    FreqTextParametersForm("Text Parameters", "html/wizard/indicator/TextParameter.html"),
-    TimeSlicesForm("Time Slices", "html/wizard/indicator/TimeSlice.html"),
-    FreqTimeSliceForm("Time Slices", "html/wizard/indicator/TimeSlice.html"),
-    DataThresholdsForm("Data Thresholds", "html/wizard/indicator/DataThreshold.html"),
-    IndicatorThresholdsForm("Indicator Thresholds", "html/wizard/indicator/IndicatorThresholds.html"),
-    TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"),
-    FreqTextLengthForm("Blank Options", "html/wizard/indicator/BlankOptions.html"),
-    NumbericNominalForm("Frequency Table Parameters", ""),
-    ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html");
+    BinsDesignerForm("Bins Designer", "html/wizard/indicator/BinsDesigner.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    FreqBinsDesignerForm("Bins Designer", "html/wizard/indicator/BinsDesigner.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    TextParametersForm("Text Parameters", "html/wizard/indicator/TextParameter.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    FreqTextParametersForm("Text Parameters", "html/wizard/indicator/TextParameter.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    TimeSlicesForm("Time Slices", "html/wizard/indicator/TimeSlice.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    FreqTimeSliceForm("Time Slices", "html/wizard/indicator/TimeSlice.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    DataThresholdsForm("Data Thresholds", "html/wizard/indicator/DataThreshold.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    IndicatorThresholdsForm("Indicator Thresholds", "html/wizard/indicator/IndicatorThresholds.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    FreqTextLengthForm("Blank Options", "html/wizard/indicator/BlankOptions.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    NumbericNominalForm("Frequency Table Parameters", ""), //$NON-NLS-1$ //$NON-NLS-2$
+    ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private String formName;
 
@@ -54,7 +55,7 @@ public enum FormEnum {
     }
 
     public String getHelpHref() {
-        return "/" + HelpPlugin.PLUGIN_ID + "/" + helpHref;
+        return "/" + HelpPlugin.PLUGIN_ID + "/" + helpHref; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public static String[] getHelpHref(IndicatorUnit indicatorUnit) {

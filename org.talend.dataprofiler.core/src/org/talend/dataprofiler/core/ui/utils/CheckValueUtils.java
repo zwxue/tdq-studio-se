@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.ui.utils;
 
 import java.util.regex.Pattern;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+
 /**
  * DOC zqin class global comment. Detailled comment
  */
@@ -26,18 +28,18 @@ public class CheckValueUtils {
 
     public static boolean isStringValue(String inputString) {
 
-        String regex = "^([a-z]|[A-Z])\\w*";
+        String regex = "^([a-z]|[A-Z])\\w*"; //$NON-NLS-1$
         return getCheckValue(regex, inputString);
     }
 
     public static boolean isNumberValue(String inputString) {
 
-        String regex = "\\d+";
+        String regex = "\\d+"; //$NON-NLS-1$
         return getCheckValue(regex, inputString);
     }
 
     public static boolean isRealNumberValue(String inputString) {
-        String regex = "-?\\d+(\\.\\d+)?";
+        String regex = "-?\\d+(\\.\\d+)?"; //$NON-NLS-1$
         return getCheckValue(regex, inputString);
     }
 
@@ -64,19 +66,19 @@ public class CheckValueUtils {
 
     public static boolean isNumberOfShownValue(String inputString) {
 
-        String regex = "^[1-9]\\d*";
+        String regex = "^[1-9]\\d*"; //$NON-NLS-1$
         return getCheckValue(regex, inputString);
     }
 
     public static boolean isNumberWithNegativeValue(String inputString) {
 
-        String regex = "-?\\d+";
+        String regex = "-?\\d+"; //$NON-NLS-1$
         return getCheckValue(regex, inputString);
     }
 
     public static boolean isPatternValue(String inputString) {
 
-        String regex = "'.*'";
+        String regex = "'.*'"; //$NON-NLS-1$
         return getCheckValue(regex, inputString);
     }
 
@@ -88,12 +90,12 @@ public class CheckValueUtils {
      */
     public static boolean isDateValue(String inputString) {
 
-        String regex1 = "\\b(0?[1-9]|[12][0-9]|3[01])[- /.](0?[1-9]|1[012])[- /.](19|20)?[0-9]{2}\\b";
-        String regex2 = "(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)[0-9]{2}";
-        String regex3 = "\\b(0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2}\\b";
-        String regex4 = "(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)[0-9]{2}";
-        String regex5 = "\\b(19|20)?[0-9]{2}[- /.](0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])\\b";
-        String regex6 = "(19|20)[0-9]{2}[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])";
+        String regex1 = "\\b(0?[1-9]|[12][0-9]|3[01])[- /.](0?[1-9]|1[012])[- /.](19|20)?[0-9]{2}\\b"; //$NON-NLS-1$
+        String regex2 = "(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)[0-9]{2}"; //$NON-NLS-1$
+        String regex3 = "\\b(0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2}\\b"; //$NON-NLS-1$
+        String regex4 = "(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)[0-9]{2}"; //$NON-NLS-1$
+        String regex5 = "\\b(19|20)?[0-9]{2}[- /.](0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])\\b"; //$NON-NLS-1$
+        String regex6 = "(19|20)[0-9]{2}[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])"; //$NON-NLS-1$
 
         System.out.println(regex1);
 

@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * A global service register provides the service registration and acquirement. <br/>
@@ -59,7 +60,7 @@ public class GlobalServiceRegister {
         if (service == null) {
             service = findService(klass);
             if (service == null) {
-                throw new RuntimeException("The service can't find:" + klass.getName());
+                throw new RuntimeException(DefaultMessagesImpl.getString("GlobalServiceRegister.cannotFindService") + klass.getName()); //$NON-NLS-1$
             }
             services.put(klass, service);
         }

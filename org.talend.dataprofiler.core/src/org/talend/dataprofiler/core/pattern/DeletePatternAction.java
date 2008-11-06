@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 
 /**
@@ -40,7 +41,7 @@ public class DeletePatternAction extends Action {
      * @param folder
      */
     public DeletePatternAction(List<IFile> selectedFiles) {
-        setText("Delete regular pattern");
+        setText(DefaultMessagesImpl.getString("DeletePatternAction.deleteRegularPattern")); //$NON-NLS-1$
         // setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.selectedFiles = selectedFiles;
     }
@@ -55,8 +56,8 @@ public class DeletePatternAction extends Action {
         IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
                 DQStructureManager.PATTERNS);
         for (IFile file : selectedFiles) {
-            if (MessageDialog.openConfirm(new Shell(), "Delete regular pattern File",
-                    "Are you sure delete regular pattern file : " + file.getName())) {
+            if (MessageDialog.openConfirm(new Shell(), DefaultMessagesImpl.getString("DeletePatternAction.deleteRegularPatternFile"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("DeletePatternAction.areYouDeleteRegularPatternFile") + file.getName())) { //$NON-NLS-1$
                 try {
                     if (file.exists()) {
                         file.delete(true, null);

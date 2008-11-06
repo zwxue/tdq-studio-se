@@ -21,6 +21,7 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 
 /**
@@ -63,7 +64,7 @@ public class EditConnectionProvider extends CommonActionProvider {
     private class EditConnectionAction extends Action {
 
         public EditConnectionAction() {
-            super("Edit Connection");
+            super(DefaultMessagesImpl.getString("EditConnectionProvider.editConnection")); //$NON-NLS-1$
             setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EDITCONNECTION));
         }
 

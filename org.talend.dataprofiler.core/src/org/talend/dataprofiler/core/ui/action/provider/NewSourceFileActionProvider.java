@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
 import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
@@ -61,7 +62,7 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
                 }
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
-                if (file.getFileExtension().equalsIgnoreCase("sql")) {
+                if (file.getFileExtension().equalsIgnoreCase("sql")) { //$NON-NLS-1$
                     menu.add(new RenameSqlFileAction((IFile) obj));
                 }
             }
@@ -87,7 +88,7 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
             Object obj = iterator.next();
             if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
-                if (file.getFileExtension().equalsIgnoreCase("sql")) {
+                if (file.getFileExtension().equalsIgnoreCase("sql")) { //$NON-NLS-1$
                     selectedFiles.add(file);
                 }
             } else {

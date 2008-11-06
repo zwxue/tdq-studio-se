@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 
@@ -66,8 +67,8 @@ public class ExportPatternsWizard extends Wizard {
         boolean isContinue = true;
 
         if (file.exists()) {
-            isContinue = MessageDialogWithToggle.openConfirm(null, "Warning",
-                    "Warning: this file already exist, do you want to overwrite it?");
+            isContinue = MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ExportPatternsWizard.fileAlreadyExist")); //$NON-NLS-1$
         }
 
         if (isContinue) {

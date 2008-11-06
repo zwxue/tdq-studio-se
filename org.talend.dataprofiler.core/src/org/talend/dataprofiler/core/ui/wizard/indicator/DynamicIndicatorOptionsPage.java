@@ -22,6 +22,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
@@ -48,14 +49,14 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
      * @param pageName
      */
     public DynamicIndicatorOptionsPage(IndicatorUnit indicatorUnit, Map<FormEnum, AbstractIndicatorParameter> paramMap) {
-        super("Indicator settings");
+        super(DefaultMessagesImpl.getString("DynamicIndicatorOptionsPage.indicatorSettings")); //$NON-NLS-1$
 
         this.indicatorUnit = indicatorUnit;
         this.paramMap = paramMap;
 
         setPageComplete(false);
-        setTitle("Indicator settings");
-        setMessage("In this wizard, parameters for the given indicator can be set");
+        setTitle(DefaultMessagesImpl.getString("DynamicIndicatorOptionsPage.indicatorSetting")); //$NON-NLS-1$
+        setMessage(DefaultMessagesImpl.getString("DynamicIndicatorOptionsPage.setIndicatorParameters")); //$NON-NLS-1$
 
         this.listener = new AbstractForm.ICheckListener() {
 

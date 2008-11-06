@@ -23,6 +23,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 
 /**
@@ -41,7 +42,7 @@ public class DeleteSqlFileAction extends Action {
      * @param selectedFiles
      */
     public DeleteSqlFileAction(List<IFile> selectedFiles) {
-        setText("Delete");
+        setText(DefaultMessagesImpl.getString("DeleteSqlFileAction.delete")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
         this.folder = selectedFiles;
     }
@@ -56,7 +57,7 @@ public class DeleteSqlFileAction extends Action {
         IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
                 DQStructureManager.SOURCE_FILES);
         for (IFile file : folder) {
-            if (MessageDialog.openConfirm(new Shell(), "Delete Sql File", "Are you sure delete sql file : " + file.getName())) {
+            if (MessageDialog.openConfirm(new Shell(), DefaultMessagesImpl.getString("DeleteSqlFileAction.deleteSqlFile"), DefaultMessagesImpl.getString("DeleteSqlFileAction.areYouDeleteSqlFile") + file.getName())) { //$NON-NLS-1$ //$NON-NLS-2$
                 try {
                     if (file.exists()) {
                         file.delete(true, null);

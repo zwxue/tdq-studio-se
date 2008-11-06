@@ -21,6 +21,7 @@ import org.eclipse.help.IHelpResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.help.HelpPlugin;
 
@@ -38,7 +39,7 @@ public class ImportPatternsAction extends Action {
      * DOC qzhang ImportPatternsAction constructor comment.
      */
     public ImportPatternsAction(IFolder folder) {
-        setText("Import Patterns");
+        setText(DefaultMessagesImpl.getString("ImportPatternsAction.importPatternOne")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
     }

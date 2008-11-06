@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 
@@ -65,7 +66,7 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
 
         // Name
         Label nameLab = new Label(container, SWT.NONE);
-        nameLab.setText("Name");
+        nameLab.setText(DefaultMessagesImpl.getString("CreateSqlFileWizardPage.names")); //$NON-NLS-1$
 
         nameText = new Text(container, SWT.BORDER);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -87,7 +88,7 @@ public class CreateSqlFileWizardPage extends MetadataWizardPage {
         pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         button = new Button(pathContainer, SWT.PUSH);
-        button.setText("Select..");
+        button.setText(DefaultMessagesImpl.getString("CreateSqlFileWizardPage.select_1")); //$NON-NLS-1$
 
         pathText.setText(getParameter().getFolderProvider().getFolderURI());
         setControl(container);

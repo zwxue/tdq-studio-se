@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -37,7 +38,7 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
      * DOC qzhang RunConnAnalysisAction constructor comment.
      */
     public RunConnAnalysisAction(IFile file) {
-        super("Create connection analysis", ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
+        super(DefaultMessagesImpl.getString("RunConnAnalysisAction.createConnAnalysis"), ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS)); //$NON-NLS-1$
         this.file = file;
     }
 

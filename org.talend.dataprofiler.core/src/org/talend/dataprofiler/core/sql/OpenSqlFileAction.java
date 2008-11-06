@@ -30,6 +30,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
 /**
@@ -50,7 +51,7 @@ public class OpenSqlFileAction extends Action {
      * @param selectedFiles
      */
     public OpenSqlFileAction(List<IFile> selectedFiles) {
-        setText("Open in " + PluginConstant.DATAEXPLORER_PERSPECTIVE);
+        setText(DefaultMessagesImpl.getString("OpenSqlFileAction.openIn") + PluginConstant.DATAEXPLORER_PERSPECTIVE); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.folder = selectedFiles;
     }
@@ -71,7 +72,7 @@ public class OpenSqlFileAction extends Action {
             String portableString = location.append(file.getFullPath()).toPortableString();
             try {
                 editorInput = new SQLEditorInput(new File(portableString));
-                ap.openEditor(editorInput, "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor");
+                ap.openEditor(editorInput, "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
             } catch (PartInitException e) {
                 e.printStackTrace();
             }

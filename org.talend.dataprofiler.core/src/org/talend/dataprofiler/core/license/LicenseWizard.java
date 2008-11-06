@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.license;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * Wizard for the creation of a new project. <br/>
@@ -43,7 +44,7 @@ public class LicenseWizard extends Wizard {
     public void addPages() {
         mainPage = new LicenseWizardPage();
         addPage(mainPage);
-        setWindowTitle("License");
+        setWindowTitle(DefaultMessagesImpl.getString("LicenseWizard.license")); //$NON-NLS-1$
         setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.LICENSE_WIZ));
     }
 

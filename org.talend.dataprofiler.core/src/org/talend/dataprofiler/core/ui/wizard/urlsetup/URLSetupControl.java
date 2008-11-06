@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Group;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 
 /**
@@ -58,7 +59,7 @@ public abstract class URLSetupControl extends Composite {
      */
     protected void createPart() {
         Group group = new Group(this, SWT.SHADOW_ETCHED_IN);
-        group.setText("DB URL"); 
+        group.setText(DefaultMessagesImpl.getString("URLSetupControl.URL"));  //$NON-NLS-1$
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         
         createPart(group);

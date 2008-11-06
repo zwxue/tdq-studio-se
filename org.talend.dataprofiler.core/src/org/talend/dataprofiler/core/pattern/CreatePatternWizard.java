@@ -20,6 +20,7 @@ import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -79,15 +80,15 @@ public class CreatePatternWizard extends AbstractWizard {
      */
     @Override
     public void addPages() {
-        String s = "Regular expression";
+        String s = DefaultMessagesImpl.getString("CreatePatternWizard.regularExpression"); //$NON-NLS-1$
 
         if (type == ExpressionType.SQL_LIKE) {
-            s = "SQL expression";
+            s = DefaultMessagesImpl.getString("CreatePatternWizard.otherSQLExpression"); //$NON-NLS-1$
         }
 
         mPage = new CreatePatternWizardPage1();
-        mPage.setTitle(s + " Creation Page1/2");
-        mPage.setDescription("Define the properties");
+        mPage.setTitle(s + DefaultMessagesImpl.getString("CreatePatternWizard.createPage1_2")); //$NON-NLS-1$
+        mPage.setDescription(DefaultMessagesImpl.getString("CreatePatternWizard.defProp")); //$NON-NLS-1$
         mPage.setPageComplete(false);
 
         if (expression != null && language != null) {
@@ -96,8 +97,8 @@ public class CreatePatternWizard extends AbstractWizard {
 
             mPage2 = new CreatePatternWizardPage2(type);
         }
-        mPage2.setTitle(s + " Creation Page2/2");
-        mPage2.setDescription("Define the properties");
+        mPage2.setTitle(s + DefaultMessagesImpl.getString("CreatePatternWizard.createPage2_2")); //$NON-NLS-1$
+        mPage2.setDescription(DefaultMessagesImpl.getString("CreatePatternWizard.defineProp")); //$NON-NLS-1$
         addPage(mPage);
         addPage(mPage2);
     }
@@ -136,7 +137,7 @@ public class CreatePatternWizard extends AbstractWizard {
         IFile file = folderResource.getFile(fname);
         location = file.getFullPath();
         if (file.exists()) {
-            log.error("Cannot save pattern " + name + ", file " + file.getFullPath() + " already exists!");
+            log.error(DefaultMessagesImpl.getString("CreatePatternWizard.cannotSavePattern", name, file.getFullPath())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             return false;
         }
 

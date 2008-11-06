@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 
@@ -49,7 +50,7 @@ public class FreqBinsDesignerForm extends BinsDesignerForm {
         group.setLayoutData(gd);
 
         Label lab = new Label(group, SWT.NONE);
-        lab.setText("Number of results shown:");
+        lab.setText(DefaultMessagesImpl.getString("FreqBinsDesignerForm.numberOfResultsShown")); //$NON-NLS-1$
 
         numberTxt = new Text(group, SWT.BORDER);
         GridData gdTxt = new GridData();
@@ -91,7 +92,7 @@ public class FreqBinsDesignerForm extends BinsDesignerForm {
     @Override
     protected boolean checkFieldsValue() {
 
-        if (numberTxt.getText() == "") {
+        if (numberTxt.getText() == "") { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }

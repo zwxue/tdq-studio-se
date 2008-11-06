@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 
@@ -33,7 +34,7 @@ public class IndicatorThresholdsForm extends DataThresholdsForm {
     @Override
     protected void addFields() {
         super.addFields();
-        group.setText("Set here the thresholds expected on the indicator");
+        group.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.setThresholds")); //$NON-NLS-1$
     }
 
 }

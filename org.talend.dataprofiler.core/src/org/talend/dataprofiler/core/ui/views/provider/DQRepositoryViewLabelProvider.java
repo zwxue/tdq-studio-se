@@ -16,6 +16,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
@@ -44,7 +45,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
         if (element instanceof AbstractFolderNode) {
             if (((IFolderNode) element).getChildren() != null) {
-                return ((IFolderNode) element).getName() + "(" + ((IFolderNode) element).getChildren().length + ")";
+                return ((IFolderNode) element).getName() + "(" + ((IFolderNode) element).getChildren().length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             return ((IFolderNode) element).getName();

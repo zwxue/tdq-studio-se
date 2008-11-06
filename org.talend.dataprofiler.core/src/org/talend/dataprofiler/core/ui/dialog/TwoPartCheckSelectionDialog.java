@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
@@ -77,7 +78,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     private ViewerComparator fComparator;
 
-    private String fEmptyListMessage = "No entries available.";
+    private String fEmptyListMessage = DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.noEntriesAvailable"); //$NON-NLS-1$
 
     private IStatus fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 
@@ -278,12 +279,12 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                     @Override
                     public void treeExpanded(TreeEvent e) {
                         TreeItem item = (TreeItem) e.item;
-                        if (!item.getText().endsWith(")")) {
+                        if (!item.getText().endsWith(")")) { //$NON-NLS-1$
                             Object obj = item.getData();
 
                             if (obj instanceof TableFolderNode || obj instanceof ViewFolderNode
                                     || obj instanceof ColumnFolderNode) {
-                                item.setText(item.getText() + "(" + item.getItemCount() + ")");
+                                item.setText(item.getText() + "(" + item.getItemCount() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
                                 fViewer.getTree().layout();
                             }
                         }
@@ -444,9 +445,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL);
         data.grabExcessHorizontalSpace = true;
         composite.setData(data);
-        Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, "Select &All", false);
+        Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.selectAll"), false); //$NON-NLS-1$
 
-        Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, "&Deselect All", false);
+        Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.deselectAll"), false); //$NON-NLS-1$
 
         addSelectionButtonListener(selectButton, deselectButton);
         return buttonComposite;

@@ -22,6 +22,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
@@ -58,7 +59,7 @@ public class FolderWizard extends Wizard {
     public void addPages() {
         mainPage = new FolderWizardPage(defaultLabel);
         addPage(mainPage);
-        setWindowTitle("New folder");
+        setWindowTitle(DefaultMessagesImpl.getString("FolderWizard.newFolder")); //$NON-NLS-1$
     }
 
     /**
@@ -81,8 +82,8 @@ public class FolderWizard extends Wizard {
                 findView.getCommonViewer().setExpandedState(newFolder, true);
 
             } catch (CoreException e) {
-                MessageDialog.openError(getShell(), "Error",
-                        "An error occurs. Folder cannot be created. See log for more details.");
+                MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("FolderWizard.error"), //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("FolderWizard.folderCreatedError")); //$NON-NLS-1$
                 ExceptionHandler.process(e);
                 return false;
             }

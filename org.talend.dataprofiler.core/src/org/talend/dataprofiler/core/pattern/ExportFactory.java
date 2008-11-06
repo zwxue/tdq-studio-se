@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -45,7 +46,7 @@ public class ExportFactory {
 
         String fileExtName = getFileExtName(exportFile);
 
-        if ("csv".equalsIgnoreCase(fileExtName)) {
+        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
 
             try {
 
@@ -74,7 +75,7 @@ public class ExportFactory {
                 out.close();
 
             } catch (FileNotFoundException fe) {
-                MessageDialogWithToggle.openError(null, "Error", "File Not Found : some processes maybe occupied current file!");
+                MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("ExportFactory.errorOne"), DefaultMessagesImpl.getString("ExportFactory.notFoundFile")); //$NON-NLS-1$ //$NON-NLS-2$
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -89,7 +90,7 @@ public class ExportFactory {
         }
 
         if (index == (name.length() - 1)) {
-            return "";
+            return ""; //$NON-NLS-1$
         }
 
         return name.substring(index + 1);
@@ -123,7 +124,7 @@ public class ExportFactory {
             }
 
             if (!patternMap.containsKey(type.getExcelEnum())) {
-                patternMap.put(type.getExcelEnum(), "");
+                patternMap.put(type.getExcelEnum(), ""); //$NON-NLS-1$
             }
         }
 

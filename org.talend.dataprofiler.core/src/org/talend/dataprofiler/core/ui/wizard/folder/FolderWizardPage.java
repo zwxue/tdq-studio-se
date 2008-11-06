@@ -27,13 +27,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * Page for new folder details.
  */
 public class FolderWizardPage extends WizardPage {
 
-    private static final String DESC = "Create a new sub-folder";
+    private static final String DESC = DefaultMessagesImpl.getString("FolderWizardPage.createSubfolder"); //$NON-NLS-1$
 
     private Text nameText;
 
@@ -49,7 +50,7 @@ public class FolderWizardPage extends WizardPage {
         super("WizardPage"); //$NON-NLS-1$
         this.defaultLabel = defaultLabel;
 
-        setTitle("Folder");
+        setTitle(DefaultMessagesImpl.getString("FolderWizardPage.folder")); //$NON-NLS-1$
         setDescription(DESC);
 
         nameStatus = createOkStatus();
@@ -98,14 +99,16 @@ public class FolderWizardPage extends WizardPage {
     protected void checkFieldsValue() {
         // Field Name
         if (nameText.getText().length() == 0) {
-            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, "Name is required", null);
+            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, DefaultMessagesImpl
+                    .getString("FolderWizardPage.name"), null); //$NON-NLS-1$
         } else if (!Pattern.matches(PluginConstant.FOLDER_PATTERN, nameText.getText())) {
-            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK,
-                    "Name contains invalid characters. Remove any space and unusual character.", null);
+            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, DefaultMessagesImpl
+                    .getString("FolderWizardPage.invalidCharacters"), null); //$NON-NLS-1$
         } else if ((defaultLabel == null || !defaultLabel.equals(nameText.getText()))
                 && !((FolderWizard) getWizard()).isValid(nameText.getText())) {
-            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, "Name " + nameText.getText()
-                    + " is forbidden", null);
+            nameStatus = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, DefaultMessagesImpl.getString(
+                    "FolderWizardPage.names", nameText.getText()) //$NON-NLS-1$
+                    , null); //$NON-NLS-1$
         } else {
             nameStatus = createOkStatus();
         }

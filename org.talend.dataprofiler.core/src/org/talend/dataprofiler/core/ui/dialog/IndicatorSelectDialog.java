@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
@@ -60,17 +61,17 @@ public class IndicatorSelectDialog extends TrayDialog {
 
     private static final int ROW_MAX_LENGTH = 107;
 
-    private static final String DESCRIPTION = "Description: ";
+    private static final String DESCRIPTION = DefaultMessagesImpl.getString("IndicatorSelectDialog.description"); //$NON-NLS-1$
 
-    private static final String PURPOSE = "Purpose: ";
+    private static final String PURPOSE = DefaultMessagesImpl.getString("IndicatorSelectDialog.purpose"); //$NON-NLS-1$
 
     // private Object[] tdColumns;
 
-    private static final String INDICATORITEM = "_INDICATORITEM";
+    private static final String INDICATORITEM = "_INDICATORITEM"; //$NON-NLS-1$
 
-    private static final String ROWINDICATORFLAG = "_ROWINDICATORFLAG";
+    private static final String ROWINDICATORFLAG = "_ROWINDICATORFLAG"; //$NON-NLS-1$
 
-    private static final String COLUMNINDICATORFLAG = "_COLUMNINDICATORFLAG";
+    private static final String COLUMNINDICATORFLAG = "_COLUMNINDICATORFLAG"; //$NON-NLS-1$
 
     private ColumnIndicator[] columnIndicators;
 
@@ -345,7 +346,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                     for (int i = ROW_MAX_LENGTH; i > 0; i--) {
                         if (longString.charAt(i) == space) {
                             String substring1 = longString.substring(0, i);
-                            String lineSeparator = System.getProperty("line.separator", "\n");
+                            String lineSeparator = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
                             String substring2 = longString.substring(i, longString.length());
                             substring2 = splitLongString(substring2);
                             longString = substring1 + lineSeparator + substring2;
@@ -427,8 +428,10 @@ public class IndicatorSelectDialog extends TrayDialog {
                     checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum,
                             currentColumnIndicator));
                     if (indicatorEnum != null) {
-                        checkButton.setToolTipText("Enable " + indicatorEnum.getLabel() + " on "
-                                + currentColumnIndicator.getTdColumn().getName());
+                        checkButton
+                                .setToolTipText(DefaultMessagesImpl
+                                        .getString(
+                                                "IndicatorSelectDialog.enable", indicatorEnum.getLabel(), currentColumnIndicator.getTdColumn().getName())); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                     checkButton.setData(COLUMNINDICATORFLAG, currentColumnIndicator);
                     commonCheckButton = checkButton;
@@ -471,25 +474,25 @@ public class IndicatorSelectDialog extends TrayDialog {
             treeColumn = new TreeColumn[columnIndicators.length + 2];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[0].setWidth(COL0_WIDTH);
-            treeColumn[0].setText("Indicators");
+            treeColumn[0].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicator")); //$NON-NLS-1$
             treeColumn[1] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[1].setWidth(COLI_WIDTH);
-            treeColumn[1].setText("All columns");
-            treeColumn[1].setToolTipText("This will select indicators for all analyzed columns");
+            treeColumn[1].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.allColumn")); //$NON-NLS-1$
+            treeColumn[1].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.string")); //$NON-NLS-1$
 
             for (int i = 0; i < this.columnIndicators.length; i++) {
                 treeColumn[i + 2] = new TreeColumn(tree, SWT.CENTER);
                 treeColumn[i + 2].setWidth(COLI_WIDTH);
                 treeColumn[i + 2].setText(columnIndicators[i].getTdColumn().getName());
                 treeColumn[i + 2].setData(columnIndicators[i]);
-                treeColumn[i + 2].setToolTipText("Analyzed column");
+                treeColumn[i + 2].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.analyzeColumn")); //$NON-NLS-1$
                 columnIndicators[i].copyOldIndicatorEnum();
             }
         } else {
             treeColumn = new TreeColumn[columnIndicators.length + 1];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[0].setWidth(COL0_WIDTH);
-            treeColumn[0].setText("Indicators");
+            treeColumn[0].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicators")); //$NON-NLS-1$
             for (int i = 0; i < this.columnIndicators.length; i++) {
                 treeColumn[i + 1] = new TreeColumn(tree, SWT.CENTER);
                 treeColumn[i + 1].setWidth(COLI_WIDTH);

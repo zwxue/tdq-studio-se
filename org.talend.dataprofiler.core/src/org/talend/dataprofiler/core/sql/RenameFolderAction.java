@@ -20,6 +20,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -38,7 +39,7 @@ public class RenameFolderAction extends Action {
      */
     public RenameFolderAction(IFolder obj) {
         this.obj = obj;
-        setText("Rename Folder");
+        setText(DefaultMessagesImpl.getString("RenameFolderAction.renameFolder")); //$NON-NLS-1$
     }
 
     /*
@@ -48,8 +49,8 @@ public class RenameFolderAction extends Action {
      */
     @Override
     public void run() {
-        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), "Rename folder name",
-                "Input new folder name", null, new IInputValidator() {
+        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), DefaultMessagesImpl.getString("RenameFolderAction.renameFolderName"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RenameFolderAction.inputNewFolderName"), null, new IInputValidator() { //$NON-NLS-1$
 
                     public String isValid(String newText) {
                         return null;

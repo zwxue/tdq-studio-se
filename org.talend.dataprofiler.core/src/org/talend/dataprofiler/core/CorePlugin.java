@@ -27,6 +27,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
@@ -57,7 +58,7 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.talend.dataprofiler.core";
+    public static final String PLUGIN_ID = "org.talend.dataprofiler.core"; //$NON-NLS-1$
 
     // The shared instance
     private static CorePlugin plugin;

@@ -33,6 +33,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -51,7 +52,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private static Logger log = Logger.getLogger(RunAnalysisAction.class);
 
-    private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00");
+    private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00"); //$NON-NLS-1$
 
     private Analysis analysis = null;
 
@@ -68,7 +69,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     public RunAnalysisAction() {
-        super("run");
+        super("run"); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
     }
 
@@ -99,12 +100,13 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             analysis = AnaResourceFileHelper.getInstance().findAnalysis(getSelectionFile());
         }
 
-        final WorkspaceJob job = new WorkspaceJob("Run Analysis") {
+        final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
-                monitor.beginTask("Running the [" + analysis.getName() + "].....", IProgressMonitor.UNKNOWN);
+                monitor.beginTask(
+                        DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
 
                 Display.getDefault().asyncExec(new Runnable() {
 
@@ -157,20 +159,24 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         if (executed.isOk()) {
             if (log.isInfoEnabled()) {
                 int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-                log.info("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: "
-                        + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s.");
+                log.info("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s."); //$NON-NLS-1$
             }
             return Status.OK_STATUS;
         } else {
             int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-            log.warn("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: "
-                    + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s.");
+            log
+                    .warn(DefaultMessagesImpl
+                            .getString(
+                                    "RunAnalysisAction.analysis", analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             // open error dialog
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
-                    MessageDialogWithToggle.openError(null, "Run analysis error", "Fail to run this analysis: \""
-                            + analysis.getName() + "\". Error message:" + executed.getMessage());
+                    MessageDialogWithToggle
+                            .openError(
+                                    null,
+                                    DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             });
 

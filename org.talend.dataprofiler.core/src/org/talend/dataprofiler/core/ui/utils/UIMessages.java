@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+
 /**
  * @author scorreia
  * 
@@ -19,20 +21,20 @@ package org.talend.dataprofiler.core.ui.utils;
  */
 public class UIMessages {
 
-    public static final String MSG_EMPTY_FIELD = "some fields are empty!";
+    public static final String MSG_EMPTY_FIELD = DefaultMessagesImpl.getString("UIMessages.empty"); //$NON-NLS-1$
 
-    public static final String MSG_ONLY_CHAR = "this field must be a character text!";
+    public static final String MSG_ONLY_CHAR = DefaultMessagesImpl.getString("UIMessages.characterText"); //$NON-NLS-1$
 
-    public static final String MSG_ONLY_NUMBER = "this field must be numeric!";
+    public static final String MSG_ONLY_NUMBER = DefaultMessagesImpl.getString("UIMessages.numeric"); //$NON-NLS-1$
 
-    public static final String MSG_ONLY_REAL_NUMBER = "this field must be a real number!";
+    public static final String MSG_ONLY_REAL_NUMBER = DefaultMessagesImpl.getString("UIMessages.realNumber"); //$NON-NLS-1$
 
-    public static final String MSG_ONLY_DATE = "this field must be a date!";
+    public static final String MSG_ONLY_DATE = DefaultMessagesImpl.getString("UIMessages.date"); //$NON-NLS-1$
 
-    public static final String MSG_VALID_FIELD = "your input is valid.";
+    public static final String MSG_VALID_FIELD = DefaultMessagesImpl.getString("UIMessages.inputValid"); //$NON-NLS-1$
 
-    public static final String MSG_INVALID_FIELD = "this field is invalid!";
+    public static final String MSG_INVALID_FIELD = DefaultMessagesImpl.getString("UIMessages.fieldInvalid"); //$NON-NLS-1$
 
-    public static final String MSG_LOWER_LESS_HIGHER = "The lower value must be less than the higher value.";
+    public static final String MSG_LOWER_LESS_HIGHER = DefaultMessagesImpl.getString("UIMessages.lowerValuelessThanHigherValue"); //$NON-NLS-1$
 
 }

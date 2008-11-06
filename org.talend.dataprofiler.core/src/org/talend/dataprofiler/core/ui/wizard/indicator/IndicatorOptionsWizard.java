@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
@@ -55,7 +56,7 @@ public class IndicatorOptionsWizard extends Wizard {
      * DOC zqin IndicatorOptionsWizard constructor comment.
      */
     public IndicatorOptionsWizard(IndicatorUnit indicatorUnit) {
-        setWindowTitle("Indicator");
+        setWindowTitle(DefaultMessagesImpl.getString("IndicatorOptionsWizard.indicator")); //$NON-NLS-1$
 
         this.indicatorUnit = indicatorUnit;
         this.indicator = indicatorUnit.getIndicator();
@@ -204,7 +205,7 @@ public class IndicatorOptionsWizard extends Wizard {
                         String min1 = dataParam.getMinThreshold();
                         String max1 = dataParam.getMaxThreshold();
 
-                        if ("".equals(min1) && "".equals(max1)) {
+                        if ("".equals(min1) && "".equals(max1)) { //$NON-NLS-1$ //$NON-NLS-2$
                             parameters.setDataValidDomain(null);
                             IndicatorHelper.propagateDataThresholdsInChildren(indicator);
                         } else {
@@ -218,7 +219,7 @@ public class IndicatorOptionsWizard extends Wizard {
                         String min2 = indiParam.getMinThreshold();
                         String max2 = indiParam.getMaxThreshold();
 
-                        if ("".equals(min2) && "".equals(max2)) {
+                        if ("".equals(min2) && "".equals(max2)) { //$NON-NLS-1$ //$NON-NLS-2$
                             parameters.setIndicatorValidDomain(null);
                         } else {
                             IndicatorHelper.setIndicatorThreshold(parameters, min2, max2);

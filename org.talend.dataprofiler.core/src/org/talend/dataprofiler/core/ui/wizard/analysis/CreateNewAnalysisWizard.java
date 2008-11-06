@@ -16,6 +16,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * @author zqin
@@ -40,7 +41,7 @@ public class CreateNewAnalysisWizard extends Wizard {
     }
 
     public CreateNewAnalysisWizard() {
-        setWindowTitle("Create New Analysis");
+        setWindowTitle(DefaultMessagesImpl.getString("CreateNewAnalysisWizard.createNewAnalysis")); //$NON-NLS-1$
     }
 
     /*

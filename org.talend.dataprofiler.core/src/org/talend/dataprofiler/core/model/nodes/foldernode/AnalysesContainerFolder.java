@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
@@ -27,7 +28,7 @@ import org.talend.dq.nodes.foldernode.AbstractFolderNode;
  */
 public class AnalysesContainerFolder extends AbstractFolderNode implements IWorkbenchAdapter {
 
-    private static final String ANALYSES = "Analyses";
+    private static final String ANALYSES = DefaultMessagesImpl.getString("AnalysesContainerFolder.analyses"); //$NON-NLS-1$
 
     /**
      * DOC rli AnalysesFolder constructor comment.

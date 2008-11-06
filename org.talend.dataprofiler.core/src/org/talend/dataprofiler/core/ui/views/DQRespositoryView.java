@@ -44,6 +44,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
@@ -67,7 +68,7 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  */
 public class DQRespositoryView extends CommonNavigator {
 
-    public static final String ID = "org.talend.dataprofiler.core.ui.views.DQRespositoryView";
+    public static final String ID = "org.talend.dataprofiler.core.ui.views.DQRespositoryView"; //$NON-NLS-1$
 
     private Map<String, AbstractViewerFilter> filterMap = new HashMap<String, AbstractViewerFilter>();
 
@@ -96,7 +97,7 @@ public class DQRespositoryView extends CommonNavigator {
         super.createPartControl(parent);
 
         // For removing the popup menu of DQRepositoryView.
-        MenuManager menuMgr = new MenuManager("org.talend.dataprofiler.core.ui.views.DQRespositoryView");
+        MenuManager menuMgr = new MenuManager("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
 
@@ -121,11 +122,11 @@ public class DQRespositoryView extends CommonNavigator {
             @Override
             public void treeExpanded(TreeEvent e) {
                 TreeItem item = (TreeItem) e.item;
-                if (!item.getText().endsWith(")")) {
+                if (!item.getText().endsWith(")")) { //$NON-NLS-1$
                     Object obj = item.getData();
 
                     if (obj instanceof TableFolderNode || obj instanceof ViewFolderNode || obj instanceof ColumnFolderNode) {
-                        item.setText(item.getText() + "(" + item.getItemCount() + ")");
+                        item.setText(item.getText() + "(" + item.getItemCount() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                 }
                 super.treeExpanded(e);
@@ -148,11 +149,11 @@ public class DQRespositoryView extends CommonNavigator {
                         node.loadChildren();
                         Object[] children = node.getChildren();
                         if (children != null) {
-                            if (item.getText().indexOf("(") > 0) {
-                                item.setText(item.getText().substring(0, item.getText().indexOf("(")) + "(" + children.length
-                                        + ")");
+                            if (item.getText().indexOf("(") > 0) { //$NON-NLS-1$
+                                item.setText(item.getText().substring(0, item.getText().indexOf("(")) + "(" + children.length //$NON-NLS-1$ //$NON-NLS-2$
+                                        + ")"); //$NON-NLS-1$
                             } else {
-                                item.setText(item.getText() + "(" + children.length + ")");
+                                item.setText(item.getText() + "(" + children.length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
                             }
 
                         }
@@ -168,7 +169,7 @@ public class DQRespositoryView extends CommonNavigator {
                         IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList, analysesFolder).get(0);
 
                         CorePlugin.getDefault()
-                                .openEditor(file, "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor");
+                                .openEditor(file, "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"); //$NON-NLS-1$
                     }
                 }
                 super.mouseDoubleClick(e);

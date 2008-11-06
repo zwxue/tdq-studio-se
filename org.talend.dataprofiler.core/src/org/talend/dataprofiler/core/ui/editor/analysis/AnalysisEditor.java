@@ -19,6 +19,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -30,13 +31,13 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
  */
 public class AnalysisEditor extends CommonFormEditor {
 
-    private static final String ANALYSIS_RESULTS = "Analysis Results";
+    private static final String ANALYSIS_RESULTS = DefaultMessagesImpl.getString("AnalysisEditor.analysisResult"); //$NON-NLS-1$
 
-    private static final String SECOND_PAGE = "secondpage";
+    private static final String SECOND_PAGE = DefaultMessagesImpl.getString("AnalysisEditor.secondPage"); //$NON-NLS-1$
 
-    private static final String MASTER_PAGE = "MasterPage";
+    private static final String MASTER_PAGE = DefaultMessagesImpl.getString("AnalysisEditor.masterPage"); //$NON-NLS-1$
 
-    private static final String ANALYSIS_SETTINGS = "Analysis Settings";
+    private static final String ANALYSIS_SETTINGS = DefaultMessagesImpl.getString("AnalysisEditor.analysisSettings"); //$NON-NLS-1$
 
     private IFormPage masterPage;
 
@@ -56,7 +57,7 @@ public class AnalysisEditor extends CommonFormEditor {
         switch (analysisType) {
         case MULTIPLE_COLUMN:
             masterPage = new ColumnMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName("Column Analysis Editor");
+            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.columnAnalysisEditor")); //$NON-NLS-1$
             columnResultPage = new ColumnAnalysisResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
@@ -67,7 +68,7 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case CONNECTION:
             masterPage = new ConnectionMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName("Connection Analysis Editor");
+            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.connectionAnalysisEditor")); //$NON-NLS-1$
             try {
                 addPage(masterPage);
             } catch (PartInitException e) {
@@ -75,8 +76,8 @@ public class AnalysisEditor extends CommonFormEditor {
             }
             break;
         case COLUMNS_COMPARISON:
-            masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, "Analysis Setttings");
-            setPartName("Columns Comparison Analysis Editor");
+            masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, DefaultMessagesImpl.getString("AnalysisEditor.analysisSetting")); //$NON-NLS-1$
+            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.column")); //$NON-NLS-1$
             ColumnsComparisonAnalysisResultPage columnsComparisonAnalysisReslultPage = new ColumnsComparisonAnalysisResultPage(
                     this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {

@@ -33,6 +33,7 @@ import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControlFactory;
@@ -99,7 +100,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
         tempLayout.numColumns = 2;
 
         Label label = new Label(tempComp, SWT.NULL);
-        label.setText("Login");
+        label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.login")); //$NON-NLS-1$
         Text username = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
 
         GridData fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
@@ -114,7 +115,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
         });
 
         label = new Label(tempComp, SWT.NULL);
-        label.setText("Password");
+        label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.password")); //$NON-NLS-1$
         final Text passwordText = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
         passwordText.setEchoChar('*');
         fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
@@ -129,7 +130,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
         });
 
         label = new Label(tempComp, SWT.NULL);
-        label.setText("DB Type");
+        label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.DBType")); //$NON-NLS-1$
         final Combo dbTypeCombo = new Combo(tempComp, SWT.READ_ONLY);
         dbTypeCombo.setItems(SupportDBUrlStore.getInstance().getDBTypes());
         dbTypeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -152,16 +153,16 @@ class DatabaseWizardPage extends AbstractWizardPage {
         buttonData.heightHint = 25;
         buttonData.widthHint = 100;
         checkButton.setLayoutData(buttonData);
-        checkButton.setText("Check");
-        checkButton.setToolTipText("Check the connection");
+        checkButton.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.check")); //$NON-NLS-1$
+        checkButton.setToolTipText(DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnection")); //$NON-NLS-1$
         checkButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
                 ReturnCode code = checkDBConnection();
                 if (code.isOk()) {
-                    MessageDialog.openInformation(getShell(), "check connections", "Check connection successful.");
+                    MessageDialog.openInformation(getShell(), DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnections"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
-                    MessageDialog.openInformation(getShell(), "check connections", "Check connection failure:"
+                    MessageDialog.openInformation(getShell(), DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
                             + code.getMessage());
                 }
             }
@@ -321,7 +322,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
     public void setUserid(String userid) {
         if (userid != null && !userid.equals(this.userid)) {
             this.userid = userid;
-            this.connectionParam.getParameters().setProperty("user", userid);
+            this.connectionParam.getParameters().setProperty("user", userid); //$NON-NLS-1$
         }
     }
 
@@ -352,7 +353,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
     public void setPassword(String password) {
         if (password != null && !password.equals(this.password)) {
             this.password = password;
-            this.connectionParam.getParameters().setProperty("password", password);
+            this.connectionParam.getParameters().setProperty("password", password); //$NON-NLS-1$
         }
     }
 

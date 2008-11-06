@@ -50,6 +50,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -63,9 +64,9 @@ public class ChangePerspectiveAction extends Action {
 
     private static Logger log = Logger.getLogger(ChangePerspectiveAction.class);
 
-    private static final String SWITCH_TO_DATA_PROFILING = "Switch to " + PluginConstant.DATAPROFILER_PERSPECTIVE;
+    private static final String SWITCH_TO_DATA_PROFILING = "Switch to " + PluginConstant.DATAPROFILER_PERSPECTIVE; //$NON-NLS-1$
 
-    private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to " + PluginConstant.DATAEXPLORER_PERSPECTIVE;
+    private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to " + PluginConstant.DATAEXPLORER_PERSPECTIVE; //$NON-NLS-1$
 
     static ChangePerspectiveAction action;
 
@@ -88,7 +89,7 @@ public class ChangePerspectiveAction extends Action {
      * DOC qzhang ChangePerspectiveAction constructor comment.
      */
     public ChangePerspectiveAction(boolean toolbar) {
-        super("");
+        super(""); //$NON-NLS-1$
         this.toolbar = toolbar;
         action = this;
     }
@@ -165,8 +166,8 @@ public class ChangePerspectiveAction extends Action {
                 TdProviderConnection providerConnection = tdPc.getObject();
                 String url = providerConnection.getConnectionString();
                 Alias alias = new Alias(tdDataProvider.getName());
-                String user = TaggedValueHelper.getValue("user", providerConnection);
-                String password = TaggedValueHelper.getValue("password", providerConnection);
+                String user = TaggedValueHelper.getValue("user", providerConnection); //$NON-NLS-1$
+                String password = TaggedValueHelper.getValue("password", providerConnection); //$NON-NLS-1$
                 User previousUser = new User(user, password);
                 alias.setDefaultUser(previousUser);
                 alias.setAutoLogon(false);

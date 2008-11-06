@@ -19,6 +19,7 @@ import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
@@ -53,18 +54,18 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      * Adding the page to the wizard and set Title, Description and PageComplete.
      */
     public void addPages() {
-        setWindowTitle("Database Connection");
+        setWindowTitle(DefaultMessagesImpl.getString("DatabaseConnectionWizard.databaseConnection")); //$NON-NLS-1$
         setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
 
         propertiesWizardPage = new DatabaseMetadataWizardPage();
         databaseWizardPage = new DatabaseWizardPage();
 
-        propertiesWizardPage.setTitle("New Database Connection on repository - Step 1/2");
-        propertiesWizardPage.setDescription("Define the properties");
+        propertiesWizardPage.setTitle(DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnection")); //$NON-NLS-1$
+        propertiesWizardPage.setDescription(DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineProperties")); //$NON-NLS-1$
         propertiesWizardPage.setPageComplete(false);
 
-        databaseWizardPage.setTitle("Database connection");
-        databaseWizardPage.setDescription("New database connection on repository - step 2/2");
+        databaseWizardPage.setTitle(DefaultMessagesImpl.getString("DatabaseConnectionWizard.databaseConnections")); //$NON-NLS-1$
+        databaseWizardPage.setDescription(DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnections")); //$NON-NLS-1$
 
         try {
             addPage(propertiesWizardPage);
@@ -82,7 +83,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     public boolean performFinish() {
         TypedReturnCode<TdDataProvider> rc = ConnectionService.createConnection(this.connectionParam);
         if (!rc.isOk()) {
-            MessageDialog.openInformation(getShell(), "Create  connections", "Create connection failure:" + rc.getMessage());
+            MessageDialog.openInformation(getShell(), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnections"), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnectionFailure") + rc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
         TdDataProvider dataProvider = rc.getObject();

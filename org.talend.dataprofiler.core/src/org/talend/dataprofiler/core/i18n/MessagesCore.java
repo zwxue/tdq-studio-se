@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  */
 public abstract class MessagesCore {
 
-//    private static Logger log = Logger.getLogger(MessagesCore.class);
+    // private static Logger log = Logger.getLogger(MessagesCore.class);
 
     public static final String KEY_NOT_FOUND_PREFIX = "!!!"; //$NON-NLS-1$
 
@@ -53,7 +53,7 @@ public abstract class MessagesCore {
         if (resourceBundle == null) {
             return KEY_NOT_FOUND_PREFIX + key + KEY_NOT_FOUND_SUFFIX;
         }
-//        log.info("Getting key " + key + "in" + resourceBundle.toString());
+        // log.info("Getting key " + key + "in" + resourceBundle.toString());
         try {
             return resourceBundle.getString(key);
         } catch (MissingResourceException e) {
@@ -71,5 +71,11 @@ public abstract class MessagesCore {
      */
     public static String getString(String key, ResourceBundle resourceBundle, Object[] args) {
         return MessageFormat.format(getString(key, resourceBundle), args);
+    }
+
+    public static void main(String[] args) {
+        Object[] test = { "DB2" };
+        String s = MessageFormat.format("The pattern''s expression for {0} must be enclosed by single quotes", test);
+        System.out.println(s);
     }
 }

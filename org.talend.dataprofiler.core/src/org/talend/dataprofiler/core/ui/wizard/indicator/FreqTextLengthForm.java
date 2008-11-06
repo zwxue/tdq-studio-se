@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 
@@ -29,8 +30,8 @@ public class FreqTextLengthForm extends TextLengthForm {
     protected void addFields() {
         super.addFields();
 
-        this.blankBtn.setText("aggregate blanks");
-        this.nullBtn.setText("aggregate nulls with blanks");
+        this.blankBtn.setText(DefaultMessagesImpl.getString("FreqTextLengthForm.aggregateBlanks")); //$NON-NLS-1$
+        this.nullBtn.setText(DefaultMessagesImpl.getString("FreqTextLengthForm.aggregateNullsWithBlanks")); //$NON-NLS-1$
     }
 
     @Override

@@ -31,6 +31,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
@@ -45,7 +46,7 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 public class RemoveAnalysisAction extends Action {
 
     public RemoveAnalysisAction() {
-        super("Remove Analysis");
+        super(DefaultMessagesImpl.getString("RemoveAnalysisAction.removeAnalysis")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
     }
 
@@ -83,9 +84,11 @@ public class RemoveAnalysisAction extends Action {
         if (analysisObj == null) {
             return;
         }
-        String message = paths.length > 1 ? "Are you sure you want to delete these " + paths.length + " elements?"
-                : "Are you sure you want to remove analysis '" + analysisObj.getName() + "' from this report?";
-        boolean openConfirm = MessageDialog.openConfirm(null, "Confirm Resource Delete", message);
+        String message = paths.length > 1 ? DefaultMessagesImpl.getString(
+                "RemoveAnalysisAction.areYouDeleteElement0", paths.length) //$NON-NLS-1$ //$NON-NLS-2$
+                : DefaultMessagesImpl.getString("RemoveAnalysisAction.areYouDeleteElement2", analysisObj.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+        boolean openConfirm = MessageDialog.openConfirm(null, DefaultMessagesImpl
+                .getString("RemoveAnalysisAction.confirmResourceDelete"), message); //$NON-NLS-1$
 
         if (openConfirm) {
             Iterator<TdReport> iterator = removeMap.keySet().iterator();

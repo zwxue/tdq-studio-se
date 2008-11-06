@@ -20,6 +20,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -33,7 +34,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 public class CreateNewAnalysisAction extends Action implements ICheatSheetAction {
 
     public CreateNewAnalysisAction() {
-        super("New Analysis");
+        super(DefaultMessagesImpl.getString("CreateNewAnalysisAction.newAnalysis")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
 

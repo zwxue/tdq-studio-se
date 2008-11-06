@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
@@ -63,8 +64,8 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
      * @param pageName
      */
     public ConnAnalysisPageStep0() {
-        setTitle("New Analysis");
-        setMessage("Choose a connection to analyze");
+        setTitle(DefaultMessagesImpl.getString("ConnAnalysisPageStep0.newAnalysis")); //$NON-NLS-1$
+        setMessage(DefaultMessagesImpl.getString("ConnAnalysisPageStep0.chooseConnection")); //$NON-NLS-1$
         setPageComplete(false);
 
         fLabelProvider = new DBTablesViewLabelProvider();
@@ -83,7 +84,7 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
         container.setLayout(layout);
 
         Label nameLabel = new Label(container, SWT.NONE);
-        nameLabel.setText("Connections:");
+        nameLabel.setText(DefaultMessagesImpl.getString("ConnAnalysisPageStep0.connections")); //$NON-NLS-1$
 
         createConnectionTree(container);
         addListeners();
@@ -118,7 +119,7 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
             }
         }
         rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME).getFile(
-                ".project"));
+                ".project")); //$NON-NLS-1$
         ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
         fViewer.addFilter(filter);
         fViewer.addFilter(new EMFObjFilter());

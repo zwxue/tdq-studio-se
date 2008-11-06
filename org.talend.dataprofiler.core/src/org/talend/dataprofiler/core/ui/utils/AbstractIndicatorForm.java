@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.help.ui.internal.views.ReusableHelpPart;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 
 /**
@@ -40,7 +41,7 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     public static final String MSG_OK = UIMessages.MSG_VALID_FIELD;
 
-    protected final String limitResultsGrp = "Limit result";
+    protected final String limitResultsGrp = DefaultMessagesImpl.getString("AbstractIndicatorForm.limitResult"); //$NON-NLS-1$
     
     /**
      * DOC zqin AbstractIndicatorForm constructor comment.

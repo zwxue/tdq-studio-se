@@ -25,6 +25,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -41,7 +42,7 @@ public class DeleteFolderAction extends Action {
      */
     public DeleteFolderAction(IFolder obj) {
         this.obj = obj;
-        setText("Delete Folder");
+        setText(DefaultMessagesImpl.getString("DeleteFolderAction.deleteFolder")); //$NON-NLS-1$
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
     }
 
@@ -76,8 +77,8 @@ public class DeleteFolderAction extends Action {
             action.run();
             return action.isFilesDeleted();
         }
-        return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), "Delete Folder",
-                "Are you sure delete the folder, all sub folders and files?");
+        return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), DefaultMessagesImpl.getString("DeleteFolderAction.deleteFold"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("DeleteFolderAction.areYouDeleteFolder")); //$NON-NLS-1$
 
     }
 

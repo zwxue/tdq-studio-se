@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 
 /**
@@ -30,11 +31,11 @@ import org.talend.dq.nodes.foldernode.AbstractFolderNode;
  */
 public class RepGeneratedFolder extends AbstractFolderNode implements IWorkbenchAdapter {
 
-    public static final String DOT_MARK = ".";
+    public static final String DOT_MARK = "."; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(RepGeneratedFolder.class);
 
-    private static final String GENERATE_REPORTS = "Generated Documents";
+    private static final String GENERATE_REPORTS = DefaultMessagesImpl.getString("RepGeneratedFolder.generateDocument"); //$NON-NLS-1$
 
     private final IFile reportFile;
 
@@ -63,7 +64,7 @@ public class RepGeneratedFolder extends AbstractFolderNode implements IWorkbench
         if (indexOf != -1) {
             simpleName = fileName.substring(0, indexOf);
         } else {
-            log.error("The current report file name:" + reportFile.getFullPath() + " is a illegal name.");
+            log.error(DefaultMessagesImpl.getString("RepGeneratedFolder.illegalFilename", reportFile.getFullPath())); //$NON-NLS-1$ //$NON-NLS-2$
             return;
         }
         IFolder currentRportFolder = reportContainer.getFolder(DOT_MARK + simpleName);

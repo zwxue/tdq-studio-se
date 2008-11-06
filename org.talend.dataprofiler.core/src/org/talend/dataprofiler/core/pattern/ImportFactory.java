@@ -35,6 +35,7 @@ import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -60,7 +61,7 @@ public class ImportFactory {
 
         String fileExtName = getFileExtName(importFile);
 
-        if ("csv".equalsIgnoreCase(fileExtName)) {
+        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
 
             try {
 
@@ -79,7 +80,7 @@ public class ImportFactory {
                             continue;
                         }
                         if (rename) {
-                            name = name + "(" + new Date() + ")";
+                            name = name + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                         }
                     }
 
@@ -92,7 +93,7 @@ public class ImportFactory {
 
                     for (PatternLanguageType type : PatternLanguageType.values()) {
                         String cellStr = reader.get(type.getExcelEnum().getLiteral());
-                        if (cellStr != null && !cellStr.equals("")) {
+                        if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
                             patternParameters.regex.put(type.getLiteral(), cellStr);
                         }
                     }
@@ -109,10 +110,10 @@ public class ImportFactory {
             }
         }
 
-        if ("xls".equalsIgnoreCase(fileExtName)) {
+        if ("xls".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
             try {
                 WorkbookSettings settings = new WorkbookSettings();
-                settings.setEncoding("UTF-8");
+                settings.setEncoding("UTF-8"); //$NON-NLS-1$
                 Workbook rwb = Workbook.getWorkbook(importFile, settings);
                 Sheet[] sheets = rwb.getSheets();
                 for (Sheet sheet : sheets) {
@@ -127,7 +128,7 @@ public class ImportFactory {
                                     continue;
                                 }
                                 if (rename) {
-                                    contents = contents + "(" + new Date() + ")";
+                                    contents = contents + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                                 }
                             }
 
@@ -141,7 +142,7 @@ public class ImportFactory {
 
                             for (PatternLanguageType type : PatternLanguageType.values()) {
                                 String cellStr = sheet.getCell(type.getExcelEnum().getLiteral()).getContents();
-                                if (cellStr != null && !cellStr.equals("")) {
+                                if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
                                     patternParameters.regex.put(type.getLiteral(), cellStr);
                                 }
                             }
@@ -184,7 +185,7 @@ public class ImportFactory {
 
         try {
 
-            String[] folderNames = parameters.relativePath.split("/");
+            String[] folderNames = parameters.relativePath.split("/"); //$NON-NLS-1$
 
             for (String folderName : folderNames) {
                 IFolder folder = selectionFolder.getFolder(folderName);
@@ -213,7 +214,7 @@ public class ImportFactory {
         }
 
         if (index == (name.length() - 1)) {
-            return "";
+            return ""; //$NON-NLS-1$
         }
 
         return name.substring(index + 1);
@@ -242,12 +243,12 @@ public class ImportFactory {
 
         public PatternParameters() {
 
-            name = "";
-            auther = "";
-            description = "";
-            purpose = "";
+            name = ""; //$NON-NLS-1$
+            auther = ""; //$NON-NLS-1$
+            description = ""; //$NON-NLS-1$
+            purpose = ""; //$NON-NLS-1$
             status = DevelopmentStatus.DRAFT.getLiteral();
-            relativePath = "";
+            relativePath = ""; //$NON-NLS-1$
             regex = new HashMap<String, String>();
         }
     }

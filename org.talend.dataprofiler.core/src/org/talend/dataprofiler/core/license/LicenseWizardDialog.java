@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * This dialog for displaying the License information.
@@ -39,13 +40,13 @@ public final class LicenseWizardDialog extends WizardDialog {
         super.createButtonsForButtonBar(parent);
         Button button = getButton(IDialogConstants.FINISH_ID);
         if (button != null) {
-            button.setText("Accept");
+            button.setText(DefaultMessagesImpl.getString("LicenseWizardDialog.accept")); //$NON-NLS-1$
             GridData data = new GridData(250, -1);
             button.setLayoutData(data);
         }
         Button buttonCancle = getButton(IDialogConstants.CANCEL_ID);
         if (buttonCancle != null) {
-            buttonCancle.setText("Cancel");
+            buttonCancle.setText(DefaultMessagesImpl.getString("LicenseWizardDialog.cancel")); //$NON-NLS-1$
             GridData data = new GridData(-1, -1);
             buttonCancle.setLayoutData(data);
         }

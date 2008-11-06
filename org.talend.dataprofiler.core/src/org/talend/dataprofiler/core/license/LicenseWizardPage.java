@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IBrandingService;
 
@@ -48,7 +49,7 @@ public class LicenseWizardPage extends WizardPage {
     public LicenseWizardPage() {
         super("WizardPage"); //$NON-NLS-1$
 
-        setTitle("License");
+        setTitle(DefaultMessagesImpl.getString("LicenseWizardPage.license")); //$NON-NLS-1$
         // setDescription(Messages.getString("LicenseWizard.description"));
     }
 
@@ -64,7 +65,7 @@ public class LicenseWizardPage extends WizardPage {
         container.setLayout(layout);
 
         Label subTitleLabel = new Label(container, SWT.NONE);
-        subTitleLabel.setText("This product is released under the following license:");
+        subTitleLabel.setText(DefaultMessagesImpl.getString("LicenseWizardPage.productLicense")); //$NON-NLS-1$
 
         clufText = new Text(container, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL | SWT.LEFT | SWT.BORDER);
         clufText.setBackground(clufText.getDisplay().getSystemColor(SWT.COLOR_WHITE));

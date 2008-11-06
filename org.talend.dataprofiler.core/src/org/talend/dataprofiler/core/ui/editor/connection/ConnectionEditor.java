@@ -17,6 +17,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 
 /**
@@ -33,7 +34,7 @@ public class ConnectionEditor extends CommonFormEditor {
     }
 
     protected void addPages() {
-        masterPage = new ConnectionInfoPage(this, "MasterPage", "Connection Settings");
+        masterPage = new ConnectionInfoPage(this, DefaultMessagesImpl.getString("ConnectionEditor.masterPage"), DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$ //$NON-NLS-2$
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
@@ -59,7 +60,7 @@ public class ConnectionEditor extends CommonFormEditor {
      */
     protected void setInput(IEditorInput input) {
         super.setInput(input);
-        setPartName("Connection Editor");
+        setPartName(DefaultMessagesImpl.getString("ConnectionEditor.connectionEditor")); //$NON-NLS-1$
     }
 
 }

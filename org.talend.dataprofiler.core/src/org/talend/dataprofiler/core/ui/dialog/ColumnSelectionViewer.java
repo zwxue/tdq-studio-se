@@ -17,14 +17,14 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
 
-    private final String tooMuchItemSeleted = "This action will select all columns of all tables existing below this level."
-            + " This can take a long time and will block the application during that time. Do you still want to continue?";
+    private final String tooMuchItemSeleted = DefaultMessagesImpl.getString("ColumnSelectionViewer.string"); //$NON-NLS-1$
 
     /**
      * DOC zqin ColumnSelectionViewer constructor comment.
@@ -49,7 +49,8 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
             super.fireCheckStateChanged(event);
         }
         if (checked && !isTable) {
-            if (MessageDialogWithToggle.openConfirm(null, "Warning", tooMuchItemSeleted)) {
+            if (MessageDialogWithToggle.openConfirm(null,
+                    DefaultMessagesImpl.getString("ColumnSelectionViewer.warning"), tooMuchItemSeleted)) { //$NON-NLS-1$
                 super.fireCheckStateChanged(event);
             } else {
                 event.getCheckable().setChecked(element, false);

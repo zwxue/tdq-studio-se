@@ -21,6 +21,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataprofiler.core.ui.editor.preview.model.CustomerBoxDataset;
@@ -82,7 +83,7 @@ public class ChartDatasetFactory {
                     }
 
                     for (int i = 0; i < numOfShown; i++) {
-                        dataset.addValue(frequencyExt[i].getValue(), "", String.valueOf(frequencyExt[i].getKey()));
+                        dataset.addValue(frequencyExt[i].getValue(), "", String.valueOf(frequencyExt[i].getKey())); //$NON-NLS-1$
 
                         ChartDataEntity entity = new ChartDataEntity();
                         entity.setIndicator(unit.getIndicator());
@@ -105,8 +106,8 @@ public class ChartDatasetFactory {
                     double notMathCount = patternExt.getNotMatchingValueCount();
                     double machCount = patternExt.getMatchingValueCount();
 
-                    dataset.addValue(machCount, "matching", label);
-                    dataset.addValue(notMathCount, "not matching", label);
+                    dataset.addValue(machCount, "matching", label); //$NON-NLS-1$
+                    dataset.addValue(notMathCount, "not matching", label); //$NON-NLS-1$
 
                     PatternChartDataEntity patternEntity = new PatternChartDataEntity();
                     patternEntity.setIndicator(unit.getIndicator());
@@ -127,7 +128,7 @@ public class ChartDatasetFactory {
                     double value = Double.parseDouble(unit.getValue().toString());
                     String label = unit.getIndicatorName();
 
-                    dataset.addValue(value, label, "");
+                    dataset.addValue(value, label, ""); //$NON-NLS-1$
 
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setIndicator(unit.getIndicator());
@@ -174,7 +175,7 @@ public class ChartDatasetFactory {
             if (map.size() != 6) {
 
                 for (IndicatorEnum indicatorEnum : map.keySet()) {
-                    dataset.addValue(map.get(indicatorEnum), "", indicatorEnum.getLabel());
+                    dataset.addValue(map.get(indicatorEnum), "", indicatorEnum.getLabel()); //$NON-NLS-1$
                 }
 
             } else {
@@ -183,7 +184,7 @@ public class ChartDatasetFactory {
                         .get(IndicatorEnum.UpperQuartileIndicatorEnum), map.get(IndicatorEnum.MinValueIndicatorEnum), map
                         .get(IndicatorEnum.MaxValueIndicatorEnum), null);
 
-                defaultDataset.add(item, "", "");
+                defaultDataset.add(item, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
                 return defaultDataset;
             }
@@ -238,7 +239,7 @@ public class ChartDatasetFactory {
         assert indexOfNumericCol != -1;
 
         final int nbNumericFunctions = numericFunctions.size();
-        assert nbNumericFunctions == 3 : "we expect only 3 functions to apply on numerical data";
+        assert nbNumericFunctions == 3 : DefaultMessagesImpl.getString("ChartDatasetFactory.expect"); //$NON-NLS-1$
 
         final List<Object[]> listRows = indicator.getListRows();
 
@@ -324,7 +325,7 @@ public class ChartDatasetFactory {
                 Object obj = internalKey[i];
                 builder.append(obj);
                 if (i < internalKey.length - 1) {
-                    builder.append(" | ");
+                    builder.append(" | "); //$NON-NLS-1$
                 }
             }
             return builder.toString();
@@ -399,10 +400,10 @@ public class ChartDatasetFactory {
         public String toString() {
             StringBuilder builder = new StringBuilder();
             for (MultipleKey key : keyToVal.keySet()) {
-                builder.append(key.toString()).append(": ");
+                builder.append(key.toString()).append(": "); //$NON-NLS-1$
                 final Double[] doubles = keyToVal.get(key);
                 for (Double d : doubles) {
-                    builder.append(d).append(" ");
+                    builder.append(d).append(" "); //$NON-NLS-1$
                 }
                 builder.append('\n');
             }
@@ -458,7 +459,7 @@ public class ChartDatasetFactory {
     private static String createKey(EList<Column> nominalColumns, int idx) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < idx; i++) {
-            builder.append(nominalColumns.get(i).getName()).append(" ");
+            builder.append(nominalColumns.get(i).getName()).append(" "); //$NON-NLS-1$
         }
         return builder.toString();
     }

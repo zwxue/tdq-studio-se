@@ -26,6 +26,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
@@ -130,7 +131,7 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
         AnalysisBuilder analysisBuilder = new AnalysisBuilder();
         boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, analysisType);
         if (!analysisInitialized) {
-            throw new DataprofilerCoreException(analysisName + " failed to initialize!");
+            throw new DataprofilerCoreException(analysisName + DefaultMessagesImpl.getString("ConnectionWizard.failedInitialize")); //$NON-NLS-1$
         }
         Analysis analysis = analysisBuilder.getAnalysis();
         fillAnalysisBuilder(analysisBuilder);
@@ -139,7 +140,7 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
         IFile file;
         if (saved.isOk()) {
             if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + folderResource.getFullPath().toString());
+                log.debug("Saved in  " + folderResource.getFullPath().toString()); //$NON-NLS-1$
             }
             file = saved.getObject();
             AnaResourceFileHelper.getInstance().clear();
@@ -147,8 +148,8 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
             AnaResourceFileHelper.getInstance().register(file, anaResource);
             AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
         } else {
-            throw new DataprofilerCoreException("Problem saving file: " + folderResource.getFullPath().toString() + ": "
-                    + saved.getMessage());
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
+                    "ConnectionWizard.problemFile", folderResource.getFullPath().toString(), saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         EList<Domain> dataFilters = analysisBuilder.getAnalysis().getParameters().getDataFilter();
@@ -164,7 +165,7 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
 
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysisBuilder.getAnalysis());
         if (save.isOk()) {
-            log.info("Success to save connection analysis:" + analysisBuilder.getAnalysis().getFileName());
+            log.info("Success to save connection analysis:" + analysisBuilder.getAnalysis().getFileName()); //$NON-NLS-1$
         }
 
         CorePlugin.getDefault().refreshWorkSpace();

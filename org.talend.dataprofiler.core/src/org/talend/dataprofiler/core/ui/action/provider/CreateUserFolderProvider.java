@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
 
 /**
@@ -62,9 +63,9 @@ public class CreateUserFolderProvider extends CommonActionProvider {
     private class CreateUserFolderAction extends Action {
 
         public CreateUserFolderAction() {
-            super("Create Folder");
+            super(DefaultMessagesImpl.getString("CreateUserFolderProvider.createFolder")); //$NON-NLS-1$
             setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.FOLDER_NEW_IMAGE));
-            setId("Create_User_Folder_Action");
+            setId("Create_User_Folder_Action"); //$NON-NLS-1$
         }
 
         /*

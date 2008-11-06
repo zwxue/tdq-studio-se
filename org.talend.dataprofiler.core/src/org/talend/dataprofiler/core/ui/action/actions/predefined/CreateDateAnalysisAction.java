@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm;
@@ -48,7 +49,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     private TimeSlicesParameter patameter;
 
     public CreateDateAnalysisAction() {
-        super("Time analysis", null);
+        super(DefaultMessagesImpl.getString("CreateDateAnalysisAction.timeAnalysis"), null); //$NON-NLS-1$
     }
 
     /*
@@ -127,9 +128,9 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
         private AbstractIndicatorForm.ICheckListener listener;
 
         public TimeSliceOptionPage() {
-            super("Creaete new analysis");
-            setTitle("New Analysis");
-            setDescription("add option to all frequency indicator.");
+            super(DefaultMessagesImpl.getString("CreateDateAnalysisAction.createNewAnalysis")); //$NON-NLS-1$
+            setTitle(DefaultMessagesImpl.getString("CreateDateAnalysisAction.newAnalysis")); //$NON-NLS-1$
+            setDescription(DefaultMessagesImpl.getString("CreateDateAnalysisAction.addOption")); //$NON-NLS-1$
 
             patameter = new TimeSlicesParameter();
             patameter.setDataUnit(DateGrain.YEAR.getLiteral());

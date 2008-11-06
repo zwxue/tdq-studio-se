@@ -60,6 +60,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
@@ -158,9 +159,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
-        form.setText("Column Analysis");
-        metadataSection.setText("Analysis Metadata");
-        metadataSection.setDescription("Set the properties of analysis.");
+        form.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnAna")); //$NON-NLS-1$
+        metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
+        metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
         createAnalysisColumnsSection(form, topComp);
 
@@ -176,7 +177,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         gdBtn.horizontalAlignment = SWT.CENTER;
         gdBtn.horizontalSpan = 2;
         gdBtn.widthHint = 120;
-        runBtn = toolkit.createButton(form.getBody(), " Run ", SWT.NONE);
+        runBtn = toolkit.createButton(form.getBody(), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.run"), SWT.NONE); //$NON-NLS-1$
         runBtn.setLayoutData(gdBtn);
 
         runBtn.addSelectionListener(new SelectionAdapter() {
@@ -190,12 +191,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
-        Section section = createSection(form, anasisDataComp, "Analyzed Columns", false, null);
+        Section section = createSection(form, anasisDataComp, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.analyzeColumn"), false, null); //$NON-NLS-1$
 
         Composite topComp = toolkit.createComposite(section);
         topComp.setLayout(new GridLayout());
 
-        Hyperlink clmnBtn = toolkit.createHyperlink(topComp, "Select columns to analyze", SWT.NONE);
+        Hyperlink clmnBtn = toolkit.createHyperlink(topComp, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -205,7 +208,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         });
 
-        Hyperlink indcBtn = toolkit.createHyperlink(topComp, "Select indicators for each column", SWT.NONE);
+        Hyperlink indcBtn = toolkit.createHyperlink(topComp, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.selectIndicator"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(indcBtn);
         indcBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -237,7 +241,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         for (ColumnIndicator columnIndicator : columnIndicators) {
             columnList.add(columnIndicator.getTdColumn());
         }
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, "Column Selection", columnList, "Column Selection");
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
+                null,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
@@ -247,7 +253,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
-        Section section = createSection(form, parent, "Graphics", true, "");
+        Section section = createSection(
+                form,
+                parent,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -255,9 +264,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
-        refreshBtn.setText("Refresh the graphics");
+        refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
         refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient, "");
+        final Label message = toolkit.createLabel(sectionClient, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
@@ -280,16 +290,16 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
 
                 if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null, "View the result of analyis",
-                            "Do you want to run the analysis or simply see sample data?");
+                    boolean returnCode = MessageDialog.openConfirm(null, DefaultMessagesImpl
+                            .getString("ColumnMasterDetailsPage.string0"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.string1")); //$NON-NLS-1$
 
                     if (returnCode) {
                         new RunAnalysisAction(ColumnMasterDetailsPage.this).run();
                         message.setVisible(false);
                     } else {
                         createPreviewCharts(form, chartComposite, false);
-                        message.setText("Warning: currently displayed values are only sample values. "
-                                + "Run the analysis to get the real values");
+                        message.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warning")); //$NON-NLS-1$
                         message.setVisible(true);
                     }
                 } else {
@@ -315,7 +325,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
-            exComp.setText("Column: " + column.getName());
+            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + column.getName()); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setData(columnIndicator);
             previewChartList.add(exComp);
@@ -330,7 +340,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-                        monitor.beginTask("Creating preview for " + column.getName(), IProgressMonitor.UNKNOWN);
+                        monitor
+                                .beginTask(
+                                        DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview") + column.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
                         Display.getDefault().asyncExec(new Runnable() {
 
@@ -424,7 +436,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @param anasisDataComp
      */
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        Section section = createSection(form, anasisDataComp, "Data Filter", false, "Edit the data filter:");
+        Section section = createSection(
+                form,
+                anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), false, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
 
         Composite sectionClient = toolkit.createComposite(section);
         dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
@@ -486,11 +501,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             }
             // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
             if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + urlString + " successful");
+                log.debug("Saved in  " + urlString + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         } else {
-            throw new DataprofilerCoreException("Problem saving analysis " + analysis.getName() + " in file: " + urlString + ": "
-                    + saved.getMessage());
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.problem0", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         // TODO get the domain constraint, we will see later.

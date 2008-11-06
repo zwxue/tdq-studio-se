@@ -17,6 +17,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 
@@ -28,7 +29,7 @@ public class RefreshChartAction extends Action implements ICheatSheetAction {
     private ColumnMasterDetailsPage page;
 
     public RefreshChartAction() {
-        super("Refresh Chart");
+        super(DefaultMessagesImpl.getString("RefreshChartAction.refreshChart")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.SECTION_PREVIEW));
 
     }

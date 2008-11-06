@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -30,7 +31,7 @@ public class ExportPatternsAction extends Action {
      * DOC zqin ExportPatternsAction constructor comment.
      */
     public ExportPatternsAction(IFolder folder) {
-        setText("Export Patterns");
+        setText(DefaultMessagesImpl.getString("ExportPatternsAction.exportPattern")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
     }

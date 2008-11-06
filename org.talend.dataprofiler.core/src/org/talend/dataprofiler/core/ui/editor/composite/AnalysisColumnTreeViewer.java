@@ -70,6 +70,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
@@ -104,15 +105,15 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     /**
      * 
      */
-    private static final String DATA_PARAM = "DATA_PARAM";
+    private static final String DATA_PARAM = "DATA_PARAM"; //$NON-NLS-1$
 
-    public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY";
+    public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY"; //$NON-NLS-1$
 
-    public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY";
+    public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY"; //$NON-NLS-1$
 
-    public static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY";
+    public static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY"; //$NON-NLS-1$
 
-    public static final String VIEWER_KEY = "org.talend.dataprofiler.core.ui.editor.composite.AnasisColumnTreeViewer";
+    public static final String VIEWER_KEY = "org.talend.dataprofiler.core.ui.editor.composite.AnasisColumnTreeViewer"; //$NON-NLS-1$
 
     private static final int WIDTH1_CELL = 75;
 
@@ -150,17 +151,17 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         newTree.setHeaderVisible(true);
         TreeColumn column1 = new TreeColumn(newTree, SWT.CENTER);
         column1.setWidth(190);
-        column1.setText("Analyzed Columns");
+        column1.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.analyzedColumns")); //$NON-NLS-1$
         TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
         column2.setWidth(120);
-        column2.setText("Datamining Type");
-        column2.setToolTipText("This forces to change the data semantic type. Please refer to documentation.");
+        column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dataminingType")); //$NON-NLS-1$
+        column2.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.columnTip")); //$NON-NLS-1$
         TreeColumn column3 = new TreeColumn(newTree, SWT.CENTER);
         column3.setWidth(80);
-        column3.setText("Pattern");
+        column3.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.pattern")); //$NON-NLS-1$
         TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
         column4.setWidth(80);
-        column4.setText("Operation");
+        column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
 
         parent.layout();
         createTreeMenu(newTree, false);
@@ -193,7 +194,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         }
         menu = new Menu(newTree);
         MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
-        deleteMenuItem.setText("Remove elements");
+        deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
         deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 
@@ -210,7 +211,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         });
         if (containEdit) {
             editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
-            editPatternMenuItem.setText("Edit Pattern");
+            editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.editPattern")); //$NON-NLS-1$
             editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
             editPatternMenuItem.addSelectionListener(new SelectionAdapter() {
 
@@ -236,7 +237,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                         try {
                             activePage.openEditor(new FileEditorInput(file),
-                                    "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor");
+                                    "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"); //$NON-NLS-1$
                         } catch (PartInitException e1) {
                             e1.printStackTrace();
                         }
@@ -290,7 +291,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
             String columnName = columnIndicator.getTdColumn().getName();
             treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
-                    + columnIndicator.getTdColumn().getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null");
+                    + columnIndicator.getTdColumn().getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
             treeItem.setData(COLUMN_INDICATOR_KEY, columnIndicator);
 
             TreeEditor comboEditor = new TreeEditor(tree);
@@ -323,7 +324,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
             TreeEditor addPatternEditor = new TreeEditor(tree);
             Button addPatternBtn = new Button(tree, SWT.NONE);
-            addPatternBtn.setText("add pattern");
+            addPatternBtn.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
             addPatternBtn.pack();
             addPatternBtn.addSelectionListener(new SelectionAdapter() {
 
@@ -351,8 +352,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                                         Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern(file);
                                         boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
                                         if (!validStatus) {
-                                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
-                                                    "please choose valid patterns.");
+                                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                                    .getString("AnalysisColumnTreeViewer.chooseValidPatterns")); //$NON-NLS-1$
                                         }
                                     }
                                 }
@@ -385,8 +386,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                         }
                     });
                     dialog.setContainerMode(true);
-                    dialog.setTitle("Pattern Selector");
-                    dialog.setMessage("Patterns:");
+                    dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patternSelector")); //$NON-NLS-1$
+                    dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patterns")); //$NON-NLS-1$
                     dialog.setSize(80, 30);
                     dialog.create();
                     if (dialog.open() == Window.OK) {
@@ -410,7 +411,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
             Label delLabel = new Label(tree, SWT.NONE);
             delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
             delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            delLabel.setToolTipText("delete");
+            delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
             delLabel.pack();
             delLabel.addMouseListener(new MouseAdapter() {
 
@@ -482,7 +483,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         Label optionLabel = new Label(tree, SWT.NONE);
         optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
-        optionLabel.setToolTipText("Options");
+        optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.options")); //$NON-NLS-1$
         optionLabel.pack();
         optionLabel.setData(indicatorUnit);
         optionLabel.addMouseListener(new MouseAdapter() {
@@ -507,7 +508,10 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                         createIndicatorParameters(indicatorItem, indicatorUnit);
                     }
                 } else {
-                    MessageDialogWithToggle.openInformation(null, "Information", "No option to set!");
+                    MessageDialogWithToggle
+                            .openInformation(
+                                    null,
+                                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
 
@@ -522,7 +526,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         Label delLabel = new Label(tree, SWT.NONE);
         delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        delLabel.setToolTipText("delete");
+        delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
         delLabel.pack();
         delLabel.addMouseListener(new MouseAdapter() {
 
@@ -577,7 +581,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         TreeItem iParamItem;
         if (indicatorUnit.getType() == IndicatorEnum.FrequencyIndicatorEnum) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, "max results shown:" + parameters.getTopN());
+            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.resultsShown") + parameters.getTopN()); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
         }
@@ -585,34 +589,36 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         TextParameters tParameter = parameters.getTextParameter();
         if (tParameter != null) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, "Text parameters");
+            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.textParameters")); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
             TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText("use blanks:" + tParameter.isUseBlank());
+            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useBlanks") + tParameter.isUseBlank()); //$NON-NLS-1$
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
 
             subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText("ignore case:" + tParameter.isIgnoreCase());
+            subParamItem
+                    .setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.ignoreCase") + tParameter.isIgnoreCase()); //$NON-NLS-1$
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
 
             subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText("use nulls:" + tParameter.isUseNulls());
+            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useNulls") + tParameter.isUseNulls()); //$NON-NLS-1$
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }
         DateParameters dParameters = parameters.getDateParameters();
         if (dParameters != null) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, "Date parameters");
+            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dateParameters")); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
             TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText("aggregation type:\"" + dParameters.getDateAggregationType().getName() + "\"");
+            subParamItem.setText(DefaultMessagesImpl.getString(
+                    "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ //$NON-NLS-2$
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }
@@ -620,21 +626,23 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
         Domain dataValidDomain = parameters.getDataValidDomain();
         if (dataValidDomain != null) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, "has valid domain:" + (dataValidDomain != null));
+            iParamItem.setText(0,
+                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.validDomain") + (dataValidDomain != null)); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
         }
         Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
         if (indicatorValidDomain != null) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, "has quality thresholds:" + (indicatorValidDomain != null));
+            iParamItem.setText(0,
+                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.qualityThresholds") + (indicatorValidDomain != null)); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
         }
         Domain bins = parameters.getBins();
         if (bins != null) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, "has bins defined:" + (bins != null));
+            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.binsDefined") + (bins != null)); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
         }
@@ -671,7 +679,8 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     }
 
     public void openIndicatorSelectDialog(Shell shell) {
-        final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, "Indicator Selection", columnIndicators);
+        final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, DefaultMessagesImpl
+                .getString("AnalysisColumnTreeViewer.indicatorSelection"), columnIndicators); //$NON-NLS-1$
         dialog.create();
         dialog.getShell().addShellListener(new ShellAdapter() {
 
@@ -873,7 +882,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
                 return ((IFolder) element).getName();
             }
 
-            return "";
+            return ""; //$NON-NLS-1$
         }
     }
 

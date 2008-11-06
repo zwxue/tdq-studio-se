@@ -18,18 +18,18 @@ package org.talend.dataprofiler.core.pattern;
  */
 public enum PatternToExcelEnum {
 
-    Label(0, "Label"),
-    Purpose(1, "Purpose"),
-    Description(2, "Description"),
-    Author(3, "Author"),
-    RelativePath(4, "Relative Path"),
-    AllDBRegularexpression(5, "All DB Regular expression"),
-    DB2Regexp(6, "DB2 Regexp"),
-    MySQLRegexp(7, "MySQL Regexp"),
-    OracleRegexp(8, "Oracle Regexp"),
-    PostgreSQLRegexp(9, "PostgreSQL Regexp"),
-    SQLServerRegexp(10, "SQL Server Regexp"),
-    SybaseRegexp(11, "Sybase Regexp");
+    Label(0, "Label"), //$NON-NLS-1$
+    Purpose(1, "Purpose"), //$NON-NLS-1$
+    Description(2, "Description"), //$NON-NLS-1$
+    Author(3, "Author"), //$NON-NLS-1$
+    RelativePath(4, "Relative Path"), //$NON-NLS-1$
+    AllDBRegularexpression(5, "All DB Regular expression"), //$NON-NLS-1$
+    DB2Regexp(6, "DB2 Regexp"), //$NON-NLS-1$
+    MySQLRegexp(7, "MySQL Regexp"), //$NON-NLS-1$
+    OracleRegexp(8, "Oracle Regexp"), //$NON-NLS-1$
+    PostgreSQLRegexp(9, "PostgreSQL Regexp"), //$NON-NLS-1$
+    SQLServerRegexp(10, "SQL Server Regexp"), //$NON-NLS-1$
+    SybaseRegexp(11, "Sybase Regexp"); //$NON-NLS-1$
 
     private String literal;
 

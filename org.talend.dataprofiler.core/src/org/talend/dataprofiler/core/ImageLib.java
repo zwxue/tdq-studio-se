@@ -18,6 +18,7 @@ import java.net.URL;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * Store and lazy load Imaged. <br/>
@@ -64,39 +65,39 @@ public class ImageLib {
 
     public static final String REPORT_OBJECT = "report.png"; //$NON-NLS-1$
 
-    public static final String TD_COLUMN = "TdColumn.gif";
+    public static final String TD_COLUMN = "TdColumn.gif"; //$NON-NLS-1$
 
-    public static final String TD_DATAPROVIDER = "TdDataProvider.gif";
+    public static final String TD_DATAPROVIDER = "TdDataProvider.gif"; //$NON-NLS-1$
 
-    public static final String EDITCONNECTION = "sample.gif";
+    public static final String EDITCONNECTION = "sample.gif"; //$NON-NLS-1$
 
-    public static final String CREATE_SQL_ACTION = "new_sqlEditor.gif";
+    public static final String CREATE_SQL_ACTION = "new_sqlEditor.gif"; //$NON-NLS-1$
 
-    public static final String LICENSE_WIZ = "license_wiz.png";
+    public static final String LICENSE_WIZ = "license_wiz.png"; //$NON-NLS-1$
 
-    public static final String PATTERN_REG = "pattern.png";
+    public static final String PATTERN_REG = "pattern.png"; //$NON-NLS-1$
 
-    public static final String REGISTER_WIZ = "register_wiz.png";
+    public static final String REGISTER_WIZ = "register_wiz.png"; //$NON-NLS-1$
 
-    public static final String CONNECTION = "connection.gif";
+    public static final String CONNECTION = "connection.gif"; //$NON-NLS-1$
 
-    public static final String METADATA = "metadata.png";
+    public static final String METADATA = "metadata.png"; //$NON-NLS-1$
 
-    public static final String OPTION = "option.png";
+    public static final String OPTION = "option.png"; //$NON-NLS-1$
 
-    public static final String LIBRARIES = "libraries.png";
+    public static final String LIBRARIES = "libraries.png"; //$NON-NLS-1$
 
-    public static final String DATA_PROFILING = "server_chart.png";
+    public static final String DATA_PROFILING = "server_chart.png"; //$NON-NLS-1$
 
-    public static final String EXPORT_REPORT = "export_rep.gif";
+    public static final String EXPORT_REPORT = "export_rep.gif"; //$NON-NLS-1$
 
-    public static final String LEVEL_WARNING = "level_warning.gif";
+    public static final String LEVEL_WARNING = "level_warning.gif"; //$NON-NLS-1$
 
-    public static final String EMOTICON_SMILE = "emoticon_smile.png";
+    public static final String EMOTICON_SMILE = "emoticon_smile.png"; //$NON-NLS-1$
 
-    public static final String EXCLAMATION = "exclamation.png";
+    public static final String EXCLAMATION = "exclamation.png"; //$NON-NLS-1$
 
-    public static final String CATALOG = "catalog.jpg";
+    public static final String CATALOG = "catalog.jpg"; //$NON-NLS-1$
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.

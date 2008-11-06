@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
@@ -71,17 +72,17 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
         group = new Group(this, SWT.NONE);
         group.setLayout(new GridLayout(2, false));
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        group.setText("Set here the thresholds expected on the data");
+        group.setText(DefaultMessagesImpl.getString("DataThresholdsForm.setThresholds")); //$NON-NLS-1$
 
         GridData gdText = new GridData(GridData.FILL_HORIZONTAL);
 
         Label lowerLabel = new Label(group, SWT.NONE);
-        lowerLabel.setText("Lower threshold");
+        lowerLabel.setText(DefaultMessagesImpl.getString("DataThresholdsForm.lowerThreshold")); //$NON-NLS-1$
         lowerText = new Text(group, SWT.BORDER);
         lowerText.setLayoutData(gdText);
 
         Label higherLabel = new Label(group, SWT.NONE);
-        higherLabel.setText("Higher threshold");
+        higherLabel.setText(DefaultMessagesImpl.getString("DataThresholdsForm.higherThreshold")); //$NON-NLS-1$
         higherText = new Text(group, SWT.BORDER);
         higherText.setLayoutData(gdText);
     }
@@ -101,9 +102,9 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
                 String lowerStr = lowerText.getText();
                 String higherStr = higherText.getText();
 
-                if (!lowerStr.equals("") && !CheckValueUtils.isNumberWithNegativeValue(lowerStr)) {
+                if (!lowerStr.equals("") && !CheckValueUtils.isNumberWithNegativeValue(lowerStr)) { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
+                } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) { //$NON-NLS-1$ //$NON-NLS-2$
                     updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
@@ -120,9 +121,9 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
                 String lowerStr = lowerText.getText();
                 String higherStr = higherText.getText();
 
-                if (!higherStr.equals("") && !CheckValueUtils.isNumberWithNegativeValue(higherStr)) {
+                if (!higherStr.equals("") && !CheckValueUtils.isNumberWithNegativeValue(higherStr)) { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) {
+                } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) { //$NON-NLS-1$ //$NON-NLS-2$
                     updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);

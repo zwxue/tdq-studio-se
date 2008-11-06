@@ -25,6 +25,7 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * @author rli
@@ -36,7 +37,7 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
      * @param name
      */
     public ViewFolderNode() {
-        super("Views");
+        super(DefaultMessagesImpl.getString("ViewFolderNode.views")); //$NON-NLS-1$
     }
 
     /*
@@ -90,8 +91,8 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
             final T columnSets) {
         try {
             boolean ok = false;
-            assert provider != null : "no provider given for getting views";
-            assert catalog != null ^ schema != null : "either catalog or schema must exist but not both. Provider= "
+            assert provider != null : DefaultMessagesImpl.getString("ViewFolderNode.noProviderForViews"); //$NON-NLS-1$
+            assert catalog != null ^ schema != null : DefaultMessagesImpl.getString("ViewFolderNode.catalogOrSchemaExist") //$NON-NLS-1$
                     + provider.getName();
 
             if (catalog != null) {

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.parameter;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 
 /**
@@ -22,9 +23,9 @@ import org.talend.dataprofiler.core.ui.utils.FormEnum;
  */
 public class DataThresholdsParameter extends AbstractIndicatorParameter {
 
-    private String minThreshold = "";
+    private String minThreshold = ""; //$NON-NLS-1$
 
-    private String maxThreshold = "";
+    private String maxThreshold = ""; //$NON-NLS-1$
 
     /**
      * Getter for minThreshold.

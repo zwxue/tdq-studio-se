@@ -25,6 +25,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
@@ -37,7 +38,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class DeleteModelElementConfirmDialog {
 
-    private static final String REQUIRES = "requires";
+    private static final String REQUIRES = "requires"; //$NON-NLS-1$
 
     private static LabelProvider fLabelProvider;
 
@@ -202,7 +203,8 @@ public class DeleteModelElementConfirmDialog {
         addDenpendencyElements(modelElements);
         ImpactNode[] impactElements = getImpactNodes();
         if (impactElements.length > 0) {
-            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, "Confirm Resource Delete", null, dialogMessage,
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, DefaultMessagesImpl
+                    .getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
@@ -222,7 +224,8 @@ public class DeleteModelElementConfirmDialog {
         addDenpendencyElements(modelElements);
         ImpactNode[] impactElements = getImpactNodes();
         if (impactElements.length > 0) {
-            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, "Confirm Element Delete", null, dialogMessage,
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, DefaultMessagesImpl
+                    .getString("DeleteModelElementConfirmDialog.confirmElementDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
@@ -238,13 +241,17 @@ public class DeleteModelElementConfirmDialog {
     private static int popConfirmDialog(ModelElement[] modelElements) {
         MessageDialog messageDialog;
         if (modelElements.length > 1) {
-            messageDialog = new MessageDialog(null, "Confirm Resource Delete", null,
-                    "Are you sure you want to delele these resources from file system?", MessageDialog.WARNING, new String[] {
-                            IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+            messageDialog = new MessageDialog(
+                    null,
+                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.deleleTheseResources"), MessageDialog.WARNING, new String[] { //$NON-NLS-1$
+                    IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
         } else {
-            messageDialog = new MessageDialog(null, "Confirm Resource Delete", null, "Are you sure you want to delele " + "\""
-                    + modelElements[0].getName() + "\" from file system?", MessageDialog.WARNING, new String[] {
+            messageDialog = new MessageDialog(
+                    null,
+                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourcesDelete"), null, DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.areYouDelele", modelElements[0].getName()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    , MessageDialog.WARNING, new String[] { //$NON-NLS-1$
                     IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
         }
         return messageDialog.open();
@@ -280,7 +287,7 @@ public class DeleteModelElementConfirmDialog {
                     if (obj instanceof ImpactNode) {
                         return ((ImpactNode) obj).toString();
                     }
-                    return REQUIRES + PluginConstant.SPACE_STRING + "<<" + ((ModelElement) obj).getName() + ">>";
+                    return REQUIRES + PluginConstant.SPACE_STRING + "<<" + ((ModelElement) obj).getName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
             };
         }

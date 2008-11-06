@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
@@ -481,7 +482,7 @@ public class ColumnIndicator {
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
-                log.error("Could not set the definition of the given indicator : " + indicator.getName());
+                log.error(DefaultMessagesImpl.getString("ColumnIndicator.cannotSetDef") + indicator.getName()); //$NON-NLS-1$
             }
 
             // for 4225, the frequency indicator need be initialized
@@ -514,7 +515,7 @@ public class ColumnIndicator {
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
-                log.error("Could not set the definition of the given indicator : " + indicator.getName());
+                log.error(DefaultMessagesImpl.getString("ColumnIndicator.cannotSetDefination") + indicator.getName()); //$NON-NLS-1$
             }
         }
         if (!flatIndicatorEnumList.contains(indicatorEnum)) {

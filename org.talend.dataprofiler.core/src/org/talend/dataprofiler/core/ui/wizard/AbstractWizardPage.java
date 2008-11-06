@@ -16,6 +16,7 @@ import java.util.EventListener;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.WizardPage;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 
@@ -48,7 +49,7 @@ public abstract class AbstractWizardPage extends WizardPage {
      * DOC zqin AbstractWizardPage constructor comment.
      */
     protected AbstractWizardPage() {
-        super("wizard");
+        super(DefaultMessagesImpl.getString("AbstractWizardPage.wizard")); //$NON-NLS-1$
 
         this.listener = new AbstractWizardPage.ICheckListener() {
 

@@ -35,6 +35,7 @@ import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
 import org.jfree.ui.RectangleEdge;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.ValueAggregator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import orgomg.cwm.resource.relational.Column;
@@ -72,7 +73,7 @@ public final class TopChartFactory {
             PlotOrientation orientation, boolean legend, boolean tooltips, boolean urls) {
 
         if (orientation == null) {
-            throw new IllegalArgumentException("Null 'orientation' argument.");
+            throw new IllegalArgumentException(DefaultMessagesImpl.getString("TopChartFactory.argument")); //$NON-NLS-1$
         }
         NumberAxis xAxis = new NumberAxis(xAxisLabel);
         xAxis.setAutoRangeIncludesZero(false);
@@ -205,7 +206,7 @@ public final class TopChartFactory {
             final String next = iterator.next();
             createXYZDatasets.get(next).addSeriesToXYZDataset(dataset, next);
         }
-        JFreeChart chart = TopChartFactory.createBubbleChart("THE title", "x", "y", dataset, PlotOrientation.HORIZONTAL, true,
+        JFreeChart chart = TopChartFactory.createBubbleChart(DefaultMessagesImpl.getString("TopChartFactory.title"), "x", "y", dataset, PlotOrientation.HORIZONTAL, true, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 false, true);
         final XYPlot plot = (XYPlot) chart.getPlot();
         final XYItemRenderer renderer = plot.getRenderer();

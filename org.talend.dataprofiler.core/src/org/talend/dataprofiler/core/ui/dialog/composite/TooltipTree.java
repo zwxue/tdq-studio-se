@@ -23,13 +23,14 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class TooltipTree extends Tree {
 
-    private static final String TREEITEM = "_TREEITEM";
+    private static final String TREEITEM = "_TREEITEM"; //$NON-NLS-1$
 
     private final Composite parent;
 

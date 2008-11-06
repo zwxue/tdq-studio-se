@@ -42,6 +42,7 @@ import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 
 /**
@@ -50,48 +51,48 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
  */
 public final class DQStructureManager {
 
-    private static final String DEMO_PATH = "/demo";
+    private static final String DEMO_PATH = "/demo"; //$NON-NLS-1$
 
-    private static final String PATTERN_PATH = "/patterns";
+    private static final String PATTERN_PATH = "/patterns"; //$NON-NLS-1$
 
-    public static final String REPORTS = "Reports";
+    public static final String REPORTS = DefaultMessagesImpl.getString("DQStructureManager.reports"); //$NON-NLS-1$
 
-    public static final String SOURCE_FILES = "Source Files";
+    public static final String SOURCE_FILES = DefaultMessagesImpl.getString("DQStructureManager.sourceFiles"); //$NON-NLS-1$
 
-    public static final String PATTERNS = "Patterns";
+    public static final String PATTERNS = DefaultMessagesImpl.getString("DQStructureManager.patterns"); //$NON-NLS-1$
 
-    public static final String SQL_PATTERNS = "SQL Patterns";
+    public static final String SQL_PATTERNS = DefaultMessagesImpl.getString("DQStructureManager.sqlPatterns"); //$NON-NLS-1$
 
-    public static final String LIBRARIES = "Libraries";
+    public static final String LIBRARIES = DefaultMessagesImpl.getString("DQStructureManager.libraries"); //$NON-NLS-1$
 
-    public static final String METADATA = "Metadata";
+    public static final String METADATA = DefaultMessagesImpl.getString("DQStructureManager.metadata"); //$NON-NLS-1$
 
-    public static final String DATA_PROFILING = "Data Profiling";
+    public static final String DATA_PROFILING = DefaultMessagesImpl.getString("DQStructureManager.data_Profiling"); //$NON-NLS-1$
 
-    public static final String ANALYSIS = "Analyses";
+    public static final String ANALYSIS = DefaultMessagesImpl.getString("DQStructureManager.analyses"); //$NON-NLS-1$
 
     /**
      * String for the DB connections folder.
      */
-    public static final String DB_CONNECTIONS = "DB Connections";
+    public static final String DB_CONNECTIONS = DefaultMessagesImpl.getString("DQStructureManager.dbConnections"); //$NON-NLS-1$
 
-    public static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_CLASSIFY");
+    public static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_CLASSIFY"); //$NON-NLS-1$
 
-    public static final String ANALYSIS_FOLDER_PROPERTY = "FOLDER_ANALYSIS_PROPERTY";
+    public static final String ANALYSIS_FOLDER_PROPERTY = "FOLDER_ANALYSIS_PROPERTY"; //$NON-NLS-1$
 
-    public static final String REPORT_FOLDER_PROPERTY = "FOLDER_REPORT_PROPERTY";
+    public static final String REPORT_FOLDER_PROPERTY = "FOLDER_REPORT_PROPERTY"; //$NON-NLS-1$
 
-    public static final String PATTERNS_FOLDER_PROPERTY = "FOLDER_PATTERNS_PROPERTY";
+    public static final String PATTERNS_FOLDER_PROPERTY = "FOLDER_PATTERNS_PROPERTY"; //$NON-NLS-1$
 
-    public static final String SQLPATTERNS_FOLDER_PROPERTY = "SQLPATTERNS_FOLDER_PROPERTY";
+    public static final String SQLPATTERNS_FOLDER_PROPERTY = "SQLPATTERNS_FOLDER_PROPERTY"; //$NON-NLS-1$
 
-    public static final String SOURCEFILES_FOLDER_PROPERTY = "SOURCEFILES_FOLDER_PROPERTY";
+    public static final String SOURCEFILES_FOLDER_PROPERTY = "SOURCEFILES_FOLDER_PROPERTY"; //$NON-NLS-1$
 
-    public static final String DBCONNECTION_FOLDER_PROPERTY = "DBCONNECTION_FOLDER_PROPERTY";
+    public static final String DBCONNECTION_FOLDER_PROPERTY = "DBCONNECTION_FOLDER_PROPERTY"; //$NON-NLS-1$
 
-    public static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_READ_ONLY");
+    public static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_READ_ONLY"); //$NON-NLS-1$
 
-    public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_property";
+    public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_property"; //$NON-NLS-1$
 
     private List<String> modleElementSuffixs = null;
 
@@ -175,7 +176,7 @@ public final class DQStructureManager {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                CreateProjectOperation op = new CreateProjectOperation(description, "Create data profiling structure");
+                CreateProjectOperation op = new CreateProjectOperation(description, DefaultMessagesImpl.getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
                 try {
                     PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(op, monitor,
                             WorkspaceUndoUtil.getUIInfoAdapter(currentShell));
@@ -222,7 +223,7 @@ public final class DQStructureManager {
         }
         while (paths.hasMoreElements()) {
             String nextElement = (String) paths.nextElement();
-            String currentPath = "/" + nextElement;
+            String currentPath = "/" + nextElement; //$NON-NLS-1$
             URL resourceURL = CorePlugin.getDefault().getBundle().getEntry(currentPath);
             URL fileURL = null;
             File file = null;
@@ -233,7 +234,7 @@ public final class DQStructureManager {
                 e.printStackTrace();
             }
             if (file.isDirectory() && recurse) {
-                if (file.getName().startsWith(".")) {
+                if (file.getName().startsWith(".")) { //$NON-NLS-1$
                     continue;
                 }
                 IFolder folder = desFolder.getFolder(file.getName());

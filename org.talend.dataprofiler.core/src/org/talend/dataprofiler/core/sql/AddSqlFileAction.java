@@ -26,6 +26,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 
@@ -45,7 +46,7 @@ public class AddSqlFileAction extends Action {
      * @param folder
      */
     public AddSqlFileAction(IFolder folder) {
-        setText("Create SQL File");
+        setText(DefaultMessagesImpl.getString("AddSqlFileAction.createSQLFile")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.folder = folder;
     }
@@ -74,7 +75,7 @@ public class AddSqlFileAction extends Action {
             try {
                 ap
                         .openEditor(new SQLEditorInput(fileWizard.getSqlFile()),
-                                "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor");
+                                "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
             } catch (PartInitException e) {
                 e.printStackTrace();
             }

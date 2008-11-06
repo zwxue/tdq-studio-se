@@ -29,6 +29,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -51,7 +52,7 @@ public class DeleteCWMResourceAction extends Action {
     private IFile[] selectedFiles;
 
     public DeleteCWMResourceAction(IFile[] files) {
-        super("Delete");
+        super("Delete"); //$NON-NLS-1$
         selectedFiles = files;
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
     }
@@ -129,11 +130,11 @@ public class DeleteCWMResourceAction extends Action {
         if (modelElementList.size() > 0 && !otherFilesExistFlag) {
 
             if (anaMessageFlag && repMessageFlag) {
-                dialogMessage = "The following analyses and reports will be unusable:";
+                dialogMessage = DefaultMessagesImpl.getString("DeleteCWMResourceAction.followingAnaAndRep"); //$NON-NLS-1$
             } else if (anaMessageFlag) {
-                dialogMessage = "The following analyses will be unusable:";
+                dialogMessage = DefaultMessagesImpl.getString("DeleteCWMResourceAction.followingAna"); //$NON-NLS-1$
             } else {
-                dialogMessage = "The following reports will be unusable:";
+                dialogMessage = DefaultMessagesImpl.getString("DeleteCWMResourceAction.followngRep"); //$NON-NLS-1$
             }
             int showDialog = DeleteModelElementConfirmDialog.showDialog(null, modelElementList
                     .toArray(new ModelElement[modelElementList.size()]), dialogMessage);
@@ -157,10 +158,10 @@ public class DeleteCWMResourceAction extends Action {
 
             // remove the unused folder related with current selected resources.
             if (PluginConstant.HTML_SUFFIX.equalsIgnoreCase(selectedResource.getFileExtension())) {
-                folderName = selectedResource.getFullPath().lastSegment() + "_files";
+                folderName = selectedResource.getFullPath().lastSegment() + "_files"; //$NON-NLS-1$
 
             } else if (FactoriesUtil.REP.equalsIgnoreCase(selectedResource.getFileExtension())) {
-                folderName = "." + selectedResource.getFullPath().removeFileExtension().lastSegment();
+                folderName = "." + selectedResource.getFullPath().removeFileExtension().lastSegment(); //$NON-NLS-1$
             } else {
                 continue;
             }
@@ -169,7 +170,9 @@ public class DeleteCWMResourceAction extends Action {
                 try {
                     folder.delete(true, null);
                 } catch (CoreException e) {
-                    Log.warn("Failure to delete the folder: " + folder.getLocationURI().toString(), e);
+                    Log
+                            .warn(
+                                    DefaultMessagesImpl.getString("DeleteCWMResourceAction.deleteFolderFail") + folder.getLocationURI().toString(), e); //$NON-NLS-1$
                 }
             }
         }
@@ -177,11 +180,13 @@ public class DeleteCWMResourceAction extends Action {
 
     private boolean popConfirmDialog(String resourceName, IResource[] selectedResources) {
         if (selectedResources.length > 1) {
-            isDeleteContent = MessageDialog.openConfirm(null, "Confirm Resource Delete",
-                    "Are you sure you want to delele these resources from file system?");
+            isDeleteContent = MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DeleteCWMResourceAction.confirm"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("DeleteCWMResourceAction.areYouDeleteResource")); //$NON-NLS-1$
         } else {
-            isDeleteContent = MessageDialog.openConfirm(null, "Confirm Resource Delete", "Are you sure you want to delele "
-                    + "\"" + resourceName + "\" from file system?");
+            isDeleteContent = MessageDialog
+                    .openConfirm(
+                            null,
+                            DefaultMessagesImpl.getString("DeleteCWMResourceAction.confirmDeleteResource"), DefaultMessagesImpl.getString("DeleteCWMResourceAction.deleteResource", resourceName)); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return isDeleteContent;
     }

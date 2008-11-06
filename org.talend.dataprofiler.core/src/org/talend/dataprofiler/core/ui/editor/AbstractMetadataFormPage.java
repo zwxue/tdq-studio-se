@@ -31,6 +31,8 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -38,7 +40,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
-    public static final String ACTION_HANDLER = "ACTION_HANDLER";
+    public static final String ACTION_HANDLER = "ACTION_HANDLER"; //$NON-NLS-1$
 
     protected Text nameText;
 
@@ -84,27 +86,27 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {
-        Section section = createSection(form, topComp, "Title", true, "");
+        Section section = createSection(form, topComp, DefaultMessagesImpl.getString("AbstractMetadataFormPage.title"), true, ""); //$NON-NLS-1$ //$NON-NLS-2$
         Composite labelButtonClient = toolkit.createComposite(section);
         labelButtonClient.setLayout(new GridLayout(2, false));
-        Label label = toolkit.createLabel(labelButtonClient, "Name:");
+        Label label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.name")); //$NON-NLS-1$
         label.setLayoutData(new GridData());
         nameText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(nameText);
-        label = toolkit.createLabel(labelButtonClient, "Purpose:");
+        label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.purpose")); //$NON-NLS-1$
         label.setLayoutData(new GridData());
         purposeText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
         // purposeText.setLayoutData(new GridData());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(purposeText);
-        label = toolkit.createLabel(labelButtonClient, "Description:");
+        label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.description")); //$NON-NLS-1$
         label.setLayoutData(new GridData());
         descriptionText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
         // descriptionText.setLayoutData(new GridData());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(descriptionText);
-        label = toolkit.createLabel(labelButtonClient, "Author:");
+        label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.author")); //$NON-NLS-1$
         authorText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(authorText);
-        label = toolkit.createLabel(labelButtonClient, "Status:");
+        label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.status")); //$NON-NLS-1$
         statusCombo = new CCombo(labelButtonClient, SWT.BORDER);
         statusCombo.setEditable(false);
         for (DevelopmentStatus status : DevelopmentStatus.values()) {

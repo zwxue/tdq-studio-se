@@ -21,6 +21,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
@@ -81,7 +82,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
         this.setLayout(new GridLayout(2, false));
         this.setLayoutData(new GridData(GridData.FILL_BOTH));
         Label label = new Label(this, SWT.NONE);
-        label.setText("Expected value:");
+        label.setText(DefaultMessagesImpl.getString("ExpectedValueForm.expectedValue")); //$NON-NLS-1$
 
         expectedValue = new Text(this, SWT.BORDER);
         expectedValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * @author rli
@@ -42,8 +43,7 @@ public class DataFilterComp extends AbstractPagePart {
         parent.setLayout(new GridLayout(3, true));
 
         dataFilterText = new Text(parent, SWT.BORDER | SWT.MULTI);
-        dataFilterText.setToolTipText("Write here a \"WHERE\" clause that will restrict "
-                + "the data of the whole analysis (without the WHERE keyword).");
+        dataFilterText.setToolTipText(DefaultMessagesImpl.getString("DataFilterComp.here")); //$NON-NLS-1$
         dataFilterText.setText(stringDataFilter == null ? PluginConstant.EMPTY_STRING : stringDataFilter);
         GridDataFactory.fillDefaults().span(2, 3).align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(dataFilterText);
         ((GridData) dataFilterText.getLayoutData()).heightHint = 150;
@@ -63,7 +63,7 @@ public class DataFilterComp extends AbstractPagePart {
         buttonsComp.setVisible(false);
 
         Button button = new Button(buttonsComp, SWT.None);
-        button.setText("Edit..");
+        button.setText(DefaultMessagesImpl.getString("DataFilterComp.edit")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().span(1, 1).align(SWT.FILL, SWT.TOP).applyTo(button);
     }
 

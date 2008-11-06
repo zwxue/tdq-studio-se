@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
@@ -34,9 +35,9 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     private Text typeText;
 
-    private final String pageTitle = "New Analysis";
+    private final String pageTitle = DefaultMessagesImpl.getString("AnalysisMetadataWizardPage.newAnalysis"); //$NON-NLS-1$
 
-    private final String pageMessage = "Adds an analysis in the repository.";
+    private final String pageMessage = DefaultMessagesImpl.getString("AnalysisMetadataWizardPage.addsAnalysis"); //$NON-NLS-1$
 
     public AnalysisMetadataWizardPage() {
         setTitle(pageTitle);
@@ -54,11 +55,11 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
         dataForTypeText.widthHint = 200;
 
         Label typeLabel = new Label(container, SWT.NONE);
-        typeLabel.setText("Type");
+        typeLabel.setText(DefaultMessagesImpl.getString("AnalysisMetadataWizardPage.type")); //$NON-NLS-1$
 
         typeText = new Text(container, SWT.BORDER);
         AnalysisParameter parameter = (AnalysisParameter) getParameter();
-        typeText.setText(parameter.getAnalysisTypeName() != null ? parameter.getAnalysisTypeName() : "");
+        typeText.setText(parameter.getAnalysisTypeName() != null ? parameter.getAnalysisTypeName() : ""); //$NON-NLS-1$
         typeText.setLayoutData(dataForTypeText);
         typeText.setEnabled(false);
 
@@ -101,7 +102,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if (typeText.getText() == "" || pathText.getText() == "") {
+        if (typeText.getText() == "" || pathText.getText() == "") { //$NON-NLS-1$ //$NON-NLS-2$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }

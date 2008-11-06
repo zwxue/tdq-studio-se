@@ -33,6 +33,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.analysis.Analysis;
@@ -122,12 +123,12 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         } else if (input.endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)) {
             IFile fileElement = (IFile) element;
             if (log.isDebugEnabled()) {
-                log.debug("Loading file " + (fileElement).getLocation());
+                log.debug("Loading file " + (fileElement).getLocation()); //$NON-NLS-1$
             }
             Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(fileElement);
             if (analysis != null) {
                 Date executionDate = analysis.getResults().getResultMetadata().getExecutionDate();
-                String executeInfo = executionDate == null ? "(Not executed yet)" : PluginConstant.PARENTHESIS_LEFT
+                String executeInfo = executionDate == null ? DefaultMessagesImpl.getString("ResourceViewLabelProvider.executed") : PluginConstant.PARENTHESIS_LEFT //$NON-NLS-1$
                         + DateFormatUtils.getSimpleDateString(executionDate) + PluginConstant.PARENTHESIS_RIGHT;
                 return analysis.getName() + PluginConstant.SPACE_STRING + executeInfo;
             }

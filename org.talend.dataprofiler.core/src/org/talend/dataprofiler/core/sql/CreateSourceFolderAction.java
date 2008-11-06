@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.NewFolderDialog;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -38,7 +39,7 @@ public class CreateSourceFolderAction extends Action {
 
     public CreateSourceFolderAction(IFolder obj) {
         this.obj = obj;
-        setText("New Folder");
+        setText(DefaultMessagesImpl.getString("CreateSourceFolderAction.newFolder")); //$NON-NLS-1$
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER));
     }
 

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -25,7 +26,7 @@ import org.talend.utils.sql.Java2SqlType;
 public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisAction {
 
     public CreateDiscreteAnalysisAction() {
-        super("Discrete analysis", null);
+        super(DefaultMessagesImpl.getString("CreateDiscreteAnalysisAction.discreteAnalysis"), null); //$NON-NLS-1$
     }
 
     /*

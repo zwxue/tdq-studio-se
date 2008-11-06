@@ -28,6 +28,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -59,10 +60,10 @@ public class CreatePatternAction extends Action {
     public CreatePatternAction(IFolder folder, ExpressionType type) {
         switch (type) {
         case SQL_LIKE:
-            setText("New SQL Pattern");
+            setText(DefaultMessagesImpl.getString("CreatePatternAction.newSQLPattern")); //$NON-NLS-1$
             break;
         default:
-            setText("New Regular Pattern");
+            setText(DefaultMessagesImpl.getString("CreatePatternAction.newRegularPattern")); //$NON-NLS-1$
             break;
         }
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));

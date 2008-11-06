@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -50,10 +51,10 @@ public class ImportPatternsWizardPage extends WizardPage {
      * @param pageName
      */
     protected ImportPatternsWizardPage() {
-        super("ImportPatternsWizardPage");
+        super(DefaultMessagesImpl.getString("ImportPatternsWizardPage.importPatternsWizardPage")); //$NON-NLS-1$
 
-        setTitle("Import Patterns from File");
-        setDescription("Choose a file to import patterns from.");
+        setTitle(DefaultMessagesImpl.getString("ImportPatternsWizardPage.importPatternsFromFile")); //$NON-NLS-1$
+        setDescription(DefaultMessagesImpl.getString("ImportPatternsWizardPage.chooseFileToImportPattern")); //$NON-NLS-1$
     }
 
     /*
@@ -74,7 +75,7 @@ public class ImportPatternsWizardPage extends WizardPage {
         fileComp.setLayout(layout);
         fileComp.setLayoutData(gridData);
         Label label = new Label(fileComp, SWT.NONE);
-        label.setText("Select File :");
+        label.setText(DefaultMessagesImpl.getString("ImportPatternsWizardPage.selectFile")); //$NON-NLS-1$
         fileText = new Text(fileComp, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gridData);
@@ -95,7 +96,7 @@ public class ImportPatternsWizardPage extends WizardPage {
             }
         });
         Button button = new Button(fileComp, SWT.PUSH);
-        button.setText("Browse...");
+        button.setText(DefaultMessagesImpl.getString("ImportPatternsWizardPage.browsing")); //$NON-NLS-1$
         button.addSelectionListener(new SelectionAdapter() {
 
             /*
@@ -106,7 +107,7 @@ public class ImportPatternsWizardPage extends WizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
-                dialog.setFilterExtensions(new String[] { "*.csv" });
+                dialog.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
                 if (fileText.getText() != null) {
                     dialog.setFileName(fileText.getText());
                 }
@@ -118,18 +119,18 @@ public class ImportPatternsWizardPage extends WizardPage {
         });
 
         Group group = new Group(container, SWT.NONE);
-        group.setText("Duplicate patterns handling");
+        group.setText(DefaultMessagesImpl.getString("ImportPatternsWizardPage.duplicatePattern")); //$NON-NLS-1$
         layout = new GridLayout();
         group.setLayout(layout);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         group.setLayoutData(gridData);
 
         skipBtn = new Button(group, SWT.RADIO);
-        skipBtn.setText("skip existing patterns");
+        skipBtn.setText(DefaultMessagesImpl.getString("ImportPatternsWizardPage.skipExistPatttern")); //$NON-NLS-1$
         skipBtn.setSelection(true);
 
         renameBtn = new Button(group, SWT.RADIO);
-        renameBtn.setText("rename new patterns with suffix");
+        renameBtn.setText(DefaultMessagesImpl.getString("ImportPatternsWizardPage.renameNewPattern")); //$NON-NLS-1$
         setPageComplete(false);
         setControl(container);
     }

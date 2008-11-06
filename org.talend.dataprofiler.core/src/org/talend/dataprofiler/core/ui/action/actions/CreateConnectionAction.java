@@ -22,6 +22,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
@@ -40,7 +41,7 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
     private IFolder folder;
 
     public CreateConnectionAction() {
-        super("New connection");
+        super(DefaultMessagesImpl.getString("CreateConnectionAction.newConnection")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
     }
 

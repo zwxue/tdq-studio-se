@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -84,7 +85,7 @@ public final class PatternUtilities {
         for (int i = 0; i < components.size(); i++) {
             RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
             String body = regularExpress.getExpression().getBody();
-            valid = ((body != null) && body.matches("'.*'"));
+            valid = ((body != null) && body.matches("'.*'")); //$NON-NLS-1$
             if (!valid) {
                 break;
             }
@@ -109,7 +110,7 @@ public final class PatternUtilities {
 
         // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
         if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(patternMatchingIndicator)) {
-            log.error("Could not set the definition of the given indicator : " + patternMatchingIndicator.getName());
+            log.error(DefaultMessagesImpl.getString("PatternUtilities.couldnotSetDef") + patternMatchingIndicator.getName()); //$NON-NLS-1$
         }
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
         IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);

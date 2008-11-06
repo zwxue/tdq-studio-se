@@ -40,6 +40,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 
@@ -101,21 +102,21 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         // Name
         Label nameLab = new Label(container, SWT.NONE);
-        nameLab.setText("Name");
+        nameLab.setText(DefaultMessagesImpl.getString("MetadataWizardPage.name")); //$NON-NLS-1$
 
         nameText = new Text(container, SWT.BORDER);
         nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // Purpose
         Label purposeLab = new Label(container, SWT.NONE);
-        purposeLab.setText("Purpose");
+        purposeLab.setText(DefaultMessagesImpl.getString("MetadataWizardPage.purpose")); //$NON-NLS-1$
 
         purposeText = new Text(container, SWT.BORDER);
         purposeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // Description
         Label descriptionLab = new Label(container, SWT.NONE);
-        descriptionLab.setText("Description");
+        descriptionLab.setText(DefaultMessagesImpl.getString("MetadataWizardPage.description")); //$NON-NLS-1$
         descriptionLab.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
         descriptionText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -125,7 +126,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         // Author
         Label authorLab = new Label(container, SWT.NONE);
-        authorLab.setText("Author");
+        authorLab.setText(DefaultMessagesImpl.getString("MetadataWizardPage.author")); //$NON-NLS-1$
 
         authorText = new Text(container, SWT.BORDER);
         authorText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -185,7 +186,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         button = new Button(pathContainer, SWT.PUSH);
-        button.setText("Select..");
+        button.setText(DefaultMessagesImpl.getString("MetadataWizardPage.select")); //$NON-NLS-1$
 
         createExtendedControl(container);
         addListeners();
@@ -230,8 +231,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(), lp, cp);
         // dialog.setValidator(validator);
-        dialog.setTitle("Select folder");
-        dialog.setMessage("Select the folder in which the item will be created");
+        dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
+        dialog.setMessage(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
         dialog.setInput(root);
         dialog.addFilter(filter);
         dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
@@ -306,12 +307,12 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if (nameText.getText().trim() == "") {
+        if (nameText.getText().trim() == "") { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }
 
-        if (nameText.getText().contains(" ")) {
+        if (nameText.getText().contains(" ")) { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_INVALID);
             return false;
         }

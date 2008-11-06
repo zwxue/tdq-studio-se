@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -30,7 +31,7 @@ public class AnaElementFolderNode extends AbstractFolderNode {
      * @param analysedElements
      */
     public AnaElementFolderNode(EList<ModelElement> analysedElements) {
-        super("analyzed elements");
+        super(DefaultMessagesImpl.getString("AnaElementFolderNode.analyzeElements")); //$NON-NLS-1$
         setChildren(analysedElements.toArray(new Object[0]));
     }
 

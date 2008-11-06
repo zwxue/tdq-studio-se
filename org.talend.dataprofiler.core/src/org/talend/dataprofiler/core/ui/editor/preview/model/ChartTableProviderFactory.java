@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -76,7 +77,7 @@ public class ChartTableProviderFactory {
             case 2:
                 return entity.getPersent();
             default:
-                return "";
+                return ""; //$NON-NLS-1$
             }
         }
 
@@ -124,7 +125,7 @@ public class ChartTableProviderFactory {
                 return entity.getValue();
 
             default:
-                return "";
+                return ""; //$NON-NLS-1$
             }
         }
 
@@ -151,7 +152,7 @@ public class ChartTableProviderFactory {
                 return entity.getNumNoMatch();
 
             default:
-                return "";
+                return ""; //$NON-NLS-1$
             }
         }
 

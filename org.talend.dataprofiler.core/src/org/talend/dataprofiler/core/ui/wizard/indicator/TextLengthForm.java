@@ -21,6 +21,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
@@ -66,13 +67,13 @@ public class TextLengthForm extends AbstractIndicatorForm {
         Group group = new Group(this, SWT.NONE);
         group.setLayout(new GridLayout());
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        group.setText("Options");
+        group.setText(DefaultMessagesImpl.getString("TextLengthForm.options")); //$NON-NLS-1$
 
         nullBtn = new Button(group, SWT.CHECK);
-        nullBtn.setText("count nulls");
+        nullBtn.setText(DefaultMessagesImpl.getString("TextLengthForm.countNulls")); //$NON-NLS-1$
 
         blankBtn = new Button(group, SWT.CHECK);
-        blankBtn.setText("count blanks");
+        blankBtn.setText(DefaultMessagesImpl.getString("TextLengthForm.countBlanks")); //$NON-NLS-1$
 
     }
 

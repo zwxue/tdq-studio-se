@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * 
@@ -47,7 +48,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
         boolean compositeEnable = !(dbType.getHostName() == null);
         Label label = new Label(parent, SWT.NONE);
-        label.setText("Hostname");
+        label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Hostname")); //$NON-NLS-1$
         final Text hostNameText = new Text(parent, SWT.BORDER | SWT.SINGLE);
         hostNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         if (compositeEnable) {
@@ -58,7 +59,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
         compositeEnable = !(dbType.getPort() == null);
         label = new Label(parent, SWT.NONE);
-        label.setText("Port");
+        label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Port")); //$NON-NLS-1$
         final Text portText = new Text(parent, SWT.BORDER | SWT.SINGLE);
         portText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         if (compositeEnable) {
@@ -70,9 +71,9 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
         compositeEnable = !(dbType.getDBName() == null);
         label = new Label(parent, SWT.NONE);
         if (dbType == SupportDBUrlType.ORACLEWITHSIDDEFAULTURL) {
-            label.setText("SID");
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.SID")); //$NON-NLS-1$
         } else if (dbType == SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL) {
-            label.setText("Service Name");
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.serviceName")); //$NON-NLS-1$
         } else {
             label.setText("DBname"); //$NON-NLS-1$
         }
@@ -100,7 +101,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
         compositeEnable = !(dbType.getDataSource() == null);
         label = new Label(parent, SWT.NONE);
-        label.setText("DataSource");
+        label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.dataSource")); //$NON-NLS-1$
         final Text dataSourceText = new Text(parent, SWT.BORDER | SWT.SINGLE);
         dataSourceText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         if (compositeEnable) {
@@ -110,7 +111,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
         dataSourceText.setEnabled(compositeEnable);
 
         label = new Label(parent, SWT.NONE);
-        label.setText("Url");
+        label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.url")); //$NON-NLS-1$
         urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
         urlText.setEditable(false);
         urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

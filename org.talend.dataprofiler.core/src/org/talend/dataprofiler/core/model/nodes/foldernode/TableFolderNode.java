@@ -26,6 +26,7 @@ import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * @author rli
@@ -37,7 +38,7 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
      * 
      */
     public TableFolderNode() {
-        super("Tables");
+        super(DefaultMessagesImpl.getString("TableFolderNode.tables")); //$NON-NLS-1$
     }
 
     @Override
@@ -86,8 +87,8 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
             final T columnSets) {
         try {
             boolean ok = false;
-            assert provider != null : "no provider given for getting views";
-            assert catalog != null ^ schema != null : "either catalog or schema must exist but not both. Provider= "
+            assert provider != null : DefaultMessagesImpl.getString("TableFolderNode.noProvider"); //$NON-NLS-1$
+            assert catalog != null ^ schema != null : DefaultMessagesImpl.getString("TableFolderNode.catalogOrSchema") //$NON-NLS-1$
                     + provider.getName();
 
             if (catalog != null) {

@@ -41,6 +41,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.browser.WebBrowserEditor;
 import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
@@ -53,6 +54,7 @@ import org.jfree.chart.entity.ChartEntity;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
@@ -62,7 +64,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.analysis.ColumnAnalysisHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
@@ -71,7 +73,11 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  */
 public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
+    private Composite summaryComp;
+
     private Composite resultComp;
+
+    ScrolledForm form;
 
     ColumnMasterDetailsPage masterPage;
 
@@ -96,16 +102,18 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         resultComp.setLayout(new GridLayout());
         createResultSection(resultComp);
+
         form.reflow(true);
     }
 
     @Override
-    protected AnalysisHandler getColumnAnalysisHandler() {
+    protected ColumnAnalysisHandler getColumnAnalysisHandler() {
         return this.masterPage.getAnalysisHandler();
     }
 
     protected void createResultSection(Composite parent) {
-        Section section = createSection(form, parent, "Analysis Results", true, null);
+        Section section = createSection(form, parent,
+                DefaultMessagesImpl.getString("ColumnAnalysisResultPage.analysisResult"), true, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -114,7 +122,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(sectionClient, ExpandableComposite.TWISTIE
                     | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-            exComp.setText("Column: " + columnIndicator.getTdColumn().getName());
+            exComp
+                    .setText(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.column") + columnIndicator.getTdColumn().getName()); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -146,7 +155,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-                    monitor.beginTask("Creating preview for " + column.getName(), IProgressMonitor.UNKNOWN);
+                    monitor
+                            .beginTask(
+                                    DefaultMessagesImpl.getString("ColumnAnalysisResultPage.createPreview") + column.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
                     Display.getDefault().asyncExec(new Runnable() {
 
@@ -255,12 +266,13 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
      * @param image
      */
     public static void addShowDefinition(ImageHyperlink image) {
-        image.setToolTipText("What is it?");
+        image.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.what")); //$NON-NLS-1$
         image.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
                 try {
-                    WebBrowserEditor.open(new WebBrowserEditorInput(new URL("http://en.wikipedia.org/wiki/Box_plot")));
+                    WebBrowserEditor.open(new WebBrowserEditorInput(new URL(DefaultMessagesImpl
+                            .getString("ColumnAnalysisResultPage.url")))); //$NON-NLS-1$
                 } catch (MalformedURLException e1) {
                     ExceptionHandler.process(e1);
                 }
@@ -302,7 +314,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                         }
                     }
 
-                    PopupMenu menu = new PopupMenu("Available actions");
+                    PopupMenu menu = new PopupMenu(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.popupMenu")); //$NON-NLS-1$
                     if (currentDataEntity != null) {
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartType, analysis, currentDataEntity);

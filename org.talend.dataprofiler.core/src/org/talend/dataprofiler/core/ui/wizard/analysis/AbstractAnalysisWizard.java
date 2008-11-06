@@ -22,6 +22,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
@@ -79,13 +80,13 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
 
     private boolean checkAnalysisEditorParam() {
         if (analysisType == null) {
-            log.error("The field 'analysisType' haven't assigned a value.");
+            log.error(DefaultMessagesImpl.getString("AbstractAnalysisWizard.analysisType")); //$NON-NLS-1$
             return false;
         } else if (analysisName == null) {
-            log.error("The field 'analysisName' haven't assigned a value.");
+            log.error(DefaultMessagesImpl.getString("AbstractAnalysisWizard.analysisName")); //$NON-NLS-1$
             return false;
         } else if (folderResource == null) {
-            log.error("The field 'fileURI' haven't assigned a value.");
+            log.error(DefaultMessagesImpl.getString("AbstractAnalysisWizard.fileURI")); //$NON-NLS-1$
             return false;
         }
         return true;
@@ -95,7 +96,8 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
         AnalysisBuilder analysisBuilder = new AnalysisBuilder();
         boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, analysisType);
         if (!analysisInitialized) {
-            throw new DataprofilerCoreException(analysisName + " failed to initialize!");
+            throw new DataprofilerCoreException(analysisName
+                    + DefaultMessagesImpl.getString("AbstractAnalysisWizard.failedToInitialize")); //$NON-NLS-1$
         }
         Analysis analysis = analysisBuilder.getAnalysis();
         fillAnalysisBuilder(analysisBuilder);
@@ -105,15 +107,15 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
         IFile file;
         if (saved.isOk()) {
             if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + folderResource.getFullPath().toString());
+                log.debug("Saved in  " + folderResource.getFullPath().toString()); //$NON-NLS-1$
             }
             file = saved.getObject();
             Resource anaResource = analysis.eResource();
             AnaResourceFileHelper.getInstance().register(file, anaResource);
             AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
         } else {
-            throw new DataprofilerCoreException("Problem saving file: " + folderResource.getFullPath().toString() + ": "
-                    + saved.getMessage());
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
+                    "AbstractAnalysisWizard.saving", folderResource.getFullPath().toString(), saved.getMessage()));//$NON-NLS-1$ //$NON-NLS-2$
         }
 
         CorePlugin.getDefault().refreshWorkSpace();
