@@ -14,6 +14,7 @@ package org.talend.dq.analysis;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,8 +25,8 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -226,7 +227,6 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
         }
 
-        Indicator rowCountIndicator = null; // FIXME scorreia remove this indicator
         Connection connection = trc.getObject();
         try {
 
@@ -247,30 +247,9 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
                             + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
                 }
-
-                if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
-                    rowCountIndicator = indicator;
-                }
             }
 
             connection.close();
-
-            // --- finalize indicators by setting the row count when it exists.
-            if (rowCountIndicator != null) {
-                for (Indicator indicator : indicators) {
-                    if (indicator != rowCountIndicator) {
-                        Long count = rowCountIndicator.getCount();
-                        indicator.setCount(count);
-                        if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator().equals(indicator.eClass())) {
-                            RowMatchingIndicator rowMatchingIndicator = (RowMatchingIndicator) indicator;
-                            Long notMatchingValueCount = rowMatchingIndicator.getNotMatchingValueCount();
-                            if (notMatchingValueCount != null) {
-                                rowMatchingIndicator.setMatchingValueCount(count - notMatchingValueCount);
-                            }
-                        }
-                    }
-                }
-            }
 
         } catch (SQLException e) {
             log.error(e, e);
@@ -297,11 +276,31 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         try {
             List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
             String tableName = getAnalyzedTable(indicator);
-            // FIXME Scorreia set data filter here
-            Long count = getCount(cachedAnalysis, "*", tableName, catalogOrSchema, null);
-            indicator.setCount(count);
+            
+            // set data filter here
+            final String stringDataFilter = AnalysisHelper.getStringDataFilter(this.cachedAnalysis);
+            List<String> whereClauses = new ArrayList<String>();
+            if (stringDataFilter != null) {
+                whereClauses.add(stringDataFilter);
+            }
             // give result to indicator so that it handles the results
-            return indicator.storeSqlResults(myResultSet);
+            boolean ok = indicator.storeSqlResults(myResultSet);
+            // get row count and store it in indicator
+            Long count = getCount(cachedAnalysis, "*", tableName, catalogOrSchema, whereClauses);
+            ok = ok && count != null;
+            indicator.setCount(count);
+            
+            // compute matching count
+            if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator().equals(indicator.eClass())) {
+                RowMatchingIndicator rowMatchingIndicator = (RowMatchingIndicator) indicator;
+                Long notMatchingValueCount = rowMatchingIndicator.getNotMatchingValueCount();
+                ok = ok && notMatchingValueCount != null;
+                if (ok) {
+                    rowMatchingIndicator.setMatchingValueCount(count - notMatchingValueCount);
+                }
+            }
+            
+            return ok;
         } catch (SQLException e) {
             log.error(e, e);
             return false;
@@ -323,7 +322,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         AnalysisHandler analysisHandler = new AnalysisHandler();
         analysisHandler.setAnalysis(analysis);
 
-        // TODO How to handler the context.getAnalysedElements()???
+        // TODO How to handle the context.getAnalysedElements()???
         // for (ModelElement node : context.getAnalysedElements()) {
         // TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
         //
