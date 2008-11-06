@@ -21,6 +21,7 @@ import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IBrandingService;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.rcp.Activator;
+import org.talend.dataprofiler.rcp.i18n.Messages;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>
@@ -44,7 +45,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         Object buildId = Activator.getDefault().getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
         IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
                 IBrandingService.class);
-        configurer.setTitle(brandingService.getFullProductName() + " (" + buildId + ")");
+        configurer.setTitle(brandingService.getFullProductName() + " (" + buildId + ")"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*

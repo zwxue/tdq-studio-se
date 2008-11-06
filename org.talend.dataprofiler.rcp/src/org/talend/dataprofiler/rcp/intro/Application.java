@@ -23,6 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.license.LicenseManagement;
 import org.talend.dataprofiler.core.license.LicenseWizard;
 import org.talend.dataprofiler.core.license.LicenseWizardDialog;
+import org.talend.dataprofiler.rcp.i18n.Messages;
 
 /**
  * This class controls all aspects of the application's execution.
@@ -55,7 +56,7 @@ public class Application implements IApplication {
         if (!LicenseManagement.isLicenseValidated()) {
             LicenseWizard licenseWizard = new LicenseWizard();
             LicenseWizardDialog dialog = new LicenseWizardDialog(shell, licenseWizard);
-            dialog.setTitle("License");
+            dialog.setTitle(Messages.getString("Application.license")); //$NON-NLS-1$
             if (dialog.open() == WizardDialog.OK) {
                 LicenseManagement.acceptLicense();
                 return true;

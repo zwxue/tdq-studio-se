@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.intro.config.IIntroContentProviderSite;
 import org.eclipse.ui.intro.config.IIntroXHTMLContentProvider;
+import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -41,16 +42,16 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider {
     }
 
     private String getCurrentTimeString() {
-        StringBuffer content = new StringBuffer("Dynamic content from Intro ContentProvider: ");
-        content.append("Current time is: ");
+        StringBuffer content = new StringBuffer("Dynamic content from Intro ContentProvider: "); //$NON-NLS-1$
+        content.append("Current time is: "); //$NON-NLS-1$
         content.append(new Date(System.currentTimeMillis()));
         return content.toString();
     }
 
     public void createContent(String id, Element parent) {
         Document dom = parent.getOwnerDocument();
-        Element para = dom.createElement("p");
-        para.setAttribute("id", "someDynamicContentId");
+        Element para = dom.createElement("p"); //$NON-NLS-1$
+        para.setAttribute("id", "someDynamicContentId"); //$NON-NLS-1$ //$NON-NLS-2$
         para.appendChild(dom.createTextNode(getCurrentTimeString()));
         parent.appendChild(para);
 

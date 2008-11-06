@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.update.core.SiteManager;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IBrandingService;
+import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.talend.repository.registeruser.proxy.RegisterUserPortTypeProxy;
 
 /**
@@ -91,7 +92,7 @@ public class RegisterManagement {
             System.setProperty("http.proxyPort", proxyPort); //$NON-NLS-1$
 
             // override automatic update parameters
-            if (proxyPort != null && proxyPort.trim().equals("")) {
+            if (proxyPort != null && proxyPort.trim().equals("")) { //$NON-NLS-1$
                 proxyPort = null;
             }
             SiteManager.setHttpProxyInfo(true, proxyHost, proxyPort);
@@ -102,8 +103,8 @@ public class RegisterManagement {
             IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
                     IBrandingService.class);
             result = proxy.registerUserWithAllUserInformations(email, country, designerVersion, brandingService
-                    .getShortProductName(), projectLanguage, osName, osVersion, javaVersion, totalMemory + "", memRAM + "",
-                    nbProc + "");
+                    .getShortProductName(), projectLanguage, osName, osVersion, javaVersion, totalMemory + "", memRAM + "", //$NON-NLS-1$ //$NON-NLS-2$
+                    nbProc + ""); //$NON-NLS-1$
             if (result) {
                 PlatformUI.getPreferenceStore().setValue("REGISTRATION_DONE", 1); //$NON-NLS-1$
                 // PreferenceManipulator prefManipulator = new

@@ -38,7 +38,7 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
 
     private static Logger log = Logger.getLogger(ApplicationWorkbenchAdvisor.class);
 
-    private static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective";
+    private static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
 
     public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         return new ApplicationWorkbenchWindowAdvisor(configurer);
@@ -71,15 +71,15 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
                 RegisterWizard registerWizard = new RegisterWizard();
                 Shell shell = getWorkbenchConfigurer().getWorkbench().getActiveWorkbenchWindow().getShell();
                 WizardDialog dialog = new RegisterWizardDialog(shell, registerWizard);
-                dialog.setTitle(Messages.getString("RegisterWizard.windowTitle")); //$NON-NLS-1$
+                dialog.setTitle(""); //$NON-NLS-1$
                 if (dialog.open() == WizardDialog.OK) {
-                    String projectLanguage = "java";
+                    String projectLanguage = "java"; //$NON-NLS-1$
                     // OS
-                    String osName = System.getProperty("os.name");
-                    String osVersion = System.getProperty("os.version");
+                    String osName = System.getProperty("os.name"); //$NON-NLS-1$
+                    String osVersion = System.getProperty("os.version"); //$NON-NLS-1$
 
                     // Java version
-                    String javaVersion = System.getProperty("java.version");
+                    String javaVersion = System.getProperty("java.version"); //$NON-NLS-1$
 
                     // Java Memory
                     long totalMemory = Runtime.getRuntime().totalMemory();
@@ -101,7 +101,7 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
                 }
             }
         } catch (Exception e) {
-            log.error("Problem during the registration wizard: " + e.getLocalizedMessage(), e);
+            log.error(Messages.getString("ApplicationWorkbenchAdvisor.problem") + e.getLocalizedMessage(), e); //$NON-NLS-1$
         }
     }
 }
