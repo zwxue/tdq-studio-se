@@ -23,7 +23,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
-import org.talend.dq.analysis.ColumnAnalysisHandler;
+import org.talend.dq.analysis.AnalysisHandler;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -34,6 +34,8 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage {
 
     protected Composite topComposite;
 
+    protected Composite summaryComp;
+
     public AbstractAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -43,17 +45,17 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage {
         this.form.setText(DefaultMessagesImpl.getString("AbstractAnalysisResultPage.analysisResult")); //$NON-NLS-1$
         topComposite = form.getBody();
         topComposite.setLayout(new GridLayout());
-
-        Composite summaryComp = toolkit.createComposite(topComposite);
+        summaryComp = toolkit.createComposite(topComposite);
+        summaryComp = toolkit.createComposite(topComposite);
         summaryComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         summaryComp.setLayout(new GridLayout());
         createSummarySection(form, summaryComp, getColumnAnalysisHandler());
 
     }
 
-    protected abstract ColumnAnalysisHandler getColumnAnalysisHandler();
+    protected abstract AnalysisHandler getColumnAnalysisHandler();
 
-    protected void createSummarySection(ScrolledForm form, Composite parent, ColumnAnalysisHandler analysisHandler) {
+    protected void createSummarySection(ScrolledForm form, Composite parent, AnalysisHandler analysisHandler) {
         Section section = createSection(form, parent,
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.analysisSummary"), true, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(section);
