@@ -349,7 +349,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * 
      */
     private String replaceVariables(String sqlGenericString, String colName, String table, List<String> patterns) {
-        assert (patterns.size() != 1);
+        assert (patterns.size() != 0);
         return dbms().fillGenericQueryWithColumnTablePattern(sqlGenericString, colName, table, patterns.get(0));
     }
 
@@ -697,7 +697,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return null;
     }
 
-    private Long getCount(Analysis analysis, String colName, String table, String catalog, List<String> whereExpression)
+    protected Long getCount(Analysis analysis, String colName, String table, String catalog, List<String> whereExpression)
             throws AnalysisExecutionException {
         try {
             return getCountLow(analysis, colName, table, catalog, whereExpression);

@@ -19,6 +19,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.dataquality.analysis.Analysis;
@@ -74,16 +75,16 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * 
      * @param indicator
      */
-    private void instantiateQuery(Indicator indicator) {
-        // indicator.reset(); //FIXME rli reset will clear columnSetA and columnSetB, we will lost our analysedElement
-        // information. So comment it.
+    private boolean instantiateQuery(Indicator indicator) {
+        // indicator.reset(); // rli reset will clear columnSetA and columnSetB, we will lost our analysedElement
+        // information. So comment it. // scorreia -> changed the implementation of reset() so that it can now be called
+        // (but is not need, hence we keep it commented)
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator().equals(indicator.eClass())) {
             RowMatchingIndicator rowMatchingIndicator = (RowMatchingIndicator) indicator;
             EList<Column> columnSetA = rowMatchingIndicator.getColumnSetA();
             EList<Column> columnSetB = rowMatchingIndicator.getColumnSetB();
             if (columnSetA.size() != columnSetB.size()) {
-                log.error("Cannot compare two column sets with different size");
-                return; // break;
+                return traceError("Cannot compare two column sets with different size"); // break;
             }
 
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
@@ -91,7 +92,9 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
             Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnSetA, columnSetB);
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
+            return true;
         }
+        return traceError("Unhandled given indicator: " + indicator.getName());
     }
 
     /**
@@ -223,7 +226,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
         }
 
-        Indicator rowCountIndicator = null;
+        Indicator rowCountIndicator = null; // FIXME scorreia remove this indicator
         Connection connection = trc.getObject();
         try {
 
@@ -273,6 +276,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
+        } catch (AnalysisExecutionException e) {
+            ok = traceError(e.getMessage());
         } finally {
             ConnectionUtils.closeConnection(connection);
         }
@@ -286,10 +291,15 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param connection
      * @param query
      * @return
+     * @throws AnalysisExecutionException
      */
-    private boolean executeQuery(Indicator indicator, Connection connection, Expression query) {
+    private boolean executeQuery(Indicator indicator, Connection connection, Expression query) throws AnalysisExecutionException {
         try {
             List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
+            String tableName = getAnalyzedTable(indicator);
+            // FIXME Scorreia set data filter here
+            Long count = getCount(cachedAnalysis, "*", tableName, catalogOrSchema, null);
+            indicator.setCount(count);
             // give result to indicator so that it handles the results
             return indicator.storeSqlResults(myResultSet);
         } catch (SQLException e) {
@@ -297,6 +307,16 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             return false;
         }
 
+    }
+
+    /**
+     * DOC scorreia Comment method "getAnalyzedTable".
+     * 
+     * @param indicator
+     * @return
+     */
+    private String getAnalyzedTable(Indicator indicator) {
+        return indicator.getAnalyzedElement().getName();
     }
 
     protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {
