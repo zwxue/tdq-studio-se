@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
@@ -43,7 +44,7 @@ public class DQRepositoryListenerView extends ViewPart implements ISelectionList
 
     public void createPartControl(Composite parent) {
         label = new Label(parent, 0);
-        label.setText("Hello World");
+        label.setText(Messages.getString("DQRepositoryListenerView.helloWorld")); //$NON-NLS-1$
         getViewSite().getPage().addSelectionListener(this);
     }
 
@@ -54,19 +55,19 @@ public class DQRepositoryListenerView extends ViewPart implements ISelectionList
         if (selection instanceof IStructuredSelection) {
             Object first = ((IStructuredSelection) selection).getFirstElement();
             if (first instanceof TdDataProvider) {
-                label.setText(((TdDataProvider) first).getName() + "\n\r" + first.getClass().toString());
+                label.setText(((TdDataProvider) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else if (first instanceof TdCatalog) {
-                label.setText(((TdCatalog) first).getName() + "\n\r" + first.getClass().toString());
+                label.setText(((TdCatalog) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else if (first instanceof TdSchema) {
-                label.setText(((TdSchema) first).getName() + "\n\r" + first.getClass().toString());
+                label.setText(((TdSchema) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else if (first instanceof TdTable) {
-                label.setText(((TdTable) first).getName() + "\n\r" + first.getClass().toString());
+                label.setText(((TdTable) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else if (first instanceof TdView) {
-                label.setText(((TdView) first).getName() + "\n\r" + first.getClass().toString());
+                label.setText(((TdView) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else if (first instanceof TdColumn) {
-                label.setText(((TdColumn) first).getName() + "\n\r" + first.getClass().toString());
+                label.setText(((TdColumn) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else {
-                label.setText(first.toString() + "\n\r" + first.getClass().toString());
+                label.setText(first.toString() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
                 if (first.toString().endsWith(".prv")) {
                     // MessageDialog.openInformation(getSite().getShell(), "DQRepositoryListenerView", "This is " +
                     // first.toString());

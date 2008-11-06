@@ -50,6 +50,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -153,7 +154,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                         String tag = ((TaggedValue) eo).getTag();
                         System.out.print(tag);
                         String value = ((TaggedValue) eo).getValue();
-                        System.out.println(" " + value);
+                        System.out.println(" " + value); //$NON-NLS-1$
                         parameters.put(tag, value);
                     }
 
@@ -167,7 +168,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 dbcp.setAuthor(TaggedValueHelper.getAuthor(pc));
                 dbcp.setDescription(TaggedValueHelper.getDescription(pc));
                 dbcp.setPurpose(TaggedValueHelper.getPurpose(pc));
-                dbcp.setStatus(TaggedValueHelper.getValue("Status", pc));
+                dbcp.setStatus(TaggedValueHelper.getValue("Status", pc)); //$NON-NLS-1$
 
                 dbcp.setDriverClassName(driverClassName);
                 dbcp.setJdbcUrl(dbUrl);
@@ -202,9 +203,9 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             for (Object object : unMatchedElements) {
                 UnMatchElement unMatched = (UnMatchElement) object;
                 ModelElement modelElt = (ModelElement) unMatched.getElement();
-                System.out.println("Unmatched elt= " + modelElt.getName());
+                System.out.println("Unmatched elt= " + modelElt.getName()); //$NON-NLS-1$
             }
-            System.out.println("LEFT MODEL=" + match.getLeftModel());
+            System.out.println("LEFT MODEL=" + match.getLeftModel()); //$NON-NLS-1$
             EList<DiffElement> ownedElements = diff.getOwnedElements();
             // for (DiffElement oe : ownedElements) {
             // // System.out.println(oe.g);
@@ -222,8 +223,8 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             }
 
             // Serializes the result as "result.emfdiff" in the directory this class has been called from.
-            String outputFile = "out/result.emfdiff";
-            System.out.println("saving emfdiff as \"" + outputFile + "\""); //$NON-NLS-1$
+            String outputFile = "out/result.emfdiff"; //$NON-NLS-1$
+            System.out.println("saving emfdiff as \"" + outputFile + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
             snapshot.setDate(Calendar.getInstance().getTime());
             snapshot.setMatch(match);
@@ -245,7 +246,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         IPath folderPath = ((folderProvider != null) && folderProvider.getFolder() != null) ? folderProvider.getFolderResource()
                 .getFullPath() : null;
         if (folderPath == null) { // do not serialize data
-            System.out.println("Data provider not serialized: no folder given.");
+            System.out.println("Data provider not serialized: no folder given."); //$NON-NLS-1$
             return null;
         }
 
@@ -253,7 +254,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         ResourceSet resourceSet = util.getResourceSet();
 
-        String fileName = ".refresh.prv";
+        String fileName = ".refresh.prv"; //$NON-NLS-1$
         IFile file = folderProvider.getFolderResource().getFile(fileName);
         // File file = new File(dataproviderFilename);
         if (file.exists()) {
@@ -307,7 +308,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 for (int i = 0; i < count; i++) {
                     Object o = treepaths[0].getSegment(i);
                     if (o instanceof IFile) {
-                        if (((IFile) o).getFileExtension().toLowerCase().equals("prv")) {
+                        if (((IFile) o).getFileExtension().toLowerCase().equals("prv")) { //$NON-NLS-1$
                             selectedFileObject = (IFile) o;
                         }
                     } else if (o instanceof TdSchema) {

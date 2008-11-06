@@ -15,6 +15,7 @@ package org.talend.cwm.compare.ui.actions.provider;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.PopComparisonUIAction;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 
@@ -23,13 +24,13 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
  */
 public class PopComparisonUIProvider extends CommonActionProvider {
 
-    private static final String COMPAREDATABASE_MENUTEXT = "Database Compare";
+    private static final String COMPAREDATABASE_MENUTEXT = Messages.getString("PopComparisonUIProvider.dbCompare"); //$NON-NLS-1$
 
-    private static final String COMPARETABLES_MENUTEXT = "Table Compare";
+    private static final String COMPARETABLES_MENUTEXT = Messages.getString("PopComparisonUIProvider.tableCompare"); //$NON-NLS-1$
 
-    private static final String COMPAREVIEWS_MENUTEXT = "View Compare";
+    private static final String COMPAREVIEWS_MENUTEXT = Messages.getString("PopComparisonUIProvider.viewCompare"); //$NON-NLS-1$
 
-    private static final String COMPARECOLUMNS_MENUTEXT = "Column Compare";
+    private static final String COMPARECOLUMNS_MENUTEXT = Messages.getString("PopComparisonUIProvider.columnCompare"); //$NON-NLS-1$
 
     public PopComparisonUIProvider() {
     }

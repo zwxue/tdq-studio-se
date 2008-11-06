@@ -25,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.ImageLib;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
@@ -75,7 +76,7 @@ public class ReloadDatabaseAction extends Action {
             ProgressUI.popProgressDialog(op, shell);
             ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         } catch (InvocationTargetException e) {
-            MessageDialog.openInformation(shell, "Connection Failure", "Check connection failure:" + e.getCause().getMessage());
+            MessageDialog.openInformation(shell, Messages.getString("ReloadDatabaseAction.connectionFailured"), Messages.getString("ReloadDatabaseAction.checkConnectionFailured") + e.getCause().getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             log.error(e, e);
         } catch (InterruptedException e) {
             log.error(e, e);

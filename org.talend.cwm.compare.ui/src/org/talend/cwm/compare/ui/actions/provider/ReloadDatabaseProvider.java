@@ -15,6 +15,7 @@ package org.talend.cwm.compare.ui.actions.provider;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 
@@ -23,13 +24,13 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
  */
 public class ReloadDatabaseProvider extends CommonActionProvider {
 
-    private static final String RELOADDATABASE_MENUTEXT = "Reload database list";
+    private static final String RELOADDATABASE_MENUTEXT = Messages.getString("ReloadDatabaseProvider.reloadDBList"); //$NON-NLS-1$
 
-    private static final String RELOADTABLES_MENUTEXT = "Reload table list";
+    private static final String RELOADTABLES_MENUTEXT = Messages.getString("ReloadDatabaseProvider.reloadTableList"); //$NON-NLS-1$
 
-    private static final String RELOADVIEWS_MENUTEXT = "Reload view list";
+    private static final String RELOADVIEWS_MENUTEXT = Messages.getString("ReloadDatabaseProvider.reloadViewList"); //$NON-NLS-1$
 
-    private static final String RELOADCOLUMNS_MENUTEXT = "Reload column list";
+    private static final String RELOADCOLUMNS_MENUTEXT = Messages.getString("ReloadDatabaseProvider.reloadColumnList"); //$NON-NLS-1$
 
     public ReloadDatabaseProvider() {
     }
