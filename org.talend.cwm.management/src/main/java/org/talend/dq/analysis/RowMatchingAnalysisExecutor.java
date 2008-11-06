@@ -20,8 +20,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.PackageHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -74,7 +75,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param indicator
      */
     private void instantiateQuery(Indicator indicator) {
-        indicator.reset();
+        // indicator.reset(); //FIXME rli reset will clear columnSetA and columnSetB, we will lost our analysedElement
+        // information. So comment it.
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator().equals(indicator.eClass())) {
             RowMatchingIndicator rowMatchingIndicator = (RowMatchingIndicator) indicator;
             EList<Column> columnSetA = rowMatchingIndicator.getColumnSetA();
@@ -195,7 +197,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 continue;
             } else {
                 tableName = columnSetOwner.getName();
-                Package pack = PackageHelper.getCatalogOrSchema(columnSetOwner);
+                Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
                 if (pack == null) {
                     log.error("No Catalog or Schema found for column set owner: " + tableName);
                     continue; // do not break until we find the owner
@@ -295,6 +297,32 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             return false;
         }
 
+    }
+
+    protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {
+        AnalysisHandler analysisHandler = new AnalysisHandler();
+        analysisHandler.setAnalysis(analysis);
+
+        // TODO How to handler the context.getAnalysedElements()???
+        // for (ModelElement node : context.getAnalysedElements()) {
+        // TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
+        //
+        // // --- Check that each analyzed element has at least one indicator
+        // if (analysisHandler.getIndicators(column).size() == 0) {
+        // this.errorMessage = "Each column must have at least one indicator, "
+        // + "please select some indicator(s) to compute on each column!";
+        // return false;
+        // }
+        //
+        // // --- get the data provider
+        // TdDataProvider dp = DataProviderHelper.getTdDataProvider(column);
+        // if (!isAccessWith(dp)) {
+        // this.errorMessage = "All columns must belong to the same connection! Remove column " + column.getName()
+        // + " from this analysis! It does not belong to \"" + dataprovider.getName() + "\"";
+        // return false;
+        // }
+        // }
+        return true;
     }
 
 }

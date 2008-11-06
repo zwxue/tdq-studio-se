@@ -41,6 +41,7 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -68,7 +69,7 @@ public final class EObjectHelper {
         }
     }
 
-    public static TdDataProvider getTdDataProvider(TdColumn column) {
+    public static TdDataProvider getTdDataProvider(Column column) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
         return DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
