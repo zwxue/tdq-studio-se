@@ -47,6 +47,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -171,7 +172,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private void setDefaultIndDef(Indicator[] indicators) {
         for (int i = 0; i < indicators.length; i++) {
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicators[i])) {
-                log.error("Could not set the definition of the given indicator : " + indicators[i].getName());
+                log.error(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.cannotSetIndicatorDef") + indicators[i].getName()); //$NON-NLS-1$
             }
         }
     }
@@ -180,14 +181,16 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         form = managedForm.getForm();
-        form.setText("ColumnSet Comparision Analysis");
-        this.metadataSection.setText("Analysis Metadata");
-        this.metadataSection.setDescription("Set the properties of analysis.");
+        form.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnSetComparisionAnalysis")); //$NON-NLS-1$
+        this.metadataSection.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analysisMetadata")); //$NON-NLS-1$
+        this.metadataSection.setDescription(DefaultMessagesImpl
+                .getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
         createAnalyzedColumnSetsSection(topComp);
     }
 
     private void createAnalyzedColumnSetsSection(Composite parentComp) {
-        Section columnsComparisonSection = this.createSection(form, parentComp, "Analyzed Column Sets", false, null);
+        Section columnsComparisonSection = this.createSection(form, parentComp, DefaultMessagesImpl
+                .getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(columnsComparisonSection);
         sectionClient.setLayout(new GridLayout());
         // sectionClient.setLayout(new GridLayout(2, true));
@@ -214,12 +217,20 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         Composite leftComp = toolkit.createComposite(sashForm);
         leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         leftComp.setLayout(new GridLayout());
-        this.createSectionPart(leftComp, columnListA, "Left Columns", "Select columns for A Set");
+        this
+                .createSectionPart(
+                        leftComp,
+                        columnListA,
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.leftColumns"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForASet")); //$NON-NLS-1$ //$NON-NLS-2$
 
         Composite rightComp = toolkit.createComposite(sashForm);
         rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         rightComp.setLayout(new GridLayout());
-        this.createSectionPart(rightComp, columnListB, "Right Columns", "Select columns for B Set");
+        this
+                .createSectionPart(
+                        rightComp,
+                        columnListB,
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.rightColumns"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.selectColumnsForBSet")); //$NON-NLS-1$ //$NON-NLS-2$
 
         columnsComparisonSection.setClient(sectionClient);
     }
@@ -243,13 +254,13 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         ((GridData) table.getLayoutData()).heightHint = 280;
         table.setHeaderVisible(true);
         table.setDragDetect(true);
-        table.setToolTipText("You can reorder elements by drag&drop");
+        table.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.reorderElementsByDragAnddrop")); //$NON-NLS-1$
         final TableColumn columnHeader = new TableColumn(table, SWT.CENTER);
         columnHeader.setWidth(260);
         columnHeader.setAlignment(SWT.CENTER);
         if (columnList.size() > 0) {
             String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnList.get(0)).getName();
-            columnHeader.setText("Element(s) from " + tableName);
+            columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element") + tableName); //$NON-NLS-1$
         }
         ColumnsElementViewerProvider provider = new ColumnsElementViewerProvider();
         columnsElementViewer.setContentProvider(provider);
@@ -264,13 +275,13 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         GridData buttonGridData = new GridData(GridData.FILL_BOTH);
         delButton.setLayoutData(buttonGridData);
         Button moveUpButton = new Button(buttonsComp, SWT.NULL);
-        moveUpButton.setText("Move Up");
+        moveUpButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
         moveUpButton.setLayoutData(buttonGridData);
         Button moveDownButton = new Button(buttonsComp, SWT.NULL);
-        moveDownButton.setText("Move Down");
+        moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
         moveDownButton.setLayoutData(buttonGridData);
         Button sortButton = new Button(buttonsComp, SWT.NULL);
-        sortButton.setText("Sort");
+        sortButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.sort")); //$NON-NLS-1$
         sortButton.setLayoutData(buttonGridData);
         // treeViewer.setDirty(false);
         final Button[] buttons = new Button[] { delButton, moveUpButton, moveDownButton, sortButton };
@@ -304,8 +315,9 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
      * 
      */
     public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<Column> columnsOfSectionPart) {
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, "Column Selection", columnsOfSectionPart,
-                "Column Selection");
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, DefaultMessagesImpl
+                .getString("ColumnsComparisonMasterDetailsPage.columnSelection"), columnsOfSectionPart, //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             List<Column> columnSet = new ArrayList<Column>();
@@ -318,7 +330,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             this.setDirty(true);
             if (columnSet.size() != 0) {
                 String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnSet.get(0)).getName();
-                columnsElementViewer.getTable().getColumn(0).setText("Element(s) from " + tableName);
+                columnsElementViewer.getTable().getColumn(0).setText(
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements") + tableName); //$NON-NLS-1$
             }
         }
     }
@@ -357,7 +370,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 rowMatchingIndicatorB });
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
-            log.info("Success to save connection analysis:" + analysis.getFileName());
+            log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }
 
     }
