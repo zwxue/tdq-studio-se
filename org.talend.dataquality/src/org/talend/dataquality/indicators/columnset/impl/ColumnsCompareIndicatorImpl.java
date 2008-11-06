@@ -179,20 +179,6 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
         this.setNotMatchingValueCount(notMatch);
 
         return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.impl.MatchingIndicatorImpl#reset()
-     */
-    @Override
-    public boolean reset() {
-        this.getColumnSetA().clear();
-        this.getColumnSetB().clear();
-        return super.reset();
-    }
-
-    
+    }    
     
 } //ColumnsCompareIndicatorImpl

@@ -176,7 +176,7 @@
   <indicatorDefinitions xmi:id="_jMh4gJE3Ed2HGNmGoaS-_w" name="Row Comparison" label="Row Comparison">
     <taggedValue xmi:id="_l9ZdoJE3Ed2HGNmGoaS-_w" tag="Purpose" value="Compare content of two column sets"/>
     <taggedValue xmi:id="_txkkkJE3Ed2HGNmGoaS-_w" tag="Description" value="Counts the number of data from a column set A that match data of a column set B"/>
-    <sqlGenericExpression xmi:id="_4xpm0JE3Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM &lt;%=__COLUMN_NAMES__%> LEFT JOIN &lt;%=__TABLE_NAME__%> ON (&lt;%=__JOIN_CLAUSE__%>) WHERE (&lt;%=__WHERE_CLAUSE__%>)" language="SQL"/>
+    <sqlGenericExpression xmi:id="_4xpm0JE3Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> LEFT JOIN &lt;%=__TABLE_NAME_2__%> ON (&lt;%=__JOIN_CLAUSE__%>) WHERE (&lt;%=__WHERE_CLAUSE__%>)" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_kQzTsJR-Ed2XO-JvLwVAwg" name="Pattern Frequency Table" categories="_0n3BsJR-Ed2XO-JvLwVAwg" label="Pattern Frequency Table">
     <taggedValue xmi:id="_kQz6wJR-Ed2XO-JvLwVAwg" tag="Description" value="counts the number of records for each distinct pattern"/>
