@@ -12,18 +12,20 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
+import org.talend.cwm.dburl.SupportDBUrlType;
+
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public enum PatternLanguageType {
 
     ALL_DATABASE_TYPE(0, "SQL", PatternToExcelEnum.AllDBRegularexpression), //$NON-NLS-1$
-    MYSQL(1, "MYSQL", PatternToExcelEnum.MySQLRegexp), //$NON-NLS-1$
-    ORACLE(2, "ORACLE", PatternToExcelEnum.OracleRegexp), //$NON-NLS-1$
-    SQLSERVER(3, "SQL SERVER", PatternToExcelEnum.SQLServerRegexp), //$NON-NLS-1$
-    DB2(4, "DB2", PatternToExcelEnum.DB2Regexp), //$NON-NLS-1$
-    POSTGRESQL(5, "POSTGRESQL", PatternToExcelEnum.PostgreSQLRegexp), //$NON-NLS-1$
-    SYBASE(6, "SYBASE", PatternToExcelEnum.SybaseRegexp); //$NON-NLS-1$
+    MYSQL(1, SupportDBUrlType.MYSQLDEFAULTURL.getLanguage(), PatternToExcelEnum.MySQLRegexp), //$NON-NLS-1$
+    ORACLE(2, SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage(), PatternToExcelEnum.OracleRegexp), //$NON-NLS-1$
+    SQLSERVER(3, SupportDBUrlType.MSSQLDEFAULTURL.getLanguage(), PatternToExcelEnum.SQLServerRegexp), //$NON-NLS-1$
+    DB2(4, SupportDBUrlType.DB2DEFAULTURL.getLanguage(), PatternToExcelEnum.DB2Regexp), //$NON-NLS-1$
+    POSTGRESQL(5, SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage(), PatternToExcelEnum.PostgreSQLRegexp), //$NON-NLS-1$
+    SYBASE(6, SupportDBUrlType.SYBASEDEFAULTURL.getLanguage(), PatternToExcelEnum.SybaseRegexp); //$NON-NLS-1$
 
     private int index;
 
