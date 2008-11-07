@@ -83,13 +83,17 @@ public class ChartDatasetFactory {
                     }
 
                     for (int i = 0; i < numOfShown; i++) {
-                        dataset.addValue(frequencyExt[i].getValue(), "", String.valueOf(frequencyExt[i].getKey())); //$NON-NLS-1$
+                        final FrequencyExt freqExt = frequencyExt[i];
+                        final String keyLabel = String.valueOf(freqExt.getKey());
+                        dataset.addValue(freqExt.getValue(), "", keyLabel); //$NON-NLS-1$
 
                         ChartDataEntity entity = new ChartDataEntity();
                         entity.setIndicator(unit.getIndicator());
-                        entity.setLabel(String.valueOf(frequencyExt[i].getKey()));
-                        entity.setValue(String.valueOf(frequencyExt[i].getValue()));
-                        entity.setPercent(String.valueOf(frequencyExt[i].getFrequency()));
+                        
+                        entity.setLabelNull(freqExt.getKey() == null);
+                        entity.setLabel(keyLabel);
+                        entity.setValue(String.valueOf(freqExt.getValue()));
+                        entity.setPercent(String.valueOf(freqExt.getFrequency()));
 
                         dataset.addDataEntity(entity);
                     }
