@@ -30,7 +30,7 @@ import org.talend.utils.sql.Java2SqlType;
 public class FrequencyStatisticsExplorer extends DataExplorer {
 
     @SuppressWarnings("fallthrough")
-    private String getFreqRowsStatement() {
+    protected String getFreqRowsStatement() {
 
         String clause = "";
 
@@ -115,8 +115,9 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
 
     private String getDefaultQuotedStatement(String quote) {
-        // FIXME handle null
-        return this.columnName + dbmsLanguage.equal() + quote + entity.getLabel() + quote;
+        return entity.isLabelNull() ? dbmsLanguage.quote(this.columnName) + dbmsLanguage.isNull() : dbmsLanguage
+                .quote(this.columnName)
+                + dbmsLanguage.equal() + quote + entity.getLabel() + quote;
     }
 
     /**
@@ -191,16 +192,6 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         String and = (clause.length() == 0) ? "" : dbmsLanguage.and();
         clause = clause + and + whereclause;
         return clause;
-    }
-
-    private String formatDate(String date) {
-        int length = date.trim().length();
-
-        for (; length < 8; length++) {
-            date = date + "0";
-        }
-
-        return "'" + date + "'";
     }
 
     /*

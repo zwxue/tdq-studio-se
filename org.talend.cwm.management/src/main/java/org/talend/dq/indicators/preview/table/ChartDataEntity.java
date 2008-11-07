@@ -28,6 +28,26 @@ public class ChartDataEntity {
 
     private String percent;
 
+    private boolean labelNull = false;
+
+    /**
+     * Getter for labelNull.
+     * 
+     * @return true if the given label represents a null value
+     */
+    public boolean isLabelNull() {
+        return this.labelNull;
+    }
+
+    /**
+     * Sets the labelNull.
+     * 
+     * @param labelNull set to true if the label represents the null value
+     */
+    public void setLabelNull(boolean labelNull) {
+        this.labelNull = labelNull;
+    }
+
     public String getLabel() {
         return label;
     }

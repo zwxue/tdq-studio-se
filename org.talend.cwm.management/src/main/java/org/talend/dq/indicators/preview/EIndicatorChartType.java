@@ -13,6 +13,7 @@
 package org.talend.dq.indicators.preview;
 
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
+import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.analysis.explore.PatternExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
@@ -28,8 +29,8 @@ public enum EIndicatorChartType {
     TEXT_STATISTICS("Text Statistics", new TextStatisticsExplorer()),
     FREQUENCE_STATISTICS("Frequency Statistics", new FrequencyStatisticsExplorer()),
     LOW_FREQUENCE_STATISTICS("Low Frequency Statistics", new FrequencyStatisticsExplorer()),
-    PATTERN_FREQUENCE_STATISTICS("Pattern Frequency Statistics", new FrequencyStatisticsExplorer()),
-    PATTERN_LOW_FREQUENCE_STATISTICS("Pattern Low Frequency Statistics", new FrequencyStatisticsExplorer()),
+    PATTERN_FREQUENCE_STATISTICS("Pattern Frequency Statistics", new FunctionFrequencyStatExplorer()),
+    PATTERN_LOW_FREQUENCE_STATISTICS("Pattern Low Frequency Statistics", new FunctionFrequencyStatExplorer()),
     SUMMARY_STATISTICS("Summary Statistics", new SummaryStastictisExplorer()),
     PATTERN_MATCHING("Pattern Matching", new PatternExplorer()),
     SQL_PATTERN_MATCHING("SQL Pattern Matching", new PatternExplorer()),
