@@ -89,7 +89,7 @@ public class ChartDatasetFactory {
 
                         ChartDataEntity entity = new ChartDataEntity();
                         entity.setIndicator(unit.getIndicator());
-                        
+
                         entity.setLabelNull(freqExt.getKey() == null);
                         entity.setLabel(keyLabel);
                         entity.setValue(String.valueOf(freqExt.getValue()));
@@ -162,6 +162,8 @@ public class ChartDatasetFactory {
             CustomerBoxDataset defaultDataset = new CustomerBoxDataset();
             Map<IndicatorEnum, Double> map = new HashMap<IndicatorEnum, Double>();
 
+            boolean isBox = indicatorUnitList.size() == 6;
+
             for (IndicatorUnit unit : indicatorUnitList) {
                 if (unit.isExcuted()) {
                     double doubleValue = Double.parseDouble(unit.getValue().toString());
@@ -171,24 +173,40 @@ public class ChartDatasetFactory {
                     entity.setIndicator(unit.getIndicator());
                     entity.setLabel(unit.getIndicatorName());
                     entity.setValue(String.valueOf(unit.getValue()));
-                    dataset.addDataEntity(entity);
-                    defaultDataset.addDataEntity(entity);
+
+                    if (isBox) {
+                        defaultDataset.addDataEntity(entity);
+                    } else {
+                        dataset.addDataEntity(entity);
+                    }
                 }
             }
 
-            if (map.size() != 6) {
+            if (!isBox) {
+                defaultDataset = null;
 
                 for (IndicatorEnum indicatorEnum : map.keySet()) {
                     dataset.addValue(map.get(indicatorEnum), "", indicatorEnum.getLabel()); //$NON-NLS-1$
                 }
 
             } else {
+                dataset = null;
+
                 BoxAndWhiskerItem item = createBoxAndWhiskerItem(map.get(IndicatorEnum.MeanIndicatorEnum), map
                         .get(IndicatorEnum.MedianIndicatorEnum), map.get(IndicatorEnum.LowerQuartileIndicatorEnum), map
                         .get(IndicatorEnum.UpperQuartileIndicatorEnum), map.get(IndicatorEnum.MinValueIndicatorEnum), map
                         .get(IndicatorEnum.MaxValueIndicatorEnum), null);
 
                 defaultDataset.add(item, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+
+                // add more data entity for sumary
+                Double range = map.get(IndicatorEnum.MaxValueIndicatorEnum) - map.get(IndicatorEnum.MinValueIndicatorEnum);
+                Double quartile = map.get(IndicatorEnum.UpperQuartileIndicatorEnum)
+                        - map.get(IndicatorEnum.LowerQuartileIndicatorEnum);
+                defaultDataset.addDataEntity(new ChartDataEntity(null, IndicatorEnum.RangeIndicatorEnum.getLabel(), range
+                        .toString()));
+                defaultDataset.addDataEntity(new ChartDataEntity(null, IndicatorEnum.IQRIndicatorEnum.getLabel(), quartile
+                        .toString()));
 
                 return defaultDataset;
             }

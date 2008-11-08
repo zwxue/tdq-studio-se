@@ -181,7 +181,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                     GridData gd = new GridData();
                                     gd.heightHint = 230;
                                     gd.widthHint = 460;
-                                    if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS) {
+                                    if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS
+                                            && chartData.getEnity().length == 8) {
                                         gd = new GridData();
                                         gd.heightHint = 450;
                                         gd.widthHint = 150;

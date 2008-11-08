@@ -241,9 +241,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         for (ColumnIndicator columnIndicator : columnIndicators) {
             columnList.add(columnIndicator.getTdColumn());
         }
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
-                null,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.columnSelections"));
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
@@ -253,10 +253,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
-        Section section = createSection(
-                form,
-                parent,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
+        Section section = createSection(form, parent, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space"));
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -340,9 +338,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-                        monitor
-                                .beginTask(
-                                        DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview") + column.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview")
+                                + column.getName(), IProgressMonitor.UNKNOWN);
 
                         Display.getDefault().asyncExec(new Runnable() {
 
@@ -358,7 +355,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                                         gd.heightHint = 230;
                                         gd.widthHint = 460;
                                         if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS
-                                                && chartData.getEnity().length == 6) {
+                                                && chartData.getEnity().length == 8) {
                                             gd = new GridData();
                                             gd.heightHint = 400;
                                             gd.widthHint = 150;

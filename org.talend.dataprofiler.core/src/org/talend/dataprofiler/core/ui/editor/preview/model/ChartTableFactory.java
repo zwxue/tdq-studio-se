@@ -136,26 +136,28 @@ public class ChartTableFactory {
                 ChartDataEntity dataEntity = (ChartDataEntity) selection.getFirstElement();
 
                 final Indicator indicator = dataEntity.getIndicator();
-                Menu menu = new Menu(table.getShell(), SWT.POP_UP);
-                table.setMenu(menu);
+                if (indicator != null) {
+                    Menu menu = new Menu(table.getShell(), SWT.POP_UP);
+                    table.setMenu(menu);
 
-                MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartTableType, analysis, dataEntity);
-                for (final MenuItemEntity itemEntity : itemEntities) {
-                    MenuItem item = new MenuItem(menu, SWT.PUSH);
-                    item.setText(itemEntity.getLabel());
-                    item.setImage(itemEntity.getIcon());
+                    MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartTableType, analysis, dataEntity);
+                    for (final MenuItemEntity itemEntity : itemEntities) {
+                        MenuItem item = new MenuItem(menu, SWT.PUSH);
+                        item.setText(itemEntity.getLabel());
+                        item.setImage(itemEntity.getIcon());
 
-                    item.addListener(SWT.Selection, new Listener() {
+                        item.addListener(SWT.Selection, new Listener() {
 
-                        public void handleEvent(Event event) {
+                            public void handleEvent(Event event) {
 
-                            viewRecordInDataExplorer(analysis, indicator, itemEntity.getQuery());
-                        }
+                                viewRecordInDataExplorer(analysis, indicator, itemEntity.getQuery());
+                            }
 
-                    });
+                        });
+                    }
+
+                    menu.setVisible(true);
                 }
-
-                menu.setVisible(true);
             }
 
         });
@@ -336,9 +338,11 @@ public class ChartTableFactory {
                         String currentValue = entity.getValue();
                         Indicator indicator = entity.getIndicator();
 
-                        String toolTipMsg = ChartTableFactory.getToolTipMsg(indicator, currentValue);
-                        if (toolTipMsg != null) {
-                            showTip(item, toolTipMsg);
+                        if (indicator != null) {
+                            String toolTipMsg = ChartTableFactory.getToolTipMsg(indicator, currentValue);
+                            if (toolTipMsg != null) {
+                                showTip(item, toolTipMsg);
+                            }
                         }
                     }
                 default:
