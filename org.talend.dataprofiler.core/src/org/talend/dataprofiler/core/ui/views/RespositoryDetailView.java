@@ -13,9 +13,11 @@
 package org.talend.dataprofiler.core.ui.views;
 
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -23,6 +25,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -32,6 +35,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdCatalog;
@@ -42,6 +46,9 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.service.GlobalServiceRegister;
+import org.talend.dataprofiler.core.service.IDetailViewSwitchService;
+import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -66,35 +73,77 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class RespositoryDetailView extends ViewPart implements ISelectionListener {
 
-    private Composite container;
+    private Group gContainer;
+
+    private Group tContainer;
+
+    private boolean switchFlag = false;
 
     /**
      * DOC qzhang RespositoryDetailView constructor comment.
      */
     public RespositoryDetailView() {
+        List<IService> filterList = GlobalServiceRegister.getDefault().getServiceGroup(IDetailViewSwitchService.class);
+        for (IService service : filterList) {
+            if (service instanceof IDetailViewSwitchService) {
+                IDetailViewSwitchService switchService = (IDetailViewSwitchService) service;
+                switchFlag = switchService.isShow();
+            }
+        }
     }
 
     @Override
     public void createPartControl(Composite parent) {
-        container = new Composite(parent, SWT.NONE);
+        Composite composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(new GridLayout());
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        gContainer = new Group(composite, SWT.NONE);
+        gContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.General"));
         GridLayout layout = new GridLayout(2, false);
         GridData data = new GridData(GridData.FILL_BOTH);
-        container.setLayout(layout);
-        container.setLayoutData(data);
+        gContainer.setLayout(layout);
+        gContainer.setLayoutData(data);
+
+        // create extend group
+        if (switchFlag) {
+            tContainer = new Group(composite, SWT.NONE);
+            tContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.Technical"));
+            tContainer.setLayout(new GridLayout(2, false));
+            tContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+            createExtDefault();
+        }
+
         createDefault();
         getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+
+    }
+
+    private void createTechnicalDetail(EObject fe) {
+        Label idLab = new Label(tContainer, SWT.NONE);
+        idLab.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.Identifier"));
+        newText(tContainer, ResourceHelper.getUUID(fe));
+
+        Label pathLab = new Label(tContainer, SWT.NONE);
+        pathLab.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"));
+        newText(tContainer, fe.eResource().getURI().path());
     }
 
     /**
      * DOC qzhang Comment method "createDefault".
      */
     private void createDefault() {
-        newText(container, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
+        newText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
+    }
+
+    private void createExtDefault() {
+        newText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable"));
     }
 
     @Override
     public void setFocus() {
-        container.setFocus();
+        gContainer.setFocus();
     }
 
     /*
@@ -129,6 +178,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 createTdColumn(column);
                 is = false;
             }
+
+            if (switchFlag) {
+                if (fe instanceof EObject) {
+                    createTechnicalDetail((EObject) fe);
+                } else {
+                    createExtDefault();
+                }
+            }
         } else if (part instanceof CommonFormEditor) {
             CommonFormEditor editor = (CommonFormEditor) part;
             IEditorInput editorInput = editor.getEditorInput();
@@ -138,10 +195,15 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 is = createFileDetail(is, file);
             }
         }
+
         if (is) {
             createDefault();
         }
-        container.layout();
+
+        gContainer.layout();
+        if (tContainer != null) {
+            tContainer.layout();
+        }
     }
 
     /**
@@ -186,10 +248,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createPurpose(pattern);
         createDescription(pattern);
         Label label;
-        
-        label = new Label(container, SWT.NONE);
+
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.type")); //$NON-NLS-1$
-        
+
         EList<PatternComponent> components = pattern.getComponents();
         StringBuilder description = new StringBuilder();
         for (PatternComponent poc : components) {
@@ -198,14 +260,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 description.append("  ").append(expression.getExpression().getLanguage()); //$NON-NLS-1$
             }
         }
-        newText(container, description.toString());        
+        newText(gContainer, description.toString());
     }
 
-    /**
-     * DOC qzhang Comment method "createAnaysisDetail".
-     * 
-     * @param ana
-     */
     /**
      * DOC qzhang Comment method "createAnaysisDetail".
      * 
@@ -216,18 +273,18 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createPurpose(ana);
         createDescription(ana);
         Label label;
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.otherType")); //$NON-NLS-1$
         String description = ana.getParameters().getAnalysisType().getLiteral();
-        newText(container, description);
+        newText(gContainer, description);
 
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyzedElements")); //$NON-NLS-1$
         AnalysisContext context = ana.getContext();
         int numn = context.getAnalysedElements().size();
-        newText(container, String.valueOf(numn));
+        newText(gContainer, String.valueOf(numn));
 
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.connection")); //$NON-NLS-1$
         DataManager connection = context.getConnection();
         if (connection == null) {
@@ -235,11 +292,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         } else {
             description = connection.getName();
         }
-        newText(container, description);
+        newText(gContainer, description);
     }
 
     private void newText(Composite composite, String inputText) {
-       newText(composite, inputText, DefaultMessagesImpl.getString("RespositoryDetailView.none")); //$NON-NLS-1$
+        newText(composite, inputText, DefaultMessagesImpl.getString("RespositoryDetailView.none")); //$NON-NLS-1$
     }
 
     private void newText(Composite composite, String inputText, String defaultText) {
@@ -254,6 +311,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
         text.setLayoutData(data);
     }
+
     /**
      * DOC qzhang Comment method "createSqlFileDetail".
      * 
@@ -261,17 +319,17 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private void createSqlFileDetail(IFile fe2) {
         Label label;
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.filename")); //$NON-NLS-1$
-        newText(container, fe2.getFullPath().toPortableString());
+        newText(gContainer, fe2.getFullPath().toPortableString());
 
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.modificationDate")); //$NON-NLS-1$
-        
+
         // MODSCA 20080728 changed to getLocalTimeStamp() because modificationStamp was 1 or 2 (=> year 1970)
         // long modificationStamp = fe2.getModificationStamp();
         long modificationStamp = fe2.getLocalTimeStamp();
-        newText(container, new Date(modificationStamp).toString());
+        newText(gContainer, new Date(modificationStamp).toString());
     }
 
     /**
@@ -283,11 +341,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(rep);
         createPurpose(rep);
         createDescription(rep);
-        Label label;        
-        label = new Label(container, SWT.NONE);
+        Label label;
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyses")); //$NON-NLS-1$
         int description = ReportHelper.getAnalyses(rep).size();
-        newText(container, String.valueOf(description));
+        newText(gContainer, String.valueOf(description));
     }
 
     /**
@@ -297,14 +355,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private void createTdColumn(TdColumn column) {
         createTdTVDetail(column);
-        Label label = new Label(container, SWT.NONE);
+        Label label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.typex")); //$NON-NLS-1$
-        newText(container, column.getSqlDataType().getName());
+        newText(gContainer, column.getSqlDataType().getName());
 
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.nullable")); //$NON-NLS-1$
         String purpose = column.getIsNullable().isNullable();
-        newText(container, purpose);
+        newText(gContainer, purpose);
     }
 
     /**
@@ -316,10 +374,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         Label label;
         createName(element);
 
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.remarks")); //$NON-NLS-1$
-        String purpose = TaggedValueHelper.getComment(element);        
-        newText(container, purpose);
+        String purpose = TaggedValueHelper.getComment(element);
+        newText(gContainer, purpose);
     }
 
     /**
@@ -328,9 +386,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * @param element
      */
     private void createName(ModelElement element) {
-        Label label = new Label(container, SWT.NONE);
+        Label label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.name")); //$NON-NLS-1$
-        newText(container, element.getName());
+        newText(gContainer, element.getName());
     }
 
     /**
@@ -361,16 +419,16 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createPurpose(dataProvider);
         createDescription(dataProvider);
 
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.URL")); //$NON-NLS-1$
         String connectionString = DataProviderHelper.getTdProviderConnection(dataProvider).getObject().getConnectionString();
-        newText(container, connectionString);
+        newText(gContainer, connectionString);
 
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.type2")); //$NON-NLS-1$
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
         String subtype = softwareSystem.getSubtype();
-        newText(container, subtype);
+        newText(gContainer, subtype);
     }
 
     /**
@@ -380,10 +438,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     private void createDescription(ModelElement dataProvider) {
         Label label;
-        label = new Label(container, SWT.NONE);
+        label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.description")); //$NON-NLS-1$
         String description = TaggedValueHelper.getDescription(dataProvider);
-        newText(container, description);
+        newText(gContainer, description);
     }
 
     /**
@@ -392,18 +450,25 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * @param dataProvider
      */
     private void createPurpose(ModelElement dataProvider) {
-        Label label = new Label(container, SWT.NONE);
+        Label label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.purpose")); //$NON-NLS-1$
         String purpose = TaggedValueHelper.getPurpose(dataProvider);
-        newText(container, purpose);
+        newText(gContainer, purpose);
     }
 
     /**
      * DOC qzhang Comment method "clearContainer".
      */
     private void clearContainer() {
-        if (container != null && !container.isDisposed()) {
-            Control[] children = container.getChildren();
+        if (gContainer != null && !gContainer.isDisposed()) {
+            Control[] children = gContainer.getChildren();
+            for (Control control : children) {
+                control.dispose();
+            }
+        }
+
+        if (tContainer != null && !tContainer.isDisposed()) {
+            Control[] children = tContainer.getChildren();
             for (Control control : children) {
                 control.dispose();
             }
