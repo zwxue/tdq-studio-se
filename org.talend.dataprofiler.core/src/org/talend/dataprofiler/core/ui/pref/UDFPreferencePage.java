@@ -21,21 +21,25 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -56,7 +60,7 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
     private Button removeBTN;
 
-    private ListViewer listViewer;
+    private TableViewer tableViewer;
 
     private SelectionListener selectionListener;
 
@@ -87,23 +91,36 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
                 entityList.add(entity);
             }
         }
-
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean performOk() {
         super.performOk();
 
         for (FunctionEntity entity : entityList) {
-            final String language = entity.getLanguage();
-            final String function = entity.getFunction();
-            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(language, function);
-            DefinitionHandler.getInstance().updateRegex(language, function);
+            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), entity.getFunction());
+            DefinitionHandler.getInstance().updateRegex(entity.getLanguage(), entity.getFunction());
         }
+
         DefinitionHandler.getInstance().saveResource();
 
         return true;
+    }
+
+    @Override
+    protected void performDefaults() {
+
+        for (FunctionEntity entity : entityList) {
+            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), "");
+        }
+
+        entityList.clear();
+        tableViewer.refresh();
+
+        DefinitionHandler.getInstance().restaureDefaultRegexDefinitions();
+        DefinitionHandler.getInstance().saveResource();
+
+        super.performDefaults();
     }
 
     @Override
@@ -122,11 +139,22 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
         composite.setLayout(new GridLayout(2, false));
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        listViewer = new ListViewer(composite, SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(listViewer.getList());
-        listViewer.setLabelProvider(new MyLabelProvider());
-        listViewer.setContentProvider(new MyContentProvider());
-        listViewer.setInput(entityList);
+        tableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
+        Table table = tableViewer.getTable();
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
+
+        TableColumn column1 = new TableColumn(table, SWT.NONE);
+        column1.setText("Function");
+        column1.setWidth(450);
+        TableColumn column2 = new TableColumn(table, SWT.NONE);
+        column2.setText("Language");
+        column2.setWidth(150);
+
+        tableViewer.setLabelProvider(new MyLabelProvider());
+        tableViewer.setContentProvider(new MyContentProvider());
+        tableViewer.setInput(entityList);
 
         Composite btnBox = new Composite(composite, SWT.NONE);
         btnBox.setLayout(new GridLayout());
@@ -178,29 +206,29 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
     }
 
     private void openAddDialog() {
-        NewUDFFunctionDialog dialog = new NewUDFFunctionDialog(getShell());
+        NewUDFFunctionDialog dialog = new NewUDFFunctionDialog(getShell(), entityList);
         if (Window.OK == dialog.open()) {
             entityList.add(dialog.getFunctionEntity());
-            listViewer.setInput(entityList);
+            tableViewer.setInput(entityList);
         }
     }
 
     private void openEditDialog() {
 
-        StructuredSelection selection = (StructuredSelection) listViewer.getSelection();
-        if (selection == null) {
+        StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
+        if (selection.isEmpty()) {
             return;
         }
 
         FunctionEntity entity = (FunctionEntity) selection.getFirstElement();
 
-        NewUDFFunctionDialog dialog = new NewUDFFunctionDialog(getShell(), entity);
+        NewUDFFunctionDialog dialog = new NewUDFFunctionDialog(getShell(), entity, entityList);
         dialog.open();
-        listViewer.refresh();
+        tableViewer.refresh();
     }
 
     private void doRemove() {
-        StructuredSelection selection = (StructuredSelection) listViewer.getSelection();
+        StructuredSelection selection = (StructuredSelection) tableViewer.getSelection();
         if (selection.isEmpty()) {
             return;
         }
@@ -208,7 +236,7 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
         FunctionEntity entity = (FunctionEntity) selection.getFirstElement();
 
         entityList.remove(entity);
-        listViewer.setInput(entityList);
+        tableViewer.refresh();
 
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), "");
     }
@@ -216,12 +244,22 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
     /**
      * DOC Zqin UDFPreferencePage class global comment. Detailled comment
      */
-    class MyLabelProvider extends LabelProvider {
+    class MyLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-        @Override
-        public String getText(Object element) {
+        public Image getColumnImage(Object element, int columnIndex) {
+
+            return null;
+        }
+
+        public String getColumnText(Object element, int columnIndex) {
             FunctionEntity entity = (FunctionEntity) element;
-            return entity.getFunction();
+            if (columnIndex == 0) {
+                return entity.getFunction();
+            } else if (columnIndex == 1) {
+                return entity.getLanguage();
+            } else {
+                return null;
+            }
         }
 
     }

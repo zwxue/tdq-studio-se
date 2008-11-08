@@ -12,16 +12,22 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.pref.ui;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -39,7 +45,9 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
 
     private FunctionEntity entity;
 
-    private Combo languageType;
+    private CCombo languageType;
+
+    private String[] existedLanguage;
 
     public FunctionEntity getFunctionEntity() {
         return this.entity;
@@ -50,14 +58,19 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
      * 
      * @param parentShell
      */
-    public NewUDFFunctionDialog(Shell parentShell) {
-        super(parentShell);
-        this.entity = new FunctionEntity();
+    public NewUDFFunctionDialog(Shell parentShell, List<FunctionEntity> entityList) {
+        this(parentShell, null, entityList);
     }
 
-    public NewUDFFunctionDialog(Shell parentShell, FunctionEntity entity) {
+    public NewUDFFunctionDialog(Shell parentShell, FunctionEntity entity, List<FunctionEntity> entityList) {
         super(parentShell);
-        this.entity = entity;
+        this.entity = entity != null ? entity : new FunctionEntity();
+
+        String[] temp = new String[entityList.size()];
+        for (int i = 0; i < entityList.size(); i++) {
+            temp[i] = entityList.get(i).getLanguage();
+        }
+        this.existedLanguage = temp;
     }
 
     @Override
@@ -79,7 +92,9 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
         functionName.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                setErrorMessage(null);
                 entity.setFunction(functionName.getText());
+                setCanFinished(true);
             }
 
         });
@@ -87,10 +102,13 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
         Label typeLab = new Label(composite, SWT.NONE);
         typeLab.setText(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.field.language"));
 
-        languageType = new Combo(composite, SWT.BORDER);
+        languageType = new CCombo(composite, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(languageType);
 
-        languageType.setItems(SupportDBUrlStore.getInstance().getDBLanguages());
+        String[] allLanguage = SupportDBUrlStore.getInstance().getDBLanguages();
+        String[] validLanguages = getValidLanguage(allLanguage, existedLanguage);
+        languageType.setItems(validLanguages);
+        languageType.setEditable(false);
 
         if (this.entity.getLanguage() != null) {
             languageType.setText(this.entity.getLanguage());
@@ -100,7 +118,8 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                entity.setLanguage(((Combo) e.getSource()).getText());
+                entity.setLanguage(languageType.getText());
+                setCanFinished(true);
             }
 
         });
@@ -109,5 +128,55 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
         setMessage(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.message"));
 
         return composite;
+    }
+
+    @Override
+    protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
+
+        Button button = super.createButton(parent, id, label, defaultButton);
+        setCanFinished(false);
+        return button;
+    }
+
+    private String[] getValidLanguage(String[] allLanguages, String[] existedLanguages) {
+        List<String> all = new ArrayList<String>();
+        for (int i = 0; i < allLanguages.length; i++) {
+            all.add(allLanguages[i]);
+        }
+        Iterator<String> iterator = all.iterator();
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            for (int i = 0; i < existedLanguages.length; i++) {
+                if (existedLanguages[i].equals(next)) {
+                    iterator.remove();
+                }
+            }
+        }
+
+        return all.toArray(new String[all.size()]);
+    }
+
+    private void setCanFinished(boolean flag) {
+        getButton(IDialogConstants.OK_ID).setEnabled(flag);
+    }
+
+    @Override
+    protected void okPressed() {
+        String function = functionName.getText();
+        String language = languageType.getText();
+
+        if ("".equals(function.trim())) {
+            setErrorMessage("Funtion can't be empty!");
+            setCanFinished(false);
+            return;
+        }
+
+        if ("".equals(language)) {
+            setErrorMessage("Language can't be empty!");
+            setCanFinished(false);
+            return;
+        }
+
+        super.okPressed();
     }
 }
