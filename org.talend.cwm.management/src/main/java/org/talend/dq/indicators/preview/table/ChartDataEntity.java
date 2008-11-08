@@ -30,6 +30,22 @@ public class ChartDataEntity {
 
     private boolean labelNull = false;
 
+    public ChartDataEntity() {
+
+    }
+
+    public ChartDataEntity(Indicator indicator, String label, String value) {
+        this(indicator, label, value, null, false);
+    }
+
+    public ChartDataEntity(Indicator indicator, String label, String value, String percent, boolean labelNull) {
+        this.indicator = indicator;
+        this.label = label;
+        this.value = value;
+        this.percent = percent;
+        this.labelNull = labelNull;
+    }
+
     /**
      * Getter for labelNull.
      * 
