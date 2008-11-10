@@ -426,8 +426,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
         label = new Label(gContainer, SWT.NONE);
         label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.type2")); //$NON-NLS-1$
-        TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
-        String subtype = softwareSystem.getSubtype();
+        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
+        if (softwareSystem == null) {
+            softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
+        }
+        String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype(); 
         newText(gContainer, subtype);
     }
 
