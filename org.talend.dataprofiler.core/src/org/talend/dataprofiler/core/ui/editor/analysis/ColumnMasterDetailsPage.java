@@ -502,7 +502,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             }
         } else {
             throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.problem0", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    "ColumnMasterDetailsPage.problem", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         // TODO get the domain constraint, we will see later.
