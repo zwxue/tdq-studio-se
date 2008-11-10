@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -46,6 +47,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * This action to delete the file which suffix is .rep/.ana/.prv files.
  */
 public class DeleteCWMResourceAction extends Action {
+
+    private static Logger log = Logger.getLogger(DeleteCWMResourceAction.class);
 
     private boolean isDeleteContent = false;
 
@@ -79,7 +82,7 @@ public class DeleteCWMResourceAction extends Action {
                 res.delete(true, new NullProgressMonitor());
                 res.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
         DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
