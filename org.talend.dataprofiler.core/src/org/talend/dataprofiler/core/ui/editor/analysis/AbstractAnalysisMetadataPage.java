@@ -45,6 +45,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     @Override
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
+        if (!canSave()) {
+            return;
+        }
         try {
             saveAnalysis();
             this.isDirty = false;
@@ -52,6 +55,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             ExceptionHandler.process(e, Level.ERROR);
             e.printStackTrace();
         }
+    }
+
+    protected boolean canSave() {
+        return true;
     }
 
     protected abstract void saveAnalysis() throws DataprofilerCoreException;

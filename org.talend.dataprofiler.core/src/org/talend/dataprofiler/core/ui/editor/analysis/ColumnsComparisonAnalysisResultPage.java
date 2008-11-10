@@ -28,12 +28,20 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.preview.ChartImageFactory;
+import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
@@ -46,6 +54,12 @@ import orgomg.cwm.resource.relational.Column;
 public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultPage {
 
     private ColumnsComparisonMasterDetailsPage masterPage;
+
+    private RowMatchingIndicator rowMatchingIndicatorA;
+
+    private RowMatchingIndicator rowMatchingIndicatorB;
+
+    private String executeData;
 
     /**
      * DOC rli ColumnsComparisonAnalysisResultPage constructor comment.
@@ -77,11 +91,18 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         // resultComp.setLayout(new GridLayout());
         // createResultSection(resultComp);
 
-        // form.reflow(true);
+        form.reflow(true);
+    }
+
+    @Override
+    protected void createSummarySection(ScrolledForm form, Composite parent, AnalysisHandler analysisHandler) {
+        super.createSummarySection(form, parent, analysisHandler);
+        executeData = analysisHandler.getExecuteData();
     }
 
     private void createAnalyzedColumnSetsSection(Composite parent) {
-        Section section = createSection(form, parent, "Analyzed Column Sets", true, null);
+        Section section = createSection(form, parent, DefaultMessagesImpl
+                .getString("ColumnsComparisonAnalysisResultPage.analyzedColumnSets"), true, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -94,7 +115,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         table.setDragDetect(true);
-        table.setToolTipText("You can reorder elements by drag&drop");
+        table.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.dragAndDropToolTip")); //$NON-NLS-1$
         final TableColumn columnHeader1 = new TableColumn(table, SWT.CENTER);
         columnHeader1.setWidth(260);
         columnHeader1.setAlignment(SWT.CENTER);
@@ -104,17 +125,17 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         Analysis analysis = this.masterPage.getAnalysisHandler().getAnalysis();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
 
-        RowMatchingIndicator rowMatchingIndicatorA = null;
         if (indicators.size() != 0) {
-            rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(1);
-            rowMatchingIndicatorA.getColumnSetA();
-            rowMatchingIndicatorA.getColumnSetB();
+            rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
+            rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
             String columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnSetOwner(
                     rowMatchingIndicatorA.getColumnSetA().get(0)).getName() : PluginConstant.EMPTY_STRING;
-            columnHeader1.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : "Element(s) from " + columnName);
+            columnHeader1.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl
+                    .getString("ColumnsComparisonAnalysisResultPage.elementsFrom") + columnName); //$NON-NLS-1$
             columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnSetOwner(
                     rowMatchingIndicatorA.getColumnSetB().get(0)).getName() : PluginConstant.EMPTY_STRING;
-            columnHeader2.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : "Element(s) from " + columnName);
+            columnHeader2.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl
+                    .getString("ColumnsComparisonAnalysisResultPage.elementsFrom") + columnName); //$NON-NLS-1$
         }
         ColumnPairsViewerProvider provider = new ColumnPairsViewerProvider();
         elementsTableViewer.setContentProvider(provider);
@@ -125,11 +146,81 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     @Override
     protected void createResultSection(Composite parent) {
-        Section section = createSection(form, parent, "Analysis Results", true, null);
+        Section section = createSection(form, parent, DefaultMessagesImpl
+                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), true, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         section.setClient(sectionClient);
+        if (executeData == null) {
+            return;
+        }
+        Table resultTable = new Table(sectionClient, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        resultTable.setLinesVisible(true);
+        resultTable.setHeaderVisible(true);
+        final TableColumn columnHeader0 = new TableColumn(resultTable, SWT.CENTER);
+        columnHeader0.setWidth(150);
+        columnHeader0.setAlignment(SWT.CENTER);
+        final TableColumn columnHeader1 = new TableColumn(resultTable, SWT.CENTER);
+        columnHeader1.setWidth(120);
+        columnHeader1.setAlignment(SWT.CENTER);
+        columnHeader1.setText("SetA"); //$NON-NLS-1$
+        final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
+        columnHeader2.setWidth(120);
+        columnHeader2.setAlignment(SWT.CENTER);
+        columnHeader2.setText("SetB"); //$NON-NLS-1$
+
+        createTableItems(resultTable);
+
+        creatChart(sectionClient);
+    }
+
+    private void createTableItems(Table resultTable) {
+        // TODO Can't get matchingValueCount or notMatchingIndicator value, so comment it.
+        // Long columnSetARows = rowMatchingIndicatorA.getMatchingValueCount() +
+        // rowMatchingIndicatorA.getMatchingValueCount();
+        // Long columnSetBRows = rowMatchingIndicatorB.getMatchingValueCount() +
+        // rowMatchingIndicatorB.getMatchingValueCount();
+        TableItem item1 = new TableItem(resultTable, SWT.NULL);
+        item1.setText(0, "%Match"); //$NON-NLS-1$
+        // item1.setText(1, StringFormatUtil.format(
+        // (rowMatchingIndicatorA.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
+        // StringFormatUtil.PERCENT).toString());
+        // item1.setText(1, StringFormatUtil.format(
+        // (rowMatchingIndicatorB.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
+        // StringFormatUtil.PERCENT).toString());
+        TableItem item2 = new TableItem(resultTable, SWT.NULL);
+        item2.setText(0, "%NotMatch"); //$NON-NLS-1$
+        // item1.setText(1, StringFormatUtil.format(
+        // (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
+        // StringFormatUtil.PERCENT).toString());
+        // item1.setText(1, StringFormatUtil.format(
+        // (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
+        // StringFormatUtil.PERCENT).toString());
+        TableItem item3 = new TableItem(resultTable, SWT.NULL);
+        item3.setText(0, "#Match"); //$NON-NLS-1$
+        // item3.setText(1, rowMatchingIndicatorA.getMatchingValueCount().toString());
+        // item3.setText(2, rowMatchingIndicatorB.getMatchingValueCount().toString());
+        TableItem item4 = new TableItem(resultTable, SWT.NULL);
+        item4.setText(0, "#Not Match"); //$NON-NLS-1$
+        // item4.setText(1, rowMatchingIndicatorA.getNotMatchingValueCount().toString());
+        // item4.setText(2, rowMatchingIndicatorB.getNotMatchingValueCount().toString());
+        TableItem item5 = new TableItem(resultTable, SWT.NULL);
+        item5.setText(0, "#Rows"); //$NON-NLS-1$
+        // item5.setText(1, columnSetARows.toString());
+        // item5.setText(2, columnSetBRows.toString());
+    }
+
+    private void creatChart(Composite parent) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(5, "matching", "ColumnsA"); //$NON-NLS-1$
+        dataset.addValue(6, "not matching", "ColumnsB"); //$NON-NLS-1$
+        JFreeChart createStacked3DBarChart = ChartImageFactory.createStacked3DBarChart(null, dataset);
+        ChartPanel chartPanel = new ChartPanel(createStacked3DBarChart);
+        GridData gd = new GridData();
+        gd.heightHint = 180;
+        gd.widthHint = 450;
+        ChartUtils.createAWTSWTComp(parent, gd, chartPanel);
     }
 
     /*
@@ -139,7 +230,6 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
      */
     @Override
     public void setDirty(boolean isDirty) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -154,7 +244,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     class ColumnPairsViewerProvider extends LabelProvider implements ITableLabelProvider, IStructuredContentProvider {
 
         public Image getColumnImage(Object element, int columnIndex) {
-            if (element instanceof Column) {
+            if (element instanceof ColumnPair) {
                 return ImageLib.getImage(ImageLib.TD_COLUMN);
             }
             return null;
@@ -195,7 +285,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     }
 
     /**
-     * The pair of columns.
+     * The pair of columnA and columnB.
      */
     static class ColumnPair {
 

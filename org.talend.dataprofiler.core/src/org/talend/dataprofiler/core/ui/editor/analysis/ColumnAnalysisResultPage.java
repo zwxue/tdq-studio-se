@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import java.awt.Frame;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
@@ -27,7 +26,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -61,6 +59,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenera
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
+import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.AnalysisHandler;
@@ -176,8 +175,6 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                 final JFreeChart chart = chartData.getChart();
                                 final EIndicatorChartType chartType = chartData.getChartType();
                                 if (chart != null) {
-                                    Composite frameComp = toolkit.createComposite(composite, SWT.EMBEDDED);
-                                    frameComp.setLayout(new GridLayout());
                                     GridData gd = new GridData();
                                     gd.heightHint = 230;
                                     gd.widthHint = 460;
@@ -187,17 +184,10 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                         gd.heightHint = 450;
                                         gd.widthHint = 150;
                                     }
-                                    frameComp.setLayoutData(gd);
-
-                                    Frame frame = SWT_AWT.new_Frame(frameComp);
-                                    frame.setLayout(new java.awt.GridLayout());
-
                                     ChartPanel chartPanel = new ChartPanel(chart);
                                     addMouseListenerForChart(chartPanel, chartType, analysis);
-
-                                    frame.add(chartPanel);
-                                    frame.pack();
-                                    frame.validate();
+                                    // Composite frameComp = toolkit.createComposite(composite, SWT.EMBEDDED);
+                                    ChartUtils.createAWTSWTComp(composite, gd, chartPanel);
                                 }
 
                                 subComp.setClient(composite);

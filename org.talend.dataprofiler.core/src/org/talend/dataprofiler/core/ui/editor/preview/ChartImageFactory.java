@@ -34,7 +34,6 @@ import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.ui.TextAnchor;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -139,7 +138,7 @@ public class ChartImageFactory {
         return ChartFactory.createBoxAndWhiskerChart(null, null, "value", dataset, false); //$NON-NLS-1$
     }
 
-    private static JFreeChart createStacked3DBarChart(String titile, CategoryDataset dataset) {
+    public static JFreeChart createStacked3DBarChart(String titile, CategoryDataset dataset) {
 
         JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, "Value", dataset, PlotOrientation.VERTICAL, true, //$NON-NLS-1$
                 false, false);

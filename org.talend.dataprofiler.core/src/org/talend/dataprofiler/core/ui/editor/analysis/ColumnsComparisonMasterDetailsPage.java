@@ -17,9 +17,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
@@ -32,6 +36,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.IManagedForm;
@@ -42,6 +48,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
@@ -49,10 +56,9 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
+import org.talend.dataprofiler.core.ui.editor.composite.DragAndDropDecorate;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.IndicatorsFactory;
-import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
@@ -62,7 +68,9 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * This page show the comparisons information of column set.
@@ -76,8 +84,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private RowMatchingIndicator rowMatchingIndicatorA;
 
     private RowMatchingIndicator rowMatchingIndicatorB;
-
-    private RowCountIndicator rowCountIndicator;
 
     private ScrolledForm form;
 
@@ -124,19 +130,15 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         columnListB = new ArrayList<Column>();
         if (analysis.getResults().getIndicators().size() == 0) {
             ColumnsetFactory factory = ColumnsetFactory.eINSTANCE;
-            IndicatorsFactory indicator = IndicatorsFactory.eINSTANCE;
-            rowCountIndicator = indicator.createRowCountIndicator();
             rowMatchingIndicatorA = factory.createRowMatchingIndicator();
-
             rowMatchingIndicatorB = factory.createRowMatchingIndicator();
-            Indicator[] currentIndicators = new Indicator[] { rowCountIndicator, rowMatchingIndicatorA, rowMatchingIndicatorB };
+            Indicator[] currentIndicators = new Indicator[] { rowMatchingIndicatorA, rowMatchingIndicatorB };
             setDefaultIndDef(currentIndicators);
         } else {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
-            rowCountIndicator = (RowCountIndicator) indicators.get(0);
-            rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(1);
+            rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
             columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
-            rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(2);
+            rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
             columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
             // for (Indicator indicator : indicators) {
             // IndicatorsSwitch<RowCountIndicator> rowCountIndSwitch = new IndicatorsSwitch<RowCountIndicator>() {
@@ -172,7 +174,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private void setDefaultIndDef(Indicator[] indicators) {
         for (int i = 0; i < indicators.length; i++) {
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicators[i])) {
-                log.error(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.cannotSetIndicatorDef") + indicators[i].getName()); //$NON-NLS-1$
+                log
+                        .error(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.cannotSetIndicatorDef") + indicators[i].getName()); //$NON-NLS-1$
             }
         }
     }
@@ -201,8 +204,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         GridData layoutData = new GridData(GridData.FILL_BOTH);
         layoutData.horizontalAlignment = SWT.CENTER;
         checkComputeButton.setLayoutData(layoutData);
-        checkComputeButton.setText("Compute only number of A rows not in B");
-        checkComputeButton.setToolTipText("When unchecked, will compute also number of B rows not in A ");
+        checkComputeButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.0")); //$NON-NLS-1$
+        checkComputeButton.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.1")); //$NON-NLS-1$
         checkComputeButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -236,7 +239,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     }
 
     @SuppressWarnings("unchecked")
-    private Section createSectionPart(Composite parentComp, List<Column> columnList, String title, String hyperlinkText) {
+    private Section createSectionPart(Composite parentComp, final List<Column> columnList, String title, String hyperlinkText) {
         Section columnSetElementSection = this.createSection(form, parentComp, title, true, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
         sectionComp.setLayout(new GridLayout());
@@ -248,7 +251,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, true).applyTo(columsComp);
         columsComp.setLayout(new GridLayout());
 
-        final TableViewer columnsElementViewer = new TableViewer(columsComp, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        final TableViewer columnsElementViewer = new TableViewer(columsComp, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         Table table = columnsElementViewer.getTable();
         GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
         ((GridData) table.getLayoutData()).heightHint = 280;
@@ -266,36 +269,93 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         columnsElementViewer.setContentProvider(provider);
         columnsElementViewer.setLabelProvider(provider);
         columnsElementViewer.setInput(columnList);
+        DragAndDropDecorate decorate = new DragAndDropDecorate();
+        decorate.toDecorateDragAndDrop(columnsElementViewer);
 
         Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);
         buttonsComp.setLayout(new GridLayout(4, true));
         buttonsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        Button delButton = new Button(buttonsComp, SWT.NULL);
+        final Button delButton = new Button(buttonsComp, SWT.NULL);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         GridData buttonGridData = new GridData(GridData.FILL_BOTH);
         delButton.setLayoutData(buttonGridData);
-        Button moveUpButton = new Button(buttonsComp, SWT.NULL);
+        final Button moveUpButton = new Button(buttonsComp, SWT.NULL);
         moveUpButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
         moveUpButton.setLayoutData(buttonGridData);
-        Button moveDownButton = new Button(buttonsComp, SWT.NULL);
+        final Button moveDownButton = new Button(buttonsComp, SWT.NULL);
         moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
         moveDownButton.setLayoutData(buttonGridData);
+
         Button sortButton = new Button(buttonsComp, SWT.NULL);
         sortButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.sort")); //$NON-NLS-1$
         sortButton.setLayoutData(buttonGridData);
-        // treeViewer.setDirty(false);
-        final Button[] buttons = new Button[] { delButton, moveUpButton, moveDownButton, sortButton };
-        Object input = columnsElementViewer.getInput();
-        List<Object> columnSet = (List<Object>) input;
-        this.enabledButtons(buttons, columnSet.size() != 0);
+
+        final Button[] buttons = new Button[] { delButton, moveUpButton, moveDownButton };
+        columnsElementViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+            public void selectionChanged(SelectionChangedEvent event) {
+                enabledButtons(buttons, event.getSelection() != null);
+
+            }
+        });
+
+        Menu menu = new Menu(table);
+        MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+        menuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        menuItem.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.removeElement")); //$NON-NLS-1$
+        table.setMenu(menu);
+        menuItem.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement());
+                columnsElementViewer.setInput(columnList);
+                enabledButtons(buttons, false);
+            }
+        });
+
+        delButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement());
+                columnsElementViewer.setInput(columnList);
+                enabledButtons(buttons, false);
+            }
+
+        });
+
+        moveUpButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                moveElement(columnList, columnsElementViewer, false);
+
+            }
+
+        });
+        moveDownButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                moveElement(columnList, columnsElementViewer, true);
+
+            }
+
+        });
+        sortButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+        this.enabledButtons(new Button[] { delButton, moveUpButton, moveDownButton }, false);
         final List<Column> columnsOfSectionPart = columnList;
         selectColumnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
                 openColumnsSelectionDialog(columnsElementViewer, columnsOfSectionPart);
-                Object input = columnsElementViewer.getInput();
-                List<Object> columnSet = (List<Object>) input;
-                enabledButtons(buttons, columnSet.size() != 0);
+                // Object input = columnsElementViewer.getInput();
+                // List<Object> columnSet = (List<Object>) input;
+                enabledButtons(buttons, false);
             }
 
         });
@@ -327,7 +387,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             columnsElementViewer.setInput(columnSet);
             columnsOfSectionPart.clear();
             columnsOfSectionPart.addAll(columnSet);
-            this.setDirty(true);
             if (columnSet.size() != 0) {
                 String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnSet.get(0)).getName();
                 columnsElementViewer.getTable().getColumn(0).setText(
@@ -366,8 +425,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         } else {
             analysis.getParameters().getDeactivatedIndicators().clear();
         }
-        anaBuilder.addElementsToAnalyze(analysedElements, new Indicator[] { rowCountIndicator, rowMatchingIndicatorA,
-                rowMatchingIndicatorB });
+        anaBuilder.addElementsToAnalyze(analysedElements, new Indicator[] { rowMatchingIndicatorA, rowMatchingIndicatorB });
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
@@ -375,14 +433,61 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     }
 
+    protected boolean canSave() {
+        if (columnListA.size() != columnListB.size()) {
+            MessageDialog.openError(null, DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage")); //$NON-NLS-1$
+            return false;
+        }
+        if (columnListA.size() > 0) {
+            ColumnSet columnSetOwnerA = ColumnHelper.getColumnSetOwner((TdColumn) columnListA.get(0));
+            Package parentCatalogOrSchemaA = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerA);
+            ColumnSet columnSetOwnerB = ColumnHelper.getColumnSetOwner((TdColumn) columnListB.get(0));
+            Package parentCatalogOrSchemaB = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerB);
+            if (!parentCatalogOrSchemaA.getName().equals(parentCatalogOrSchemaB.getName())) {
+                MessageDialog.openError(null, DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * DOC rli Comment method "setColumnAB".
      */
     private void setColumnAB(RowMatchingIndicator rowMatchingIndicator, List<Column> columnsA, List<Column> columnsB) {
+        if (columnsA.size() != 0) {
+            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner((TdColumn) columnsA.get(0));
+            rowMatchingIndicator.setAnalyzedElement(columnSetOwner);
+        }
         rowMatchingIndicator.getColumnSetA().clear();
         rowMatchingIndicator.getColumnSetA().addAll(columnsA);
         rowMatchingIndicator.getColumnSetB().clear();
         rowMatchingIndicator.getColumnSetB().addAll(columnsB);
+    }
+
+    /**
+     * DOC rli Comment method "moveElement".
+     * 
+     * @param columnList
+     * @param columnsElementViewer
+     */
+    private void moveElement(List<Column> columnList, TableViewer columnsElementViewer, boolean isDown) {
+        Object firstElement = ((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement();
+        int index = columnList.indexOf(firstElement);
+        if (isDown) {
+            if ((index + 1) < columnList.size()) {
+                columnList.remove(firstElement);
+                columnList.add((index + 1), (Column) firstElement);
+            }
+        } else {
+            if ((index - 1) >= 0) {
+                columnList.remove(firstElement);
+                columnList.add((index - 1), (Column) firstElement);
+            }
+
+        }
+        columnsElementViewer.setInput(columnList);
     }
 
     /**
@@ -397,6 +502,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            setDirty(true);
         }
 
         public Image getImage(Object element) {
