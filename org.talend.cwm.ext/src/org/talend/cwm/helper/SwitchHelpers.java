@@ -20,7 +20,9 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.relational.util.RelationalSwitch;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch;
+import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -112,4 +114,36 @@ public final class SwitchHelpers {
         }
 
     };
+
+    public static final SoftwaredeploymentSwitch<TdSoftwareSystem> TDSOFTWARE_SYSTEM_SWITCH = new SoftwaredeploymentSwitch<TdSoftwareSystem>() {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @seeorg.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch#caseTdSoftwareSystem(org.talend.cwm.
+         * softwaredeployment.TdSoftwareSystem)
+         */
+        @Override
+        public TdSoftwareSystem caseTdSoftwareSystem(TdSoftwareSystem object) {
+            return object;
+        }
+
+    };
+    
+    public static final orgomg.cwm.foundation.softwaredeployment.util.SoftwaredeploymentSwitch<Component> COMPONENT_SWITCH = new orgomg.cwm.foundation.softwaredeployment.util.SoftwaredeploymentSwitch<Component>() {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * orgomg.cwm.foundation.softwaredeployment.util.SoftwaredeploymentSwitch#caseComponent(orgomg.cwm.foundation
+         * .softwaredeployment.Component)
+         */
+        @Override
+        public Component caseComponent(Component object) {
+            return object;
+        }
+        
+    };
+    
 }

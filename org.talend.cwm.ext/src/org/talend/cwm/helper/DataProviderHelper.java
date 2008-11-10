@@ -19,16 +19,19 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -115,7 +118,7 @@ public final class DataProviderHelper {
      * @param column
      * @return the data provider or null
      */
-    public static TdDataProvider getTdDataProvider(TdColumn column) {
+    public static TdDataProvider getTdDataProvider(Column column) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         if (columnSetOwner == null) {
             return null;
@@ -192,6 +195,39 @@ public final class DataProviderHelper {
 
     public static boolean addSchema(TdSchema schema, TdDataProvider dataProvider) {
         return addPackage(schema, dataProvider);
+    }
+
+    public static TdSoftwareSystem getSoftwareSystem(TdDataProvider dataProvider) {
+        final Component component = dataProvider.getComponent();
+        if (component != null) {
+            final Namespace namespace = component.getNamespace();
+            if (namespace != null) {
+                final TdSoftwareSystem softwareSystem = SwitchHelpers.TDSOFTWARE_SYSTEM_SWITCH.doSwitch(namespace);
+                return softwareSystem;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Method "setSoftwareSystem".
+     * 
+     * @param dataProvider
+     * @param softwareSystem
+     * @return true if the link between the data provider and the software system is set
+     */
+    public static boolean setSoftwareSystem(TdDataProvider dataProvider, TdSoftwareSystem softwareSystem) {
+        final EList<ModelElement> ownedElements = softwareSystem.getOwnedElement();
+        for (ModelElement modelElement : ownedElements) {
+            if (modelElement != null) {
+            Component component = SwitchHelpers.COMPONENT_SWITCH.doSwitch(modelElement);
+            if (component != null) {
+                    dataProvider.setComponent(component);
+                    return true;
+            }
+            }
+        }
+        return false;
     }
 
     private static boolean addPackages(Collection<? extends Package> packages, TdDataProvider dataProvider) {
