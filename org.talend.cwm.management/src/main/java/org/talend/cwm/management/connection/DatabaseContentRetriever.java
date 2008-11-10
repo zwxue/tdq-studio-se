@@ -53,6 +53,7 @@ import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sql.metadata.constants.MetaDataConstants;
 import org.talend.utils.sql.metadata.constants.TypeInfoColumns;
+import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.foundation.typemapping.TypeSystem;
 import orgomg.cwm.foundation.typemapping.TypemappingFactory;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -346,6 +347,8 @@ public final class DatabaseContentRetriever {
         system.setType(SoftwareSystemConstants.DBMS.toString());
         system.setSubtype(databaseProductName);
         system.setVersion(databaseProductVersion);
+        Component component = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory.eINSTANCE.createComponent();
+        system.getOwnedElement().add(component);        
 
         return system;
     }

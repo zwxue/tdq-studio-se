@@ -37,10 +37,11 @@ public class SoftwareSystemBuilder extends CwmBuilder {
 
     private TdSoftwareSystem initializeSoftwareSystem() throws SQLException {
         TdSoftwareSystem system = DatabaseContentRetriever.getSoftwareSystem(connection);
-        this.typeSystem = DatabaseContentRetriever.getTypeSystem(connection);
-
-        // --- add type systems: softwareSystem.getTypespace()
-        system.getTypespace().add(typeSystem);
+        // TODO scorreia uncomment this part when we know where to save the typeSystem.
+        // this.typeSystem = DatabaseContentRetriever.getTypeSystem(connection);
+        //
+        // // --- add type systems: softwareSystem.getTypespace()
+        // system.getTypespace().add(typeSystem);
 
         return system;
     }

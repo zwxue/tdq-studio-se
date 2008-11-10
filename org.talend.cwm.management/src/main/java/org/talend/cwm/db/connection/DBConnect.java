@@ -237,7 +237,7 @@ public class DBConnect {
      * @param props
      * @return false if problem. true if the connection is opened.
      */
-    public boolean connectAndRetrieveInformations() {
+    boolean connectAndRetrieveInformations() {
         boolean ok = true;
         try {
             ok = connect();

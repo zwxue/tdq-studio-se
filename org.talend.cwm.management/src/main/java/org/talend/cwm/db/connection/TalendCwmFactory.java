@@ -37,6 +37,7 @@ import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
@@ -92,6 +93,14 @@ public final class TalendCwmFactory {
         TdDataProvider dataProvider = getTdDataProvider(connector);
         // --- get the connection provider
         TdProviderConnection providerConnection = connector.getProviderConnection();
+
+        // --- get software system
+        if (connector.retrieveDeployedSystemInformations()) {
+            TdSoftwareSystem softwareSystem = connector.getSoftwareSystem();
+            if (softwareSystem != null) {
+                DataProviderHelper.setSoftwareSystem(dataProvider, softwareSystem);
+            }
+        }
 
         // --- get database structure informations
         Collection<TdCatalog> catalogs = getCatalogs(connector);

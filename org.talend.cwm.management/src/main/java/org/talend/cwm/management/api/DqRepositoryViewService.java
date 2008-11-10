@@ -55,6 +55,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.RangeRestriction;
@@ -354,6 +355,10 @@ public final class DqRepositoryViewService {
             resource.getContents().addAll(supplierDependency);
         }
 
+        // save software system
+        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
+        saveSoftwareSystem(softwareSystem);
+
         // save each catalog is its own file
         Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
         if (CAT_WITH_PRV) {
@@ -380,6 +385,17 @@ public final class DqRepositoryViewService {
             log.debug("Schema added " + ok);
         }
         return ok;
+    }
+
+    /**
+     * DOC scorreia Comment method "saveSoftwareSystem".
+     * @param util
+     * @param softwareSystem
+     */
+    public static boolean saveSoftwareSystem(TdSoftwareSystem softwareSystem) {
+        EMFSharedResources util = EMFSharedResources.getInstance();
+        util.getSoftwareDeploymentResource().getContents().add(softwareSystem);
+        return util.saveSoftwareDeploymentResource();
     }
 
     /**

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -29,13 +30,16 @@ import org.talend.utils.sugars.TypedReturnCode;
  * 
  * This class manages the software systems. TODO scorreia store SoftwareSystem in Namespace object.
  */
-public class SoftwareSystemManager {
+public final class SoftwareSystemManager {
 
     private static Logger log = Logger.getLogger(SoftwareSystemManager.class);
 
     private Map<TdDataProvider, TdSoftwareSystem> urlToSoftwareSystem = new HashMap<TdDataProvider, TdSoftwareSystem>();
 
     private static SoftwareSystemManager instance;
+
+    private SoftwareSystemManager() {
+    }
 
     public static SoftwareSystemManager getInstance() {
         if (instance == null) {
@@ -44,6 +48,7 @@ public class SoftwareSystemManager {
         return instance;
     }
 
+    // FIXME handle delete of data provider
     /**
      * Method "getSoftwareSystem".
      * 
@@ -59,9 +64,14 @@ public class SoftwareSystemManager {
                 if (trc.isOk()) {
                     Connection connection = trc.getObject();
                     tdSoftwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
+                    if (tdSoftwareSystem != null) {
+                       if (DataProviderHelper.setSoftwareSystem(dataProvider, tdSoftwareSystem)) {
+                            DqRepositoryViewService.saveSoftwareSystem(tdSoftwareSystem);
+                        }
+                    }
+                    // store it in map
+                    urlToSoftwareSystem.put(dataProvider, tdSoftwareSystem);
                 }
-                // store it in map
-                urlToSoftwareSystem.put(dataProvider, tdSoftwareSystem);
             } catch (SQLException e) {
                 log.error(e, e);
             }
