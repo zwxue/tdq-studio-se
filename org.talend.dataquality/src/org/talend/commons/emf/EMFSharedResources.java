@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -34,6 +35,40 @@ public final class EMFSharedResources {
     private final EMFUtil emfUtil = new EMFUtil();
 
     private final ResourceSet resourceSet = emfUtil.getResourceSet();
+    
+    private Resource softwareDeploymentResource = null;
+
+    
+    /**
+     * Getter for softwareDeploymentResource.
+     * 
+     * @return the softwareDeploymentResource
+     */
+    public Resource getSoftwareDeploymentResource() {
+        if (softwareDeploymentResource == null) {
+            softwareDeploymentResource = initSoftwareDeploymentResource();
+        }
+        return this.softwareDeploymentResource;
+    }
+
+    public boolean saveSoftwareDeploymentResource() {
+        return (softwareDeploymentResource != null) ? EMFUtil.saveSingleResource(softwareDeploymentResource) : false;
+    }
+    
+    /**
+     * DOC scorreia Comment method "initSoftwareDeploymentResource".
+     * 
+     * @return
+     */
+    private Resource initSoftwareDeploymentResource() {
+        URI sUri = URI.createPlatformResourceURI("/Libraries/.softwaresystem." + SoftwaredeploymentPackage.eNAME, false);
+        Resource resource = resourceSet.getResource(sUri, false);
+        if (resource != null) {
+            return resource;
+        }
+        // else
+        return resourceSet.createResource(sUri);
+    }
 
     /**
      * Getter for instance.
