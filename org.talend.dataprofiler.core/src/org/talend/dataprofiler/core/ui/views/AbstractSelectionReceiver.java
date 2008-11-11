@@ -81,7 +81,8 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.views.ISelectionReceiver#doDropValidation(org.eclipse.swt.dnd.DropTargetEvent,
+     * @see
+     * org.talend.dataprofiler.core.ui.views.ISelectionReceiver#doDropValidation(org.eclipse.swt.dnd.DropTargetEvent,
      * org.eclipse.ui.navigator.CommonViewer)
      */
     public boolean doDropValidation(DropTargetEvent event, LocalSelectionTransfer transfer) {
@@ -90,7 +91,7 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
         for (Object object : firstElements) {
             if (object instanceof IFile) {
                 IFile fe = (IFile) object;
-                if (extension.equals(fe.getFileExtension())) {
+                if (extension != null && extension.equals(fe.getFileExtension())) {
                     ret = true;
                 }
             }

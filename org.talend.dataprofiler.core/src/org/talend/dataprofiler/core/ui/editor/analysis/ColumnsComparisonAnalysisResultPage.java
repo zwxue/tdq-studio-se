@@ -46,12 +46,17 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.utils.format.StringFormatUtil;
 import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
 public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultPage {
+
+    private static final String NOT_MATCHING = "not matching";
+
+    private static final String MATCHING = "matching";
 
     private ColumnsComparisonMasterDetailsPage masterPage;
 
@@ -176,45 +181,44 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     }
 
     private void createTableItems(Table resultTable) {
-        // TODO Can't get matchingValueCount or notMatchingIndicator value, so comment it.
-        // Long columnSetARows = rowMatchingIndicatorA.getMatchingValueCount() +
-        // rowMatchingIndicatorA.getMatchingValueCount();
-        // Long columnSetBRows = rowMatchingIndicatorB.getMatchingValueCount() +
-        // rowMatchingIndicatorB.getMatchingValueCount();
+        Long columnSetARows = rowMatchingIndicatorA.getMatchingValueCount() + rowMatchingIndicatorA.getNotMatchingValueCount();
+        Long columnSetBRows = rowMatchingIndicatorB.getMatchingValueCount() + rowMatchingIndicatorB.getNotMatchingValueCount();
         TableItem item1 = new TableItem(resultTable, SWT.NULL);
         item1.setText(0, "%Match"); //$NON-NLS-1$
-        // item1.setText(1, StringFormatUtil.format(
-        // (rowMatchingIndicatorA.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-        // StringFormatUtil.PERCENT).toString());
-        // item1.setText(1, StringFormatUtil.format(
-        // (rowMatchingIndicatorB.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-        // StringFormatUtil.PERCENT).toString());
+        item1.setText(1, StringFormatUtil.format(
+                (rowMatchingIndicatorA.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
+                StringFormatUtil.PERCENT).toString());
+        item1.setText(2, StringFormatUtil.format(
+                (rowMatchingIndicatorB.getMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
+                StringFormatUtil.PERCENT).toString());
         TableItem item2 = new TableItem(resultTable, SWT.NULL);
         item2.setText(0, "%NotMatch"); //$NON-NLS-1$
-        // item1.setText(1, StringFormatUtil.format(
-        // (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-        // StringFormatUtil.PERCENT).toString());
-        // item1.setText(1, StringFormatUtil.format(
-        // (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-        // StringFormatUtil.PERCENT).toString());
+        item2.setText(1, StringFormatUtil.format(
+                (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
+                StringFormatUtil.PERCENT).toString());
+        item2.setText(2, StringFormatUtil.format(
+                (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
+                StringFormatUtil.PERCENT).toString());
         TableItem item3 = new TableItem(resultTable, SWT.NULL);
         item3.setText(0, "#Match"); //$NON-NLS-1$
-        // item3.setText(1, rowMatchingIndicatorA.getMatchingValueCount().toString());
-        // item3.setText(2, rowMatchingIndicatorB.getMatchingValueCount().toString());
+        item3.setText(1, rowMatchingIndicatorA.getMatchingValueCount().toString());
+        item3.setText(2, rowMatchingIndicatorB.getMatchingValueCount().toString());
         TableItem item4 = new TableItem(resultTable, SWT.NULL);
         item4.setText(0, "#Not Match"); //$NON-NLS-1$
-        // item4.setText(1, rowMatchingIndicatorA.getNotMatchingValueCount().toString());
-        // item4.setText(2, rowMatchingIndicatorB.getNotMatchingValueCount().toString());
+        item4.setText(1, rowMatchingIndicatorA.getNotMatchingValueCount().toString());
+        item4.setText(2, rowMatchingIndicatorB.getNotMatchingValueCount().toString());
         TableItem item5 = new TableItem(resultTable, SWT.NULL);
         item5.setText(0, "#Rows"); //$NON-NLS-1$
-        // item5.setText(1, columnSetARows.toString());
-        // item5.setText(2, columnSetBRows.toString());
+        item5.setText(1, columnSetARows.toString());
+        item5.setText(2, columnSetBRows.toString());
     }
 
     private void creatChart(Composite parent) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(5, "matching", "ColumnsA"); //$NON-NLS-1$
-        dataset.addValue(6, "not matching", "ColumnsB"); //$NON-NLS-1$
+        dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, "SetA");
+        dataset.addValue(rowMatchingIndicatorA.getNotMatchingValueCount(), NOT_MATCHING, "SetA");
+        dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB");
+        dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB");
         JFreeChart createStacked3DBarChart = ChartImageFactory.createStacked3DBarChart(null, dataset);
         ChartPanel chartPanel = new ChartPanel(createStacked3DBarChart);
         GridData gd = new GridData();

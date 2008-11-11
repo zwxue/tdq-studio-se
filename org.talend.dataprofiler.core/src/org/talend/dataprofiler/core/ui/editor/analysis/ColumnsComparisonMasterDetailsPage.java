@@ -56,7 +56,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
-import org.talend.dataprofiler.core.ui.editor.composite.DragAndDropDecorate;
+import org.talend.dataprofiler.core.ui.editor.composite.TableViewerDNDDecorate;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
@@ -269,8 +269,10 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         columnsElementViewer.setContentProvider(provider);
         columnsElementViewer.setLabelProvider(provider);
         columnsElementViewer.setInput(columnList);
-        DragAndDropDecorate decorate = new DragAndDropDecorate();
-        decorate.toDecorateDragAndDrop(columnsElementViewer);
+        // DragAndDropDecorate decorate = new DragAndDropDecorate();
+        // decorate.toDecorateDragAndDrop(columnsElementViewer);
+        TableViewerDNDDecorate dndDecorate = new TableViewerDNDDecorate();
+        dndDecorate.installDND(columnsElementViewer, true, TableViewerDNDDecorate.COLUMN_VALIDATETYPE);
 
         Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);
         buttonsComp.setLayout(new GridLayout(4, true));
@@ -376,8 +378,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
      */
     public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<Column> columnsOfSectionPart) {
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, DefaultMessagesImpl
-                .getString("ColumnsComparisonMasterDetailsPage.columnSelection"), columnsOfSectionPart, //$NON-NLS-1$
-                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnSelections")); //$NON-NLS-1$
+                .getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             List<Column> columnSet = new ArrayList<Column>();
@@ -404,8 +406,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
         List<ModelElement> analysedElements = new ArrayList<ModelElement>();
-        setColumnAB(rowMatchingIndicatorA, columnListA, columnListB);
-        setColumnAB(rowMatchingIndicatorB, columnListB, columnListA);
+        setColumnABForMatchingIndicator(rowMatchingIndicatorA, columnListA, columnListB);
+        setColumnABForMatchingIndicator(rowMatchingIndicatorB, columnListB, columnListA);
         for (int i = 0; i < columnListA.size(); i++) {
             analysedElements.add(columnListA.get(i));
         }
@@ -440,12 +442,44 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             return false;
         }
         if (columnListA.size() > 0) {
-            ColumnSet columnSetOwnerA = ColumnHelper.getColumnSetOwner((TdColumn) columnListA.get(0));
+            // whether the columns on a same table
+            ColumnSet columnSetOwnerA = null;
+            ColumnSet columnSetOwnerB = null;
+            ColumnSet ownerA = null;
+            ColumnSet ownerB = null;
+            for (int i = 0; i < columnListA.size(); i++) {
+                if (!((TdColumn) columnListA.get(i)).getSqlDataType().getName().equals(
+                        ((TdColumn) columnListB.get(i)).getSqlDataType().getName())) {
+                    MessageDialog
+                            .openError(
+                                    null,
+                                    DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType")); //$NON-NLS-1$ //$NON-NLS-2$
+                    return false;
+                }
+                ownerA = ColumnHelper.getColumnSetOwner(columnListA.get(i));
+                ownerB = ColumnHelper.getColumnSetOwner(columnListB.get(i));
+                if (i == 0) {
+                    columnSetOwnerA = ownerA;
+                    columnSetOwnerB = ownerB;
+                } else {
+                    if ((columnSetOwnerA != ownerA) || (columnSetOwnerB != ownerB)) {
+                        MessageDialog
+                                .openError(
+                                        null,
+                                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameElementMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+                        return false;
+                    }
+                }
+            }
+
+            // whether have a same schema/catalog.
             Package parentCatalogOrSchemaA = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerA);
-            ColumnSet columnSetOwnerB = ColumnHelper.getColumnSetOwner((TdColumn) columnListB.get(0));
             Package parentCatalogOrSchemaB = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerB);
             if (!parentCatalogOrSchemaA.getName().equals(parentCatalogOrSchemaB.getName())) {
-                MessageDialog.openError(null, DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage")); //$NON-NLS-1$ //$NON-NLS-2$
+                MessageDialog
+                        .openError(
+                                null,
+                                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage")); //$NON-NLS-1$ //$NON-NLS-2$
                 return false;
             }
         }
@@ -455,7 +489,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     /**
      * DOC rli Comment method "setColumnAB".
      */
-    private void setColumnAB(RowMatchingIndicator rowMatchingIndicator, List<Column> columnsA, List<Column> columnsB) {
+    private void setColumnABForMatchingIndicator(RowMatchingIndicator rowMatchingIndicator, List<Column> columnsA,
+            List<Column> columnsB) {
         if (columnsA.size() != 0) {
             ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner((TdColumn) columnsA.get(0));
             rowMatchingIndicator.setAnalyzedElement(columnSetOwner);

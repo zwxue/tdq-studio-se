@@ -76,7 +76,8 @@ public class AnalysisEditor extends CommonFormEditor {
             }
             break;
         case COLUMNS_COMPARISON:
-            masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, DefaultMessagesImpl.getString("AnalysisEditor.analysisSetting")); //$NON-NLS-1$
+            masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, DefaultMessagesImpl
+                    .getString("AnalysisEditor.analysisSetting")); //$NON-NLS-1$
             setPartName(DefaultMessagesImpl.getString("AnalysisEditor.column")); //$NON-NLS-1$
             ColumnsComparisonAnalysisResultPage columnsComparisonAnalysisReslultPage = new ColumnsComparisonAnalysisResultPage(
                     this, SECOND_PAGE, ANALYSIS_RESULTS);
@@ -120,7 +121,7 @@ public class AnalysisEditor extends CommonFormEditor {
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);
         if (getMasterPage().isDirty()) {
-            getMasterPage().doSave(null);
+            // getMasterPage().doSave(null);
         }
 
         if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()) {
