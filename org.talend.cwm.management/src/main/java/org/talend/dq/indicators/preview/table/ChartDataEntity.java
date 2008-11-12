@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dq.indicators.preview.table;
 
+import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 
 /**
@@ -28,6 +31,10 @@ public class ChartDataEntity {
 
     private String percent;
 
+    private Boolean outOfRange = null;
+
+    private String range;
+
     private boolean labelNull = false;
 
     public ChartDataEntity() {
@@ -39,11 +46,121 @@ public class ChartDataEntity {
     }
 
     public ChartDataEntity(Indicator indicator, String label, String value, String percent, boolean labelNull) {
-        this.indicator = indicator;
         this.label = label;
         this.value = value;
         this.percent = percent;
         this.labelNull = labelNull;
+        this.indicator = indicator;
+    }
+
+    /**
+     * DOC Zqin Comment method "isOutOfRange".
+     * 
+     * @return
+     */
+    public boolean isOutOfRange() {
+        outOfRange = false;
+
+        if (value != null && indicator != null) {
+            IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
+
+            switch (indicatorEnum) {
+            case ModeIndicatorEnum:
+                String expectedValue = IndicatorHelper.getExpectedValue(indicator);
+                if (expectedValue != null) {
+
+                    Boolean ignoreCaseOption = IndicatorHelper.ignoreCaseOption(indicator);
+
+                    outOfRange = !StringUtils.equals(value, expectedValue);
+
+                    if (ignoreCaseOption) {
+                        outOfRange = !(ignoreCaseOption && StringUtils.equalsIgnoreCase(value, expectedValue));
+                    }
+                }
+                break;
+            default:
+
+                outOfRange = checkRange(value, getDefinedRange());
+            }
+        }
+
+        return outOfRange;
+    }
+
+    public Double[] getDefinedRange() {
+        String[] threshold = IndicatorHelper.getDataThreshold(indicator);
+
+        if (threshold == null) {
+            threshold = IndicatorHelper.getIndicatorThreshold(indicator);
+        }
+
+        if (threshold != null) {
+            Double[] returnDB = new Double[threshold.length];
+
+            for (int i = 0; i < threshold.length; i++) {
+                returnDB[i] = Double.valueOf(StringFormatUtil.format(threshold[i], StringFormatUtil.NUMBER).toString());
+            }
+
+            return returnDB;
+        }
+
+        return null;
+    }
+
+    /**
+     * DOC Zqin Comment method "checkRange".
+     * 
+     * @param currentValue
+     * @param threshold
+     * @return
+     */
+    private boolean checkRange(String currentValue, Double[] threshold) {
+
+        if (threshold != null) {
+            Double min = threshold[0];
+            Double max = threshold[1];
+
+            // handle min and max
+            Double dValue = currentValue != null ? Double.valueOf(currentValue) : Double.NaN;
+            if (min == null || Double.isNaN(min)) {
+                min = Double.NEGATIVE_INFINITY;
+            }
+
+            if (max == null || Double.isNaN(max)) {
+                max = Double.POSITIVE_INFINITY;
+            }
+
+            if (dValue < min || dValue > max) {
+                range = " [" + min + "," + max + "]";
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * DOC Zqin Comment method "getRangeAsString".
+     * 
+     * @return retrun the message when indicator value out the defined range.
+     */
+    public String getRangeAsString() {
+
+        StringBuilder msg = new StringBuilder();
+
+        if (outOfRange != null && indicator != null && outOfRange) {
+            IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
+
+            if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
+                msg.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\"");
+            } else if (indicatorEnum == IndicatorEnum.BoxIIndicatorEnum) {
+                msg.append("This value is outside the expected data's thresholds: " + range);
+            } else {
+                msg.append("This value is outside the expected indicator's thresholds: " + range);
+            }
+        }
+
+        return msg.length() == 0 ? null : msg.toString();
     }
 
     /**
