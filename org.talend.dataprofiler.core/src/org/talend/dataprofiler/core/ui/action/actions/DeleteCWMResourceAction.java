@@ -25,8 +25,11 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.jfree.util.Log;
+import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -165,6 +168,14 @@ public class DeleteCWMResourceAction extends Action {
 
             } else if (FactoriesUtil.REP.equalsIgnoreCase(selectedResource.getFileExtension())) {
                 folderName = "." + selectedResource.getFullPath().removeFileExtension().lastSegment(); //$NON-NLS-1$
+            } else if (FactoriesUtil.PROV.equalsIgnoreCase(selectedResource.getFileExtension())) {
+                // remove the software system from its resource
+                TypedReturnCode<TdDataProvider> findProvider = PrvResourceFileHelper.getInstance().findProvider(
+                        (IFile) selectedResource);
+                TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(findProvider.getObject());
+                EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(softwareSystem);
+                EMFSharedResources.getInstance().saveSoftwareDeploymentResource();
+                continue;
             } else {
                 continue;
             }
