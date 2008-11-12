@@ -39,6 +39,8 @@ public class AnalysisEditor extends CommonFormEditor {
 
     private static final String ANALYSIS_SETTINGS = DefaultMessagesImpl.getString("AnalysisEditor.analysisSettings"); //$NON-NLS-1$
 
+    private static final int RESULT_PAGE_INDEX = 1;
+
     private IFormPage masterPage;
 
     private IFormPage columnResultPage;
@@ -120,8 +122,8 @@ public class AnalysisEditor extends CommonFormEditor {
     @Override
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);
-        if (getMasterPage().isDirty()) {
-            // getMasterPage().doSave(null);
+        if (getMasterPage().isDirty() && (newPageIndex == RESULT_PAGE_INDEX)) {
+            getMasterPage().doSave(null);
         }
 
         if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()) {
