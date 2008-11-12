@@ -31,8 +31,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -62,7 +60,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
@@ -86,8 +83,7 @@ import orgomg.cwm.resource.relational.Column;
  * @author rli
  * 
  */
-public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implements IRuningStatusListener,
-        PropertyChangeListener {
+public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
 
@@ -109,7 +105,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     private Composite[] previewChartCompsites;
 
-    private Button runBtn;
+    private Button runButton;
 
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -173,21 +169,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         createPreviewSection(form, previewComp);
 
-        GridData gdBtn = new GridData();
-        gdBtn.horizontalAlignment = SWT.CENTER;
-        gdBtn.horizontalSpan = 2;
-        gdBtn.widthHint = 120;
-        runBtn = toolkit.createButton(form.getBody(), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.run"), SWT.NONE); //$NON-NLS-1$
-        runBtn.setLayoutData(gdBtn);
-
-        runBtn.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-
-                new RunAnalysisAction(ColumnMasterDetailsPage.this).run();
-            }
-        });
+        runButton = createRunButton(form);
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
@@ -583,12 +565,26 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     public void fireRuningItemChanged(boolean status) {
 
-        this.runBtn.setEnabled(status);
+        this.runButton.setEnabled(status);
 
         if (status) {
             ((AnalysisEditor) getEditor()).setRefreshResultPage(true);
             refreshChart();
         }
 
+    }
+
+    @Override
+    protected boolean canRun() {
+        ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
+        if (columnIndicators == null || columnIndicators.length == 0) {
+            return false;
+        }
+        for (ColumnIndicator columnIndicator : columnIndicators) {
+            if (columnIndicator.getIndicators().length == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }

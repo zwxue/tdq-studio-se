@@ -30,11 +30,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -58,8 +55,6 @@ import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.IRuningStatusListener;
-import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -74,7 +69,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage implements IRuningStatusListener {
+public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
 
     private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema"); //$NON-NLS-1$
 
@@ -121,22 +116,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
         createAnalysisSummarySection(form, topComp);
         createStatisticalSection(form, topComp);
 
-        GridData gdBtn = new GridData();
-        gdBtn.horizontalAlignment = SWT.CENTER;
-        gdBtn.horizontalSpan = 2;
-        gdBtn.widthHint = 120;
-        Button runBtn = toolkit.createButton(form.getBody(),
-                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.run"), SWT.NONE); //$NON-NLS-1$
-        runBtn.setLayoutData(gdBtn);
-
-        runBtn.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                new RunAnalysisAction(ConnectionMasterDetailsPage.this).run();
-            }
-
-        });
+        createRunButton(form);
     }
 
     private void createAnalysisParamSection(ScrolledForm form, Composite topComp) {
@@ -616,5 +596,10 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage im
         if (status) {
             doSetInput();
         }
+    }
+
+    @Override
+    protected boolean canRun() {
+        return true;
     }
 }

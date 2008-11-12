@@ -14,7 +14,9 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
@@ -107,6 +109,14 @@ public class AnalysisEditor extends CommonFormEditor {
 
     protected void firePropertyChange(final int propertyId) {
         super.firePropertyChange(propertyId);
+        if (propertyId == IEditorPart.PROP_DIRTY) {
+            if (isDirty() && this.getMasterPage() != null) {
+                Button runButton = ((AbstractAnalysisMetadataPage) this.getMasterPage()).getRunButton();
+                if (runButton != null) {
+                    runButton.setEnabled(false);
+                }
+            }
+        }
         isRefreshResultPage = true;
     }
 

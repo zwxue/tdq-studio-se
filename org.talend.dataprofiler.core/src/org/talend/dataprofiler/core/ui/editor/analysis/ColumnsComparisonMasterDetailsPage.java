@@ -140,30 +140,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
             rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
             columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
-            // for (Indicator indicator : indicators) {
-            // IndicatorsSwitch<RowCountIndicator> rowCountIndSwitch = new IndicatorsSwitch<RowCountIndicator>() {
-            //
-            // public RowCountIndicator caseRowCountIndicator(RowCountIndicator object) {
-            // return object;
-            // }
-            // };
-            // ColumnsetSwitch<RowMatchingIndicator> rowMatchingIndSwitch = new ColumnsetSwitch<RowMatchingIndicator>()
-            // {
-            //
-            // public RowMatchingIndicator caseRowMatchingIndicator(RowMatchingIndicator object) {
-            // return object;
-            // }
-            // };
-            //
-            // // if(){
-            // //
-            // // }
-            // }
         }
-
-        // EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
-        // analysisHandler = new ColumnComparisonAnalysisHandler();
-        // analysisHandler.setAnalysis();
     }
 
     /**
@@ -189,6 +166,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         this.metadataSection.setDescription(DefaultMessagesImpl
                 .getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
         createAnalyzedColumnSetsSection(topComp);
+        createRunButton(form);
+        this.setDirty(false);
     }
 
     private void createAnalyzedColumnSetsSection(Composite parentComp) {
@@ -213,6 +192,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             }
 
         });
+        checkComputeButton.setSelection(analysis.getParameters().getDeactivatedIndicators().size() != 0);
 
         SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
         sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -554,6 +534,16 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             return PluginConstant.EMPTY_STRING;
         }
 
+    }
+
+    public void fireRuningItemChanged(boolean status) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected boolean canRun() {
+        return rowMatchingIndicatorA.getColumnSetA().size() != 0;
     }
 
 }
