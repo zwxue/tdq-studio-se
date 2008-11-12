@@ -168,7 +168,17 @@ public final class IndicatorHelper {
      * null. The first element is the lower threshold and the second element is the higher threshold.
      */
     public static String[] getIndicatorThreshold(Indicator indicator) {
-        IndicatorParameters parameters = indicator.getParameters();
+        return getIndicatorThreshold(indicator.getParameters());
+    }
+
+    /**
+     * DOC Zqin Comment method "getIndicatorThreshold".
+     * 
+     * @param parameters
+     * @return an array of thresholds if any or null. When the array is not null, its size is 2 but its elements can be
+     * null. The first element is the lower threshold and the second element is the higher threshold.
+     */
+    public static String[] getIndicatorThreshold(IndicatorParameters parameters) {
         if (parameters == null) {
             return null;
         }

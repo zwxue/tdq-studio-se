@@ -228,7 +228,7 @@ public class DomainHelper {
         return getValueAsText(range.getUpperValue());
     }
 
-    private static double getRealValue(LiteralValue object) {
+    public static double getRealValue(LiteralValue object) {
         RealNumberValue upperValue = DataqualitySwitchHelper.REAL_NB_VALUE_SWITCH.doSwitch(object);
         if (upperValue == null) {
             throw new IllegalArgumentException(object + " does not contain real value.");
@@ -357,7 +357,6 @@ public class DomainHelper {
         return pattern;
     }
 
-    
     private static String getPattern(final Collection<Domain> dataFilters, DomainType domainType, PatternType patternType) {
         if (dataFilters == null) {
             return null;

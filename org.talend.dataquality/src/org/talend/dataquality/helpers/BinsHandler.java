@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import org.talend.utils.format.StringFormatUtil;
+
 /**
  * DOC scorreia class global comment. Detailled comment
  */
@@ -50,7 +52,7 @@ public class BinsHandler {
         double[] bins = new double[nbIntervals + 1];
         double step = (max - min) / (nbIntervals);
         for (int i = 0; i < nbIntervals + 1; i++) {
-            bins[i] = min + i * step;
+            bins[i] = StringFormatUtil.formatDouble(min + i * step);
         }
         return bins;
     }
