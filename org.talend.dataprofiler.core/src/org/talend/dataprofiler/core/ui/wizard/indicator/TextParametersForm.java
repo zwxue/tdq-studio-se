@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.Group;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TextParameter;
+import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.TextParameters;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -34,24 +34,10 @@ public class TextParametersForm extends AbstractIndicatorForm {
 
     private Button caseBtn;
 
-    protected TextParameter parameter;
+    public TextParametersForm(Composite parent, int style) {
+        super(parent, style);
 
-    public TextParametersForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
-        super(parent, style, parameter);
-
-        this.parameter = (TextParameter) parameter;
-        this.setupForm();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
-     */
-    @Override
-    protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
+        setupForm();
     }
 
     /*
@@ -91,11 +77,40 @@ public class TextParametersForm extends AbstractIndicatorForm {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                parameter.setIngoreCase(caseBtn.getSelection());
                 updateStatus(IStatus.OK, MSG_OK);
             }
 
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
+     */
+    @Override
+    protected void initialize() {
+
+        TextParameters textParameter = parameters.getTextParameter();
+        if (textParameter != null) {
+            caseBtn.setSelection(textParameter.isIgnoreCase());
+        }
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.TextParametersForm;
+    }
+
+    @Override
+    public boolean performFinish() {
+        TextParameters textParameter = parameters.getTextParameter();
+        if (textParameter == null) {
+            textParameter = IndicatorsFactory.eINSTANCE.createTextParameters();
+        }
+        textParameter.setIgnoreCase(caseBtn.getSelection());
+        parameters.setTextParameter(textParameter);
+        return true;
     }
 
     /*
@@ -123,23 +138,11 @@ public class TextParametersForm extends AbstractIndicatorForm {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
-    protected void initialize() {
+    protected void adaptFormToReadOnly() {
+        // TODO Auto-generated method stub
 
-        if (parameter == null) {
-
-            parameter = new TextParameter();
-        } else {
-
-            caseBtn.setSelection(parameter.isIngoreCase());
-        }
     }
-
-    @Override
-    public FormEnum getFormEnum() {
-        return FormEnum.TextParametersForm;
-    }
-
 }

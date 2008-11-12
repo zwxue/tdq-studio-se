@@ -75,7 +75,6 @@ Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.ui.wizard.analysis.provider,
  org.talend.dataprofiler.core.ui.wizard.database,
  org.talend.dataprofiler.core.ui.wizard.indicator,
- org.talend.dataprofiler.core.ui.wizard.indicator.parameter,
  org.talend.dataprofiler.core.ui.wizard.urlsetup
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.apache.log4j

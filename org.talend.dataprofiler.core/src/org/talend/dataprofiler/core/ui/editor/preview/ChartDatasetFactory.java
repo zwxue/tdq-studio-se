@@ -162,8 +162,6 @@ public class ChartDatasetFactory {
             CustomerBoxDataset defaultDataset = new CustomerBoxDataset();
             Map<IndicatorEnum, Double> map = new HashMap<IndicatorEnum, Double>();
 
-            boolean isBox = indicatorUnitList.size() == 6;
-
             for (IndicatorUnit unit : indicatorUnitList) {
                 if (unit.isExcuted()) {
                     double doubleValue = Double.parseDouble(unit.getValue().toString());
@@ -174,22 +172,13 @@ public class ChartDatasetFactory {
                     entity.setLabel(unit.getIndicatorName());
                     entity.setValue(String.valueOf(unit.getValue()));
 
-                    if (isBox) {
-                        defaultDataset.addDataEntity(entity);
-                    } else {
-                        dataset.addDataEntity(entity);
-                    }
+                    defaultDataset.addDataEntity(entity);
+                    dataset.addDataEntity(entity);
                 }
             }
 
-            if (!isBox) {
-                defaultDataset = null;
+            if (map.size() == 6) {
 
-                for (IndicatorEnum indicatorEnum : map.keySet()) {
-                    dataset.addValue(map.get(indicatorEnum), "", indicatorEnum.getLabel()); //$NON-NLS-1$
-                }
-
-            } else {
                 dataset = null;
 
                 BoxAndWhiskerItem item = createBoxAndWhiskerItem(map.get(IndicatorEnum.MeanIndicatorEnum), map
@@ -209,6 +198,13 @@ public class ChartDatasetFactory {
                         .toString()));
 
                 return defaultDataset;
+
+            } else {
+                defaultDataset = null;
+
+                for (IndicatorEnum indicatorEnum : map.keySet()) {
+                    dataset.addValue(map.get(indicatorEnum), "", indicatorEnum.getLabel()); //$NON-NLS-1$
+                }
             }
 
             break;

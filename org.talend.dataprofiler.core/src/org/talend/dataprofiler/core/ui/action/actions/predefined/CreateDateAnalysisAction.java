@@ -29,9 +29,7 @@ import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -46,7 +44,7 @@ import org.talend.utils.sql.Java2SqlType;
  */
 public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
 
-    private TimeSlicesParameter patameter;
+    private IndicatorParameters parameters;
 
     public CreateDateAnalysisAction() {
         super(DefaultMessagesImpl.getString("CreateDateAnalysisAction.timeAnalysis"), null); //$NON-NLS-1$
@@ -66,25 +64,11 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
 
         ColumnIndicator[] returnColumnIndicator = composePredefinedColumnIndicator(allwedEnumes);
 
-        if (patameter != null) {
+        if (parameters != null) {
             for (ColumnIndicator columnIndicator : returnColumnIndicator) {
                 for (Indicator indicator : columnIndicator.getIndicators()) {
                     if (indicator instanceof FrequencyIndicator) {
-                        IndicatorParameters indicatorParameters = indicator.getParameters();
-                        if (indicatorParameters == null) {
-                            indicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-                            indicator.setParameters(indicatorParameters);
-                        }
-
-                        indicatorParameters.setTopN(patameter.getNumOfShown());
-
-                        DateParameters dateParameters = indicatorParameters.getDateParameters();
-                        if (dateParameters == null) {
-                            dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
-                            indicatorParameters.setDateParameters(dateParameters);
-                        }
-
-                        dateParameters.setDateAggregationType(DateGrain.get(patameter.getDataUnit()));
+                        indicator.setParameters(parameters);
                     }
                 }
             }
@@ -132,8 +116,12 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             setTitle(DefaultMessagesImpl.getString("CreateDateAnalysisAction.newAnalysis")); //$NON-NLS-1$
             setDescription(DefaultMessagesImpl.getString("CreateDateAnalysisAction.addOption")); //$NON-NLS-1$
 
-            patameter = new TimeSlicesParameter();
-            patameter.setDataUnit(DateGrain.YEAR.getLiteral());
+            parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+            DateParameters dateParameters = parameters.getDateParameters();
+            if (dateParameters == null) {
+                dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
+                parameters.setDateParameters(dateParameters);
+            }
 
             this.listener = new AbstractForm.ICheckListener() {
 
@@ -157,7 +145,9 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-            FreqTimeSliceForm timeSliceForm = new FreqTimeSliceForm(comp, SWT.NONE, patameter);
+            AbstractIndicatorForm.setParameters(parameters);
+
+            FreqTimeSliceForm timeSliceForm = new FreqTimeSliceForm(comp, SWT.NONE);
             timeSliceForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             timeSliceForm.setListener(listener);
 

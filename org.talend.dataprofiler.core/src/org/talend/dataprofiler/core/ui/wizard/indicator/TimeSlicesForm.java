@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -26,8 +25,6 @@ import org.eclipse.swt.widgets.Group;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.TimeSlicesParameter;
 import org.talend.dataquality.indicators.DateGrain;
 
 /**
@@ -39,24 +36,10 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
 
     private ArrayList<Button> allBtns = new ArrayList<Button>();
 
-    protected TimeSlicesParameter parameter;
+    public TimeSlicesForm(Composite parent, int style) {
+        super(parent, style);
 
-    public TimeSlicesForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
-        super(parent, style, parameter);
-
-        this.parameter = (TimeSlicesParameter) parameter;
-        this.setupForm();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
-     */
-    @Override
-    protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
+        setupForm();
     }
 
     /*
@@ -76,23 +59,6 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
         for (DateGrain oneDate : DateGrain.VALUES) {
             btn = new Button(group, SWT.RADIO);
             btn.setText(oneDate.getLiteral());
-
-            btn.addSelectionListener(new SelectionAdapter() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-
-                    parameter.setDataUnit(btn.getText());
-                    updateStatus(IStatus.OK, MSG_OK);
-                }
-
-            });
-
             allBtns.add(btn);
         }
     }
@@ -105,9 +71,8 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
     @Override
     protected void addFieldsListeners() {
 
-        for (final Button oneBTN : allBtns) {
-
-            oneBTN.addSelectionListener(new SelectionAdapter() {
+        for (final Button button : allBtns) {
+            button.addSelectionListener(new SelectionAdapter() {
 
                 /*
                  * (non-Javadoc)
@@ -116,8 +81,9 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
                  */
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-
-                    parameter.setDataUnit(oneBTN.getText());
+                    String timeUnit = button.getText();
+                    DateGrain dateGrain = DateGrain.get(timeUnit);
+                    parameters.getDateParameters().setDateAggregationType(dateGrain);
                 }
 
             });
@@ -154,22 +120,10 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
     @Override
     protected void initialize() {
 
-        if (parameter == null) {
-
-            parameter = new TimeSlicesParameter();
-            parameter.setDataUnit(DateGrain.YEAR.getLiteral());
-        } else {
-
-            for (Button oneBtn : allBtns) {
-                if (oneBtn.getText().equals(DateGrain.YEAR.getLiteral())) {
-
-                    oneBtn.setSelection(false);
-                }
-            }
-        }
+        DateGrain dateGrain = parameters.getDateParameters().getDateAggregationType();
 
         for (Button oneBtn : allBtns) {
-            if (oneBtn.getText().equals(parameter.getDataUnit())) {
+            if (oneBtn.getText().equals(dateGrain.getLiteral())) {
 
                 oneBtn.setSelection(true);
             }
@@ -179,6 +133,22 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
     @Override
     public FormEnum getFormEnum() {
         return FormEnum.TimeSlicesForm;
+    }
+
+    @Override
+    public boolean performFinish() {
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
+     */
+    @Override
+    protected void adaptFormToReadOnly() {
+        // TODO Auto-generated method stub
+
     }
 
 }

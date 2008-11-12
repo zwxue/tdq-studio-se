@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -43,13 +44,13 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ViewerDataFactory;
-import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.BinsDesignerParameter;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.domain.RealNumberValue;
+import org.talend.dataquality.helpers.DomainHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -64,24 +65,9 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     private TableViewer tableViewer;
 
-    protected BinsDesignerParameter parameter;
-
-    public BinsDesignerForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
-        super(parent, style, parameter);
-
-        this.parameter = (BinsDesignerParameter) parameter;
-        this.setupForm();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
-     */
-    @Override
-    protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
+    public BinsDesignerForm(Composite parent, int style) {
+        super(parent, style);
+        setupForm();
     }
 
     /*
@@ -191,7 +177,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
-                    parameter.setMinValue(Double.valueOf(min));
                 }
             }
 
@@ -208,7 +193,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
-                    parameter.setMaxValue(Double.valueOf(max));
                 }
             }
 
@@ -226,7 +210,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
-                    parameter.setNumOfBins(Integer.parseInt(numb));
                 }
             }
 
@@ -237,10 +220,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
+                int numb = numbOfBins.getText().equals("") ? 0 : Integer.parseInt(numbOfBins.getText());
                 boolean flag = ((Button) e.getSource()).getSelection();
-                double numb = Double.parseDouble(numbOfBins.getText());
-                double min = Double.parseDouble(minValue.getText());
-                double max = Double.parseDouble(maxValue.getText());
 
                 if (flag && numb > 0) {
                     addSlice.setEnabled(true);
@@ -250,9 +231,11 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     maxValue.setEnabled(false);
                     numbOfBins.setEnabled(false);
 
-                    tableViewer.setInput(ViewerDataFactory.createSliceFormData(min, max, numb));
+                    double min = Double.parseDouble(minValue.getText());
+                    double max = Double.parseDouble(maxValue.getText());
+                    Domain customerDomin = DomainHelper.createContiguousClosedBinsIntoDomain("", numb, min, max);
+                    tableViewer.setInput(customerDomin.getRanges());
 
-                    parameter.setBinsData(tableViewer.getInput());
                 } else {
                     addSlice.setEnabled(false);
                     delSlice.setEnabled(false);
@@ -273,10 +256,11 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (tableViewer.getInput() instanceof List) {
-                    List<SliceEntity> inputList = (List<SliceEntity>) tableViewer.getInput();
+                    List<RangeRestriction> inputList = (List<RangeRestriction>) tableViewer.getInput();
 
-                    SliceEntity newEntity = new SliceEntity();
-                    inputList.add(newEntity);
+                    // create a default range restriction, the min = 0, the max = 0
+                    RangeRestriction newRange = DomainHelper.createRealRangeRestriction(0, 0);
+                    inputList.add(newRange);
 
                     tableViewer.setInput(inputList);
                 }
@@ -293,10 +277,10 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
                 if (flag) {
                     IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
-                    SliceEntity entity = (SliceEntity) selection.getFirstElement();
+                    RangeRestriction range = (RangeRestriction) selection.getFirstElement();
                     if (tableViewer.getInput() instanceof List) {
-                        List<SliceEntity> inputList = (List<SliceEntity>) tableViewer.getInput();
-                        inputList.remove(entity);
+                        List<RangeRestriction> inputList = (List<RangeRestriction>) tableViewer.getInput();
+                        inputList.remove(range);
 
                         tableViewer.setInput(inputList);
                     }
@@ -310,37 +294,77 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
      */
     @Override
-    protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
+    protected void initialize() {
+        Domain domain = parameters.getBins();
+
+        if (domain != null) {
+            minValue.setText(String.valueOf(DomainHelper.getMinBinValue(domain)));
+            maxValue.setText(String.valueOf(DomainHelper.getMaxBinValue(domain)));
+            numbOfBins.setText(String.valueOf(DomainHelper.getNumberOfBins(domain)));
+
+            EList<RangeRestriction> ranges = domain.getRanges();
+
+            if (!ranges.isEmpty()) {
+                addSlice.setEnabled(true);
+                delSlice.setEnabled(true);
+
+                minValue.setEnabled(false);
+                maxValue.setEnabled(false);
+                numbOfBins.setEnabled(false);
+                isSetRange.setSelection(true);
+
+                tableViewer.setInput(ranges);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean performFinish() {
+        Object inputList = tableViewer.getInput();
+        Domain userDomain = DomainHelper.createDomain("test");
+        if (inputList != null && (inputList instanceof List)) {
+            List<RangeRestriction> eInputList = (List<RangeRestriction>) inputList;
+            userDomain.getRanges().addAll(eInputList);
+            parameters.setBins(userDomain);
+            return true;
+        } else {
+            parameters.setBins(null);
+            return false;
+        }
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.BinsDesignerForm;
+    }
+
+    @Override
+    protected boolean checkFieldsValue() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
+     */
+    @Override
+    protected void adaptFormToReadOnly() {
 
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
      */
     @Override
-    protected void initialize() {
+    protected void addUtilsButtonListeners() {
 
-        minValue.setText(String.valueOf(parameter.getMinValue()));
-        maxValue.setText(String.valueOf(parameter.getMaxValue()));
-        numbOfBins.setText(String.valueOf(parameter.getNumOfBins()));
-
-        if (parameter.getBinsDataFromExsitingDomain().size() > 0) {
-            addSlice.setEnabled(true);
-            delSlice.setEnabled(true);
-
-            minValue.setEnabled(false);
-            maxValue.setEnabled(false);
-            numbOfBins.setEnabled(false);
-            isSetRange.setSelection(true);
-
-            tableViewer.setInput(parameter.getBinsDataFromExsitingDomain());
-        }
     }
 
     /**
@@ -354,14 +378,14 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
         public String getColumnText(Object element, int columnIndex) {
 
-            SliceEntity entity = (SliceEntity) element;
+            RangeRestriction range = (RangeRestriction) element;
             switch (columnIndex) {
             case 0:
-                return entity.getLowValue();
+                return DomainHelper.getMinValue(range);
             case 1:
                 return PluginConstant.LESS_OR_EQUAL + " value <"; //$NON-NLS-1$
             case 2:
-                return entity.getHighValue();
+                return DomainHelper.getMaxValue(range);
             default:
                 return ""; //$NON-NLS-1$
             }
@@ -377,7 +401,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         @SuppressWarnings("unchecked")
         public Object[] getElements(Object inputElement) {
             if (inputElement instanceof List) {
-                return ((List<SliceEntity>) inputElement).toArray();
+                return ((List<RangeRestriction>) inputElement).toArray();
             }
 
             return new Object[0];
@@ -405,33 +429,32 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         }
 
         public Object getValue(Object element, String property) {
-            SliceEntity entity = (SliceEntity) element;
+            RangeRestriction range = (RangeRestriction) element;
 
-            if (property.equals("low")) { //$NON-NLS-1$
-                return entity.getLowValue();
-            } else if (property.equals("high")) { //$NON-NLS-1$
-                return entity.getHighValue();
+            if (property.equals("low")) {
+                double lowerValue = DomainHelper.getRealValue(range.getLowerValue());
+                return String.valueOf(lowerValue);
+            } else if (property.equals("high")) {
+                double upperValue = DomainHelper.getRealValue(range.getUpperValue());
+                return String.valueOf(upperValue);
             }
 
             return ""; //$NON-NLS-1$
         }
 
         public void modify(Object element, String property, Object value) {
-            TableItem item = (TableItem) element;
-            SliceEntity entity = (SliceEntity) item.getData();
-
-            if (property.equals("low")) { //$NON-NLS-1$
-                entity.setLowValue(value.toString());
-
-                parameter.setBinsData(tableViewer.getInput());
-            } else if (property.equals("high")) { //$NON-NLS-1$
-                entity.setHighValue(value.toString());
-
-                parameter.setBinsData(tableViewer.getInput());
-            }
 
             if (CheckValueUtils.isRealNumberValue(value.toString())) {
                 updateStatus(IStatus.OK, MSG_OK);
+                TableItem item = (TableItem) element;
+                RangeRestriction range = (RangeRestriction) item.getData();
+
+                RealNumberValue realNumberValue = DomainHelper.createRealNumberValue(null, Double.valueOf(value.toString()));
+                if (property.equals("low")) {
+                    range.setLowerValue(realNumberValue);
+                } else if (property.equals("high")) {
+                    range.setUpperValue(realNumberValue);
+                }
             } else {
                 updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
             }
@@ -439,16 +462,4 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             tableViewer.refresh();
         }
     }
-
-    @Override
-    public FormEnum getFormEnum() {
-        return FormEnum.BinsDesignerForm;
-    }
-
-    @Override
-    protected boolean checkFieldsValue() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
 }

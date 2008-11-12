@@ -12,10 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.EventListener;
-import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
@@ -65,11 +62,6 @@ public abstract class AbstractForm extends Composite {
 
     protected ICheckListener listener;
 
-    /**
-     * Use to validate the unicity of label use to the metadata.
-     */
-    protected List<String> existingNames;
-
     protected static final String DEFAULT_LABEL = "Column"; //$NON-NLS-1$
 
     /**
@@ -80,20 +72,7 @@ public abstract class AbstractForm extends Composite {
      */
     protected AbstractForm(Composite parent, int style) {
         super(parent, style);
-        this.existingNames = Collections.EMPTY_LIST;
 
-    }
-
-    /**
-     * DOC ocarbone AbstractForm constructor comment.
-     * 
-     * @param parent
-     * @param style
-     * @param existingNames
-     */
-    protected AbstractForm(Composite parent, int style, String[] existingNames) {
-        super(parent, style);
-        this.existingNames = existingNames == null ? Collections.EMPTY_LIST : Arrays.asList(existingNames);
     }
 
     /**
@@ -253,10 +232,6 @@ public abstract class AbstractForm extends Composite {
 
     public int getStatusLevel() {
         return statusLevel;
-    }
-
-    protected boolean isNameAllowed(String name) {
-        return existingNames.contains(name);
     }
 
     /**

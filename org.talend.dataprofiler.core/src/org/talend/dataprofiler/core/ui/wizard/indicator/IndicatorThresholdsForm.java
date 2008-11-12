@@ -15,20 +15,44 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
+import org.talend.dataquality.helpers.IndicatorHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class IndicatorThresholdsForm extends DataThresholdsForm {
 
-    public IndicatorThresholdsForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
-        super(parent, style, parameter);
+    public IndicatorThresholdsForm(Composite parent, int style) {
+        super(parent, style);
+    }
+
+    @Override
+    protected void initialize() {
+        String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(parameters);
+        if (indicatorThreshold != null) {
+            lowerText.setText(indicatorThreshold[0]);
+
+            higherText.setText(indicatorThreshold[1]);
+        }
     }
 
     @Override
     public FormEnum getFormEnum() {
         return FormEnum.IndicatorThresholdsForm;
+    }
+
+    @Override
+    public boolean performFinish() {
+        String min = lowerText.getText();
+        String max = higherText.getText();
+
+        if ("".equals(min) && "".equals(max)) {
+            parameters.setIndicatorValidDomain(null);
+        } else {
+            IndicatorHelper.setIndicatorThreshold(parameters, min, max);
+        }
+
+        return true;
     }
 
     @Override

@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
-import java.util.Map;
-
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -27,8 +25,9 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.AbstractForm;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.utils.FormFactory;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
+import org.talend.dataprofiler.core.ui.utils.AbstractForm.ICheckListener;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -39,7 +38,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
     private TabFolder tabFolder;
 
-    private Map<FormEnum, AbstractIndicatorParameter> paramMap;
+    private AbstractIndicatorForm[] validFroms;
 
     private AbstractIndicatorForm.ICheckListener listener;
 
@@ -48,11 +47,10 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
      * 
      * @param pageName
      */
-    public DynamicIndicatorOptionsPage(IndicatorUnit indicatorUnit, Map<FormEnum, AbstractIndicatorParameter> paramMap) {
+    public DynamicIndicatorOptionsPage(IndicatorUnit indicatorUnit) {
         super(DefaultMessagesImpl.getString("DynamicIndicatorOptionsPage.indicatorSettings")); //$NON-NLS-1$
 
         this.indicatorUnit = indicatorUnit;
-        this.paramMap = paramMap;
 
         setPageComplete(false);
         setTitle(DefaultMessagesImpl.getString("DynamicIndicatorOptionsPage.indicatorSetting")); //$NON-NLS-1$
@@ -98,9 +96,10 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
         });
 
-        FormEnum[] forms = FormEnum.getForms(this.indicatorUnit);
+        FormEnum[] forms = FormEnum.getForms(indicatorUnit);
         if (forms != null) {
-            setControl(createView(FormFactory.createForm(tabFolder, listener, forms, paramMap)));
+            validFroms = createForm(tabFolder, listener, forms);
+            setControl(createView(validFroms));
         }
     }
 
@@ -119,6 +118,25 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         return tabFolder;
     }
 
+    public AbstractIndicatorForm[] createForm(Composite parent, ICheckListener listener, FormEnum[] formTypes) {
+
+        IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
+        if (parameters == null) {
+            parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+            indicatorUnit.getIndicator().setParameters(parameters);
+        }
+        AbstractIndicatorForm.setParameters(parameters);
+
+        AbstractIndicatorForm[] froms = new AbstractIndicatorForm[formTypes.length];
+        for (int i = 0; i < formTypes.length; i++) {
+            AbstractIndicatorForm form = IndicatorFormFactory.createForm(parent, formTypes[i]);
+            form.setListener(listener);
+            froms[i] = form;
+        }
+
+        return froms;
+    }
+
     @Override
     public void setErrorMessage(String newMessage) {
         super.setErrorMessage(newMessage);
@@ -126,6 +144,10 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         if (isCurrentPage()) {
             getContainer().updateMessage();
         }
+    }
+
+    public AbstractIndicatorForm[] getValidFroms() {
+        return validFroms;
     }
 
 }

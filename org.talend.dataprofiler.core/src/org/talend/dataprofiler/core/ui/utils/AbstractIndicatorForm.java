@@ -12,20 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.help.ui.internal.views.ReusableHelpPart;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public abstract class AbstractIndicatorForm extends AbstractForm {
-
-    private static List<AbstractIndicatorParameter> parameters = new ArrayList<AbstractIndicatorParameter>();
 
     // ----message define----
 
@@ -42,36 +37,25 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
     public static final String MSG_OK = UIMessages.MSG_VALID_FIELD;
 
     protected final String limitResultsGrp = DefaultMessagesImpl.getString("AbstractIndicatorForm.limitResult"); //$NON-NLS-1$
-    
+
+    protected static IndicatorParameters parameters;
+
     /**
      * DOC zqin AbstractIndicatorForm constructor comment.
      * 
      * @param parent
      * @param style
      */
-    public AbstractIndicatorForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
+    public AbstractIndicatorForm(Composite parent, int style) {
         super(parent, style);
-        parameters.add(parameter);
     }
-
-    public static AbstractIndicatorParameter[] getParameters() {
-
-        return parameters.toArray(new AbstractIndicatorParameter[parameters.size()]);
-    }
-
-    public static boolean isParametersEmpty() {
-        return parameters.isEmpty();
-    }
-
-    public static void emptyParameterList() {
-
-        parameters.clear();
-    }
-
-    public abstract FormEnum getFormEnum();
 
     public String getFormName() {
         return getFormEnum().getFormName();
+    }
+
+    public static void setParameters(IndicatorParameters parameters) {
+        AbstractIndicatorForm.parameters = parameters;
     }
 
     public void showHelp() {
@@ -83,4 +67,7 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
         }
     }
 
+    public abstract boolean performFinish();
+
+    public abstract FormEnum getFormEnum();
 }

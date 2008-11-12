@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 
@@ -24,8 +25,6 @@ import org.talend.utils.format.StringFormatUtil;
  * 
  */
 public class IndicatorUnit {
-
-    private String indicatorName;
 
     private IndicatorEnum type;
 
@@ -42,8 +41,16 @@ public class IndicatorUnit {
     public IndicatorUnit(IndicatorEnum type, Indicator indicator, ColumnIndicator parentColumn) {
         this.type = type;
         this.indicator = indicator;
-        this.indicatorName = indicator.getName();
         this.parentColumn = parentColumn;
+    }
+
+    /**
+     * Getter for parameters.
+     * 
+     * @return the parameters
+     */
+    public IndicatorParameters getParameters() {
+        return indicator.getParameters();
     }
 
     /**
@@ -97,7 +104,7 @@ public class IndicatorUnit {
      * @return the indicatorName
      */
     public String getIndicatorName() {
-        return this.indicatorName;
+        return this.indicator.getName();
     }
 
     /**

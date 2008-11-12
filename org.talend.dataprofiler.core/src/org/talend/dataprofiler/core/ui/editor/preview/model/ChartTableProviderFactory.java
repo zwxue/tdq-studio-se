@@ -22,7 +22,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -57,8 +56,9 @@ public class ChartTableProviderFactory {
     static class BaseChartTableLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 
         public Image getColumnImage(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
 
-            if (isOutsideValueRange(element, columnIndex)) {
+            if (entity.isOutOfRange() && entity.getValue().equals(getColumnText(element, columnIndex))) {
                 return ImageLib.getImage(ImageLib.LEVEL_WARNING);
             }
 
@@ -91,24 +91,13 @@ public class ChartTableProviderFactory {
          * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
          */
         public Color getForeground(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
 
-            if (isOutsideValueRange(element, columnIndex)) {
+            if (entity.isOutOfRange() && entity.getValue().equals(getColumnText(element, columnIndex))) {
                 return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 
             return null;
-        }
-
-        private boolean isOutsideValueRange(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-            Indicator indicator = entity.getIndicator();
-            String value = entity.getValue();
-
-            if (indicator != null) {
-                String currentValue = getColumnText(element, columnIndex);
-                return ChartTableFactory.getToolTipMsg(indicator, value) != null && value.equals(currentValue);
-            }
-            return false;
         }
     }
 

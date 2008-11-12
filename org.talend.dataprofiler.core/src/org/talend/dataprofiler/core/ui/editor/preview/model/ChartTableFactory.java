@@ -20,12 +20,11 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -52,11 +51,9 @@ import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -65,7 +62,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 public class ChartTableFactory {
 
     public static void createTable(Composite parent, ChartWithData inputObject, final Analysis analysis) {
-        TableViewer tbViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
+        final TableViewer tbViewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
 
         final Table table = tbViewer.getTable();
 
@@ -129,37 +126,40 @@ public class ChartTableFactory {
 
         tbViewer.setInput(inputObject);
 
-        tbViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        tbViewer.getTable().addMouseListener(new MouseAdapter() {
 
-            public void selectionChanged(SelectionChangedEvent event) {
-                StructuredSelection selection = (StructuredSelection) event.getSelection();
-                ChartDataEntity dataEntity = (ChartDataEntity) selection.getFirstElement();
+            @Override
+            public void mouseDown(MouseEvent e) {
+                if (e.button == 3) {
+                    StructuredSelection selection = (StructuredSelection) tbViewer.getSelection();
 
-                final Indicator indicator = dataEntity.getIndicator();
-                if (indicator != null) {
-                    Menu menu = new Menu(table.getShell(), SWT.POP_UP);
-                    table.setMenu(menu);
+                    ChartDataEntity dataEntity = (ChartDataEntity) selection.getFirstElement();
 
-                    MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartTableType, analysis, dataEntity);
-                    for (final MenuItemEntity itemEntity : itemEntities) {
-                        MenuItem item = new MenuItem(menu, SWT.PUSH);
-                        item.setText(itemEntity.getLabel());
-                        item.setImage(itemEntity.getIcon());
+                    final Indicator indicator = dataEntity.getIndicator();
+                    if (indicator != null) {
+                        Menu menu = new Menu(table.getShell(), SWT.POP_UP);
+                        table.setMenu(menu);
 
-                        item.addListener(SWT.Selection, new Listener() {
+                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartTableType, analysis, dataEntity);
+                        for (final MenuItemEntity itemEntity : itemEntities) {
+                            MenuItem item = new MenuItem(menu, SWT.PUSH);
+                            item.setText(itemEntity.getLabel());
+                            item.setImage(itemEntity.getIcon());
 
-                            public void handleEvent(Event event) {
+                            item.addListener(SWT.Selection, new Listener() {
 
-                                viewRecordInDataExplorer(analysis, indicator, itemEntity.getQuery());
-                            }
+                                public void handleEvent(Event event) {
 
-                        });
+                                    viewRecordInDataExplorer(analysis, indicator, itemEntity.getQuery());
+                                }
+
+                            });
+                        }
+
+                        menu.setVisible(true);
                     }
-
-                    menu.setVisible(true);
                 }
             }
-
         });
 
         // add tool tip
@@ -174,83 +174,6 @@ public class ChartTableFactory {
                 column.setWidth(columnWidths[i]);
             }
         }
-    }
-
-    static String getToolTipMsg(Indicator indicator, String currentValue) {
-        IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
-        StringBuilder msg = new StringBuilder();
-
-        switch (indicatorEnum) {
-        case ModeIndicatorEnum:
-            String expectedValue = IndicatorHelper.getExpectedValue(indicator);
-            if (expectedValue != null) {
-                // ignore case when options is set
-                Boolean ignoreCaseOption = IndicatorHelper.ignoreCaseOption(indicator) == null ? false : IndicatorHelper
-                        .ignoreCaseOption(indicator);
-
-                boolean areSame = StringUtils.equals(currentValue, expectedValue)
-                        || (ignoreCaseOption && StringUtils.equalsIgnoreCase(currentValue, expectedValue));
-                if (!areSame) {
-                    msg.append("This value differs from the expected value: \"" + expectedValue + "\"");
-                }
-            }
-            break;
-        default:
-            String[] dataThreshold = IndicatorHelper.getDataThreshold(indicator);
-            if (dataThreshold != null) {
-                String range = getRange(currentValue, dataThreshold);
-                if (range != null) {
-                    msg.append("This value is outside the expected data's thresholds: " + range);
-                }
-            }
-            String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(indicator);
-            if (indicatorThreshold != null) {
-                if (msg.length() != 0) {
-                    msg.append('\n');
-                }
-                String range = getRange(currentValue, indicatorThreshold);
-                if (range != null) {
-                    msg.append("This value is outside the expected indicator's thresholds: " + range);
-                }
-            }
-            break;
-        }
-
-        return msg.length() == 0 ? null : msg.toString();
-    }
-
-    /**
-     * DOC scorreia Comment method "getRange".
-     * 
-     * @param currentValue
-     * @param msg
-     * @param threshold
-     * @return
-     */
-    private static String getRange(String currentValue, String[] threshold) {
-        String msg = null;
-        String min = threshold[0];
-        String max = threshold[1];
-
-        // handle min and max
-        Double dMin, dMax, dValue = currentValue != null ? Double.valueOf(currentValue) : Double.NaN;
-        if (min == null || "".equals(min) || "null".equals(min)) {
-            dMin = Double.NEGATIVE_INFINITY;
-            min = String.valueOf(dMin);
-        } else {
-            dMin = Double.valueOf(min);
-        }
-        if (max == null || "".equals(max) || "null".equals(max)) {
-            dMax = Double.POSITIVE_INFINITY;
-            max = String.valueOf(dMax);
-        } else {
-            dMax = Double.valueOf(max);
-        }
-
-        if (dValue < dMin || dValue > dMax) {
-            msg = " [" + min + "," + max + "]";
-        }
-        return msg;
     }
 
     public static void viewRecordInDataExplorer(Analysis analysis, Indicator indicaotr, String query) {
@@ -335,14 +258,9 @@ public class ChartTableFactory {
                     if (item != null) {
                         // show tool tip
                         ChartDataEntity entity = (ChartDataEntity) item.getData();
-                        String currentValue = entity.getValue();
-                        Indicator indicator = entity.getIndicator();
 
-                        if (indicator != null) {
-                            String toolTipMsg = ChartTableFactory.getToolTipMsg(indicator, currentValue);
-                            if (toolTipMsg != null) {
-                                showTip(item, toolTipMsg);
-                            }
+                        if (entity.isOutOfRange() && entity.getRangeAsString() != null) {
+                            showTip(item, entity.getRangeAsString());
                         }
                     }
                 default:

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -26,15 +27,11 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.NumbericNominalParameter;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class NumbericNominalForm extends AbstractIndicatorForm {
-
-    protected NumbericNominalParameter parameter;
 
     private Text numberTxt;
 
@@ -45,33 +42,10 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
      * @param style
      * @param parameter
      */
-    public NumbericNominalForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
-        super(parent, style, parameter);
+    public NumbericNominalForm(Composite parent, int style) {
+        super(parent, style);
 
-        this.parameter = (NumbericNominalParameter) parameter;
-        this.setupForm();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormEnum()
-     */
-    @Override
-    public FormEnum getFormEnum() {
-
-        return FormEnum.NumbericNominalForm;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
-     */
-    @Override
-    protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
+        setupForm();
     }
 
     /*
@@ -114,22 +88,12 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
                 checkFieldsValue();
 
                 if (isStatusOnValid()) {
-                    parameter.setNumberOfShown(Integer.parseInt(numberTxt.getText()));
+                    String topN = numberTxt.getText();
+                    parameters.setTopN(Integer.parseInt(topN));
                 }
             }
 
         });
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
-     */
-    @Override
-    protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
 
     }
 
@@ -161,12 +125,47 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
      */
     @Override
     protected void initialize() {
-        if (this.parameter != null) {
-            if (this.parameter.getNumberOfShown() == 0) {
-                this.parameter.setNumberOfShown(10);
-            }
-            numberTxt.setText(String.valueOf(this.parameter.getNumberOfShown()));
-        }
+        numberTxt.setText(String.valueOf(parameters.getTopN()));
     }
 
+    @Override
+    public boolean performFinish() {
+        if (StringUtils.equals(numberTxt.getText(), String.valueOf(parameters.getTopN()))) {
+            return false;
+        }
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormEnum()
+     */
+    @Override
+    public FormEnum getFormEnum() {
+
+        return FormEnum.NumbericNominalForm;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
+     */
+    @Override
+    protected void adaptFormToReadOnly() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
+     */
+    @Override
+    protected void addUtilsButtonListeners() {
+        // TODO Auto-generated method stub
+
+    }
 }

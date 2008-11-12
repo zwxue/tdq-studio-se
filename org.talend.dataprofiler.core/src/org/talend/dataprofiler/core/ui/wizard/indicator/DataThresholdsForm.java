@@ -27,8 +27,7 @@ import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.DataThresholdsParameter;
+import org.talend.dataquality.helpers.IndicatorHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -37,28 +36,14 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
     private static final String LOWER_LESS_HIGHER = UIMessages.MSG_LOWER_LESS_HIGHER;
 
-    private Text lowerText, higherText;
-
-    private DataThresholdsParameter parameter;
+    protected Text lowerText, higherText;
 
     protected Group group;
 
-    public DataThresholdsForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
-        super(parent, style, parameter);
+    public DataThresholdsForm(Composite parent, int style) {
+        super(parent, style);
 
-        this.parameter = (DataThresholdsParameter) parameter;
-        this.setupForm();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
-     */
-    @Override
-    protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
+        setupForm();
     }
 
     /*
@@ -109,8 +94,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                 }
-
-                parameter.setMinThreshold(lowerStr);
             }
 
         });
@@ -128,11 +111,55 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                 }
-
-                parameter.setMaxThreshold(higherText.getText());
             }
 
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
+     */
+    @Override
+    protected void initialize() {
+
+        String[] dataThreshold = IndicatorHelper.getDataThreshold(parameters);
+        if (dataThreshold != null) {
+            lowerText.setText(dataThreshold[0]);
+
+            higherText.setText(dataThreshold[1]);
+        }
+    }
+
+    @Override
+    public FormEnum getFormEnum() {
+        return FormEnum.DataThresholdsForm;
+    }
+
+    @Override
+    public boolean performFinish() {
+        String lower = lowerText.getText();
+        String higher = higherText.getText();
+
+        if ("".equals(lower) && "".equals(higher)) {
+            parameters.setDataValidDomain(null);
+        } else {
+            IndicatorHelper.setDataThreshold(parameters, lower, higher);
+        }
+
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
+     */
+    @Override
+    protected void adaptFormToReadOnly() {
+        // TODO Auto-generated method stub
+
     }
 
     /*
@@ -154,29 +181,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
     @Override
     protected boolean checkFieldsValue() {
         return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
-     */
-    @Override
-    protected void initialize() {
-
-        if (parameter == null) {
-            parameter = new DataThresholdsParameter();
-        } else {
-
-            lowerText.setText(parameter.getMinThreshold());
-
-            higherText.setText(parameter.getMaxThreshold());
-        }
-    }
-
-    @Override
-    public FormEnum getFormEnum() {
-        return FormEnum.DataThresholdsForm;
     }
 
 }

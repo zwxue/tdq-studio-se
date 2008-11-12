@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -33,8 +32,8 @@ public class FreqTextParametersForm extends TextParametersForm {
 
     private Text numberTxt;
 
-    public FreqTextParametersForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
-        super(parent, style, parameter);
+    public FreqTextParametersForm(Composite parent, int style) {
+        super(parent, style);
     }
 
     @Override
@@ -64,11 +63,10 @@ public class FreqTextParametersForm extends TextParametersForm {
 
         numberTxt.addModifyListener(new ModifyListener() {
 
-            // MOD scorreia annotation commented out for Java 5 compilation @Override
             public void modifyText(ModifyEvent e) {
                 checkFieldsValue();
                 if (isStatusOnValid()) {
-                    parameter.setNumOfShown(Integer.parseInt(numberTxt.getText()));
+                    parameters.setTopN(Integer.parseInt(numberTxt.getText()));
                 }
             }
 
@@ -79,12 +77,11 @@ public class FreqTextParametersForm extends TextParametersForm {
     protected void initialize() {
         super.initialize();
 
-        if (this.parameter != null) {
-            if (this.parameter.getNumOfShown() == 0) {
-                this.parameter.setNumOfShown(10);
-            }
-            numberTxt.setText(String.valueOf(this.parameter.getNumOfShown()));
+        int topN = parameters.getTopN();
+        if (topN == 0) {
+            topN = 10;
         }
+        numberTxt.setText(String.valueOf(topN));
     }
 
     @Override

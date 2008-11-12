@@ -24,15 +24,12 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.AbstractIndicatorParameter;
-import org.talend.dataprofiler.core.ui.wizard.indicator.parameter.ExpectedValueParameter;
+import org.talend.dataquality.helpers.IndicatorHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class ExpectedValueForm extends AbstractIndicatorForm {
-
-    private ExpectedValueParameter parameter;
 
     private Text expectedValue;
 
@@ -43,33 +40,10 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
      * @param style
      * @param parameter
      */
-    public ExpectedValueForm(Composite parent, int style, AbstractIndicatorParameter parameter) {
-        super(parent, style, parameter);
+    public ExpectedValueForm(Composite parent, int style) {
+        super(parent, style);
 
-        this.parameter = (ExpectedValueParameter) parameter;
-        this.setupForm();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormEnum()
-     */
-    @Override
-    public FormEnum getFormEnum() {
-
-        return FormEnum.ExpectedValueForm;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
-     */
-    @Override
-    protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
+        setupForm();
     }
 
     /*
@@ -98,11 +72,52 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
         expectedValue.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                parameter.setExpectedValue(expectedValue.getText());
                 updateStatus(IStatus.OK, MSG_OK);
+                IndicatorHelper.setIndicatorExpectedValue(parameters, expectedValue.getText());
             }
 
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
+     */
+    @Override
+    protected void initialize() {
+
+        String existedExpectedValue = IndicatorHelper.getExpectedValue(parameters);
+        if (existedExpectedValue != null) {
+            expectedValue.setText(existedExpectedValue);
+        }
+    }
+
+    @Override
+    public boolean performFinish() {
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormEnum()
+     */
+    @Override
+    public FormEnum getFormEnum() {
+
+        return FormEnum.ExpectedValueForm;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
+     */
+    @Override
+    protected void adaptFormToReadOnly() {
+        // TODO Auto-generated method stub
+
     }
 
     /*
@@ -126,18 +141,4 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
         // TODO Auto-generated method stub
         return false;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
-     */
-    @Override
-    protected void initialize() {
-
-        if (parameter.getExpectedValue() != null) {
-            expectedValue.setText(parameter.getExpectedValue());
-        }
-    }
-
 }

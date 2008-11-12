@@ -17,11 +17,9 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
-import org.talend.dataprofiler.core.model.nodes.indicator.option.SliceEntity;
 import org.talend.dataquality.analysis.category.AnalysisCategories;
 import org.talend.dataquality.analysis.category.AnalysisCategory;
 import org.talend.dq.analysis.category.CategoryHandler;
-import org.talend.utils.format.StringFormatUtil;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -51,23 +49,5 @@ public class ViewerDataFactory {
 
         return returnList;
 
-    }
-
-    public static Object createSliceFormData(double min, double max, double numb) {
-        List<SliceEntity> returnList = new ArrayList<SliceEntity>();
-
-        double mod = (max - min) / numb;
-
-        for (int i = 1; i < numb + 1; i++) {
-            SliceEntity entity = new SliceEntity();
-            entity.setLowValue(StringFormatUtil.format(min, StringFormatUtil.NUMBER).toString());
-
-            min = min + mod;
-            entity.setHighValue(StringFormatUtil.format(min, StringFormatUtil.NUMBER).toString());
-
-            returnList.add(entity);
-        }
-
-        return returnList;
     }
 }
