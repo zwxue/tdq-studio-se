@@ -177,6 +177,24 @@ public class ChartDatasetFactory {
                 }
             }
 
+            // add more data entity for sumary
+            if (map.containsKey(IndicatorEnum.MaxValueIndicatorEnum) && map.containsKey(IndicatorEnum.MinValueIndicatorEnum)) {
+                Double range = map.get(IndicatorEnum.MaxValueIndicatorEnum) - map.get(IndicatorEnum.MinValueIndicatorEnum);
+                ChartDataEntity entity = new ChartDataEntity(null, IndicatorEnum.RangeIndicatorEnum.getLabel(), range.toString());
+                defaultDataset.addDataEntity(entity);
+                dataset.addDataEntity(entity);
+            }
+
+            if (map.containsKey(IndicatorEnum.UpperQuartileIndicatorEnum)
+                    && map.containsKey(IndicatorEnum.LowerQuartileIndicatorEnum)) {
+                Double quartile = map.get(IndicatorEnum.UpperQuartileIndicatorEnum)
+                        - map.get(IndicatorEnum.LowerQuartileIndicatorEnum);
+                ChartDataEntity entity = new ChartDataEntity(null, IndicatorEnum.IQRIndicatorEnum.getLabel(), quartile
+                        .toString());
+                defaultDataset.addDataEntity(entity);
+                dataset.addDataEntity(entity);
+            }
+
             if (map.size() == 6) {
 
                 dataset = null;
@@ -187,15 +205,6 @@ public class ChartDatasetFactory {
                         .get(IndicatorEnum.MaxValueIndicatorEnum), null);
 
                 defaultDataset.add(item, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-
-                // add more data entity for sumary
-                Double range = map.get(IndicatorEnum.MaxValueIndicatorEnum) - map.get(IndicatorEnum.MinValueIndicatorEnum);
-                Double quartile = map.get(IndicatorEnum.UpperQuartileIndicatorEnum)
-                        - map.get(IndicatorEnum.LowerQuartileIndicatorEnum);
-                defaultDataset.addDataEntity(new ChartDataEntity(null, IndicatorEnum.RangeIndicatorEnum.getLabel(), range
-                        .toString()));
-                defaultDataset.addDataEntity(new ChartDataEntity(null, IndicatorEnum.IQRIndicatorEnum.getLabel(), quartile
-                        .toString()));
 
                 return defaultDataset;
 
