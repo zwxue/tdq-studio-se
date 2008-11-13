@@ -22,13 +22,14 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
-import org.talend.dataprofiler.core.ui.utils.AbstractForm;
-import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.FormEnum;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
-import org.talend.dataprofiler.core.ui.wizard.indicator.FreqTimeSliceForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm.ICheckListener;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTimeSliceForm;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.FrequencyIndicator;
@@ -109,7 +110,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
      */
     public class TimeSliceOptionPage extends WizardPage {
 
-        private AbstractIndicatorForm.ICheckListener listener;
+        private ICheckListener listener;
 
         public TimeSliceOptionPage() {
             super(DefaultMessagesImpl.getString("CreateDateAnalysisAction.createNewAnalysis")); //$NON-NLS-1$

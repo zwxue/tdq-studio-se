@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.wizard.indicator;
+package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl;
 
 import java.util.ArrayList;
 
@@ -23,8 +23,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.indicators.DateGrain;
 
 /**

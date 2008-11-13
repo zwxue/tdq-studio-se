@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.wizard.indicator;
+package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
@@ -24,15 +24,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.BinsDesignerForm;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class FreqTimeSliceForm extends TimeSlicesForm {
+public class FreqBinsDesignerForm extends BinsDesignerForm {
 
     private Text numberTxt;
 
-    public FreqTimeSliceForm(Composite parent, int style) {
+    public FreqBinsDesignerForm(Composite parent, int style) {
         super(parent, style);
     }
 
@@ -49,7 +50,7 @@ public class FreqTimeSliceForm extends TimeSlicesForm {
         group.setLayoutData(gd);
 
         Label lab = new Label(group, SWT.NONE);
-        lab.setText(DefaultMessagesImpl.getString("FreqTimeSliceForm.numberOfResultsShown")); //$NON-NLS-1$
+        lab.setText(DefaultMessagesImpl.getString("FreqBinsDesignerForm.numberOfResultsShown")); //$NON-NLS-1$
 
         numberTxt = new Text(group, SWT.BORDER);
         GridData gdTxt = new GridData();
@@ -67,6 +68,7 @@ public class FreqTimeSliceForm extends TimeSlicesForm {
             public void modifyText(ModifyEvent e) {
 
                 checkFieldsValue();
+
                 if (isStatusOnValid()) {
                     parameters.setTopN(Integer.parseInt(numberTxt.getText()));
                 }
@@ -83,6 +85,7 @@ public class FreqTimeSliceForm extends TimeSlicesForm {
         if (topN == 0) {
             topN = 10;
         }
+
         numberTxt.setText(String.valueOf(topN));
     }
 
@@ -100,7 +103,7 @@ public class FreqTimeSliceForm extends TimeSlicesForm {
         }
 
         updateStatus(IStatus.OK, MSG_OK);
-        return true;
+        return super.checkFieldsValue();
     }
 
 }

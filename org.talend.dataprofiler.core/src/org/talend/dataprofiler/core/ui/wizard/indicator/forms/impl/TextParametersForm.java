@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.wizard.indicator;
+package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
@@ -22,19 +22,19 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.TextParameters;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class TextLengthForm extends AbstractIndicatorForm {
+public class TextParametersForm extends AbstractIndicatorForm {
 
-    protected Button nullBtn, blankBtn;
+    private Button caseBtn;
 
-    public TextLengthForm(Composite parent, int style) {
+    public TextParametersForm(Composite parent, int style) {
         super(parent, style);
 
         setupForm();
@@ -47,19 +47,15 @@ public class TextLengthForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFields() {
-
         this.setLayout(new GridLayout());
 
         Group group = new Group(this, SWT.NONE);
         group.setLayout(new GridLayout());
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        group.setText(DefaultMessagesImpl.getString("TextLengthForm.options")); //$NON-NLS-1$
+        group.setText(DefaultMessagesImpl.getString("TextParametersForm.options")); //$NON-NLS-1$
 
-        nullBtn = new Button(group, SWT.CHECK);
-        nullBtn.setText(DefaultMessagesImpl.getString("TextLengthForm.countNulls")); //$NON-NLS-1$
-
-        blankBtn = new Button(group, SWT.CHECK);
-        blankBtn.setText(DefaultMessagesImpl.getString("TextLengthForm.countBlanks")); //$NON-NLS-1$
+        caseBtn = new Button(group, SWT.CHECK);
+        caseBtn.setText(DefaultMessagesImpl.getString("TextParametersForm.ignoreCase")); //$NON-NLS-1$
 
     }
 
@@ -71,7 +67,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
     @Override
     protected void addFieldsListeners() {
 
-        nullBtn.addSelectionListener(new SelectionAdapter() {
+        caseBtn.addSelectionListener(new SelectionAdapter() {
 
             /*
              * (non-Javadoc)
@@ -80,20 +76,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                updateStatus(IStatus.OK, MSG_OK);
-            }
 
-        });
-
-        blankBtn.addSelectionListener(new SelectionAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
                 updateStatus(IStatus.OK, MSG_OK);
             }
 
@@ -110,38 +93,24 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
         TextParameters textParameter = parameters.getTextParameter();
         if (textParameter != null) {
-            nullBtn.setSelection(textParameter.isUseNulls());
-            blankBtn.setSelection(textParameter.isUseBlank());
+            caseBtn.setSelection(textParameter.isIgnoreCase());
         }
     }
 
     @Override
     public FormEnum getFormEnum() {
-        return FormEnum.TextLengthForm;
+        return FormEnum.TextParametersForm;
     }
 
     @Override
     public boolean performFinish() {
-
         TextParameters textParameter = parameters.getTextParameter();
         if (textParameter == null) {
             textParameter = IndicatorsFactory.eINSTANCE.createTextParameters();
         }
-        textParameter.setUseNulls(nullBtn.getSelection());
-        textParameter.setUseBlank(blankBtn.getSelection());
+        textParameter.setIgnoreCase(caseBtn.getSelection());
         parameters.setTextParameter(textParameter);
         return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
-     */
-    @Override
-    protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -164,5 +133,16 @@ public class TextLengthForm extends AbstractIndicatorForm {
     protected boolean checkFieldsValue() {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
+     */
+    @Override
+    protected void adaptFormToReadOnly() {
+        // TODO Auto-generated method stub
+
     }
 }

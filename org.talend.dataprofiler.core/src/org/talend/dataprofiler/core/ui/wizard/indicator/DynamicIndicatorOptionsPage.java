@@ -22,10 +22,10 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.utils.AbstractForm;
-import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.FormEnum;
-import org.talend.dataprofiler.core.ui.utils.AbstractForm.ICheckListener;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm.ICheckListener;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 

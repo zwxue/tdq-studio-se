@@ -14,8 +14,20 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.BinsDesignerForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.DataThresholdsForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.ExpectedValueForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.IndicatorThresholdsForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.NumbericNominalForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextLengthForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextParametersForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TimeSlicesForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqBinsDesignerForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTextLengthForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTextParametersForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTimeSliceForm;
 
 /**
  * DOC Zqin class global comment. Detailled comment

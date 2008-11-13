@@ -10,9 +10,8 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.wizard.indicator;
+package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -24,37 +23,23 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
-import org.talend.dataprofiler.core.ui.utils.FormEnum;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TimeSlicesForm;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class NumbericNominalForm extends AbstractIndicatorForm {
+public class FreqTimeSliceForm extends TimeSlicesForm {
 
     private Text numberTxt;
 
-    /**
-     * DOC zqin NumbericNominalForm constructor comment.
-     * 
-     * @param parent
-     * @param style
-     * @param parameter
-     */
-    public NumbericNominalForm(Composite parent, int style) {
+    public FreqTimeSliceForm(Composite parent, int style) {
         super(parent, style);
-
-        setupForm();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFields()
-     */
     @Override
     protected void addFields() {
+        super.addFields();
 
         Group group = new Group(this, SWT.NONE);
         group.setText(limitResultsGrp);
@@ -65,7 +50,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
         group.setLayoutData(gd);
 
         Label lab = new Label(group, SWT.NONE);
-        lab.setText(DefaultMessagesImpl.getString("NumbericNominalForm.numberOfResultsShown")); //$NON-NLS-1$
+        lab.setText(DefaultMessagesImpl.getString("FreqTimeSliceForm.numberOfResultsShown")); //$NON-NLS-1$
 
         numberTxt = new Text(group, SWT.BORDER);
         GridData gdTxt = new GridData();
@@ -73,37 +58,38 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
         numberTxt.setLayoutData(gdTxt);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFieldsListeners()
-     */
     @Override
     protected void addFieldsListeners() {
+        super.addFieldsListeners();
+
         numberTxt.addModifyListener(new ModifyListener() {
 
             // MOD scorreia annotation commented out for Java 5 compilation @Override
             public void modifyText(ModifyEvent e) {
 
                 checkFieldsValue();
-
                 if (isStatusOnValid()) {
-                    String topN = numberTxt.getText();
-                    parameters.setTopN(Integer.parseInt(topN));
+                    parameters.setTopN(Integer.parseInt(numberTxt.getText()));
                 }
             }
 
         });
-
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#checkFieldsValue()
-     */
+    @Override
+    protected void initialize() {
+        super.initialize();
+
+        int topN = parameters.getTopN();
+        if (topN == 0) {
+            topN = 10;
+        }
+        numberTxt.setText(String.valueOf(topN));
+    }
+
     @Override
     protected boolean checkFieldsValue() {
+
         if (numberTxt.getText() == "") { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
@@ -118,54 +104,4 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
-     */
-    @Override
-    protected void initialize() {
-        numberTxt.setText(String.valueOf(parameters.getTopN()));
-    }
-
-    @Override
-    public boolean performFinish() {
-        if (StringUtils.equals(numberTxt.getText(), String.valueOf(parameters.getTopN()))) {
-            return false;
-        }
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormEnum()
-     */
-    @Override
-    public FormEnum getFormEnum() {
-
-        return FormEnum.NumbericNominalForm;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
-     */
-    @Override
-    protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
-     */
-    @Override
-    protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
-
-    }
 }

@@ -14,19 +14,11 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import jxl.Cell;
-import jxl.CellType;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.read.biff.BiffException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -35,7 +27,6 @@ import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -106,58 +97,6 @@ public class ImportFactory {
                 reader.close();
 
             } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        if ("xls".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
-            try {
-                WorkbookSettings settings = new WorkbookSettings();
-                settings.setEncoding("UTF-8"); //$NON-NLS-1$
-                Workbook rwb = Workbook.getWorkbook(importFile, settings);
-                Sheet[] sheets = rwb.getSheets();
-                for (Sheet sheet : sheets) {
-                    int rows = sheet.getRows();
-                    for (int i = 1; i < rows; i++) {
-                        Cell[] row = sheet.getRow(i);
-                        Cell cell = row[0];
-                        if (CellType.LABEL.equals(cell.getType())) {
-                            String contents = cell.getContents();
-                            if (names.contains(contents)) {
-                                if (skip) {
-                                    continue;
-                                }
-                                if (rename) {
-                                    contents = contents + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-                                }
-                            }
-
-                            PatternParameters patternParameters = new ImportFactory().new PatternParameters();
-
-                            patternParameters.name = contents;
-                            patternParameters.auther = row[6].getContents();
-                            patternParameters.description = row[2].getContents();
-                            patternParameters.purpose = row[1].getContents();
-                            patternParameters.status = DevelopmentStatus.DRAFT.getLiteral();
-
-                            for (PatternLanguageType type : PatternLanguageType.values()) {
-                                String cellStr = sheet.getCell(type.getExcelEnum().getLiteral()).getContents();
-                                if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
-                                    patternParameters.regex.put(type.getLiteral(), cellStr);
-                                }
-                            }
-
-                            createAndStorePattern(patternParameters, selectionFolder);
-
-                            names.add(contents);
-                        }
-                    }
-                }
-
-                rwb.close();
-            } catch (BiffException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
