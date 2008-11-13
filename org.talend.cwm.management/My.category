@@ -22,4 +22,7 @@
     <subCategories analysisType="Columns Comparison Analysis" label="Column Set Comparison"/> -->
     <subCategories analysisType="Columns Comparison Analysis" label="column comparison"/>
   </categories>
+  <categories label="Column Correlation Analysis">
+  	<subCategories label="Column Correlation Nominal Interval Analysis"/>
+  </categories>
 </dataquality.category:AnalysisCategories>

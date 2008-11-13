@@ -60,6 +60,10 @@ public final class AnalysisExecutorSelector {
         case COLUMNS_COMPARISON:
             exec = new RowMatchingAnalysisExecutor();
             break;
+
+        case COLUMN_CORRELATION:
+            exec = new MultiColumnAnalysisExecutor();
+            break;
         default:
             // this should not happen. This executor has not been tested for a long time.
             exec = null;
