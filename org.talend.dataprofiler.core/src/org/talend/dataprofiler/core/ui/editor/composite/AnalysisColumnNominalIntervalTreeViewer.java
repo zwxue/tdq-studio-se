@@ -280,7 +280,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             } else {
                 combo.setText(dataminingType.getLiteral());
             }
-
+            MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), column);
             /**
              * 
              * DOC zhaoxinyi AnalysisColumnNominalIntervalTreeViewer class global comment. Detailled comment
@@ -389,10 +389,9 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                         createIndicatorParameters(indicatorItem, indicatorUnit);
                     }
                 } else {
-                    MessageDialogWithToggle
-                            .openInformation(
-                                    null,
-                                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl
+                            .getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$ 
+                            DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-2$
                 }
             }
 
@@ -462,7 +461,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         TreeItem iParamItem;
         if (indicatorUnit.getType() == IndicatorEnum.FrequencyIndicatorEnum) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.resultsShown") + parameters.getTopN()); //$NON-NLS-1$
+            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.resultsShown") + //$NON-NLS-1$
+                    parameters.getTopN());
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
         }
@@ -475,18 +475,20 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
             TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useBlanks") + tParameter.isUseBlank()); //$NON-NLS-1$
+            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useBlanks") + //$NON-NLS-1$
+                    tParameter.isUseBlank());
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
 
             subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem
-                    .setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.ignoreCase") + tParameter.isIgnoreCase()); //$NON-NLS-1$
+            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.ignoreCase") + //$NON-NLS-1$
+                    tParameter.isIgnoreCase());
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
 
             subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useNulls") + tParameter.isUseNulls()); //$NON-NLS-1$
+            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useNulls") + //$NON-NLS-1$
+                    tParameter.isUseNulls());
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }
@@ -498,8 +500,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
 
             TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString(
-                    "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ //$NON-NLS-2$
+            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.aggregationType", //$NON-NLS-1$
+                    dParameters.getDateAggregationType().getName())); //$NON-NLS-2$
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }
@@ -515,8 +517,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
         if (indicatorValidDomain != null) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0,
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.qualityThresholds") + (indicatorValidDomain != null)); //$NON-NLS-1$
+            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.qualityThresholds") + //$NON-NLS-1$
+                    (indicatorValidDomain != null));
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
             iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
         }
@@ -554,8 +556,9 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             }
         }
         setElements(remainColumns);
-        if (remainColumns.size() == 0)
+        if (remainColumns.size() == 0) {
             isLast = true;
+        }
         this.columnSetMultiValueList = remainColumns;
     }
 
