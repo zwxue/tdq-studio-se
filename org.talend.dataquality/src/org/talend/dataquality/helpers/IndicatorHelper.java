@@ -193,7 +193,17 @@ public final class IndicatorHelper {
      * null. The first element is the lower threshold and the second element is the higher threshold.
      */
     public static String[] getIndicatorThresholdInPercent(Indicator indicator) {
-        IndicatorParameters parameters = indicator.getParameters();
+        return getIndicatorThresholdInPercent(indicator.getParameters());
+    }
+
+    /**
+     * Method "getIndicatorThresholdInPercent" returns the threshold in percentage.
+     * 
+     * @param parameters
+     * @return an array of thresholds if any or null. When the array is not null, its size is 2 but its elements can be
+     * null. The first element is the lower threshold and the second element is the higher threshold.
+     */
+    public static String[] getIndicatorThresholdInPercent(IndicatorParameters parameters) {
         if (parameters == null) {
             return null;
         }
