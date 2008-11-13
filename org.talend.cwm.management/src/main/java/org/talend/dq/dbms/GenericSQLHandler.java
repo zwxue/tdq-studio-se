@@ -64,17 +64,17 @@ public class GenericSQLHandler {
     }
 
     public GenericSQLHandler replaceTable(String table) {
-        sqlString = sqlString.replaceAll(TABLE_NAME, table);
+        sqlString = sqlString.replace(TABLE_NAME, table);
         return this;
     }
 
     public GenericSQLHandler replaceColumn(String columns) {
-        sqlString = sqlString.replaceAll(COLUMN_NAMES, columns);
+        sqlString = sqlString.replace(COLUMN_NAMES, columns);
         return this;
     }
 
     public GenericSQLHandler replaceGroupByAlias(String groupByAliases) {
-        sqlString = sqlString.replaceAll(GROUP_BY_ALIAS, groupByAliases);
+        sqlString = sqlString.replace(GROUP_BY_ALIAS, groupByAliases);
         return this;
     }
 
@@ -95,31 +95,31 @@ public class GenericSQLHandler {
     }
 
     public GenericSQLHandler replaceWhere(String whereClause) {
-        sqlString = sqlString.replaceAll(WHERE_CLAUSE, whereClause);
+        sqlString = sqlString.replace(WHERE_CLAUSE, whereClause);
         return this;
     }
 
     public GenericSQLHandler replaceAndClause(String whereClause) {
-        sqlString = sqlString.replaceAll(AND_WHERE_CLAUSE, whereClause);
+        sqlString = sqlString.replace(AND_WHERE_CLAUSE, whereClause);
         return this;
     }
 
     public GenericSQLHandler replaceWithJoin(String tableNameA, String tableNameB, String joinClause, String whereClause) {
-        sqlString = sqlString.replaceAll(TABLE_NAME, tableNameA).replaceAll(TABLE_NAME2, tableNameB).replaceAll(JOIN_CLAUSE,
-                joinClause).replaceAll(WHERE_CLAUSE, whereClause);
+        sqlString = sqlString.replace(TABLE_NAME, tableNameA).replace(TABLE_NAME2, tableNameB).replace(JOIN_CLAUSE, joinClause)
+                .replace(WHERE_CLAUSE, whereClause);
         return this;
     }
 
     public GenericSQLHandler replaceLimitOffset(String colName, String table, String limitRow, String offset,
             String limitRowPlusOffset) {
         this.replaceColumnTable(colName, table);
-        sqlString = this.sqlString.replaceAll(LIMIT_ROW, limitRow).replaceAll(LIMIT_OFFSET, offset).replaceAll(
+        sqlString = this.sqlString.replace(LIMIT_ROW, limitRow).replace(LIMIT_OFFSET, offset).replace(
                 LIMIT_ROW_PLUS_OFFSET, limitRowPlusOffset);
         return this;
     }
 
     public GenericSQLHandler replacePattern(String regexp) {
-        sqlString = sqlString.replaceAll(PATTERN_EXPRESSION, regexp);
+        sqlString = sqlString.replace(PATTERN_EXPRESSION, regexp);
         return this;
     }
 
