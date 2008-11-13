@@ -95,12 +95,13 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * @author rli
  * 
  */
-public class AnalysisColumnTreeViewer extends AbstractPagePart {
+public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * 
@@ -132,6 +133,7 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
+        initTreeData(tree);
     }
 
     public AnalysisColumnTreeViewer(Composite parent, ColumnMasterDetailsPage masterPage) {
@@ -897,5 +899,30 @@ public class AnalysisColumnTreeViewer extends AbstractPagePart {
 
     public Tree getTree() {
         return tree;
+    }
+
+    public void dropColumns(List<Column> columns) {
+
+        int size = columns.size();
+        ColumnIndicator[] cIndicators = new ColumnIndicator[size];
+        for (int i = 0; i < size; i++) {
+            Column column = columns.get(i);
+            ColumnIndicator columnIndicator = new ColumnIndicator((TdColumn) column);
+            cIndicators[i] = columnIndicator;
+        }
+        this.addElements(cIndicators);
+    }
+
+    @Override
+    public boolean canDrop(Column column) {
+        List<TdColumn> existColumns = new ArrayList<TdColumn>();
+
+        for (ColumnIndicator columnIndicator : this.getColumnIndicator()) {
+            existColumns.add(columnIndicator.getTdColumn());
+        }
+        if (existColumns.contains(column)) {
+            return false;
+        }
+        return true;
     }
 }

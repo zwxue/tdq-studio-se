@@ -36,11 +36,13 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -197,14 +199,15 @@ public class ColumnViewerDND {
                 TdColumn column = (TdColumn) firstElement;
 
                 Tree tree = (Tree) ((DropTarget) event.widget).getControl();
-                AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) tree.getData(AnalysisColumnTreeViewer.VIEWER_KEY);
-                List<TdColumn> existColumns = new ArrayList<TdColumn>();
+                AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree
+                        .getData(AbstractColumnDropTree.COLUMNVIEWER_KEY);
+                // List<TdColumn> existColumns = new ArrayList<TdColumn>();
+                //
+                // for (ColumnIndicator columnIndicator : viewer.getColumnIndicator()) {
+                // existColumns.add(columnIndicator.getTdColumn());
+                // }
 
-                for (ColumnIndicator columnIndicator : viewer.getColumnIndicator()) {
-                    existColumns.add(columnIndicator.getTdColumn());
-                }
-
-                if (!existColumns.contains(column)) {
+                if (viewer.canDrop(column)) {
                     event.detail = DND.DROP_MOVE;
                 }
 
@@ -214,15 +217,16 @@ public class ColumnViewerDND {
         @SuppressWarnings("unchecked")
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer) {
-            Tree tree = (Tree) ((DropTarget) event.widget).getControl();
-            AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) tree.getData(AnalysisColumnTreeViewer.VIEWER_KEY);
+            Tree control = (Tree) ((DropTarget) event.widget).getControl();
+            AbstractColumnDropTree viewer = (AbstractColumnDropTree) control
+                    .getData(AbstractColumnDropTree.COLUMNVIEWER_KEY);
 
             StructuredSelection selection = (StructuredSelection) commonViewer.getSelection();
             Iterator it = selection.iterator();
-            List<TdColumn> selectedColumn = new ArrayList<TdColumn>();
+            List<Column> selectedColumn = new ArrayList<Column>();
 
             while (it.hasNext()) {
-                TdColumn column = (TdColumn) it.next();
+                Column column = (Column) it.next();
 
                 selectedColumn.add(column);
             }
@@ -231,15 +235,16 @@ public class ColumnViewerDND {
             int size2 = selectedColumn.size();
 
             if (size1 == size2) {
+                viewer.dropColumns(selectedColumn);
 
-                ColumnIndicator[] columns = new ColumnIndicator[size2];
-                for (int i = 0; i < size2; i++) {
-                    TdColumn column = selectedColumn.get(i);
-                    ColumnIndicator columnIndicator = new ColumnIndicator(column);
-                    columns[i] = columnIndicator;
-                }
-
-                viewer.addElements(columns);
+                // ColumnIndicator[] columns = new ColumnIndicator[size2];
+                // for (int i = 0; i < size2; i++) {
+                // TdColumn column = selectedColumn.get(i);
+                // ColumnIndicator columnIndicator = new ColumnIndicator(column);
+                // columns[i] = columnIndicator;
+                // }
+                //
+                // viewer.addElements(columns);
             }
 
         }
