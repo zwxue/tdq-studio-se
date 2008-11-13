@@ -37,6 +37,12 @@ public class WizardFactory {
         assert type != null;
 
         switch (type) {
+        case COLUMN_CORRELATION:
+            if (parameter == null) {
+                parameter = new AnalysisParameter();
+            }
+            parameter.setAnalysisTypeName(type.getLiteral());
+            return new ColumnWizard(parameter);
         case MULTIPLE_COLUMN:
             if (parameter == null) {
                 parameter = new AnalysisParameter();

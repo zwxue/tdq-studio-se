@@ -59,6 +59,17 @@ public class AnalysisEditor extends CommonFormEditor {
 
     protected void addPages() {
         switch (analysisType) {
+        case COLUMN_CORRELATION:
+            masterPage = new ColumnCorrelationNominalAndIntervalMasterPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.columnAnalysisEditor")); //$NON-NLS-1$
+            columnResultPage = new ColumnCorrelationNominalIntervalResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
+            try {
+                addPage(masterPage);
+                addPage(columnResultPage);
+            } catch (PartInitException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
+            break;
         case MULTIPLE_COLUMN:
             masterPage = new ColumnMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             setPartName(DefaultMessagesImpl.getString("AnalysisEditor.columnAnalysisEditor")); //$NON-NLS-1$
@@ -136,8 +147,15 @@ public class AnalysisEditor extends CommonFormEditor {
             getMasterPage().doSave(null);
         }
 
-        if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()) {
+        if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()
+                && columnResultPage instanceof ColumnAnalysisResultPage) {
             ((ColumnAnalysisResultPage) columnResultPage).refresh((ColumnMasterDetailsPage) getMasterPage());
+            isRefreshResultPage = false;
+        }
+        if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()
+                && columnResultPage instanceof ColumnCorrelationNominalIntervalResultPage) {
+            ((ColumnCorrelationNominalIntervalResultPage) columnResultPage)
+                    .refresh((ColumnCorrelationNominalAndIntervalMasterPage) getMasterPage());
             isRefreshResultPage = false;
         }
     }

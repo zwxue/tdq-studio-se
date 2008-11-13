@@ -100,6 +100,10 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     FolderProvider currentFolderProvider = ((CreateNewAnalysisWizard) getWizard()).getCurrentFolderProvider();
                     switch (type) {
                     case MULTIPLE_COLUMN:
+                        AnalysisParameter correlationParam = new AnalysisParameter();
+                        correlationParam.setFolderProvider(currentFolderProvider);
+                        parameter = correlationParam;
+                        break;
                     case COLUMNS_COMPARISON:
                         AnalysisParameter anaParam = new AnalysisParameter();
                         anaParam.setFolderProvider(currentFolderProvider);

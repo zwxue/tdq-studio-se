@@ -46,7 +46,6 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage {
         topComposite = form.getBody();
         topComposite.setLayout(new GridLayout());
         summaryComp = toolkit.createComposite(topComposite);
-        summaryComp = toolkit.createComposite(topComposite);
         summaryComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         summaryComp.setLayout(new GridLayout());
         createSummarySection(form, summaryComp, getColumnAnalysisHandler());
