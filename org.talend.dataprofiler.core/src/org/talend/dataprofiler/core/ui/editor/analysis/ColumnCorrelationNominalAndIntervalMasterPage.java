@@ -72,8 +72,8 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
-import org.talend.dataquality.indicators.columnset.impl.ColumnsetFactoryImpl;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -131,7 +131,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         analyzedColumns = columnCorrelationAnalysisHandler.getAnalyzedColumns();
         CountAvgNullIndicator currentCountAvgNullIndicator;
         if (columnCorrelationAnalysisHandler.getIndicator() == null) {
-            ColumnsetFactoryImpl columnsetFactory = (ColumnsetFactoryImpl) ColumnsetFactoryImpl.init();
+            ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             currentCountAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
             countAvgNullIndicator = currentCountAvgNullIndicator;
         } else {

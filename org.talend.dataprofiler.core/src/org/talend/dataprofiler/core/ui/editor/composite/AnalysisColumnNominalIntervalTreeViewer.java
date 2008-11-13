@@ -115,7 +115,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     public AnalysisColumnNominalIntervalTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
-        initTreeData(tree);
+        tree.setData(this);
     }
 
     public AnalysisColumnNominalIntervalTreeViewer(Composite parent, ColumnCorrelationNominalAndIntervalMasterPage masterPage) {
@@ -249,7 +249,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     public void setElements(final List<Column> columns) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
-        tree.setData(VIEWER_KEY, this);
+        tree.setData(this);
         this.columnSetMultiValueList = columns;
         addItemElements(columns);
     }
