@@ -13,24 +13,20 @@
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.wizard.WizardDialog;
-import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.utils.sql.Java2SqlType;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
-public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisAction {
+public class CreatePatternAnalysisAction extends AbstractPredefinedAnalysisAction {
 
     /**
-     * DOC Zqin CreateSummaryAnalysisAction constructor comment.
-     * 
+     * DOC Zqin CreatePatternAnalysisAction constructor comment.
      */
-    public CreateSummaryAnalysisAction() {
-        super(DefaultMessagesImpl.getString("CreateSummaryAnalysisAction.summaryAnalysis"), null); //$NON-NLS-1$
+    public CreatePatternAnalysisAction() {
+        super("Pattern Analysis", null);
     }
 
     /*
@@ -40,12 +36,14 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected ColumnIndicator[] getPredefinedColumnIndicator() {
-        IndicatorEnum[] allowedEnumes = new IndicatorEnum[3];
-        allowedEnumes[0] = IndicatorEnum.BoxIIndicatorEnum;
-        allowedEnumes[1] = IndicatorEnum.RowCountIndicatorEnum;
-        allowedEnumes[2] = IndicatorEnum.NullCountIndicatorEnum;
 
-        return composePredefinedColumnIndicator(allowedEnumes);
+        IndicatorEnum[] allwedEnumes = new IndicatorEnum[4];
+        allwedEnumes[0] = IndicatorEnum.RowCountIndicatorEnum;
+        allwedEnumes[1] = IndicatorEnum.NullCountIndicatorEnum;
+        allwedEnumes[2] = IndicatorEnum.PatternFreqIndicatorEnum;
+        allwedEnumes[3] = IndicatorEnum.PatternLowFreqIndicatorEnum;
+
+        return composePredefinedColumnIndicator(allwedEnumes);
     }
 
     /*
@@ -55,6 +53,7 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected WizardDialog getPredefinedDialog() {
+        // TODO Auto-generated method stub
         return null;
     }
 
@@ -65,13 +64,7 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected boolean isAllowed() {
-
-        for (TdColumn column : getColumns()) {
-            if (!Java2SqlType.isNumbericInSQL(column.getJavaType())) {
-                return false;
-            }
-        }
-
+        // TODO Auto-generated method stub
         return true;
     }
 
@@ -82,7 +75,7 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
      */
     @Override
     protected boolean preDo() {
-
+        // TODO Auto-generated method stub
         return true;
     }
 

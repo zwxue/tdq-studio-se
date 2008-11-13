@@ -49,7 +49,7 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
     @Override
     protected WizardDialog getPredefinedDialog() {
 
-        return getStandardAnalysisWizardDialog();
+        return null;
     }
 
     /*

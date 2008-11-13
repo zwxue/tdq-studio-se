@@ -32,7 +32,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
@@ -149,17 +148,6 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         }
     }
 
-    protected ColumnCorrelationNominalAndIntervalMasterPage getColumnNominalIntervalMasterPage() {
-        AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getActiveEditor();
-
-        if (editor != null) {
-            return (ColumnCorrelationNominalAndIntervalMasterPage) editor.getMasterPage();
-        } else {
-            return null;
-        }
-    }
-
     protected ColumnIndicator[] composePredefinedColumnIndicator(IndicatorEnum[] allowedEnum) {
 
         ColumnIndicator[] predefinedColumnIndicator = new ColumnIndicator[getColumns().length];
@@ -194,6 +182,9 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         // do something before open the wizard
         if (preDo()) {
             WizardDialog dialog = getPredefinedDialog();
+            if (dialog == null) {
+                dialog = getStandardAnalysisWizardDialog();
+            }
             dialog.setPageSize(500, 340);
 
             if (dialog.open() == Window.OK) {

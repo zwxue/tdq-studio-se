@@ -75,7 +75,7 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
     @Override
     protected WizardDialog getPredefinedDialog() {
 
-        return getStandardAnalysisWizardDialog();
+        return null;
     }
 
 }

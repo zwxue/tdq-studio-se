@@ -90,7 +90,7 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
     @Override
     protected WizardDialog getPredefinedDialog() {
 
-        return getStandardAnalysisWizardDialog();
+        return null;
     }
 
 }
