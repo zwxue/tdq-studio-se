@@ -21,6 +21,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -170,6 +171,12 @@ public class AnalysisHelper {
         for (Indicator indicator : indicators) {
             if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
                 return true;
+            }
+            if (IndicatorsPackage.eINSTANCE.getCountsIndicator().equals(indicator.eClass())) {
+                CountsIndicator cInd = (CountsIndicator) indicator;
+                if (cInd.getRowCountIndicator() != null) {
+                    return true;
+                }
             }
         }
         return false;
