@@ -27,7 +27,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
@@ -139,6 +138,10 @@ public class CorePlugin extends AbstractUIPlugin {
             DQStructureManager manager = DQStructureManager.getInstance();
             getDefault().setUsed(manager.createDQStructure());
         }
+    }
+
+    public IEditorPart getCurrentActiveEditor() {
+        return getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
     }
 
     public IEditorPart openEditor(IFile file, String editorId) {

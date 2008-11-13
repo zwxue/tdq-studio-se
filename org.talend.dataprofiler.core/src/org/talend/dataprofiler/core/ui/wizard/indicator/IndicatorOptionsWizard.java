@@ -49,8 +49,9 @@ public class IndicatorOptionsWizard extends Wizard {
 
         if (indicatorPage.getValidFroms() != null) {
             for (AbstractIndicatorForm form : indicatorPage.getValidFroms()) {
-                isDirty = isDirty || form.performFinish();
-                if (form.getFormEnum() == FormEnum.DataThresholdsForm) {
+                boolean isOk = form.performFinish();
+                isDirty = isDirty || isOk;
+                if (form.getFormEnum() == FormEnum.DataThresholdsForm || form.getFormEnum() == FormEnum.IndicatorThresholdsForm) {
                     IndicatorHelper.propagateDataThresholdsInChildren(indicatorUnit.getIndicator());
                 }
             }

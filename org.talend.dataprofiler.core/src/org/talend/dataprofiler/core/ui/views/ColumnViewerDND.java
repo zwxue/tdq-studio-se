@@ -199,15 +199,9 @@ public class ColumnViewerDND {
                 TdColumn column = (TdColumn) firstElement;
 
                 Tree tree = (Tree) ((DropTarget) event.widget).getControl();
-                AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree
-                        .getData(AbstractColumnDropTree.COLUMNVIEWER_KEY);
-                // List<TdColumn> existColumns = new ArrayList<TdColumn>();
-                //
-                // for (ColumnIndicator columnIndicator : viewer.getColumnIndicator()) {
-                // existColumns.add(columnIndicator.getTdColumn());
-                // }
+                AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
 
-                if (viewer.canDrop(column)) {
+                if (viewer != null && viewer.canDrop(column)) {
                     event.detail = DND.DROP_MOVE;
                 }
 
@@ -218,8 +212,7 @@ public class ColumnViewerDND {
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer) {
             Tree control = (Tree) ((DropTarget) event.widget).getControl();
-            AbstractColumnDropTree viewer = (AbstractColumnDropTree) control
-                    .getData(AbstractColumnDropTree.COLUMNVIEWER_KEY);
+            AbstractColumnDropTree viewer = (AbstractColumnDropTree) control.getData();
 
             StructuredSelection selection = (StructuredSelection) commonViewer.getSelection();
             Iterator it = selection.iterator();
@@ -236,15 +229,6 @@ public class ColumnViewerDND {
 
             if (size1 == size2) {
                 viewer.dropColumns(selectedColumn);
-
-                // ColumnIndicator[] columns = new ColumnIndicator[size2];
-                // for (int i = 0; i < size2; i++) {
-                // TdColumn column = selectedColumn.get(i);
-                // ColumnIndicator columnIndicator = new ColumnIndicator(column);
-                // columns[i] = columnIndicator;
-                // }
-                //
-                // viewer.addElements(columns);
             }
 
         }

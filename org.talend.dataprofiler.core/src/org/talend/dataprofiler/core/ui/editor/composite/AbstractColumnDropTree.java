@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.List;
 
-import org.eclipse.swt.widgets.Tree;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -23,15 +22,6 @@ import orgomg.cwm.resource.relational.Column;
 public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     public static final String COLUMNVIEWER_KEY = "COLUMNVIEWER_KEY";
-
-    /**
-     * Should be called when the control of column viewer is created.
-     * 
-     * @param control
-     */
-    public void initTreeData(Tree tree) {
-        tree.setData(COLUMNVIEWER_KEY, this);
-    }
 
     public abstract void dropColumns(List<Column> columns);
 

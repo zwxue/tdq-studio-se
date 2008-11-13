@@ -133,7 +133,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
-        initTreeData(tree);
     }
 
     public AnalysisColumnTreeViewer(Composite parent, ColumnMasterDetailsPage masterPage) {
@@ -180,6 +179,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
         ColumnViewerDND.installDND(newTree);
         this.addTreeListener(newTree);
+        newTree.setData(this);
         return newTree;
     }
 
