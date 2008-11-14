@@ -92,7 +92,11 @@ public final class DQStructureManager {
 
     public static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_READ_ONLY"); //$NON-NLS-1$
 
-    public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_property"; //$NON-NLS-1$
+    public static final QualifiedName NO_SUBFOLDER_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "NO_SUBFOLDER"); //$NON-NLS-1$
+
+    public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_PROPERTY"; //$NON-NLS-1$
+
+    public static final String NO_SUBFOLDER_PROPERTY = "NO_SUBFOLDER_PROPERTY"; //$NON-NLS-1$
 
     private List<String> modleElementSuffixs = null;
 
@@ -176,7 +180,8 @@ public final class DQStructureManager {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                CreateProjectOperation op = new CreateProjectOperation(description, DefaultMessagesImpl.getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
+                CreateProjectOperation op = new CreateProjectOperation(description, DefaultMessagesImpl
+                        .getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
                 try {
                     PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(op, monitor,
                             WorkspaceUndoUtil.getUIInfoAdapter(currentShell));

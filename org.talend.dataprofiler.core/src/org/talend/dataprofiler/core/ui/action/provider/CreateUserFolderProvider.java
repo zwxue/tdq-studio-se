@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -21,13 +22,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
 
 /**
  * This provider for creating a user folder.
  */
 public class CreateUserFolderProvider extends CommonActionProvider {
+
+    public static final String ACTION_ID = "Create_User_Folder_Action";
 
     /**
      * DOC rli CreateSubFolderProvider constructor comment.
@@ -51,6 +56,13 @@ public class CreateUserFolderProvider extends CommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
             currentSelection = (IFolder) obj;
+            try {
+                if (currentSelection.getPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY) != null) {
+                    return;
+                }
+            } catch (CoreException e) {
+                ExceptionHandler.process(e);
+            }
         }
         CreateUserFolderAction createSubFolderAction = new CreateUserFolderAction();
         menu.add(createSubFolderAction);
@@ -65,7 +77,7 @@ public class CreateUserFolderProvider extends CommonActionProvider {
         public CreateUserFolderAction() {
             super(DefaultMessagesImpl.getString("CreateUserFolderProvider.createFolder")); //$NON-NLS-1$
             setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.FOLDER_NEW_IMAGE));
-            setId("Create_User_Folder_Action"); //$NON-NLS-1$
+            setId(ACTION_ID); //$NON-NLS-1$
         }
 
         /*
