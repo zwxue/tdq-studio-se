@@ -437,6 +437,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     public void saveAnalysis() throws DataprofilerCoreException {
         columnCorrelationAnalysisHandler.clearAnalysis();
+        countAvgNullIndicator.getAnalyzedColumns().clear();
         List<String> comboStringList = new ArrayList<String>();
         List<Column> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
         for (int i = 0; i < columnSetMultiValueList.size(); i++) {
