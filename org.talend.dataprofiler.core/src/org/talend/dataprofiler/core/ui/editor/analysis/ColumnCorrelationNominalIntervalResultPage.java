@@ -82,7 +82,7 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import orgomg.cwm.resource.relational.Column;
 
 /**
- * DOC zqin class global comment. Detailled comment
+ * DOC xzhao class global comment. Detailled comment
  */
 public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
@@ -333,7 +333,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     }
 
     /**
-     * DOC qzhang Comment method "addShowDefinition".
+     * DOC xzhao Comment method "addShowDefinition".
      * 
      * @param image
      */

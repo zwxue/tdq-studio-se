@@ -83,7 +83,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 
 /**
- * @author rli
+ * @author xzhao
  * 
  */
 public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnalysisMetadataPage implements IRuningStatusListener,
@@ -392,7 +392,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     /**
-     * DOC zqin Comment method "refreshChart".
+     * DOC xzhao Comment method "refreshChart".
      * 
      * @param form
      */

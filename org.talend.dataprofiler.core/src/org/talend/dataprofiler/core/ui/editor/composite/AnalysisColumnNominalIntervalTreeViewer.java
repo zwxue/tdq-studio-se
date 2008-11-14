@@ -166,7 +166,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * DOC qzhang Comment method "createTreeMenu".
+     * DOC xzhao Comment method "createTreeMenu".
      * 
      * @param newTree
      * @param containEdit
@@ -309,7 +309,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 @Override
                 public void mouseDown(MouseEvent e) {
                     deleteColumnItems(column);
-                    setElements(columns);
+                    // setElements(columns);
                 }
 
             });
@@ -338,7 +338,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * DOC qzhang Comment method "createOneUnit".
+     * DOC xzhao Comment method "createOneUnit".
      * 
      * @param treeItem
      * @param indicatorUnit
@@ -440,7 +440,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * DOC qzhang Comment method "createIndicatorParameters".
+     * DOC xzhao Comment method "createIndicatorParameters".
      * 
      * @param indicatorItem
      * @param parameters
@@ -532,7 +532,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * DOC rli Comment method "deleteIndicatorItems".
+     * DOC xzhao Comment method "deleteIndicatorItems".
      * 
      * @param treeItem
      * @param inidicatorUnit
@@ -542,7 +542,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * DOC rli Comment method "deleteTreeElements".
+     * DOC xzhao Comment method "deleteTreeElements".
      * 
      * @param columnIndicators
      * @param deleteColumnIndiciators
@@ -555,11 +555,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 remainColumns.remove(j);
             }
         }
-        setElements(remainColumns);
-        if (remainColumns.size() == 0) {
-            isLast = true;
-        }
         this.columnSetMultiValueList = remainColumns;
+        setElements(columnSetMultiValueList);
     }
 
     /*
@@ -698,7 +695,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * DOC zqin AnalysisColumnTreeViewer class global comment. Detailled comment
+     * DOC xzhao AnalysisColumnTreeViewer class global comment. Detailled comment
      */
     class PatternLabelProvider extends LabelProvider {
 
@@ -775,6 +772,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     @Override
     public void dropColumns(List<Column> columns) {
+        this.columnSetMultiValueList.addAll(columns);
         this.addElements(columns);
     }
 }
