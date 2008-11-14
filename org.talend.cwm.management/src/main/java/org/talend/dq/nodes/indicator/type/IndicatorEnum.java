@@ -136,12 +136,12 @@ public enum IndicatorEnum {
     IQRIndicatorEnum(
                      IndicatorsPackage.IQR_INDICATOR,
                      IndicatorsPackage.Literals.IQR_INDICATOR,
-                     "inter quartile range",
+                     "Inter Quartile Range",
                      new IndicatorEnum[] { LowerQuartileIndicatorEnum, UpperQuartileIndicatorEnum }),
     RangeIndicatorEnum(
                        IndicatorsPackage.RANGE_INDICATOR,
                        IndicatorsPackage.Literals.RANGE_INDICATOR,
-                       "range",
+                       "Range",
                        new IndicatorEnum[] { MinValueIndicatorEnum, MaxValueIndicatorEnum }),
     BoxIIndicatorEnum(
                       IndicatorsPackage.BOX_INDICATOR,
