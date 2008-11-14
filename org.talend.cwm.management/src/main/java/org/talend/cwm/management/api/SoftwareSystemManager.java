@@ -56,28 +56,27 @@ public final class SoftwareSystemManager {
      * @return the software system that is referenced by the data provider.
      */
     public TdSoftwareSystem getSoftwareSystem(TdDataProvider dataProvider) {
-        TdSoftwareSystem tdSoftwareSystem = urlToSoftwareSystem.get(dataProvider);
-        if (tdSoftwareSystem == null) {
+        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
+        if (softwareSystem == null) {
+            // else create it and store it
             try {
                 // create it
                 TypedReturnCode<Connection> trc = JavaSqlFactory.createConnection(dataProvider);
                 if (trc.isOk()) {
                     Connection connection = trc.getObject();
-                    tdSoftwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
-                    if (tdSoftwareSystem != null) {
-                       if (DataProviderHelper.setSoftwareSystem(dataProvider, tdSoftwareSystem)) {
-                            DqRepositoryViewService.saveSoftwareSystem(tdSoftwareSystem);
+                    softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
+                    if (softwareSystem != null) { // store it
+                        if (DataProviderHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
+                            DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
                         }
                     }
-                    // store it in map
-                    urlToSoftwareSystem.put(dataProvider, tdSoftwareSystem);
                 }
             } catch (SQLException e) {
                 log.error(e, e);
             }
         }
         // else not null
-        return tdSoftwareSystem;
+        return softwareSystem;
     }
 
 }
