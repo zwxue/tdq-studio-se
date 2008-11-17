@@ -53,15 +53,25 @@ public class ChartDataEntity {
         this.indicator = indicator;
     }
 
+    public boolean isOutOfRange() {
+        return isOutOfRange(null);
+    }
+
     /**
      * DOC Zqin Comment method "isOutOfRange".
      * 
      * @return
      */
-    public boolean isOutOfRange() {
+    public boolean isOutOfRange(String inputValue) {
         outOfRange = false;
 
-        if (value != null && indicator != null) {
+        if (inputValue == null) {
+            inputValue = getValue();
+        }
+
+        boolean canContinue = value != null && percent != null && indicator != null;
+
+        if (canContinue) {
             IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
 
             switch (indicatorEnum) {
@@ -80,7 +90,12 @@ public class ChartDataEntity {
                 break;
             default:
 
-                outOfRange = checkRange(value, getDefinedRange());
+                if (inputValue.equals(getValue())) {
+                    outOfRange = checkRange(value, getDefinedRange());
+                } else if (inputValue.equals(getPersent())) {
+                    outOfRange = checkRange(percent, getDefinedPercentRange());
+                }
+
             }
         }
 
@@ -99,6 +114,22 @@ public class ChartDataEntity {
 
             for (int i = 0; i < threshold.length; i++) {
                 returnDB[i] = Double.valueOf(StringFormatUtil.format(threshold[i], StringFormatUtil.NUMBER).toString());
+            }
+
+            return returnDB;
+        }
+
+        return null;
+    }
+
+    private Double[] getDefinedPercentRange() {
+        String[] threshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
+
+        if (threshold != null) {
+            Double[] returnDB = new Double[threshold.length];
+
+            for (int i = 0; i < threshold.length; i++) {
+                returnDB[i] = new Double(threshold[i]);
             }
 
             return returnDB;
