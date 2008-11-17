@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -94,9 +96,20 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     @Override
     public void createPartControl(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
+        Composite comp = new Composite(parent, SWT.NONE);
+        comp.setLayout(new FillLayout());
+        ScrolledComposite scomp = new ScrolledComposite(comp, SWT.H_SCROLL | SWT.V_SCROLL);
+        scomp.setLayout(new FillLayout());
+
+        Composite composite = new Composite(scomp, SWT.NONE);
         composite.setLayout(new GridLayout());
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        scomp.setExpandHorizontal(true);
+        scomp.setExpandVertical(true);
+        scomp.setMinWidth(400);
+        scomp.setMinHeight(300);
+        scomp.setContent(composite);
 
         gContainer = new Group(composite, SWT.NONE);
         gContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.General"));
@@ -128,6 +141,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         Label pathLab = new Label(tContainer, SWT.NONE);
         pathLab.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"));
         newText(tContainer, fe.eResource().getURI().path());
+    }
+
+    private void createTechnicalDetail(IFile fe) {
+        EObject object = getEObject(fe);
+
+        if (object != null) {
+            createTechnicalDetail(object);
+        }
     }
 
     /**
@@ -182,6 +203,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             if (switchFlag) {
                 if (fe instanceof EObject) {
                     createTechnicalDetail((EObject) fe);
+                } else if (fe instanceof IFile) {
+                    createTechnicalDetail((IFile) fe);
                 } else {
                     createExtDefault();
                 }
@@ -236,6 +259,24 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             is = false;
         }
         return is;
+    }
+
+    private EObject getEObject(IFile fe2) {
+        EObject object = null;
+
+        if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
+            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
+            TdDataProvider dataProvider = tdProvider.getObject();
+            object = dataProvider;
+        } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+            object = PatternResourceFileHelper.getInstance().findPattern(fe2);
+        } else if (fe2.getFileExtension().equals(FactoriesUtil.ANA)) {
+            object = AnaResourceFileHelper.getInstance().findAnalysis(fe2);
+        } else if (fe2.getFileExtension().equals(FactoriesUtil.REP)) {
+            object = RepResourceFileHelper.getInstance().findReport(fe2);
+        }
+
+        return object;
     }
 
     /**
@@ -430,7 +471,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (softwareSystem == null) {
             softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
         }
-        String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype(); 
+        String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype();
         newText(gContainer, subtype);
     }
 
