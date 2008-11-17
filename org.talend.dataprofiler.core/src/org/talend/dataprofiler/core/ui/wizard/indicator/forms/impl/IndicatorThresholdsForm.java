@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -24,9 +27,11 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.RowCountIndicator;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -37,22 +42,81 @@ public class IndicatorThresholdsForm extends DataThresholdsForm {
 
     private boolean canUsed;
 
+    protected static final String VALUE_OUT_OF_RANGE = "These percent value must between 0-100.";
+
     public IndicatorThresholdsForm(Composite parent, int style) {
         super(parent, style);
     }
 
     @Override
     protected void initialize() {
-        String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(parameters);
-        if (indicatorThreshold != null) {
-            lowerText.setText(indicatorThreshold[0]);
-            higherText.setText(indicatorThreshold[1]);
-        }
+        super.initialize();
 
         String[] indicatorPersentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(parameters);
-        if (indicatorPersentThreshold != null) {
+        if (indicatorPersentThreshold != null && canUsed) {
             pLowerText.setText(indicatorPersentThreshold[0]);
             pHigherText.setText(indicatorPersentThreshold[1]);
+        }
+    }
+
+    @Override
+    protected void addFieldsListeners() {
+        super.addFieldsListeners();
+        if (!canUsed) {
+            return;
+        }
+
+        pLowerText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+
+                if (!CheckValueUtils.isNumberWithNegativeValue(pLowerText.getText())) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                } else {
+                    updateStatus(IStatus.OK, MSG_OK);
+                }
+            }
+        });
+
+        pHigherText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+
+                if (!CheckValueUtils.isNumberWithNegativeValue(pHigherText.getText())) {
+                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                } else {
+                    updateStatus(IStatus.OK, MSG_OK);
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected boolean checkFieldsValue() {
+        boolean isSuperOk = super.checkFieldsValue();
+        if (!isSuperOk) {
+            return false;
+        }
+        if (!canUsed) {
+            return isSuperOk;
+        } else {
+
+            String min = pLowerText.getText();
+            String max = pHigherText.getText();
+
+            if (CheckValueUtils.isEmpty(min, max)) {
+                updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+            } else if (CheckValueUtils.isAoverB(min, max)) {
+                updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
+            } else if (CheckValueUtils.isOutRange(0, 100, min, max)) {
+                updateStatus(IStatus.ERROR, VALUE_OUT_OF_RANGE);
+            } else {
+                updateStatus(IStatus.OK, MSG_OK);
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -63,25 +127,23 @@ public class IndicatorThresholdsForm extends DataThresholdsForm {
 
     @Override
     public boolean performFinish() {
-        String min = lowerText.getText();
-        String max = higherText.getText();
 
-        if ("".equals(min) && "".equals(max)) {
-            parameters.setIndicatorValidDomain(null);
+        if (!canUsed) {
+            return super.performFinish();
         } else {
-            IndicatorHelper.setIndicatorThreshold(parameters, min, max);
-        }
+            if (super.performFinish()) {
+                String pmin = pLowerText.getText();
+                String pmax = pHigherText.getText();
+                if ("".equals(pmin) && "".equals(pmax)) {
+                    return false;
+                } else {
+                    IndicatorHelper.setIndicatorThresholdInPercent(parameters, pmin, pmax);
+                    return true;
+                }
+            }
 
-        String pmin = pLowerText.getText();
-        String pmax = pHigherText.getText();
-
-        if ("".equals(pmin) && "".equals(pmax)) {
             return false;
-        } else {
-            IndicatorHelper.setIndicatorThresholdInPercent(parameters, pmin, pmax);
         }
-
-        return true;
     }
 
     @Override
@@ -89,39 +151,41 @@ public class IndicatorThresholdsForm extends DataThresholdsForm {
         super.addFields();
         group.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.setThresholds")); //$NON-NLS-1$
 
-        Group pGroup = new Group(this, SWT.NONE);
-        pGroup.setLayout(new GridLayout(2, false));
-        pGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        pGroup.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.setPersentThresholds"));
+        if (!(parameters.eContainer() instanceof RowCountIndicator)) {
+            Group pGroup = new Group(this, SWT.NONE);
+            pGroup.setLayout(new GridLayout(2, false));
+            pGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            pGroup.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.setPersentThresholds"));
 
-        GridData gdText = new GridData(GridData.FILL_HORIZONTAL);
+            GridData gdText = new GridData(GridData.FILL_HORIZONTAL);
 
-        Label pLower = new Label(pGroup, SWT.NONE);
-        pLower.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.lowerThreshold"));
-        pLowerText = new Text(pGroup, SWT.BORDER);
-        pLowerText.setLayoutData(gdText);
+            Label pLower = new Label(pGroup, SWT.NONE);
+            pLower.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.lowerThreshold"));
+            pLowerText = new Text(pGroup, SWT.BORDER);
+            pLowerText.setLayoutData(gdText);
 
-        Label pHigher = new Label(pGroup, SWT.NONE);
-        pHigher.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.higherThreshold"));
-        pHigherText = new Text(pGroup, SWT.BORDER);
-        pHigherText.setLayoutData(gdText);
+            Label pHigher = new Label(pGroup, SWT.NONE);
+            pHigher.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.higherThreshold"));
+            pHigherText = new Text(pGroup, SWT.BORDER);
+            pHigherText.setLayoutData(gdText);
 
-        IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
-        ColumnMasterDetailsPage masterPage = null;
-        AnalysisEditor anaEditor = null;
-        if (editor != null) {
-            anaEditor = (AnalysisEditor) editor;
-            if (anaEditor.getMasterPage() != null) {
-                masterPage = (ColumnMasterDetailsPage) anaEditor.getMasterPage();
+            IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
+            ColumnMasterDetailsPage masterPage = null;
+            AnalysisEditor anaEditor = null;
+            if (editor != null) {
+                anaEditor = (AnalysisEditor) editor;
+                if (anaEditor.getMasterPage() != null) {
+                    masterPage = (ColumnMasterDetailsPage) anaEditor.getMasterPage();
+                }
             }
-        }
 
-        if (masterPage != null) {
-            canUsed = AnalysisHelper.containsRowCount(masterPage.getAnalysisHandler().getAnalysis());
-        }
+            if (masterPage != null) {
+                canUsed = AnalysisHelper.containsRowCount(masterPage.getAnalysisHandler().getAnalysis());
+            }
 
-        pLowerText.setEnabled(canUsed);
-        pHigherText.setEnabled(canUsed);
+            pLowerText.setEnabled(canUsed);
+            pHigherText.setEnabled(canUsed);
+        }
     }
 
 }

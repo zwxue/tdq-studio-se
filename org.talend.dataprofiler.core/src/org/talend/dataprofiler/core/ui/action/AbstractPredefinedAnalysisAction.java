@@ -191,6 +191,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
                 if (getPredefinedColumnIndicator() != null) {
                     getMasterPage().getTreeViewer().addElements(getPredefinedColumnIndicator());
+                    getMasterPage().doSave(null);
                 }
             }
         }

@@ -14,14 +14,16 @@ package org.talend.dataprofiler.core.ui.utils;
 
 import java.util.regex.Pattern;
 
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class CheckValueUtils {
 
     public static boolean getCheckValue(String regex, String inputString) {
+
+        if (isEmpty(inputString)) {
+            return false;
+        }
 
         return Pattern.matches(regex, inputString);
     }
@@ -43,25 +45,23 @@ public class CheckValueUtils {
         return getCheckValue(regex, inputString);
     }
 
-    public static boolean isNumberValue(String[] inputString) {
-
-        boolean flag = true;
-
-        for (String str : inputString) {
-            flag = flag && isNumberValue(str);
+    public static boolean isNumberValue(String... strs) {
+        for (String str : strs) {
+            if (!isNumberValue(str)) {
+                return false;
+            }
         }
-
-        return flag;
+        return true;
     }
 
-    public static boolean isRealNumberValue(String[] inputString) {
-        boolean flag = true;
-
-        for (String str : inputString) {
-            flag = flag && isRealNumberValue(str);
+    public static boolean isRealNumberValue(String... strs) {
+        for (String str : strs) {
+            if (!isRealNumberValue(str)) {
+                return false;
+            }
         }
 
-        return flag;
+        return true;
     }
 
     public static boolean isNumberOfShownValue(String inputString) {
@@ -80,6 +80,63 @@ public class CheckValueUtils {
 
         String regex = "'.*'"; //$NON-NLS-1$
         return getCheckValue(regex, inputString);
+    }
+
+    /**
+     * DOC Zqin Comment method "isAoverB".
+     * 
+     * @param a
+     * @param b
+     * @return
+     */
+    public static boolean isAoverB(String a, String b) {
+        if (!isEmpty(a, b) && (isNumberValue(a, b) || isRealNumberValue(a, b))) {
+            Double da = new Double(a);
+            Double db = new Double(b);
+            return da > db;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * DOC Zqin Comment method "isEmpty".
+     * 
+     * @param strs
+     * @return
+     */
+    public static boolean isEmpty(String... strs) {
+        if (strs == null) {
+            return false;
+        }
+
+        for (String str : strs) {
+            if ("".equals(str.trim())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * DOC Zqin Comment method "isOutRange".
+     * 
+     * @param min the min value of this range, and min <= max.
+     * @param max the max value of this range, and max >= min
+     * @param strs
+     * @return
+     */
+    public static boolean isOutRange(double min, double max, String... strs) {
+
+        for (String str : strs) {
+            if (isNumberValue(str) || isRealNumberValue(str)) {
+                Double db = new Double(str);
+                return db > max || db < min;
+            }
+        }
+
+        return false;
     }
 
     /**

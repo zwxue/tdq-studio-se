@@ -57,7 +57,7 @@ public class IndicatorOptionsWizard extends Wizard {
             }
         }
 
-        return true;
+        return isDirty;
     }
 
     /*

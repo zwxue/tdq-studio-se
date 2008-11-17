@@ -58,7 +58,10 @@ public class ChartTableProviderFactory {
         public Image getColumnImage(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
 
-            if (entity.isOutOfRange() && entity.getValue().equals(getColumnText(element, columnIndex))) {
+            String currentText = getColumnText(element, columnIndex);
+            boolean outOfRange = entity.isOutOfRange(currentText);
+            boolean isCurrentCol = currentText.equals(entity.getValue()) || currentText.equals(entity.getPersent());
+            if (outOfRange && isCurrentCol) {
                 return ImageLib.getImage(ImageLib.LEVEL_WARNING);
             }
 
@@ -93,7 +96,10 @@ public class ChartTableProviderFactory {
         public Color getForeground(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
 
-            if (entity.isOutOfRange() && entity.getValue().equals(getColumnText(element, columnIndex))) {
+            String currentText = getColumnText(element, columnIndex);
+            boolean outOfRange = entity.isOutOfRange(currentText);
+            boolean isCurrentCol = currentText.equals(entity.getValue()) || currentText.equals(entity.getPersent());
+            if (outOfRange && isCurrentCol) {
                 return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 

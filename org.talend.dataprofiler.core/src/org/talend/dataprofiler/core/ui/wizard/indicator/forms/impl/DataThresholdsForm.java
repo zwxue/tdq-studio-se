@@ -34,7 +34,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
  */
 public class DataThresholdsForm extends AbstractIndicatorForm {
 
-    private static final String LOWER_LESS_HIGHER = UIMessages.MSG_LOWER_LESS_HIGHER;
+    protected static final String LOWER_LESS_HIGHER = UIMessages.MSG_LOWER_LESS_HIGHER;
 
     protected Text lowerText, higherText;
 
@@ -84,13 +84,8 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                String lowerStr = lowerText.getText();
-                String higherStr = higherText.getText();
-
-                if (!lowerStr.equals("") && !CheckValueUtils.isNumberWithNegativeValue(lowerStr)) { //$NON-NLS-1$
+                if (!CheckValueUtils.isNumberWithNegativeValue(lowerText.getText())) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                 }
@@ -101,13 +96,9 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
         higherText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String lowerStr = lowerText.getText();
-                String higherStr = higherText.getText();
 
-                if (!higherStr.equals("") && !CheckValueUtils.isNumberWithNegativeValue(higherStr)) { //$NON-NLS-1$
+                if (!CheckValueUtils.isNumberWithNegativeValue(higherText.getText())) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                } else if (!lowerStr.equals("") && !higherStr.equals("") && Double.valueOf(lowerStr) > Double.valueOf(higherStr)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                 }
@@ -139,13 +130,17 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     public boolean performFinish() {
-        String lower = lowerText.getText();
-        String higher = higherText.getText();
+        if (!checkFieldsValue()) {
+            return false;
+        }
 
-        if ("".equals(lower) && "".equals(higher)) {
+        String min = lowerText.getText();
+        String max = higherText.getText();
+
+        if ("".equals(min) && "".equals(max)) {
             parameters.setDataValidDomain(null);
         } else {
-            IndicatorHelper.setDataThreshold(parameters, lower, higher);
+            IndicatorHelper.setDataThreshold(parameters, min, max);
         }
 
         return true;
@@ -180,6 +175,18 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
+        String min = lowerText.getText();
+        String max = higherText.getText();
+
+        if (CheckValueUtils.isEmpty(min, max)) {
+            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+        } else if (CheckValueUtils.isAoverB(min, max)) {
+            updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
+        } else {
+            updateStatus(IStatus.OK, MSG_OK);
+            return true;
+        }
+
         return false;
     }
 
