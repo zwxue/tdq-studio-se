@@ -66,6 +66,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     private String executeData;
 
+    private boolean isHasDeactivatedIndicator;
+
     /**
      * DOC rli ColumnsComparisonAnalysisResultPage constructor comment.
      * 
@@ -128,6 +130,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         columnHeader2.setWidth(260);
         columnHeader2.setAlignment(SWT.CENTER);
         Analysis analysis = this.masterPage.getAnalysisHandler().getAnalysis();
+        isHasDeactivatedIndicator = analysis.getParameters().getDeactivatedIndicators().size() != 0;
         EList<Indicator> indicators = analysis.getResults().getIndicators();
 
         if (indicators.size() != 0) {
@@ -170,11 +173,12 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         columnHeader1.setWidth(120);
         columnHeader1.setAlignment(SWT.CENTER);
         columnHeader1.setText("SetA"); //$NON-NLS-1$
-        final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
-        columnHeader2.setWidth(120);
-        columnHeader2.setAlignment(SWT.CENTER);
-        columnHeader2.setText("SetB"); //$NON-NLS-1$
-
+        if (!isHasDeactivatedIndicator) {
+            final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
+            columnHeader2.setWidth(120);
+            columnHeader2.setAlignment(SWT.CENTER);
+            columnHeader2.setText("SetB"); //$NON-NLS-1$
+        }
         createTableItems(resultTable);
 
         creatChart(sectionClient);
@@ -182,44 +186,51 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     private void createTableItems(Table resultTable) {
         Long columnSetARows = rowMatchingIndicatorA.getMatchingValueCount() + rowMatchingIndicatorA.getNotMatchingValueCount();
-        Long columnSetBRows = rowMatchingIndicatorB.getMatchingValueCount() + rowMatchingIndicatorB.getNotMatchingValueCount();
+
         TableItem item1 = new TableItem(resultTable, SWT.NULL);
         item1.setText(0, "%Match"); //$NON-NLS-1$
         item1.setText(1, StringFormatUtil.format(
                 (rowMatchingIndicatorA.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-                StringFormatUtil.PERCENT).toString());
-        item1.setText(2, StringFormatUtil.format(
-                (rowMatchingIndicatorB.getMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
                 StringFormatUtil.PERCENT).toString());
         TableItem item2 = new TableItem(resultTable, SWT.NULL);
         item2.setText(0, "%NotMatch"); //$NON-NLS-1$
         item2.setText(1, StringFormatUtil.format(
                 (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
                 StringFormatUtil.PERCENT).toString());
-        item2.setText(2, StringFormatUtil.format(
-                (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
-                StringFormatUtil.PERCENT).toString());
         TableItem item3 = new TableItem(resultTable, SWT.NULL);
         item3.setText(0, "#Match"); //$NON-NLS-1$
         item3.setText(1, rowMatchingIndicatorA.getMatchingValueCount().toString());
-        item3.setText(2, rowMatchingIndicatorB.getMatchingValueCount().toString());
         TableItem item4 = new TableItem(resultTable, SWT.NULL);
         item4.setText(0, "#Not Match"); //$NON-NLS-1$
         item4.setText(1, rowMatchingIndicatorA.getNotMatchingValueCount().toString());
-        item4.setText(2, rowMatchingIndicatorB.getNotMatchingValueCount().toString());
         TableItem item5 = new TableItem(resultTable, SWT.NULL);
         item5.setText(0, "#Rows"); //$NON-NLS-1$
         item5.setText(1, columnSetARows.toString());
-        item5.setText(2, columnSetBRows.toString());
+
+        if (!isHasDeactivatedIndicator) {
+            Long columnSetBRows = rowMatchingIndicatorB.getMatchingValueCount()
+                    + rowMatchingIndicatorB.getNotMatchingValueCount();
+            item1.setText(2, StringFormatUtil.format(
+                    (rowMatchingIndicatorB.getMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
+                    StringFormatUtil.PERCENT).toString());
+            item2.setText(2, StringFormatUtil.format(
+                    (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
+                    StringFormatUtil.PERCENT).toString());
+            item3.setText(2, rowMatchingIndicatorB.getMatchingValueCount().toString());
+            item4.setText(2, rowMatchingIndicatorB.getNotMatchingValueCount().toString());
+            item5.setText(2, columnSetBRows.toString());
+        }
     }
 
     private void creatChart(Composite parent) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, "SetA");
         dataset.addValue(rowMatchingIndicatorA.getNotMatchingValueCount(), NOT_MATCHING, "SetA");
-        dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB");
-        dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB");
-        JFreeChart createStacked3DBarChart = ChartImageFactory.createStacked3DBarChart(null, dataset);
+        if (!isHasDeactivatedIndicator) {
+            dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB");
+            dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB");
+        }
+        JFreeChart createStacked3DBarChart = ChartImageFactory.createStacked3DBarChart("Columns Comparison", dataset);
         ChartPanel chartPanel = new ChartPanel(createStacked3DBarChart);
         GridData gd = new GridData();
         gd.heightHint = 180;
