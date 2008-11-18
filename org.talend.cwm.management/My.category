@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataquality.category:AnalysisCategories xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.category="http://org.talend.dataquality.category">
-  <categories label="Connection Analysis">
+  <categories analysisType="Connection Analysis" label="Connection Analysis">
     <subCategories label="Default Analysis"/>
   </categories>
- <!--<categories label="Table Analysis">
+  <!--categories analysisType="Table Analysis" label="Table Analysis">
     <subCategories analysisType="Table Analysis" label="Default Analysis"/>
     <subCategories analysisType="Table Analysis" label="Column Analysis"/>
   </categories-->
-  <categories label="Multiple Column Analysis">
+  <categories analysisType="Multiple Column Analysis" label="Multiple Column Analysis">
     <!--subCategories label="Default Analysis"/-->
-    <subCategories label="Open Analysis Editor"/>
+    <subCategories analysisType="Multiple Column Analysis" label="Column Analysis"/>
   </categories>
   <!--categories label="Analysis on a column">
     <subCategories label="Default Analysis"/>
     <subCategories label="Nominal values analysis"/>
     <subCategories label="Numerical values analysis"/>
     <subCategories label="Time analysis"/>
-  </categories>-->
-  <categories label="Columns Comparison Analysis">
-    <!-- <subCategories analysisType="Table Comparison" label="Table comparison"/>
-    <subCategories analysisType="Columns Comparison Analysis" label="Column Set Comparison"/> -->
-    <subCategories analysisType="Columns Comparison Analysis" label="column comparison"/>
+  </categories-->
+  <categories analysisType="Columns Comparison Analysis" label="Comparison Analysis">
+    <!--subCategories analysisType="Table Comparison" label="Table comparison"/>
+    <subCategories analysisType="Columns Comparison Analysis" label="Column Set Comparison"/-->
+    <subCategories analysisType="Columns Comparison Analysis" label="Column Content Comparison"/>
   </categories>
-  <categories label="Column Correlation Analysis">
-  	<subCategories label="Column Correlation Nominal Interval Analysis"/>
+  <categories analysisType="Column Correlation Analysis" label="Column Correlation Analysis">
+    <subCategories analysisType="Column Correlation Analysis" label="Column Correlation Nominal Interval Analysis"/>
   </categories>
 </dataquality.category:AnalysisCategories>
