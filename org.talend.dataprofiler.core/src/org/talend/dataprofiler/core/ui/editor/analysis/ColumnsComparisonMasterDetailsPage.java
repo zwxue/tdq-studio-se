@@ -175,7 +175,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 .createSection(
                         form,
                         parentComp,
-                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), false, "Select tables or columns to compare. For tables comparison, select one table from A elements and one table from B elements. For columns comparison, select one or several columns from A and the same number of columns from B."); //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), false, "Select tables or columns to compare. \nFor tables comparison, select one table from A elements and one table from B elements. \nFor columns comparison, select one or several columns from A and the same number of columns from B."); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(columnsComparisonSection);
         sectionClient.setLayout(new GridLayout());
         // sectionClient.setLayout(new GridLayout(2, true));

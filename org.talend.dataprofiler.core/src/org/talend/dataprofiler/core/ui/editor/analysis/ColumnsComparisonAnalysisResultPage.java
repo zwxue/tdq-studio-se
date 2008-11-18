@@ -191,7 +191,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         description.append(setAMatchPercent);
         description.append(" of the data from set A are found in data from set B");
         if (!isHasDeactivatedIndicator) {
-            description.append(", ");
+            description.append("\n");
             description.append(setBMatchPercent);
             description.append(" of the data from set B are found in data from set A ");
         } else {
