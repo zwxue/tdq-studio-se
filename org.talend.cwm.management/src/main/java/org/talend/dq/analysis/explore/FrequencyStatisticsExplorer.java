@@ -14,6 +14,8 @@ package org.talend.dq.analysis.explore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.relational.TdColumn;
@@ -23,11 +25,14 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.utils.sql.Java2SqlType;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC Administrator class global comment. Detailled comment
  */
 public class FrequencyStatisticsExplorer extends DataExplorer {
+
+    private static final String REGEX = "SELECT (.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM";
 
     @SuppressWarnings("fallthrough")
     protected String getFreqRowsStatement() {
@@ -38,7 +43,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         int javaType = column.getJavaType();
 
         if (Java2SqlType.isTextInSQL(javaType)) {
-            clause = getDefaultQuotedStatement("'");
+            clause = getInstantiatedClause();
         } else if (Java2SqlType.isDateInSQL(javaType)) {
             IndicatorParameters parameters = indicator.getParameters();
             DateGrain dateGrain = parameters.getDateParameters().getDateAggregationType();
@@ -206,5 +211,31 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
         return map;
     }
+    
+    
+    /**
+     * Method "getInstantiatedClause".
+     * 
+     * @return the where clause from the instantiated query
+     */
+    protected String getInstantiatedClause() {
+        // get function which convert data into a pattern
+        String function = getFunction();
+
+        String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : function
+                + dbmsLanguage.equal() + "'" + entity.getLabel() + "'";
+        return clause;
+    }
+    
+    private String getFunction() {
+        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
+        final String body = instantiatedExpression.getBody();
+        Pattern p = Pattern.compile(REGEX, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = p.matcher(body);
+        matcher.find();
+        String group = matcher.group(1);
+        return group;
+    }
+
 
 }
