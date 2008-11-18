@@ -229,6 +229,9 @@ public class ChartDataEntity {
     }
 
     public String getPersent() {
+        if (percent == null) {
+            return String.valueOf(Double.NaN);
+        }
         return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
     }
 
