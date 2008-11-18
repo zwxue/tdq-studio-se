@@ -35,6 +35,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.dataprofiler.core.ImageLib;
@@ -67,6 +68,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     private String executeData;
 
     private boolean isHasDeactivatedIndicator;
+
+    private String setAMatchPercent;
+
+    private String setBMatchPercent;
 
     /**
      * DOC rli ColumnsComparisonAnalysisResultPage constructor comment.
@@ -155,12 +160,12 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     @Override
     protected void createResultSection(Composite parent) {
         Section section = createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), true, null); //$NON-NLS-1$
+                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), true, ""); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         section.setClient(sectionClient);
-        if (executeData == null) {
+        if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         }
         Table resultTable = new Table(sectionClient, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
@@ -182,6 +187,18 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         createTableItems(resultTable);
 
         creatChart(sectionClient);
+        StringBuilder description = new StringBuilder();
+        description.append(setAMatchPercent);
+        description.append(" of the data from set A are found in data from set B");
+        if (!isHasDeactivatedIndicator) {
+            description.append(", ");
+            description.append(setBMatchPercent);
+            description.append(" of the data from set B are found in data from set A ");
+        } else {
+            description.append(".");
+        }
+        section.setDescription(description.toString());
+        section.layout();
     }
 
     private void createTableItems(Table resultTable) {
@@ -189,9 +206,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
         TableItem item1 = new TableItem(resultTable, SWT.NULL);
         item1.setText(0, "%Match"); //$NON-NLS-1$
-        item1.setText(1, StringFormatUtil.format(
+        setAMatchPercent = StringFormatUtil.format(
                 (rowMatchingIndicatorA.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-                StringFormatUtil.PERCENT).toString());
+                StringFormatUtil.PERCENT).toString();
+        item1.setText(1, setAMatchPercent);
         TableItem item2 = new TableItem(resultTable, SWT.NULL);
         item2.setText(0, "%NotMatch"); //$NON-NLS-1$
         item2.setText(1, StringFormatUtil.format(
@@ -210,9 +228,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         if (!isHasDeactivatedIndicator) {
             Long columnSetBRows = rowMatchingIndicatorB.getMatchingValueCount()
                     + rowMatchingIndicatorB.getNotMatchingValueCount();
-            item1.setText(2, StringFormatUtil.format(
+            setBMatchPercent = StringFormatUtil.format(
                     (rowMatchingIndicatorB.getMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
-                    StringFormatUtil.PERCENT).toString());
+                    StringFormatUtil.PERCENT).toString();
+            item1.setText(2, setBMatchPercent);
             item2.setText(2, StringFormatUtil.format(
                     (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
                     StringFormatUtil.PERCENT).toString());
@@ -230,7 +249,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB");
             dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB");
         }
-        JFreeChart createStacked3DBarChart = ChartImageFactory.createStacked3DBarChart("Columns Comparison", dataset);
+        JFreeChart createStacked3DBarChart = ChartImageFactory.createStacked3DBarChart("Columns Comparison", dataset,
+                PlotOrientation.HORIZONTAL);
         ChartPanel chartPanel = new ChartPanel(createStacked3DBarChart);
         GridData gd = new GridData();
         gd.heightHint = 180;

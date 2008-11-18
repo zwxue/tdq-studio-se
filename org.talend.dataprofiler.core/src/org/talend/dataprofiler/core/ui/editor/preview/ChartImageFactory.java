@@ -89,7 +89,7 @@ public class ChartImageFactory {
 
         case PATTERN_MATCHING:
         case SQL_PATTERN_MATCHING:
-            return createStacked3DBarChart(chartType.getLiteral(), cDataset);
+            return createStacked3DBarChart(chartType.getLiteral(), cDataset, PlotOrientation.VERTICAL);
 
         case SUMMARY_STATISTICS:
             if (dataset instanceof BoxAndWhiskerCategoryDataset) {
@@ -142,9 +142,9 @@ public class ChartImageFactory {
         return ChartFactory.createBoxAndWhiskerChart(null, null, "value", dataset, false); //$NON-NLS-1$
     }
 
-    public static JFreeChart createStacked3DBarChart(String titile, CategoryDataset dataset) {
+    public static JFreeChart createStacked3DBarChart(String titile, CategoryDataset dataset, PlotOrientation orientation) {
 
-        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, "Value", dataset, PlotOrientation.VERTICAL, true, //$NON-NLS-1$
+        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, "Value", dataset, orientation, true, //$NON-NLS-1$
                 false, false);
 
         CategoryPlot plot = chart.getCategoryPlot();
