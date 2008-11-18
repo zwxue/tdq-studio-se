@@ -771,4 +771,14 @@ public class DbmsLanguage {
         return new GenericSQLHandler(genericSQL).replaceWithJoin(tableNameA, tableNameB, joinClause, whereClause).getSqlString();
     }
 
+    /**
+     * Method "charLength".
+     * 
+     * @param columnName
+     * @return CHAR_LENGTH(columnName)
+     */
+    public String charLength(String columnName) {
+        return " CHAR_LENGTH(" + columnName + ") ";
+    }
+
 }

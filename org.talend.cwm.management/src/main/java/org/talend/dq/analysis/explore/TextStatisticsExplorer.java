@@ -27,7 +27,7 @@ public class TextStatisticsExplorer extends DataExplorer {
         Expression instantiatedExpression = this.indicator.getInstantiatedExpressions(lang);
         String instantiatedSQL = instantiatedExpression.getBody();
 
-        String clause = "CHAR_LENGTH(" + this.columnName + ")" + dbmsLanguage.equal() + "(" + instantiatedSQL + ")";
+        String clause = dbmsLanguage.charLength(this.columnName) + dbmsLanguage.equal() + "(" + instantiatedSQL + ")";
         return getRowsStatement(clause);
     }
 

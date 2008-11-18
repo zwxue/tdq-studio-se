@@ -195,4 +195,14 @@ public class OracleDbmsLanguage extends DbmsLanguage {
         return "SELECT COMMENTS FROM USER_COL_COMMENTS WHERE COLUMN_NAME='" + columnName + "'";
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
+     */
+    @Override
+    public String charLength(String columnName) {
+        return " LENGTH(" + columnName + ") ";
+    }
+
 }

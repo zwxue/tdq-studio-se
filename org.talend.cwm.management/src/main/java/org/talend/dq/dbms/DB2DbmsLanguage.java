@@ -70,4 +70,14 @@ public class DB2DbmsLanguage extends DbmsLanguage {
         return dateGrain.getName() + surroundWith('(', colName, ')');
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
+     */
+    @Override
+    public String charLength(String columnName) {
+        return " LENGTH(" + columnName + ") ";
+    }
+
 }

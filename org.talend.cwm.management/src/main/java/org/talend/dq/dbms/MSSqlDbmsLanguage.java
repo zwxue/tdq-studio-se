@@ -114,4 +114,14 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
         return super.getTopNQuery(query, n);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
+     */
+    @Override
+    public String charLength(String columnName) {
+        return " DATALENGTH(" + columnName + ") ";
+    }
+
 }
