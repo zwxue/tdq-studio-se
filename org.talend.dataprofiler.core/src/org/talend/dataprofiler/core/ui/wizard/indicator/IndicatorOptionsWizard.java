@@ -16,8 +16,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
-import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
-import org.talend.dataquality.helpers.IndicatorHelper;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -50,14 +48,14 @@ public class IndicatorOptionsWizard extends Wizard {
         if (indicatorPage.getValidFroms() != null) {
             for (AbstractIndicatorForm form : indicatorPage.getValidFroms()) {
                 boolean isOk = form.performFinish();
-                isDirty = isDirty || isOk;
-                if (form.getFormEnum() == FormEnum.DataThresholdsForm || form.getFormEnum() == FormEnum.IndicatorThresholdsForm) {
-                    IndicatorHelper.propagateDataThresholdsInChildren(indicatorUnit.getIndicator());
+                if (!isOk) {
+                    return false;
                 }
             }
         }
 
-        return isDirty;
+        isDirty = true;
+        return true;
     }
 
     /*

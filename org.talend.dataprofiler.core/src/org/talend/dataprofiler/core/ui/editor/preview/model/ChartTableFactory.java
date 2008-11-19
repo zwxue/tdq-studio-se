@@ -259,8 +259,9 @@ public class ChartTableFactory {
                         // show tool tip
                         ChartDataEntity entity = (ChartDataEntity) item.getData();
 
-                        if (entity.isOutOfRange() && entity.getRangeAsString() != null) {
-                            showTip(item, entity.getRangeAsString());
+                        String rangeAsString = entity.getRangeAsString();
+                        if (rangeAsString != null) {
+                            showTip(item, rangeAsString);
                         }
                     }
                 default:

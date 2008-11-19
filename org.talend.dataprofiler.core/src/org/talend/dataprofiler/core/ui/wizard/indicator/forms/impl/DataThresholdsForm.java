@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.Indicator;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -84,7 +85,8 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                if (!CheckValueUtils.isNumberWithNegativeValue(lowerText.getText())) {
+                String min = lowerText.getText();
+                if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
@@ -97,7 +99,8 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                if (!CheckValueUtils.isNumberWithNegativeValue(higherText.getText())) {
+                String max = higherText.getText();
+                if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
@@ -141,6 +144,8 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
             parameters.setDataValidDomain(null);
         } else {
             IndicatorHelper.setDataThreshold(parameters, min, max);
+            Indicator indicator = (Indicator) parameters.eContainer();
+            IndicatorHelper.propagateDataThresholdsInChildren(indicator);
         }
 
         return true;
@@ -178,9 +183,7 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
         String min = lowerText.getText();
         String max = higherText.getText();
 
-        if (CheckValueUtils.isEmpty(min, max)) {
-            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-        } else if (CheckValueUtils.isAoverB(min, max)) {
+        if (CheckValueUtils.isAoverB(min, max)) {
             updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
         } else {
             updateStatus(IStatus.OK, MSG_OK);

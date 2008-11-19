@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.text.DecimalFormat;
@@ -30,14 +29,11 @@ import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
-import org.jfree.ui.Layer;
 import org.jfree.ui.TextAnchor;
-import org.talend.dataprofiler.core.ui.editor.preview.model.CustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -149,20 +145,6 @@ public class ChartImageFactory {
 
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setRangeGridlinesVisible(true);
-
-        if (dataset != null && titile.endsWith(EIndicatorChartType.SUMMARY_STATISTICS.getLiteral())) {
-            CustomerDataset data = (CustomerDataset) dataset;
-
-            Double min = data.getDataEntities()[0].getDefinedRange()[0];
-            Double max = data.getDataEntities()[0].getDefinedRange()[1];
-            ValueMarker minMarker = new ValueMarker(min, new Color(200, 200, 255), new BasicStroke(1.0f),
-                    new Color(200, 200, 255), new BasicStroke(1.0f), 1.0f);
-            ValueMarker maxMarker = new ValueMarker(max, new Color(200, 200, 255), new BasicStroke(1.0f),
-                    new Color(200, 200, 255), new BasicStroke(1.0f), 1.0f);
-
-            plot.addRangeMarker(minMarker, Layer.BACKGROUND);
-            plot.addRangeMarker(maxMarker, Layer.BACKGROUND);
-        }
 
         StackedBarRenderer3D renderer = (StackedBarRenderer3D) plot.getRenderer();
         renderer.setSeriesPaint(0, Color.GREEN);

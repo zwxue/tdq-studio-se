@@ -59,9 +59,8 @@ public class ChartTableProviderFactory {
             ChartDataEntity entity = (ChartDataEntity) element;
 
             String currentText = getColumnText(element, columnIndex);
-            boolean outOfRange = entity.isOutOfRange(currentText);
             boolean isCurrentCol = currentText.equals(entity.getValue()) || currentText.equals(entity.getPersent());
-            if (outOfRange && isCurrentCol) {
+            if (isCurrentCol && entity.isOutOfRange(currentText)) {
                 return ImageLib.getImage(ImageLib.LEVEL_WARNING);
             }
 
@@ -97,9 +96,8 @@ public class ChartTableProviderFactory {
             ChartDataEntity entity = (ChartDataEntity) element;
 
             String currentText = getColumnText(element, columnIndex);
-            boolean outOfRange = entity.isOutOfRange(currentText);
             boolean isCurrentCol = currentText.equals(entity.getValue()) || currentText.equals(entity.getPersent());
-            if (outOfRange && isCurrentCol) {
+            if (isCurrentCol && entity.isOutOfRange(currentText)) {
                 return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 
@@ -125,7 +123,6 @@ public class ChartTableProviderFactory {
                 return ""; //$NON-NLS-1$
             }
         }
-
     }
 
     /**
@@ -153,6 +150,33 @@ public class ChartTableProviderFactory {
             }
         }
 
+        @Override
+        public Image getColumnImage(Object element, int columnIndex) {
+            PatternChartDataEntity entity = (PatternChartDataEntity) element;
+
+            String currentText = getColumnText(element, columnIndex);
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getNumNoMatch())
+                    || currentText.equals(entity.getPerMatch()) || currentText.equals(entity.getPerNoMatch());
+            if (isCurrentCol && entity.isOutOfRange(currentText)) {
+                return ImageLib.getImage(ImageLib.LEVEL_WARNING);
+            }
+
+            return null;
+        }
+
+        @Override
+        public Color getForeground(Object element, int columnIndex) {
+            PatternChartDataEntity entity = (PatternChartDataEntity) element;
+
+            String currentText = getColumnText(element, columnIndex);
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getNumNoMatch())
+                    || currentText.equals(entity.getPerMatch()) || currentText.equals(entity.getPerNoMatch());
+            if (isCurrentCol && entity.isOutOfRange(currentText)) {
+                return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+            }
+
+            return null;
+        }
     }
 
     /**

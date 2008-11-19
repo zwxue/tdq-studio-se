@@ -132,7 +132,9 @@ public class CheckValueUtils {
         for (String str : strs) {
             if (isNumberValue(str) || isRealNumberValue(str)) {
                 Double db = new Double(str);
-                return db > max || db < min;
+                if (db > max || db < min) {
+                    return true;
+                }
             }
         }
 
