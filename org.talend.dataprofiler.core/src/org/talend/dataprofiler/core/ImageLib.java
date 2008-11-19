@@ -18,7 +18,6 @@ import java.net.URL;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * Store and lazy load Imaged. <br/>
@@ -98,6 +97,10 @@ public class ImageLib {
     public static final String EXCLAMATION = "exclamation.png"; //$NON-NLS-1$
 
     public static final String CATALOG = "catalog.jpg"; //$NON-NLS-1$
+
+    public static final String ASC_SORT = "asc.gif"; //$NON-NLS-1$
+
+    public static final String DESC_SORT = "desc.gif"; //$NON-NLS-1$
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.

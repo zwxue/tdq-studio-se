@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -55,12 +56,15 @@ import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dataquality.indicators.schema.TableIndicator;
+import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -74,6 +78,22 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
     private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema"); //$NON-NLS-1$
 
     private static final String CATALOG = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog"); //$NON-NLS-1$
+
+    private SchemaTableSorter[][] tableSorters = {
+            { new SchemaTableSorter(SchemaTableSorter.TABLE), new SchemaTableSorter(-SchemaTableSorter.TABLE) },
+            { new SchemaTableSorter(SchemaTableSorter.ROWS), new SchemaTableSorter(-SchemaTableSorter.ROWS) },
+            { new SchemaTableSorter(SchemaTableSorter.KEYS), new SchemaTableSorter(-SchemaTableSorter.KEYS) },
+            { new SchemaTableSorter(SchemaTableSorter.INDEXES), new SchemaTableSorter(-SchemaTableSorter.INDEXES) } };
+
+    private SchemaViewSorter[][] viewSorters = {
+            { new SchemaViewSorter(SchemaViewSorter.VIEW), new SchemaViewSorter(-SchemaViewSorter.VIEW) },
+            { new SchemaViewSorter(SchemaViewSorter.ROWS), new SchemaViewSorter(-SchemaViewSorter.ROWS) } };
+
+    // private static final String TABLE = "tables";
+
+    // private static final String VIEW = "View";
+
+    private static final int COLUMN_TABLEVIEW_WIDTH = 100;
 
     /**
      * Width of the first column.
@@ -101,6 +121,14 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
 
     private Composite sumSectionClient;
 
+    private Composite tableAndViewComposite;
+
+    private ScrolledForm form;
+
+    private TableViewer tableOfCatalogOrSchemaViewer;
+
+    private TableViewer viewOfCatalogOrSchemaViewer;
+
     public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -108,18 +136,17 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
-        final ScrolledForm form = managedForm.getForm();
+        form = managedForm.getForm();
         form.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectionAnalysis")); //$NON-NLS-1$
         this.metadataSection.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         this.metadataSection.setDescription(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.setAnalysisProp")); //$NON-NLS-1$
-        createAnalysisParamSection(form, topComp);
-        createAnalysisSummarySection(form, topComp);
-        createStatisticalSection(form, topComp);
-
+        createAnalysisParamSection(topComp);
+        createAnalysisSummarySection(topComp);
+        createStatisticalSection(topComp);
         createRunButton(form);
     }
 
-    private void createAnalysisParamSection(ScrolledForm form, Composite topComp) {
+    private void createAnalysisParamSection(Composite topComp) {
         Section statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
                 .getString("ConnectionMasterDetailsPage.analysisParameter"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
@@ -171,7 +198,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
         statisticalSection.setClient(sectionClient);
     }
 
-    private void createAnalysisSummarySection(ScrolledForm form, Composite topComp) {
+    private void createAnalysisSummarySection(Composite topComp) {
         Section summarySection = this.createSection(form, topComp, DefaultMessagesImpl
                 .getString("ConnectionMasterDetailsPage.analysisSummary"), false, null); //$NON-NLS-1$
         sumSectionClient = toolkit.createComposite(summarySection);
@@ -279,18 +306,18 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
         return format;
     }
 
-    private void createStatisticalSection(ScrolledForm form, Composite topComp) {
+    private void createStatisticalSection(Composite topComp) {
         Section statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
                 .getString("ConnectionMasterDetailsPage.statisticalinformations"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
-        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayout(new GridLayout(3, false));
 
         statisticalViewer = new TableViewer(sectionClient, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         Table table = statisticalViewer.getTable();
         table.setHeaderVisible(true);
         table.setBackgroundMode(SWT.INHERIT_FORCE);
         table.setLinesVisible(true);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(table);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).span(3, 1).grab(true, true).applyTo(table);
         List<TdCatalog> catalogs = DataProviderHelper.getTdCatalogs(tdDataProvider);
         boolean containSchema = false;
         for (TdCatalog catalog : catalogs) {
@@ -327,6 +354,14 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
         statisticalViewer.setLabelProvider(provider);
         statisticalViewer.setContentProvider(provider);
         doSetInput();
+
+        statisticalViewer.addSelectionChangedListener(new DisplayTableAndViewListener());
+
+        tableAndViewComposite = new Composite(sectionClient, SWT.None);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tableAndViewComposite);
+        tableAndViewComposite.setLayout(new GridLayout(2, false));
+        tableAndViewComposite.setVisible(false);
+
         sectionClient.layout();
         statisticalSection.setClient(sectionClient);
 
@@ -471,6 +506,128 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
         }
 
     }
+
+    private void displayTableAndViewComp(SchemaIndicator schemaIndicator) {
+        tableAndViewComposite.setVisible(true);
+        if (tableOfCatalogOrSchemaViewer == null) {
+            tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
+                    | SWT.FULL_SELECTION);
+            Table catalogOrSchemaTable = tableOfCatalogOrSchemaViewer.getTable();
+            catalogOrSchemaTable.setHeaderVisible(true);
+            // catalogOrSchemaTable.setBackgroundMode(SWT.INHERIT_FORCE);
+            catalogOrSchemaTable.setLinesVisible(true);
+            GridData layoutData = new GridData(SWT.CENTER, SWT.FILL, false, true);
+            layoutData.heightHint = 150;
+            layoutData.horizontalIndent = -10;
+            layoutData.verticalIndent = 0;
+            catalogOrSchemaTable.setLayoutData(layoutData);
+            String[] columnTexts = new String[] { "Table", "#Rows", "#Keys", "#Indexs" };
+            createSorterColumns(tableOfCatalogOrSchemaViewer, columnTexts, tableSorters);
+            TableOfCatalogOrSchemaProvider providerTable = new TableOfCatalogOrSchemaProvider();
+            tableOfCatalogOrSchemaViewer.setLabelProvider(providerTable);
+            tableOfCatalogOrSchemaViewer.setContentProvider(providerTable);
+
+            // Label spaceWhitePanel = new Label(tableAndViewComposite, SWT.NONE);
+            // spaceWhitePanel.setText(PluginConstant.SPACE_STRING + PluginConstant.SPACE_STRING +
+            // PluginConstant.SPACE_STRING);
+            // spaceWhitePanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+
+            viewOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
+                    | SWT.FULL_SELECTION);
+            Table tableCatalogOrSchemaView = viewOfCatalogOrSchemaViewer.getTable();
+            tableCatalogOrSchemaView.setHeaderVisible(true);
+            // tableCatalogOrSchemaView.setBackgroundMode(SWT.INHERIT_FORCE);/
+            tableCatalogOrSchemaView.setLinesVisible(true);
+            layoutData = new GridData(SWT.CENTER, SWT.FILL, false, true);
+            layoutData.heightHint = 150;
+            layoutData.horizontalIndent = 100;
+            layoutData.verticalIndent = 0;
+            tableCatalogOrSchemaView.setLayoutData(layoutData);
+            columnTexts = new String[] { "View", "#Rows" };
+            createSorterColumns(viewOfCatalogOrSchemaViewer, columnTexts, viewSorters);
+            ViewOfCatalogOrSchemaProvider viewProvider = new ViewOfCatalogOrSchemaProvider();
+            viewOfCatalogOrSchemaViewer.setLabelProvider(viewProvider);
+            viewOfCatalogOrSchemaViewer.setContentProvider(viewProvider);
+        }
+        List<TableIndicator> indicatorTableList = (List<TableIndicator>) schemaIndicator.getTableIndicators();
+        tableOfCatalogOrSchemaViewer.setInput(indicatorTableList);
+
+        List<ViewIndicator> indicatorViewList = (List<ViewIndicator>) schemaIndicator.getViewIndicators();
+        viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
+        tableAndViewComposite.layout();
+        form.reflow(true);
+
+    }
+
+    // public void doTableSetInput(TableViewer viewer, SchemaIndicator schemaIndicator) {
+    // List<TableIndicator> indicatorTableList = schemaIndicator.getTableIndicators();
+    // viewer.setInput(indicatorTableList);
+    // }
+    //
+    // public void doViewSetInput(TableViewer viewer, SchemaIndicator schemaIndicator) {
+    // List<ViewIndicator> indicatorViewList = null;
+    // if (this.analysis.getResults().getIndicators().size() > 0) {
+    // ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
+    // indicatorViewList = conIndicator.getViewIndicators();
+    // viewer.setInput(indicatorViewList);
+    // } else {
+    // indicatorViewList = new ArrayList<ViewIndicator>();
+    // }
+    // }
+
+    /**
+     * 
+     * DOC zhaoxinyi ConnectionMasterDetailsPage class global comment. Detailled comment
+     */
+    class DisplayTableAndViewListener implements ISelectionChangedListener {
+
+        public void selectionChanged(SelectionChangedEvent event) {
+            StructuredSelection selection = (StructuredSelection) event.getSelection();
+            SchemaIndicator schemaIndicator = (SchemaIndicator) selection.getFirstElement();
+            displayTableAndViewComp(schemaIndicator);
+        }
+    }
+
+    private void createSorterColumns(final TableViewer tableViewer, String[] columnTexts, ViewerSorter[][] sorters) {
+        Table table = tableViewer.getTable();
+        TableColumn[] columns = new TableColumn[columnTexts.length];
+        for (int i = 0; i < columns.length; i++) {
+            columns[i] = new TableColumn(table, SWT.LEFT | SWT.FILL);
+            columns[i].setText(columnTexts[i]);
+            columns[i].setWidth(COLUMN_TABLEVIEW_WIDTH);
+            columns[i].addSelectionListener(new ColumnSortListener(columns, i, tableViewer, sorters));
+        }
+    }
+
+    // private void createAccordingViewColumn(final TableViewer tableViewer) {
+    // Table table = tableViewer.getTable();
+    // TableColumn tableColumnView = new TableColumn(table, SWT.LEFT | SWT.FILL);
+    // tableColumnView.setText("view");
+    // tableColumnView.setWidth(TABLE_WIDTH);
+    // tableColumnView.addSelectionListener(new SelectionAdapter() {
+    //
+    // boolean asc = true;
+    //
+    // public void widgetSelected(SelectionEvent e) {
+    //
+    // tableViewer.setSorter(asc ? SchemaViewSorter.VIEW_ASC : SchemaViewSorter.VIEW_DESC);
+    // asc = !asc;
+    // }
+    // });
+    // TableColumn tableColumnRows = new TableColumn(table, SWT.LEFT | SWT.FILL);
+    // tableColumnRows.setText("#rows");
+    // tableColumnRows.setWidth(TABLE_WIDTH);
+    // tableColumnView.addSelectionListener(new SelectionAdapter() {
+    //
+    // boolean asc = true;
+    //
+    // public void widgetSelected(SelectionEvent e) {
+    //
+    // tableViewer.setSorter(asc ? SchemaViewSorter.ROWS_ASC : SchemaViewSorter.ROWS_DESC);
+    // asc = !asc;
+    // }
+    // });
+    // }
 
     /**
      * The provider for display the data of catalog table viewer.
