@@ -106,7 +106,7 @@ public final class TopChartFactory {
                 if (!Double.isNaN(z)) {
                     // MOD scorreia +2L avoid points: minimal size of circle must be 1
                     z += 1;
-                    
+
                     RectangleEdge domainAxisLocation = plot.getDomainAxisEdge();
                     RectangleEdge rangeAxisLocation = plot.getRangeAxisEdge();
                     double transX = domainAxis.valueToJava2D(x, dataArea, domainAxisLocation);
@@ -136,7 +136,7 @@ public final class TopChartFactory {
                     transDomain = Math.abs(transDomain);
                     transRange = Math.abs(transRange);
                     Ellipse2D circle = null;
-                   
+
                     if (orientation == PlotOrientation.VERTICAL) {
                         circle = new Ellipse2D.Double(transX - transDomain / 2.0, transY - transRange / 2.0, transDomain,
                                 transRange);
@@ -206,7 +206,7 @@ public final class TopChartFactory {
             final String next = iterator.next();
             createXYZDatasets.get(next).addSeriesToXYZDataset(dataset, next);
         }
-        JFreeChart chart = TopChartFactory.createBubbleChart(DefaultMessagesImpl.getString("TopChartFactory.title"), "x", "y", dataset, PlotOrientation.HORIZONTAL, true, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        JFreeChart chart = TopChartFactory.createBubbleChart("", "x", "y", dataset, PlotOrientation.HORIZONTAL, true, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 false, true);
         final XYPlot plot = (XYPlot) chart.getPlot();
         final XYItemRenderer renderer = plot.getRenderer();

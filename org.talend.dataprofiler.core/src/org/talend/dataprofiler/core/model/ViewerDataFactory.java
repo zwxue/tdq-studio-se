@@ -35,7 +35,7 @@ public class ViewerDataFactory {
         EList<AnalysisCategory> categories = analysisCategories.getCategories();
 
         for (AnalysisCategory category : categories) {
-            AnalysisTypeNode typeNode = new AnalysisTypeNode(category.getLabel(), category.getAnalysisType().getLiteral(), null);
+            AnalysisTypeNode typeNode = new AnalysisTypeNode(category.getLabel(), category.getLabel(), null);
             if (category.getSubCategories() != null) {
                 List<AnalysisTypeNode> subCategories = new ArrayList<AnalysisTypeNode>();
                 for (AnalysisCategory subCategory : category.getSubCategories()) {

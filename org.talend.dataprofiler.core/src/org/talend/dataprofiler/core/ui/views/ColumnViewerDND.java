@@ -112,8 +112,23 @@ public class ColumnViewerDND {
             @SuppressWarnings("unchecked")
             @Override
             public void drop(DropTargetEvent event) {
+                int index = 0;
                 super.drop(event);
-                receiver.drop(event, commonViewer);
+                if (event.item == null) {
+                    // TreeItem item = new TreeItem(targetControl, SWT.NONE);
+                    // item.setText(texts);
+                    // item.setText(text);
+                } else {
+                    TreeItem item = (TreeItem) event.item;
+                    TreeItem[] items = targetControl.getItems();
+                    for (int i = 0; i < items.length; i++) {
+                        if (items[i] == item) {
+                            index = i;
+                            break;
+                        }
+                    }
+                }
+                receiver.drop(event, commonViewer, index);
             }
         };
 
@@ -128,7 +143,7 @@ public class ColumnViewerDND {
 
         void doDropValidation(DropTargetEvent event, CommonViewer commonViewer);
 
-        void drop(DropTargetEvent event, CommonViewer commonViewer);
+        void drop(DropTargetEvent event, CommonViewer commonViewer, int index);
     }
 
     /**
@@ -168,7 +183,7 @@ public class ColumnViewerDND {
         }
 
         // @Override
-        public void drop(DropTargetEvent event, CommonViewer commonViewer) {
+        public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
             IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
             TreeItem item = (TreeItem) event.item;
             ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
@@ -193,7 +208,7 @@ public class ColumnViewerDND {
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
 
             event.detail = DND.DROP_NONE;
-            Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
+            Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
 
             if (firstElement instanceof TdColumn) {
                 TdColumn column = (TdColumn) firstElement;
@@ -210,11 +225,12 @@ public class ColumnViewerDND {
 
         @SuppressWarnings("unchecked")
         // @Override
-        public void drop(DropTargetEvent event, CommonViewer commonViewer) {
+        public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
+            LocalSelectionTransfer localSelection = LocalSelectionTransfer.getTransfer();
             Tree control = (Tree) ((DropTarget) event.widget).getControl();
             AbstractColumnDropTree viewer = (AbstractColumnDropTree) control.getData();
 
-            StructuredSelection selection = (StructuredSelection) commonViewer.getSelection();
+            StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
             List<Column> selectedColumn = new ArrayList<Column>();
 
@@ -228,10 +244,9 @@ public class ColumnViewerDND {
             int size2 = selectedColumn.size();
 
             if (size1 == size2) {
-                viewer.dropColumns(selectedColumn);
+                viewer.dropColumns(selectedColumn, index);
             }
-
+            localSelection = null;
         }
-
     }
 }

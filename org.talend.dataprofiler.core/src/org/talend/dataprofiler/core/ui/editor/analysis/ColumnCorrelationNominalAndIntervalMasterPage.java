@@ -50,8 +50,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -60,14 +58,12 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesPanel;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -77,7 +73,6 @@ import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
@@ -182,7 +177,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         previewComp.setLayout(new GridLayout());
 
         createPreviewSection(form, previewComp);
-
         runButton = createRunButton(form);
     }
 
@@ -222,8 +216,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      */
     public void openColumnsSelectionDialog() {
         List<Column> columnList = treeViewer.getColumnSetMultiValueList();
-        if (columnList == null)
+        if (columnList == null) {
             columnList = new ArrayList<Column>();
+        }
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
                 null,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -301,14 +296,13 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
 
         List<Composite> previewChartList = new ArrayList<Composite>();
-        List<Column> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
 
-        for (int i = 0; i < columnSetMultiValueList.size(); i++) {
-            final TdColumn column = (TdColumn) columnSetMultiValueList.get(i);
+        for (Column column : countAvgNullIndicator.getNumericColumns()) {
+            final TdColumn tdColumn = (TdColumn) column;
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
-            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + column.getName()); //$NON-NLS-1$
+            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + tdColumn.getName()); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setData(countAvgNullIndicator);
             previewChartList.add(exComp);
@@ -317,43 +311,37 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-            if (column != null) {
-                final ColumnIndicator columnIndicator = new ColumnIndicator(column);
-
+            if (tdColumn != null) {
                 IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-
                         monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview")
-                                + column.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-
+                                + tdColumn.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         Display.getDefault().asyncExec(new Runnable() {
 
                             public void run() {
 
-                                for (ChartWithData chartData : IndicatorChartFactory.createChart(columnIndicator, isCreate)) { // carete
-                                    // chart
-                                    final JFreeChart chart = chartData.getChart();
-                                    if (chart != null) {
-                                        Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
-                                        frameComp.setLayout(new GridLayout());
-                                        GridData gd = new GridData();
-                                        gd.heightHint = 230;
-                                        gd.widthHint = 460;
-                                        if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS
-                                                && chartData.getEnity().length == 6) {
-                                            gd = new GridData();
-                                            gd.heightHint = 400;
-                                            gd.widthHint = 150;
-                                        }
-                                        frameComp.setLayoutData(gd);
+                                // carete chart
+                                HideSeriesPanel hideSeriesPanel = new HideSeriesPanel(countAvgNullIndicator, tdColumn);
+                                if (hideSeriesPanel != null) {
+                                    Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
+                                    frameComp.setLayout(new GridLayout());
+                                    GridData gd = new GridData();
+                                    gd.heightHint = 230;
+                                    gd.widthHint = 460;
+                                    // if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS
+                                    // && chartData.getEnity().length == 6) {
+                                    // gd = new GridData();
+                                    // gd.heightHint = 400;
+                                    // gd.widthHint = 150;
+                                    // }
+                                    frameComp.setLayoutData(gd);
 
-                                        Frame frame = SWT_AWT.new_Frame(frameComp);
-                                        frame.setLayout(new java.awt.GridLayout());
+                                    Frame frame = SWT_AWT.new_Frame(frameComp);
+                                    frame.setLayout(new java.awt.BorderLayout());
 
-                                        frame.add(new ChartPanel(chart));
-                                        frame.validate();
-                                    }
+                                    frame.add(hideSeriesPanel);
+                                    frame.validate();
                                 }
                             }
 
@@ -442,6 +430,11 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         List<Column> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
         for (int i = 0; i < columnSetMultiValueList.size(); i++) {
             TdColumn tdColumn = (TdColumn) columnSetMultiValueList.get(i);
+            if (tdColumn.getSqlDataType().getName().trim().equals("date")
+                    || tdColumn.getSqlDataType().getName().trim().equals("datetime")) {
+                MessageDialog.openWarning(new Shell(), "Warning", "Analysis columns can't exist date datatype");
+                return;
+            }
             DataminingType type = MetadataHelper.getDataminingType(tdColumn);
             String comboString = type.getLiteral();
             comboStringList.add(comboString);
@@ -450,11 +443,12 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         List<String> correctString = new ArrayList<String>();
         correctString.add("Nominal");
         correctString.add("Interval");
-        for (String combo : comboStringList)
+        for (String combo : comboStringList) {
             if (!correctString.contains(combo)) {
                 isSave = false;
                 break;
             }
+        }
         if (!isSave) {
             MessageDialog
                     .openWarning(
@@ -595,11 +589,17 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     }
 
-    public boolean canSave() {
+    protected boolean canSave() {
         return true;
     }
 
     public boolean canRun() {
+        // if (canSave()) {
+        // return false;
+        // }
+        if (isDirty()) {
+            return false;
+        }
         return true;
     }
 }

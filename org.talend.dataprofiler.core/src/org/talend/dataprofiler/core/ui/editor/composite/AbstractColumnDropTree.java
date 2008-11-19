@@ -23,7 +23,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     public static final String COLUMNVIEWER_KEY = "COLUMNVIEWER_KEY";
 
-    public abstract void dropColumns(List<Column> columns);
+    public abstract void dropColumns(List<Column> columns, int index);
 
     public abstract boolean canDrop(Column column);
 

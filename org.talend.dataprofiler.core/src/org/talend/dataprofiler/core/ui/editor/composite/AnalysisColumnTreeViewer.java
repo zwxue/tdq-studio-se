@@ -901,7 +901,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return tree;
     }
 
-    public void dropColumns(List<Column> columns) {
+    public void dropColumns(List<Column> columns, int index) {
 
         int size = columns.size();
         ColumnIndicator[] cIndicators = new ColumnIndicator[size];

@@ -18,23 +18,23 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.DecorationOverlayIcon;
-import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TreeEditor;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -43,14 +43,12 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -61,19 +59,12 @@ import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
-import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
-import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.DateParameters;
-import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
-import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.resource.relational.Column;
@@ -97,8 +88,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     private static final int WIDTH1_CELL = 75;
 
     private Composite parentComp;
-
-    private boolean isLast;
 
     private Tree tree;
 
@@ -140,10 +129,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         column2.setWidth(120);
         column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dataminingType")); //$NON-NLS-1$
         column2.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.columnTip")); //$NON-NLS-1$
-        /*
-         * TreeColumn column3 = new TreeColumn(newTree, SWT.CENTER); column3.setWidth(80);
-         * column3.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.pattern")); //$NON-NLS-1$
-         */TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
+        TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
         column4.setWidth(80);
         column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
 
@@ -160,7 +146,45 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         };
 
         parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
+        // ColumnViewerDND.installDND(newTree);
+        // TreeViewerDNDDecorator treeDND = new TreeViewerDNDDecorator();
+        // treeDND.installDND(newTree, true);
+        final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
+        Transfer[] types = new Transfer[] { transfer };
+        int operations = DND.DROP_COPY | DND.DROP_MOVE;
+        final DragSource source = new DragSource(newTree, operations);
+        source.setTransfer(types);
+        final TreeItem[] dragSourceItem = new TreeItem[1];
+        source.addDragListener(new DragSourceListener() {
+
+            public void dragStart(DragSourceEvent event) {
+                TreeItem[] selection = newTree.getSelection();
+                dragSourceItem[0] = selection[0];
+                if (selection.length > 0) {
+                    event.doit = true;
+                    transfer.setSelection(new StructuredSelection(selection[0].getData(COLUMN_INDICATOR_KEY)));
+                    getColumnSetMultiValueList().remove(selection[0].getData(COLUMN_INDICATOR_KEY));
+                } else {
+                    event.doit = false;
+                }
+            };
+
+            public void dragSetData(DragSourceEvent event) {
+                event.data = dragSourceItem[0];
+            }
+
+            public void dragFinished(DragSourceEvent event) {
+                if (event.detail == DND.DROP_MOVE) {
+                    removeItemBranch(dragSourceItem[0]);
+                    tree.forceFocus();
+                }
+                dragSourceItem[0] = null;
+
+            }
+        });
+
         ColumnViewerDND.installDND(newTree);
+
         this.addTreeListener(newTree);
         return newTree;
     }
@@ -251,13 +275,14 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         this.tree = createTree(this.parentComp);
         tree.setData(this);
         this.columnSetMultiValueList = columns;
-        addItemElements(columns);
+        addItemElements(columns, 0);
+        // addItemElements(columns);
     }
 
-    private void addItemElements(final List<Column> columns) {
+    private void addItemElements(final List<Column> columns, int index) {
         for (int i = 0; i < columns.size(); i++) {
             final TdColumn column = (TdColumn) columns.get(i);
-            final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
+            final TreeItem treeItem = new TreeItem(tree, SWT.NONE, index);
             String columnName = column.getName();
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
@@ -266,6 +291,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             treeItem.setData(COLUMN_INDICATOR_KEY, column);
 
             TreeEditor comboEditor = new TreeEditor(tree);
+            tree.setData("TreeEditor", comboEditor);
+
             final CCombo combo = new CCombo(tree, SWT.BORDER);
             for (DataminingType type : DataminingType.values()) {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal for presentation
@@ -309,7 +336,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 @Override
                 public void mouseDown(MouseEvent e) {
                     deleteColumnItems(column);
-                    // setElements(columns);
+                    removeItemBranch(treeItem);
                 }
 
             });
@@ -322,214 +349,23 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
              * if (columnIndicator.hasIndicators()) { createIndicatorItems(treeItem,
              * columnIndicator.getIndicatorUnits()); }
              */
+            delLabelEditor.layout();
             treeItem.setExpanded(true);
         }
+        tree.layout();
+        tree.redraw();
         this.setDirty(true);
     }
 
-    public void addElements(final List<Column> columns) {
-        this.addItemElements(columns);
+    public void addElements(final List<Column> columns, int index) {
+        this.addItemElements(columns, index);
     }
 
-    private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
-        for (IndicatorUnit indicatorUnit : indicatorUnits) {
-            createOneUnit(treeItem, indicatorUnit);
-        }
-    }
-
-    /**
-     * DOC xzhao Comment method "createOneUnit".
-     * 
-     * @param treeItem
-     * @param indicatorUnit
-     */
-    public void createOneUnit(final TreeItem treeItem, IndicatorUnit indicatorUnit) {
-        final TreeItem indicatorItem = new TreeItem(treeItem, SWT.NONE);
-        final IndicatorUnit unit = indicatorUnit;
-        IndicatorEnum type = indicatorUnit.getType();
-        final IndicatorEnum indicatorEnum = type;
-        indicatorItem.setData(COLUMN_INDICATOR_KEY, treeItem.getData(COLUMN_INDICATOR_KEY));
-        indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
-        indicatorItem.setData(VIEWER_KEY, this);
-        String label = indicatorUnit.getIndicatorName();
-        if (IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
-                || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0) {
-            indicatorItem.setImage(0, ImageLib.getImage(ImageLib.PATTERN_REG));
-        }
-        indicatorItem.setText(0, label);
-
-        TreeEditor optionEditor;
-        // if (indicatorEnum.hasChildren()) {
-        optionEditor = new TreeEditor(tree);
-        Label optionLabel = new Label(tree, SWT.NONE);
-        optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
-        optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.options")); //$NON-NLS-1$
-        optionLabel.pack();
-        optionLabel.setData(indicatorUnit);
-        optionLabel.addMouseListener(new MouseAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-             */
-            @Override
-            public void mouseDown(MouseEvent e) {
-
-                IndicatorUnit indicatorUnit = (IndicatorUnit) ((Label) e.getSource()).getData();
-                IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
-
-                if (FormEnum.isExsitingForm(indicatorUnit)) {
-                    String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
-                    OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(null, wizard, href);
-                    optionDialog.create();
-                    if (Window.OK == optionDialog.open()) {
-                        setDirty(wizard.isDirty());
-                        createIndicatorParameters(indicatorItem, indicatorUnit);
-                    }
-                } else {
-                    MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl
-                            .getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$ 
-                            DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-2$
-                }
-            }
-
-        });
-
-        optionEditor.minimumWidth = WIDTH1_CELL;
-        optionEditor.horizontalAlignment = SWT.CENTER;
-        optionEditor.setEditor(optionLabel, indicatorItem, 1);
-        // }
-
-        TreeEditor delEditor = new TreeEditor(tree);
-        Label delLabel = new Label(tree, SWT.NONE);
-        delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-        delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
-        delLabel.pack();
-        delLabel.addMouseListener(new MouseAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-             */
-            @Override
-            public void mouseDown(MouseEvent e) {
-                ColumnIndicator columnIndicator = (ColumnIndicator) treeItem.getData(COLUMN_INDICATOR_KEY);
-                deleteIndicatorItems(columnIndicator, unit);
-                if (indicatorItem.getParentItem() != null && indicatorItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
-                    setElements(columnSetMultiValueList);
-                } else {
-                    removeItemBranch(indicatorItem);
-                }
-            }
-
-        });
-
-        delEditor.minimumWidth = WIDTH1_CELL;
-        delEditor.horizontalAlignment = SWT.CENTER;
-        delEditor.setEditor(delLabel, indicatorItem, 3);
-        indicatorItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { optionEditor, delEditor });
-        if (indicatorEnum.hasChildren()) {
-            indicatorItem.setData(treeItem.getData(COLUMN_INDICATOR_KEY));
-            createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
-        }
-        createIndicatorParameters(indicatorItem, indicatorUnit);
-    }
-
-    /**
-     * DOC xzhao Comment method "createIndicatorParameters".
-     * 
-     * @param indicatorItem
-     * @param parameters
-     */
-    private void createIndicatorParameters(TreeItem indicatorItem, IndicatorUnit indicatorUnit) {
-        TreeItem[] items = indicatorItem.getItems();
-        if (indicatorItem != null && !indicatorItem.isDisposed()) {
-            for (TreeItem treeItem : items) {
-                if (DATA_PARAM.equals(treeItem.getData(DATA_PARAM))) {
-                    treeItem.dispose();
-                }
-            }
-        }
-        IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
-        if (parameters == null) {
-            return;
-        }
-        TreeItem iParamItem;
-        if (indicatorUnit.getType() == IndicatorEnum.FrequencyIndicatorEnum) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.resultsShown") + //$NON-NLS-1$
-                    parameters.getTopN());
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-        }
-
-        TextParameters tParameter = parameters.getTextParameter();
-        if (tParameter != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.textParameters")); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
-            TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useBlanks") + //$NON-NLS-1$
-                    tParameter.isUseBlank());
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-
-            subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.ignoreCase") + //$NON-NLS-1$
-                    tParameter.isIgnoreCase());
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-
-            subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useNulls") + //$NON-NLS-1$
-                    tParameter.isUseNulls());
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-        }
-        DateParameters dParameters = parameters.getDateParameters();
-        if (dParameters != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dateParameters")); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-
-            TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
-            subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.aggregationType", //$NON-NLS-1$
-                    dParameters.getDateAggregationType().getName())); //$NON-NLS-2$
-            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-            subParamItem.setData(DATA_PARAM, DATA_PARAM);
-        }
-
-        Domain dataValidDomain = parameters.getDataValidDomain();
-        if (dataValidDomain != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0,
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.validDomain") + (dataValidDomain != null)); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-        }
-        Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
-        if (indicatorValidDomain != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.qualityThresholds") + //$NON-NLS-1$
-                    (indicatorValidDomain != null));
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-        }
-        Domain bins = parameters.getBins();
-        if (bins != null) {
-            iParamItem = new TreeItem(indicatorItem, SWT.NONE);
-            iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.binsDefined") + (bins != null)); //$NON-NLS-1$
-            iParamItem.setData(DATA_PARAM, DATA_PARAM);
-            iParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
-        }
-    }
+    // private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
+    // for (IndicatorUnit indicatorUnit : indicatorUnits) {
+    // createOneUnit(treeItem, indicatorUnit);
+    // }
+    // }
 
     /**
      * DOC xzhao Comment method "deleteIndicatorItems".
@@ -556,26 +392,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             }
         }
         this.columnSetMultiValueList = remainColumns;
-        setElements(columnSetMultiValueList);
+        // setElements(columnSetMultiValueList);
     }
-
-    /*
-     * public void openIndicatorSelectDialog(Shell shell) { final IndicatorSelectDialog dialog = new
-     * IndicatorSelectDialog(shell, DefaultMessagesImpl .getString("AnalysisColumnTreeViewer.indicatorSelection"),
-     * columnIndicators); //$NON-NLS-1$ dialog.create(); dialog.getShell().addShellListener(new ShellAdapter() {
-     * 
-     * 
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.swt.events.ShellAdapter#shellActivated(org.eclipse.swt.events.ShellEvent)
-     * 
-     * @Override public void shellActivated(ShellEvent e) { dialog.getShell().setFocus(); IContext context =
-     * HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
-     * PlatformUI.getWorkbench().getHelpSystem().displayHelp(context); } });
-     * 
-     * if (dialog.open() == Window.OK) { ColumnIndicator[] result = dialog.getResult(); for (ColumnIndicator
-     * columnIndicator : result) { columnIndicator.storeTempIndicator(); } this.setElements(result); return; } }
-     */
 
     public List<Column> getColumnSetMultiValueList() {
         return this.columnSetMultiValueList;
@@ -591,7 +409,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         for (TreeItem item : selection) {
             TdColumn tdColumn = (TdColumn) item.getData(COLUMN_INDICATOR_KEY);
             deleteColumnItems(tdColumn);
-
+            removeItemBranch(item);
         }
     }
 
@@ -695,52 +513,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * DOC xzhao AnalysisColumnTreeViewer class global comment. Detailled comment
-     */
-    class PatternLabelProvider extends LabelProvider {
-
-        @Override
-        public Image getImage(Object element) {
-            if (element instanceof IFolder) {
-                return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-            }
-
-            if (element instanceof IFile) {
-                Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern((IFile) element);
-                boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
-                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
-                if (!validStatus) {
-                    ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-                            ISharedImages.IMG_OBJS_WARN_TSK);
-                    DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
-                            IDecoration.BOTTOM_RIGHT);
-                    imageDescriptor = icon;
-                }
-                return imageDescriptor.createImage();
-            }
-
-            return null;
-        }
-
-        @Override
-        public String getText(Object element) {
-            if (element instanceof IFile) {
-                IFile file = (IFile) element;
-                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                if (pattern != null) {
-                    return pattern.getName();
-                }
-            }
-
-            if (element instanceof IFolder) {
-                return ((IFolder) element).getName();
-            }
-
-            return ""; //$NON-NLS-1$
-        }
-    }
-
-    /**
      * Getter for analysis.
      * 
      * @return the analysis
@@ -771,8 +543,9 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     @Override
-    public void dropColumns(List<Column> columns) {
-        this.columnSetMultiValueList.addAll(columns);
-        this.addElements(columns);
+    public void dropColumns(List<Column> columns, int index) {
+        this.columnSetMultiValueList.addAll(index, columns);
+        this.addElements(columns, index);
+        // this.setElements(columnSetMultiValueList);
     }
 }

@@ -189,8 +189,7 @@ public class ChartDatasetFactory {
                     && map.containsKey(IndicatorEnum.LowerQuartileIndicatorEnum)) {
                 Double quartile = map.get(IndicatorEnum.UpperQuartileIndicatorEnum)
                         - map.get(IndicatorEnum.LowerQuartileIndicatorEnum);
-                ChartDataEntity entity = new ChartDataEntity(null, IndicatorEnum.IQRIndicatorEnum.getLabel(), quartile
-                        .toString());
+                ChartDataEntity entity = new ChartDataEntity(null, IndicatorEnum.IQRIndicatorEnum.getLabel(), quartile.toString());
                 defaultDataset.addDataEntity(entity);
                 dataset.addDataEntity(entity);
             }
@@ -415,6 +414,7 @@ public class ChartDatasetFactory {
             }
 
             double[][] data = new double[][] { xDouble, yDouble, zDouble };
+            // System.out.println(Arrays.deepToString(data));
             dataset.addSeries(keyOfDataset, data);
         }
 

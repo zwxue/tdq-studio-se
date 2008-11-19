@@ -89,6 +89,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                 }
                 AnalysisTypeNode parent = (AnalysisTypeNode) node.getParent();
                 if (parent == null) {
+                    setPageComplete(false);
                     return;
                 } else {
                     String literal = parent.getLiteral();
@@ -99,6 +100,11 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
                     FolderProvider currentFolderProvider = ((CreateNewAnalysisWizard) getWizard()).getCurrentFolderProvider();
                     switch (type) {
+                    case COLUMN_CORRELATION:
+                        AnalysisParameter correlationColumnParam = new AnalysisParameter();
+                        correlationColumnParam.setFolderProvider(currentFolderProvider);
+                        parameter = correlationColumnParam;
+                        break;
                     case MULTIPLE_COLUMN:
                         AnalysisParameter correlationParam = new AnalysisParameter();
                         correlationParam.setFolderProvider(currentFolderProvider);

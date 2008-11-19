@@ -218,6 +218,15 @@
 	            <instanceof value="org.talend.cwm.relational.TdColumn"/>           
 	        </and>
          </enablement>
+      </actionProvider> 
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider">
+         <enablement>
+            <and>
+	            <instanceof value="org.talend.cwm.relational.TdColumn"/>           
+	        </and>
+         </enablement>
       </actionProvider>        
       <!--actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.EditConnectionProvider"
