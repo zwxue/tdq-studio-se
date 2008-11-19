@@ -80,7 +80,11 @@ public class ChartDataEntity {
     }
 
     public String getValue() {
-        return StringFormatUtil.format(value, StringFormatUtil.NUMBER).toString();
+        if (value != null) {
+            return StringFormatUtil.format(value, StringFormatUtil.NUMBER).toString();
+        } else {
+            return null;
+        }
     }
 
     public void setValue(String value) {
@@ -88,10 +92,11 @@ public class ChartDataEntity {
     }
 
     public String getPersent() {
-        if (percent == null) {
-            return String.valueOf(Double.NaN);
+        if (percent != null) {
+            return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
+        } else {
+            return null;
         }
-        return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
     }
 
     public void setPercent(String percent) {
