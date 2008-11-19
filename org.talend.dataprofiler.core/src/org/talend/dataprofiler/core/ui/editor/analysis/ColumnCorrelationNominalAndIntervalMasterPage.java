@@ -73,6 +73,7 @@ import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
@@ -164,7 +165,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
-        form.setText("Analyze correlation between nominal and interval columns"); //$NON-NLS-1$
+        form.setText("Correlation Analysis between nominal and interval columns"); 
         metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
@@ -430,9 +431,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         List<Column> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
         for (int i = 0; i < columnSetMultiValueList.size(); i++) {
             TdColumn tdColumn = (TdColumn) columnSetMultiValueList.get(i);
-            if (tdColumn.getSqlDataType().getName().trim().equals("date")
-                    || tdColumn.getSqlDataType().getName().trim().equals("datetime")) {
-                MessageDialog.openWarning(new Shell(), "Warning", "Analysis columns can't exist date datatype");
+            if (Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                MessageDialog.openWarning(new Shell(), "Warning", "Date column cannot be used in this kind of analysis.");
                 return;
             }
             DataminingType type = MetadataHelper.getDataminingType(tdColumn);
@@ -441,8 +441,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         }
         boolean isSave = true;
         List<String> correctString = new ArrayList<String>();
-        correctString.add("Nominal");
-        correctString.add("Interval");
+        correctString.add(DataminingType.NOMINAL.getLiteral());
+        correctString.add(DataminingType.INTERVAL.getLiteral());
         for (String combo : comboStringList) {
             if (!correctString.contains(combo)) {
                 isSave = false;
