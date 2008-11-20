@@ -286,7 +286,7 @@ public class ChartTableFactory {
                 Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
                 Rectangle rect = item.getBounds(1);
                 Point pt = table.toDisplay(rect.x, rect.y);
-                tip.setBounds(pt.x + 10, pt.y + 10, size.x, size.y);
+                tip.setBounds(pt.x + 10, pt.y + 18, size.x, size.y);
                 tip.setVisible(true);
             }
         };

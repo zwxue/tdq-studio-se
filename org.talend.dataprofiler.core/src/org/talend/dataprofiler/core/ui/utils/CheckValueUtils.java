@@ -111,7 +111,9 @@ public class CheckValueUtils {
         }
 
         for (String str : strs) {
-            if ("".equals(str.trim())) {
+            if (str == null) {
+                return true;
+            } else if ("".equals(str.trim())) {
                 return true;
             }
         }

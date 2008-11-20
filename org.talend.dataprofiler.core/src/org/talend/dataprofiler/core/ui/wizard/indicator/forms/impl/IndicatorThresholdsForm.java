@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl;
 
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -31,6 +33,8 @@ import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -46,11 +50,13 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private boolean canUsed;
 
-    protected static final String VALUE_OUT_OF_RANGE = "These percent value must between 0-100.";
-
     private static final double MIN = 0;
 
     private static final double MAX = 100;
+
+    private static final String VALUE_THRESHOLD = "Value Threshold";
+
+    private static final String PERCENTAGE_THRESHOLD = "Percentage Threshold";
 
     public IndicatorThresholdsForm(Composite parent, int style) {
         super(parent, style);
@@ -123,25 +129,49 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     public boolean performFinish() {
-        if (checkFieldsValue()) {
-            String min = lowerText.getText();
-            String max = higherText.getText();
-            if (!CheckValueUtils.isEmpty(min, max)) {
-                IndicatorHelper.setIndicatorThreshold(parameters, min, max);
-            }
-            if (canUsed) {
-                String pmin = pLowerText.getText();
-                String pmax = pHigherText.getText();
+        boolean isMinEmpty = CheckValueUtils.isEmpty(lowerText.getText());
+        boolean isMaxEmpty = CheckValueUtils.isEmpty(higherText.getText());
+        if (canUsed) {
+            boolean isPerMinEmpty = CheckValueUtils.isEmpty(pLowerText.getText());
+            boolean isPerMaxEmpty = CheckValueUtils.isEmpty(pHigherText.getText());
 
-                if (!CheckValueUtils.isEmpty(pmin, pmax)) {
-                    IndicatorHelper.setIndicatorThresholdInPercent(parameters, pmin, pmax);
+            if (isMinEmpty && isMaxEmpty && isPerMinEmpty && isPerMaxEmpty) {
+                parameters.setIndicatorValidDomain(null);
+            } else {
+                if (isMinEmpty && isMaxEmpty) {
+                    removeRange(VALUE_THRESHOLD);
+                } else {
+                    IndicatorHelper.setIndicatorThreshold(parameters, lowerText.getText(), higherText.getText());
+                }
+
+                if (isPerMinEmpty && isPerMaxEmpty) {
+                    removeRange(PERCENTAGE_THRESHOLD);
+                } else {
+                    IndicatorHelper.setIndicatorThresholdInPercent(parameters, pLowerText.getText(), pHigherText.getText());
                 }
             }
 
-            return true;
+        } else {
+            if (isMinEmpty && isMaxEmpty) {
+                parameters.setIndicatorValidDomain(null);
+            } else {
+                IndicatorHelper.setIndicatorThreshold(parameters, lowerText.getText(), higherText.getText());
+            }
         }
 
-        return false;
+        return true;
+    }
+
+    private void removeRange(String rangeName) {
+        Domain validDomain = parameters.getIndicatorValidDomain();
+        if (validDomain != null) {
+            Iterator<RangeRestriction> it = validDomain.getRanges().iterator();
+            while (it.hasNext()) {
+                if (rangeName.equals(it.next().getName())) {
+                    it.remove();
+                }
+            }
+        }
     }
 
     @Override
@@ -155,12 +185,19 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         lowerText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-
                 String min = lowerText.getText();
-                if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                String max = higherText.getText();
+
+                if (!CheckValueUtils.isEmpty(min)) {
+                    if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
+                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                    } else if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
+                        updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                    } else {
+                        updateStatus(IStatus.OK, MSG_OK);
+                    }
                 } else {
-                    updateStatus(IStatus.OK, MSG_OK);
+                    updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
                 }
             }
 
@@ -169,12 +206,19 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         higherText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-
+                String min = lowerText.getText();
                 String max = higherText.getText();
-                if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+
+                if (!CheckValueUtils.isEmpty(max)) {
+                    if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
+                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                    } else if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
+                        updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                    } else {
+                        updateStatus(IStatus.OK, MSG_OK);
+                    }
                 } else {
-                    updateStatus(IStatus.OK, MSG_OK);
+                    updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
                 }
             }
 
@@ -184,39 +228,47 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             pLowerText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
+                    String pmin = pLowerText.getText();
+                    String pmax = pHigherText.getText();
 
-                    checkInput(pLowerText.getText());
+                    if (!CheckValueUtils.isEmpty(pmin)) {
+                        if (!CheckValueUtils.isRealNumberValue(pmin)) {
+                            updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                        } else if (CheckValueUtils.isOutRange(MIN, MAX, pmin)) {
+                            updateStatus(IStatus.ERROR, UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE);
+                        } else if (!CheckValueUtils.isEmpty(pmax) && CheckValueUtils.isAoverB(pmin, pmax)) {
+                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                        } else {
+                            updateStatus(IStatus.OK, MSG_OK);
+                        }
+                    } else {
+                        updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
+                    }
                 }
             });
 
             pHigherText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
+                    String pmin = pLowerText.getText();
+                    String pmax = pHigherText.getText();
 
-                    checkInput(pHigherText.getText());
+                    if (!CheckValueUtils.isEmpty(pmax)) {
+                        if (!CheckValueUtils.isRealNumberValue(pmax)) {
+                            updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                        } else if (CheckValueUtils.isOutRange(MIN, MAX, pmax)) {
+                            updateStatus(IStatus.ERROR, UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE);
+                        } else if (!CheckValueUtils.isEmpty(pmin) && CheckValueUtils.isAoverB(pmin, pmax)) {
+                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                        } else {
+                            updateStatus(IStatus.OK, MSG_OK);
+                        }
+                    } else {
+                        updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
+                    }
 
                 }
             });
-        }
-    }
-
-    private void checkInput(String input) {
-        if (!CheckValueUtils.isNumberWithNegativeValue(input)) {
-            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-        } else if (CheckValueUtils.isOutRange(MIN, MAX, input)) {
-            updateStatus(IStatus.ERROR, VALUE_OUT_OF_RANGE);
-        } else {
-            updateStatus(IStatus.OK, MSG_OK);
-        }
-    }
-
-    private boolean checkFinished(String min, String max) {
-        if (CheckValueUtils.isAoverB(min, max)) {
-            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
-            return false;
-        } else {
-            updateStatus(IStatus.OK, MSG_OK);
-            return true;
         }
     }
 
@@ -228,30 +280,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     protected boolean checkFieldsValue() {
-        String min, max;
-        String pmin, pmax;
-        if (canUsed) {
-            min = lowerText.getText();
-            max = higherText.getText();
-            pmin = pLowerText.getText();
-            pmax = pHigherText.getText();
-            boolean flag = false;
-            if (!CheckValueUtils.isEmpty(min, max)) {
-                flag = checkFinished(min, max);
-            }
-
-            if (!CheckValueUtils.isEmpty(pmin, pmax)) {
-                flag = flag && checkFinished(pmin, pmax);
-            }
-            return flag;
-        } else {
-            min = lowerText.getText();
-            max = higherText.getText();
-            if (!CheckValueUtils.isEmpty(min, max)) {
-                return checkFinished(min, max);
-            }
-        }
-
+        // TODO Auto-generated method stub
         return false;
     }
 

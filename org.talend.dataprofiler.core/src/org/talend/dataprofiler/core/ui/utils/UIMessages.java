@@ -37,4 +37,8 @@ public class UIMessages {
 
     public static final String MSG_LOWER_LESS_HIGHER = DefaultMessagesImpl.getString("UIMessages.lowerValuelessThanHigherValue"); //$NON-NLS-1$
 
+    public static final String MSG_INDICATOR_WIZARD = "In this wizard, parameters for the given indicator can be set";
+
+    public static final String MSG_INDICATOR_VALUE_OUT_OF_RANGE = "These percent value must between 0-100.";
+
 }
