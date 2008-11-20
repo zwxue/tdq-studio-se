@@ -33,7 +33,7 @@ public class ChartDataEntity {
 
     private Boolean outOfRange = null;
 
-    private String range;
+    protected String range;
 
     private boolean labelNull = false;
 
@@ -190,6 +190,13 @@ public class ChartDataEntity {
             }
 
             if (dValue < min || dValue > max) {
+                if (inString.indexOf('%') > 0) {
+                    range = "[" + StringFormatUtil.formatPersent(min / 100) + "," + StringFormatUtil.formatPersent(max / 100)
+                            + "]";
+                } else {
+                    range = "[" + min + "," + max + "]";
+                }
+
                 return true;
             }
         }
@@ -212,21 +219,14 @@ public class ChartDataEntity {
                 msg.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\"");
             } else if (indicatorEnum == IndicatorEnum.BoxIIndicatorEnum) {
                 if (isOutOfRange(getValue())) {
-                    Double[] dRange = getDefinedRange(getValue());
-                    range = "[" + dRange[0] + "," + dRange[1] + "]";
                     msg.append("This value is outside the expected data's thresholds: " + range);
                 }
             } else {
                 if (isOutOfRange(getValue())) {
-                    Double[] dRange = getDefinedRange(getValue());
-                    range = "[" + dRange[0] + "," + dRange[1] + "]";
                     msg.append("This value is outside the expected indicator's thresholds: " + range);
                     msg.append("\n");
                 }
                 if (isOutOfRange(getPersent())) {
-                    Double[] dRange = getDefinedRange(getPersent());
-                    range = "[" + StringFormatUtil.formatPersent(dRange[0] / 100) + ","
-                            + StringFormatUtil.formatPersent(dRange[1] / 100) + "]";
                     msg.append("This value is outside the expected indicator's thresholds in percent: " + range);
                 }
             }
