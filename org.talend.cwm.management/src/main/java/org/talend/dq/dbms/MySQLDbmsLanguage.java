@@ -41,7 +41,6 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      */
     public MySQLDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         super(dbmsType, majorVersion, minorVersion);
-        // TODO Auto-generated constructor stub
     }
 
     /*

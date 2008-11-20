@@ -13,11 +13,23 @@
 package org.talend.dq.dbms;
 
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.utils.properties.PropertiesLoader;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
 public class PostgresqlDbmsLanguage extends DbmsLanguage {
+    private static final Class<PostgresqlDbmsLanguage> THAT = PostgresqlDbmsLanguage.class;
+
+    private static final String NUM = getProperties("POSTGRES_NUM", "1234567890");
+
+    private static final String LOWER = getProperties("POSTGRES_LOWER", "abcdefghijklmnopqrstuvwxyz");
+
+    private static final String UPPER = getProperties("POSTGRES_UPPER", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+    private static String getProperties(String key, String defaultString) {
+        return PropertiesLoader.getProperties(THAT, "characters.properties").getProperty(key, defaultString); //$NON-NLS-1$
+    }
 
     /**
      * DOC scorreia PostgresqlDbmsLanguage constructor comment.
@@ -57,9 +69,8 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getPatternFinderDefaultFunction(String expression) {
-        return "TRANSLATE(" + expression
-                + " ,'1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZÂÊÎÔÛÄËÏÖÜabcdefghijklmnopqrstuvwxyzçâêîôûéèùïöü' "
-                + ",RPAD('9',10,'9') || RPAD('A',36,'A')||RPAD('a',38,'a'))";
+        return "TRANSLATE(" + expression + " ,'" + NUM + UPPER + LOWER + "' " + ",RPAD('9'," + NUM.length()
+                + ",'9') || RPAD('A'," + UPPER.length() + ",'A')||RPAD('a'," + LOWER.length() + ",'a'))";
     }
 
     /*
