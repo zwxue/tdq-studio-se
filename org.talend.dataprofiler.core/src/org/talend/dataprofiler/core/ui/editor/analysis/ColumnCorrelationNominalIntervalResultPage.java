@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -107,29 +106,36 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         Section graphicsAndTableSection = this.createSection(form, parent, "Analysis Result", false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
         // sectionClient.setLayout(new GridLayout(2, true));
         // this.createSectionPart(form, sectionClient, "left Columns");
         // this.createSectionPart(form, sectionClient, "Right Columns");
 
-        GridData layoutData = new GridData(GridData.FILL_BOTH);
-        layoutData.horizontalAlignment = SWT.CENTER;
+        // GridData layoutData = new GridData(GridData.FILL_BOTH);
+        // layoutData.horizontalAlignment = SWT.CENTER;
 
-        SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
-        sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+        // SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
+        // sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         if (countAvgNullIndicator == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             countAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
         }
-        Composite leftComp = toolkit.createComposite(sashForm);
-        leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        leftComp.setLayout(new GridLayout());
-        this.createGraphicsSectionPart(leftComp, countAvgNullIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+        Composite graphicsComp = toolkit.createComposite(sectionClient);
+        GridData graphicsGridData = new GridData(GridData.FILL_BOTH);
+        graphicsGridData.heightHint = 1000;
+        graphicsGridData.widthHint = 1000;
+        graphicsComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        graphicsComp.setLayout(new GridLayout());
+        this.createGraphicsSectionPart(sectionClient, countAvgNullIndicator); //$NON-NLS-1$ //$NON-NLS-2$
 
-        Composite rightComp = toolkit.createComposite(sashForm);
-        rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        rightComp.setLayout(new GridLayout());
-        this.createTableSectionPart(rightComp, "Table Section", countAvgNullIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+        // Composite tableSectionClient = toolkit.createComposite(graphicsAndTableSection);
+        // tableSectionClient.setLayout(new GridLayout());
+        // tableSectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+        Composite tableComp = toolkit.createComposite(sectionClient);
+        tableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        tableComp.setLayout(new GridLayout());
+        this.createTableSectionPart(sectionClient, "Table Section", countAvgNullIndicator); //$NON-NLS-1$ //$NON-NLS-2$
 
         graphicsAndTableSection.setClient(sectionClient);
     }
@@ -186,8 +192,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                                     Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
                                     frameComp.setLayout(new GridLayout());
                                     GridData gd = new GridData();
-                                    gd.heightHint = 230;
-                                    gd.widthHint = 460;
+                                    gd.heightHint = 500;
+                                    gd.widthHint = 1000;
                                     frameComp.setLayoutData(gd);
 
                                     Frame frame = SWT_AWT.new_Frame(frameComp);

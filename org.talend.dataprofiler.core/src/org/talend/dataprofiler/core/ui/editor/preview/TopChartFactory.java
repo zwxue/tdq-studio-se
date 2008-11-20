@@ -206,7 +206,9 @@ public final class TopChartFactory {
             final String next = iterator.next();
             createXYZDatasets.get(next).addSeriesToXYZDataset(dataset, next);
         }
-        JFreeChart chart = TopChartFactory.createBubbleChart("", "x", "y", dataset, PlotOrientation.HORIZONTAL, true, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        String chartName = "Average of '" + numericColumn.getName() + "' versus count";
+        JFreeChart chart = TopChartFactory.createBubbleChart(chartName,
+                "average", "count", dataset, PlotOrientation.HORIZONTAL, true, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 false, true);
         final XYPlot plot = (XYPlot) chart.getPlot();
         final XYItemRenderer renderer = plot.getRenderer();

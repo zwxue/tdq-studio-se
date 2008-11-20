@@ -112,7 +112,7 @@ public class ColumnViewerDND {
             @SuppressWarnings("unchecked")
             @Override
             public void drop(DropTargetEvent event) {
-                int index = 0;
+                int index = targetControl.getItemCount();
                 super.drop(event);
                 if (event.item == null) {
                     // TreeItem item = new TreeItem(targetControl, SWT.NONE);
@@ -127,6 +127,7 @@ public class ColumnViewerDND {
                             break;
                         }
                     }
+
                 }
                 receiver.drop(event, commonViewer, index);
             }

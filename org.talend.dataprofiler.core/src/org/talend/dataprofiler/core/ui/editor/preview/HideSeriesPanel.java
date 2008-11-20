@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -88,6 +89,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
         rangeAxis.setTickUnit(new NumberTickUnit(minYValue * 5));
 
         ChartPanel chartpanel = new ChartPanel(chart);
+        chartpanel.setPreferredSize(new Dimension(1000, 500));
         JPanel jpanel = new JPanel();
         while (iterator.hasNext()) {
             String next = iterator.next();

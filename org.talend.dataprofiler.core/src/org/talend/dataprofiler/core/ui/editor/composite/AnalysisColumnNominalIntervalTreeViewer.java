@@ -182,7 +182,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
             }
         });
-
         ColumnViewerDND.installDND(newTree);
 
         this.addTreeListener(newTree);
@@ -352,9 +351,11 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             delLabelEditor.layout();
             treeItem.setExpanded(true);
         }
+
         tree.layout();
         tree.redraw();
         this.setDirty(true);
+        tree.forceFocus();
     }
 
     public void addElements(final List<Column> columns, int index) {
