@@ -66,7 +66,7 @@ public class PatternChartDataEntity extends ChartDataEntity {
             Double[] dRange = getDefinedRange(getPerMatch());
             String range = "[" + StringFormatUtil.formatPersent(dRange[0] / 100) + ","
                     + StringFormatUtil.formatPersent(dRange[1] / 100) + "]";
-            msg.append("This value is outside the expected indicator's thresholds: " + range);
+            msg.append("This value is outside the expected indicator's thresholds in percent: " + range);
         }
         return msg.length() == 0 ? null : msg.toString();
     }
