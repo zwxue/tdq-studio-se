@@ -74,7 +74,6 @@ import org.talend.dq.analysis.ColumnAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
@@ -307,6 +306,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     | ExpandableComposite.CLIENT_INDENT);
             exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + column.getName()); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
+            exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             exComp.setData(columnIndicator);
             previewChartList.add(exComp);
 
@@ -333,16 +333,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                                     if (chart != null) {
                                         Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
                                         frameComp.setLayout(new GridLayout());
-                                        GridData gd = new GridData();
-                                        gd.heightHint = 230;
-                                        gd.widthHint = 460;
-                                        if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS
-                                                && chartData.getEnity().length == 8) {
-                                            gd = new GridData();
-                                            gd.heightHint = 400;
-                                            gd.widthHint = 150;
-                                        }
-                                        frameComp.setLayoutData(gd);
+                                        frameComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
                                         Frame frame = SWT_AWT.new_Frame(frameComp);
                                         frame.setLayout(new java.awt.GridLayout());

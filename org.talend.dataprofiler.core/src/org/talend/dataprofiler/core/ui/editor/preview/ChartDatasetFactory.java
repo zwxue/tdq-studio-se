@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,7 +204,15 @@ public class ChartDatasetFactory {
                         .get(IndicatorEnum.UpperQuartileIndicatorEnum), map.get(IndicatorEnum.MinValueIndicatorEnum), map
                         .get(IndicatorEnum.MaxValueIndicatorEnum), null);
 
-                defaultDataset.add(item, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+                defaultDataset.add(item, "0", ""); //$NON-NLS-1$ //$NON-NLS-2$
+
+                List zerolist = new ArrayList();
+                defaultDataset.add(zerolist, "1", "");
+                defaultDataset.add(zerolist, "2", "");
+                defaultDataset.add(zerolist, "3", "");
+                defaultDataset.add(zerolist, "4", "");
+                defaultDataset.add(zerolist, "5", "");
+                defaultDataset.add(zerolist, "6", "");
 
                 return defaultDataset;
 

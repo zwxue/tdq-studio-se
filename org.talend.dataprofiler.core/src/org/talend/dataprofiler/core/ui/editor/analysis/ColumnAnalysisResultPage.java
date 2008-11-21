@@ -175,15 +175,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                 final JFreeChart chart = chartData.getChart();
                                 final EIndicatorChartType chartType = chartData.getChartType();
                                 if (chart != null) {
-                                    GridData gd = new GridData();
-                                    gd.heightHint = 230;
-                                    gd.widthHint = 460;
-                                    if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS
-                                            && chartData.getEnity().length == 8) {
-                                        gd = new GridData();
-                                        gd.heightHint = 450;
-                                        gd.widthHint = 150;
-                                    }
+                                    GridData gd = new GridData(GridData.FILL_BOTH);
+
                                     ChartPanel chartPanel = new ChartPanel(chart);
                                     addMouseListenerForChart(chartPanel, chartType, analysis);
                                     // Composite frameComp = toolkit.createComposite(composite, SWT.EMBEDDED);
