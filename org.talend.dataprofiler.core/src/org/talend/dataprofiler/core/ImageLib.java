@@ -102,6 +102,8 @@ public class ImageLib {
 
     public static final String DESC_SORT = "desc.gif"; //$NON-NLS-1$
 
+    public static final String PK_DECORATE = "pk_decorate.gif"; //$NON-NLS-1$
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 

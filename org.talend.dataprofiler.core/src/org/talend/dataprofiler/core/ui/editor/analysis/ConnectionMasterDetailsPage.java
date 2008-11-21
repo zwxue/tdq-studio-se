@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import net.sourceforge.sqlexplorer.dbstructure.nodes.TableNode;
+
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -61,9 +63,11 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.SqlExplorerBridge;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
@@ -75,13 +79,17 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * @author rli
  * 
  */
 public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
+
+    private static Logger log = Logger.getLogger(ConnectionMasterDetailsPage.class);
 
     private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema"); //$NON-NLS-1$
 
@@ -112,8 +120,6 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
      * Width of columns.
      */
     private static final int COL_WIDTH = 100;
-
-    private static Logger log = Logger.getLogger(ConnectionMasterDetailsPage.class);
 
     private Text tableFilterText;
 
@@ -505,8 +511,9 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
 
     }
 
-    private void displayTableAndViewComp(SchemaIndicator schemaIndicator) {
+    private void displayTableAndViewComp(final SchemaIndicator schemaIndicator) {
         tableAndViewComposite.setVisible(true);
+        final List<TableIndicator> indicatorTableList = (List<TableIndicator>) schemaIndicator.getTableIndicators();
         if (tableOfCatalogOrSchemaViewer == null) {
             tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
                     | SWT.SINGLE);
@@ -521,8 +528,6 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
             TableOfCatalogOrSchemaProvider providerTable = new TableOfCatalogOrSchemaProvider();
             tableOfCatalogOrSchemaViewer.setLabelProvider(providerTable);
             tableOfCatalogOrSchemaViewer.setContentProvider(providerTable);
-            final List<TableIndicator> indicatorTableList = (List<TableIndicator>) schemaIndicator.getTableIndicators();
-            tableOfCatalogOrSchemaViewer.setInput(indicatorTableList);
 
             final TableCursor cursor = new TableCursor(catalogOrSchemaTable, SWT.NONE);
             cursor.setBackground(catalogOrSchemaTable.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION));
@@ -532,6 +537,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
             final Menu menu = new Menu(catalogOrSchemaTable);
             MenuItem item = new MenuItem(menu, SWT.PUSH);
             item.setText("View keys");
+            item.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
             item.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
@@ -539,7 +545,17 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
                     List<TableItem> itemList = Arrays.asList(catalogOrSchemaTable.getItems());
                     int itemIndex = itemList.indexOf(tableItem);
                     TableIndicator tableIndicator = indicatorTableList.get(itemIndex);
-                    // TODO Open data explore perspective.
+                    TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
+                    TdProviderConnection providerConnection = tdPc.getObject();
+                    StructuredSelection selection = (StructuredSelection) statisticalViewer.getSelection();
+                    SchemaIndicator schemaIndicator = (SchemaIndicator) selection.getFirstElement();
+                    TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
+                            providerConnection, (Package) schemaIndicator.getAnalyzedElement(), tableIndicator.getTableName());
+
+                    if (!findSqlExplorerTableNode.isOk()) {
+                        log.error(findSqlExplorerTableNode.getMessage());
+                    }
+                    TableNode tableNode = findSqlExplorerTableNode.getObject();
                 }
 
             });
@@ -548,7 +564,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
                 public void widgetSelected(SelectionEvent e) {
                     int column = cursor.getColumn();
                     if (column == VIEW_COLUMN_INDEX) {
-                        // catalogOrSchemaTable.setMenu(menu);
+                        catalogOrSchemaTable.setMenu(menu);
                     } else {
                         catalogOrSchemaTable.setMenu(null);
                     }
@@ -569,7 +585,7 @@ public class ConnectionMasterDetailsPage extends AbstractAnalysisMetadataPage {
             viewOfCatalogOrSchemaViewer.setLabelProvider(viewProvider);
             viewOfCatalogOrSchemaViewer.setContentProvider(viewProvider);
         }
-
+        tableOfCatalogOrSchemaViewer.setInput(indicatorTableList);
         List<ViewIndicator> indicatorViewList = (List<ViewIndicator>) schemaIndicator.getViewIndicators();
         viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
         tableAndViewComposite.layout();
