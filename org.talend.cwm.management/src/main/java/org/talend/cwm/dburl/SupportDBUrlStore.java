@@ -16,11 +16,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.text.ParsePosition;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -92,12 +91,12 @@ public final class SupportDBUrlStore {
     }
 
     public String[] getDBLanguages() {
-        List<String> tempList = new ArrayList<String>();
+        Set<String> tempList = new HashSet<String>();
 
         for (SupportDBUrlType type : SupportDBUrlType.values()) {
             String language = type.getLanguage();
 
-            if (!tempList.contains(language) && supportDBUrlMap.containsKey(type.getDBKey())) {
+            if (supportDBUrlMap.containsKey(type.getDBKey())) {
                 tempList.add(language);
             }
         }
