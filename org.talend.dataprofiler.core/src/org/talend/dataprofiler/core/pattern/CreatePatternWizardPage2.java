@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
@@ -110,12 +109,12 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         }
         nameLab = new Label(container, SWT.NONE);
         nameLab.setText(DefaultMessagesImpl.getString("CreatePatternWizardPage2.languageSelection")); //$NON-NLS-1$
-        String[] types = SupportDBUrlStore.getInstance().getDBLanguages();
+        String[] types = PatternLanguageType.getAllLanguageTypes();
         comboLang = new Combo(container, SWT.BORDER);
         comboLang.setItems(types);
         comboLang.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         if (types.length > 0 && language == null) {
-            comboLang.select(0);
+            comboLang.setText(PatternLanguageType.ALL_DATABASE_TYPE.getName());
         } else {
             comboLang.setText(language);
         }

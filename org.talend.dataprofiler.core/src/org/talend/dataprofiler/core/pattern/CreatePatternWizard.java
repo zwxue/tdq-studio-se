@@ -126,7 +126,7 @@ public class CreatePatternWizard extends AbstractWizard {
         String expr = mPage2.getExpressionText().getText();
         expression.setBody(expr);
         String cl = mPage2.getComboLang();
-        expression.setLanguage(cl); // qzhang fixed bug 4259.save language from selected db type
+        expression.setLanguage(PatternLanguageType.findLanguageByName(cl));
         regularExpr.setExpression(expression);
         regularExpr.setExpressionType(type.getName());
 

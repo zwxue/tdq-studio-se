@@ -41,12 +41,12 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
-import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -66,8 +66,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     private static final String SQL = "SQL"; //$NON-NLS-1$
 
     private Pattern pattern;
-
-    public static final String ALL_DATABASE_TYPE = "ALL_DATABASE_TYPE"; //$NON-NLS-1$
 
     private Composite patternDefinitionSectionComp;
 
@@ -96,12 +94,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
      * DOC rli Comment method "reset".
      */
     private void reset() {
-        String[] supportTypes = SupportDBUrlStore.getInstance().getDBLanguages();
-        String[] allDBTypes = new String[supportTypes.length + 1];
-        System.arraycopy(supportTypes, 0, allDBTypes, 0, supportTypes.length);
-        allDBTypes[supportTypes.length] = ALL_DATABASE_TYPE;
+        String[] supportTypes = PatternLanguageType.getAllLanguageTypes();
         allDBTypeList = new ArrayList<String>();
-        allDBTypeList.addAll(Arrays.asList(allDBTypes));
+        allDBTypeList.addAll(Arrays.asList(supportTypes));
         if (tempPatternComponents == null) {
             tempPatternComponents = new ArrayList<PatternComponent>();
         } else {
@@ -189,7 +184,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 remainDBTypeList.addAll(allDBTypeList);
                 for (PatternComponent patternComponent : tempPatternComponents) {
                     String language = ((RegularExpressionImpl) patternComponent).getExpression().getLanguage();
-                    language = language.equalsIgnoreCase(SQL) ? ALL_DATABASE_TYPE : language;
                     remainDBTypeList.remove(language);
                 }
                 if (remainDBTypeList.size() == 0) {
@@ -200,11 +194,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                     return;
                 }
                 Expression expression = CoreFactory.eINSTANCE.createExpression();
-                if (remainDBTypeList.contains(ALL_DATABASE_TYPE)) {
-                    expression.setLanguage(SQL);
-                } else {
-                    expression.setLanguage(remainDBTypeList.get(0));
-                }
+                expression.setLanguage(remainDBTypeList.get(0));
                 RegularExpressionImpl newRegularExpress = (RegularExpressionImpl) PatternFactory.eINSTANCE
                         .createRegularExpression();
                 newRegularExpress.setExpression(expression);
@@ -225,21 +215,16 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         final RegularExpressionImpl finalRegExpress = regularExpress;
         String language = regularExpress.getExpression().getLanguage();
         if (language == null) {
-            if (this.remainDBTypeList.contains(ALL_DATABASE_TYPE)) {
-                combo.setText(ALL_DATABASE_TYPE);
-            } else {
-                combo.setText(remainDBTypeList.get(0));
-            }
+            combo.setText(remainDBTypeList.get(0));
         } else {
-            String supportLanguage = language.equalsIgnoreCase(SQL) ? ALL_DATABASE_TYPE : language;
-            combo.setText(supportLanguage);
+            combo.setText(PatternLanguageType.findNameByLanguage(language));
         }
         GridDataFactory.fillDefaults().span(2, 1).grab(false, false).applyTo(combo);
         combo.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                String lang = combo.getText().equalsIgnoreCase(ALL_DATABASE_TYPE) ? SQL : combo.getText();
-                finalRegExpress.getExpression().setLanguage(lang);
+                String lang = combo.getText();
+                finalRegExpress.getExpression().setLanguage(PatternLanguageType.findLanguageByName(lang));
                 setDirty(true);
             }
         });
