@@ -103,7 +103,8 @@ public enum SupportDBUrlType {
                        null,
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$
                        null,
-                       "FireBird"); //$NON-NLS-1$
+                       "FireBird"), //$NON-NLS-1$
+    INGRESDEFAULTURL("Ingres", "localhost", "II7", "dbname", null, "com.ingres.jdbc.IngresDriver", null, "Ingres");
 
     private final String dbKey;
 

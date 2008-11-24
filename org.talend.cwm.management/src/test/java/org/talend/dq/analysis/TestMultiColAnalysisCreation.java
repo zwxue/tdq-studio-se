@@ -59,7 +59,6 @@ public class TestMultiColAnalysisCreation {
      */
     private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
 
-
     private static Logger log = Logger.getLogger(TestMultiColAnalysisCreation.class);
 
     private AnalysisBuilder analysisBuilder;
@@ -67,17 +66,14 @@ public class TestMultiColAnalysisCreation {
     private static final boolean GRAPHICALTEST = true;
 
     private static final String[] COLUMNS = GRAPHICALTEST ? new String[] { "position_title", "gender", "management_role",
-            "salary" }
-            : new String[] { "position_title", "gender", "management_role", "salary" };
+            "salary" } : new String[] { "position_title", "gender", "management_role", "salary" };
 
     private static final String[] NUMERICFUNC = GRAPHICALTEST ? new String[] { "SUM({0})", "COUNT({0})", "SUM(ISNULL({0}))" }
             : new String[] { "AVG({0})", "SUM(ISNULL({0}))", "COUNT({0})", "MIN({0})" };
 
-
     private static final String CATALOG = "tdq_demo";
 
     private static final String TABLE = "employee";
-
 
     /**
      * DOC scorreia Comment method "main".
@@ -296,6 +292,7 @@ public class TestMultiColAnalysisCreation {
         params.setDriverClassName(driverClassName);
         params.setJdbcUrl(dbUrl);
         params.setParameters(connectionParams);
+        params.getParameters();
 
         // create connection
 
