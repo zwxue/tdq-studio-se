@@ -106,8 +106,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     private Button runButton;
 
+    private AnalysisEditor currentEditor;
+
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+        currentEditor = (AnalysisEditor) editor;
     }
 
     public void initialize(FormEditor editor) {
@@ -491,11 +494,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-            ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+            currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
+            currentEditor.setRefreshResultPage(true);
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.analysisHandler.setStringDataFilter((String) evt.getNewValue());
         }
-
     }
 
     // public void setDirty(boolean isDirty) {
@@ -559,7 +562,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         this.runButton.setEnabled(status);
 
         if (status) {
-            ((AnalysisEditor) getEditor()).setRefreshResultPage(true);
+            currentEditor.setRefreshResultPage(true);
             refreshChart();
         }
 

@@ -128,7 +128,6 @@ public class AnalysisEditor extends CommonFormEditor {
                 }
             }
         }
-        isRefreshResultPage = true;
     }
 
     protected void translateInput(IEditorInput input) {

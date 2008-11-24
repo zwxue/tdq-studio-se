@@ -35,13 +35,9 @@ import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.ui.TextAnchor;
-import org.talend.dataprofiler.core.ui.editor.preview.model.CustomerBoxDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
-import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -146,19 +142,9 @@ public class ChartImageFactory {
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setAutoRange(false);
 
-        double min = 0, max = 0;
-        CustomerBoxDataset data = (CustomerBoxDataset) dataset;
-        for (ChartDataEntity entity : data.getDataEntities()) {
-            Indicator indicator = entity.getIndicator();
-            if (indicator != null) {
-                IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
-                if (indicatorEnum == IndicatorEnum.MinValueIndicatorEnum) {
-                    min = Double.parseDouble(entity.getValue());
-                } else if (indicatorEnum == IndicatorEnum.MaxValueIndicatorEnum) {
-                    max = Double.parseDouble(entity.getValue());
-                }
-            }
-        }
+        double min = dataset.getMinRegularValue("0", "").doubleValue();
+        double max = dataset.getMaxRegularValue("0", "").doubleValue();
+
         double unit = (max - min) / 10;
         rangeAxis.setRange(min - unit, max + unit);
         rangeAxis.setTickUnit(new NumberTickUnit(unit));

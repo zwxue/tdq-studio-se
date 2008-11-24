@@ -170,7 +170,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             .getString(
                                     "RunAnalysisAction.analysis", analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             // open error dialog
-            Display.getDefault().asyncExec(new Runnable() {
+            Display.getDefault().syncExec(new Runnable() {
 
                 public void run() {
                     MessageDialogWithToggle
