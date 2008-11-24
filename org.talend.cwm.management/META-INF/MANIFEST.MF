@@ -21,7 +21,7 @@ Require-Bundle: org.talend.libraries.apache,
  org.talend.cwm.ext;visibility:=reexport,
  org.apache.log4j;bundle-version="1.2.13",
  net.sourceforge.sqlexplorer,
- org.talend.libraries.jdbc.ingres;bundle-version="1.0.0"
+ org.talend.libraries.jdbc.ingres;resolution:=optional;bundle-version="1.0.0"
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.db.connection,
  org.talend.cwm.dburl,
