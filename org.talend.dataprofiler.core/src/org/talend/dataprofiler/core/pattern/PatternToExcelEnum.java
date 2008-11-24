@@ -29,7 +29,8 @@ public enum PatternToExcelEnum {
     PostgreSQLRegexp(9, "PostgreSQL Regexp"), //$NON-NLS-1$
     SQLServerRegexp(10, "SQL Server Regexp"), //$NON-NLS-1$
     SybaseRegexp(11, "Sybase Regexp"), //$NON-NLS-1$
-    IngresRegexp(12, "Ingres Regexp");
+    IngresRegexp(12, "Ingres Regexp"),
+    InformixRegexp(13, "Informix Regexp");
 
     private String literal;
 

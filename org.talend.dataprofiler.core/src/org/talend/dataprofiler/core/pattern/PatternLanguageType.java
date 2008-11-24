@@ -57,7 +57,12 @@ public enum PatternLanguageType {
            7,
            SupportDBUrlType.INGRESDEFAULTURL.getLanguage(),
            SupportDBUrlType.INGRESDEFAULTURL.getLanguage(),
-           PatternToExcelEnum.IngresRegexp);
+           PatternToExcelEnum.IngresRegexp),
+    INFORMIX(
+             8,
+             SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
+             SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
+             PatternToExcelEnum.InformixRegexp);
 
     private int index;
 
