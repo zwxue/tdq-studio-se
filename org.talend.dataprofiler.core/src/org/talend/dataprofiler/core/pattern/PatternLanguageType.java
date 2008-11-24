@@ -52,7 +52,12 @@ public enum PatternLanguageType {
            6,
            SupportDBUrlType.SYBASEDEFAULTURL.getLanguage(),
            SupportDBUrlType.SYBASEDEFAULTURL.getLanguage(),
-           PatternToExcelEnum.SybaseRegexp); //$NON-NLS-1$
+           PatternToExcelEnum.SybaseRegexp), //$NON-NLS-1$
+    INGRES(
+           7,
+           SupportDBUrlType.INGRESDEFAULTURL.getLanguage(),
+           SupportDBUrlType.INGRESDEFAULTURL.getLanguage(),
+           PatternToExcelEnum.IngresRegexp);
 
     private int index;
 

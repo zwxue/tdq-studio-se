@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-
 /**
  * DOC zqin class global comment. Detailled comment
  */
@@ -29,7 +28,8 @@ public enum PatternToExcelEnum {
     OracleRegexp(8, "Oracle Regexp"), //$NON-NLS-1$
     PostgreSQLRegexp(9, "PostgreSQL Regexp"), //$NON-NLS-1$
     SQLServerRegexp(10, "SQL Server Regexp"), //$NON-NLS-1$
-    SybaseRegexp(11, "Sybase Regexp"); //$NON-NLS-1$
+    SybaseRegexp(11, "Sybase Regexp"), //$NON-NLS-1$
+    IngresRegexp(12, "Ingres Regexp");
 
     private String literal;
 
