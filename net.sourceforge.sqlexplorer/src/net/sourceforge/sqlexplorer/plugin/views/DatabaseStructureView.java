@@ -18,9 +18,11 @@
  */
 package net.sourceforge.sqlexplorer.plugin.views;
 
-import java.util.ArrayList;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.Messages;
@@ -45,6 +47,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeViewerListener;
@@ -89,6 +92,9 @@ public class DatabaseStructureView extends ViewPart {
 		private TreeViewer treeViewer;
 		private MetaDataSession session;
 	}
+	
+
+    private Map<MetaDataSession, ISelection> sessionSelectionMap = new HashMap<MetaDataSession, ISelection>();
 
     private FilterStructureAction _filterAction;
 
@@ -356,6 +362,17 @@ public class DatabaseStructureView extends ViewPart {
                 actionGroup.fillContextMenu(manager);
             }
         });
+        
+        if(sessionSelectionMap.containsKey(tabData.session)){
+            tabData.treeViewer.setSelection( sessionSelectionMap.get(tabData.session));
+            sessionSelectionMap.remove(tabData.session);
+        }
+    }
+    
+
+
+    public void setSessionSelectionNode(MetaDataSession metadataSession, ISelection selection) {
+        sessionSelectionMap.put(metadataSession, selection);
     }
 
 
@@ -504,9 +521,9 @@ public class DatabaseStructureView extends ViewPart {
                 INode selectedNode = null;
 
                 if (tabData.treeViewer != null) {
+                        // find our target node..
+                    IStructuredSelection  selection  = (IStructuredSelection) tabData.treeViewer.getSelection();
 
-                    // find our target node..
-                    IStructuredSelection selection = (IStructuredSelection) tabData.treeViewer.getSelection();
 
                     // check if we have a valid selection
                     if (selection != null && (selection.getFirstElement() instanceof INode)) {
