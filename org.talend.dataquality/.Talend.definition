@@ -201,11 +201,17 @@
     <taggedValue xmi:id="_ByME0ZxdEd2YicTszQEJLA" tag="Purpose" value="evaluates frequencies of values on several columns"/>
     <sqlGenericExpression xmi:id="_2CtwgJxdEd2YicTszQEJLA" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>" language="SQL"/>
   </indicatorDefinitions>
-  <indicatorDefinitions xmi:id="_9GKxAamWEd2LEfr3zBgTzA" name="Averaged Multiple Column Frequency Table" label="Averaged Multiple Column Frequency Table">
+  <indicatorDefinitions xmi:id="_9GKxAamWEd2LEfr3zBgTzA" name="Averaged Multiple Column Frequency Table" categories="_-DfJgLrcEd2PGrJOyhNk-w" label="Averaged Multiple Column Frequency Table">
     <taggedValue xmi:id="_9GKxAqmWEd2LEfr3zBgTzA" tag="Description" value="Computes a frequency table on several columns with aggregate functions when needed"/>
     <taggedValue xmi:id="_9GKxA6mWEd2LEfr3zBgTzA" tag="Purpose" value="evaluates frequencies of values on several columns"/>
     <sqlGenericExpression xmi:id="_9GKxBKmWEd2LEfr3zBgTzA" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>" language="SQL"/>
     <aggregate1argFunctions xmi:id="_O1k0MKmmEd2O27sR3bvpzw" body="AVG({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)" language="SQL"/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_yCHCULrcEd2PGrJOyhNk-w" name="Min Max Date Multiple Column Frequency Table" categories="_-DfJgLrcEd2PGrJOyhNk-w" label="Min Max Date Multiple Column Frequency Table">
+    <taggedValue xmi:id="_yCHCUbrcEd2PGrJOyhNk-w" tag="Description" value="Computes a frequency table on several columns with aggregate functions when needed"/>
+    <taggedValue xmi:id="_yCHCUrrcEd2PGrJOyhNk-w" tag="Purpose" value="evaluates frequencies of values on several columns"/>
+    <sqlGenericExpression xmi:id="_yCHCU7rcEd2PGrJOyhNk-w" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>" language="SQL"/>
+    <aggregate1argFunctions xmi:id="_yCHCVLrcEd2PGrJOyhNk-w" body="MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)" language="SQL"/>
   </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
@@ -251,4 +257,5 @@
     <taggedValue xmi:id="_ycCDQTh8Ed2XmO7pl5Yuyg" tag="Description" value="contains several count indicators"/>
     <taggedValue xmi:id="_ycCDQjh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze the quantity of records"/>
   </categories>
+  <categories xmi:id="_-DfJgLrcEd2PGrJOyhNk-w" name="Correlation" label="Correlation"/>
 </dataquality.indicators.definition:IndicatorsDefinitions>
