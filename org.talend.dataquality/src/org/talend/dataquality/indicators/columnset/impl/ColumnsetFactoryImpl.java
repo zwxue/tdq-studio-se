@@ -66,6 +66,7 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
             case ColumnsetPackage.ROW_MATCHING_INDICATOR: return createRowMatchingIndicator();
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR: return createColumnSetMultiValueIndicator();
             case ColumnsetPackage.COUNT_AVG_NULL_INDICATOR: return createCountAvgNullIndicator();
+            case ColumnsetPackage.MIN_MAX_DATE_INDICATOR: return createMinMaxDateIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -139,6 +140,16 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
     public CountAvgNullIndicator createCountAvgNullIndicator() {
         CountAvgNullIndicatorImpl countAvgNullIndicator = new CountAvgNullIndicatorImpl();
         return countAvgNullIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MinMaxDateIndicator createMinMaxDateIndicator() {
+        MinMaxDateIndicatorImpl minMaxDateIndicator = new MinMaxDateIndicatorImpl();
+        return minMaxDateIndicator;
     }
 
     /**

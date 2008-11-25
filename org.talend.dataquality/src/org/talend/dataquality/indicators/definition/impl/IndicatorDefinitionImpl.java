@@ -44,6 +44,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getSubCategories <em>Sub Categories</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getSqlGenericExpression <em>Sql Generic Expression</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getAggregate1argFunctions <em>Aggregate1arg Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl#getDate1argFunctions <em>Date1arg Functions</em>}</li>
  * </ul>
  * </p>
  *
@@ -119,6 +120,16 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * @ordered
      */
     protected EList<Expression> aggregate1argFunctions;
+
+    /**
+     * The cached value of the '{@link #getDate1argFunctions() <em>Date1arg Functions</em>}' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDate1argFunctions()
+     * @generated
+     * @ordered
+     */
+    protected EList<Expression> date1argFunctions;
 
     /**
      * <!-- begin-user-doc -->
@@ -225,6 +236,18 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
      * <!-- end-user-doc -->
      * @generated
      */
+    public EList<Expression> getDate1argFunctions() {
+        if (date1argFunctions == null) {
+            date1argFunctions = new EObjectContainmentEList<Expression>(Expression.class, this, DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS);
+        }
+        return date1argFunctions;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -232,6 +255,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return ((InternalEList<?>)getSqlGenericExpression()).basicRemove(otherEnd, msgs);
             case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
                 return ((InternalEList<?>)getAggregate1argFunctions()).basicRemove(otherEnd, msgs);
+            case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
+                return ((InternalEList<?>)getDate1argFunctions()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -256,6 +281,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return getSqlGenericExpression();
             case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
                 return getAggregate1argFunctions();
+            case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
+                return getDate1argFunctions();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -292,6 +319,10 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 getAggregate1argFunctions().clear();
                 getAggregate1argFunctions().addAll((Collection<? extends Expression>)newValue);
                 return;
+            case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
+                getDate1argFunctions().clear();
+                getDate1argFunctions().addAll((Collection<? extends Expression>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -322,6 +353,9 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
             case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
                 getAggregate1argFunctions().clear();
                 return;
+            case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
+                getDate1argFunctions().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -346,6 +380,8 @@ public class IndicatorDefinitionImpl extends ModelElementImpl implements Indicat
                 return sqlGenericExpression != null && !sqlGenericExpression.isEmpty();
             case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
                 return aggregate1argFunctions != null && !aggregate1argFunctions.isEmpty();
+            case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
+                return date1argFunctions != null && !date1argFunctions.isEmpty();
         }
         return super.eIsSet(featureID);
     }

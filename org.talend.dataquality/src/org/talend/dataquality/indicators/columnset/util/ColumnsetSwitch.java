@@ -144,6 +144,16 @@ public class ColumnsetSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case ColumnsetPackage.MIN_MAX_DATE_INDICATOR: {
+                MinMaxDateIndicator minMaxDateIndicator = (MinMaxDateIndicator)theEObject;
+                T result = caseMinMaxDateIndicator(minMaxDateIndicator);
+                if (result == null) result = caseColumnSetMultiValueIndicator(minMaxDateIndicator);
+                if (result == null) result = caseIndicator(minMaxDateIndicator);
+                if (result == null) result = caseModelElement(minMaxDateIndicator);
+                if (result == null) result = caseElement(minMaxDateIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -220,6 +230,21 @@ public class ColumnsetSwitch<T> {
      * @generated
      */
     public T caseCountAvgNullIndicator(CountAvgNullIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Min Max Date Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Min Max Date Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMinMaxDateIndicator(MinMaxDateIndicator object) {
         return null;
     }
 

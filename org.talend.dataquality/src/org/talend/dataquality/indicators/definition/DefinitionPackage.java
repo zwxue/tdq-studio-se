@@ -505,13 +505,22 @@ public interface DefinitionPackage extends EPackage {
     int INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 5;
 
     /**
+     * The feature id for the '<em><b>Date1arg Functions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 6;
+
+    /**
      * The number of structural features of the '<em>Indicator Definition</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDICATOR_DEFINITION_FEATURE_COUNT = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 6;
+    int INDICATOR_DEFINITION_FEATURE_COUNT = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 7;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.definition.impl.IndicatorCategoryImpl <em>Indicator Category</em>}' class.
@@ -822,6 +831,17 @@ public interface DefinitionPackage extends EPackage {
     EReference getIndicatorDefinition_Aggregate1argFunctions();
 
     /**
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getDate1argFunctions <em>Date1arg Functions</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Date1arg Functions</em>'.
+     * @see org.talend.dataquality.indicators.definition.IndicatorDefinition#getDate1argFunctions()
+     * @see #getIndicatorDefinition()
+     * @generated
+     */
+    EReference getIndicatorDefinition_Date1argFunctions();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.definition.IndicatorCategory <em>Indicator Category</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -947,6 +967,14 @@ public interface DefinitionPackage extends EPackage {
          * @generated
          */
         EReference INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS = eINSTANCE.getIndicatorDefinition_Aggregate1argFunctions();
+
+        /**
+         * The meta object literal for the '<em><b>Date1arg Functions</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS = eINSTANCE.getIndicatorDefinition_Date1argFunctions();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.definition.impl.IndicatorCategoryImpl <em>Indicator Category</em>}' class.

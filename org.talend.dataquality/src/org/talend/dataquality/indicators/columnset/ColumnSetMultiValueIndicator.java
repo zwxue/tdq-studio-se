@@ -26,6 +26,8 @@ import orgomg.cwm.resource.relational.Column;
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getNominalColumns <em>Nominal Columns</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getNumericColumns <em>Numeric Columns</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getColumnHeaders <em>Column Headers</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDateFunctions <em>Date Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDateColumns <em>Date Columns</em>}</li>
  * </ul>
  * </p>
  *
@@ -140,5 +142,37 @@ public interface ColumnSetMultiValueIndicator extends Indicator {
      * @generated
      */
     EList<String> getColumnHeaders();
+
+    /**
+     * Returns the value of the '<em><b>Date Functions</b></em>' attribute list.
+     * The list contents are of type {@link java.lang.String}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Date Functions</em>' attribute list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Date Functions</em>' attribute list.
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_DateFunctions()
+     * @model
+     * @generated
+     */
+    EList<String> getDateFunctions();
+
+    /**
+     * Returns the value of the '<em><b>Date Columns</b></em>' reference list.
+     * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Date Columns</em>' reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Date Columns</em>' reference list.
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_DateColumns()
+     * @model
+     * @generated
+     */
+    EList<Column> getDateColumns();
 
 } // ColumnSetMultiValueIndicator

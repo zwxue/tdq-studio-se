@@ -62,6 +62,15 @@ public interface ColumnsetFactory extends EFactory {
     CountAvgNullIndicator createCountAvgNullIndicator();
 
     /**
+     * Returns a new object of class '<em>Min Max Date Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Min Max Date Indicator</em>'.
+     * @generated
+     */
+    MinMaxDateIndicator createMinMaxDateIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

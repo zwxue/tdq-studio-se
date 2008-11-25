@@ -633,6 +633,9 @@
         <eStructuralFeatures xsi:type="ecore:EReference" name="aggregate1argFunctions"
             upperBound="-1" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/Expression"
             containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="date1argFunctions"
+            upperBound="-1" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/Expression"
+            containment="true"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="IndicatorCategory" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement">
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
@@ -680,9 +683,14 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnHeaders" upperBound="-1"
             eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
             changeable="false" volatile="true" transient="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateFunctions" upperBound="-1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="dateColumns" upperBound="-1"
+            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="CountAvgNullIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
       <eClassifiers xsi:type="ecore:EDataType" name="ListObject" instanceClassName="java.util.List&lt;Object>"/>
+      <eClassifiers xsi:type="ecore:EClass" name="MinMaxDateIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
     </eSubpackages>
   </eSubpackages>
   <eSubpackages name="expressions" nsURI="http://dataquality.expressions" nsPrefix="dataquality.expressions">

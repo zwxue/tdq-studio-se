@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
+import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
@@ -114,6 +115,13 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * @generated
      */
     private EClass countAvgNullIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass minMaxDateIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -371,8 +379,35 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getColumnSetMultiValueIndicator_DateFunctions() {
+        return (EAttribute)columnSetMultiValueIndicatorEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getColumnSetMultiValueIndicator_DateColumns() {
+        return (EReference)columnSetMultiValueIndicatorEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getCountAvgNullIndicator() {
         return countAvgNullIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getMinMaxDateIndicator() {
+        return minMaxDateIndicatorEClass;
     }
 
     /**
@@ -427,8 +462,12 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS);
         createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS);
         createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS);
+        createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS);
+        createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS);
 
         countAvgNullIndicatorEClass = createEClass(COUNT_AVG_NULL_INDICATOR);
+
+        minMaxDateIndicatorEClass = createEClass(MIN_MAX_DATE_INDICATOR);
 
         // Create data types
         listObjectEDataType = createEDataType(LIST_OBJECT);
@@ -471,6 +510,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         rowMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
         columnSetMultiValueIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
         countAvgNullIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
+        minMaxDateIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(columnsCompareIndicatorEClass, ColumnsCompareIndicator.class, "ColumnsCompareIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -488,8 +528,12 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         initEReference(getColumnSetMultiValueIndicator_NominalColumns(), theRelationalPackage.getColumn(), null, "nominalColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getColumnSetMultiValueIndicator_NumericColumns(), theRelationalPackage.getColumn(), null, "numericColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_ColumnHeaders(), ecorePackage.getEString(), "columnHeaders", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getColumnSetMultiValueIndicator_DateFunctions(), ecorePackage.getEString(), "dateFunctions", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnSetMultiValueIndicator_DateColumns(), theRelationalPackage.getColumn(), null, "dateColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(countAvgNullIndicatorEClass, CountAvgNullIndicator.class, "CountAvgNullIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(minMaxDateIndicatorEClass, MinMaxDateIndicator.class, "MinMaxDateIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize data types
         initEDataType(listObjectEDataType, List.class, "ListObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<Object>");

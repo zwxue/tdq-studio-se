@@ -24,6 +24,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getSubCategories <em>Sub Categories</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getSqlGenericExpression <em>Sql Generic Expression</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getAggregate1argFunctions <em>Aggregate1arg Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.definition.IndicatorDefinition#getDate1argFunctions <em>Date1arg Functions</em>}</li>
  * </ul>
  * </p>
  *
@@ -123,20 +124,36 @@ public interface IndicatorDefinition extends ModelElement {
     EList<Expression> getSqlGenericExpression();
 
     /**
-     * Returns the value of the '<em><b>Aggregate1arg Functions</b></em>' containment reference list. The list contents
-     * are of type {@link orgomg.cwm.objectmodel.core.Expression}. <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Aggregate1arg Functions</b></em>' containment reference list.
+     * The list contents are of type {@link orgomg.cwm.objectmodel.core.Expression}.
+     * <!-- begin-user-doc -->
      * <p>
      * Contains a list of aggregate functions (specific to each database language). There is only one expression for
      * each database language. The body of the expression can contain several functions. In that case, the functions are
      * separated by a semi-column ';'.
      * </p>
      * <!-- end-user-doc -->
-     * 
      * @return the value of the '<em>Aggregate1arg Functions</em>' containment reference list.
      * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorDefinition_Aggregate1argFunctions()
      * @model containment="true"
      * @generated
      */
     EList<Expression> getAggregate1argFunctions();
+
+    /**
+     * Returns the value of the '<em><b>Date1arg Functions</b></em>' containment reference list.
+     * The list contents are of type {@link orgomg.cwm.objectmodel.core.Expression}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Date1arg Functions</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Date1arg Functions</em>' containment reference list.
+     * @see org.talend.dataquality.indicators.definition.DefinitionPackage#getIndicatorDefinition_Date1argFunctions()
+     * @model containment="true"
+     * @generated
+     */
+    EList<Expression> getDate1argFunctions();
 
 } // IndicatorDefinition
