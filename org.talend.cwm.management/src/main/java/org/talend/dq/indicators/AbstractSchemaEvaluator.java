@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
@@ -51,6 +52,11 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  * @param <T> the type of analyzed element.
  */
 public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
+
+    /**
+     * 
+     */
+    private static final char FILTER_SEP = ',';
 
     private DbmsLanguage dbmsLanguage;
 
@@ -155,20 +161,30 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         // profile tables
         TableBuilder tableBuilder = new TableBuilder(connection);
         int tableCount = 0;
-        List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(catName, schemaName, tablePattern);
-        for (NamedColumnSet t : tables) {
-            tableCount++;
-            evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);
+        final String[] tablePatterns = tablePattern != null && tablePattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
+                .split(this.tablePattern, FILTER_SEP) : new String[] { this.tablePattern };
+        for (String pat : tablePatterns) {
+            String trimPat = pat != null ? pat.trim() : pat;
+            List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(catName, schemaName, trimPat);
+            for (NamedColumnSet t : tables) {
+                tableCount++;
+                evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);
+            }
         }
         schemaIndic.setTableCount(tableCount);
 
         // do the same for views
         ViewBuilder viewBuilder = new ViewBuilder(connection);
         int viewCount = 0;
-        List<? extends NamedColumnSet> views = viewBuilder.getColumnSets(catName, schemaName, viewPattern);
-        for (NamedColumnSet t : views) {
-            viewCount++;
-            evalAllCounts(catName, schemaName, t, schemaIndic, false, ok);
+        final String[] viewPatterns = viewPattern != null && viewPattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
+                .split(this.viewPattern, FILTER_SEP) : new String[] { this.viewPattern };
+        for (String pat : viewPatterns) {
+            String trimPat = pat != null ? pat.trim() : pat;
+            List<? extends NamedColumnSet> views = viewBuilder.getColumnSets(catName, schemaName, trimPat);
+            for (NamedColumnSet t : views) {
+                viewCount++;
+                evalAllCounts(catName, schemaName, t, schemaIndic, false, ok);
+            }
         }
         schemaIndic.setViewCount(viewCount);
 
@@ -251,18 +267,19 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             ReturnCode ok) throws SQLException {
         String quCatalog = catalog == null ? null : dbms().quote(catalog);
         String quSchema = schema == null ? null : dbms().quote(schema);
-        String quTable = dbms().quote(t.getName());
+        final String table = t.getName();
+        String quTable = dbms().quote(table);
 
         if (isTable) {
             long rowCount = getRowCounts(quCatalog, quSchema, quTable);
             schemaIndic.setTableRowCount(schemaIndic.getTableRowCount() + rowCount);
 
             // ---- pk
-            int pkCount = getPKCount(quCatalog, quSchema, quTable);
+            int pkCount = getPKCount(catalog, schema, table);
             schemaIndic.setKeyCount(schemaIndic.getKeyCount() + pkCount);
 
             // indexes
-            int idxCount = getIndexCount(quCatalog, quSchema, quTable);
+            int idxCount = getIndexCount(catalog, schema, table);
             schemaIndic.setIndexCount(schemaIndic.getIndexCount() + idxCount);
 
             // create Table Indicator
@@ -406,23 +423,23 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     /**
      * DOC scorreia Comment method "getIndexCount".
      * 
-     * @param quCatalog
-     * @param quSchema
-     * @param quTable
+     * @param catalog
+     * @param schema
+     * @param table
      * @param idxCount
      * @return
      * @throws SQLException
      */
-    private int getIndexCount(String quCatalog, String quSchema, String quTable) throws SQLException {
+    private int getIndexCount(String catalog, String schema, String table) throws SQLException {
         int idxCount = 0;
         ResultSet idx = null;
         try {
-            idx = getConnection().getMetaData().getIndexInfo(quCatalog, quSchema, quTable, false, false);
+            idx = getConnection().getMetaData().getIndexInfo(catalog, schema, table, false, false);
         } catch (SQLException e) {
-            log.warn("Exception while getting indexes on " + this.dbms().toQualifiedName(quCatalog, quSchema, quTable) + ": "
+            log.warn("Exception while getting indexes on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
                     + e.getLocalizedMessage(), e);
             // Oracle increments the number of cursors to close each time a new query is executed after this exception!
-            reloadConnectionAfterException(quCatalog);
+            reloadConnectionAfterException(catalog);
         }
         // TODO unicity of index could be a parameter
         if (idx != null) {
@@ -437,22 +454,22 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     /**
      * DOC scorreia Comment method "getPKCount".
      * 
-     * @param quCatalog
-     * @param quSchema
-     * @param quTable
+     * @param catalog
+     * @param schema
+     * @param table
      * @param pkCount
      * @return
      * @throws SQLException
      */
-    private int getPKCount(String quCatalog, String quSchema, String quTable) throws SQLException {
+    private int getPKCount(String catalog, String schema, String table) throws SQLException {
         int pkCount = 0;
         ResultSet pk = null;
         try {
-            pk = getConnection().getMetaData().getPrimaryKeys(quCatalog, quSchema, quTable);
+            pk = getConnection().getMetaData().getPrimaryKeys(catalog, schema, table);
         } catch (SQLException e1) {
-            log.warn("Exception while getting primary keys on " + this.dbms().toQualifiedName(quCatalog, quSchema, quTable)
+            log.warn("Exception while getting primary keys on " + this.dbms().toQualifiedName(catalog, schema, table)
                     + ": " + e1.getLocalizedMessage(), e1);
-            reloadConnectionAfterException(quCatalog);
+            reloadConnectionAfterException(catalog);
         }
         if (pk != null) {
             while (pk.next()) {
