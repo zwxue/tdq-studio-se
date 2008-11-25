@@ -168,6 +168,29 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.columnset.MinMaxDateIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MinMaxDateIndicatorItemProvider minMaxDateIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.columnset.MinMaxDateIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMinMaxDateIndicatorAdapter() {
+        if (minMaxDateIndicatorItemProvider == null) {
+            minMaxDateIndicatorItemProvider = new MinMaxDateIndicatorItemProvider(this);
+        }
+
+        return minMaxDateIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -270,6 +293,7 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
         if (rowMatchingIndicatorItemProvider != null) rowMatchingIndicatorItemProvider.dispose();
         if (columnSetMultiValueIndicatorItemProvider != null) columnSetMultiValueIndicatorItemProvider.dispose();
         if (countAvgNullIndicatorItemProvider != null) countAvgNullIndicatorItemProvider.dispose();
+        if (minMaxDateIndicatorItemProvider != null) minMaxDateIndicatorItemProvider.dispose();
     }
 
 }

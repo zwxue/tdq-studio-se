@@ -496,6 +496,11 @@ public class DomainItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 ColumnsetFactory.eINSTANCE.createMinMaxDateIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  PatternFactory.eINSTANCE.createPattern()));
     }
 

@@ -73,6 +73,8 @@ public class ColumnSetMultiValueIndicatorItemProvider
             addNominalColumnsPropertyDescriptor(object);
             addNumericColumnsPropertyDescriptor(object);
             addColumnHeadersPropertyDescriptor(object);
+            addDateFunctionsPropertyDescriptor(object);
+            addDateColumnsPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -210,6 +212,50 @@ public class ColumnSetMultiValueIndicatorItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Date Functions feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDateFunctionsPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ColumnSetMultiValueIndicator_dateFunctions_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_ColumnSetMultiValueIndicator_dateFunctions_feature", "_UI_ColumnSetMultiValueIndicator_type"),
+                 ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Date Columns feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDateColumnsPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ColumnSetMultiValueIndicator_dateColumns_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_ColumnSetMultiValueIndicator_dateColumns_feature", "_UI_ColumnSetMultiValueIndicator_type"),
+                 ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns ColumnSetMultiValueIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -249,6 +295,7 @@ public class ColumnSetMultiValueIndicatorItemProvider
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

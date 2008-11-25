@@ -466,6 +466,11 @@ public class AnalysisItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 ColumnsetFactory.eINSTANCE.createMinMaxDateIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  DomainFactory.eINSTANCE.createDomain()));
 
         newChildDescriptors.add

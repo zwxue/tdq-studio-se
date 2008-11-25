@@ -183,6 +183,7 @@ public class IndicatorDefinitionItemProvider
             super.getChildrenFeatures(object);
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION);
             childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS);
+            childrenFeatures.add(DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS);
         }
         return childrenFeatures;
     }
@@ -242,6 +243,7 @@ public class IndicatorDefinitionItemProvider
                 return;
             case DefinitionPackage.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION:
             case DefinitionPackage.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS:
+            case DefinitionPackage.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -298,6 +300,26 @@ public class IndicatorDefinitionItemProvider
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS,
                  DatatypesFactory.eINSTANCE.createQueryExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
+                 CoreFactory.eINSTANCE.createExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
+                 CoreFactory.eINSTANCE.createBooleanExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
+                 CoreFactory.eINSTANCE.createProcedureExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS,
+                 DatatypesFactory.eINSTANCE.createQueryExpression()));
     }
 
     /**
@@ -313,7 +335,8 @@ public class IndicatorDefinitionItemProvider
 
         boolean qualify =
             childFeature == DefinitionPackage.Literals.INDICATOR_DEFINITION__SQL_GENERIC_EXPRESSION ||
-            childFeature == DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS;
+            childFeature == DefinitionPackage.Literals.INDICATOR_DEFINITION__AGGREGATE1ARG_FUNCTIONS ||
+            childFeature == DefinitionPackage.Literals.INDICATOR_DEFINITION__DATE1ARG_FUNCTIONS;
 
         if (qualify) {
             return getString
