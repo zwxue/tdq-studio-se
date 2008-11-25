@@ -46,7 +46,7 @@ public class ImportFactory {
 
     private static final char CURRENT_SEPARATOR = '\t';
 
-    static void importToStucture(File importFile, IFolder selectionFolder, boolean skip, boolean rename) {
+    static void importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip, boolean rename) {
 
         Set<String> names = PatternUtilities.getAllPatternNames(selectionFolder);
 
@@ -82,14 +82,14 @@ public class ImportFactory {
                     patternParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
                     patternParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
 
-                    for (PatternLanguageType type : PatternLanguageType.values()) {
-                        String cellStr = reader.get(type.getExcelEnum().getLiteral());
+                    for (PatternLanguageType languagetype : PatternLanguageType.values()) {
+                        String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
                         if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
-                            patternParameters.regex.put(type.getLiteral(), cellStr);
+                            patternParameters.regex.put(languagetype.getLiteral(), cellStr);
                         }
                     }
 
-                    createAndStorePattern(patternParameters, selectionFolder);
+                    createAndStorePattern(patternParameters, selectionFolder, type);
 
                     names.add(name);
                 }
@@ -102,7 +102,7 @@ public class ImportFactory {
         }
     }
 
-    private static void createAndStorePattern(PatternParameters parameters, IFolder selectionFolder) {
+    private static void createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
 
         Pattern pattern = PatternResourceFileHelper.getInstance().createPattern(parameters.name, parameters.auther,
                 parameters.description, parameters.purpose, parameters.status);
@@ -113,7 +113,7 @@ public class ImportFactory {
             expression.setBody(parameters.regex.get(key));
             expression.setLanguage(key);
             regularExpr.setExpression(expression);
-            regularExpr.setExpressionType(ExpressionType.REGEXP.getName());
+            regularExpr.setExpressionType(type.getName());
             pattern.getComponents().add(regularExpr);
         }
 

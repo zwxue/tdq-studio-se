@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -42,9 +43,12 @@ public class ExportFactory {
 
     private static final char CURRENT_SEPARATOR = '\t';
 
-    static void exportToFile(Pattern[] patterns, File exportFile) {
+    private static ExpressionType type;
+
+    static void exportToFile(Pattern[] patterns, File exportFile, ExpressionType type) {
 
         String fileExtName = getFileExtName(exportFile);
+        ExportFactory.type = type;
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
 
@@ -75,7 +79,10 @@ public class ExportFactory {
                 out.close();
 
             } catch (FileNotFoundException fe) {
-                MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("ExportFactory.errorOne"), DefaultMessagesImpl.getString("ExportFactory.notFoundFile")); //$NON-NLS-1$ //$NON-NLS-2$
+                MessageDialogWithToggle
+                        .openError(
+                                null,
+                                DefaultMessagesImpl.getString("ExportFactory.errorOne"), DefaultMessagesImpl.getString("ExportFactory.notFoundFile")); //$NON-NLS-1$ //$NON-NLS-2$
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,31 +107,42 @@ public class ExportFactory {
 
         Map<PatternToExcelEnum, String> patternMap = new HashMap<PatternToExcelEnum, String>();
 
-        IFolder patternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.PATTERNS);
-        IFolder sqlPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.SQL_PATTERNS);
-        IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
-                new IFolder[] { patternFolder, sqlPatternFolder });
-        URI relativeURI = patternFolder.getLocationURI().relativize(file.getParent().getLocationURI());
+        IFolder curFolder = null;
 
-        // get the basic information
-        patternMap.put(PatternToExcelEnum.Label, pattern.getName());
-        patternMap.put(PatternToExcelEnum.Purpose, TaggedValueHelper.getPurpose(pattern));
-        patternMap.put(PatternToExcelEnum.Description, TaggedValueHelper.getDescription(pattern));
-        patternMap.put(PatternToExcelEnum.Author, TaggedValueHelper.getAuthor(pattern));
-        patternMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
+        switch (type) {
+        case REGEXP:
+            curFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+                    DQStructureManager.PATTERNS);
+            break;
+        case SQL_LIKE:
+            curFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+                    DQStructureManager.SQL_PATTERNS);
+            break;
+        default:
+        }
 
-        for (PatternLanguageType type : PatternLanguageType.values()) {
-            for (PatternComponent component : pattern.getComponents()) {
-                Expression expression = ((RegularExpression) component).getExpression();
-                if (expression != null && expression.getLanguage().equalsIgnoreCase(type.getLiteral())) {
-                    patternMap.put(type.getExcelEnum(), expression.getBody());
+        if (curFolder != null) {
+            IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern, new IFolder[] { curFolder });
+            URI relativeURI = curFolder.getLocationURI().relativize(file.getParent().getLocationURI());
+
+            // get the basic information
+            patternMap.put(PatternToExcelEnum.Label, pattern.getName());
+            patternMap.put(PatternToExcelEnum.Purpose, TaggedValueHelper.getPurpose(pattern));
+            patternMap.put(PatternToExcelEnum.Description, TaggedValueHelper.getDescription(pattern));
+            patternMap.put(PatternToExcelEnum.Author, TaggedValueHelper.getAuthor(pattern));
+            patternMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
+
+            for (PatternLanguageType languagetype : PatternLanguageType.values()) {
+                for (PatternComponent component : pattern.getComponents()) {
+                    Expression expression = ((RegularExpression) component).getExpression();
+                    if (expression != null && expression.getLanguage().equalsIgnoreCase(languagetype.getLiteral())) {
+                        patternMap.put(languagetype.getExcelEnum(), expression.getBody());
+                    }
                 }
-            }
 
-            if (!patternMap.containsKey(type.getExcelEnum())) {
-                patternMap.put(type.getExcelEnum(), ""); //$NON-NLS-1$
+                if (!patternMap.containsKey(languagetype.getExcelEnum())) {
+                    patternMap.put(languagetype.getExcelEnum(), ""); //$NON-NLS-1$
+                }
             }
         }
 

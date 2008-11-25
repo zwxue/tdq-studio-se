@@ -19,6 +19,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -27,19 +28,22 @@ public class ExportPatternsAction extends Action {
 
     private IFolder folder;
 
+    private ExpressionType type;
+
     /**
      * DOC zqin ExportPatternsAction constructor comment.
      */
-    public ExportPatternsAction(IFolder folder) {
+    public ExportPatternsAction(IFolder folder, ExpressionType type) {
         setText(DefaultMessagesImpl.getString("ExportPatternsAction.exportPattern")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
+        this.type = type;
     }
 
     @Override
     public void run() {
 
-        ExportPatternsWizard wizard = new ExportPatternsWizard(folder);
+        ExportPatternsWizard wizard = new ExportPatternsWizard(folder, type);
         WizardDialog dialog = new WizardDialog(null, wizard);
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {

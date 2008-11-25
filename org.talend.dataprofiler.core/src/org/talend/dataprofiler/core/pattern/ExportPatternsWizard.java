@@ -22,6 +22,7 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 
@@ -32,13 +33,16 @@ public class ExportPatternsWizard extends Wizard {
 
     private IFolder folder;
 
+    private ExpressionType type;
+
     private ExportPatternsWizardPage page;
 
     /**
      * DOC zqin ExportPatternsWizard constructor comment.
      */
-    public ExportPatternsWizard(IFolder folder) {
+    public ExportPatternsWizard(IFolder folder, ExpressionType type) {
         this.folder = folder;
+        this.type = type;
     }
 
     /*
@@ -73,7 +77,7 @@ public class ExportPatternsWizard extends Wizard {
 
         if (isContinue) {
 
-            ExportFactory.exportToFile(seletedPatterns.toArray(new Pattern[seletedPatterns.size()]), file);
+            ExportFactory.exportToFile(seletedPatterns.toArray(new Pattern[seletedPatterns.size()]), file, type);
             return true;
         }
 

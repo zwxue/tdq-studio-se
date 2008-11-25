@@ -24,6 +24,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.help.HelpPlugin;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -35,13 +36,16 @@ public class ImportPatternsAction extends Action {
 
     private IFolder folder;
 
+    private ExpressionType type;
+
     /**
      * DOC qzhang ImportPatternsAction constructor comment.
      */
-    public ImportPatternsAction(IFolder folder) {
+    public ImportPatternsAction(IFolder folder, ExpressionType type) {
         setText(DefaultMessagesImpl.getString("ImportPatternsAction.importPatternOne")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
         this.folder = folder;
+        this.type = type;
     }
 
     /*
@@ -51,7 +55,7 @@ public class ImportPatternsAction extends Action {
      */
     @Override
     public void run() {
-        ImportPatternsWizard wizard = new ImportPatternsWizard(folder);
+        ImportPatternsWizard wizard = new ImportPatternsWizard(folder, type);
 
         IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getPatternHelpContextID());
         IHelpResource[] relatedTopics = context.getRelatedTopics();

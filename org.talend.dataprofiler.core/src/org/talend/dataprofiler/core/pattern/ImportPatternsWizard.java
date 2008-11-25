@@ -16,6 +16,7 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -27,6 +28,8 @@ public class ImportPatternsWizard extends Wizard {
 
     private IFolder folder;
 
+    private ExpressionType type;
+
     private ImportPatternsWizardPage page;
 
     /**
@@ -35,8 +38,9 @@ public class ImportPatternsWizard extends Wizard {
      * @param folder
      * @param type
      */
-    public ImportPatternsWizard(IFolder folder) {
+    public ImportPatternsWizard(IFolder folder, ExpressionType type) {
         this.folder = folder;
+        this.type = type;
     }
 
     /*
@@ -60,7 +64,7 @@ public class ImportPatternsWizard extends Wizard {
 
         File file = new File(page.getSourceFile());
 
-        ImportFactory.importToStucture(file, folder, page.getSkip(), page.getRename());
+        ImportFactory.importToStucture(file, folder, type, page.getSkip(), page.getRename());
 
         return true;
     }
