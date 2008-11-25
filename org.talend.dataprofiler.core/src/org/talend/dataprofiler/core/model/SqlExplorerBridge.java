@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.model;
 import java.util.Collection;
 import java.util.List;
 
+import net.sourceforge.sqlexplorer.Messages;
+import net.sourceforge.sqlexplorer.dbdetail.DetailTabManager;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.DatabaseNode;
@@ -25,6 +27,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogAction;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
@@ -100,10 +103,9 @@ public final class SqlExplorerBridge {
             if (tableName.equalsIgnoreCase(node.getName())) {
                 TypedReturnCode<TableNode> typedReturnCode = new TypedReturnCode<TableNode>(null, true);
                 typedReturnCode.setObject((TableNode) node);
-
                 DatabaseStructureView dsView = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
-                // TreeViewer findSessionTreeViewer = dsView.findSessionTreeViewer(currentUser.getMetaDataSession());
-                // findSessionTreeViewer.setSelection(new StructuredSelection(node));
+                dsView.setSessionSelectionNode(currentUser.getMetaDataSession(), new StructuredSelection(node));
+                DetailTabManager.setActiveTabName(Messages.getString("DatabaseDetailView.Tab.PrimaryKeys"));
                 return typedReturnCode;
             }
         }
