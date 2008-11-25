@@ -20,11 +20,14 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -49,11 +52,15 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.pattern.CreatePatternAction;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.pattern.PatternTransformer;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -130,6 +137,7 @@ public class ChartTableFactory {
 
             @Override
             public void mouseDown(MouseEvent e) {
+
                 if (e.button == 3) {
                     StructuredSelection selection = (StructuredSelection) tbViewer.getSelection();
 
@@ -139,7 +147,7 @@ public class ChartTableFactory {
                     if (indicator != null) {
                         Menu menu = new Menu(table.getShell(), SWT.POP_UP);
                         table.setMenu(menu);
-
+                        int createPatternFlag = 0;
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartTableType, analysis, dataEntity);
                         for (final MenuItemEntity itemEntity : itemEntities) {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
@@ -154,8 +162,19 @@ public class ChartTableFactory {
                                 }
 
                             });
-                        }
+                            if (createPatternFlag == 0) {
+                                MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
+                                final PatternTransformer pattTransformer = new PatternTransformer();
+                                itemCreatePatt.setText("Generate Regular Pattern");
+                                itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
+                                    public void widgetSelected(SelectionEvent e) {
+                                        createPattern(analysis, itemEntity, pattTransformer);
+                                    }
+                                });
+                            }
+                        }
+                        createPatternFlag++;
                         menu.setVisible(true);
                     }
                 }
@@ -295,6 +314,14 @@ public class ChartTableFactory {
         table.addListener(SWT.KeyDown, tableListener);
         table.addListener(SWT.MouseMove, tableListener);
         table.addListener(SWT.MouseHover, tableListener);
+    }
+
+    public static void createPattern(Analysis analysis, MenuItemEntity itemEntity, final PatternTransformer pattTransformer) {
+        String language = analysis.getContext().getConnection().getName();
+        String query = itemEntity.getQuery();
+        String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
+        new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+                DQStructureManager.PATTERNS), ExpressionType.REGEXP, "'" + regex + "'", language).run();
     }
 
 }

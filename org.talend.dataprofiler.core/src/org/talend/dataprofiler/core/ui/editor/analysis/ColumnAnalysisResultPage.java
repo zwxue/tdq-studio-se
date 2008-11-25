@@ -65,6 +65,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.pattern.PatternTransformer;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -296,6 +297,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                     PopupMenu menu = new PopupMenu(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.popupMenu")); //$NON-NLS-1$
                     if (currentDataEntity != null) {
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
+                        int createPatternFlag = 0;
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartType, analysis, currentDataEntity);
                         for (final MenuItemEntity itemEntity : itemEntities) {
                             MenuItem item = new MenuItem(itemEntity.getLabel());
@@ -314,10 +316,27 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
                             });
                             menu.add(item);
+                            if (createPatternFlag == 0) {
+                                MenuItem itemCreatePatt = new MenuItem("Generate Regular Pattern");
+                                final PatternTransformer pattTransformer = new PatternTransformer();
+                                itemCreatePatt.addActionListener(new ActionListener() {
+
+                                    public void actionPerformed(ActionEvent e) {
+                                        Display.getDefault().asyncExec(new Runnable() {
+
+                                            public void run() {
+                                                ChartTableFactory.createPattern(analysis, itemEntity, pattTransformer);
+                                            }
+                                        });
+                                    }
+                                });
+                                menu.add(itemCreatePatt);
+                            }
                         }
 
                         chartPanel.add(menu);
                         menu.show(chartPanel, event.getTrigger().getX(), event.getTrigger().getY());
+                        createPatternFlag++;
                     }
                 }
             }
@@ -328,4 +347,5 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             }
         });
     }
+
 }
