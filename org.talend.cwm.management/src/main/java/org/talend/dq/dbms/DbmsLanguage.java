@@ -490,7 +490,22 @@ public class DbmsLanguage {
      */
     public List<String> getAggregate1argFunctions(IndicatorDefinition indicatorDefinition) {
         final EList<Expression> aggregate1argFunctions = indicatorDefinition.getAggregate1argFunctions();
-        Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName, aggregate1argFunctions);
+        return getFunctions(indicatorDefinition, aggregate1argFunctions);
+    }
+
+    /**
+     * Method "getDate1argFunctions".
+     * 
+     * @param indicatorDefinition
+     * @return the ordered list of functions applicable to date columns
+     */
+    public List<String> getDate1argFunctions(IndicatorDefinition indicatorDefinition) {
+        final EList<Expression> date1argFunctions = indicatorDefinition.getDate1argFunctions();
+        return getFunctions(indicatorDefinition, date1argFunctions);
+    }
+
+    private List<String> getFunctions(IndicatorDefinition indicatorDefinition, final EList<Expression> functions) {
+        Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName, functions);
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();
             final String[] fonc = body.split(";");
@@ -498,7 +513,7 @@ public class DbmsLanguage {
         }
 
         // else try with default language (ANSI SQL)
-        sqlGenExpr = getSqlExpression(indicatorDefinition, getDefaultLanguage(), aggregate1argFunctions);
+        sqlGenExpr = getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions);
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();
             final String[] fonc = body.split(";");
@@ -506,7 +521,7 @@ public class DbmsLanguage {
         }
         return Collections.emptyList();
     }
-
+    
     /**
      * Method "getRegexPatternString".
      * 

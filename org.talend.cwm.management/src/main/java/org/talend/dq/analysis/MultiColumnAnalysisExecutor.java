@@ -76,6 +76,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
             final EList<Column> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
             final EList<String> numericFunctions = initializeNumericFunctions(colSetMultValIndicator);
+            final EList<String> dateFunctions = initializeDateFunctions(colSetMultValIndicator);
+            
             // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
             for (Column column : colSetMultValIndicator.getNominalColumns()) {
@@ -85,6 +87,12 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             for (Column column : colSetMultValIndicator.getNumericColumns()) {
                 // call functions for each column
                 for (String f : numericFunctions) {
+                    computedColumns.add(replaceVariablesLow(f, column.getName()));
+                }
+            }
+            for (Column column : colSetMultValIndicator.getDateColumns()) {
+                // call functions for each column
+                for (String f : dateFunctions) {
                     computedColumns.add(replaceVariablesLow(f, column.getName()));
                 }
             }
@@ -128,6 +136,23 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         final List<String> aggregate1argFunctions = dbms().getAggregate1argFunctions(indicatorDefinition);
         numericFunctions.addAll(aggregate1argFunctions);
         return numericFunctions;
+    }
+
+    /**
+     * DOC scorreia Comment method "initializeNumericFunctions".
+     * 
+     * @param indicator
+     * @return
+     */
+    private EList<String> initializeDateFunctions(ColumnSetMultiValueIndicator indicator) {
+        final EList<String> dateFunctions = indicator.getDateFunctions();
+        if (!dateFunctions.isEmpty()) { // could be already set
+            return dateFunctions;
+        }
+        final IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+        final List<String> date1argFunctions = dbms().getDate1argFunctions(indicatorDefinition);
+        dateFunctions.addAll(date1argFunctions);
+        return dateFunctions;
     }
 
     /**

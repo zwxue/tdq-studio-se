@@ -54,6 +54,7 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
+import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -373,6 +374,17 @@ public final class DefinitionHandler {
             @Override
             public Boolean caseCountAvgNullIndicator(CountAvgNullIndicator object) {
                 return setIndicatorDefinition(object, "Averaged Multiple Column Frequency Table");
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @seeorg.talend.dataquality.indicators.columnset.util.ColumnsetSwitch#caseMinMaxDateIndicator(org.talend.
+             * dataquality.indicators.columnset.MinMaxDateIndicator)
+             */
+            @Override
+            public Boolean caseMinMaxDateIndicator(MinMaxDateIndicator object) {
+                return setIndicatorDefinition(object, "Min Max Date Multiple Column Frequency Table");
             }
 
             /*
