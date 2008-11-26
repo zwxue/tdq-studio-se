@@ -29,7 +29,6 @@ import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -38,60 +37,30 @@ import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisWriter;
-import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
- * @author zqin
- * 
+ * The wizard contains a table and table/view filter wizard page.
  */
-public class ConnectionWizard extends AbstractAnalysisWizard {
+public class AnalysisFilterWizard extends AbstractAnalysisWizard {
 
-    private static Logger log = Logger.getLogger(ConnectionWizard.class);
+    private static Logger log = Logger.getLogger(AnalysisFilterWizard.class);
 
-    private ConnectionAnalysisParameter parameter;
+    protected AnalysisFilterParameter anaFilterParameter;
 
-    private ConnAnalysisPageStep0 page0;
+    protected AnalysisFilterPage anaFilterPage;
 
-    private ConnAnalysisPageStep1 page1;
-
-    /**
-     * 
-     */
-    public ConnectionWizard(ConnectionAnalysisParameter parameter) {
+    public AnalysisFilterWizard(AnalysisFilterParameter parameter) {
         super(parameter);
-        this.parameter = parameter;
+        this.anaFilterParameter = parameter;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.Wizard#addPages()
-     */
-    @Override
-    public void addPages() {
-
-        addPage(new AnalysisMetadataWizardPage());
-
-        if (parameter.getTdDataProvider() == null) {
-            page0 = new ConnAnalysisPageStep0();
-            addPage(page0);
-        }
-
-        page1 = new ConnAnalysisPageStep1();
-        addPage(page1);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.Wizard#canFinish()
-     */
     @Override
     public boolean canFinish() {
-        if (this.getContainer().getCurrentPage() != page1) {
+        if (this.getContainer().getCurrentPage() != anaFilterPage) {
             return false;
         }
         return super.canFinish();
@@ -99,15 +68,15 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
 
     @Override
     protected void fillAnalysisEditorParam() {
-        this.analysisName = parameter.getAnalysisName();
-        this.analysisType = parameter.getAnalysisType();
-        this.folderResource = parameter.getFolderProvider().getFolderResource();
+        this.analysisName = anaFilterParameter.getAnalysisName();
+        this.analysisType = anaFilterParameter.getAnalysisType();
+        this.folderResource = anaFilterParameter.getFolderProvider().getFolderResource();
     }
 
     @Override
     protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
 
-        TdDataProvider tdProvider = parameter.getTdDataProvider();
+        TdDataProvider tdProvider = anaFilterParameter.getTdDataProvider();
         analysisBuilder.setAnalysisConnection(tdProvider);
         ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
         indicator.setAnalyzedElement(tdProvider);
@@ -153,11 +122,13 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
         }
 
         EList<Domain> dataFilters = analysisBuilder.getAnalysis().getParameters().getDataFilter();
-        if ((parameter.getTableFilter() != null) && (!parameter.getTableFilter().equals(PluginConstant.EMPTY_STRING))) {
-            DomainHelper.setDataFilterTablePattern(dataFilters, parameter.getTableFilter());
+        if ((anaFilterParameter.getTableFilter() != null)
+                && (!anaFilterParameter.getTableFilter().equals(PluginConstant.EMPTY_STRING))) {
+            DomainHelper.setDataFilterTablePattern(dataFilters, anaFilterParameter.getTableFilter());
         }
-        if ((parameter.getViewFilter() != null) && (!parameter.getViewFilter().equals(PluginConstant.EMPTY_STRING))) {
-            DomainHelper.setDataFilterViewPattern(dataFilters, parameter.getViewFilter());
+        if ((anaFilterParameter.getViewFilter() != null)
+                && (!anaFilterParameter.getViewFilter().equals(PluginConstant.EMPTY_STRING))) {
+            DomainHelper.setDataFilterViewPattern(dataFilters, anaFilterParameter.getViewFilter());
         }
 
         DependenciesHandler.getInstance().setDependencyOn(analysisBuilder.getAnalysis(),
@@ -165,7 +136,7 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
 
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysisBuilder.getAnalysis());
         if (save.isOk()) {
-            log.info("Success to save connection analysis:" + analysisBuilder.getAnalysis().getFileName()); //$NON-NLS-1$
+            log.info("Success to save the analysis:" + analysisBuilder.getAnalysis().getFileName()); //$NON-NLS-1$
         }
 
         CorePlugin.getDefault().refreshWorkSpace();
@@ -174,4 +145,5 @@ public class ConnectionWizard extends AbstractAnalysisWizard {
         return file;
 
     }
+
 }

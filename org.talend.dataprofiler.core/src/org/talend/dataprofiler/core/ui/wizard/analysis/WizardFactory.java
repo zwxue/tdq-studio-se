@@ -17,13 +17,15 @@ import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.pattern.CreatePatternWizard;
 import org.talend.dataprofiler.core.sql.CreateSqlFileWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.catalog.CatalogAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionAnalysisWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.schema.SchemaAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
@@ -57,10 +59,22 @@ public class WizardFactory {
             return new ColumnWizard(parameter);
         case CONNECTION:
             if (parameter == null) {
-                parameter = new ConnectionAnalysisParameter();
+                parameter = new AnalysisFilterParameter();
             }
             parameter.setAnalysisTypeName(type.getLiteral());
-            return new ConnectionWizard((ConnectionAnalysisParameter) parameter);
+            return new ConnectionAnalysisWizard((AnalysisFilterParameter) parameter);
+        case CATALOG:
+            if (parameter == null) {
+                parameter = new AnalysisFilterParameter();
+            }
+            parameter.setAnalysisTypeName(type.getLiteral());
+            return new CatalogAnalysisWizard((AnalysisFilterParameter) parameter);
+        case SCHEMA:
+            if (parameter == null) {
+                parameter = new AnalysisFilterParameter();
+            }
+            parameter.setAnalysisTypeName(type.getLiteral());
+            return new SchemaAnalysisWizard((AnalysisFilterParameter) parameter);
         default:
             return null;
         }
@@ -75,7 +89,7 @@ public class WizardFactory {
     }
 
     public static Wizard createSqlFileWizard(IFolder folder) {
-        ConnectionParameter parameter = new ConnectionAnalysisParameter();
+        ConnectionParameter parameter = new AnalysisFilterParameter();
         FolderProvider folderProvider = parameter.getFolderProvider();
         if (folderProvider == null) {
             folderProvider = new FolderProvider();

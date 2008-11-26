@@ -22,33 +22,23 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
-import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 
 /**
- * @author zqin
- * 
+ * DOC rli class global comment. Detailled comment
  */
-public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
+public class AnalysisFilterPage extends AbstractAnalysisWizardPage {
 
-    private String defaultInfor = DefaultMessagesImpl.getString("ConnAnalysisPageStep1.defaultInfor"); //$NON-NLS-1$
+    private String defaultInfor = DefaultMessagesImpl.getString("ConnAnalysisPageStep1.defaultInfor");
 
     private Text tableFilter;
 
     private Text viewFilter;
 
-    /**
-     * @param pageName
-     */
-    public ConnAnalysisPageStep1() {
-        setTitle(DefaultMessagesImpl.getString("ConnAnalysisPageStep1.newAnalysis")); //$NON-NLS-1$
-        setMessage(DefaultMessagesImpl.getString("ConnAnalysisPageStep1.addFiltersConnectionAnalysis")); //$NON-NLS-1$
+    public AnalysisFilterPage() {
+        super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     public void createControl(Composite parent) {
 
         Composite container = new Composite(parent, SWT.NONE);
@@ -72,7 +62,7 @@ public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
         tableFilter.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                ((ConnectionAnalysisParameter) getConnectionParams()).setTableFilter(tableFilter.getText());
+                ((AnalysisFilterParameter) getConnectionParams()).setTableFilter(tableFilter.getText());
 
             }
         });
@@ -84,7 +74,7 @@ public class ConnAnalysisPageStep1 extends AbstractAnalysisWizardPage {
         viewFilter.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                ((ConnectionAnalysisParameter) getConnectionParams()).setViewFilter(viewFilter.getText());
+                ((AnalysisFilterParameter) getConnectionParams()).setViewFilter(viewFilter.getText());
 
             }
         });

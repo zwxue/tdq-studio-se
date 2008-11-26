@@ -43,7 +43,7 @@ import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ConnectionsContentProvider;
-import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -52,7 +52,7 @@ import org.talend.utils.sugars.TypedReturnCode;
  * @author zqin
  * 
  */
-public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
+public class ConnAnalysisDPSelectionPage extends AbstractAnalysisWizardPage {
 
     private TreeViewer fViewer;
 
@@ -63,7 +63,7 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
     /**
      * @param pageName
      */
-    public ConnAnalysisPageStep0() {
+    public ConnAnalysisDPSelectionPage() {
         setTitle(DefaultMessagesImpl.getString("ConnAnalysisPageStep0.newAnalysis")); //$NON-NLS-1$
         setMessage(DefaultMessagesImpl.getString("ConnAnalysisPageStep0.chooseConnection")); //$NON-NLS-1$
         setPageComplete(false);
@@ -147,7 +147,7 @@ public class ConnAnalysisPageStep0 extends AbstractAnalysisWizardPage {
 
                 // get the dataprovider from the seleted connection
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                ConnectionAnalysisParameter connPanameter = (ConnectionAnalysisParameter) getConnectionParams();
+                AnalysisFilterParameter connPanameter = (AnalysisFilterParameter) getConnectionParams();
                 if (object instanceof IFile) {
                     IFile file = (IFile) object;
                     TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);

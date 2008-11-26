@@ -33,7 +33,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeCont
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeLabelProvider;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 
 /**
  * @author zqin
@@ -117,7 +117,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
                         break;
                     case CONNECTION:
-                        ConnectionAnalysisParameter connParam = new ConnectionAnalysisParameter();
+                        AnalysisFilterParameter connParam = new AnalysisFilterParameter();
                         connParam.setFolderProvider(currentFolderProvider);
                         parameter = connParam;
 

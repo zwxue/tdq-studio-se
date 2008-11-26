@@ -20,7 +20,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dq.analysis.parameters.ConnectionAnalysisParameter;
+import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -59,7 +59,7 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
      */
     @Override
     protected WizardDialog getPredefinedDialog() {
-        ConnectionAnalysisParameter connectionParams = new ConnectionAnalysisParameter();
+        AnalysisFilterParameter connectionParams = new AnalysisFilterParameter();
 
         file = (IFile) getSelection().getFirstElement();
         TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(file);
