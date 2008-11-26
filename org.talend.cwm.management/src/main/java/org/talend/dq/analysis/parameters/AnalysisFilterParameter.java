@@ -14,72 +14,68 @@ package org.talend.dq.analysis.parameters;
 
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
- * <br/>
- *
+ * DOC zqin class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- *
+ * 
  */
-public class ConnectionAnalysisParameter extends AnalysisParameter {
-    
+public class AnalysisFilterParameter extends AnalysisParameter {
+
     private String tableFilter;
-    
+
     private String viewFilter;
 
     private TdDataProvider tdDataProvider;
 
-    
     /**
      * Getter for tableFilter.
+     * 
      * @return the tableFilter
      */
     public String getTableFilter() {
         return this.tableFilter;
     }
 
-    
     /**
      * Sets the tableFilter.
+     * 
      * @param tableFilter the tableFilter to set
      */
     public void setTableFilter(String tableFilter) {
         this.tableFilter = tableFilter;
     }
 
-    
     /**
      * Getter for viewFilter.
+     * 
      * @return the viewFilter
      */
     public String getViewFilter() {
         return this.viewFilter;
     }
 
-    
     /**
      * Sets the viewFilter.
+     * 
      * @param viewFilter the viewFilter to set
      */
     public void setViewFilter(String viewFilter) {
         this.viewFilter = viewFilter;
     }
 
-
-    
     /**
      * Getter for tdDataProvider.
+     * 
      * @return the tdDataProvider
      */
     public TdDataProvider getTdDataProvider() {
         return this.tdDataProvider;
     }
 
-
-    
     /**
      * Sets the tdDataProvider.
+     * 
      * @param tdDataProvider the tdDataProvider to set
      */
     public void setTdDataProvider(TdDataProvider tdDataProvider) {
