@@ -108,7 +108,7 @@ public enum PatternLanguageType {
 
     public static String findNameByLanguage(String language) {
         for (PatternLanguageType oneType : values()) {
-            if (language != null && language.equals(oneType.getLiteral())) {
+            if (language != null && language.equalsIgnoreCase(oneType.getLiteral())) {
                 return oneType.getName();
             }
         }

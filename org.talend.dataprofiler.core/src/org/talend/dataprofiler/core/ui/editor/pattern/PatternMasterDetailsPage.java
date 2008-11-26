@@ -49,6 +49,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -214,6 +215,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
         final RegularExpressionImpl finalRegExpress = regularExpress;
         String language = regularExpress.getExpression().getLanguage();
+        String expressionType = regularExpress.getExpressionType();
+        String body = regularExpress.getExpression().getBody();
+
         if (language == null) {
             combo.setText(remainDBTypeList.get(0));
         } else {
@@ -229,8 +233,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             }
         });
         final Text patternText = new Text(expressComp, SWT.BORDER);
-        patternText.setText(regularExpress.getExpression().getBody() == null ? PluginConstant.EMPTY_STRING : regularExpress
-                .getExpression().getBody());
+        patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
         GridDataFactory.fillDefaults().span(6, 1).grab(true, false).applyTo(patternText);
         patternText.addModifyListener(new ModifyListener() {
 
@@ -254,19 +257,23 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 setDirty(true);
             }
         });
-        Button testPatternButton = new Button(expressComp, SWT.NONE);
-        // testPatternButton.setImage(ImageLib.getImage(ImageLib.));
-        testPatternButton.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.test")); //$NON-NLS-1$
-        testPatternButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternTest")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(testPatternButton);
-        testPatternButton.addSelectionListener(new SelectionAdapter() {
 
-            public void widgetSelected(SelectionEvent e) {
-                // Open test pattern viewer
-                PatternTestView patternTestView = (PatternTestView) CorePlugin.getDefault().findView(PatternTestView.ID);
-                patternTestView.setPatternExpression(PatternMasterDetailsPage.this, pattern, finalRegExpress);
-            }
-        });
+        if (expressionType != null && expressionType.equals(ExpressionType.REGEXP.getName())) {
+            Button testPatternButton = new Button(expressComp, SWT.NONE);
+            // testPatternButton.setImage(ImageLib.getImage(ImageLib.));
+            testPatternButton.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.test")); //$NON-NLS-1$
+            testPatternButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternTest")); //$NON-NLS-1$
+            GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(testPatternButton);
+            testPatternButton.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    // Open test pattern viewer
+                    PatternTestView patternTestView = (PatternTestView) CorePlugin.getDefault().findView(PatternTestView.ID);
+                    patternTestView.setPatternExpression(PatternMasterDetailsPage.this, pattern, finalRegExpress);
+                }
+            });
+        }
+
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
     }
 
