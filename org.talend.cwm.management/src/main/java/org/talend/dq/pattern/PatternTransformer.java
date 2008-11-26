@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dq.pattern;
 
+import org.talend.dq.dbms.DbmsLanguage;
+
 /**
  * @author scorreia
  * 
@@ -19,22 +21,48 @@ package org.talend.dq.pattern;
  */
 public class PatternTransformer {
 
+    private static final String BEGIN = "^";
+
+    private static final String END = "$";
+
     private char lowerCase = 'a';
 
     private char upperCase = 'A';
 
     private char numeric = '9';
+    
+    private String specialChar = ".*?^${}()\\+|[]";
+
+    private DbmsLanguage dbmsLanguage;
+    
+    
+    /**
+     * Getter for dbmsLanguage.
+     * 
+     * @return the dbmsLanguage
+     */
+    public DbmsLanguage getDbmsLanguage() {
+        return this.dbmsLanguage;
+    }
+
+    public PatternTransformer(DbmsLanguage dbms) {
+        assert dbms != null;
+        this.dbmsLanguage = dbms;
+    }
 
     private String getRegexpPattern(char inputCharacter) {
         if (lowerCase == inputCharacter) {
             // TODO could depend on DBMS here
-            return "[:lower:]";
+            return "[[:lower:]]";
         }
         if (upperCase == inputCharacter) {
-            return "[:upper:]";
+            return "[[:upper:]]";
         }
         if (numeric == inputCharacter) {
-            return "[:digit:]";
+            return "[[:digit:]]";
+        }
+        if (specialChar.contains(String.valueOf(inputCharacter))) {
+            return "\\" + inputCharacter; // TODO for Mysql, should double the number of \
         }
         // TODO add other classes here
         return String.valueOf(inputCharacter);        
@@ -51,10 +79,12 @@ public class PatternTransformer {
             return null;
         }
         StringBuilder builder = new StringBuilder();
+        builder.append(BEGIN);
         final int length = input.length();
         for (int i = 0; i < length; i++) {
             builder.append(this.getRegexpPattern(input.charAt(i)));
         }
+        builder.append(END);
         return builder.toString();
     }
     

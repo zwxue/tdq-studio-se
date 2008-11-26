@@ -579,6 +579,10 @@ public class DbmsLanguage {
         }
         return null;
     }
+    
+    public String getBackSlashForRegex() {
+        return "\\";
+    }
 
     /**
      * Method "getExpression".

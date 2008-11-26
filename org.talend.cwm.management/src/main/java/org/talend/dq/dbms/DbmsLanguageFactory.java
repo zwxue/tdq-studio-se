@@ -22,6 +22,8 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
@@ -155,5 +157,22 @@ public final class DbmsLanguageFactory {
                     || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
         }
         return StringUtils.equalsIgnoreCase(lang1, lang2);
+    }
+
+    /**
+     * Method "createDbmsLanguage".
+     * 
+     * @param analysis
+     * @return the dbms language associated to the connection of the given analysis or a default one.
+     */
+    public static DbmsLanguage createDbmsLanguage(Analysis analysis) {
+        final AnalysisContext context = analysis.getContext();
+        if (context != null) {
+            final DataManager dm = context.getConnection();
+            if (dm != null) {
+                return createDbmsLanguage(dm);
+            }
+        }
+        return new DbmsLanguage();
     }
 }

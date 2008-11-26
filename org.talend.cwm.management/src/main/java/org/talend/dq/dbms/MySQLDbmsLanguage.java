@@ -152,4 +152,14 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
         return "SELECT TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_NAME='" + tableName + "'";
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getBackSlashForRegex()
+     */
+    @Override
+    public String getBackSlashForRegex() {
+        return "\\\\";
+    }
+
 }
