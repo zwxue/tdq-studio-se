@@ -63,6 +63,7 @@ import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
@@ -318,7 +319,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                             menu.add(item);
                             if (createPatternFlag == 0) {
                                 MenuItem itemCreatePatt = new MenuItem("Generate Regular Pattern");
-                                final PatternTransformer pattTransformer = new PatternTransformer();
+                                final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
+                                        .createDbmsLanguage(analysis));
                                 itemCreatePatt.addActionListener(new ActionListener() {
 
                                     public void actionPerformed(ActionEvent e) {

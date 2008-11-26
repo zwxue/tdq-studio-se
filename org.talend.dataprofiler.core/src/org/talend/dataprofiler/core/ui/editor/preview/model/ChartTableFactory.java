@@ -58,6 +58,7 @@ import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
@@ -164,7 +165,8 @@ public class ChartTableFactory {
                             });
                             if (createPatternFlag == 0) {
                                 MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                final PatternTransformer pattTransformer = new PatternTransformer();
+                                final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
+                                        .createDbmsLanguage(analysis));
                                 itemCreatePatt.setText("Generate Regular Pattern");
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
@@ -317,7 +319,7 @@ public class ChartTableFactory {
     }
 
     public static void createPattern(Analysis analysis, MenuItemEntity itemEntity, final PatternTransformer pattTransformer) {
-        String language = analysis.getContext().getConnection().getName();
+        String language = pattTransformer.getDbmsLanguage().getDbmsName();
         String query = itemEntity.getQuery();
         String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
         new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
