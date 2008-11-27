@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.columnset.impl;
@@ -29,31 +28,40 @@ import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.resource.relational.Column;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Column Set Multi Value Indicator</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Column Set Multi Value Indicator</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getAnalyzedColumns <em>Analyzed Columns</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getListRows <em>List Rows</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericFunctions <em>Numeric Functions</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNominalColumns <em>Nominal Columns</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericColumns <em>Numeric Columns</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getColumnHeaders <em>Column Headers</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateFunctions <em>Date Functions</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateColumns <em>Date Columns</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getAnalyzedColumns <em>
+ * Analyzed Columns</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getListRows <em>List
+ * Rows</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericFunctions <em>
+ * Numeric Functions</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNominalColumns <em>
+ * Nominal Columns</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericColumns <em>
+ * Numeric Columns</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getColumnHeaders <em>
+ * Column Headers</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateFunctions <em>
+ * Date Functions</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateColumns <em>Date
+ * Columns</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements ColumnSetMultiValueIndicator {
+
     private static Logger log = Logger.getLogger(ColumnSetMultiValueIndicatorImpl.class);
+
     /**
-     * The cached value of the '{@link #getAnalyzedColumns() <em>Analyzed Columns</em>}' reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getAnalyzedColumns() <em>Analyzed Columns</em>}' reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getAnalyzedColumns()
      * @generated
      * @ordered
@@ -61,9 +69,9 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
     protected EList<Column> analyzedColumns;
 
     /**
-     * The default value of the '{@link #getListRows() <em>List Rows</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getListRows() <em>List Rows</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getListRows()
      * @generated
      * @ordered
@@ -71,9 +79,9 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
     protected static final List<Object[]> LIST_ROWS_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getListRows() <em>List Rows</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getListRows() <em>List Rows</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getListRows()
      * @generated
      * @ordered
@@ -81,9 +89,9 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
     protected List<Object[]> listRows = LIST_ROWS_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getNumericFunctions() <em>Numeric Functions</em>}' attribute list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getNumericFunctions() <em>Numeric Functions</em>}' attribute list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getNumericFunctions()
      * @generated
      * @ordered
@@ -91,26 +99,28 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
     protected EList<String> numericFunctions;
 
     /**
-     * The cached value of the '{@link #getDateFunctions() <em>Date Functions</em>}' attribute list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDateFunctions() <em>Date Functions</em>}' attribute list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     * 
      * @see #getDateFunctions()
      * @generated
      * @ordered
      */
     protected EList<String> dateFunctions;
+
     /**
-     * The cached value of the '{@link #getDateColumns() <em>Date Columns</em>}' reference list.
-     * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDateColumns() <em>Date Columns</em>}' reference list. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getDateColumns()
      * @generated
      * @ordered
      */
     protected EList<Column> dateColumns;
+
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected ColumnSetMultiValueIndicatorImpl() {
@@ -118,8 +128,8 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -128,20 +138,21 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList<Column> getAnalyzedColumns() {
         if (analyzedColumns == null) {
-            analyzedColumns = new EObjectResolvingEList<Column>(Column.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
+            analyzedColumns = new EObjectResolvingEList<Column>(Column.class, this,
+                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
         }
         return analyzedColumns;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public List<Object[]> getListRows() {
@@ -149,25 +160,27 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setListRows(List<Object[]> newListRows) {
         List<Object[]> oldListRows = listRows;
         listRows = newListRows;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS, oldListRows, listRows));
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS,
+                    oldListRows, listRows));
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList<String> getNumericFunctions() {
         if (numericFunctions == null) {
-            numericFunctions = new EDataTypeUniqueEList<String>(String.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS);
+            numericFunctions = new EDataTypeUniqueEList<String>(String.class, this,
+                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS);
         }
         return numericFunctions;
     }
@@ -184,7 +197,7 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
             final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
             if (DataminingType.NOMINAL.equals(dmType)) {
                 nominalColumns.add(column);
-            } 
+            }
         }
         return nominalColumns;
     }
@@ -230,27 +243,33 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
         }
         return headers;
     }
-    
+
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList<String> getDateFunctions() {
         if (dateFunctions == null) {
-            dateFunctions = new EDataTypeUniqueEList<String>(String.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS);
+            dateFunctions = new EDataTypeUniqueEList<String>(String.class, this,
+                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS);
         }
         return dateFunctions;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
      */
     public EList<Column> getDateColumns() {
-        if (dateColumns == null) {
-            dateColumns = new EObjectResolvingEList<Column>(Column.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS);
+        EList<Column> dateColumns = new BasicEList<Column>();
+        for (Column column : analyzedColumns) {
+            final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
+            final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
+            if (DataminingType.INTERVAL.equals(dmType) && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                dateColumns.add(tdColumn);
+            }
         }
         return dateColumns;
     }
@@ -280,128 +299,129 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
-                return getAnalyzedColumns();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
-                return getListRows();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
-                return getNumericFunctions();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS:
-                return getNominalColumns();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
-                return getNumericColumns();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
-                return getColumnHeaders();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
-                return getDateFunctions();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-                return getDateColumns();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
+            return getAnalyzedColumns();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
+            return getListRows();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+            return getNumericFunctions();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS:
+            return getNominalColumns();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
+            return getNumericColumns();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
+            return getColumnHeaders();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+            return getDateFunctions();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+            return getDateColumns();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
-                getAnalyzedColumns().clear();
-                getAnalyzedColumns().addAll((Collection<? extends Column>)newValue);
-                return;
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
-                setListRows((List<Object[]>)newValue);
-                return;
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
-                getNumericFunctions().clear();
-                getNumericFunctions().addAll((Collection<? extends String>)newValue);
-                return;
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
-                getDateFunctions().clear();
-                getDateFunctions().addAll((Collection<? extends String>)newValue);
-                return;
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-                getDateColumns().clear();
-                getDateColumns().addAll((Collection<? extends Column>)newValue);
-                return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
+            getAnalyzedColumns().clear();
+            getAnalyzedColumns().addAll((Collection<? extends Column>) newValue);
+            return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
+            setListRows((List<Object[]>) newValue);
+            return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+            getNumericFunctions().clear();
+            getNumericFunctions().addAll((Collection<? extends String>) newValue);
+            return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+            getDateFunctions().clear();
+            getDateFunctions().addAll((Collection<? extends String>) newValue);
+            return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+            getDateColumns().clear();
+            getDateColumns().addAll((Collection<? extends Column>) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
-                getAnalyzedColumns().clear();
-                return;
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
-                setListRows(LIST_ROWS_EDEFAULT);
-                return;
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
-                getNumericFunctions().clear();
-                return;
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
-                getDateFunctions().clear();
-                return;
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-                getDateColumns().clear();
-                return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
+            getAnalyzedColumns().clear();
+            return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
+            setListRows(LIST_ROWS_EDEFAULT);
+            return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+            getNumericFunctions().clear();
+            return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+            getDateFunctions().clear();
+            return;
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+            getDateColumns().clear();
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
-                return analyzedColumns != null && !analyzedColumns.isEmpty();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
-                return LIST_ROWS_EDEFAULT == null ? listRows != null : !LIST_ROWS_EDEFAULT.equals(listRows);
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
-                return numericFunctions != null && !numericFunctions.isEmpty();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS:
-                return !getNominalColumns().isEmpty();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
-                return !getNumericColumns().isEmpty();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
-                return !getColumnHeaders().isEmpty();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
-                return dateFunctions != null && !dateFunctions.isEmpty();
-            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-                return dateColumns != null && !dateColumns.isEmpty();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
+            return analyzedColumns != null && !analyzedColumns.isEmpty();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
+            return LIST_ROWS_EDEFAULT == null ? listRows != null : !LIST_ROWS_EDEFAULT.equals(listRows);
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+            return numericFunctions != null && !numericFunctions.isEmpty();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS:
+            return !getNominalColumns().isEmpty();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
+            return !getNumericColumns().isEmpty();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
+            return !getColumnHeaders().isEmpty();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+            return dateFunctions != null && !dateFunctions.isEmpty();
+        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+            return dateColumns != null && !dateColumns.isEmpty();
         }
         return super.eIsSet(featureID);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy())
+            return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (listRows: ");
@@ -414,4 +434,4 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
         return result.toString();
     }
 
-} //ColumnSetMultiValueIndicatorImpl
+} // ColumnSetMultiValueIndicatorImpl
