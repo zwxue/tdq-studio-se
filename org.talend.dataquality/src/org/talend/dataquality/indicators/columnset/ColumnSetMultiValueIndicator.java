@@ -170,7 +170,7 @@ public interface ColumnSetMultiValueIndicator extends Indicator {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Date Columns</em>' reference list.
      * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_DateColumns()
-     * @model
+     * @model transient="true" changeable="false" volatile="true"
      * @generated
      */
     EList<Column> getDateColumns();
