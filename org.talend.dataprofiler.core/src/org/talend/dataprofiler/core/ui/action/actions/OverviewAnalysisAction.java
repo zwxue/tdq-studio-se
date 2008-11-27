@@ -17,9 +17,11 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
@@ -50,7 +52,10 @@ public class OverviewAnalysisAction extends Action implements ICheatSheetAction 
      */
     @Override
     public void run() {
-        Wizard wizard = WizardFactory.createAnalysisWizard(AnalysisType.CATALOG, null);
+        PackagesAnalyisParameter packaFilterParameter = new PackagesAnalyisParameter();
+        packaFilterParameter.setTdDataProvider(DataProviderHelper.getTdDataProvider(packageObjs[0]));
+        packaFilterParameter.setPackages(packageObjs);
+        Wizard wizard = WizardFactory.createAnalysisWizard(AnalysisType.CATALOG, packaFilterParameter);
 
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);

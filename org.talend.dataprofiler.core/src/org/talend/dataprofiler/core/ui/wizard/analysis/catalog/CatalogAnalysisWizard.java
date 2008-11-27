@@ -15,8 +15,8 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.catalog;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.AnalysisFilterWizard;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
-import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -48,14 +48,15 @@ public class CatalogAnalysisWizard extends AnalysisFilterWizard {
         PackagesAnalyisParameter packageParameter = (PackagesAnalyisParameter) anaFilterParameter;
         TdDataProvider tdProvider = packageParameter.getTdDataProvider();
         analysisBuilder.setAnalysisConnection(tdProvider);
-        ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
-        indicator.setAnalyzedElement(tdProvider);
+        Indicator[] indicators = new Indicator[packageParameter.getPackages().length];
+        int i = 0;
         for (Package tdCatalog : packageParameter.getPackages()) {
             CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
             createCatalogIndicator.setAnalyzedElement(tdCatalog);
-            indicator.addSchemaIndicator(createCatalogIndicator);
+            indicators[i] = createCatalogIndicator;
+            i++;
         }
-        analysisBuilder.addElementToAnalyze(tdProvider, indicator);
+        analysisBuilder.addElementsToAnalyze(packageParameter.getPackages(), indicators);
         super.fillAnalysisBuilder(analysisBuilder);
     }
 

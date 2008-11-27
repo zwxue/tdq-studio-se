@@ -410,7 +410,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         } else {
             analysis.getParameters().getDeactivatedIndicators().clear();
         }
-        anaBuilder.addElementsToAnalyze(analysedElements, new Indicator[] { rowMatchingIndicatorA, rowMatchingIndicatorB });
+        anaBuilder.addElementsToAnalyze(analysedElements.toArray(new ModelElement[analysedElements.size()]), new Indicator[] {
+                rowMatchingIndicatorA, rowMatchingIndicatorB });
         ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
         if (save.isOk()) {
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$

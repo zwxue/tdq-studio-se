@@ -15,7 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.schema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.AnalysisFilterWizard;
-import org.talend.dataquality.indicators.schema.ConnectionIndicator;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
@@ -45,17 +45,19 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
 
     @Override
     protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
+
         PackagesAnalyisParameter packageParameter = (PackagesAnalyisParameter) anaFilterParameter;
         TdDataProvider tdProvider = packageParameter.getTdDataProvider();
         analysisBuilder.setAnalysisConnection(tdProvider);
-        ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
-        indicator.setAnalyzedElement(tdProvider);
-        for (Package tdCatalog : packageParameter.getPackages()) {
+        Indicator[] indicators = new Indicator[packageParameter.getPackages().length];
+        int i = 0;
+        for (Package tdSchema : packageParameter.getPackages()) {
             SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
-            createSchemaIndicator.setAnalyzedElement(tdCatalog);
-            indicator.addSchemaIndicator(createSchemaIndicator);
+            createSchemaIndicator.setAnalyzedElement(tdSchema);
+            indicators[i] = createSchemaIndicator;
+            i++;
         }
-        analysisBuilder.addElementToAnalyze(tdProvider, indicator);
+        analysisBuilder.addElementsToAnalyze(packageParameter.getPackages(), indicators);
         super.fillAnalysisBuilder(analysisBuilder);
     }
 

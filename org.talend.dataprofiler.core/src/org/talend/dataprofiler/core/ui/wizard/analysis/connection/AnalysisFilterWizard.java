@@ -12,17 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.connection;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.TdCatalog;
-import org.talend.cwm.relational.TdSchema;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
@@ -32,9 +26,6 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
-import org.talend.dataquality.indicators.schema.ConnectionIndicator;
-import org.talend.dataquality.indicators.schema.SchemaFactory;
-import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisWriter;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -71,29 +62,6 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
         this.analysisName = anaFilterParameter.getAnalysisName();
         this.analysisType = anaFilterParameter.getAnalysisType();
         this.folderResource = anaFilterParameter.getFolderProvider().getFolderResource();
-    }
-
-    @Override
-    protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
-
-        TdDataProvider tdProvider = anaFilterParameter.getTdDataProvider();
-        analysisBuilder.setAnalysisConnection(tdProvider);
-        ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
-        indicator.setAnalyzedElement(tdProvider);
-        List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdProvider);
-        for (TdSchema schema : tdSchemas) {
-            SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
-            createSchemaIndicator.setAnalyzedElement(schema);
-            indicator.addSchemaIndicator(createSchemaIndicator);
-        }
-        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tdProvider);
-        for (TdCatalog tdCatalog : tdCatalogs) {
-            SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
-            createSchemaIndicator.setAnalyzedElement(tdCatalog);
-            indicator.addSchemaIndicator(createSchemaIndicator);
-        }
-        analysisBuilder.addElementToAnalyze(tdProvider, indicator);
-        super.fillAnalysisBuilder(analysisBuilder);
     }
 
     protected IFile createEmptyAnalysisFile() throws DataprofilerCoreException {

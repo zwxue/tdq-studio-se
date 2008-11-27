@@ -90,6 +90,24 @@ public class AnalysisEditor extends CommonFormEditor {
                 ExceptionHandler.process(e, Level.ERROR);
             }
             break;
+        case CATALOG:
+            masterPage = new CatalogMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            setPartName("Catalog Analysis Editor");
+            try {
+                addPage(masterPage);
+            } catch (PartInitException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
+            break;
+        case SCHEMA:
+            masterPage = new ConnectionMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            setPartName("Schema Analysis Editor");
+            try {
+                addPage(masterPage);
+            } catch (PartInitException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
+            break;
         case COLUMNS_COMPARISON:
             masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, DefaultMessagesImpl
                     .getString("AnalysisEditor.analysisSetting")); //$NON-NLS-1$

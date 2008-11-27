@@ -238,6 +238,9 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
         if (dialog.open() == Window.OK) {
+            if (dialog.getResult() == null || dialog.getResult().length == 0) {
+                return;
+            }
             Object elements = dialog.getResult()[0];
             IResource elem = (IResource) elements;
             if (elem instanceof IFolder) {
