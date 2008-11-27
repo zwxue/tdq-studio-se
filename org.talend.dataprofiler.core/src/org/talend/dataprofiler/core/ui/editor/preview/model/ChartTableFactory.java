@@ -163,7 +163,9 @@ public class ChartTableFactory {
                                 }
 
                             });
-                            if (createPatternFlag == 0) {
+                            if ((indicator.getName().trim().equals("Pattern Low Frequency Table") || indicator.getName().trim()
+                                    .equals("Pattern Frequency Table"))
+                                    && createPatternFlag == 0) {
                                 MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
                                 final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
                                         .createDbmsLanguage(analysis));
