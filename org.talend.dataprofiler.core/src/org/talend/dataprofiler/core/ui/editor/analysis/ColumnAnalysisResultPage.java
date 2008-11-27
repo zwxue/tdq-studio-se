@@ -62,6 +62,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.PatternFreqIndicator;
+import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -317,7 +319,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
                             });
                             menu.add(item);
-                            if (createPatternFlag == 0) {
+                            if ((currentIndicator instanceof PatternFreqIndicator || currentIndicator instanceof PatternLowFreqIndicator)
+                                    && createPatternFlag == 0) {
                                 MenuItem itemCreatePatt = new MenuItem("Generate Regular Pattern");
                                 final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
                                         .createDbmsLanguage(analysis));
@@ -349,5 +352,4 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             }
         });
     }
-
 }
