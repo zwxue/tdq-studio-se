@@ -53,6 +53,7 @@ import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import orgomg.cwm.objectmodel.core.CoreFactory;
@@ -82,6 +83,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     private Section patternDefinitionSection;
 
+    private String expressionType;
+
     public PatternMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -89,6 +92,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         reset();
+        this.expressionType = getExpressionType((Pattern) currentModelElement);
     }
 
     /**
@@ -106,6 +110,20 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         tempPatternComponents.addAll(pattern.getComponents());
         remainDBTypeList = new ArrayList<String>();
         remainDBTypeList.addAll(allDBTypeList);
+    }
+
+    private String getExpressionType(Pattern pattern) {
+        if (pattern != null) {
+            PatternComponent component = pattern.getComponents().get(0);
+            if (component == null) {
+                return null;
+            } else {
+                RegularExpression regexp = (RegularExpression) component;
+                return regexp.getExpressionType();
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -199,6 +217,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 RegularExpressionImpl newRegularExpress = (RegularExpressionImpl) PatternFactory.eINSTANCE
                         .createRegularExpression();
                 newRegularExpress.setExpression(expression);
+                newRegularExpress.setExpressionType(expressionType);
                 creatNewExpressLine(newRegularExpress);
                 tempPatternComponents.add(newRegularExpress);
                 form.reflow(true);
@@ -215,7 +234,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
         final RegularExpressionImpl finalRegExpress = regularExpress;
         String language = regularExpress.getExpression().getLanguage();
-        String expressionType = regularExpress.getExpressionType();
         String body = regularExpress.getExpression().getBody();
 
         if (language == null) {
