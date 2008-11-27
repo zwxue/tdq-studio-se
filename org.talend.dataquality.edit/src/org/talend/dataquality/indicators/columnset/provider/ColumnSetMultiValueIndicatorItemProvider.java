@@ -15,6 +15,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -27,9 +28,11 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 
+import org.talend.dataquality.indicators.provider.CompositeIndicatorItemProvider;
 import org.talend.dataquality.indicators.provider.IndicatorItemProvider;
 
 /**
@@ -39,7 +42,7 @@ import org.talend.dataquality.indicators.provider.IndicatorItemProvider;
  * @generated
  */
 public class ColumnSetMultiValueIndicatorItemProvider
-    extends IndicatorItemProvider
+    extends CompositeIndicatorItemProvider
     implements
         IEditingDomainItemProvider,
         IStructuredItemContentProvider,
@@ -75,6 +78,9 @@ public class ColumnSetMultiValueIndicatorItemProvider
             addColumnHeadersPropertyDescriptor(object);
             addDateFunctionsPropertyDescriptor(object);
             addDateColumnsPropertyDescriptor(object);
+            addUniqueCountPropertyDescriptor(object);
+            addDistinctCountPropertyDescriptor(object);
+            addDuplicateCountPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -256,6 +262,72 @@ public class ColumnSetMultiValueIndicatorItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Unique Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addUniqueCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ColumnSetMultiValueIndicator_uniqueCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_ColumnSetMultiValueIndicator_uniqueCount_feature", "_UI_ColumnSetMultiValueIndicator_type"),
+                 ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Distinct Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDistinctCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ColumnSetMultiValueIndicator_distinctCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_ColumnSetMultiValueIndicator_distinctCount_feature", "_UI_ColumnSetMultiValueIndicator_type"),
+                 ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Duplicate Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addDuplicateCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_ColumnSetMultiValueIndicator_duplicateCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_ColumnSetMultiValueIndicator_duplicateCount_feature", "_UI_ColumnSetMultiValueIndicator_type"),
+                 ColumnsetPackage.Literals.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT,
+                 false,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns ColumnSetMultiValueIndicator.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -296,6 +368,9 @@ public class ColumnSetMultiValueIndicatorItemProvider
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }
