@@ -13,7 +13,6 @@
 package org.talend.dq.analysis;
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -149,15 +148,15 @@ public class AnalysisBuilder {
 
     }
 
-    public boolean addElementsToAnalyze(List<ModelElement> elements, Indicator... indicators) {
+    public boolean addElementsToAnalyze(ModelElement[] elements, Indicator... indicators) {
 
-        for (int i = 0; i < elements.size(); i++) {
-            if (!isOfGoodType(elements.get(i), indicators)) {
-                log.error(elements.get(i).getName() + " cannot be analyzed in this analysis.");
+        for (int i = 0; i < elements.length; i++) {
+            if (!isOfGoodType(elements[i], indicators)) {
+                log.error(elements[i].getName() + " cannot be analyzed in this analysis.");
                 continue;
             }
             // store element in context
-            addElementToContext(elements.get(i));
+            addElementToContext(elements[i]);
         }
         for (Indicator indicator : indicators) {
             // do not attach element to indicators (because they should be attached outside in the case of a column
