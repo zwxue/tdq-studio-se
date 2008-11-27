@@ -104,9 +104,6 @@ public final class TopChartFactory {
                     z = xyzData.getZValue(series, item);
                 }
                 if (!Double.isNaN(z)) {
-                    // MOD scorreia +2L avoid points: minimal size of circle must be 1
-                    z += 1;
-
                     RectangleEdge domainAxisLocation = plot.getDomainAxisEdge();
                     RectangleEdge rangeAxisLocation = plot.getRangeAxisEdge();
                     double transX = domainAxis.valueToJava2D(x, dataArea, domainAxisLocation);
@@ -115,6 +112,9 @@ public final class TopChartFactory {
                     double transDomain = 0.0;
                     double transRange = 0.0;
                     double zero;
+
+                    // MOD scorreia +2L avoid points: minimal size of circle must be 1
+                    // z = z * transX + 1;
 
                     switch (getScaleType()) {
                     case SCALE_ON_DOMAIN_AXIS:
@@ -135,6 +135,13 @@ public final class TopChartFactory {
                     }
                     transDomain = Math.abs(transDomain);
                     transRange = Math.abs(transRange);
+                    
+                    // MODSCA 2008-11-27 enlarge ellipse by diag% of the total diagonal
+                    double diag = Math.sqrt(dataArea.getHeight() * dataArea.getHeight() + dataArea.getWidth()
+                            * dataArea.getWidth());
+                    transDomain += diag / 100;
+                    transRange += diag / 100; 
+                    
                     Ellipse2D circle = null;
 
                     if (orientation == PlotOrientation.VERTICAL) {
@@ -191,11 +198,11 @@ public final class TopChartFactory {
     }
 
     /**
-     * DOC scorreia Comment method "createBubbleChart".
+     * Method "createBubbleChart".
      * 
-     * @param indic
-     * @param numericColumn TODO
-     * @return
+     * @param indic the indicator
+     * @param numericColumn the analyzed numeric column
+     * @return the bubble chart
      */
     public static JFreeChart createBubbleChart(final ColumnSetMultiValueIndicator indic, Column numericColumn) {
         final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetFactory.createXYZDatasets(indic, numericColumn);
