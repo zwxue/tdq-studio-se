@@ -47,7 +47,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private static Logger log = Logger.getLogger(MultiColumnAnalysisExecutor.class);
 
     private String catalogOrSchema = null;
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -96,6 +96,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     computedColumns.add(replaceVariablesLow(f, column.getName()));
                 }
             }
+            // add count(*)
+            computedColumns.add(colSetMultValIndicator.getCountAll());
             String selectItems = createSelect(nominalColumns, computedColumns);
 
             // get indicator definition
