@@ -58,6 +58,8 @@ import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.PatternFreqIndicator;
+import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -163,8 +165,7 @@ public class ChartTableFactory {
                                 }
 
                             });
-                            if ((indicator.getName().trim().equals("Pattern Low Frequency Table") || indicator.getName().trim()
-                                    .equals("Pattern Frequency Table"))
+                            if (((indicator instanceof PatternFreqIndicator || indicator instanceof PatternLowFreqIndicator))
                                     && createPatternFlag == 0) {
                                 MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
                                 final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
