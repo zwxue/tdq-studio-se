@@ -9,6 +9,11 @@ package org.talend.dataquality.indicators.columnset;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.DistinctCountIndicator;
+import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwm.resource.relational.Column;
 
@@ -28,6 +33,9 @@ import orgomg.cwm.resource.relational.Column;
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getColumnHeaders <em>Column Headers</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDateFunctions <em>Date Functions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDateColumns <em>Date Columns</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCount <em>Unique Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCount <em>Distinct Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDuplicateCount <em>Duplicate Count</em>}</li>
  * </ul>
  * </p>
  *
@@ -35,7 +43,7 @@ import orgomg.cwm.resource.relational.Column;
  * @model
  * @generated
  */
-public interface ColumnSetMultiValueIndicator extends Indicator {
+public interface ColumnSetMultiValueIndicator extends CompositeIndicator {
     /**
      * Returns the value of the '<em><b>Analyzed Columns</b></em>' reference list.
      * The list contents are of type {@link orgomg.cwm.resource.relational.Column}.
@@ -170,9 +178,83 @@ public interface ColumnSetMultiValueIndicator extends Indicator {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Date Columns</em>' reference list.
      * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_DateColumns()
-     * @model transient="true" changeable="false" volatile="true"
+     * @model
      * @generated
      */
     EList<Column> getDateColumns();
+    
+    /**
+     * Returns the value of the '<em><b>Unique Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Unique Count</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Unique Count</em>' attribute.
+     * @see #setUniqueCount(Long)
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_UniqueCount()
+     * @model
+     * @generated
+     */
+    Long getUniqueCount();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCount <em>Unique Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Unique Count</em>' attribute.
+     * @see #getUniqueCount()
+     * @generated
+     */
+    void setUniqueCount(Long value);
+
+    /**
+     * Returns the value of the '<em><b>Distinct Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Distinct Count</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Distinct Count</em>' attribute.
+     * @see #setDistinctCount(Long)
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_DistinctCount()
+     * @model
+     * @generated
+     */
+    Long getDistinctCount();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCount <em>Distinct Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Distinct Count</em>' attribute.
+     * @see #getDistinctCount()
+     * @generated
+     */
+    void setDistinctCount(Long value);
+
+    /**
+     * Returns the value of the '<em><b>Duplicate Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Duplicate Count</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Duplicate Count</em>' attribute.
+     * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnSetMultiValueIndicator_DuplicateCount()
+     * @model transient="true" changeable="false" volatile="true"
+     * @generated
+     */
+    Long getDuplicateCount();
+
+    /**
+     * Method "getCountAll".
+     * 
+     * @return "COUNT(*)"
+     */
+    public String getCountAll();
 
 } // ColumnSetMultiValueIndicator

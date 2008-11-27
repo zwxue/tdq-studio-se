@@ -426,6 +426,9 @@
           <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/dateFunctions"/>
           <genFeatures notify="false" createChild="false" propertySortChoices="true"
               ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/dateColumns"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/uniqueCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/distinctCount"/>
+          <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/duplicateCount"/>
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/CountAvgNullIndicator"/>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/MinMaxDateIndicator"/>

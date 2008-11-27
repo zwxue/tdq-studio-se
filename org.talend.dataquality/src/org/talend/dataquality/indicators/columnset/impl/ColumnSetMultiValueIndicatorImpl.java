@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.columnset.impl;
@@ -24,13 +23,12 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
-import org.talend.dataquality.indicators.impl.IndicatorImpl;
+import org.talend.dataquality.indicators.impl.CompositeIndicatorImpl;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.resource.relational.Column;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Column Set Multi Value Indicator</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Column Set Multi Value Indicator</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
@@ -43,13 +41,18 @@ import orgomg.cwm.resource.relational.Column;
  *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getColumnHeaders <em>Column Headers</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateFunctions <em>Date Functions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateColumns <em>Date Columns</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getUniqueCount <em>Unique Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDistinctCount <em>Distinct Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDuplicateCount <em>Duplicate Count</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements ColumnSetMultiValueIndicator {
+public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl implements ColumnSetMultiValueIndicator {
+
     private static Logger log = Logger.getLogger(ColumnSetMultiValueIndicatorImpl.class);
+
     /**
      * The cached value of the '{@link #getAnalyzedColumns() <em>Analyzed Columns</em>}' reference list.
      * <!-- begin-user-doc -->
@@ -99,6 +102,67 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
      * @ordered
      */
     protected EList<String> dateFunctions;
+
+    /**
+     * The cached value of the '{@link #getDateColumns() <em>Date Columns</em>}' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDateColumns()
+     * @generated
+     * @ordered
+     */
+    protected EList<Column> dateColumns;
+
+    /**
+     * The default value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getUniqueCount()
+     * @generated
+     * @ordered
+     */
+    protected static final Long UNIQUE_COUNT_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getUniqueCount()
+     * @generated
+     * @ordered
+     */
+    protected Long uniqueCount = UNIQUE_COUNT_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getDistinctCount() <em>Distinct Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDistinctCount()
+     * @generated
+     * @ordered
+     */
+    protected static final Long DISTINCT_COUNT_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getDistinctCount() <em>Distinct Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDistinctCount()
+     * @generated
+     * @ordered
+     */
+    protected Long distinctCount = DISTINCT_COUNT_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getDuplicateCount() <em>Duplicate Count</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDuplicateCount()
+     * @generated
+     * @ordered
+     */
+    protected static final Long DUPLICATE_COUNT_EDEFAULT = null;
+
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -175,7 +239,7 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
             final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
             if (DataminingType.NOMINAL.equals(dmType)) {
                 nominalColumns.add(column);
-            } 
+            }
         }
         return nominalColumns;
     }
@@ -219,9 +283,10 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
                 headers.add(MessageFormat.format(f, column.getName()));
             }
         }
+        headers.add(this.getCountAll());
         return headers;
     }
-    
+
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -251,6 +316,57 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
         return dateColumns;
     }
 
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public Long getUniqueCount() {
+        return uniqueCount;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setUniqueCount(Long newUniqueCount) {
+        Long oldUniqueCount = uniqueCount;
+        uniqueCount = newUniqueCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT, oldUniqueCount, uniqueCount));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public Long getDistinctCount() {
+        return distinctCount;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setDistinctCount(Long newDistinctCount) {
+        Long oldDistinctCount = distinctCount;
+        distinctCount = newDistinctCount;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT, oldDistinctCount, distinctCount));
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
+     */
+    public Long getDuplicateCount() {
+        return (uniqueCount != null && distinctCount != null) ? distinctCount - uniqueCount : null;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -272,7 +388,37 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
             }
             log.debug(builder);
         }
+        
+        computeCounts(objects);
         return true;
+    }
+
+    /**
+     * DOC scorreia Comment method "computeUniqueCount".
+     * 
+     * @param objects
+     * @return
+     */
+    private boolean computeCounts(List<Object[]> objects) {
+        boolean ok = true;
+        this.setDistinctCount(Long.valueOf(objects.size()));
+        Long uniq = 0L;
+        Long rowcount = 0L;
+        for (Object[] row : objects) {
+            Object c = row[row.length - 1];
+            if (c != null) {
+                Long val = Long.valueOf(String.valueOf(c));
+                rowcount += val;
+                if (val == 1) {
+                    uniq++;
+                }
+            } else {
+                ok = false;
+            }
+        }
+        this.setCount(rowcount);
+        this.setUniqueCount(uniq);
+        return ok;
     }
 
     /**
@@ -299,6 +445,12 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
                 return getDateFunctions();
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
                 return getDateColumns();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+                return getUniqueCount();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+                return getDistinctCount();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT:
+                return getDuplicateCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -327,6 +479,16 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
                 getDateFunctions().clear();
                 getDateFunctions().addAll((Collection<? extends String>)newValue);
                 return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+                getDateColumns().clear();
+                getDateColumns().addAll((Collection<? extends Column>)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+                setUniqueCount((Long)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+                setDistinctCount((Long)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -350,6 +512,15 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
                 getDateFunctions().clear();
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+                getDateColumns().clear();
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+                setUniqueCount(UNIQUE_COUNT_EDEFAULT);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+                setDistinctCount(DISTINCT_COUNT_EDEFAULT);
                 return;
         }
         super.eUnset(featureID);
@@ -378,7 +549,13 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
                 return dateFunctions != null && !dateFunctions.isEmpty();
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-                return !getDateColumns().isEmpty();
+                return dateColumns != null && !dateColumns.isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+                return UNIQUE_COUNT_EDEFAULT == null ? uniqueCount != null : !UNIQUE_COUNT_EDEFAULT.equals(uniqueCount);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+                return DISTINCT_COUNT_EDEFAULT == null ? distinctCount != null : !DISTINCT_COUNT_EDEFAULT.equals(distinctCount);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT:
+                return DUPLICATE_COUNT_EDEFAULT == null ? getDuplicateCount() != null : !DUPLICATE_COUNT_EDEFAULT.equals(getDuplicateCount());
         }
         return super.eIsSet(featureID);
     }
@@ -399,8 +576,22 @@ public class ColumnSetMultiValueIndicatorImpl extends IndicatorImpl implements C
         result.append(numericFunctions);
         result.append(", dateFunctions: ");
         result.append(dateFunctions);
+        result.append(", uniqueCount: ");
+        result.append(uniqueCount);
+        result.append(", distinctCount: ");
+        result.append(distinctCount);
         result.append(')');
         return result.toString();
     }
 
-} //ColumnSetMultiValueIndicatorImpl
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getCountAll()
+     * 
+     * @generated NOT getCountAll()
+     */
+    public String getCountAll() {
+        return "COUNT(*)";
+    }
+} // ColumnSetMultiValueIndicatorImpl

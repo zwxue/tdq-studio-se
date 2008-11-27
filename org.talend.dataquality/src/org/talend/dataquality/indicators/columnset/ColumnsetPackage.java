@@ -948,7 +948,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__NAME = IndicatorsPackage.INDICATOR__NAME;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__NAME = IndicatorsPackage.COMPOSITE_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -957,7 +957,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__VISIBILITY = IndicatorsPackage.INDICATOR__VISIBILITY;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__VISIBILITY = IndicatorsPackage.COMPOSITE_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -966,7 +966,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__CLIENT_DEPENDENCY = IndicatorsPackage.INDICATOR__CLIENT_DEPENDENCY;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__CLIENT_DEPENDENCY = IndicatorsPackage.COMPOSITE_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -975,7 +975,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__SUPPLIER_DEPENDENCY = IndicatorsPackage.INDICATOR__SUPPLIER_DEPENDENCY;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__SUPPLIER_DEPENDENCY = IndicatorsPackage.COMPOSITE_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -984,7 +984,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__CONSTRAINT = IndicatorsPackage.INDICATOR__CONSTRAINT;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__CONSTRAINT = IndicatorsPackage.COMPOSITE_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -993,7 +993,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__NAMESPACE = IndicatorsPackage.INDICATOR__NAMESPACE;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__NAMESPACE = IndicatorsPackage.COMPOSITE_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -1002,7 +1002,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__IMPORTER = IndicatorsPackage.INDICATOR__IMPORTER;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__IMPORTER = IndicatorsPackage.COMPOSITE_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -1011,7 +1011,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__STEREOTYPE = IndicatorsPackage.INDICATOR__STEREOTYPE;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__STEREOTYPE = IndicatorsPackage.COMPOSITE_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -1020,7 +1020,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__TAGGED_VALUE = IndicatorsPackage.INDICATOR__TAGGED_VALUE;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__TAGGED_VALUE = IndicatorsPackage.COMPOSITE_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -1029,7 +1029,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__DOCUMENT = IndicatorsPackage.INDICATOR__DOCUMENT;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DOCUMENT = IndicatorsPackage.COMPOSITE_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -1038,7 +1038,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTION = IndicatorsPackage.INDICATOR__DESCRIPTION;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTION = IndicatorsPackage.COMPOSITE_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1047,7 +1047,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__RESPONSIBLE_PARTY = IndicatorsPackage.INDICATOR__RESPONSIBLE_PARTY;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__RESPONSIBLE_PARTY = IndicatorsPackage.COMPOSITE_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -1056,7 +1056,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__ELEMENT_NODE = IndicatorsPackage.INDICATOR__ELEMENT_NODE;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__ELEMENT_NODE = IndicatorsPackage.COMPOSITE_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -1065,7 +1065,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__SET = IndicatorsPackage.INDICATOR__SET;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__SET = IndicatorsPackage.COMPOSITE_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -1074,7 +1074,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__RENDERED_OBJECT = IndicatorsPackage.INDICATOR__RENDERED_OBJECT;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__RENDERED_OBJECT = IndicatorsPackage.COMPOSITE_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -1083,7 +1083,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__VOCABULARY_ELEMENT = IndicatorsPackage.INDICATOR__VOCABULARY_ELEMENT;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__VOCABULARY_ELEMENT = IndicatorsPackage.COMPOSITE_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -1092,7 +1092,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__MEASUREMENT = IndicatorsPackage.INDICATOR__MEASUREMENT;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__MEASUREMENT = IndicatorsPackage.COMPOSITE_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -1101,7 +1101,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__CHANGE_REQUEST = IndicatorsPackage.INDICATOR__CHANGE_REQUEST;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__CHANGE_REQUEST = IndicatorsPackage.COMPOSITE_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -1110,7 +1110,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__DASDL_PROPERTY = IndicatorsPackage.INDICATOR__DASDL_PROPERTY;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DASDL_PROPERTY = IndicatorsPackage.COMPOSITE_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -1119,7 +1119,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__COUNT = IndicatorsPackage.INDICATOR__COUNT;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__COUNT = IndicatorsPackage.COMPOSITE_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -1128,7 +1128,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__NULL_COUNT = IndicatorsPackage.INDICATOR__NULL_COUNT;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__NULL_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -1137,7 +1137,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__PARAMETERS = IndicatorsPackage.INDICATOR__PARAMETERS;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__PARAMETERS = IndicatorsPackage.COMPOSITE_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -1146,7 +1146,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_ELEMENT = IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_ELEMENT = IndicatorsPackage.COMPOSITE_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -1155,7 +1155,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__DATAMINING_TYPE = IndicatorsPackage.INDICATOR__DATAMINING_TYPE;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DATAMINING_TYPE = IndicatorsPackage.COMPOSITE_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -1164,7 +1164,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__INDICATOR_DEFINITION = IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__INDICATOR_DEFINITION = IndicatorsPackage.COMPOSITE_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -1173,7 +1173,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__INSTANTIATED_EXPRESSIONS = IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__INSTANTIATED_EXPRESSIONS = IndicatorsPackage.COMPOSITE_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
@@ -1182,7 +1182,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 0;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The feature id for the '<em><b>List Rows</b></em>' attribute.
@@ -1191,7 +1191,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 1;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 1;
 
     /**
      * The feature id for the '<em><b>Numeric Functions</b></em>' attribute list.
@@ -1200,7 +1200,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 2;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 2;
 
     /**
      * The feature id for the '<em><b>Nominal Columns</b></em>' reference list.
@@ -1209,7 +1209,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 3;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 3;
 
     /**
      * The feature id for the '<em><b>Numeric Columns</b></em>' reference list.
@@ -1218,7 +1218,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 4;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 4;
 
     /**
      * The feature id for the '<em><b>Column Headers</b></em>' attribute list.
@@ -1227,7 +1227,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 5;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 5;
 
     /**
      * The feature id for the '<em><b>Date Functions</b></em>' attribute list.
@@ -1236,7 +1236,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 6;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 6;
 
     /**
      * The feature id for the '<em><b>Date Columns</b></em>' reference list.
@@ -1245,7 +1245,34 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 7;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 7;
+
+    /**
+     * The feature id for the '<em><b>Unique Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 8;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 9;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 10;
 
     /**
      * The number of structural features of the '<em>Column Set Multi Value Indicator</em>' class.
@@ -1254,7 +1281,7 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 8;
+    int COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT = IndicatorsPackage.COMPOSITE_INDICATOR_FEATURE_COUNT + 11;
 
 
     /**
@@ -1572,6 +1599,33 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int COUNT_AVG_NULL_INDICATOR__DATE_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>Unique Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__UNIQUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__DISTINCT_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__DUPLICATE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT;
 
     /**
      * The number of structural features of the '<em>Count Avg Null Indicator</em>' class.
@@ -1899,6 +1953,33 @@ public interface ColumnsetPackage extends EPackage {
     int MIN_MAX_DATE_INDICATOR__DATE_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS;
 
     /**
+     * The feature id for the '<em><b>Unique Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__UNIQUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__DISTINCT_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__DUPLICATE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT;
+
+    /**
      * The number of structural features of the '<em>Min Max Date Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2067,6 +2148,39 @@ public interface ColumnsetPackage extends EPackage {
      * @generated
      */
     EReference getColumnSetMultiValueIndicator_DateColumns();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCount <em>Unique Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Unique Count</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getUniqueCount()
+     * @see #getColumnSetMultiValueIndicator()
+     * @generated
+     */
+    EAttribute getColumnSetMultiValueIndicator_UniqueCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCount <em>Distinct Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Distinct Count</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDistinctCount()
+     * @see #getColumnSetMultiValueIndicator()
+     * @generated
+     */
+    EAttribute getColumnSetMultiValueIndicator_DistinctCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDuplicateCount <em>Duplicate Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Duplicate Count</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator#getDuplicateCount()
+     * @see #getColumnSetMultiValueIndicator()
+     * @generated
+     */
+    EAttribute getColumnSetMultiValueIndicator_DuplicateCount();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.columnset.CountAvgNullIndicator <em>Count Avg Null Indicator</em>}'.
@@ -2240,6 +2354,30 @@ public interface ColumnsetPackage extends EPackage {
          * @generated
          */
         EReference COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS = eINSTANCE.getColumnSetMultiValueIndicator_DateColumns();
+
+        /**
+         * The meta object literal for the '<em><b>Unique Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT = eINSTANCE.getColumnSetMultiValueIndicator_UniqueCount();
+
+        /**
+         * The meta object literal for the '<em><b>Distinct Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT = eINSTANCE.getColumnSetMultiValueIndicator_DistinctCount();
+
+        /**
+         * The meta object literal for the '<em><b>Duplicate Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT = eINSTANCE.getColumnSetMultiValueIndicator_DuplicateCount();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.columnset.impl.CountAvgNullIndicatorImpl <em>Count Avg Null Indicator</em>}' class.

@@ -397,6 +397,33 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getColumnSetMultiValueIndicator_UniqueCount() {
+        return (EAttribute)columnSetMultiValueIndicatorEClass.getEStructuralFeatures().get(8);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getColumnSetMultiValueIndicator_DistinctCount() {
+        return (EAttribute)columnSetMultiValueIndicatorEClass.getEStructuralFeatures().get(9);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getColumnSetMultiValueIndicator_DuplicateCount() {
+        return (EAttribute)columnSetMultiValueIndicatorEClass.getEStructuralFeatures().get(10);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getCountAvgNullIndicator() {
         return countAvgNullIndicatorEClass;
     }
@@ -464,6 +491,9 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS);
         createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS);
         createEReference(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS);
+        createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT);
+        createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT);
+        createEAttribute(columnSetMultiValueIndicatorEClass, COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT);
 
         countAvgNullIndicatorEClass = createEClass(COUNT_AVG_NULL_INDICATOR);
 
@@ -508,7 +538,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         columnsCompareIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getMatchingIndicator());
         valueMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
         rowMatchingIndicatorEClass.getESuperTypes().add(this.getColumnsCompareIndicator());
-        columnSetMultiValueIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
+        columnSetMultiValueIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
         countAvgNullIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         minMaxDateIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
 
@@ -529,7 +559,10 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         initEReference(getColumnSetMultiValueIndicator_NumericColumns(), theRelationalPackage.getColumn(), null, "numericColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_ColumnHeaders(), ecorePackage.getEString(), "columnHeaders", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getColumnSetMultiValueIndicator_DateFunctions(), ecorePackage.getEString(), "dateFunctions", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getColumnSetMultiValueIndicator_DateColumns(), theRelationalPackage.getColumn(), null, "dateColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnSetMultiValueIndicator_DateColumns(), theRelationalPackage.getColumn(), null, "dateColumns", null, 0, -1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getColumnSetMultiValueIndicator_UniqueCount(), ecorePackage.getELongObject(), "uniqueCount", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getColumnSetMultiValueIndicator_DistinctCount(), ecorePackage.getELongObject(), "distinctCount", null, 0, 1, ColumnSetMultiValueIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getColumnSetMultiValueIndicator_DuplicateCount(), ecorePackage.getELongObject(), "duplicateCount", null, 0, 1, ColumnSetMultiValueIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(countAvgNullIndicatorEClass, CountAvgNullIndicator.class, "CountAvgNullIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

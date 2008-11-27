@@ -11,6 +11,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
+import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.MatchingIndicator;
 
@@ -128,6 +129,7 @@ public class ColumnsetSwitch<T> {
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR: {
                 ColumnSetMultiValueIndicator columnSetMultiValueIndicator = (ColumnSetMultiValueIndicator)theEObject;
                 T result = caseColumnSetMultiValueIndicator(columnSetMultiValueIndicator);
+                if (result == null) result = caseCompositeIndicator(columnSetMultiValueIndicator);
                 if (result == null) result = caseIndicator(columnSetMultiValueIndicator);
                 if (result == null) result = caseModelElement(columnSetMultiValueIndicator);
                 if (result == null) result = caseElement(columnSetMultiValueIndicator);
@@ -138,6 +140,7 @@ public class ColumnsetSwitch<T> {
                 CountAvgNullIndicator countAvgNullIndicator = (CountAvgNullIndicator)theEObject;
                 T result = caseCountAvgNullIndicator(countAvgNullIndicator);
                 if (result == null) result = caseColumnSetMultiValueIndicator(countAvgNullIndicator);
+                if (result == null) result = caseCompositeIndicator(countAvgNullIndicator);
                 if (result == null) result = caseIndicator(countAvgNullIndicator);
                 if (result == null) result = caseModelElement(countAvgNullIndicator);
                 if (result == null) result = caseElement(countAvgNullIndicator);
@@ -148,6 +151,7 @@ public class ColumnsetSwitch<T> {
                 MinMaxDateIndicator minMaxDateIndicator = (MinMaxDateIndicator)theEObject;
                 T result = caseMinMaxDateIndicator(minMaxDateIndicator);
                 if (result == null) result = caseColumnSetMultiValueIndicator(minMaxDateIndicator);
+                if (result == null) result = caseCompositeIndicator(minMaxDateIndicator);
                 if (result == null) result = caseIndicator(minMaxDateIndicator);
                 if (result == null) result = caseModelElement(minMaxDateIndicator);
                 if (result == null) result = caseElement(minMaxDateIndicator);
@@ -305,6 +309,21 @@ public class ColumnsetSwitch<T> {
      * @generated
      */
     public T caseMatchingIndicator(MatchingIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Composite Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Composite Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseCompositeIndicator(CompositeIndicator object) {
         return null;
     }
 

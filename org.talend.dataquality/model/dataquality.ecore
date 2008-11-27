@@ -668,7 +668,7 @@
           <details key="documentation" value="counts the number of rows matching or not matching when comparing two or more columns"/>
         </eAnnotations>
       </eClassifiers>
-      <eClassifiers xsi:type="ecore:EClass" name="ColumnSetMultiValueIndicator" eSuperTypes="#//indicators/Indicator">
+      <eClassifiers xsi:type="ecore:EClass" name="ColumnSetMultiValueIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eStructuralFeatures xsi:type="ecore:EReference" name="analyzedColumns" upperBound="-1"
             eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="listRows" eType="#//indicators/ObjectArray"/>
@@ -686,7 +686,10 @@
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateFunctions" upperBound="-1"
             eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="dateColumns" upperBound="-1"
-            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"
+            eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="uniqueCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="distinctCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="duplicateCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
             changeable="false" volatile="true" transient="true"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="CountAvgNullIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>

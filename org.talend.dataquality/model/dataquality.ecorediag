@@ -2149,6 +2149,18 @@
           <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/dateFunctions"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_PfCaobo-Ed2o48nSRKyAzg"/>
         </children>
+        <children xmi:type="notation:Node" xmi:id="_3kpYsLybEd2WlvInH3B5Ug" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/uniqueCount"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_3kpYsbybEd2WlvInH3B5Ug"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="__xoBMLybEd2WlvInH3B5Ug" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/distinctCount"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="__xoBMbybEd2WlvInH3B5Ug"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_RYgYULycEd2WlvInH3B5Ug" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//indicators/columnset/ColumnSetMultiValueIndicator/duplicateCount"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_RYgYUbycEd2WlvInH3B5Ug"/>
+        </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_mvLKopoQEd2nYJ2ArnrjqA"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_mvLKo5oQEd2nYJ2ArnrjqA"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_mvLKpJoQEd2nYJ2ArnrjqA"/>
@@ -2181,25 +2193,6 @@
       <element xmi:type="ecore:EClass" href="platform:/resource/org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YNAsQpoREd2nYJ2ArnrjqA" x="13" y="26"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_fHkDkJoREd2nYJ2ArnrjqA" type="1001">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_fHt0kJoREd2nYJ2ArnrjqA" source="Shortcut">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fHuboJoREd2nYJ2ArnrjqA" key="modelID" value="EcoreTools"/>
-      </eAnnotations>
-      <children xmi:type="notation:Node" xmi:id="_fHkqoJoREd2nYJ2ArnrjqA" type="4001"/>
-      <children xmi:type="notation:Node" xmi:id="_fHkqoZoREd2nYJ2ArnrjqA" type="5001">
-        <styles xmi:type="notation:DrawerStyle" xmi:id="_fHkqopoREd2nYJ2ArnrjqA"/>
-        <styles xmi:type="notation:SortingStyle" xmi:id="_fHkqo5oREd2nYJ2ArnrjqA"/>
-        <styles xmi:type="notation:FilteringStyle" xmi:id="_fHkqpJoREd2nYJ2ArnrjqA"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_fHkqpZoREd2nYJ2ArnrjqA" type="5002">
-        <styles xmi:type="notation:DrawerStyle" xmi:id="_fHkqppoREd2nYJ2ArnrjqA"/>
-        <styles xmi:type="notation:SortingStyle" xmi:id="_fHkqp5oREd2nYJ2ArnrjqA"/>
-        <styles xmi:type="notation:FilteringStyle" xmi:id="_fHkqqJoREd2nYJ2ArnrjqA"/>
-      </children>
-      <styles xmi:type="notation:ShapeStyle" xmi:id="_fHkDkZoREd2nYJ2ArnrjqA" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
-      <element xmi:type="ecore:EClass" href="dataquality.ecore#//indicators/Indicator"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_fHkDkpoREd2nYJ2ArnrjqA" x="611" y="13"/>
-    </children>
     <children xmi:type="notation:Node" xmi:id="_EnU-wJoUEd2nYJ2ArnrjqA" type="1001">
       <children xmi:type="notation:Node" xmi:id="_EnZ3QJoUEd2nYJ2ArnrjqA" type="4001"/>
       <children xmi:type="notation:Node" xmi:id="_EnZ3QZoUEd2nYJ2ArnrjqA" type="5001">
@@ -2214,7 +2207,7 @@
       </children>
       <styles xmi:type="notation:ShapeStyle" xmi:id="_EnU-wZoUEd2nYJ2ArnrjqA" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
       <element xmi:type="ecore:EClass" href="dataquality.ecore#//indicators/columnset/CountAvgNullIndicator"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_EnU-wpoUEd2nYJ2ArnrjqA" x="416" y="533"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_EnU-wpoUEd2nYJ2ArnrjqA" x="325" y="585"/>
     </children>
     <children xmi:type="notation:Node" xmi:id="_0rbGQJoUEd2nYJ2ArnrjqA" type="1004">
       <children xmi:type="notation:Node" xmi:id="_0rf-wJoUEd2nYJ2ArnrjqA" type="4008"/>
@@ -2287,17 +2280,36 @@
       </children>
       <styles xmi:type="notation:ShapeStyle" xmi:id="_Yr8rUbrcEd209-ZfixnADg" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
       <element xmi:type="ecore:EClass" href="dataquality.ecore#//indicators/columnset/MinMaxDateIndicator"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yr8rUrrcEd209-ZfixnADg" x="598" y="533"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yr8rUrrcEd209-ZfixnADg" x="507" y="585"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_UGyVwLyXEd2WlvInH3B5Ug" type="1001">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_UI6csLyXEd2WlvInH3B5Ug" source="Shortcut">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_UI6csbyXEd2WlvInH3B5Ug" key="modelID" value="EcoreTools"/>
+      </eAnnotations>
+      <children xmi:type="notation:Node" xmi:id="_UHQP0LyXEd2WlvInH3B5Ug" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_UHRd8LyXEd2WlvInH3B5Ug" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_UHRd8byXEd2WlvInH3B5Ug"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_UHRd8ryXEd2WlvInH3B5Ug"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_UHRd87yXEd2WlvInH3B5Ug"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_UHSsELyXEd2WlvInH3B5Ug" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_UHSsEbyXEd2WlvInH3B5Ug"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_UHSsEryXEd2WlvInH3B5Ug"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_UHSsE7yXEd2WlvInH3B5Ug"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_UGyVwbyXEd2WlvInH3B5Ug" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="dataquality.ecore#//indicators/CompositeIndicator"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_UGyVwryXEd2WlvInH3B5Ug" x="598" y="65"/>
     </children>
     <styles xmi:type="notation:DiagramStyle" xmi:id="_eDt2YZoQEd2nYJ2ArnrjqA"/>
     <element xmi:type="ecore:EPackage" href="dataquality.ecore#//indicators/columnset"/>
-    <edges xmi:type="notation:Edge" xmi:id="_igoRIJoREd2nYJ2ArnrjqA" type="3003" source="_mvKjkJoQEd2nYJ2ArnrjqA" target="_fHkDkJoREd2nYJ2ArnrjqA">
+    <edges xmi:type="notation:Edge" xmi:id="_igoRIJoREd2nYJ2ArnrjqA" type="3003" source="_mvKjkJoQEd2nYJ2ArnrjqA" target="_UGyVwLyXEd2WlvInH3B5Ug">
       <styles xmi:type="notation:ConnectorStyle" xmi:id="_igoRIZoREd2nYJ2ArnrjqA" routing="Tree" lineColor="0"/>
       <styles xmi:type="notation:FontStyle" xmi:id="_igoRIpoREd2nYJ2ArnrjqA" fontName="Sans Serif"/>
       <element xsi:nil="true"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_igoRI5oREd2nYJ2ArnrjqA" points="[1, -8, -64, 406]$[63, -424, -2, -10]"/>
       <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_igqtYJoREd2nYJ2ArnrjqA" id="(0.30097088,0.225)"/>
-      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_igqtYZoREd2nYJ2ArnrjqA" id="(0.4473684,0.034013607)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_igqtYZoREd2nYJ2ArnrjqA" id="(0.6137339,0.042105265)"/>
     </edges>
     <edges xmi:type="notation:Edge" xmi:id="_oJXbQJoREd2nYJ2ArnrjqA" type="3002" source="_mvKjkJoQEd2nYJ2ArnrjqA" target="_YNAsQJoREd2nYJ2ArnrjqA">
       <children xmi:type="notation:Node" xmi:id="_oJc60JoREd2nYJ2ArnrjqA" type="4011">
