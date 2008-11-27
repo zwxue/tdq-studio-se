@@ -35,7 +35,9 @@ import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.utils.collections.DoubleValueAggregate;
 import org.talend.utils.collections.MultiMapHelper;
+import org.talend.utils.collections.MultipleKey;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -284,109 +286,11 @@ public class ChartDatasetFactory {
     }
 
     /**
-     * DOC scorreia MultipleKey class global comment. Detailled comment
-     */
-    private static class MultipleKey implements Comparable<MultipleKey> {
-
-        private Object[] internalKey;
-
-        MultipleKey(Object[] key, int nbElements) {
-            this.internalKey = new Object[nbElements];
-            for (int i = 0; i < nbElements; i++) {
-                internalKey[i] = key[i];
-            }
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Object#equals(java.lang.Object)
-         */
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (!(obj instanceof MultipleKey)) {
-                return false;
-            }
-            MultipleKey other = (MultipleKey) obj;
-            return this.compareTo(other) == 0;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Object#hashCode()
-         */
-        @Override
-        public int hashCode() {
-            int hash = 0;
-            for (Object obj : internalKey) {
-                hash += 13 * obj.hashCode();
-            }
-            return hash;
-        }
-
-        public int compareTo(MultipleKey o) {
-            if (o == null) {
-                return -1;
-            }
-            int diff = this.internalKey.length - o.internalKey.length;
-            if (diff != 0) {
-                return diff;
-            }
-            for (int i = 0; i < internalKey.length; i++) {
-                String internalObj = String.valueOf(internalKey[i]);
-                String otherObj = String.valueOf(o.internalKey[i]);
-                diff = internalObj.compareTo(otherObj);
-                if (diff != 0) {
-                    return diff;
-                }
-            }
-
-            return diff;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Object#toString()
-         */
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < internalKey.length; i++) {
-                Object obj = internalKey[i];
-                builder.append(obj);
-                if (i < internalKey.length - 1) {
-                    builder.append(" | "); //$NON-NLS-1$
-                }
-            }
-            return builder.toString();
-        }
-
-    }
-
-    /**
      * DOC scorreia ValueAggregator class global comment. Detailled comment
      */
-    public static class ValueAggregator {
-
-        private Map<MultipleKey, Double[]> keyToVal = new HashMap<MultipleKey, Double[]>();
+    public static class ValueAggregator extends DoubleValueAggregate<MultipleKey> {
 
         private Map<String, List<String>> seriesKeyToLabel = new HashMap<String, List<String>>();
-
-        void addValue(MultipleKey key, Double x, Double y, Double z) {
-            Double[] doubles = keyToVal.get(key);
-            if (doubles == null) {
-                doubles = new Double[] { 0.0, 0.0, 0.0 };
-            }
-            doubles[0] = doubles[0] + x;
-            doubles[1] = doubles[1] + y;
-            doubles[2] = doubles[2] + z;
-            keyToVal.put(key, doubles);
-        }
 
         /**
          * Method "getLabels". Must not be called before the {@link #addSeriesToXYZDataset(DefaultXYZDataset, String)}
@@ -427,25 +331,6 @@ public class ChartDatasetFactory {
             dataset.addSeries(keyOfDataset, data);
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Object#toString()
-         */
-        @Override
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            for (MultipleKey key : keyToVal.keySet()) {
-                builder.append(key.toString()).append(": "); //$NON-NLS-1$
-                final Double[] doubles = keyToVal.get(key);
-                for (Double d : doubles) {
-                    builder.append(d).append(" "); //$NON-NLS-1$
-                }
-                builder.append('\n');
-            }
-            return builder.toString();
-        }
-
     }
 
     /**
@@ -467,9 +352,13 @@ public class ChartDatasetFactory {
         for (int i = nominalColumns.size(); i > 0; i--) {
             String key = createKey(nominalColumns, i);
             for (Object[] row : listRows) {
-                final Double xValue = Double.valueOf(String.valueOf(row[xPos]));
-                final Double yValue = Double.valueOf(String.valueOf(row[yPos]));
-                final Double zValue = Double.valueOf(String.valueOf(row[zPos]));
+                
+                final Object xobj = row[xPos];
+                final Double xValue = xobj != null ? Double.valueOf(String.valueOf(xobj)) : null;
+                final Object yobj = row[yPos];
+                final Double yValue = yobj != null ? Double.valueOf(String.valueOf(yobj)) : null;
+                final Object zobj = row[zPos];
+                final Double zValue = zobj != null ? Double.valueOf(String.valueOf(zobj)) : null;
 
                 ValueAggregator valueAggregator = valueAggregators.get(key);
                 if (valueAggregator == null) {
@@ -477,7 +366,7 @@ public class ChartDatasetFactory {
                     valueAggregators.put(key, valueAggregator);
                 }
                 MultipleKey multipleKey = new MultipleKey(row, i);
-                valueAggregator.addValue(multipleKey, xValue, yValue, zValue);
+                valueAggregator.addValue(multipleKey, new Double[] { xValue, yValue, zValue });
             }
 
         }
