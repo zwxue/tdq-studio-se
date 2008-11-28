@@ -100,7 +100,7 @@ public class AnalysisEditor extends CommonFormEditor {
             }
             break;
         case SCHEMA:
-            masterPage = new ConnectionMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            masterPage = new SchemaAnalysisMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             setPartName("Schema Analysis Editor");
             try {
                 addPage(masterPage);

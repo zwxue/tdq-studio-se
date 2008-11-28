@@ -79,6 +79,7 @@ public final class SqlExplorerBridge {
             for (INode catalogNode : catalogs) {
                 if (parentPackageElement.getName().equalsIgnoreCase(catalogNode.getName())) {
                     catalogOrSchemaNode = catalogNode;
+                    // TODO if the schema is the child of catalog
                     break;
                 }
             }

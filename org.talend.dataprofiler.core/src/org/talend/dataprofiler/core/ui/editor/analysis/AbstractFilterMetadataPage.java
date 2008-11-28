@@ -280,6 +280,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         String tablePattern = DomainHelper.getTablePattern(dataFilters);
         latestTableFilterValue = tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern;
         tableFilterText.setText(latestTableFilterValue);
+        tableFilterText.setToolTipText("Filter several tables with table names separated by a comma");
         GridDataFactory.fillDefaults().grab(true, false).applyTo(tableFilterText);
         tableFilterText.addModifyListener(new ModifyListener() {
 
@@ -295,6 +296,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         String viewPattern = DomainHelper.getViewPattern(dataFilters);
         latestViewFilterValue = viewPattern == null ? PluginConstant.EMPTY_STRING : viewPattern;
         viewFilterText.setText(latestViewFilterValue);
+        viewFilterText.setToolTipText("Filter several views with view names separated by a comma");
         GridDataFactory.fillDefaults().grab(true, false).applyTo(viewFilterText);
         viewFilterText.addModifyListener(new ModifyListener() {
 
@@ -441,6 +443,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             createCatalogSchemaColumns(table);
             provider = new CatalogSchemaViewerProvier();
             final TableViewer createSecondStatisticalTable = createSecondStatisticalTable(sectionClient);
+            createSecondStatisticalTable.addSelectionChangedListener(new DisplayTableAndViewListener());
             statisticalViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
                 public void selectionChanged(SelectionChangedEvent event) {

@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -29,28 +30,16 @@ import orgomg.cwm.objectmodel.core.Package;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
+public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage {
 
-    private List<CatalogIndicator> catalogIndicatorList = new ArrayList<CatalogIndicator>();
+    private List<SchemaIndicator> schemaIndicatorList = new ArrayList<SchemaIndicator>();
 
-    private List<TdCatalog> catalogs = new ArrayList<TdCatalog>();
+    private List<TdSchema> schemas = new ArrayList<TdSchema>();
 
-    /**
-     * DOC rli CatalogMasterDetailsPage constructor comment.
-     * 
-     * @param editor
-     * @param id
-     * @param title
-     */
-    public CatalogMasterDetailsPage(FormEditor editor, String id, String title) {
+    public SchemaAnalysisMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#fillDataProvider()
-     */
     @Override
     protected void fillDataProvider() {
         EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
@@ -61,46 +50,23 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getCatalogIndicators()
-     */
     @Override
     protected List<CatalogIndicator> getCatalogIndicators() {
-        EList<Indicator> indicators = analysis.getResults().getIndicators();
-        catalogIndicatorList.clear();
-        for (Indicator indicator : indicators) {
-            catalogIndicatorList.add((CatalogIndicator) indicator);
-        }
-        return catalogIndicatorList;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getCatalogs()
-     */
-    @Override
-    protected List<TdCatalog> getCatalogs() {
-        catalogs.clear();
-        EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
-        for (ModelElement element : analysedElements) {
-            catalogs.add((TdCatalog) element);
-        }
-        return catalogs;
-    }
-
-    // private List<SchemaIndicator> default
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getSchemaIndicators()
-     */
-    @Override
-    protected List<SchemaIndicator> getSchemaIndicators() {
         return Collections.emptyList();
     }
 
+    @Override
+    protected List<TdCatalog> getCatalogs() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    protected List<SchemaIndicator> getSchemaIndicators() {
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        schemaIndicatorList.clear();
+        for (Indicator indicator : indicators) {
+            schemaIndicatorList.add((SchemaIndicator) indicator);
+        }
+        return schemaIndicatorList;
+    }
 }
