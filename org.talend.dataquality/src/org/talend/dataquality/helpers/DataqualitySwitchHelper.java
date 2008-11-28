@@ -22,7 +22,9 @@ import org.talend.dataquality.domain.TextValue;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.domain.util.DomainSwitch;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
+import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 
 /**
@@ -36,6 +38,24 @@ public class DataqualitySwitchHelper {
 
         @Override
         public ConnectionIndicator caseConnectionIndicator(ConnectionIndicator object) {
+            return object;
+        }
+
+    };
+
+    public static final SchemaSwitch<CatalogIndicator> CATALOG_SWITCH = new SchemaSwitch<CatalogIndicator>() {
+
+        @Override
+        public CatalogIndicator caseCatalogIndicator(CatalogIndicator object) {
+            return object;
+        }
+
+    };
+
+    public static final SchemaSwitch<SchemaIndicator> SCHEMA_SWITCH = new SchemaSwitch<SchemaIndicator>() {
+
+        @Override
+        public SchemaIndicator caseSchemaIndicator(SchemaIndicator object) {
             return object;
         }
 
@@ -82,7 +102,9 @@ public class DataqualitySwitchHelper {
         /*
          * (non-Javadoc)
          * 
-         * @see org.talend.dataquality.domain.pattern.util.PatternSwitch#casePattern(org.talend.dataquality.domain.pattern.Pattern)
+         * @see
+         * org.talend.dataquality.domain.pattern.util.PatternSwitch#casePattern(org.talend.dataquality.domain.pattern
+         * .Pattern)
          */
         @Override
         public Pattern casePattern(Pattern object) {
