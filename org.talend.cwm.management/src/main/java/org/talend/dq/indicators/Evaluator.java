@@ -212,4 +212,8 @@ public abstract class Evaluator<T> {
 
     }
 
+    protected Indicator[] getAllIndicators() {
+        return this.allIndicators.toArray(new Indicator[allIndicators.size()]);
+    }
+
 }
