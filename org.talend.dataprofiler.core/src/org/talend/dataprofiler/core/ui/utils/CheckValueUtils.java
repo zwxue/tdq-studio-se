@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -94,9 +96,22 @@ public class CheckValueUtils {
             Double da = new Double(a);
             Double db = new Double(b);
             return da > db;
-        } else {
-            return false;
         }
+
+        if (!isEmpty(a, b) && isDateValue(a) && isDateValue(b)) {
+            try {
+                Date ad = DateFormat.getDateInstance().parse(a);
+                Date bd = DateFormat.getDateInstance().parse(b);
+
+                return ad.after(bd);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+
+            }
+
+        }
+        return false;
     }
 
     /**
@@ -151,17 +166,17 @@ public class CheckValueUtils {
      */
     public static boolean isDateValue(String inputString) {
 
-        String regex1 = "\\b(0?[1-9]|[12][0-9]|3[01])[- /.](0?[1-9]|1[012])[- /.](19|20)?[0-9]{2}\\b"; //$NON-NLS-1$
-        String regex2 = "(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)[0-9]{2}"; //$NON-NLS-1$
-        String regex3 = "\\b(0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2}\\b"; //$NON-NLS-1$
-        String regex4 = "(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)[0-9]{2}"; //$NON-NLS-1$
-        String regex5 = "\\b(19|20)?[0-9]{2}[- /.](0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])\\b"; //$NON-NLS-1$
-        String regex6 = "(19|20)[0-9]{2}[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])"; //$NON-NLS-1$
+        if (!isEmpty(inputString)) {
+            try {
+                DateFormat df = DateFormat.getDateInstance();
+                df.parse(inputString);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
 
-        System.out.println(regex1);
-
-        return getCheckValue(regex1, inputString) || getCheckValue(regex2, inputString) || getCheckValue(regex3, inputString)
-                || getCheckValue(regex4, inputString) || getCheckValue(regex5, inputString) || getCheckValue(regex6, inputString);
+        return false;
     }
 
 }

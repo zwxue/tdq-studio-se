@@ -180,11 +180,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                 final EIndicatorChartType chartType = chartData.getChartType();
                                 if (chart != null) {
                                     GridData gd = new GridData(GridData.FILL_BOTH);
-
-                                    ChartPanel chartPanel = new ChartPanel(chart);
+                                    ChartPanel chartPanel = ChartUtils.createAWTSWTComp(composite, gd, chart);
                                     addMouseListenerForChart(chartPanel, chartType, analysis);
-                                    // Composite frameComp = toolkit.createComposite(composite, SWT.EMBEDDED);
-                                    ChartUtils.createAWTSWTComp(composite, gd, chartPanel);
                                 }
 
                                 subComp.setClient(composite);

@@ -33,7 +33,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -251,11 +250,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         }
         JFreeChart createStacked3DBarChart = ChartImageFactory.createStacked3DBarChart("Columns Comparison", dataset,
                 PlotOrientation.HORIZONTAL);
-        ChartPanel chartPanel = new ChartPanel(createStacked3DBarChart);
         GridData gd = new GridData();
         gd.heightHint = 180;
         gd.widthHint = 450;
-        ChartUtils.createAWTSWTComp(parent, gd, chartPanel);
+        ChartUtils.createAWTSWTComp(parent, gd, createStacked3DBarChart);
     }
 
     /*

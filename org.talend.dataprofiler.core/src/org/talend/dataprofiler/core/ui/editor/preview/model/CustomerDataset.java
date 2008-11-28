@@ -15,23 +15,32 @@ package org.talend.dataprofiler.core.ui.editor.preview.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
- * DOC Administrator class global comment. Detailled comment
+ * DOC zqin class global comment. Detailled comment
  */
-public class CustomerDataset extends DefaultCategoryDataset implements IDataEntity {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+public class CustomerDataset implements IDataEntity {
 
     private List<ChartDataEntity> dataEnities;
 
+    private CategoryDataset dataset;
+
+    private Boolean valid;
+
     public CustomerDataset() {
         dataEnities = new ArrayList<ChartDataEntity>();
+        dataset = new DefaultCategoryDataset();
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 
     public void addDataEntity(ChartDataEntity dataEntity) {
@@ -40,5 +49,13 @@ public class CustomerDataset extends DefaultCategoryDataset implements IDataEnti
 
     public ChartDataEntity[] getDataEntities() {
         return dataEnities.toArray(new ChartDataEntity[dataEnities.size()]);
+    }
+
+    public CategoryDataset getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(CategoryDataset dataset) {
+        this.dataset = dataset;
     }
 }

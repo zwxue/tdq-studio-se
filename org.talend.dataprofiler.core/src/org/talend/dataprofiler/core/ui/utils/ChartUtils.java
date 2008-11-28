@@ -83,7 +83,7 @@ public final class ChartUtils {
      * @param gd
      * @param chartPanel
      */
-    public static void createAWTSWTComp(final Composite composite, GridData gd, ChartPanel chartPanel) {
+    public static ChartPanel createAWTSWTComp(final Composite composite, GridData gd, JFreeChart chart) {
         Composite frameComp = new Composite(composite, SWT.EMBEDDED);
         frameComp.setLayout(new GridLayout());
         frameComp.setLayoutData(gd);
@@ -91,8 +91,11 @@ public final class ChartUtils {
         Frame frame = SWT_AWT.new_Frame(frameComp);
         frame.setLayout(new java.awt.GridLayout());
 
+        ChartPanel chartPanel = new ChartPanel(chart);
         frame.add(chartPanel);
         frame.pack();
         frame.validate();
+
+        return chartPanel;
     }
 }

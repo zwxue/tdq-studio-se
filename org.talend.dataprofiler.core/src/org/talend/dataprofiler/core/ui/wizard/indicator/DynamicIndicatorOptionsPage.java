@@ -126,6 +126,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
             indicatorUnit.getIndicator().setParameters(parameters);
         }
         AbstractIndicatorForm.setParameters(parameters);
+        AbstractIndicatorForm.setSqltype(indicatorUnit.getParentColumn().getTdColumn().getJavaType());
 
         AbstractIndicatorForm[] froms = new AbstractIndicatorForm[formTypes.length];
         for (int i = 0; i < formTypes.length; i++) {

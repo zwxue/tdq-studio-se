@@ -15,9 +15,12 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -30,6 +33,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
+import org.talend.dataprofiler.core.ui.utils.DateTimeDialog;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
@@ -38,6 +42,7 @@ import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.utils.sql.Java2SqlType;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -189,9 +194,16 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 String max = higherText.getText();
 
                 if (!CheckValueUtils.isEmpty(min)) {
-                    if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
-                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                    } else if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
+                    if (Java2SqlType.isDateInSQL(sqltype)) {
+                        if (!CheckValueUtils.isDateValue(min)) {
+                            updateStatus(IStatus.ERROR, MSG_ONLY_DATE);
+                        }
+                    } else {
+                        if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
+                            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                        }
+                    }
+                    if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
                         updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                     } else {
                         updateStatus(IStatus.OK, MSG_OK);
@@ -210,9 +222,16 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 String max = higherText.getText();
 
                 if (!CheckValueUtils.isEmpty(max)) {
-                    if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
-                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                    } else if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
+                    if (Java2SqlType.isDateInSQL(sqltype)) {
+                        if (!CheckValueUtils.isDateValue(max)) {
+                            updateStatus(IStatus.ERROR, MSG_ONLY_DATE);
+                        }
+                    } else {
+                        if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
+                            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                        }
+                    }
+                    if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
                         updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                     } else {
                         updateStatus(IStatus.OK, MSG_OK);
@@ -274,8 +293,30 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
+        if (Java2SqlType.isDateInSQL(sqltype)) {
+            lowerText.addMouseListener(new MouseAdapter() {
 
+                @Override
+                public void mouseDown(MouseEvent e) {
+                    DateTimeDialog dialog = new DateTimeDialog(null);
+                    if (Window.OK == dialog.open()) {
+                        lowerText.setText(dialog.getSelectDate());
+                    }
+                }
+
+            });
+            higherText.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mouseDown(MouseEvent e) {
+                    DateTimeDialog dialog = new DateTimeDialog(null);
+                    if (Window.OK == dialog.open()) {
+                        higherText.setText(dialog.getSelectDate());
+                    }
+                }
+
+            });
+        }
     }
 
     @Override

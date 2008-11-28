@@ -41,10 +41,13 @@ public class IndicatorChartFactory {
             if (!list.isEmpty()) {
                 IDataEntity dataset = isCreate ? ChartDatasetFactory.createDataset(chartType, list) : ChartDatasetFactory
                         .createExampleDataset(chartType);
-                JFreeChart chart = ChartImageFactory.createChart(chartType, dataset);
 
-                ChartWithData chartData = new ChartWithData(chartType, chart, dataset.getDataEntities());
-                returnFiles.add(chartData);
+                if (dataset != null) {
+                    JFreeChart chart = ChartImageFactory.createChart(chartType, dataset);
+
+                    ChartWithData chartData = new ChartWithData(chartType, chart, dataset.getDataEntities());
+                    returnFiles.add(chartData);
+                }
             }
         }
 

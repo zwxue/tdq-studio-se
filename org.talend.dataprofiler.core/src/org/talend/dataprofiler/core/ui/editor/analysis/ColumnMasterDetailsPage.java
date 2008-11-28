@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +28,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,7 +48,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -66,6 +63,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -334,15 +332,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                                     // carete chart
                                     final JFreeChart chart = chartData.getChart();
                                     if (chart != null) {
-                                        Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
-                                        frameComp.setLayout(new GridLayout());
-                                        frameComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-                                        Frame frame = SWT_AWT.new_Frame(frameComp);
-                                        frame.setLayout(new java.awt.GridLayout());
-
-                                        frame.add(new ChartPanel(chart));
-                                        frame.validate();
+                                        GridData gd = new GridData(GridData.FILL_BOTH);
+                                        gd.widthHint = 420;
+                                        gd.heightHint = 230;
+                                        ChartUtils.createAWTSWTComp(composite, gd, chart);
                                     }
                                 }
                             }

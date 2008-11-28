@@ -35,6 +35,7 @@ import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.ui.TextAnchor;
+import org.talend.dataprofiler.core.ui.editor.preview.model.CustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -73,9 +74,10 @@ public class ChartImageFactory {
         return null;
     }
 
-    static JFreeChart createChart(EIndicatorChartType chartType, IDataEntity dataset) {
+    static JFreeChart createChart(EIndicatorChartType chartType, IDataEntity dataEntity) {
 
-        CategoryDataset cDataset = (CategoryDataset) dataset;
+        CustomerDataset customerdata = (CustomerDataset) dataEntity;
+        CategoryDataset cDataset = (CategoryDataset) customerdata.getDataset();
 
         switch (chartType) {
         case FREQUENCE_STATISTICS:
@@ -89,12 +91,16 @@ public class ChartImageFactory {
             return createStacked3DBarChart(chartType.getLiteral(), cDataset, PlotOrientation.VERTICAL);
 
         case SUMMARY_STATISTICS:
-            if (dataset instanceof BoxAndWhiskerCategoryDataset) {
-                BoxAndWhiskerCategoryDataset bDataset = (BoxAndWhiskerCategoryDataset) dataset;
-                return createBoxAndWhiskerChart(chartType.getLiteral(), bDataset);
+            if (customerdata.getValid()) {
+                if (cDataset instanceof BoxAndWhiskerCategoryDataset) {
+                    BoxAndWhiskerCategoryDataset bDataset = (BoxAndWhiskerCategoryDataset) cDataset;
+                    return createBoxAndWhiskerChart(chartType.getLiteral(), bDataset);
+                } else {
+                    return create3DBarChart(chartType.getLiteral(), cDataset, false);
+                }
+            } else {
+                return null;
             }
-
-            return create3DBarChart(chartType.getLiteral(), cDataset, false);
 
         case SIMPLE_STATISTICS:
         case TEXT_STATISTICS:

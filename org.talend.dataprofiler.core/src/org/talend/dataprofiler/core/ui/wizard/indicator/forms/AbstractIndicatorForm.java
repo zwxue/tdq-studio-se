@@ -41,6 +41,8 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     protected static IndicatorParameters parameters;
 
+    protected static int sqltype;
+
     /**
      * DOC zqin AbstractIndicatorForm constructor comment.
      * 
@@ -57,6 +59,10 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     public static void setParameters(IndicatorParameters parameters) {
         AbstractIndicatorForm.parameters = parameters;
+    }
+
+    public static void setSqltype(int sqltype) {
+        AbstractIndicatorForm.sqltype = sqltype;
     }
 
     public void showHelp() {
