@@ -151,6 +151,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         public void selectionChanged(SelectionChangedEvent event) {
             StructuredSelection selection = (StructuredSelection) event.getSelection();
             currentSelectionSchemaIndicator = (SchemaIndicator) selection.getFirstElement();
+            if (currentSelectionSchemaIndicator == null) {
+                return;
+            }
             displayTableAndViewComp(currentSelectionSchemaIndicator);
         }
     }
