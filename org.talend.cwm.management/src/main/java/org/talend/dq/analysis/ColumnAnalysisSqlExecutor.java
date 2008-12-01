@@ -655,7 +655,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             throw new AnalysisExecutionException(errorMessage);
         }
 
-        Long midleCount = getLimitFirstArg(indicator, count);
+        Long midleCount = getOffsetInLimit(indicator, count);
         Integer nbRow = getNbReturnedRows(indicator, count);
 
         long nPlusSkip = midleCount + nbRow; // needed for MSSQL query with TOP clause
@@ -674,25 +674,46 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getMedianIndicator())) {
             boolean isEven = count % 2 == 0;
             return (isEven) ? 2 : 1;
+        } else if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getLowerQuartileIndicator())
+                || indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getUpperQuartileIndicator())) {
+            return (count % 4) == 0 ? 2 : 1;
         }
         return 1;
     }
 
     /**
-     * DOC scorreia Comment method "getLimitFirstArg".
+     * See http://en.wikipedia.org/wiki/Quartile Method "getLimitFirstArg".
      * 
      * @param indicator
      * @param count
-     * @return
+     * @return the number of rows to skip in order to compute the quartiles. In case of an odd number of rows, one row
+     * is returned and the returned value is the index of the row before the quartile. In case of an even number of
+     * rows, two rows are returned and the quartile is the average of the two values (for the median).
      */
-    private Long getLimitFirstArg(Indicator indicator, long count) {
+    private Long getOffsetInLimit(Indicator indicator, long count) {
+        // get the number of rows to be skipped by the LIMIT n,o in MySQL query.
+        // Be careful, -1 is needed to get the searched index -1 because the searched index is 3 when n=4
+        boolean isEven = count % 2 == 0;
         if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getMedianIndicator())) {
-            boolean isEven = count % 2 == 0;
             return isEven ? count / 2 - 1 : (count - 1) / 2;
         } else if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getLowerQuartileIndicator())) {
-            return count / 4 - 1;
+            return /* isEven ? */Math.round(0.25 * (count + 1)) - 1 /* : Math.round(0.25 count) */;
         } else if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getUpperQuartileIndicator())) {
-            return (3 * count) / 4 - 1;
+            Long res = 0L; // count - (Math.round(0.25 * (count + 1))) - 1; does not work
+            if (isEven) {
+                if ((count / 2) % 2 == 0) {
+                    res = 3 * count / 4 - 1;
+                } else {                    
+                    res = 3 * ((count / 2) + 1) / 2 - 2;
+                }
+            } else { // odd number of rows
+                if (((count + 1) / 2) % 2 == 0) {                    
+                    res = 3 * (count + 1) / 4 - 1;
+                } else {
+                    res = 3 * (((count + 1) / 2) - 1) / 2;
+                }
+            }
+            return res;
         }
         return null;
     }
