@@ -140,6 +140,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private TableViewer viewOfCatalogOrSchemaViewer;
 
+    private SchemaIndicator currentSelectionSchemaIndicator;
+
     /**
      * 
      * 
@@ -148,8 +150,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         public void selectionChanged(SelectionChangedEvent event) {
             StructuredSelection selection = (StructuredSelection) event.getSelection();
-            SchemaIndicator schemaIndicator = (SchemaIndicator) selection.getFirstElement();
-            displayTableAndViewComp(schemaIndicator);
+            currentSelectionSchemaIndicator = (SchemaIndicator) selection.getFirstElement();
+            displayTableAndViewComp(currentSelectionSchemaIndicator);
         }
     }
 
@@ -430,16 +432,16 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         table.setLinesVisible(true);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(table);
         List<TdCatalog> catalogs = getCatalogs();
-        boolean containSchema = false;
+        boolean containSubSchema = false;
         for (Catalog catalog : catalogs) {
             List<TdSchema> schemas = CatalogHelper.getSchemas(catalog);
             if (schemas.size() > 0) {
-                containSchema = true;
+                containSubSchema = true;
                 break;
             }
         }
         AbstractStatisticalViewerProvider provider;
-        if (catalogs.size() > 0 && containSchema) {
+        if (catalogs.size() > 0 && containSubSchema) {
             createCatalogSchemaColumns(table);
             provider = new CatalogSchemaViewerProvier();
             final TableViewer createSecondStatisticalTable = createSecondStatisticalTable(sectionClient);
@@ -462,12 +464,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 createSchemaTableColumns(table);
                 provider = new SchemaViewerProvier();
             }
+            statisticalViewer.addSelectionChangedListener(new DisplayTableAndViewListener());
         }
         statisticalViewer.setLabelProvider(provider);
         statisticalViewer.setContentProvider(provider);
         doSetInput();
-
-        statisticalViewer.addSelectionChangedListener(new DisplayTableAndViewListener());
 
         tableAndViewComposite = new Composite(sectionClient, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tableAndViewComposite);
@@ -664,16 +665,17 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             MenuItem item = new MenuItem(menu, SWT.PUSH);
             item.setText("View keys");
             item.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
+
+            // catalogOrSchemaTable.setMenu(menu);
             item.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
                     TableItem tableItem = cursor.getRow();
                     TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
                     TdProviderConnection providerConnection = tdPc.getObject();
-                    StructuredSelection selection = (StructuredSelection) statisticalViewer.getSelection();
-                    SchemaIndicator schemaIndicator = (SchemaIndicator) selection.getFirstElement();
                     TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
-                            providerConnection, (Package) schemaIndicator.getAnalyzedElement(), tableItem.getText(0));
+                            providerConnection, (Package) currentSelectionSchemaIndicator.getAnalyzedElement(), tableItem
+                                    .getText(0));
 
                     if (!findSqlExplorerTableNode.isOk()) {
                         log.error(findSqlExplorerTableNode.getMessage());
@@ -686,9 +688,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 public void widgetSelected(SelectionEvent e) {
                     int column = cursor.getColumn();
                     if (column == VIEW_COLUMN_INDEX) {
-                        catalogOrSchemaTable.setMenu(menu);
+                        // catalogOrSchemaTable.setMenu(menu);
+                        cursor.setMenu(menu);
                     } else {
-                        catalogOrSchemaTable.setMenu(null);
+                        // catalogOrSchemaTable.setMenu(null);
+                        cursor.setMenu(null);
                     }
                 }
             });
