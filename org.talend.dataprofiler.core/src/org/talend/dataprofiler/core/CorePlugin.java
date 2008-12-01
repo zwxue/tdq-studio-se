@@ -12,10 +12,19 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
+import java.util.Collection;
+
+import net.sourceforge.sqlexplorer.dbproduct.Alias;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
+import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
+
 import org.apache.log4j.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -26,10 +35,14 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
+import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -124,11 +137,21 @@ public class CorePlugin extends AbstractUIPlugin {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
 
+    /**
+     * DOC Zqin Comment method "setUsed".
+     * 
+     * @param isUsed
+     */
     public void setUsed(boolean isUsed) {
         this.getPreferenceStore().setValue(PluginConstant.PROJECTCREATED_FLAG, isUsed);
 
     }
 
+    /**
+     * DOC Zqin Comment method "isUsed".
+     * 
+     * @return
+     */
     public boolean isUsed() {
         return this.getPreferenceStore().getBoolean(PluginConstant.PROJECTCREATED_FLAG);
     }
@@ -140,8 +163,44 @@ public class CorePlugin extends AbstractUIPlugin {
         }
     }
 
+    /**
+     * DOC Zqin Comment method "getCurrentActiveEditor".
+     * 
+     * @return the current active editor;
+     */
     public IEditorPart getCurrentActiveEditor() {
         return getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+    }
+
+    /**
+     * DOC Zqin Comment method "runInDQViewer". this method open DQ responsitory view and run the specified query.
+     * 
+     * @param tdDataProvider
+     * @param query
+     */
+    public void runInDQViewer(TdDataProvider tdDataProvider, String query) {
+        SQLExplorerPlugin sqlexplorer = SQLExplorerPlugin.getDefault();
+        Collection<Alias> aliases = sqlexplorer.getAliasManager().getAliases();
+        TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
+        TdProviderConnection providerConnection = tdPc.getObject();
+        String url = providerConnection.getConnectionString();
+        for (Alias alias : aliases) {
+            if (alias.getUrl().equals(url)) {
+                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() //$NON-NLS-1$
+                        + ").sql"); //$NON-NLS-1$
+                input.setUser(alias.getDefaultUser());
+                try {
+                    IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+                            .getActivePage();
+                    SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+                    editorPart.setText(query);
+                    ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
+                    execSQLAction.run();
+                } catch (PartInitException e) {
+                    ExceptionHandler.process(e);
+                }
+            }
+        }
     }
 
     public IEditorPart openEditor(IFile file, String editorId) {

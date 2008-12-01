@@ -65,8 +65,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -79,6 +82,7 @@ import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
@@ -93,9 +97,11 @@ import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dq.helper.ColumnSetNameHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author rli
@@ -129,6 +135,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private Menu menu;
 
     private MenuItem editPatternMenuItem;
+
+    private MenuItem showMenuItem;
 
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
@@ -208,6 +216,22 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelectedElements(newTree);
+            }
+
+        });
+        showMenuItem = new MenuItem(menu, SWT.CASCADE);
+        showMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
+        showMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        showMenuItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                showSelectedElements(newTree);
             }
 
         });
@@ -718,7 +742,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * 
      * @param newTree
      */
-    private void removeSelectedElements(final Tree newTree) {
+    private void removeSelectedElements(Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
         boolean branchIndicatorExist = false;
         for (TreeItem item : selection) {
@@ -740,6 +764,30 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         if (branchIndicatorExist) {
             setElements(columnIndicators);
+        }
+    }
+
+    /**
+     * DOC Zqin Comment method "showSelectedElements".
+     * 
+     * @param newTree
+     */
+    private void showSelectedElements(Tree newTree) {
+        TreeItem[] selection = newTree.getSelection();
+        for (TreeItem item : selection) {
+            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+            ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
+            if (columnIndicator != null && indicatorUnit == null) {
+                new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+
+                TdColumn column = columnIndicator.getTdColumn();
+                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(column);
+                ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+                String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
+                String columnName = ColumnHelper.getFullName(column);
+                String query = "select " + columnName + " from " + tableName;
+                CorePlugin.getDefault().runInDQViewer(dataprovider, query);
+            }
         }
     }
 
