@@ -435,7 +435,7 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
      * @param object
      * @return
      */
-    private Double getRealValue(int javaType, String object) {
+    static Double getRealValue(int javaType, String object) {
 
         // FIXME scorreia this is not the best way to work. Other indicator simply store dates.
         if (Java2SqlType.isDateInSQL(javaType)) {
