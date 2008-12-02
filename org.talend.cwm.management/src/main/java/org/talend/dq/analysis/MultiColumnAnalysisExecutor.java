@@ -47,7 +47,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private static Logger log = Logger.getLogger(MultiColumnAnalysisExecutor.class);
 
     private String catalogOrSchema = null;
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -77,7 +77,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             final EList<Column> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
             final EList<String> numericFunctions = initializeNumericFunctions(colSetMultValIndicator);
             final EList<String> dateFunctions = initializeDateFunctions(colSetMultValIndicator);
-            
+
             // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
             for (Column column : colSetMultValIndicator.getNominalColumns()) {
@@ -92,7 +92,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             }
             for (Column column : colSetMultValIndicator.getDateColumns()) {
                 // call functions for each column
-                for (String f : dateFunctions) {
+                for (String f : numericFunctions) {
                     computedColumns.add(replaceVariablesLow(f, column.getName()));
                 }
             }
