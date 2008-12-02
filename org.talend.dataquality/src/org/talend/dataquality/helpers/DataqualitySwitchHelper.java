@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.domain.DateValue;
@@ -20,6 +21,7 @@ import org.talend.dataquality.domain.IntegerValue;
 import org.talend.dataquality.domain.RealNumberValue;
 import org.talend.dataquality.domain.TextValue;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.domain.util.DomainSwitch;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
@@ -113,6 +115,22 @@ public class DataqualitySwitchHelper {
 
     };
 
+    public static final PatternSwitch<RegularExpression> REGULAR_EXPR_SWITCH = new PatternSwitch<RegularExpression>() {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * org.talend.dataquality.domain.pattern.util.PatternSwitch#caseRegularExpression(org.talend.dataquality.domain
+         * .pattern.RegularExpression)
+         */
+        @Override
+        public RegularExpression caseRegularExpression(RegularExpression object) {
+            return object;
+        }
+
+      
+    };
     public static final DomainSwitch<String> LITTERAL_VALUE_AS_TEXT_SWITCH = new DomainSwitch<String>() {
 
         @Override

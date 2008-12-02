@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
@@ -74,11 +75,27 @@ public class BooleanExpressionHelper {
      * 
      * @param language
      * @param expression
-     * @return
+     * @return a regular expression (no type is set. The caller should set the correct type)
      */
     public static RegularExpression createRegularExpression(String language, String expression) {
         RegularExpression regexp = PatternFactory.eINSTANCE.createRegularExpression();
         regexp.setExpression(createExpression(language, expression));
         return regexp;
     }
+    
+    /**
+     * Method "createRegularExpression".
+     * 
+     * @param language
+     * @param expression
+     * @param exprType
+     * @return a regular expression of the given type (SQL like or regular expression)
+     */
+    public static RegularExpression createRegularExpression(String language, String expression, ExpressionType exprType) {
+        RegularExpression regexp = PatternFactory.eINSTANCE.createRegularExpression();
+        regexp.setExpression(createExpression(language, expression));
+        regexp.setExpressionType(exprType.getLiteral());
+        return regexp;
+    }
+
 }

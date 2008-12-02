@@ -414,4 +414,18 @@ public class DomainHelper {
         return pattern;
     }
 
+    public static String getExpressionType(Pattern pattern) {
+        if (pattern != null) {
+            PatternComponent component = pattern.getComponents().get(0);
+            if (component == null) {
+                return null;
+            } else {
+                RegularExpression regexp = DataqualitySwitchHelper.REGULAR_EXPR_SWITCH.doSwitch(component);
+                return (regexp != null) ? regexp.getExpressionType() : null;
+            }
+        }
+
+        return null;
+    }
+
 }
