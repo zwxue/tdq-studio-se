@@ -72,6 +72,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     private Composite[] previewChartCompsites;
 
+    private String executeData;
+
     /**
      * DOC zqin ColumnAnalysisResultPage constructor comment.
      * 
@@ -103,6 +105,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     }
 
     protected void createResultSection(Composite parent) {
+        executeData = getColumnAnalysisHandler().getExecuteData();
         Section graphicsAndTableSection = this.createSection(form, parent, "Analysis Result", false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
@@ -127,7 +130,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         graphicsGridData.widthHint = 1000;
         graphicsComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         graphicsComp.setLayout(new GridLayout());
-        if (columnSetMultiIndicator == null) {
+        if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
             this.createGraphicsSectionPart(sectionClient, columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
@@ -139,7 +142,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         Composite tableComp = toolkit.createComposite(sectionClient);
         tableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableComp.setLayout(new GridLayout());
-        if (columnSetMultiIndicator == null) {
+        if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
             this.createTableSectionPart(sectionClient, "Table Section", columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
