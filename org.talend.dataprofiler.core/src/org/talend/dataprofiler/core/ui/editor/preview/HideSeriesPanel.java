@@ -17,7 +17,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +28,14 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.GanttRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.DateValueAggregate;
 import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.ValueAggregator;
+import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 
 /**
@@ -41,52 +44,82 @@ import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
  */
 public class HideSeriesPanel extends JPanel implements ActionListener {
 
-    private XYItemRenderer renderer;
-
-    private CountAvgNullIndicator countIndicator;
+    private ColumnSetMultiValueIndicator countIndicator;
 
     private TdColumn tdColumn;
 
-    public void actionPerformed(ActionEvent actionevent) {
-        Map<String, ValueAggregator> createXYZDatasets = ChartDatasetFactory.createXYZDatasets(countIndicator, tdColumn);
+    private XYItemRenderer xyRenderer;
 
-        Iterator<String> iterator = createXYZDatasets.keySet().iterator();
-        int byte0 = -1;
-        int i = 1;
-        while (iterator.hasNext()) {
-            String key = (String) iterator.next();
-            if (actionevent.getActionCommand().equals(key)) {
-                byte0 = i - 1;
+    private GanttRenderer ganttRenderer;
+
+    public void actionPerformed(ActionEvent actionevent) {
+        Iterator<String> iterator = null;
+        if (countIndicator instanceof CountAvgNullIndicator) {
+            Map<String, ValueAggregator> createXYZDatasets = ChartDatasetFactory.createXYZDatasets(countIndicator, tdColumn);
+            iterator = createXYZDatasets.keySet().iterator();
+            int byte0 = -1;
+            int i = 1;
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                if (actionevent.getActionCommand().equals(key)) {
+                    byte0 = i - 1;
+                }
+                i++;
             }
-            i++;
+            if (byte0 >= 0) {
+                boolean flag = xyRenderer.getItemVisible(byte0, 0);
+                xyRenderer.setSeriesVisible(byte0, new Boolean(!flag));
+            }
+        } else {
+            Map<String, DateValueAggregate> createGanttDatasets = ChartDatasetFactory.createGanttDatasets(countIndicator,
+                    tdColumn);
+            iterator = createGanttDatasets.keySet().iterator();
+            int byte0 = -1;
+            int i = 1;
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                if (actionevent.getActionCommand().equals(key)) {
+                    byte0 = i - 1;
+                }
+                i++;
+            }
+            if (byte0 >= 0) {
+                boolean flag = ganttRenderer.getItemVisible(byte0, 0);
+                ganttRenderer.setSeriesVisible(byte0, new Boolean(!flag));
+            }
         }
-        if (byte0 >= 0) {
-            boolean flag = renderer.getItemVisible(byte0, 0);
-            renderer.setSeriesVisible(byte0, new Boolean(!flag));
-        }
+
     }
 
-    public HideSeriesPanel(CountAvgNullIndicator countIndicator, TdColumn columnPara) {
+    public HideSeriesPanel(ColumnSetMultiValueIndicator columnMultiIndicator, TdColumn columnPara) {
         super(new BorderLayout());
-        this.countIndicator = countIndicator;
+        this.countIndicator = columnMultiIndicator;
         this.tdColumn = columnPara;
-        Map<String, ValueAggregator> createXYZDatasets = ChartDatasetFactory.createXYZDatasets(countIndicator, tdColumn);
+        JFreeChart chart = null;
+        Iterator<String> iterator;
+        if (columnMultiIndicator instanceof CountAvgNullIndicator) {
+            Map<String, ValueAggregator> createXYZDatasets = ChartDatasetFactory
+                    .createXYZDatasets(columnMultiIndicator, tdColumn);
 
-        Iterator<String> iterator = createXYZDatasets.keySet().iterator();
-        JFreeChart chart = TopChartFactory.createBubbleChart(countIndicator, columnPara);
-        XYPlot plot = chart.getXYPlot();
-        renderer = plot.getRenderer();
-        // ValueAxis domainAxis = (ValueAxis) plot.getDomainAxis();
-        // int minXValue = (int) getMinYValue(plot, false);
-        // domainAxis.setAutoRange(false);
-        // domainAxis.setRange(0, minXValue * 10);
-        // domainAxis.setTickUnit(new NumberTickUnit(minXValue * 5));
-
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        int minYValue = (int) getMinYValue(plot, true);
-        rangeAxis.setAutoRange(false);
-        rangeAxis.setRange(0, minYValue * 100);
-        rangeAxis.setTickUnit(new NumberTickUnit(minYValue * 5));
+            iterator = createXYZDatasets.keySet().iterator();
+            chart = TopChartFactory.createBubbleChart(columnMultiIndicator, columnPara);
+            XYPlot plot = chart.getXYPlot();
+            xyRenderer = plot.getRenderer();
+            NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+            int minYValue = (int) getMinYValue(plot, true);
+            rangeAxis.setAutoRange(false);
+            rangeAxis.setRange(0, minYValue * 100);
+            rangeAxis.setTickUnit(new NumberTickUnit(minYValue * 5));
+        } else {
+            Map<String, DateValueAggregate> createGanttDatasets = ChartDatasetFactory.createGanttDatasets(columnMultiIndicator,
+                    tdColumn);
+            iterator = createGanttDatasets.keySet().iterator();
+            chart = TopChartFactory.createGanttChart(columnMultiIndicator, columnPara);
+            CategoryPlot plot = (CategoryPlot) chart.getPlot();
+            plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
+            ganttRenderer = (GanttRenderer) plot.getRenderer();
+            // ganttenderer.setDrawBarOutline(false);
+        }
 
         ChartPanel chartpanel = new ChartPanel(chart);
         chartpanel.setPreferredSize(new Dimension(1000, 500));
@@ -104,42 +137,24 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
     }
 
     private double getMinYValue(XYPlot plot, boolean isY) {
-        double minValue = -1;
+        double minValue = 0d;
         int seriesCount = plot.getDataset().getSeriesCount();
         List<Double> yList = new ArrayList<Double>();
-        Double[] yArrayTransfer = new Double[10];
-        for (int i = 0; i < yArrayTransfer.length; i++) {
-            yArrayTransfer[i] = 0D;
-        }
         for (int i = 0; i < seriesCount; i++) {
-            if (isY) {
-                for (int j = 0; j < plot.getDataset().getItemCount(i); j++) {
-                    double yValue = plot.getDataset().getYValue(i, j);
-                    yList.add(yValue);
-                }
-            } else {
-                for (int j = 0; j < plot.getDataset().getItemCount(i); j++) {
-                    double yValue = plot.getDataset().getXValue(i, j);
-                    yList.add(yValue);
-                }
+            for (int j = 0; j < plot.getDataset().getItemCount(i); j++) {
+                double yValue = plot.getDataset().getYValue(i, j);
+                yList.add(yValue);
             }
         }
-        yArrayTransfer = yList.toArray(yArrayTransfer);
-        double[] yArray = new double[yArrayTransfer.length];
-        for (int k = 0; k < yArrayTransfer.length; k++) {
-            if (yArrayTransfer[k] == null) {
-                yArrayTransfer[k] = new Double(-1D);
-            }
-            yArray[k] = yArrayTransfer[k].doubleValue();
-        }
-        Arrays.sort(yArray);
-        for (double d : yArray) {
-            if (d > 0) {
+        minValue = yList.get(0);
+        for (double d : yList) {
+            if (d > 0 && minValue > d) {
                 minValue = d;
-                break;
             }
         }
-
+        if (minValue == 0) {
+            minValue = 1d;
+        }
         return minValue;
     }
 }

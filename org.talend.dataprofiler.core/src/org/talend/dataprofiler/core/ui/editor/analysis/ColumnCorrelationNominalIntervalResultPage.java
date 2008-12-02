@@ -50,7 +50,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesPanel;
-import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
+import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
 import orgomg.cwm.resource.relational.Column;
@@ -66,7 +66,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     private ColumnCorrelationNominalAndIntervalMasterPage masterPage;
 
-    private CountAvgNullIndicator countAvgNullIndicator;
+    private ColumnSetMultiValueIndicator columnSetMultiIndicator;
 
     private Composite chartComposite;
 
@@ -83,7 +83,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
         this.masterPage = (ColumnCorrelationNominalAndIntervalMasterPage) analysisEditor.getMasterPage();
-        countAvgNullIndicator = (CountAvgNullIndicator) masterPage.getColumnSetMultiValueIndicator();
+        columnSetMultiIndicator = masterPage.getColumnSetMultiValueIndicator();
     }
 
     @Override
@@ -117,17 +117,21 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         // SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
         // sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        if (countAvgNullIndicator == null) {
-            ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
-            countAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
-        }
+        // if (countAvgNullIndicator == null) {
+        // ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
+        // countAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
+        // }
         Composite graphicsComp = toolkit.createComposite(sectionClient);
         GridData graphicsGridData = new GridData(GridData.FILL_BOTH);
         graphicsGridData.heightHint = 1000;
         graphicsGridData.widthHint = 1000;
         graphicsComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         graphicsComp.setLayout(new GridLayout());
-        this.createGraphicsSectionPart(sectionClient, countAvgNullIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+        if (columnSetMultiIndicator == null) {
+            return;
+        } else {
+            this.createGraphicsSectionPart(sectionClient, columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+        }
 
         // Composite tableSectionClient = toolkit.createComposite(graphicsAndTableSection);
         // tableSectionClient.setLayout(new GridLayout());
@@ -135,12 +139,15 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         Composite tableComp = toolkit.createComposite(sectionClient);
         tableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableComp.setLayout(new GridLayout());
-        this.createTableSectionPart(sectionClient, "Table Section", countAvgNullIndicator); //$NON-NLS-1$ //$NON-NLS-2$
-
+        if (columnSetMultiIndicator == null) {
+            return;
+        } else {
+            this.createTableSectionPart(sectionClient, "Table Section", columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+        }
         graphicsAndTableSection.setClient(sectionClient);
     }
 
-    private Section createGraphicsSectionPart(Composite parentComp, CountAvgNullIndicator countAvgNullIndicator) {
+    private Section createGraphicsSectionPart(Composite parentComp, ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         Section section = createSection(form, parentComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"),
                 true, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -154,22 +161,28 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         chartComposite = toolkit.createComposite(sectionClient);
         chartComposite.setLayout(new GridLayout());
         chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        createBubbleChart(form, chartComposite, countAvgNullIndicator);
+        createBubbleOrGanttChart(form, chartComposite, columnSetMultiValueIndicator);
         section.setClient(sectionClient);
         return section;
     }
 
-    private void createBubbleChart(final ScrolledForm form, final Composite composite,
-            final CountAvgNullIndicator countAvgNullIndicator) {
+    private void createBubbleOrGanttChart(final ScrolledForm form, final Composite composite,
+            final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         List<Composite> previewChartList = new ArrayList<Composite>();
-        for (Column column : countAvgNullIndicator.getNumericColumns()) {
+        List<Column> bubOrGanttColumnList = new ArrayList<Column>();
+        if (columnSetMultiValueIndicator instanceof CountAvgNullIndicator) {
+            bubOrGanttColumnList = columnSetMultiValueIndicator.getNumericColumns();
+        } else {
+            bubOrGanttColumnList = columnSetMultiValueIndicator.getDateColumns();
+        }
+        for (Column column : bubOrGanttColumnList) {
             final TdColumn tdColumn = (TdColumn) column;
 
             final ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
             exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + tdColumn.getName()); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
-            exComp.setData(countAvgNullIndicator);
+            exComp.setData(columnSetMultiValueIndicator);
             previewChartList.add(exComp);
 
             final Composite comp = toolkit.createComposite(exComp);
@@ -187,7 +200,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                             public void run() {
 
                                 // carete chart
-                                HideSeriesPanel hideSeriesPanel = new HideSeriesPanel(countAvgNullIndicator, tdColumn);
+                                HideSeriesPanel hideSeriesPanel = new HideSeriesPanel(columnSetMultiValueIndicator, tdColumn);
                                 if (hideSeriesPanel != null) {
                                     Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
                                     frameComp.setLayout(new GridLayout());
@@ -236,7 +249,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
     }
 
-    private Section createTableSectionPart(Composite parentComp, String title, CountAvgNullIndicator countAvgNullIndicator) {
+    private Section createTableSectionPart(Composite parentComp, String title,
+            ColumnSetMultiValueIndicator columnSetMultiIndicator) {
         Section columnSetElementSection = this.createSection(form, parentComp, title, true, null);
         Composite sectionTableComp = toolkit.createComposite(columnSetElementSection);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).grab(true, true).applyTo(sectionTableComp);
@@ -250,7 +264,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         Table table = columnsElementViewer.getTable();
         GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
         ((GridData) table.getLayoutData()).heightHint = 280;
-        List<String> tableColumnNames = countAvgNullIndicator.getColumnHeaders();
+        List<String> tableColumnNames = columnSetMultiIndicator.getColumnHeaders();
         for (String tableColumnName : tableColumnNames) {
             // System.out.println(tableColumnName);
             final TableColumn columnHeader = new TableColumn(table, SWT.NONE);
@@ -259,7 +273,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
         TableSectionViewerProvider provider = new TableSectionViewerProvider();
-        List<Object[]> tableRows = countAvgNullIndicator.getListRows();
+        List<Object[]> tableRows = columnSetMultiIndicator.getListRows();
         columnsElementViewer.setContentProvider(provider);
         columnsElementViewer.setLabelProvider(provider);
         columnsElementViewer.setInput(tableRows);

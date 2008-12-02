@@ -18,24 +18,29 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CrosshairState;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.GanttRenderer;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.chart.urls.StandardXYZURLGenerator;
+import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
 import org.jfree.ui.RectangleEdge;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.DateValueAggregate;
 import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.ValueAggregator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import orgomg.cwm.resource.relational.Column;
@@ -135,13 +140,13 @@ public final class TopChartFactory {
                     }
                     transDomain = Math.abs(transDomain);
                     transRange = Math.abs(transRange);
-                    
+
                     // MODSCA 2008-11-27 enlarge ellipse by diag% of the total diagonal
                     double diag = Math.sqrt(dataArea.getHeight() * dataArea.getHeight() + dataArea.getWidth()
                             * dataArea.getWidth());
                     transDomain += diag / 100;
-                    transRange += diag / 100; 
-                    
+                    transRange += diag / 100;
+
                     Ellipse2D circle = null;
 
                     if (orientation == PlotOrientation.VERTICAL) {
@@ -239,6 +244,62 @@ public final class TopChartFactory {
             }
 
         });
+        return chart;
+    }
+
+    /**
+     * 
+     * DOC zhaoxinyi Comment method "createGanttChart".
+     * 
+     * @param indic
+     * @param dateColumn
+     * @return
+     */
+
+    public static JFreeChart createGanttChart(final ColumnSetMultiValueIndicator indic, Column dateColumn) {
+        final Map<String, DateValueAggregate> createGannttDatasets = ChartDatasetFactory.createGanttDatasets(indic, dateColumn);
+
+        TaskSeriesCollection ganttDataset = new TaskSeriesCollection();
+        final Iterator<String> iterator = createGannttDatasets.keySet().iterator();
+        while (iterator.hasNext()) {
+            final String next = iterator.next();
+            // System.out.println(next);
+
+            createGannttDatasets.get(next).addSeriesToGanttDataset(ganttDataset, next);
+        }
+        String chartName = "Average of '" + dateColumn.getName() + "' versus count";
+        JFreeChart chart = ChartFactory.createGanttChart(chartName, // chart title
+                "Task", // domain axis label
+                "Date", // range axis label
+                ganttDataset, // data
+                true, // include legend
+                true, // tooltips
+                false // urls
+                );
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
+        GanttRenderer renderer = (GanttRenderer) plot.getRenderer();
+        renderer.setDrawBarOutline(false);
+        // renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator() {
+        //
+        // /*
+        // * (non-Javadoc)
+        // *
+        // * @see org.jfree.chart.labels.StandardXYZToolTipGenerator#createItemArray(org.jfree.data.xy.XYZDataset,
+        // * int, int)
+        // */
+        // @Override
+        // protected Object[] createItemArray(XYZDataset dset, int series, int item) {
+        // final Comparable<?> seriesKey = dset.getSeriesKey(series);
+        // final String seriesK = String.valueOf(seriesKey);
+        // final ValueAggregator valueAggregator = createXYZDatasets.get(seriesKey);
+        // String label = valueAggregator.getLabels(seriesK).get(item);
+        // final Object[] itemArray = super.createItemArray(dset, series, item);
+        // itemArray[0] = label;
+        // return itemArray;
+        // }
+        //
+        // });
         return chart;
     }
 }

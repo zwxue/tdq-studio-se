@@ -70,6 +70,7 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
+import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -93,7 +94,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     ColumnCorrelationAnalysisHandler columnCorrelationAnalysisHandler;
 
-    private CountAvgNullIndicator countAvgNullIndicator;
+    private ColumnSetMultiValueIndicator columnSetMultiIndicator;
+
+    private boolean indicatorIsBlank;
 
     private String stringDataFilter;
 
@@ -129,9 +132,11 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         if (columnCorrelationAnalysisHandler.getIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             currentCountAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
-            countAvgNullIndicator = currentCountAvgNullIndicator;
+            columnSetMultiIndicator = currentCountAvgNullIndicator;
+            indicatorIsBlank = false;
         } else {
-            countAvgNullIndicator = (CountAvgNullIndicator) columnCorrelationAnalysisHandler.getIndicator();
+            indicatorIsBlank = false;
+            columnSetMultiIndicator = (ColumnSetMultiValueIndicator) columnCorrelationAnalysisHandler.getIndicator();
         }
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
@@ -165,7 +170,11 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
-        form.setText("Correlation Analysis between nominal and interval columns"); 
+        if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
+            form.setText("Correlation Analysis between nominal and interval columns");
+        } else {
+            form.setText("Correlation Analysis between nominal and date columns");
+        }
         metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
@@ -297,15 +306,20 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
 
         List<Composite> previewChartList = new ArrayList<Composite>();
-
-        for (Column column : countAvgNullIndicator.getNumericColumns()) {
+        List<Column> numericOrDateList = new ArrayList<Column>();
+        if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
+            numericOrDateList = columnSetMultiIndicator.getNumericColumns();
+        } else {
+            numericOrDateList = columnSetMultiIndicator.getDateColumns();
+        }
+        for (Column column : numericOrDateList) {
             final TdColumn tdColumn = (TdColumn) column;
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
             exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + tdColumn.getName()); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
-            exComp.setData(countAvgNullIndicator);
+            exComp.setData(columnSetMultiIndicator);
             previewChartList.add(exComp);
 
             final Composite comp = toolkit.createComposite(exComp);
@@ -323,7 +337,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                             public void run() {
 
                                 // carete chart
-                                HideSeriesPanel hideSeriesPanel = new HideSeriesPanel(countAvgNullIndicator, tdColumn);
+                                HideSeriesPanel hideSeriesPanel = new HideSeriesPanel(columnSetMultiIndicator, tdColumn);
                                 if (hideSeriesPanel != null) {
                                     Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
                                     frameComp.setLayout(new GridLayout());
@@ -425,24 +439,42 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      */
 
     public void saveAnalysis() throws DataprofilerCoreException {
+        if (columnSetMultiIndicator.getAnalyzedColumns().size() != 0) {
+            indicatorIsBlank = false;
+        }
         columnCorrelationAnalysisHandler.clearAnalysis();
-        countAvgNullIndicator.getAnalyzedColumns().clear();
+        columnSetMultiIndicator.getAnalyzedColumns().clear();
         List<String> comboStringList = new ArrayList<String>();
+        List<String> correctString = new ArrayList<String>();
         List<Column> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
         for (int i = 0; i < columnSetMultiValueList.size(); i++) {
             TdColumn tdColumn = (TdColumn) columnSetMultiValueList.get(i);
-            if (Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+            if (columnSetMultiIndicator instanceof CountAvgNullIndicator && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
                 MessageDialog.openWarning(new Shell(), "Warning", "Date column cannot be used in this kind of analysis.");
                 return;
+            } else if (columnSetMultiIndicator instanceof MinMaxDateIndicator
+                    && Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
+                MessageDialog.openWarning(new Shell(), "Warning", "Numberic column cannot be used in this kind of analysis.");
+                return;
             }
-            DataminingType type = MetadataHelper.getDataminingType(tdColumn);
-            String comboString = type.getLiteral();
+            // DataminingType type = MetadataHelper.getDataminingType(tdColumn);
+            // if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
+            String comboString = MetadataHelper.getDataminingType(tdColumn).getLiteral();
             comboStringList.add(comboString);
+            // } else {
+            // String comboString = tdColumn.getSqlDataType().getName();
+            // comboStringList.add(comboString);
+            // }
         }
         boolean isSave = true;
-        List<String> correctString = new ArrayList<String>();
+        // if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
         correctString.add(DataminingType.NOMINAL.getLiteral());
         correctString.add(DataminingType.INTERVAL.getLiteral());
+        // } else {
+        // correctString.add("varchar"); // DataminingType.NOMINAL.getLiteral());
+        // correctString.add("date"); // DataminingType.INTERVAL.getLiteral());
+        // correctString.add("datetime");
+        // }
         for (String combo : comboStringList) {
             if (!correctString.contains(combo)) {
                 isSave = false;
@@ -465,10 +497,10 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                     tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH
                             .doSwitch(columnSetMultiValueList.get(0)));
                     analysis.getContext().setConnection(tdProvider);
-                    countAvgNullIndicator.getAnalyzedColumns().addAll(columnSetMultiValueList);
+                    columnSetMultiIndicator.getAnalyzedColumns().addAll(columnSetMultiValueList);
                 }
 
-                columnCorrelationAnalysisHandler.addIndicator(columnSetMultiValueList, countAvgNullIndicator);
+                columnCorrelationAnalysisHandler.addIndicator(columnSetMultiValueList, columnSetMultiIndicator);
             }
             // if (providerList.size() != 0) {
             //           
@@ -567,7 +599,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     public ColumnSetMultiValueIndicator getColumnSetMultiValueIndicator() {
-        return countAvgNullIndicator;
+        return columnSetMultiIndicator;
     }
 
     public Composite[] getPreviewChartCompsites() {
@@ -597,7 +629,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         // if (canSave()) {
         // return false;
         // }
-        if (isDirty()) {
+        if (isDirty() || getTreeViewer().getTree().getItemCount() == 0) {
             return false;
         }
         return true;

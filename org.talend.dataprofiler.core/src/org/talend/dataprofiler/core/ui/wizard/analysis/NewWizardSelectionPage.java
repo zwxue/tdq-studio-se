@@ -32,8 +32,9 @@ import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeLabelProvider;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
+import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
+import org.talend.dq.analysis.parameters.AnalysisParameter;
 
 /**
  * @author zqin
@@ -101,7 +102,8 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     FolderProvider currentFolderProvider = ((CreateNewAnalysisWizard) getWizard()).getCurrentFolderProvider();
                     switch (type) {
                     case COLUMN_CORRELATION:
-                        AnalysisParameter correlationColumnParam = new AnalysisParameter();
+                        AnalysisParameter correlationColumnParam = new AnalysisLabelParameter();
+                        ((AnalysisLabelParameter) correlationColumnParam).setCategoryLabel(node.getName());
                         correlationColumnParam.setFolderProvider(currentFolderProvider);
                         parameter = correlationColumnParam;
                         break;

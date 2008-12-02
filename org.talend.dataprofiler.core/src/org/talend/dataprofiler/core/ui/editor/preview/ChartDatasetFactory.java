@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +22,12 @@ import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.gantt.Task;
+import org.jfree.data.gantt.TaskSeries;
+import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
+import org.jfree.data.time.SimpleTimePeriod;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
@@ -38,6 +44,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.collections.DoubleValueAggregate;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.collections.MultipleKey;
+import org.talend.utils.collections.ValueAggregate;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.resource.relational.Column;
@@ -291,6 +298,28 @@ public class ChartDatasetFactory {
     }
 
     /**
+     * 
+     */
+    static Map<String, DateValueAggregate> createGanttDatasets(ColumnSetMultiValueIndicator indicator, Column dateColumn) {
+
+        final EList<Column> nominalColumns = indicator.getNominalColumns();
+        final EList<Column> dateColumns = indicator.getDateColumns();
+        final EList<String> dateFunctions = indicator.getNumericFunctions();
+
+        final int indexOfNumericCol = dateColumns.indexOf(dateColumn);
+        assert indexOfNumericCol != -1;
+
+        final int nbNumericFunctions = dateFunctions.size();
+        assert nbNumericFunctions == 3 : DefaultMessagesImpl.getString("ChartDatasetFactory.expect"); //$NON-NLS-1$
+
+        final List<Object[]> listRows = indicator.getListRows();
+
+        final int nbNominalColumns = nominalColumns.size();
+
+        return fillGanttDataset(nominalColumns, listRows, nbNominalColumns + indexOfNumericCol);
+    }
+
+    /**
      * DOC scorreia ValueAggregator class global comment. Detailled comment
      */
     public static class ValueAggregator extends DoubleValueAggregate<MultipleKey> {
@@ -339,6 +368,65 @@ public class ChartDatasetFactory {
     }
 
     /**
+     * 
+     */
+    public static class DateValueAggregate<T> extends ValueAggregate<T, Date> {
+
+        private Map<String, List<String>> seriesKeyToLabel = new HashMap<String, List<String>>();
+
+        /**
+         * Method "getLabels". Must not be called before the {@link #addSeriesToXYZDataset(DefaultXYZDataset, String)}
+         * method.
+         * 
+         * @param seriesKey
+         * @return the label for each item of the dataset
+         */
+        public List<String> getLabels(String seriesKey) {
+            return seriesKeyToLabel.get(seriesKey);
+        }
+
+        /**
+         * 
+         */
+        public void addValue(T key, Date[] values) {
+            Date[] dates = keyToVal.get(key);
+            if (dates == null) {
+                dates = new Date[values.length];
+                Arrays.fill(dates, new Date());
+            }
+
+            for (int i = 0; i < values.length; i++) {
+                Date d = values[i];
+                if (d == null) {
+                    nullResults.add(key);
+                    return;
+                }
+                dates[i] = d;
+            }
+            keyToVal.put(key, dates);
+        }
+
+        /**
+         * Method "addSeriesToXYZDataset" adds a new series of data to the given dataset.
+         * 
+         * @param dataset a dataset
+         * @param keyOfDataset the series key of the data series
+         */
+        public void addSeriesToGanttDataset(TaskSeriesCollection ganttDataset, String keyOfDataset) {
+            // System.out.println(keyOfDataset);
+            TaskSeries series = new TaskSeries(keyOfDataset);
+            for (T key : keyToVal.keySet()) {
+                final Date[] date = keyToVal.get(key);
+                series.add(new Task(((MultipleKey) key).toString(), new SimpleTimePeriod(date[0], date[1])));
+                MultiMapHelper.addUniqueObjectToListMap(keyOfDataset, key.toString(), this.seriesKeyToLabel);
+            }
+            ganttDataset.add(series);
+            // dataset.addSeries(keyOfDataset, date);
+        }
+
+    }
+
+    /**
      * DOC scorreia Comment method "fillDataset".
      * 
      * @param nominalColumns
@@ -378,6 +466,41 @@ public class ChartDatasetFactory {
 
         return valueAggregators;
 
+    }
+
+    /**
+     * 
+     */
+    private static Map<String, DateValueAggregate> fillGanttDataset(final EList<Column> nominalColumns,
+            final List<Object[]> listRows, final int firstNumericColumnIdx) {
+        Map<String, DateValueAggregate> valueAggregators = new HashMap<String, DateValueAggregate>();
+
+        // int xPos = firstNumericColumnIdx;
+        // int yPos = firstNumericColumnIdx + 1;
+        // int zPos = firstNumericColumnIdx + 2;
+        int minPos = firstNumericColumnIdx;
+        int maxPos = firstNumericColumnIdx + 1;
+        for (int i = nominalColumns.size(); i > 0; i--) {
+            String key = createKey(nominalColumns, i);
+            for (Object[] row : listRows) {
+                final Object minObj = row[minPos];
+                // final Date minValue = minObj != null ? minObj : null;
+                final Object maxobj = row[maxPos];
+                // final Date maxValue = maxobj != null ? df.parse((String) maxobj) : null;
+                // final Object zobj = row[zPos];
+                // final Double zValue = zobj != null ? Double.valueOf(String.valueOf(zobj)) : null;
+
+                DateValueAggregate valueAggregator = valueAggregators.get(key);
+                if (valueAggregator == null) {
+                    valueAggregator = new DateValueAggregate();
+                    valueAggregators.put(key, valueAggregator);
+                }
+                MultipleKey multipleKey = new MultipleKey(row, i);
+                valueAggregator.addValue(multipleKey, new Date[] { (Date) minObj, (Date) maxobj });
+            }
+        }
+        // System.out.println(valueAggregators);
+        return valueAggregators;
     }
 
     /**
