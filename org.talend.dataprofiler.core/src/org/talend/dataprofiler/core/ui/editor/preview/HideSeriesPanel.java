@@ -30,7 +30,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.GanttRenderer;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.DateValueAggregate;
@@ -50,7 +50,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
 
     private XYItemRenderer xyRenderer;
 
-    private GanttRenderer ganttRenderer;
+    private CategoryItemRenderer ganttRenderer;
 
     public void actionPerformed(ActionEvent actionevent) {
         Iterator<String> iterator = null;
@@ -116,8 +116,9 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             iterator = createGanttDatasets.keySet().iterator();
             chart = TopChartFactory.createGanttChart(columnMultiIndicator, columnPara);
             CategoryPlot plot = (CategoryPlot) chart.getPlot();
+            plot.setRenderer(new HideSeriesGanttRenderer());
             plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
-            ganttRenderer = (GanttRenderer) plot.getRenderer();
+            ganttRenderer = plot.getRenderer();
             // ganttenderer.setDrawBarOutline(false);
         }
 

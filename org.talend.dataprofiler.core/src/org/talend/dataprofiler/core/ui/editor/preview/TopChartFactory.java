@@ -24,12 +24,10 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CrosshairState;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.GanttRenderer;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
@@ -276,30 +274,10 @@ public final class TopChartFactory {
                 true, // tooltips
                 false // urls
                 );
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
-        GanttRenderer renderer = (GanttRenderer) plot.getRenderer();
-        renderer.setDrawBarOutline(false);
-        // renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator() {
-        //
-        // /*
-        // * (non-Javadoc)
-        // *
-        // * @see org.jfree.chart.labels.StandardXYZToolTipGenerator#createItemArray(org.jfree.data.xy.XYZDataset,
-        // * int, int)
-        // */
-        // @Override
-        // protected Object[] createItemArray(XYZDataset dset, int series, int item) {
-        // final Comparable<?> seriesKey = dset.getSeriesKey(series);
-        // final String seriesK = String.valueOf(seriesKey);
-        // final ValueAggregator valueAggregator = createXYZDatasets.get(seriesKey);
-        // String label = valueAggregator.getLabels(seriesK).get(item);
-        // final Object[] itemArray = super.createItemArray(dset, series, item);
-        // itemArray[0] = label;
-        // return itemArray;
-        // }
-        //
-        // });
+        // CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        // plot.setRenderer(new GanttRenderer2());
+        // plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
+        // CategoryItemRenderer renderer = plot.getRenderer();
         return chart;
     }
 }

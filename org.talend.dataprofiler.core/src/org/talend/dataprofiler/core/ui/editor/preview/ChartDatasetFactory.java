@@ -294,7 +294,7 @@ public class ChartDatasetFactory {
 
         final int nbNominalColumns = nominalColumns.size();
 
-        return fillDataset(nominalColumns, listRows, nbNominalColumns + indexOfNumericCol);
+        return fillDataset(nominalColumns, listRows, nbNominalColumns + nbNumericFunctions * indexOfNumericCol);
     }
 
     /**
@@ -305,9 +305,8 @@ public class ChartDatasetFactory {
         final EList<Column> nominalColumns = indicator.getNominalColumns();
         final EList<Column> dateColumns = indicator.getDateColumns();
         final EList<String> dateFunctions = indicator.getNumericFunctions();
-
-        final int indexOfNumericCol = dateColumns.indexOf(dateColumn);
-        assert indexOfNumericCol != -1;
+        final int indexOfDateCol = dateColumns.indexOf(dateColumn);
+        assert indexOfDateCol != -1;
 
         final int nbNumericFunctions = dateFunctions.size();
         assert nbNumericFunctions == 3 : DefaultMessagesImpl.getString("ChartDatasetFactory.expect"); //$NON-NLS-1$
@@ -316,7 +315,7 @@ public class ChartDatasetFactory {
 
         final int nbNominalColumns = nominalColumns.size();
 
-        return fillGanttDataset(nominalColumns, listRows, nbNominalColumns + indexOfNumericCol);
+        return fillGanttDataset(nominalColumns, listRows, nbNominalColumns + nbNumericFunctions * indexOfDateCol);
     }
 
     /**
