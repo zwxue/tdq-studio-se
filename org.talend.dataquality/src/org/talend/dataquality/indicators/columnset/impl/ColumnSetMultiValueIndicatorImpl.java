@@ -293,7 +293,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         }
         for (Column column : this.getDateColumns()) {
             // call functions for each column
-            for (String f : this.getNumericFunctions()) {
+            for (String f : this.getDateFunctions()) { 
                 headers.add(MessageFormat.format(f, column.getName()));
             }
         }
