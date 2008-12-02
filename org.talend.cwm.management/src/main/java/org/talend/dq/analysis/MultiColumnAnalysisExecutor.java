@@ -92,7 +92,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             }
             for (Column column : colSetMultValIndicator.getDateColumns()) {
                 // call functions for each column
-                for (String f : numericFunctions) {
+                for (String f : dateFunctions) {
                     computedColumns.add(replaceVariablesLow(f, column.getName()));
                 }
             }
