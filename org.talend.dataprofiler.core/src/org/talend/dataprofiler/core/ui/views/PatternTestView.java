@@ -69,14 +69,12 @@ import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
-import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.objectmodel.core.CoreFactory;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * The View use to test the text whether match the specification regular text.
@@ -443,12 +441,8 @@ public class PatternTestView extends ViewPart {
 
                     // Not find the corresponding regular expression, will new a expression.
                     if (!isContainLanguage) {
-                        Expression expression = CoreFactory.eINSTANCE.createExpression();
-                        expression.setLanguage(dbmsLanguage.getDbmsName());
-                        expression.setBody(regularText.getText());
-                        RegularExpressionImpl newRegularExpress = (RegularExpressionImpl) PatternFactory.eINSTANCE
-                                .createRegularExpression();
-                        newRegularExpress.setExpression(expression);
+                        RegularExpression newRegularExpress = BooleanExpressionHelper.createRegularExpression(dbmsLanguage
+                                .getDbmsName(), regularText.getText());
                         this.pattern.getComponents().add(newRegularExpress);
                     }
                 }

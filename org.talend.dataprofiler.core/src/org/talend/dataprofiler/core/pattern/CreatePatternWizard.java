@@ -27,9 +27,8 @@ import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
-import orgomg.cwm.objectmodel.core.CoreFactory;
-import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -110,6 +109,8 @@ public class CreatePatternWizard extends AbstractWizard {
      */
     @Override
     public boolean performFinish() {
+    
+        
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         String name = parameter.getName();
         pattern.setName(name);
@@ -121,14 +122,11 @@ public class CreatePatternWizard extends AbstractWizard {
         // qzhang fixed bug 4296: set the Pattern is valid
         TaggedValueHelper.setValidStatus(true, pattern);
 
-        RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
-        Expression expression = CoreFactory.eINSTANCE.createExpression();
-        String expr = mPage2.getExpressionText().getText();
-        expression.setBody(expr);
         String cl = mPage2.getComboLang();
-        expression.setLanguage(PatternLanguageType.findLanguageByName(cl));
-        regularExpr.setExpression(expression);
-        regularExpr.setExpressionType(type.getName());
+        String lang = PatternLanguageType.findLanguageByName(cl);
+        String expr = mPage2.getExpressionText().getText();
+        RegularExpression regularExpr = BooleanExpressionHelper.createRegularExpression(lang, expr);
+        regularExpr.setExpressionType(type.getLiteral());
 
         pattern.getComponents().add(regularExpr);
         String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);

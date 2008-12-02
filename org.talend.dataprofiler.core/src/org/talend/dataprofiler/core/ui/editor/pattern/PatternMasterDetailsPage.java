@@ -52,12 +52,11 @@ import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
-import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import orgomg.cwm.objectmodel.core.CoreFactory;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -92,7 +91,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         reset();
-        this.expressionType = getExpressionType((Pattern) currentModelElement);
+        this.expressionType = DomainHelper.getExpressionType((Pattern) currentModelElement);
     }
 
     /**
@@ -110,20 +109,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         tempPatternComponents.addAll(pattern.getComponents());
         remainDBTypeList = new ArrayList<String>();
         remainDBTypeList.addAll(allDBTypeList);
-    }
-
-    private String getExpressionType(Pattern pattern) {
-        if (pattern != null) {
-            PatternComponent component = pattern.getComponents().get(0);
-            if (component == null) {
-                return null;
-            } else {
-                RegularExpression regexp = (RegularExpression) component;
-                return regexp.getExpressionType();
-            }
-        }
-
-        return null;
     }
 
     @Override
@@ -179,7 +164,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(componentsComp);
         EList<PatternComponent> components = this.pattern.getComponents();
         for (int i = 0; i < components.size(); i++) {
-            RegularExpressionImpl regularExpress = (RegularExpressionImpl) components.get(i);
+            RegularExpression regularExpress = (RegularExpression) components.get(i);
             creatNewExpressLine(regularExpress);
         }
         createAddButton(newComp);
@@ -212,11 +197,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                                     DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
                     return;
                 }
-                Expression expression = CoreFactory.eINSTANCE.createExpression();
-                expression.setLanguage(remainDBTypeList.get(0));
-                RegularExpressionImpl newRegularExpress = (RegularExpressionImpl) PatternFactory.eINSTANCE
-                        .createRegularExpression();
-                newRegularExpress.setExpression(expression);
+                RegularExpression newRegularExpress = BooleanExpressionHelper.createRegularExpression(remainDBTypeList.get(0),
+                        null);
                 newRegularExpress.setExpressionType(expressionType);
                 creatNewExpressLine(newRegularExpress);
                 tempPatternComponents.add(newRegularExpress);
@@ -226,13 +208,13 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         });
     }
 
-    private void creatNewExpressLine(RegularExpressionImpl regularExpress) {
+    private void creatNewExpressLine(RegularExpression regularExpress) {
         final Composite expressComp = new Composite(componentsComp, SWT.NONE);
         expressComp.setLayout(new GridLayout(10, false));
         final CCombo combo = new CCombo(expressComp, SWT.BORDER);
         combo.setEditable(false);
         combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
-        final RegularExpressionImpl finalRegExpress = regularExpress;
+        final RegularExpression finalRegExpress = regularExpress;
         String language = regularExpress.getExpression().getLanguage();
         String body = regularExpress.getExpression().getBody();
 

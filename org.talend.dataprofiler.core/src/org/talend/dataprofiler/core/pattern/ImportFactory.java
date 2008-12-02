@@ -31,11 +31,9 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import orgomg.cwm.objectmodel.core.CoreFactory;
-import orgomg.cwm.objectmodel.core.Expression;
 
 import com.csvreader.CsvReader;
 
@@ -107,13 +105,8 @@ public class ImportFactory {
         Pattern pattern = PatternResourceFileHelper.getInstance().createPattern(parameters.name, parameters.auther,
                 parameters.description, parameters.purpose, parameters.status);
 
-        for (String key : parameters.regex.keySet()) {
-            RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
-            Expression expression = CoreFactory.eINSTANCE.createExpression();
-            expression.setBody(parameters.regex.get(key));
-            expression.setLanguage(key);
-            regularExpr.setExpression(expression);
-            regularExpr.setExpressionType(type.getName());
+        for (String key : parameters.regex.keySet()) {            
+            RegularExpression regularExpr = BooleanExpressionHelper.createRegularExpression(key, parameters.regex.get(key), type);
             pattern.getComponents().add(regularExpr);
         }
 

@@ -5,7 +5,7 @@
   <taggedValue xmi:id="__qeGEkElEd2095gIBp6gJQ" tag="Author" value=""/>
   <taggedValue xmi:id="__qeGE0ElEd2095gIBp6gJQ" tag="Status" value="Draft"/>
   <taggedValue xmi:id="_Ij0xIGO8Ed2pdqzSh7BKqQ" tag="Validation_Status" value="true"/>
-  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_NwUnsT4LEd20H7qFpzB9dg">
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_NwUnsT4LEd20H7qFpzB9dg" expressionType="REGEXP">
     <expression xmi:id="_NwUnsj4LEd20H7qFpzB9dg" body="'^(F-[0-9]{4,5}|B-[0-9]{4})$'" language="SQL"/>
   </components>
 </dataquality.domain.pattern:Pattern>

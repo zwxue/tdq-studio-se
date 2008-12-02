@@ -8,10 +8,10 @@
   <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_yapKgIZMEd2G3OfabUsfOQ" expressionType="REGEXP">
     <expression xmi:id="_yapKgYZMEd2G3OfabUsfOQ" body="'^https?://[[:alnum:]_-][\.[[:alnum:]_-]*]*\.(com|edu|org|net|int|info|eu|biz|mil|gov|aero|travel|pro|name|museum|coop|asia|[a-z][a-z])+(:[[:digit:]]+)?[/[[:alnum:]\._#-\?]*]*/?$'" language="Oracle"/>
   </components>
-  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_86hpwIZMEd2G3OfabUsfOQ">
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_86hpwIZMEd2G3OfabUsfOQ" expressionType="REGEXP">
     <expression xmi:id="_86hpwYZMEd2G3OfabUsfOQ" body="'^https?://[[:alnum:]_-][\\.[[:alnum:]_-]*]*\\.(com|edu|org|net|int|info|eu|biz|mil|gov|aero|travel|pro|name|museum|coop|asia|[a-z][a-z])+(:[[:digit:]]+)?[/[[:alnum:]\\._#-\\?]*]*/?$'" language="Mysql"/>
   </components>
-  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_R-PXUIZREd2G3OfabUsfOQ">
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_R-PXUIZREd2G3OfabUsfOQ" expressionType="REGEXP">
     <expression xmi:id="_R-PXUYZREd2G3OfabUsfOQ" body="'^https?://[[:alnum:]_-][\.[[:alnum:]_-]*]*\.(com|edu|org|net|int|info|eu|biz|mil|gov|aero|travel|pro|name|museum|coop|asia|[a-z][a-z])+(:[[:digit:]]+)?[/[[:alnum:]\._#-\?]*]*/?$'" language="PostgreSQL"/>
   </components>
 </dataquality.domain.pattern:Pattern>
