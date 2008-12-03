@@ -288,7 +288,7 @@ public class ChartDatasetFactory {
         assert indexOfNumericCol != -1;
 
         final int nbNumericFunctions = numericFunctions.size();
-        //        assert nbNumericFunctions == 3 : DefaultMessagesImpl.getString("ChartDatasetFactory.expect"); //$NON-NLS-1$
+        assert nbNumericFunctions >= 3 : DefaultMessagesImpl.getString("ChartDatasetFactory.expect"); //$NON-NLS-1$
 
         final List<Object[]> listRows = indicator.getListRows();
 
@@ -308,14 +308,14 @@ public class ChartDatasetFactory {
         final int indexOfDateCol = dateColumns.indexOf(dateColumn);
         assert indexOfDateCol != -1;
 
-        final int nbNumericFunctions = dateFunctions.size();
-        assert nbNumericFunctions == 3 : DefaultMessagesImpl.getString("ChartDatasetFactory.expect"); //$NON-NLS-1$
+        final int nbDateFunctions = dateFunctions.size();
+        assert nbDateFunctions >= 2 : DefaultMessagesImpl.getString("ChartDatasetFactory.expect"); //$NON-NLS-1$
 
         final List<Object[]> listRows = indicator.getListRows();
 
         final int nbNominalColumns = nominalColumns.size();
 
-        return fillGanttDataset(nominalColumns, listRows, nbNominalColumns + nbNumericFunctions * indexOfDateCol);
+        return fillGanttDataset(nominalColumns, listRows, nbNominalColumns + nbDateFunctions * indexOfDateCol);
     }
 
     /**
