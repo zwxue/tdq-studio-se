@@ -12,14 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
-import java.util.Collection;
-
-import net.sourceforge.sqlexplorer.dbproduct.Alias;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
-import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
-
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -43,18 +35,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
-import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.CreatePatternAction;
-import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.indicators.Indicator;
@@ -64,7 +50,6 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -161,7 +146,11 @@ public class ChartTableFactory {
 
                                 public void handleEvent(Event event) {
 
-                                    viewRecordInDataExplorer(analysis, indicator, itemEntity.getQuery());
+                                    TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                            .getContext().getConnection());
+                                    String query = itemEntity.getQuery();
+                                    String editorName = indicator.getName();
+                                    CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                 }
 
                             });
@@ -196,37 +185,6 @@ public class ChartTableFactory {
                 TableColumn column = new TableColumn(table, SWT.NONE);
                 column.setText(columNames[i]);
                 column.setWidth(columnWidths[i]);
-            }
-        }
-    }
-
-    public static void viewRecordInDataExplorer(Analysis analysis, Indicator indicaotr, String query) {
-        new ChangePerspectiveAction(PluginConstant.SE_ID).run();
-
-        Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
-        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis.getContext().getConnection());
-        if (tdDataProvider != null) {
-            TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-            TdProviderConnection providerConnection = tdPc.getObject();
-            String url = providerConnection.getConnectionString();
-            for (Alias alias : aliases) {
-                if (alias.getUrl().equals(url)) {
-                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + indicaotr.getName() + ").sql");
-                    input.setUser(alias.getDefaultUser());
-                    try {
-                        IWorkbenchPage workPage = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-                                .getActivePage();
-                        SQLEditor editorPart = (SQLEditor) workPage.openEditor((IEditorInput) input, SQLEditor.class.getName());
-                        editorPart.setText(query);
-                        ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
-                        execSQLAction.run();
-                        // MOD scorreia bug 4736 fixed: execute action only once when several connections
-                        // exist
-                        break;
-                    } catch (PartInitException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }
     }

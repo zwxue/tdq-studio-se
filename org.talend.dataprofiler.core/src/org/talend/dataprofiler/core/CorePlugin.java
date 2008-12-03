@@ -178,7 +178,10 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param tdDataProvider
      * @param query
      */
-    public void runInDQViewer(TdDataProvider tdDataProvider, String query) {
+    public void runInDQViewer(TdDataProvider tdDataProvider, String query, String editorName) {
+        if (editorName == null) {
+            editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
+        }
         SQLExplorerPlugin sqlexplorer = SQLExplorerPlugin.getDefault();
         Collection<Alias> aliases = sqlexplorer.getAliasManager().getAliases();
         TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
@@ -186,8 +189,7 @@ public class CorePlugin extends AbstractUIPlugin {
         String url = providerConnection.getConnectionString();
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
-                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() //$NON-NLS-1$
-                        + ").sql"); //$NON-NLS-1$
+                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$
                 input.setUser(alias.getDefaultUser());
                 try {
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()

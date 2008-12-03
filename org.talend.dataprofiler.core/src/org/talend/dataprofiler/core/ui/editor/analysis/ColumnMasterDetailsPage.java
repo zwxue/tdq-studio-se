@@ -313,6 +313,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             final Composite comp = toolkit.createComposite(exComp);
             comp.setLayout(new GridLayout());
+            // comp.setLayout(new FillLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             if (columnIndicator.getIndicators().length != 0) {
@@ -324,18 +325,19 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                         monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview")
                                 + column.getName(), IProgressMonitor.UNKNOWN);
 
-                        Display.getDefault().asyncExec(new Runnable() {
+                        Display.getDefault().syncExec(new Runnable() {
 
                             public void run() {
 
                                 for (ChartWithData chartData : IndicatorChartFactory.createChart(columnIndicator, isCreate)) {
                                     // carete chart
-                                    final JFreeChart chart = chartData.getChart();
+                                    JFreeChart chart = chartData.getChart();
                                     if (chart != null) {
-                                        GridData gd = new GridData(GridData.FILL_BOTH);
-                                        gd.widthHint = 420;
-                                        gd.heightHint = 230;
-                                        ChartUtils.createAWTSWTComp(composite, gd, chart);
+
+                                        ChartUtils.createAWTSWTComp(comp, new GridData(GridData.FILL_BOTH), chart);
+
+                                        // ChartComposite chartcomp = new ChartComposite(comp, SWT.EMBEDDED, chart,
+                                        // true);
                                     }
                                 }
                             }

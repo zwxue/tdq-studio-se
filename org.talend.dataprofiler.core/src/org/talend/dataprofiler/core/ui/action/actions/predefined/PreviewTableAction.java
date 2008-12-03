@@ -54,6 +54,6 @@ public class PreviewTableAction extends Action {
         TdDataProvider tdDataProvider = DataProviderHelper.getDataProvider(table);
         String qualifiedName = ColumnSetNameHelper.getColumnSetQualifiedName(tdDataProvider, table);
         String query = "select * from " + qualifiedName; //$NON-NLS-1$
-        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query);
+        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, null);
     }
 }

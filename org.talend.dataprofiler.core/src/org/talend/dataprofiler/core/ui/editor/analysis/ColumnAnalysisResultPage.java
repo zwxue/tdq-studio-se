@@ -48,7 +48,10 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -307,8 +310,11 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                     Display.getDefault().asyncExec(new Runnable() {
 
                                         public void run() {
-                                            ChartTableFactory.viewRecordInDataExplorer(analysis, currentIndicator, itemEntity
-                                                    .getQuery());
+                                            TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                                    .getContext().getConnection());
+                                            String query = itemEntity.getQuery();
+                                            String editorName = currentIndicator.getName();
+                                            CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                         }
 
                                     });

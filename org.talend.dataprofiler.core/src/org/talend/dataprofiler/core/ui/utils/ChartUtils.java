@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -83,17 +84,17 @@ public final class ChartUtils {
      * @param gd
      * @param chartPanel
      */
-    public static ChartPanel createAWTSWTComp(final Composite composite, GridData gd, JFreeChart chart) {
+    public static ChartPanel createAWTSWTComp(Composite composite, GridData gd, JFreeChart chart) {
+
+        ChartPanel chartPanel = new ChartPanel(chart);
         Composite frameComp = new Composite(composite, SWT.EMBEDDED);
         frameComp.setLayout(new GridLayout());
         frameComp.setLayoutData(gd);
+        frameComp.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
 
         Frame frame = SWT_AWT.new_Frame(frameComp);
         frame.setLayout(new java.awt.GridLayout());
-
-        ChartPanel chartPanel = new ChartPanel(chart);
         frame.add(chartPanel);
-        frame.pack();
         frame.validate();
 
         return chartPanel;

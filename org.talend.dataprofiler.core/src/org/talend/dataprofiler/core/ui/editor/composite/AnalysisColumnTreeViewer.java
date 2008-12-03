@@ -786,7 +786,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
                 String columnName = ColumnHelper.getFullName(column);
                 String query = "select " + columnName + " from " + tableName;
-                CorePlugin.getDefault().runInDQViewer(dataprovider, query);
+                CorePlugin.getDefault().runInDQViewer(dataprovider, query, null);
             }
         }
     }
