@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -76,6 +77,8 @@ import Zql.ParseException;
  * DOC scorreia class global comment. Detailled comment
  */
 public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
+
+    private static final String ALIAS = "(\\w*)\\.";
 
     /**
      * TODO scorreia this constant must be replaced by a default preference and the possibility to the user to change it
@@ -249,6 +252,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getUpperQuartileIndicator())) {
             // TODO scorreia test type of column and cast when needed
             completedSqlString = getCompletedStringForQuantiles(indicator, sqlGenericExpression, colName, table, whereExpression);
+            whereExpression = duplicateForCrossJoin(completedSqlString, whereExpression, tdColumn);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
         } else
 
@@ -314,6 +318,76 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Expression instantiateSqlExpression = instantiateSqlExpression(language, finalQuery);
         indicator.setInstantiatedExpression(instantiateSqlExpression);
         return true;
+    }
+
+    /**
+     * Method "duplicateForCrossJoin". For some SQL queries, auto-joins are used in subqueries. This means that the
+     * table has two differents aliases and the columns must be prefixed with the alias of the table. Each where clause
+     * must be duplicated. For example, the clause "AGE > 10" must be duplicated to give "a.AGE > 10" and "b.AGE" when
+     * table aliases are "a" and "b".
+     * 
+     * @param completedSqlString the SQL query
+     * 
+     * @param whereExpression some where clauses
+     * @param tdColumn the analyzed column
+     * @return a list of new where clauses (or the one given as argument)
+     */
+    private List<String> duplicateForCrossJoin(String completedSqlString, List<String> whereExpression, TdColumn tdColumn) {
+        if (whereExpression.isEmpty()) {
+            return whereExpression;
+        }
+        String quotedColName = quote(tdColumn.getName());
+        String[] tableAliases = getTableTableAliasA(completedSqlString, quotedColName);
+        if (tableAliases == null) {
+            return whereExpression;
+        }
+        List<String> duplicatedWhereExpressions = new ArrayList<String>();
+        // get the table
+        ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(tdColumn);
+        List<TdColumn> columns = ColumnHelper.getColumns(columnSetOwner.getFeature());
+        for (String where : whereExpression) {
+            // we expect only 2 table aliases, hence two distinct where clauses.
+            String whereA = where;
+            String whereB = where;
+            for (TdColumn col : columns) {
+                String colNameToReplace = where.contains(quotedColName) ? quotedColName : col.getName();
+                if (where.contains(colNameToReplace)) {
+                    whereA = whereA.replace(colNameToReplace, tableAliases[0] + "." + colNameToReplace);
+                    whereB = whereB.replace(colNameToReplace, tableAliases[1] + "." + colNameToReplace);
+                }
+            }
+            duplicatedWhereExpressions.add(whereA);
+            duplicatedWhereExpressions.add(whereB);
+        }
+
+        return duplicatedWhereExpressions;
+    }
+
+    /**
+     * DOC scorreia Comment method "getTableTableAliasA".
+     * 
+     * @param completedSqlString
+     * @param quotedColName
+     * @return
+     */
+    private String[] getTableTableAliasA(String completedSqlString, String quotedColName) {
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ALIAS + quotedColName);
+        Matcher matcher = p.matcher(completedSqlString);
+        if (!matcher.find()) {
+            return null;
+        }
+        String g1 = matcher.group(1);
+        String g2 = null;
+        while (matcher.find()) {
+            g2 = matcher.group(1);
+            if (!g1.equals(g2)) {
+                break;
+            }
+        }
+        if (g1 == null || g2 == null) {
+            return null;
+        }
+        return new String[] { g1, g2 };
     }
 
     /**
@@ -703,11 +777,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (isEven) {
                 if ((count / 2) % 2 == 0) {
                     res = 3 * count / 4 - 1;
-                } else {                    
+                } else {
                     res = 3 * ((count / 2) + 1) / 2 - 2;
                 }
             } else { // odd number of rows
-                if (((count + 1) / 2) % 2 == 0) {                    
+                if (((count + 1) / 2) % 2 == 0) {
                     res = 3 * (count + 1) / 4 - 1;
                 } else {
                     res = 3 * (((count + 1) / 2) - 1) / 2;
