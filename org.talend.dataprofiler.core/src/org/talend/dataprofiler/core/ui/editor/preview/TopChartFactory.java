@@ -15,15 +15,21 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.annotations.CategoryTextAnnotation;
+import org.jfree.chart.axis.CategoryAnchor;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CrosshairState;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PlotRenderingInfo;
@@ -32,11 +38,13 @@ import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.chart.urls.StandardXYZURLGenerator;
+import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
 import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.TextAnchor;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.DateValueAggregate;
 import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.ValueAggregator;
@@ -265,19 +273,52 @@ public final class TopChartFactory {
 
             createGannttDatasets.get(next).addSeriesToGanttDataset(ganttDataset, next);
         }
-        String chartName = "Average of '" + dateColumn.getName() + "' versus count";
-        JFreeChart chart = ChartFactory.createGanttChart(chartName, // chart title
+        List<Object[]> rowList = indic.getListRows();
+        final EList<Column> nominalColumns = indic.getNominalColumns();
+        final EList<Column> dateColumns = indic.getDateColumns();
+        final EList<String> dateFunctions = indic.getDateFunctions();
+        final int indexOfDateCol = dateColumns.indexOf(dateColumn);
+        assert indexOfDateCol != -1;
+        final int nbNominalColumns = nominalColumns.size();
+
+        final int nbDateFunctions = dateFunctions.size();
+        // String chartName = "Gantt Chart";
+        String chartAxies = "'" + dateColumn.getName() + "' Range per nominal values";
+        JFreeChart chart = ChartFactory.createGanttChart("", // chart title
                 "Task", // domain axis label
-                "Date", // range axis label
+                chartAxies, // range axis label
                 ganttDataset, // data
                 true, // include legend
                 true, // tooltips
                 false // urls
                 );
-        // CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        // plot.setRenderer(new GanttRenderer2());
-        // plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
-        // CategoryItemRenderer renderer = plot.getRenderer();
+        createAnnotOnGantt(chart, rowList, nbNominalColumns + nbDateFunctions * indexOfDateCol + 3);
         return chart;
+    }
+
+    public static void createAnnotOnGantt(JFreeChart chart, List<Object[]> rowList, int multiDateColumn) {
+        CategoryPlot xyplot = (CategoryPlot) chart.getPlot();
+        CategoryTextAnnotation an;
+
+        int indexOfRow = 0;
+        for (int seriesCount = 0; seriesCount < ((TaskSeriesCollection) xyplot.getDataset()).getSeriesCount(); seriesCount++) {
+            for (int itemCount = 0; itemCount < ((TaskSeriesCollection) xyplot.getDataset()).getSeries(seriesCount)
+                    .getItemCount(); itemCount++) {
+                Task task = ((TaskSeriesCollection) xyplot.getDataset()).getSeries(seriesCount).get(itemCount);
+                String taskDescription = task.getDescription();
+                String[] taskArray = taskDescription.split("|");
+                if (taskArray.length == 3) {
+                    indexOfRow++;
+                }
+                boolean isSameTime = task.getDuration().getStart().getTime() == task.getDuration().getEnd().getTime();
+                if (!isSameTime && !((rowList.get(indexOfRow))[multiDateColumn]).equals(new BigDecimal(0L))) {
+                    an = new CategoryTextAnnotation("#nulls = " + (rowList.get(indexOfRow))[multiDateColumn],
+                            (Comparable<String>) taskDescription, task.getDuration().getStart().getTime());
+                    an.setTextAnchor(TextAnchor.CENTER_LEFT);
+                    an.setCategoryAnchor(CategoryAnchor.MIDDLE);
+                    xyplot.addAnnotation(an);
+                }
+            }
+        }
     }
 }
