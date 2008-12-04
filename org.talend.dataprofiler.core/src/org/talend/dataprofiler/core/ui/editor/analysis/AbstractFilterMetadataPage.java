@@ -691,10 +691,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 public void widgetSelected(SelectionEvent e) {
                     int column = cursor.getColumn();
                     if (column == VIEW_COLUMN_INDEX) {
-                        // catalogOrSchemaTable.setMenu(menu);
                         cursor.setMenu(menu);
+                        menu.setVisible(true);
                     } else {
-                        // catalogOrSchemaTable.setMenu(null);
                         cursor.setMenu(null);
                     }
                 }
