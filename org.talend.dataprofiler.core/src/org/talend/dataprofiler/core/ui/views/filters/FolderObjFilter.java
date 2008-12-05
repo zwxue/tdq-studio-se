@@ -13,8 +13,12 @@
 package org.talend.dataprofiler.core.ui.views.filters;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -41,14 +45,26 @@ public class FolderObjFilter extends AbstractViewerFilter {
      */
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        if (element instanceof IFolder) {
-            IFolder folder = (IFolder) element;
-            ResourceAttributes resourceAttributes = folder.getResourceAttributes();
-            if (resourceAttributes == null) {
+        if (element instanceof IResource) {
+            IResource res = (IResource) element;
+            if (IResource.FOLDER == res.getType()) {
+                IFolder folder = (IFolder) element;
+                ResourceAttributes resourceAttributes = folder.getResourceAttributes();
+                if (resourceAttributes == null) {
+                    return true;
+                }
+                if (resourceAttributes.isHidden()) {
+                    return false;
+                }
+            } else if (IResource.PROJECT == res.getType()) {
+                try {
+                    String persistentProperty = res.getPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY);
+                    return persistentProperty != null;
+                } catch (CoreException e) {
+                    ExceptionHandler.process(e);
+                }
+            } else {
                 return true;
-            }
-            if (resourceAttributes.isHidden()) {
-                return false;
             }
         }
         return true;

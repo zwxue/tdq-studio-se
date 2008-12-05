@@ -94,9 +94,13 @@ public final class DQStructureManager {
 
     public static final QualifiedName NO_SUBFOLDER_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "NO_SUBFOLDER"); //$NON-NLS-1$
 
+    public static final QualifiedName PROJECT_TDQ_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "TDQ_PROJECT"); //$NON-NLS-1$
+
     public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_PROPERTY"; //$NON-NLS-1$
 
     public static final String NO_SUBFOLDER_PROPERTY = "NO_SUBFOLDER_PROPERTY"; //$NON-NLS-1$
+
+    public static final String PROJECT_TDQ_PROPERTY = "PROJECT_TDQ_PROPERTY"; //$NON-NLS-1$
 
     private List<String> modleElementSuffixs = null;
 
@@ -162,8 +166,10 @@ public final class DQStructureManager {
      * @return the created project resource, or <code>null</code> if the project was not created
      * @throws InterruptedException
      * @throws InvocationTargetException
+     * @throws CoreException
      */
-    private IProject createNewProject(String projectName, Shell shell) throws InvocationTargetException, InterruptedException {
+    private IProject createNewProject(String projectName, Shell shell) throws InvocationTargetException, InterruptedException,
+            CoreException {
 
         final Shell currentShell = shell;
 
@@ -194,7 +200,7 @@ public final class DQStructureManager {
         // run the new project creation o`peration
         // try {
         ProgressUI.popProgressDialog(op, shell);
-
+        newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
         return newProjectHandle;
     }
 
