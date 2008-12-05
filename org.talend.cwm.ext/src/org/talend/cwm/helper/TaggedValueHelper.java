@@ -20,6 +20,7 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * @author scorreia
@@ -55,6 +56,10 @@ public final class TaggedValueHelper {
 
     public static final String COMMENT = "Comment";
 
+    public static final String VERSION = "Version";
+
+    public static final String GEN_SINGLE_REPORT = "Single output";
+
     public static final String DB_IDENTIFIER_QUOTE_STRING = "DB IdentifierQuoteString";
 
     /**
@@ -62,6 +67,55 @@ public final class TaggedValueHelper {
      */
     public static final String VALID_STATUS = "Validation_Status";
 
+    /**
+     * Method "setVersion" sets the version of the given element.
+     * 
+     * @param version the version to set
+     * @param element the element
+     * @return true if the value was not set before.
+     */
+    public static boolean setVersion(Boolean version, ModelElement element) {
+        String statusStr = String.valueOf(version);
+        return setTaggedValue(element, VERSION, statusStr);
+    }
+
+    /**
+     * Method "getVersion".
+     * 
+     * @param element
+     * @return the version of the element
+     */
+    public static Boolean getVersion(ModelElement element) {
+        return Boolean.valueOf(getValue(VERSION, element));
+    }
+
+    /**
+     * Method "setSingleGenReport".
+     * 
+     * @param single true if the generated report must overwrite the existing report
+     * @param report a report
+     * @return true if the value was not set before.
+     */
+    public static boolean setSingleGenReport(Boolean single, Report report) {
+        String statusStr = String.valueOf(single);
+        return setTaggedValue(report, GEN_SINGLE_REPORT, statusStr);
+    }
+
+    /**
+     * Method "getSingleGenReport".
+     * 
+     * @param report
+     * @return true when a single generated file must be used. False when the generated file must not overwrite the
+     * existing generated files.
+     */
+    public static Boolean getSingleGenReport(Report report) {
+        final String value = getValue(GEN_SINGLE_REPORT, report);
+        if (value == null || value.trim().length() == 0) {
+            return false;
+        }
+        return Boolean.valueOf(value);
+    }
+    
     /**
      * Method "setValidStatus" sets the status on the given element.
      * 
@@ -83,7 +137,7 @@ public final class TaggedValueHelper {
     public static Boolean getValidStatus(ModelElement element) {
         return Boolean.valueOf(getValue(VALID_STATUS, element));
     }
-
+    
     /**
      * Method "setIdentifierQuoteString" sets a comment on the given element.
      * 
