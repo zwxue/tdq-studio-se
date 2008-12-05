@@ -140,7 +140,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
         Label pathLab = new Label(tContainer, SWT.NONE);
         pathLab.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"));
-        newText(tContainer, fe.eResource().getURI().path());
+        newText(tContainer, fe.eResource().getURI().toPlatformString(false));
     }
 
     private void createTechnicalDetail(IFile fe) {
