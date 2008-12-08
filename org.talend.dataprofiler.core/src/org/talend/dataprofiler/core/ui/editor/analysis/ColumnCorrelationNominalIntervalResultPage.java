@@ -12,10 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.awt.Font;
 import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -45,11 +49,23 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.labels.ItemLabelAnchor;
+import org.jfree.chart.labels.ItemLabelPosition;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer3D;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.ui.TextAnchor;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesPanel;
+import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
@@ -110,20 +126,6 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
-        // sectionClient.setLayout(new GridLayout(2, true));
-        // this.createSectionPart(form, sectionClient, "left Columns");
-        // this.createSectionPart(form, sectionClient, "Right Columns");
-
-        // GridData layoutData = new GridData(GridData.FILL_BOTH);
-        // layoutData.horizontalAlignment = SWT.CENTER;
-
-        // SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
-        // sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        // if (countAvgNullIndicator == null) {
-        // ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
-        // countAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
-        // }
         Composite graphicsComp = toolkit.createComposite(sectionClient);
         GridData graphicsGridData = new GridData(GridData.FILL_BOTH);
         graphicsGridData.heightHint = 1000;
@@ -136,16 +138,22 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             this.createGraphicsSectionPart(sectionClient, columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        // Composite tableSectionClient = toolkit.createComposite(graphicsAndTableSection);
-        // tableSectionClient.setLayout(new GridLayout());
-        // tableSectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+        Composite simpleSatisticsComp = toolkit.createComposite(sectionClient);
+        simpleSatisticsComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        simpleSatisticsComp.setLayout(new GridLayout());
+        if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
+            return;
+        } else {
+            this.createSimpleStatisticsPart(sectionClient, "Simple Statistics", columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
         Composite tableComp = toolkit.createComposite(sectionClient);
         tableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         tableComp.setLayout(new GridLayout());
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createTableSectionPart(sectionClient, "Table Section", columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+            this.createTableSectionPart(sectionClient, "Data", columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
         }
         graphicsAndTableSection.setClient(sectionClient);
     }
@@ -250,6 +258,98 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (!previewChartList.isEmpty()) {
             this.previewChartCompsites = previewChartList.toArray(new Composite[previewChartList.size()]);
         }
+    }
+
+    private Section createSimpleStatisticsPart(Composite parentComp, String title,
+            ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
+        Section section = createSection(form, parentComp, title, true, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
+        section.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Composite sectionClient = toolkit.createComposite(section);
+        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
+
+        Composite simpleComposite = toolkit.createComposite(sectionClient);
+        simpleComposite.setLayout(new GridLayout(2, false));
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).grab(true, true).applyTo(simpleComposite);
+        createSimpleTable(form, simpleComposite, columnSetMultiValueIndicator);
+        createSimpleStatistics(form, simpleComposite, columnSetMultiValueIndicator);
+        section.setClient(sectionClient);
+        return section;
+    }
+
+    private void createSimpleTable(final ScrolledForm form, final Composite composite,
+            final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
+        // final TableViewer tbViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
+        NumberFormat doubleFormat = new DecimalFormat("0.00");
+        final Table table = new Table(composite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).grab(true, true).applyTo(table);
+        ((GridData) table.getLayoutData()).heightHint = 200;
+        ((GridData) table.getLayoutData()).widthHint = 300;
+        table.setVisible(true);
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+        String[] titles = { "Label", "Count", "%" };
+        for (String title : titles) {
+            TableColumn column = new TableColumn(table, SWT.NONE);
+            column.setText(title);
+            column.setWidth(100);
+        }
+        String[] label = { "Row Count", "Distinct Count", "Unique Count", "Duplicate Count" };
+        long[] count = { columnSetMultiValueIndicator.getCount(), columnSetMultiValueIndicator.getDistinctCount(),
+                columnSetMultiValueIndicator.getUniqueCount(), columnSetMultiValueIndicator.getDuplicateCount() };
+        double[] percent = new double[4];
+        for (int i = 0; i < count.length; i++) {
+            percent[i] = (double) count[i] / count[0];
+        }
+        for (int itemCount = 0; itemCount < 4; itemCount++) {
+            TableItem item = new TableItem(table, SWT.NONE);
+            item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]),
+                    doubleFormat.format(percent[itemCount] * 100) + "%" });
+        }
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumn(i).pack();
+        }
+    }
+
+    private void createSimpleStatistics(final ScrolledForm form, final Composite composite,
+            final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset.addValue(columnSetMultiValueIndicator.getCount(), "Row Count", "");
+        dataset.addValue(columnSetMultiValueIndicator.getDistinctCount(), "Distinct Count", "");
+        dataset.addValue(columnSetMultiValueIndicator.getUniqueCount(), "Unique Count", "");
+        dataset.addValue(columnSetMultiValueIndicator.getDuplicateCount(), "Duplicate Count", "");
+
+        JFreeChart chart = ChartFactory.createBarChart3D("simple satistical chart", // chart title
+                "simple satistics", // domain axis label
+                "Value", // range axis label
+                dataset, // data
+                PlotOrientation.VERTICAL, // orientation
+                true, // include legend
+                true, // tooltips
+                false // urls
+                );
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        CategoryAxis axis = plot.getDomainAxis();
+        // axis.setVisible(false);
+        plot.setRangeGridlinesVisible(true);
+
+        BarRenderer3D renderer3d = (BarRenderer3D) plot.getRenderer();
+
+        renderer3d.setBaseItemLabelsVisible(true);
+        renderer3d.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        renderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
+        renderer3d.setItemMargin(0.2);
+        plot.setForegroundAlpha(0.50f);
+        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd.heightHint = 200;
+        gd.widthHint = 500;
+        ChartUtils.createAWTSWTComp(composite, gd, chart);
     }
 
     private Section createTableSectionPart(Composite parentComp, String title,
