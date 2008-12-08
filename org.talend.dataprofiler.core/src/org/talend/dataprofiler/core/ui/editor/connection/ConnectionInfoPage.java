@@ -158,7 +158,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                fireTextChange();
+                // saveTextChange();
             }
 
         };
@@ -177,7 +177,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     @Override
-    protected void fireTextChange() {
+    protected void saveTextChange() {
         this.tdDataProvider.setName(nameText.getText());
         TaggedValueHelper.setPurpose(purposeText.getText(), this.tdDataProvider);
         TaggedValueHelper.setDescription(descriptionText.getText(), this.tdDataProvider);

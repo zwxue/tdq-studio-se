@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -32,7 +33,6 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -41,6 +41,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     public static final String ACTION_HANDLER = "ACTION_HANDLER"; //$NON-NLS-1$
+
+    private static final int META_FIELD_WIDTH = 750;
 
     protected Text nameText;
 
@@ -93,19 +95,23 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         label.setLayoutData(new GridData());
         nameText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(nameText);
+        ((GridData) nameText.getLayoutData()).widthHint = META_FIELD_WIDTH;
         label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.purpose")); //$NON-NLS-1$
         label.setLayoutData(new GridData());
         purposeText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
         // purposeText.setLayoutData(new GridData());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(purposeText);
+        ((GridData) purposeText.getLayoutData()).widthHint = META_FIELD_WIDTH;
         label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.description")); //$NON-NLS-1$
         label.setLayoutData(new GridData());
         descriptionText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
         // descriptionText.setLayoutData(new GridData());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(descriptionText);
+        ((GridData) descriptionText.getLayoutData()).widthHint = META_FIELD_WIDTH;
         label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.author")); //$NON-NLS-1$
         authorText = toolkit.createText(labelButtonClient, null, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(authorText);
+        ((GridData) authorText.getLayoutData()).widthHint = META_FIELD_WIDTH;
         label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.status")); //$NON-NLS-1$
         statusCombo = new CCombo(labelButtonClient, SWT.BORDER);
         statusCombo.setEditable(false);
@@ -118,7 +124,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                fireTextChange();
+                // fireTextChange();
             }
 
         });
@@ -126,7 +132,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                fireTextChange();
+                // fireTextChange();
             }
 
         });
@@ -134,7 +140,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                fireTextChange();
+                // fireTextChange();
             }
 
         });
@@ -143,7 +149,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                fireTextChange();
+                // fireTextChange();
             }
         });
 
@@ -151,7 +157,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                fireTextChange();
+                // fireTextChange();
             }
 
         });
@@ -172,7 +178,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 : TaggedValueHelper.getDevStatus(currentModelElement).getLiteral());
     }
 
-    protected void fireTextChange() {
+    public void doSave(IProgressMonitor monitor) {
+        super.doSave(monitor);
+        saveTextChange();
+    }
+
+    protected void saveTextChange() {
         currentModelElement.setName(nameText.getText());
         TaggedValueHelper.setPurpose(purposeText.getText(), currentModelElement);
         TaggedValueHelper.setDescription(descriptionText.getText(), currentModelElement);
