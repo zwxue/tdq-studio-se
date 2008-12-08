@@ -155,6 +155,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         } else {
             this.createTableSectionPart(sectionClient, "Data", columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
         }
+        graphicsAndTableSection.setExpanded(true);
         graphicsAndTableSection.setClient(sectionClient);
     }
 
