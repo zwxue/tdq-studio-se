@@ -12,40 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
-/*
- * =========================================================== JFreeChart : a free chart library for the Java(tm)
- * platform ===========================================================
- * 
- * (C) Copyright 2000-2006, by Object Refinery Limited and Contributors.
- * 
- * Project Info: http://www.jfree.org/jfreechart/index.html
- * 
- * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- * 
- * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- * 
- * [Java is a trademark or registered trademark of Sun Microsystems, Inc. in the United States and other countries.]
- * 
- * ------------------- GanttRenderer2.java ------------------- (C) Copyright 2003-2006, by Object Refinery Limited.
- * 
- * Original Author: David Gilbert (for Object Refinery Limited); Contributor(s): -;
- * 
- * $Id: GanttRenderer.java,v 1.6.2.3 2005/12/01 11:38:58 mungady Exp $
- * 
- * Changes ------- 16-Sep-2003 : Version 1 (DG); 23-Sep-2003 : Fixed Checkstyle issues (DG); 21-Oct-2003 : Bar width
- * moved into CategoryItemRendererState (DG); 03-Feb-2004 : Added get/set methods for attributes (DG); 12-Aug-2004 :
- * Fixed rendering problem with maxBarWidth attribute (DG); 05-Nov-2004 : Modified drawItem() signature (DG);
- * 20-Apr-2005 : Renamed CategoryLabelGenerator --> CategoryItemLabelGenerator (DG); 01-Dec-2005 : Fix for bug 1369954,
- * drawBarOutline flag ignored (DG); 17-Jan-2006 : Set includeBaseInRange flag to false (DG);
- */
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;

@@ -13,10 +13,14 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,25 +28,64 @@ import java.util.Map;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import org.eclipse.emf.common.util.EList;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.annotations.CategoryTextAnnotation;
+import org.jfree.chart.axis.CategoryAnchor;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.gantt.Task;
+import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.ui.TextAnchor;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.DateValueAggregate;
 import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.ValueAggregator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * 
  * DOC xZhao class global comment. Detailled comment
  */
 public class HideSeriesPanel extends JPanel implements ActionListener {
+
+    private Map<String, RowColumPair> hightlightSeriesMap = new HashMap<String, RowColumPair>();
+
+    private int columnCount;
+
+    /**
+     * 
+     * DOC zhaoxinyi HideSeriesPanel class global comment. Detailled comment
+     */
+
+    /**
+     * 
+     * DOC zhaoxinyi HideSeriesPanel class global comment. Detailled comment
+     */
+    class CustomHideSeriesGantt extends HideSeriesGanttRenderer {
+
+        /**
+         * 
+         * DOC zhaoxinyi CustomHideSeriesGantt constructor comment.
+         * 
+         * @param colors
+         */
+        public Paint getItemPaint(int row, int column) {
+            Paint itemPaint = super.getItemPaint(row, column);
+            String key = String.valueOf(row) + String.valueOf(column);
+            if (hightlightSeriesMap.get(key) != null && hightlightSeriesMap.get(key).getRow() == row
+                    && hightlightSeriesMap.get(key).getColumn() == column) {
+                return ((Color) itemPaint).brighter().brighter();
+            }
+            return itemPaint;
+        }
+    }
 
     private ColumnSetMultiValueIndicator countIndicator;
 
@@ -111,15 +154,24 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             rangeAxis.setRange(0, minYValue * 100);
             rangeAxis.setTickUnit(new NumberTickUnit(minYValue * 5));
         } else {
+            List<Object[]> rowList = columnMultiIndicator.getListRows();
+            final EList<Column> nominalColumns = columnMultiIndicator.getNominalColumns();
+            final EList<Column> dateColumns = columnMultiIndicator.getDateColumns();
+            final EList<String> dateFunctions = columnMultiIndicator.getDateFunctions();
+            final int indexOfDateCol = dateColumns.indexOf(columnPara);
+            assert indexOfDateCol != -1;
+            final int nbNominalColumns = nominalColumns.size();
+
+            final int nbDateFunctions = dateFunctions.size();
             Map<String, DateValueAggregate> createGanttDatasets = ChartDatasetFactory.createGanttDatasets(columnMultiIndicator,
                     tdColumn);
             iterator = createGanttDatasets.keySet().iterator();
             chart = TopChartFactory.createGanttChart(columnMultiIndicator, columnPara);
+            createAnnotOnGantt(chart, rowList, nbNominalColumns + nbDateFunctions * indexOfDateCol + 3, nbNominalColumns);
             CategoryPlot plot = (CategoryPlot) chart.getPlot();
-            plot.setRenderer(new HideSeriesGanttRenderer());
+            plot.setRenderer(new CustomHideSeriesGantt());
             plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
             ganttRenderer = plot.getRenderer();
-            // ganttenderer.setDrawBarOutline(false);
         }
 
         ChartPanel chartpanel = new ChartPanel(chart);
@@ -137,6 +189,14 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
         add(jpanel, "South");
     }
 
+    /**
+     * 
+     * DOC zhaoxinyi Comment method "getMinYValue".
+     * 
+     * @param plot
+     * @param isY
+     * @return
+     */
     private double getMinYValue(XYPlot plot, boolean isY) {
         double minValue = 0d;
         int seriesCount = plot.getDataset().getSeriesCount();
@@ -157,5 +217,73 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             minValue = 1d;
         }
         return minValue;
+    }
+
+    /**
+     * 
+     * DOC zhaoxinyi Comment method "createAnnotOnGantt".
+     * 
+     * @param chart
+     * @param rowList
+     * @param multiDateColumn
+     */
+    public void createAnnotOnGantt(JFreeChart chart, List<Object[]> rowList, int multiDateColumn, int nominal) {
+        CategoryPlot xyplot = (CategoryPlot) chart.getPlot();
+        CategoryTextAnnotation an;
+        for (int seriesCount = 0; seriesCount < ((TaskSeriesCollection) xyplot.getDataset()).getSeriesCount(); seriesCount++) {
+            int indexOfRow = 0;
+            for (int itemCount = 0; itemCount < ((TaskSeriesCollection) xyplot.getDataset()).getSeries(seriesCount)
+                    .getItemCount(); itemCount++, columnCount++) {
+                Task task = ((TaskSeriesCollection) xyplot.getDataset()).getSeries(seriesCount).get(itemCount);
+                String taskDescription = task.getDescription();
+                String[] taskArray = taskDescription.split("\\|");
+                boolean isSameTime = task.getDuration().getStart().getTime() == task.getDuration().getEnd().getTime();
+                if (!isSameTime && !((rowList.get(indexOfRow))[multiDateColumn]).equals(new BigDecimal(0L))) {
+                    RowColumPair pair = new RowColumPair();
+                    pair.setRow(seriesCount);
+                    pair.setColumn(columnCount);
+                    hightlightSeriesMap.put(String.valueOf(seriesCount) + String.valueOf(columnCount), pair);
+                    an = new CategoryTextAnnotation("#nulls = " + (rowList.get(indexOfRow))[multiDateColumn],
+                            (Comparable<String>) taskDescription, task.getDuration().getStart().getTime());
+                    an.setTextAnchor(TextAnchor.CENTER_LEFT);
+                    an.setCategoryAnchor(CategoryAnchor.MIDDLE);
+                    xyplot.addAnnotation(an);
+                }
+                if (taskArray.length == nominal) {
+                    indexOfRow++;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 
+ * DOC zhaoxinyi class global comment. Detailled comment
+ */
+class RowColumPair {
+
+    private int row;
+
+    private int column;
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public String toString() {
+        return "row = " + row + ", column = " + column;
     }
 }

@@ -474,20 +474,13 @@ public class ChartDatasetFactory {
             final List<Object[]> listRows, final int firstNumericColumnIdx) {
         Map<String, DateValueAggregate> valueAggregators = new HashMap<String, DateValueAggregate>();
 
-        // int xPos = firstNumericColumnIdx;
-        // int yPos = firstNumericColumnIdx + 1;
-        // int zPos = firstNumericColumnIdx + 2;
         int minPos = firstNumericColumnIdx;
         int maxPos = firstNumericColumnIdx + 1;
         for (int i = nominalColumns.size(); i > 0; i--) {
             String key = createKey(nominalColumns, i);
             for (Object[] row : listRows) {
                 final Object minObj = row[minPos];
-                // final Date minValue = minObj != null ? minObj : null;
                 final Object maxobj = row[maxPos];
-                // final Date maxValue = maxobj != null ? df.parse((String) maxobj) : null;
-                // final Object zobj = row[zPos];
-                // final Double zValue = zobj != null ? Double.valueOf(String.valueOf(zobj)) : null;
 
                 DateValueAggregate valueAggregator = valueAggregators.get(key);
                 if (valueAggregator == null) {
@@ -498,7 +491,6 @@ public class ChartDatasetFactory {
                 valueAggregator.addValue(multipleKey, new Date[] { (Date) minObj, (Date) maxobj });
             }
         }
-        // System.out.println(valueAggregators);
         return valueAggregators;
     }
 
