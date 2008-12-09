@@ -12,34 +12,51 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.EntityCollection;
+import org.jfree.chart.labels.ItemLabelAnchor;
+import org.jfree.chart.labels.ItemLabelPosition;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CrosshairState;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.BarRenderer3D;
+import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
 import org.jfree.chart.urls.StandardXYZURLGenerator;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
 import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.TextAnchor;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.DateValueAggregate;
-import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.ValueAggregator;
+import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
+import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.DateValueAggregate;
+import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.ValueAggregator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import orgomg.cwm.resource.relational.Column;
 
@@ -208,7 +225,7 @@ public final class TopChartFactory {
      * @return the bubble chart
      */
     public static JFreeChart createBubbleChart(final ColumnSetMultiValueIndicator indic, Column numericColumn) {
-        final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetFactory.createXYZDatasets(indic, numericColumn);
+        final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(indic, numericColumn);
 
         DefaultXYZDataset dataset = new DefaultXYZDataset();
         final Iterator<String> iterator = createXYZDatasets.keySet().iterator();
@@ -255,7 +272,7 @@ public final class TopChartFactory {
      */
 
     public static JFreeChart createGanttChart(final ColumnSetMultiValueIndicator indic, Column dateColumn) {
-        final Map<String, DateValueAggregate> createGannttDatasets = ChartDatasetFactory.createGanttDatasets(indic, dateColumn);
+        final Map<String, DateValueAggregate> createGannttDatasets = ChartDatasetUtils.createGanttDatasets(indic, dateColumn);
 
         TaskSeriesCollection ganttDataset = new TaskSeriesCollection();
         final Iterator<String> iterator = createGannttDatasets.keySet().iterator();
@@ -275,4 +292,104 @@ public final class TopChartFactory {
         return chart;
     }
 
+    /**
+     * DOC Zqin Comment method "create3DBarChart".
+     * 
+     * @param titile
+     * @param dataset
+     * @param showLegend
+     * @return
+     */
+    public static JFreeChart create3DBarChart(String titile, CategoryDataset dataset, boolean showLegend) {
+
+        JFreeChart chart = ChartFactory.createBarChart3D(null, titile, "Value", dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
+                false, true);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setRangeGridlinesVisible(true);
+
+        BarRenderer3D renderer3d = (BarRenderer3D) plot.getRenderer();
+
+        renderer3d.setBaseItemLabelsVisible(true);
+        renderer3d.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        renderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
+        renderer3d.setItemMargin(0.2);
+        plot.setForegroundAlpha(0.50f);
+
+        CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
+
+        return chart;
+    }
+
+    /**
+     * DOC Zqin Comment method "createBarChart".
+     * 
+     * @param titile
+     * @param dataset
+     * @return
+     */
+    public static JFreeChart createBarChart(String titile, CategoryDataset dataset) {
+
+        return ChartFactory.createBarChart(null, titile, "Value", dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
+    }
+
+    /**
+     * DOC Zqin Comment method "createBoxAndWhiskerChart".
+     * 
+     * @param title
+     * @param dataset
+     * @return
+     */
+    public static JFreeChart createBoxAndWhiskerChart(String title, BoxAndWhiskerCategoryDataset dataset) {
+
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, title, "value", dataset, false);
+        CategoryPlot plot = chart.getCategoryPlot();
+
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setAutoRange(false);
+
+        double min = dataset.getMinRegularValue("0", "").doubleValue();
+        double max = dataset.getMaxRegularValue("0", "").doubleValue();
+
+        double unit = (max - min) / 10;
+        rangeAxis.setRange(min - unit, max + unit);
+        rangeAxis.setTickUnit(new NumberTickUnit(unit));
+        return chart;
+    }
+
+    /**
+     * DOC Zqin Comment method "createStacked3DBarChart".
+     * 
+     * @param titile
+     * @param dataset
+     * @param orientation
+     * @return
+     */
+    public static JFreeChart createStacked3DBarChart(String titile, CategoryDataset dataset, PlotOrientation orientation) {
+
+        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, "Value", dataset, orientation, true, //$NON-NLS-1$
+                false, false);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setRangeGridlinesVisible(true);
+
+        StackedBarRenderer3D renderer = (StackedBarRenderer3D) plot.getRenderer();
+        renderer.setSeriesPaint(0, Color.GREEN);
+        renderer.setSeriesPaint(1, Color.RED);
+        renderer.setBaseItemLabelsVisible(true);
+        renderer.setRenderAsPercentages(true);
+        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(), //$NON-NLS-1$
+                new DecimalFormat("0.0%"))); //$NON-NLS-1$
+        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
+
+        NumberAxis axis = (NumberAxis) plot.getRangeAxis();
+        axis.setNumberFormatOverride(NumberFormat.getPercentInstance());
+        axis.setUpperMargin(0.05f);
+        axis.setLowerMargin(0.01f);
+
+        return chart;
+    }
 }

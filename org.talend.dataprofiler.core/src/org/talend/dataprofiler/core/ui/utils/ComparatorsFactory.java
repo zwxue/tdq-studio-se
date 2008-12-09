@@ -195,8 +195,8 @@ public final class ComparatorsFactory {
 
         public int compare(IndicatorUnit o1, IndicatorUnit o2) {
 
-            IndicatorCommonUtil.compositeIndicatorMap(o1);
-            IndicatorCommonUtil.compositeIndicatorMap(o2);
+            IndicatorCommonUtil.getIndicatorValue(o1);
+            IndicatorCommonUtil.getIndicatorValue(o2);
 
             if (o1.isExcuted() && o2.isExcuted()) {
                 double value1 = Double.parseDouble(String.valueOf(o1.getValue()));

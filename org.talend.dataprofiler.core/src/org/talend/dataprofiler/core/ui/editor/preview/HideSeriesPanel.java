@@ -44,8 +44,9 @@ import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.ui.TextAnchor;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.DateValueAggregate;
-import org.talend.dataprofiler.core.ui.editor.preview.ChartDatasetFactory.ValueAggregator;
+import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
+import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.DateValueAggregate;
+import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.ValueAggregator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import orgomg.cwm.resource.relational.Column;
@@ -113,7 +114,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent actionevent) {
         Iterator<String> iterator = null;
         if (countIndicator instanceof CountAvgNullIndicator) {
-            Map<String, ValueAggregator> createXYZDatasets = ChartDatasetFactory.createXYZDatasets(countIndicator, tdColumn);
+            Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(countIndicator, tdColumn);
             iterator = createXYZDatasets.keySet().iterator();
             int byte0 = -1;
             int i = 1;
@@ -129,8 +130,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
                 xyRenderer.setSeriesVisible(byte0, new Boolean(!flag));
             }
         } else {
-            Map<String, DateValueAggregate> createGanttDatasets = ChartDatasetFactory.createGanttDatasets(countIndicator,
-                    tdColumn);
+            Map<String, DateValueAggregate> createGanttDatasets = ChartDatasetUtils.createGanttDatasets(countIndicator, tdColumn);
             iterator = createGanttDatasets.keySet().iterator();
             int byte0 = -1;
             int i = 1;
@@ -156,8 +156,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
         JFreeChart chart = null;
         Iterator<String> iterator;
         if (columnMultiIndicator instanceof CountAvgNullIndicator) {
-            Map<String, ValueAggregator> createXYZDatasets = ChartDatasetFactory
-                    .createXYZDatasets(columnMultiIndicator, tdColumn);
+            Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(columnMultiIndicator, tdColumn);
 
             iterator = createXYZDatasets.keySet().iterator();
             chart = TopChartFactory.createBubbleChart(columnMultiIndicator, columnPara);
@@ -178,7 +177,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             final int nbNominalColumns = nominalColumns.size();
 
             final int nbDateFunctions = dateFunctions.size();
-            Map<String, DateValueAggregate> createGanttDatasets = ChartDatasetFactory.createGanttDatasets(columnMultiIndicator,
+            Map<String, DateValueAggregate> createGanttDatasets = ChartDatasetUtils.createGanttDatasets(columnMultiIndicator,
                     tdColumn);
             iterator = createGanttDatasets.keySet().iterator();
             chart = TopChartFactory.createGanttChart(columnMultiIndicator, columnPara);

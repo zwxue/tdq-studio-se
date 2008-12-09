@@ -40,7 +40,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.preview.ChartImageFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -248,7 +248,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB");
             dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB");
         }
-        JFreeChart createStacked3DBarChart = ChartImageFactory.createStacked3DBarChart("Columns Comparison", dataset,
+        JFreeChart createStacked3DBarChart = TopChartFactory.createStacked3DBarChart("Columns Comparison", dataset,
                 PlotOrientation.HORIZONTAL);
         GridData gd = new GridData();
         gd.heightHint = 180;

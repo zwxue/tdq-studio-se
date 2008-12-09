@@ -23,8 +23,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -33,7 +31,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -46,8 +43,8 @@ import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
+import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 
@@ -56,70 +53,9 @@ import org.talend.dq.pattern.PatternTransformer;
  */
 public class ChartTableFactory {
 
-    public static void createTable(Composite parent, ChartWithData inputObject, final Analysis analysis) {
-        final TableViewer tbViewer = new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
+    public static void addMenuAndTip(final TableViewer tbViewer, final IDataExplorer explorer, final Analysis analysis) {
 
         final Table table = tbViewer.getTable();
-
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        GridData gd = new GridData();
-        gd.heightHint = 220;
-        gd.widthHint = 500;
-        gd.verticalAlignment = SWT.BEGINNING;
-        table.setLayoutData(gd);
-
-        String[] names = null;
-        Integer[] widths = null;
-
-        final EIndicatorChartType chartTableType = inputObject.getChartType();
-
-        switch (chartTableType) {
-        case FREQUENCE_STATISTICS:
-        case LOW_FREQUENCE_STATISTICS:
-        case PATTERN_FREQUENCE_STATISTICS:
-        case PATTERN_LOW_FREQUENCE_STATISTICS:
-            names = new String[] { "value", "count", "%" };
-            widths = new Integer[] { 200, 150, 150 };
-
-            break;
-        case MODE_INDICATOR:
-            names = new String[] { "Mode" };
-            widths = new Integer[] { 500 };
-
-            break;
-        case SQL_PATTERN_MATCHING:
-        case PATTERN_MATCHING:
-            names = new String[] { "Label", "%Match", "%No Match", "#Match", "#No Match" };
-            widths = new Integer[] { 200, 75, 75, 75, 75 };
-
-            break;
-        case SIMPLE_STATISTICS:
-            names = new String[] { "Label", "Count", "%" };
-            widths = new Integer[] { 200, 150, 150 };
-
-            break;
-        case TEXT_STATISTICS:
-            names = new String[] { "Label", "Value" };
-            widths = new Integer[] { 200, 300 };
-
-            break;
-        case SUMMARY_STATISTICS:
-            names = new String[] { "Label", "Value" };
-            widths = new Integer[] { 200, 300 };
-
-            break;
-        default:
-
-        }
-
-        createTableColumnStructure(names, widths, table);
-
-        tbViewer.setLabelProvider(ChartTableProviderFactory.createLabelProvider(chartTableType));
-
-        tbViewer.setContentProvider(ChartTableProviderFactory.createContentProvider(chartTableType));
-
-        tbViewer.setInput(inputObject);
 
         tbViewer.getTable().addMouseListener(new MouseAdapter() {
 
@@ -136,7 +72,7 @@ public class ChartTableFactory {
                         Menu menu = new Menu(table.getShell(), SWT.POP_UP);
                         table.setMenu(menu);
                         int createPatternFlag = 0;
-                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartTableType, analysis, dataEntity);
+                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
                         for (final MenuItemEntity itemEntity : itemEntities) {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
@@ -177,16 +113,6 @@ public class ChartTableFactory {
 
         // add tool tip
         addTooltipOnTableItem(table);
-    }
-
-    private static void createTableColumnStructure(String[] columNames, Integer[] columnWidths, Table table) {
-        if (columNames.length == columnWidths.length) {
-            for (int i = 0; i < columNames.length; i++) {
-                TableColumn column = new TableColumn(table, SWT.NONE);
-                column.setText(columNames[i]);
-                column.setWidth(columnWidths[i]);
-            }
-        }
     }
 
     private static void addTooltipOnTableItem(final Table table) {

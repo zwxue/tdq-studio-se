@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.editor.preview.model;
+package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableColorProvider;
@@ -22,7 +22,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 
@@ -31,29 +31,10 @@ import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
  */
 public class ChartTableProviderFactory {
 
-    static ITableLabelProvider createLabelProvider(EIndicatorChartType chartType) {
-
-        switch (chartType) {
-        case MODE_INDICATOR:
-            return new ModeLabelProvider();
-        case SQL_PATTERN_MATCHING:
-        case PATTERN_MATCHING:
-            return new PatternLabelProvider();
-        case SUMMARY_STATISTICS:
-            return new SummaryLabelProvider();
-        default:
-            return new BaseChartTableLabelProvider();
-        }
-    }
-
-    static IStructuredContentProvider createContentProvider(EIndicatorChartType chartType) {
-        return new CommonContenteProvider();
-    }
-
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class BaseChartTableLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
+    public static class BaseChartTableLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 
         public Image getColumnImage(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
@@ -108,7 +89,7 @@ public class ChartTableProviderFactory {
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class SummaryLabelProvider extends BaseChartTableLabelProvider {
+    public static class SummaryLabelProvider extends BaseChartTableLabelProvider {
 
         public String getColumnText(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
@@ -128,7 +109,7 @@ public class ChartTableProviderFactory {
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class PatternLabelProvider extends BaseChartTableLabelProvider {
+    public static class PatternLabelProvider extends BaseChartTableLabelProvider {
 
         public String getColumnText(Object element, int columnIndex) {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;
@@ -182,7 +163,7 @@ public class ChartTableProviderFactory {
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class ModeLabelProvider extends BaseChartTableLabelProvider {
+    public static class ModeLabelProvider extends BaseChartTableLabelProvider {
 
         @Override
         public String getColumnText(Object element, int columnIndex) {
@@ -196,7 +177,7 @@ public class ChartTableProviderFactory {
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment
      */
-    static class CommonContenteProvider implements IStructuredContentProvider {
+    public static class CommonContenteProvider implements IStructuredContentProvider {
 
         public Object[] getElements(Object inputElement) {
             if (inputElement instanceof ChartWithData) {

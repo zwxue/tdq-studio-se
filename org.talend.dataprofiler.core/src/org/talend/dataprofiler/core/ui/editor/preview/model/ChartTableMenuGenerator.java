@@ -16,7 +16,6 @@ import java.util.Map;
 
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.explore.IDataExplorer;
-import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
@@ -24,9 +23,7 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  */
 public class ChartTableMenuGenerator {
 
-    public static MenuItemEntity[] generate(EIndicatorChartType chartTableType, Analysis analysis, ChartDataEntity entity) {
-
-        IDataExplorer explorer = chartTableType.getExplorer();
+    public static MenuItemEntity[] generate(IDataExplorer explorer, Analysis analysis, ChartDataEntity entity) {
 
         if (explorer != null) {
             explorer.setAnalysis(analysis);

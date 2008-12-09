@@ -10,52 +10,46 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.editor.preview.model;
+package org.talend.dataprofiler.core.ui.editor.preview.model.dataset;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
- * DOC zqin class global comment. Detailled comment
+ * DOC Zqin class global comment. Detailled comment
  */
-public class CustomerDataset implements IDataEntity {
+public class CustomerDefaultCategoryDataset extends DefaultCategoryDataset implements ICustomerDataset {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     private List<ChartDataEntity> dataEnities;
 
-    private CategoryDataset dataset;
-
-    private Boolean valid;
-
-    public CustomerDataset() {
+    public CustomerDefaultCategoryDataset() {
         dataEnities = new ArrayList<ChartDataEntity>();
-        dataset = new DefaultCategoryDataset();
-    }
-
-    public Boolean getValid() {
-        return valid;
-    }
-
-    public void setValid(Boolean valid) {
-        this.valid = valid;
     }
 
     public void addDataEntity(ChartDataEntity dataEntity) {
+        // TODO Auto-generated method stub
         dataEnities.add(dataEntity);
     }
 
+    public void addDataEntity(ChartDataEntity[] dataEntity) {
+        // TODO Auto-generated method stub
+        for (ChartDataEntity data : dataEntity) {
+            dataEnities.add(data);
+        }
+    }
+
     public ChartDataEntity[] getDataEntities() {
+        // TODO Auto-generated method stub
         return dataEnities.toArray(new ChartDataEntity[dataEnities.size()]);
     }
 
-    public CategoryDataset getDataset() {
-        return dataset;
-    }
-
-    public void setDataset(CategoryDataset dataset) {
-        this.dataset = dataset;
-    }
 }

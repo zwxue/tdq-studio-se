@@ -19,12 +19,13 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,13 +36,8 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.browser.WebBrowserEditor;
-import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.ChartPanel;
@@ -53,21 +49,25 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenerator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
-import org.talend.dataprofiler.core.ui.editor.preview.model.IDataEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -164,40 +164,53 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
                         public void run() {
 
-                            for (ChartWithData chartData : IndicatorChartFactory.createChart(columnIndicator, true)) {
+                            Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
+                                    .getIndicatorComposite(columnIndicator);
+                            for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
+                                List<IndicatorUnit> units = indicatorComposite.get(chartType);
+                                if (!units.isEmpty()) {
+                                    IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+                                    ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(),
+                                            chartTypeState.getDataEntity());
 
-                                ExpandableComposite subComp = toolkit.createExpandableComposite(comp, ExpandableComposite.TWISTIE
-                                        | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-                                subComp.setText(chartData.getChartType().getLiteral());
-                                subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+                                    // create UI
+                                    ExpandableComposite subComp = toolkit.createExpandableComposite(comp,
+                                            ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT
+                                                    | ExpandableComposite.EXPANDED);
+                                    subComp.setText(chartData.getChartType().getLiteral());
+                                    subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-                                final Composite composite = toolkit.createComposite(subComp, SWT.NULL);
-                                composite.setLayout(new GridLayout(2, false));
-                                composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+                                    final Composite composite = toolkit.createComposite(subComp, SWT.NULL);
+                                    composite.setLayout(new GridLayout(2, false));
+                                    composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-                                // create table
-                                final Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
-                                ChartTableFactory.createTable(composite, chartData, analysis);
-                                // carete chart
-                                final JFreeChart chart = chartData.getChart();
-                                final EIndicatorChartType chartType = chartData.getChartType();
-                                if (chart != null) {
-                                    GridData gd = new GridData(GridData.FILL_BOTH);
-                                    ChartPanel chartPanel = ChartUtils.createAWTSWTComp(composite, gd, chart);
-                                    addMouseListenerForChart(chartPanel, chartType, analysis);
-                                }
+                                    Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
 
-                                subComp.setClient(composite);
-                                subComp.addExpansionListener(new ExpansionAdapter() {
+                                    // create table
+                                    TableViewer tableviewer = chartTypeState.getTableForm(composite);
+                                    tableviewer.setInput(chartData);
+                                    DataExplorer dataExplorer = chartTypeState.getDataExplorer();
+                                    ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
-                                    @Override
-                                    public void expansionStateChanged(ExpansionEvent e) {
-                                        form.reflow(true);
+                                    // create chart
+                                    JFreeChart chart = chartTypeState.getChart();
+                                    if (chart != null) {
+                                        GridData gd = new GridData(GridData.FILL_BOTH);
+                                        ChartPanel chartPanel = ChartUtils.createAWTSWTComp(composite, gd, chart);
+                                        addMouseListenerForChart(chartPanel, dataExplorer, analysis);
                                     }
 
-                                });
-                            }
+                                    subComp.setClient(composite);
+                                    subComp.addExpansionListener(new ExpansionAdapter() {
 
+                                        @Override
+                                        public void expansionStateChanged(ExpansionEvent e) {
+                                            form.reflow(true);
+                                        }
+
+                                    });
+                                }
+                            }
                         }
 
                     });
@@ -243,36 +256,14 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         createFormContent(getManagedForm());
     }
 
-    /**
-     * DOC qzhang Comment method "addShowDefinition".
-     * 
-     * @param image
-     */
-    public static void addShowDefinition(ImageHyperlink image) {
-        image.setToolTipText(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.what")); //$NON-NLS-1$
-        image.addHyperlinkListener(new HyperlinkAdapter() {
-
-            public void linkActivated(HyperlinkEvent e) {
-                try {
-                    WebBrowserEditor.open(new WebBrowserEditorInput(new URL(DefaultMessagesImpl
-                            .getString("ColumnAnalysisResultPage.url")))); //$NON-NLS-1$
-                } catch (MalformedURLException e1) {
-                    ExceptionHandler.process(e1);
-                }
-            }
-
-        });
-    }
-
-    private void addMouseListenerForChart(final ChartPanel chartPanel, final EIndicatorChartType chartType,
-            final Analysis analysis) {
+    private void addMouseListenerForChart(final ChartPanel chartPanel, final IDataExplorer explorer, final Analysis analysis) {
         chartPanel.addChartMouseListener(new ChartMouseListener() {
 
             public void chartMouseClicked(ChartMouseEvent event) {
                 ChartEntity chartEntity = event.getEntity();
                 if (chartEntity != null) {
                     CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
-                    IDataEntity dataEntity = (IDataEntity) cateEntity.getDataset();
+                    ICustomerDataset dataEntity = (ICustomerDataset) cateEntity.getDataset();
 
                     ChartDataEntity currentDataEntity = null;
                     ChartDataEntity[] dataEntities = dataEntity.getDataEntities();
@@ -280,16 +271,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                         currentDataEntity = dataEntities[0];
                     } else {
                         for (ChartDataEntity entity : dataEntities) {
-                            switch (chartType) {
-                            case FREQUENCE_STATISTICS:
-                            case LOW_FREQUENCE_STATISTICS:
-                            case PATTERN_FREQUENCE_STATISTICS:
-                            case PATTERN_LOW_FREQUENCE_STATISTICS:
-                                if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
-                                    currentDataEntity = entity;
-                                }
-                                break;
-                            default:
+                            if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
+                                currentDataEntity = entity;
+                            } else {
                                 if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
                                     currentDataEntity = entity;
                                 }
@@ -301,7 +285,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                     if (currentDataEntity != null) {
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
                         int createPatternFlag = 0;
-                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(chartType, analysis, currentDataEntity);
+                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
                         for (final MenuItemEntity itemEntity : itemEntities) {
                             MenuItem item = new MenuItem(itemEntity.getLabel());
                             item.addActionListener(new ActionListener() {

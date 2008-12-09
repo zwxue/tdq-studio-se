@@ -49,14 +49,14 @@ public class IndicatorCommonUtil {
 
     }
 
-    public static void compositeIndicatorMap(IndicatorUnit indicatorUnit) {
+    public static void getIndicatorValue(IndicatorUnit indicatorUnit) {
 
         Object tempObject = null;
 
         IndicatorEnum type = indicatorUnit.getType();
         Indicator indicator = indicatorUnit.getIndicator();
 
-        if (!indicator.getInstantiatedExpressions().isEmpty()) {
+        if (indicatorUnit.isExcuted()) {
 
             switch (type) {
             case RowCountIndicatorEnum:
@@ -157,7 +157,6 @@ public class IndicatorCommonUtil {
 
             }
 
-            indicatorUnit.setExcuted(true);
             indicatorUnit.setValue(tempObject);
         }
     }

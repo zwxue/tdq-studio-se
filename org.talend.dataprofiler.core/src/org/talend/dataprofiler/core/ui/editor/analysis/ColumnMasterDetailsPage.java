@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,8 +62,10 @@ import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorChartFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -72,6 +75,7 @@ import org.talend.dq.analysis.ColumnAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
@@ -329,15 +333,19 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                             public void run() {
 
-                                for (ChartWithData chartData : IndicatorChartFactory.createChart(columnIndicator, isCreate)) {
-                                    // carete chart
-                                    JFreeChart chart = chartData.getChart();
-                                    if (chart != null) {
-
-                                        ChartUtils.createAWTSWTComp(comp, new GridData(GridData.FILL_BOTH), chart);
-
-                                        // ChartComposite chartcomp = new ChartComposite(comp, SWT.EMBEDDED, chart,
-                                        // true);
+                                Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator
+                                        .getInstance().getIndicatorComposite(columnIndicator);
+                                for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
+                                    List<IndicatorUnit> units = indicatorComposite.get(chartType);
+                                    if (!units.isEmpty()) {
+                                        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+                                        JFreeChart chart = chartTypeState.getChart();
+                                        if (chart != null) {
+                                            GridData gd = new GridData();
+                                            gd.widthHint = 450;
+                                            gd.heightHint = 250;
+                                            ChartUtils.createAWTSWTComp(comp, gd, chart);
+                                        }
                                     }
                                 }
                             }

@@ -36,8 +36,6 @@ public class IndicatorUnit {
 
     private IndicatorUnit[] children;
 
-    private boolean isExcuted;
-
     public IndicatorUnit(IndicatorEnum type, Indicator indicator, ColumnIndicator parentColumn) {
         this.type = type;
         this.indicator = indicator;
@@ -126,11 +124,6 @@ public class IndicatorUnit {
     }
 
     public boolean isExcuted() {
-        return isExcuted;
+        return !indicator.getInstantiatedExpressions().isEmpty();
     }
-
-    public void setExcuted(boolean isExcuted) {
-        this.isExcuted = isExcuted;
-    }
-
 }
