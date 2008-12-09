@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,11 +64,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
      * 
      * DOC zhaoxinyi HideSeriesPanel class global comment. Detailled comment
      */
-
-    /**
-     * 
-     * DOC zhaoxinyi HideSeriesPanel class global comment. Detailled comment
-     */
+    @SuppressWarnings("serial")
     class CustomHideSeriesGantt extends HideSeriesGanttRenderer {
 
         /**
@@ -87,6 +84,23 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * 
+     * DOC zhaoxinyi HideSeriesPanel class global comment. Detailled comment
+     */
+    @SuppressWarnings("serial")
+    class HideChartPanel extends ChartPanel {
+
+        public HideChartPanel(JFreeChart chart) {
+            super(chart);
+        }
+
+        public void mouseEntered(MouseEvent e) {
+            super.mouseEntered(e);
+            grabFocus();
+        }
+    }
+
     private ColumnSetMultiValueIndicator countIndicator;
 
     private TdColumn tdColumn;
@@ -95,6 +109,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
 
     private CategoryItemRenderer ganttRenderer;
 
+    @SuppressWarnings("unchecked")
     public void actionPerformed(ActionEvent actionevent) {
         Iterator<String> iterator = null;
         if (countIndicator instanceof CountAvgNullIndicator) {
@@ -173,8 +188,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
             ganttRenderer = plot.getRenderer();
         }
-
-        ChartPanel chartpanel = new ChartPanel(chart);
+        HideChartPanel chartpanel = new HideChartPanel(chart);
         chartpanel.setPreferredSize(new Dimension(1000, 500));
         JPanel jpanel = new JPanel();
         while (iterator.hasNext()) {
@@ -255,6 +269,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             }
         }
     }
+
 }
 
 /**

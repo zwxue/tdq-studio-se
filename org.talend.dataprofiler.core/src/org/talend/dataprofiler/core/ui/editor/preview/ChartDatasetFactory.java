@@ -56,6 +56,7 @@ public class ChartDatasetFactory {
 
     private static final double OUTLIER_FACTOR = 3;
 
+    @SuppressWarnings("unchecked")
     static IDataEntity createDataset(EIndicatorChartType chartType, List<IndicatorUnit> indicatorUnitList) {
 
         CustomerDataset customerdata = new CustomerDataset();

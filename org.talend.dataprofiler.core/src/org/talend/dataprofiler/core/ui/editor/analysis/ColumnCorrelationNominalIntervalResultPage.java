@@ -51,7 +51,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
@@ -334,7 +333,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                 false // urls
                 );
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        CategoryAxis axis = plot.getDomainAxis();
+        // CategoryAxis axis = plot.getDomainAxis();
         // axis.setVisible(false);
         plot.setRangeGridlinesVisible(true);
 
