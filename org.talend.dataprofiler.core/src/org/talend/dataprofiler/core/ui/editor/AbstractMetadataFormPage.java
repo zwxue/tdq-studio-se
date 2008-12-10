@@ -42,7 +42,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     public static final String ACTION_HANDLER = "ACTION_HANDLER"; //$NON-NLS-1$
 
-    private static final int META_FIELD_WIDTH = 750;
+    private static final int META_FIELD_WIDTH = 200;
 
     protected Text nameText;
 
