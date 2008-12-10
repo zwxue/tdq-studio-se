@@ -240,7 +240,7 @@ public final class ChartDatasetUtils {
             int i = 0;
             for (MultipleKey key : keyToVal.keySet()) {
                 final Double[] doubles = keyToVal.get(key);
-                xDouble[i] = doubles[0] / doubles[1]; // FIXME how to know this is the avg !!
+                xDouble[i] = doubles[0]; 
                 yDouble[i] = doubles[1];
                 zDouble[i] = doubles[2];
                 MultiMapHelper.addUniqueObjectToListMap(keyOfDataset, key.toString(), this.seriesKeyToLabel);
