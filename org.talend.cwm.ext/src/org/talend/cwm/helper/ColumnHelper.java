@@ -22,7 +22,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -32,7 +31,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * 
  * Utility class for handling (Td)Columns.
  */
-public class ColumnHelper {
+public final class ColumnHelper {
 
     private ColumnHelper() {
     }
