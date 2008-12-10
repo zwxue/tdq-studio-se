@@ -180,6 +180,22 @@
     <taggedValue xmi:id="_txkkkJE3Ed2HGNmGoaS-_w" tag="Description" value="Counts the number of data from a column set A that match data of a column set B"/>
     <sqlGenericExpression xmi:id="_4xpm0JE3Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> LEFT JOIN &lt;%=__TABLE_NAME_2__%> ON (&lt;%=__JOIN_CLAUSE__%>) WHERE (&lt;%=__WHERE_CLAUSE__%>)" language="SQL"/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_nZEo8MYSEd27NP4lvE0A4w" name="Connection Overview" categories="_wQj8IMYUEd27NP4lvE0A4w" aggregatedDefinitions="_QwDiwMYUEd27NP4lvE0A4w" label="Connection Overview">
+    <taggedValue xmi:id="_FqBpgMYUEd27NP4lvE0A4w" tag="Purpose" value="Give an overview of the content of a connection"/>
+    <taggedValue xmi:id="_FqBpgcYUEd27NP4lvE0A4w" tag="Description" value="Counts the number of rows, tables, catalogs, schemas..."/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_QwDiwMYUEd27NP4lvE0A4w" name="Catalog Overview" categories="_wQj8IMYUEd27NP4lvE0A4w" aggregatedDefinitions="_V4SA0MYUEd27NP4lvE0A4w _hgO7YMYUEd27NP4lvE0A4w" label="Catalog Overview">
+    <taggedValue xmi:id="_UH4aMMYUEd27NP4lvE0A4w" tag="Purpose" value="Give an overview of the content of a catalog"/>
+    <taggedValue xmi:id="_UH4aMcYUEd27NP4lvE0A4w" tag="Description" value="Counts the number of rows, tables, schemas..."/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_V4SA0MYUEd27NP4lvE0A4w" name="Schema Overview" categories="_wQj8IMYUEd27NP4lvE0A4w" aggregatedDefinitions="_hgO7YMYUEd27NP4lvE0A4w" label="Schema Overview">
+    <taggedValue xmi:id="_YLSlQMYUEd27NP4lvE0A4w" tag="Purpose" value="Give an overview of the content of a schema"/>
+    <taggedValue xmi:id="_YLSlQcYUEd27NP4lvE0A4w" tag="Description" value="Counts the number of rows, tables..."/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_hgO7YMYUEd27NP4lvE0A4w" name="Table Overview" categories="_wQj8IMYUEd27NP4lvE0A4w" label="Table Overview">
+    <taggedValue xmi:id="_kRtkgMYUEd27NP4lvE0A4w" tag="Purpose" value="Give an overview of the content of a table"/>
+    <taggedValue xmi:id="_kRtkgcYUEd27NP4lvE0A4w" tag="Description" value="Counts the number of rows, primary keys, indices..."/>
+  </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_kQzTsJR-Ed2XO-JvLwVAwg" name="Pattern Frequency Table" categories="_0n3BsJR-Ed2XO-JvLwVAwg" label="Pattern Frequency Table">
     <taggedValue xmi:id="_kQz6wJR-Ed2XO-JvLwVAwg" tag="Description" value="counts the number of records for each distinct pattern"/>
     <taggedValue xmi:id="_kQz6wZR-Ed2XO-JvLwVAwg" tag="Purpose" value="evaluates the most frequent patterns"/>
@@ -214,6 +230,10 @@
     <taggedValue xmi:id="_yCHCUrrcEd2PGrJOyhNk-w" tag="Purpose" value="evaluates frequencies of values on several columns"/>
     <sqlGenericExpression xmi:id="_yCHCU7rcEd2PGrJOyhNk-w" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>" language="SQL"/>
     <date1argFunctions xmi:id="_3CkEMMBdEd2OKqiaTD0zvg" body="MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)" language="SQL"/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_lNIE0MbNEd2d_JPxxDRSfQ" name="View Overview" categories="_wQj8IMYUEd27NP4lvE0A4w" label="View Overview">
+    <taggedValue xmi:id="_lNIE0cbNEd2d_JPxxDRSfQ" tag="Purpose" value="Give an overview of the content of a view"/>
+    <taggedValue xmi:id="_lNIE0sbNEd2d_JPxxDRSfQ" tag="Description" value="Counts the number of rows..."/>
   </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
@@ -260,4 +280,5 @@
     <taggedValue xmi:id="_ycCDQjh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze the quantity of records"/>
   </categories>
   <categories xmi:id="_-DfJgLrcEd2PGrJOyhNk-w" name="Correlation" label="Correlation"/>
+  <categories xmi:id="_wQj8IMYUEd27NP4lvE0A4w" name="Overview" label="Overview"/>
 </dataquality.indicators.definition:IndicatorsDefinitions>
