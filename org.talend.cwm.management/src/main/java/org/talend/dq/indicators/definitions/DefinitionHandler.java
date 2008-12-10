@@ -60,6 +60,12 @@ import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
+import org.talend.dataquality.indicators.schema.ConnectionIndicator;
+import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dataquality.indicators.schema.TableIndicator;
+import org.talend.dataquality.indicators.schema.ViewIndicator;
+import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.GenericSQLHandler;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -338,6 +344,80 @@ public final class DefinitionHandler {
      */
     private final IndicatorsSwitch<Boolean> indicatorSwitch = new IndicatorsSwitch<Boolean>() {
 
+        private final SchemaSwitch<Boolean> schemaIndicatorSwitch = new SchemaSwitch<Boolean>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.schema.util.SchemaSwitch#caseCatalogIndicator(org.talend.dataquality
+             * .indicators.schema.CatalogIndicator)
+             */
+            @Override
+            public Boolean caseCatalogIndicator(CatalogIndicator object) {
+                return setIndicatorDefinition(object, "Catalog Overview");
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.schema.util.SchemaSwitch#caseConnectionIndicator(org.talend.dataquality
+             * .indicators.schema.ConnectionIndicator)
+             */
+            @Override
+            public Boolean caseConnectionIndicator(ConnectionIndicator object) {
+                return setIndicatorDefinition(object, "Connection Overview");
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.schema.util.SchemaSwitch#caseSchemaIndicator(org.talend.dataquality
+             * .indicators.schema.SchemaIndicator)
+             */
+            @Override
+            public Boolean caseSchemaIndicator(SchemaIndicator object) {
+                return setIndicatorDefinition(object, "Schema Overview");
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.schema.util.SchemaSwitch#caseTableIndicator(org.talend.dataquality.
+             * indicators.schema.TableIndicator)
+             */
+            @Override
+            public Boolean caseTableIndicator(TableIndicator object) {
+                return setIndicatorDefinition(object, "Table Overview");
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @seeorg.talend.dataquality.indicators.schema.util.SchemaSwitch#caseViewIndicator(org.talend.dataquality.
+             * indicators.schema.ViewIndicator)
+             */
+            @Override
+            public Boolean caseViewIndicator(ViewIndicator object) {
+                return setIndicatorDefinition(object, "View Overview");
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.schema.util.SchemaSwitch#defaultCase(org.eclipse.emf.ecore.EObject)
+             */
+            @Override
+            public Boolean defaultCase(EObject object) {
+                return false;
+            }
+
+        };
+        
         private final ColumnsetSwitch<Boolean> columnIndicatorSwitch = new ColumnsetSwitch<Boolean>() {
 
             /*
@@ -396,7 +476,8 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean defaultCase(EObject object) {
-                return false;
+                // try schemaswitch
+                return schemaIndicatorSwitch.doSwitch(object);
             }
 
         };
@@ -598,7 +679,7 @@ public final class DefinitionHandler {
             return setIndicatorDefinition(object, "Upper Quartile");
         }
 
-    };
+    }; // EOC IndicatorsSwitch
 
     private Boolean setIndicatorDefinition(Indicator indicator, String definitionLabel) {
         // get the definition
