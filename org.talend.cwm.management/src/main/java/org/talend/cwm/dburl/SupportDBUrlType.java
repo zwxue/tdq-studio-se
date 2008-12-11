@@ -104,7 +104,8 @@ public enum SupportDBUrlType {
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$
                        null,
                        "FireBird"), //$NON-NLS-1$
-    INGRESDEFAULTURL("Ingres", "localhost", "II7", "dbname", null, "com.ingres.jdbc.IngresDriver", null, "Ingres");
+    INGRESDEFAULTURL("Ingres", "localhost", "II7", "dbname", null, "com.ingres.jdbc.IngresDriver", null, "Ingres"),
+    SQLITE3DEFAULTURL("SQLite3", "localhost", "", "dbname", null, "org.sqlite.JDBC", null, "SQLite3");
 
     private final String dbKey;
 

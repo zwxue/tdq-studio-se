@@ -73,6 +73,7 @@ public final class SupportDBUrlStore {
         // supportDBUrlMap.put(SupportDBUrlType.FIREBIRDDEFAULTURL.getDBKey(), SupportDBUrlType.FIREBIRDDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.INGRESDEFAULTURL.getDBKey(), SupportDBUrlType.INGRESDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.INFORMIXDEFAULTURL.getDBKey(), SupportDBUrlType.INFORMIXDEFAULTURL);
+        supportDBUrlMap.put(SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey(), SupportDBUrlType.SQLITE3DEFAULTURL);
     }
 
     public void changeAllDBNmae(String dbName) {
