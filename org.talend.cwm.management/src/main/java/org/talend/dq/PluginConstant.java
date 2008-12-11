@@ -33,7 +33,7 @@ public final class PluginConstant {
 
     public static final String DBTYPE_PROPERTY = "dbtype";
 
-    public static final String DEFAULT_PARAMETERS = "noDatetimeStringSync=true";
+    public static final String DEFAULT_PARAMETERS = "zeroDateTimeBehavior=convertToNull&noDatetimeStringSync=true";
 
     public static final String PRV_SUFFIX = "." + FactoriesUtil.PROV;
 

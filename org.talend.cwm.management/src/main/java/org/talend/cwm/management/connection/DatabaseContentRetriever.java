@@ -114,7 +114,7 @@ public final class DatabaseContentRetriever {
 
                 // --- check whether the result set has two columns (Oracle and Sybase only return 1 column)
                 final int columnCount = schemas.getMetaData().getColumnCount();
-
+                boolean hasSchema = false;
                 while (schemas.next()) {
 
                     // set link Catalog -> Schema if exists
@@ -139,6 +139,13 @@ public final class DatabaseContentRetriever {
                             }
                         }
                     }
+                    hasSchema = true; // found at least one schema
+                }
+                // handle case of SQLite (no schema no catalog)
+                if (!hasSchema && catalogName2schemas.isEmpty()) {
+                    // create a fake schema with an empty name (otherwise queries will use the name and will fail)
+                    TdSchema schema = createSchema(" "); //$NON-NLS-1$
+                    MultiMapHelper.addUniqueObjectToListMap(null, schema, catalogName2schemas);
                 }
             }
         } catch (SQLException e) {
@@ -343,7 +350,7 @@ public final class DatabaseContentRetriever {
 
         // --- create and fill the software system
         TdSoftwareSystem system = SoftwaredeploymentFactory.eINSTANCE.createTdSoftwareSystem();
-        system.setName(databaseProductName); // TODO scorreia find the name!
+        system.setName(databaseProductName); 
         system.setType(SoftwareSystemConstants.DBMS.toString());
         system.setSubtype(databaseProductName);
         system.setVersion(databaseProductVersion);

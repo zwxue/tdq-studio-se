@@ -100,9 +100,14 @@ public final class DbmsLanguageFactory {
         if (isSybaseASE(dbmsSubtype)) {
             return new SybaseASEDbmsLanguage();
         }
+         if (isSQLite(dbmsSubtype)) {
+            return new SQLiteDbmsLanguage(dbmsSubtype);
+        }
+        // TODO other supported databases here
         return new DbmsLanguage();
     }
 
+  
     /**
      * Method "createDbmsLanguage".
      * 
@@ -145,6 +150,10 @@ public final class DbmsLanguageFactory {
 
     private static boolean isSybaseASE(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.SYBASE_ASE, dbms);
+    }
+
+    private static boolean isSQLite(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.SQLITE3, dbms);
     }
 
     static boolean compareDbmsLanguage(String lang1, String lang2) {

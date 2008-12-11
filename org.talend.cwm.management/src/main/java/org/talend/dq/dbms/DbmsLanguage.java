@@ -62,6 +62,8 @@ public class DbmsLanguage {
 
     static final String SYBASE_ASE = SupportDBUrlType.SYBASEDEFAULTURL.getLanguage();
 
+    static final String SQLITE3 = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
+
     /**
      * Ansi SQL.
      */
@@ -240,11 +242,11 @@ public class DbmsLanguage {
 
     public String toQualifiedName(String catalog, String schema, String table) {
         StringBuffer qualName = new StringBuffer();
-        if (catalog != null && catalog.length() > 0) {
+        if (catalog != null && catalog.trim().length() > 0) {
             qualName.append(this.quote(catalog));
             qualName.append(DOT);
         }
-        if (schema != null && schema.length() > 0) {
+        if (schema != null && schema.trim().length() > 0) {
             qualName.append(this.quote(schema));
             qualName.append(DOT);
         }
