@@ -30,7 +30,8 @@ public enum PatternToExcelEnum {
     SQLServerRegexp(10, "SQL Server Regexp"), //$NON-NLS-1$
     SybaseRegexp(11, "Sybase Regexp"), //$NON-NLS-1$
     IngresRegexp(12, "Ingres Regexp"),
-    InformixRegexp(13, "Informix Regexp");
+    InformixRegexp(13, "Informix Regexp"),
+    SQLite3Regexp(14, "SQLite3 Regexp");
 
     private String literal;
 

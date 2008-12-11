@@ -62,7 +62,12 @@ public enum PatternLanguageType {
              8,
              SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
              SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
-             PatternToExcelEnum.InformixRegexp);
+             PatternToExcelEnum.InformixRegexp),
+    SQLITE3(
+            9,
+            SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
+            SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
+            PatternToExcelEnum.SQLite3Regexp);
 
     private int index;
 
