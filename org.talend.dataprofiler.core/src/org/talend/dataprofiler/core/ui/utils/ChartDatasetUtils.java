@@ -124,12 +124,12 @@ public final class ChartDatasetUtils {
     }
 
     /**
-     * DOC scorreia Comment method "fillDataset".
+     * Method "fillDataset" fills in the data sets.
      * 
-     * @param nominalColumns
-     * @param listRows
-     * @param firstNumericColumnIdx
-     * @param dataset
+     * @param nominalColumns the nominal columns
+     * @param listRows the rows (=result set)
+     * @param firstNumericColumnIdx the index of the first numeric column
+     * @return a map [key -> aggregated values] where identifies a level of aggregation
      */
     private static Map<String, ValueAggregator> fillDataset(final EList<Column> nominalColumns, final List<Object[]> listRows,
             final int firstNumericColumnIdx) {
@@ -169,38 +169,41 @@ public final class ChartDatasetUtils {
      * 
      */
     private static Map<String, DateValueAggregate> fillGanttDataset(final EList<Column> nominalColumns,
-            final List<Object[]> listRows, final int firstNumericColumnIdx) {
+            final List<Object[]> listRows, final int firstDateColumnIdx) {
         Map<String, DateValueAggregate> valueAggregators = new HashMap<String, DateValueAggregate>();
 
-        int minPos = firstNumericColumnIdx;
-        int maxPos = firstNumericColumnIdx + 1;
+        int minPos = firstDateColumnIdx;
+        int maxPos = firstDateColumnIdx + 1;
         for (int i = nominalColumns.size(); i > 0; i--) {
             String key = createKey(nominalColumns, i);
             for (Object[] row : listRows) {
                 final Object minObj = row[minPos];
+                final Date minDate = minObj != null ? (Date) minObj : null; 
                 final Object maxobj = row[maxPos];
-
+                final Date maxDate = maxobj != null ? (Date) maxobj : null;
+                
                 DateValueAggregate valueAggregator = valueAggregators.get(key);
                 if (valueAggregator == null) {
                     valueAggregator = new DateValueAggregate();
                     valueAggregators.put(key, valueAggregator);
                 }
                 MultipleKey multipleKey = new MultipleKey(row, i);
-                valueAggregator.addValue(multipleKey, new Date[] { (Date) minObj, (Date) maxobj });
+                valueAggregator.addValue(multipleKey, new Date[] { minDate, maxDate });
             }
         }
         return valueAggregators;
     }
 
     /**
-     * DOC scorreia Comment method "createKey".
+     * Method "createKey" creates a key with the concatenation of the values of the first n columns of the given list.
      * 
      * @param nominalColumns
-     * @return
+     * @param n
+     * @return a key
      */
-    private static String createKey(EList<Column> nominalColumns, int idx) {
+    private static String createKey(EList<Column> nominalColumns, int n) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < idx; i++) {
+        for (int i = 0; i < n; i++) {
             builder.append(nominalColumns.get(i).getName()).append(" "); //$NON-NLS-1$
         }
         return builder.toString();
@@ -223,7 +226,40 @@ public final class ChartDatasetUtils {
         public List<String> getLabels(String seriesKey) {
             return seriesKeyToLabel.get(seriesKey);
         }
+        
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.talend.utils.collections.DoubleValueAggregate#addValue(java.lang.Object, java.lang.Double[]) Need to
+         * compute average.
+         */
+        public void addValue(MultipleKey key, Double[] values) {
+            Double[] doubles = keyToVal.get(key);
+            if (doubles == null) {
+                doubles = new Double[values.length];
+                Arrays.fill(doubles, 0.0);
+            }
 
+            // handle average which is an not additive variable
+            assert values.length == 3;
+            // specific code for CountAvgNullIndicator
+            Double avg = values[0];
+            Double count = values[1];
+            Double nulls = values[2];
+            if (count == null || avg == null || nulls == null) {
+                nullResults.add(key);
+                return;
+            }
+            // else add values
+            Double previousCount = doubles[1];
+            Double sumCount = previousCount + count;
+            doubles[0] = (doubles[0] * previousCount + avg * count) / sumCount; // sum averages
+            doubles[1] = sumCount;
+            doubles[2] += nulls;
+
+            keyToVal.put(key, doubles);
+        }
+        
         /**
          * Method "addSeriesToXYZDataset" adds a new series of data to the given dataset.
          * 
@@ -237,6 +273,7 @@ public final class ChartDatasetUtils {
             double[] yDouble = new double[size];
             double[] zDouble = new double[size];
 
+            // get x,y,z for each key
             int i = 0;
             for (MultipleKey key : keyToVal.keySet()) {
                 final Double[] doubles = keyToVal.get(key);
@@ -247,6 +284,7 @@ public final class ChartDatasetUtils {
                 i++;
             }
 
+            // array of data for jfreechart
             double[][] data = new double[][] { xDouble, yDouble, zDouble };
             // System.out.println(Arrays.deepToString(data));
             dataset.addSeries(keyOfDataset, data);
@@ -257,7 +295,7 @@ public final class ChartDatasetUtils {
     /**
      * 
      */
-    public static class DateValueAggregate<T> extends ValueAggregate<T, Date> {
+    public static class DateValueAggregate extends ValueAggregate<MultipleKey, Date> {
 
         private Map<String, List<String>> seriesKeyToLabel = new HashMap<String, List<String>>();
 
@@ -272,24 +310,31 @@ public final class ChartDatasetUtils {
             return seriesKeyToLabel.get(seriesKey);
         }
 
-        /**
-         * 
-         */
-        public void addValue(T key, Date[] values) {
+        public void addValue(MultipleKey key, Date[] values) {
+            assert values.length == 2; // expect only min date and max date functions
+
             Date[] dates = keyToVal.get(key);
             if (dates == null) {
                 dates = new Date[values.length];
-                Arrays.fill(dates, new Date());
+                // fill in with nulls
+                Arrays.fill(dates, null);
             }
 
-            for (int i = 0; i < values.length; i++) {
-                Date d = values[i];
-                if (d == null) {
-                    nullResults.add(key);
-                    return;
-                }
-                dates[i] = d;
+            Date min = values[0];
+            Date max = values[1];
+
+            if (min == null || max == null) {
+                nullResults.add(key);
+                return;
             }
+
+            // assert max.after(max)(min);
+
+            Date prevMinDate = dates[0];
+            Date prevMaxDate = dates[1];
+            dates[0] = (prevMinDate == null || min.before(prevMinDate)) ? min : prevMinDate;
+            dates[1] = (prevMaxDate == null || max.after(prevMaxDate)) ? max : prevMaxDate;
+
             keyToVal.put(key, dates);
         }
 
@@ -302,7 +347,7 @@ public final class ChartDatasetUtils {
         public void addSeriesToGanttDataset(TaskSeriesCollection ganttDataset, String keyOfDataset) {
             // System.out.println(keyOfDataset);
             TaskSeries series = new TaskSeries(keyOfDataset);
-            for (T key : keyToVal.keySet()) {
+            for (MultipleKey key : keyToVal.keySet()) {
                 final Date[] date = keyToVal.get(key);
                 series.add(new Task(((MultipleKey) key).toString(), new SimpleTimePeriod(date[0], date[1])));
                 MultiMapHelper.addUniqueObjectToListMap(keyOfDataset, key.toString(), this.seriesKeyToLabel);
