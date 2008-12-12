@@ -34,9 +34,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -67,8 +65,9 @@ public class PreviewViewAction extends Action {
      */
     @Override
     public void run() {
-        ChangePerspectiveAction perspectiveAction = new ChangePerspectiveAction(PluginConstant.SE_ID);
-        perspectiveAction.run();
+        // MOD scorreia 2008-12-12 do not switch perspective for preview
+        // ChangePerspectiveAction perspectiveAction = new ChangePerspectiveAction(PluginConstant.SE_ID);
+        // perspectiveAction.run();
         SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
         Collection<Alias> aliases = default1.getAliasManager().getAliases();
         TdDataProvider tdDataProvider = DataProviderHelper.getDataProvider(view);

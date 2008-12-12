@@ -18,9 +18,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dq.helper.ColumnSetNameHelper;
 
 /**
@@ -51,7 +49,8 @@ public class PreviewTableAction extends Action {
      */
     @Override
     public void run() {
-        new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+        // MOD scorreia 2008-12-12 do not switch perspective for preview
+        // new ChangePerspectiveAction(PluginConstant.SE_ID).run();
 
         TdDataProvider tdDataProvider = DataProviderHelper.getDataProvider(table);
         String qualifiedName = ColumnSetNameHelper.getColumnSetQualifiedName(tdDataProvider, table);
