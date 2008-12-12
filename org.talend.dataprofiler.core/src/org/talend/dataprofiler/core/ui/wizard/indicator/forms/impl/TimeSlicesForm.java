@@ -26,6 +26,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -83,7 +85,11 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
                 public void widgetSelected(SelectionEvent e) {
                     String timeUnit = button.getText();
                     DateGrain dateGrain = DateGrain.get(timeUnit);
-                    parameters.getDateParameters().setDateAggregationType(dateGrain);
+                    DateParameters dateParameters = parameters.getDateParameters();
+                    if (dateParameters == null) {
+                        dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
+                    }
+                    dateParameters.setDateAggregationType(dateGrain);
                 }
 
             });
@@ -120,12 +126,17 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
     @Override
     protected void initialize() {
 
-        DateGrain dateGrain = parameters.getDateParameters().getDateAggregationType();
+        if (parameters != null) {
+            DateParameters dateParameters = parameters.getDateParameters();
+            if (dateParameters != null) {
+                DateGrain dateGrain = dateParameters.getDateAggregationType();
 
-        for (Button oneBtn : allBtns) {
-            if (oneBtn.getText().equals(dateGrain.getLiteral())) {
+                for (Button oneBtn : allBtns) {
+                    if (oneBtn.getText().equals(dateGrain.getLiteral())) {
 
-                oneBtn.setSelection(true);
+                        oneBtn.setSelection(true);
+                    }
+                }
             }
         }
     }
