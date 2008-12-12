@@ -28,8 +28,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultBAWDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderFactory.CommonContenteProvider;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderFactory.SummaryLabelProvider;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.SummaryLabelProvider;
 import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
@@ -48,7 +48,10 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
     public SummaryStatisticsState(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
+
+        if (units != null && !units.isEmpty()) {
+            sqltype = units.get(0).getParentColumn().getTdColumn().getJavaType();
+        }
     }
 
     public JFreeChart getChart() {
@@ -67,8 +70,6 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     public ICustomerDataset getCustomerDataset() {
         Map<IndicatorEnum, Double> map = new HashMap<IndicatorEnum, Double>();
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
-
-        sqltype = units.get(0).getParentColumn().getTdColumn().getJavaType();
 
         for (IndicatorUnit unit : units) {
             if (Java2SqlType.isNumbericInSQL(sqltype)) {

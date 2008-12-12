@@ -29,7 +29,7 @@ import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class ChartTableProviderFactory {
+public class ChartTableProviderClassSet {
 
     /**
      * DOC zqin ChartTableFactory class global comment. Detailled comment

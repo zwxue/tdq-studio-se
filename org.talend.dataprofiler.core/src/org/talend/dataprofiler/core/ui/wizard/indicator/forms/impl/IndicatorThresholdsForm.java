@@ -88,7 +88,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         higherText = new Text(group, SWT.BORDER);
         higherText.setLayoutData(gdText);
 
-        if (!(parameters.eContainer() instanceof RowCountIndicator)) {
+        if (!(parameters.eContainer() instanceof RowCountIndicator) && !Java2SqlType.isDateInSQL(sqltype)) {
             Group pGroup = new Group(this, SWT.NONE);
             pGroup.setLayout(new GridLayout(2, false));
             pGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
