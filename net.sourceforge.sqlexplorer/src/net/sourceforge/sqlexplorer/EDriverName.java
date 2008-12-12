@@ -73,7 +73,14 @@ public enum EDriverName {
     FIREBIRDDEFAULTURL("FireBird", //$NON-NLS-1$
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$
                        "-25",
-                       "lib/jaybird-2.1.1.jar");
+                       "lib/jaybird-2.1.1.jar"),
+    TERADATADEFAULTURL(
+                       "Teradata",
+                       "com.ncr.teradata.TeraDriver",
+                       "-50",
+                       "lib/terajdbc4.jar",
+                       "lib/tdgssconfig.jar",
+                       "lib/tdgssjava.jar");
 
     private final String dbKey;
 
@@ -141,6 +148,12 @@ public enum EDriverName {
             break;
         case HSQLDEFAULTURL:
             plugins = "org.talend.libraries.jdbc.hsql";
+            break;
+        case TERADATADEFAULTURL:
+            plugins = "org.talend.libraries.jdbc.teradata";
+            break;
+        case INFORMIXDEFAULTURL:
+            plugins = "org.talend.libraries.jdbc.informix";
             break;
         default:
             return linkedList;

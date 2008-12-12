@@ -136,4 +136,9 @@
     <url>jdbc:sybase:Tds:&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>
     <jars/>
   </driver>
+  <driver id="-50">
+    <name>Teradata</name>
+    <url>jdbc:teradata:&lt;host&gt;/&lt;DBNAME&gt;</url>
+    <jars/>
+  </driver>
 </drivers>
