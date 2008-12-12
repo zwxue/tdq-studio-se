@@ -43,7 +43,7 @@ public class PreviewColumnAction extends Action {
             String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
             String columnName = ColumnHelper.getFullName(column);
             String query = "select " + columnName + " from " + tableName;
-            CorePlugin.getDefault().runInDQViewer(dataprovider, query, null);
+            CorePlugin.getDefault().runInDQViewer(dataprovider, query, column.getName());
         }
     }
 }

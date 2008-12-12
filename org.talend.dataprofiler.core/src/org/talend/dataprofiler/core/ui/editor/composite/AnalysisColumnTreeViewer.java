@@ -67,8 +67,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -96,9 +99,11 @@ import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dq.helper.ColumnSetNameHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author rli
@@ -133,7 +138,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     private MenuItem editPatternMenuItem;
 
-    private MenuItem showMenuItem;
+    private MenuItem showMenuItem, previewMenuItem;
 
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
@@ -213,6 +218,23 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelectedElements(newTree);
+            }
+
+        });
+
+        previewMenuItem = new MenuItem(menu, SWT.CASCADE);
+        previewMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.previewDQElement")); //$NON-NLS-1$
+        previewMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        previewMenuItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                previewSelectedElements(newTree);
             }
 
         });
@@ -766,6 +788,30 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
     }
 
+    /**
+     * DOC Zqin Comment method "previewSelectedElements".
+     * 
+     * @param newTree
+     */
+    private void previewSelectedElements(Tree newTree) {
+        TreeItem[] selection = newTree.getSelection();
+        for (TreeItem item : selection) {
+            ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
+            TdColumn column = columnIndicator.getTdColumn();
+            TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(column);
+            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+            String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
+            String columnName = ColumnHelper.getFullName(column);
+            String query = "select " + columnName + " from " + tableName;
+            CorePlugin.getDefault().runInDQViewer(dataprovider, query, column.getName());
+        }
+    }
+
+    /**
+     * DOC Zqin Comment method "showSelectedElements".
+     * 
+     * @param newTree
+     */
     private void showSelectedElements(Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
         DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
