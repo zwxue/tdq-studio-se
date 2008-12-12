@@ -105,7 +105,8 @@ public enum SupportDBUrlType {
                        null,
                        "FireBird"), //$NON-NLS-1$
     INGRESDEFAULTURL("Ingres", "localhost", "II7", "dbname", null, "com.ingres.jdbc.IngresDriver", null, "Ingres"),
-    SQLITE3DEFAULTURL("SQLite3", "localhost", "", "dbname", null, "org.sqlite.JDBC", null, "SQLite3");
+    SQLITE3DEFAULTURL("SQLite3", "localhost", "", "dbname", null, "org.sqlite.JDBC", null, "SQLite3"),
+    TERADATADEFAULTURL("Teradata", "localhost", null, "dbname", null, "com.ncr.teradata.TeraDriver", null, "Teradata");
 
     private final String dbKey;
 

@@ -23,7 +23,8 @@ Require-Bundle: org.talend.libraries.apache,
  net.sourceforge.sqlexplorer,
  org.talend.libraries.jdbc.ingres;resolution:=optional,
  org.talend.libraries.jdbc.informix;resolution:=optional,
- org.talend.libraries.jdbc.sqlite3;resolution:=optional
+ org.talend.libraries.jdbc.sqlite3;resolution:=optional,
+ org.talend.libraries.jdbc.teradata;resolution:=optional
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.db.connection,
  org.talend.cwm.dburl,

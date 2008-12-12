@@ -285,21 +285,23 @@ public final class DatabaseContentRetriever {
         // print driver properties
         // TODO scorreia adapt this code in order to store information in CWM ????
         DriverPropertyInfo[] driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
-        for (int i = 0; i < driverProps.length; i++) {
-            DriverPropertyInfo prop = driverProps[i];
+        if (driverProps != null) {
+            for (int i = 0; i < driverProps.length; i++) {
+                DriverPropertyInfo prop = driverProps[i];
 
-            if (log.isDebugEnabled()) { // TODO use logger here
-                log.debug("Prop description = " + prop.description);
-                log.debug(prop.name + "=" + prop.value);
-            }
+                if (log.isDebugEnabled()) { // TODO use logger here
+                    log.debug("Prop description = " + prop.description);
+                    log.debug(prop.name + "=" + prop.value);
+                }
 
-            TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(prop.name, prop.value);
-            provider.getTaggedValue().add(taggedValue);
+                TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(prop.name, prop.value);
+                provider.getTaggedValue().add(taggedValue);
 
-            if (log.isDebugEnabled()) {
-                if (prop.choices != null) {
-                    for (int j = 0; j < prop.choices.length; j++) {
-                        log.debug("prop choice " + j + " = " + prop.choices[j]);
+                if (log.isDebugEnabled()) {
+                    if (prop.choices != null) {
+                        for (int j = 0; j < prop.choices.length; j++) {
+                            log.debug("prop choice " + j + " = " + prop.choices[j]);
+                        }
                     }
                 }
             }
@@ -350,12 +352,12 @@ public final class DatabaseContentRetriever {
 
         // --- create and fill the software system
         TdSoftwareSystem system = SoftwaredeploymentFactory.eINSTANCE.createTdSoftwareSystem();
-        system.setName(databaseProductName); 
+        system.setName(databaseProductName);
         system.setType(SoftwareSystemConstants.DBMS.toString());
         system.setSubtype(databaseProductName);
         system.setVersion(databaseProductVersion);
         Component component = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory.eINSTANCE.createComponent();
-        system.getOwnedElement().add(component);        
+        system.getOwnedElement().add(component);
 
         return system;
     }
