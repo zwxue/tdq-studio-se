@@ -198,6 +198,9 @@ public class CorePlugin extends AbstractUIPlugin {
                     editorPart.setText(query);
                     ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
                     execSQLAction.run();
+                    // MOD scorreia 2008-12-12 avoid to execute several times the same query when several connections
+                    // with the same url exist
+                    break;
                 } catch (PartInitException e) {
                     ExceptionHandler.process(e);
                 }
