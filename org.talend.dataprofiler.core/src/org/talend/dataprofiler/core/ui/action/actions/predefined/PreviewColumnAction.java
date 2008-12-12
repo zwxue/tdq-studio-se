@@ -30,7 +30,7 @@ public class PreviewColumnAction extends Action {
     private TdColumn column;
 
     public PreviewColumnAction(TdColumn column) {
-        super("Preview in Data Explorer");
+        super("Preview");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE));
         this.column = column;
     }
