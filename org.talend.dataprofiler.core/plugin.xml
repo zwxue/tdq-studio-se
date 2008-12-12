@@ -407,6 +407,15 @@
          </enablement>
       </actionProvider>
       <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewColumnProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewColumnProvider">
+         <enablement>
+            <instanceof
+                  value="org.talend.cwm.relational.TdColumn">
+            </instanceof>
+         </enablement>
+      </actionProvider>
+      <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreatePatternAnalysis"
             id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreatePatternAnalysis">
          <enablement>

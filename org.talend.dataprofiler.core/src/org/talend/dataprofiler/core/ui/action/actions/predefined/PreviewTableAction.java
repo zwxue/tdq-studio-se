@@ -17,6 +17,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
@@ -39,6 +40,7 @@ public class PreviewTableAction extends Action {
      */
     public PreviewTableAction(TdTable table) {
         super(DefaultMessagesImpl.getString("PreviewTableAction.previewTable")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE));
         this.table = table;
     }
 

@@ -33,6 +33,7 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
@@ -55,6 +56,7 @@ public class PreviewViewAction extends Action {
      */
     public PreviewViewAction(TdView view) {
         super(DefaultMessagesImpl.getString("PreviewViewAction.previewView")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE));
         this.view = view;
     }
 

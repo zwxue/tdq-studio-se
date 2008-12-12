@@ -40,13 +40,8 @@ public class PreviewTableProvider extends CommonActionProvider {
     @Override
     public void fillContextMenu(IMenuManager menu) {
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
-        if (treeSelection.size() == 1) {
-            Object obj = treeSelection.getFirstElement();
-            if (obj instanceof TdTable) {
-                TdTable table = (TdTable) obj;
-                PreviewTableAction action = new PreviewTableAction(table);
-                menu.add(action);
-            }
-        }
+        TdTable table = (TdTable) treeSelection.getFirstElement();
+        PreviewTableAction action = new PreviewTableAction(table);
+        menu.add(action);
     }
 }

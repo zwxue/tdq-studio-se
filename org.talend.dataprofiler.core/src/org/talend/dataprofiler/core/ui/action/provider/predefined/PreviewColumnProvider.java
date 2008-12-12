@@ -15,31 +15,19 @@ package org.talend.dataprofiler.core.ui.action.provider.predefined;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.cwm.relational.TdView;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewViewAction;
+import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
-public class PreviewViewProvider extends CommonActionProvider {
+public class PreviewColumnProvider extends CommonActionProvider {
 
-    /**
-     * DOC Zqin PreviewViewProvider constructor comment.
-     */
-    public PreviewViewProvider() {
-        // TODO Auto-generated constructor stub
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.action.IMenuManager)
-     */
     @Override
     public void fillContextMenu(IMenuManager menu) {
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
-        TdView view = (TdView) treeSelection.getFirstElement();
-        PreviewViewAction action = new PreviewViewAction(view);
+        TdColumn column = (TdColumn) treeSelection.getFirstElement();
+        PreviewColumnAction action = new PreviewColumnAction(column);
         menu.add(action);
     }
 }
