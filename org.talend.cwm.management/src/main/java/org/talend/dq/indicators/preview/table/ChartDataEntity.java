@@ -12,11 +12,16 @@
 // ============================================================================
 package org.talend.dq.indicators.preview.table;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
+import org.talend.utils.sql.Java2SqlType;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -147,7 +152,7 @@ public class ChartDataEntity {
         return outOfRange;
     }
 
-    protected Double[] getDefinedRange(String inString) {
+    protected String[] getDefinedRange(String inString) {
         boolean flag = inString.indexOf('%') > 0;
         String[] threshold = IndicatorHelper.getDataThreshold(indicator);
 
@@ -159,47 +164,47 @@ public class ChartDataEntity {
             }
         }
 
-        if (threshold != null) {
-            Double[] returnDB = new Double[threshold.length];
-
-            for (int i = 0; i < threshold.length; i++) {
-                returnDB[i] = StringFormatUtil.formatDouble(threshold[i]);
-            }
-
-            return returnDB;
-        }
-
-        return null;
+        return threshold;
     }
 
     private boolean checkRange(String inString) {
 
-        Double[] definedRange = getDefinedRange(inString);
-        if (definedRange != null) {
-            Double min = definedRange[0];
-            Double max = definedRange[1];
+        String[] definedRange = getDefinedRange(inString);
+        if (definedRange != null && definedRange.length >= 2) {
 
-            // handle min and max
-            Double dValue = inString != null ? StringFormatUtil.parseDouble(inString) : Double.NaN;
-            if (min == null || Double.isNaN(min)) {
-                min = Double.NEGATIVE_INFINITY;
-            }
+            range = "[" + definedRange[0] + "," + definedRange[1] + "]";
 
-            if (max == null || Double.isNaN(max)) {
-                max = Double.POSITIVE_INFINITY;
-            }
+            int sqltype = ((TdColumn) indicator.getAnalyzedElement()).getJavaType();
+            if (Java2SqlType.isDateInSQL(sqltype)) {
+                try {
+                    Date min = DateFormat.getDateInstance().parse(definedRange[0]);
+                    Date max = DateFormat.getDateInstance().parse(definedRange[1]);
 
-            if (dValue < min || dValue > max) {
-                if (inString.indexOf('%') > 0) {
-                    range = "[" + StringFormatUtil.formatPersent(min / 100) + "," + StringFormatUtil.formatPersent(max / 100)
-                            + "]";
-                } else {
-                    range = "[" + min + "," + max + "]";
+                    Date dValue = DateFormat.getDateInstance().parse(value);
+
+                    return dValue.after(max) || dValue.before(min);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            } else {
+                Double min = StringFormatUtil.formatDouble(definedRange[0]);
+                Double max = StringFormatUtil.formatDouble(definedRange[1]);
+
+                // handle min and max
+                Double dValue = inString != null ? StringFormatUtil.parseDouble(inString) : Double.NaN;
+                if (min == null || Double.isNaN(min)) {
+                    min = Double.NEGATIVE_INFINITY;
                 }
 
-                return true;
+                if (max == null || Double.isNaN(max)) {
+                    max = Double.POSITIVE_INFINITY;
+                }
+
+                return dValue < min || dValue > max;
             }
         }
+
         return false;
     }
 
