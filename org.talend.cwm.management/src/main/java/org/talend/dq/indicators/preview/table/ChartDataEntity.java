@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.indicators.preview.table;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
@@ -177,10 +177,11 @@ public class ChartDataEntity {
             int sqltype = ((TdColumn) indicator.getAnalyzedElement()).getJavaType();
             if (Java2SqlType.isDateInSQL(sqltype)) {
                 try {
-                    Date min = DateFormat.getDateInstance().parse(definedRange[0]);
-                    Date max = DateFormat.getDateInstance().parse(definedRange[1]);
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    Date min = format.parse(definedRange[0]);
+                    Date max = format.parse(definedRange[1]);
 
-                    Date dValue = DateFormat.getDateInstance().parse(value);
+                    Date dValue = format.parse(value);
 
                     return dValue.after(max) || dValue.before(min);
                 } catch (Exception e) {
