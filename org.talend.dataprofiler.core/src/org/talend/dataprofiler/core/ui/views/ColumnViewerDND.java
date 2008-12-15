@@ -89,8 +89,13 @@ public class ColumnViewerDND {
                     receiver = new ColumnReceiver();
                 }
 
-                event.feedback = DND.FEEDBACK_EXPAND;
-                receiver.doDropValidation(event, commonViewer);
+                if (receiver == null) {
+                    event.detail = DND.DROP_NONE;
+                } else {
+                    event.feedback = DND.FEEDBACK_EXPAND;
+                    receiver.doDropValidation(event, commonViewer);
+                }
+
             }
 
             /*

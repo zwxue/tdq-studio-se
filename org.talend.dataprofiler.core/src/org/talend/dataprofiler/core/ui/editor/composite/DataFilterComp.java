@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.views.DataFilterDND;
 
 /**
  * @author rli
@@ -40,12 +41,13 @@ public class DataFilterComp extends AbstractPagePart {
     }
 
     public void createContent(Composite parent) {
-        parent.setLayout(new GridLayout(3, true));
+        parent.setLayout(new GridLayout(2, false));
 
         dataFilterText = new Text(parent, SWT.BORDER | SWT.MULTI);
+        DataFilterDND.installDND(dataFilterText);
         dataFilterText.setToolTipText(DefaultMessagesImpl.getString("DataFilterComp.here")); //$NON-NLS-1$
         dataFilterText.setText(stringDataFilter == null ? PluginConstant.EMPTY_STRING : stringDataFilter);
-        GridDataFactory.fillDefaults().span(2, 3).align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(dataFilterText);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(dataFilterText);
         ((GridData) dataFilterText.getLayoutData()).heightHint = 150;
         dataFilterText.addModifyListener(new ModifyListener() {
 
@@ -60,11 +62,11 @@ public class DataFilterComp extends AbstractPagePart {
         GridDataFactory.fillDefaults().span(1, 1).applyTo(buttonsComp);
         buttonsComp.setLayout(new GridLayout(1, true));
 
-        buttonsComp.setVisible(false);
+        buttonsComp.setVisible(true);
 
         Button button = new Button(buttonsComp, SWT.None);
         button.setText(DefaultMessagesImpl.getString("DataFilterComp.edit")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().span(1, 1).align(SWT.FILL, SWT.TOP).applyTo(button);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(button);
     }
 
     public String getDataFilterString() {
