@@ -268,7 +268,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             }
         });
 
-        if (expressionType != null && expressionType.equals(ExpressionType.REGEXP.getName())) {
+        // MOD scorreia 2008-12-15 do not display button when pattern is "SQL Like"
+        if (!ExpressionType.SQL_LIKE.getLiteral().equals(expressionType)) {
             Button testPatternButton = new Button(expressComp, SWT.NONE);
             // testPatternButton.setImage(ImageLib.getImage(ImageLib.));
             testPatternButton.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.test")); //$NON-NLS-1$

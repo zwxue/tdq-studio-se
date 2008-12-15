@@ -36,6 +36,8 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -104,14 +106,20 @@ public final class PatternUtilities {
     public static IndicatorUnit createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis) {
         Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(pfile);
         RegularExpression expression = (RegularExpression) pattern.getComponents().get(0);
-        PatternMatchingIndicator patternMatchingIndicator = (ExpressionType.SQL_LIKE.getName().equals(expression
+        PatternMatchingIndicator patternMatchingIndicator = (ExpressionType.SQL_LIKE.getLiteral().equals(expression
                 .getExpressionType())) ? PatternIndicatorFactory.createSqlPatternMatchingIndicator(pattern)
                 : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
 
+       final DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
+        if (ExpressionType.REGEXP.getLiteral().equals(expression.getExpressionType()) && dbmsLanguage.getRegexp(pattern) == null) {
+            // TODO xzhao this is when we must tell the user that the database cannot support regular expression
+        }
+                
         // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
         if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(patternMatchingIndicator)) {
             log.error(DefaultMessagesImpl.getString("PatternUtilities.couldnotSetDef") + patternMatchingIndicator.getName()); //$NON-NLS-1$
         }
+              
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
         IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
