@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.eclipse.jface.dialogs.TrayDialog;
@@ -58,7 +58,8 @@ public class DateTimeDialog extends TrayDialog {
         Calendar cenlendar = Calendar.getInstance();
         cenlendar.set(year, month, day);
 
-        selectDate = DateFormat.getInstance().format(cenlendar.getTime());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        selectDate = format.format(cenlendar.getTime());
 
         super.okPressed();
     }
