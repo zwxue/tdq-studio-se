@@ -58,7 +58,7 @@ public class DateTimeDialog extends TrayDialog {
         Calendar cenlendar = Calendar.getInstance();
         cenlendar.set(year, month, day);
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         selectDate = format.format(cenlendar.getTime());
 
         super.okPressed();

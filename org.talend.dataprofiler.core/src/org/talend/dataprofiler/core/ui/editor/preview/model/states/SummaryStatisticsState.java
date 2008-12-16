@@ -140,8 +140,8 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { "Label", "Count", "%" });
-        entity.setFieldWidths(new Integer[] { 200, 150, 150 });
+        entity.setFieldNames(new String[] { "Label", "Count" });
+        entity.setFieldWidths(new Integer[] { 200, 300 });
         return entity;
     }
 

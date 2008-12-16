@@ -67,6 +67,10 @@ public class ChartTableFactory {
 
                     ChartDataEntity dataEntity = (ChartDataEntity) selection.getFirstElement();
 
+                    if (dataEntity == null) {
+                        return;
+                    }
+
                     final Indicator indicator = dataEntity.getIndicator();
                     if (indicator != null) {
                         Menu menu = new Menu(table.getShell(), SWT.POP_UP);

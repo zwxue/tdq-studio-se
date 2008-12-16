@@ -105,7 +105,6 @@ public final class ColumnIndicatorRule {
         case IQRIndicatorEnum:
         case LowerQuartileIndicatorEnum:
         case UpperQuartileIndicatorEnum:
-        case RangeIndicatorEnum:
 
             // MOD scorreia 2008-09-19 do not allow box plot on date fields because it is not correctly handled in the
             // graphics and database yet.
@@ -116,11 +115,12 @@ public final class ColumnIndicatorRule {
             }
             break;
 
+        case RangeIndicatorEnum:
         case MinValueIndicatorEnum:
         case MaxValueIndicatorEnum:
             // MOD scorreia 2008-09-25 do not allow min and max on date fields because it is not correctly handled in
             // the graphics and database yet.
-            if (Java2SqlType.isDateInSQL(javaType)) {
+            if (Java2SqlType.isNumbericInSQL(javaType) || Java2SqlType.isDateInSQL(javaType)) {
                 if (dataminingType == DataminingType.INTERVAL) {
                     return true;
                 }
