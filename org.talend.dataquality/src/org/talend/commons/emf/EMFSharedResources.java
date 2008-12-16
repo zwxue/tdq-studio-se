@@ -35,10 +35,9 @@ public final class EMFSharedResources {
     private final EMFUtil emfUtil = new EMFUtil();
 
     private final ResourceSet resourceSet = emfUtil.getResourceSet();
-    
+
     private Resource softwareDeploymentResource = null;
 
-    
     /**
      * Getter for softwareDeploymentResource.
      * 
@@ -54,7 +53,7 @@ public final class EMFSharedResources {
     public boolean saveSoftwareDeploymentResource() {
         return (softwareDeploymentResource != null) ? EMFUtil.saveSingleResource(softwareDeploymentResource) : false;
     }
-    
+
     /**
      * DOC scorreia Comment method "initSoftwareDeploymentResource".
      * 
@@ -203,5 +202,11 @@ public final class EMFSharedResources {
      */
     public String getLastErrorMessage() {
         return this.emfUtil.getLastErrorMessage();
+    }
+
+    public EObject copyEObject(EObject oldObject) {
+        EObject newObject = EcoreUtil.copy(oldObject);
+
+        return newObject;
     }
 }
