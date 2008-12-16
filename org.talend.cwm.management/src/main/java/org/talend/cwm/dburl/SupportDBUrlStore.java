@@ -74,6 +74,7 @@ public final class SupportDBUrlStore {
         supportDBUrlMap.put(SupportDBUrlType.INGRESDEFAULTURL.getDBKey(), SupportDBUrlType.INGRESDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.INFORMIXDEFAULTURL.getDBKey(), SupportDBUrlType.INFORMIXDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey(), SupportDBUrlType.SQLITE3DEFAULTURL);
+        supportDBUrlMap.put(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey(), SupportDBUrlType.GENERICJDBCDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.TERADATADEFAULTURL.getDBKey(), SupportDBUrlType.TERADATADEFAULTURL);
     }
 
