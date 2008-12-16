@@ -101,7 +101,10 @@ public final class DbmsLanguageFactory {
             return new SybaseASEDbmsLanguage();
         }
          if (isSQLite(dbmsSubtype)) {
-            return new SQLiteDbmsLanguage(dbmsSubtype);
+            return new SQLiteDbmsLanguage();
+        }
+         if (isTeradata(dbmsSubtype)) {
+            return new TeradataDbmsLanguage();
         }
         // TODO other supported databases here
         return new DbmsLanguage();
@@ -156,6 +159,10 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.SQLITE3, dbms);
     }
 
+    private static boolean isTeradata(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.TERADATA, dbms);
+    }
+    
     static boolean compareDbmsLanguage(String lang1, String lang2) {
         if (lang1 == null || lang2 == null) {
             return false;

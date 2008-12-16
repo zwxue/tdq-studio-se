@@ -38,7 +38,7 @@ public class GenericSQLHandler {
     private static final String LIMIT_OFFSET = "<%=__LIMIT_OFFSET__%>";
 
     private static final String LIMIT_ROW_PLUS_OFFSET = "<%=__LIMIT_ROW_PLUS_OFFSET__%>";
-
+    
     private final String originalSQL;
 
     private String sqlString;
@@ -127,6 +127,11 @@ public class GenericSQLHandler {
         return this.replaceColumnTable(columns, table).replacePattern(regexp);
     }
 
+    /**
+     * Method "getSqlString".
+     * 
+     * @return the modified sql string
+     */
     public String getSqlString() {
         return this.sqlString;
     }

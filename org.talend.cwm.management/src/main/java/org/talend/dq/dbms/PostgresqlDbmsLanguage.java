@@ -47,7 +47,6 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     public PostgresqlDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         super(dbmsType, majorVersion, minorVersion);
-        // TODO Auto-generated constructor stub
     }
 
     /*

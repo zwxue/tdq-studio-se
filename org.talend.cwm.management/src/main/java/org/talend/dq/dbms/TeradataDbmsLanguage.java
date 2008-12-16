@@ -16,22 +16,22 @@ package org.talend.dq.dbms;
 /**
  * DOC scorreia  class global comment. Detailled comment
  */
-public class SQLiteDbmsLanguage extends DbmsLanguage {
+public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /**
-     * DOC scorreia SQLiteDbmsLanguage constructor comment.
+     * DOC scorreia TeradataDbmsLanguage constructor comment.
      */
-    public SQLiteDbmsLanguage() {
-        super(DbmsLanguage.SQLITE3);
+    public TeradataDbmsLanguage() {
+        super(DbmsLanguage.TERADATA);
     }
 
     /**
-     * DOC scorreia SQLiteDbmsLanguage constructor comment.
+     * DOC scorreia TeradataDbmsLanguage constructor comment.
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
      */
-    public SQLiteDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
+    public TeradataDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
         super(dbmsType, majorVersion, minorVersion);
     }
 

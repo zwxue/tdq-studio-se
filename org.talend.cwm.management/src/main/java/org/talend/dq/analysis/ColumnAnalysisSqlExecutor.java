@@ -46,6 +46,7 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -65,7 +66,6 @@ import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
-import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -315,7 +315,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // completedSqlString is the final query
         String finalQuery = completedSqlString;
 
-        Expression instantiateSqlExpression = instantiateSqlExpression(language, finalQuery);
+        Expression instantiateSqlExpression = BooleanExpressionHelper.createExpression(language, finalQuery);
         indicator.setInstantiatedExpression(instantiateSqlExpression);
         return true;
     }
@@ -607,7 +607,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // constraint, but MySQL allows it)
         // hence we extract the ORDER BY clause and add it at the end.
         int idxOfOrderBY = sqlGenericExpression.indexOf(" ORDER BY");
-        String orderBy = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(idxOfOrderBY) : "";
+        // MOD scorreia 2008-12-16 handle teradata case where "order by" clause needs a number to identify the column
+        // by removing the unnecessary "order by" clause
+        // String orderBy = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(idxOfOrderBY) : "";
         String singleStatement = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(0, idxOfOrderBY) : sqlGenericExpression;
 
         for (int i = 0; i < last; i++) {
@@ -621,10 +623,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         }
         // MOD scorreia 2008-09-03 Bug #4976 append the order by clause at the end of the whole statement
-        if (idxOfOrderBY != -1) {
-            buf.append(orderBy);
-        }
-
+        // if (idxOfOrderBY != -1) {
+        // buf.append(orderBy);
+        // }
         return buf.toString();
     }
 
@@ -657,7 +658,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         completedSqlString = addWhereToSqlStringStatement(allWheresForSingleSelect, completedSqlString);
         // replacement in order to get lines even when no data is available
         // do this replacement after having added the where clause otherwise the parsing with ZQL will fail.
-        completedSqlString = replaceCountByZeroCount(completedSqlString, completedRange);
+        completedSqlString = replaceCountByZeroCount(completedSqlString, range);
         return completedSqlString;
     }
 
@@ -849,13 +850,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             this.dbmsLanguage = createDbmsLanguage();
         }
         return this.dbmsLanguage;
-    }
-
-    private Expression instantiateSqlExpression(String language, String body) {
-        Expression expression = CoreFactory.eINSTANCE.createExpression();
-        expression.setLanguage(language);
-        expression.setBody(body);
-        return expression;
     }
 
     /**

@@ -64,6 +64,8 @@ public class DbmsLanguage {
 
     static final String SQLITE3 = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
 
+    static final String TERADATA = SupportDBUrlType.TERADATADEFAULTURL.getLanguage();
+    
     /**
      * Ansi SQL.
      */
@@ -710,7 +712,7 @@ public class DbmsLanguage {
      */
     public boolean supportNonIntegerConstantInGroupBy() {
         // DBMS_SUPPORT
-        // else MySQL, Oracle
+        // MySQL, Oracle
         return true;
     }
 

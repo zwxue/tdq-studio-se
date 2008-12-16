@@ -122,8 +122,7 @@ public final class DqRepositoryViewService {
             return techname;
         }
         // encode in base 64 so that all characters such white spaces, accents, everything that is dangerous when used
-        // for
-        // file names are removed
+        // for file names are removed
         try {
             // encode
             String b64 = new String(Base64.encodeBase64(functionalName.getBytes()), "UTF-8");
