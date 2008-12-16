@@ -18,7 +18,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -41,7 +40,7 @@ public class DataFilterComp extends AbstractPagePart {
     }
 
     public void createContent(Composite parent) {
-        parent.setLayout(new GridLayout(2, false));
+        parent.setLayout(new GridLayout());
 
         dataFilterText = new Text(parent, SWT.BORDER | SWT.MULTI);
         DataFilterDND.installDND(dataFilterText);
@@ -57,16 +56,6 @@ public class DataFilterComp extends AbstractPagePart {
             }
 
         });
-
-        Composite buttonsComp = new Composite(parent, SWT.None);
-        GridDataFactory.fillDefaults().span(1, 1).applyTo(buttonsComp);
-        buttonsComp.setLayout(new GridLayout(1, true));
-
-        buttonsComp.setVisible(true);
-
-        Button button = new Button(buttonsComp, SWT.None);
-        button.setText(DefaultMessagesImpl.getString("DataFilterComp.edit")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(button);
     }
 
     public String getDataFilterString() {
