@@ -16,6 +16,7 @@
     <sqlGenericExpression xmi:id="_ybq24jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) AS myquery" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybq24zh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount = 1) AS myquery" language="MySQL"/>
     <sqlGenericExpression xmi:id="_v_vkMKafEd2vAre0A_m0Dg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) myquery" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_BsX1oMtNEd2CMtoJzSqU8Q" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount = 1) AS myquery" language="Teradata"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0hF2Ed2PKb6nEJEvhw" name="Duplicate Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Duplicate Count">
     <taggedValue xmi:id="_ybrd8Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of duplicate rows. This number and the number of unique data equals the number of distinct rows"/>
@@ -23,6 +24,7 @@
     <sqlGenericExpression xmi:id="_ybrd8jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) AS myquery" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybrd8zh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%> col, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY col HAVING mycount > 1) AS myquery" language="MySQL"/>
     <sqlGenericExpression xmi:id="_ybrd9Dh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%> col, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) myquery" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_H3q6QMtNEd2CMtoJzSqU8Q" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%> col, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY col HAVING mycount > 1) AS myquery" language="Teradata"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0xF2Ed2PKb6nEJEvhw" name="Blank Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Blank Count">
     <taggedValue xmi:id="_ybsFADh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of blank rows. A blank is a non null textual data that contains only white spaces (or nothing). Note that Oracle does not distinguish between the empty string and the null value"/>
@@ -75,6 +77,7 @@
     <sqlGenericExpression xmi:id="_ybwWcjh8Ed2XmO7pl5Yuyg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="Oracle"/>
     <sqlGenericExpression xmi:id="_u4GDEEbNEd2QPKsejnYyXQ" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY COUNT(*) DESC" language="PostgreSQL"/>
     <sqlGenericExpression xmi:id="_C4G9kJRmEd2PFJoogKUukg" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_RWPXYMtWEd2CMtoJzSqU8Q" body="SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> ORDER BY c DESC" language="Teradata"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_-0C00JOtEd2Iyo0dtkB9pA" name="Low Frequency Table" categories="_ccKuIRF2Ed2PKb6nEJEvhw" label="Low Frequency Table">
     <taggedValue xmi:id="_Hhd38JOuEd2Iyo0dtkB9pA" tag="Description" value="counts the number of records for each distinct record"/>
