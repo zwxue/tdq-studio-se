@@ -42,14 +42,33 @@ public class DuplicateCWMResourceAction extends Action {
 
                 if (oldObject != null) {
                     ModelElement newObject = (ModelElement) EMFSharedResources.getInstance().copyEObject(oldObject);
-
-                    IFile newFile = ((IFolder) file.getParent()).getFile("copy " + file.getName());
-                    newObject.setName("copy " + newObject.getName());
+                    
+                    IFile newFile = getNewFile(file);
+                    newObject.setName("copy of " + newObject.getName());
                     EMFSharedResources.getInstance().addEObjectToResourceSet(newFile.getFullPath().toString(), newObject);
                     EMFSharedResources.getInstance().saveLastResource();
                 }
             }
         }
+    }
+
+    /**
+     * DOC scorreia Comment method "getNewFile".
+     * @param file
+     * @return
+     */
+    private IFile getNewFile(IFile file) {
+        IFile newFile = null;
+        int idx = 1;
+        while (true) {
+            final String newFilename = "copy" + idx + file.getName();
+            newFile = ((IFolder) file.getParent()).getFile(newFilename);
+            if (!newFile.exists()) {
+                break;
+            }
+            idx++;
+        }
+        return newFile;
     }
 
     private ModelElement getOldEObject(IFile file) {
