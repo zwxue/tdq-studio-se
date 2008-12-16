@@ -13,10 +13,8 @@
 package org.talend.dataprofiler.core;
 
 import java.util.Collection;
-import java.util.LinkedList;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
-import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
@@ -163,31 +161,18 @@ public class CorePlugin extends AbstractUIPlugin {
         return this.getPreferenceStore().getBoolean(PluginConstant.PROJECTCREATED_FLAG);
     }
 
-    // public void loadExternalDrivers() {
-    // String driverpaths = getPreferenceStore().getString(DRIVERPATHS);
-    // String drivername = getPreferenceStore().getString(DRIVERNAME);
-    // if (driverpaths != null && drivername != null) {
-    // String[] driverPaths = driverpaths.split(";");
-    // for (String driverPath : driverPaths) {
-    // loadExternalDriver(driverPath, drivername);
+    // public void loadExternalDriver(String driverPaths, String driverName, String url) {
+    // String[] driverJarPath = driverPaths.split(";");
+    // LinkedList<String> driverFile = new LinkedList<String>();
+    // for (String driverpath : driverJarPath) {
+    // driverFile.add(driverpath);
     // }
+    // ManagedDriver driver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
+    // driver.setJars(driverFile);
+    // driver.setDriverClassName(driverName);
+    // driver.setUrl(url);
+    // SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
     // }
-    //
-    // }
-
-    public void loadExternalDriver(String driverPaths, String driverName, String url) {
-        String[] driverJarPath = driverPaths.split(";");
-        LinkedList<String> driverFile = new LinkedList<String>();
-        for (String driverpath : driverJarPath) {
-            driverFile.add(driverpath);
-        }
-        ManagedDriver driver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
-        driver.setJars(driverFile);
-        driver.setDriverClassName(driverName);
-        driver.setUrl(url);
-        SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
-
-    }
 
     public void checkDQStructure() {
         if (!getDefault().isUsed()) {
