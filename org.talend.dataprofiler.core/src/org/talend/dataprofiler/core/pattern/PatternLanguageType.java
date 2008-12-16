@@ -68,14 +68,9 @@ public enum PatternLanguageType {
             SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
             SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
             PatternToExcelEnum.SQLite3Regexp),
-    GENERICJDBC(
-                10,
-                SupportDBUrlType.GENERICJDBCDEFAULTURL.getLanguage(),
-                SupportDBUrlType.GENERICJDBCDEFAULTURL.getLanguage(),
-                PatternToExcelEnum.GenericJDBCRegexp),
-    // PatternToExcelEnum.GenericJDBCRegexp),
+            // MOD scorreia 2008-12-16 removed "generic jdbc" because its meaning is the same as ALL_DATABASE_TYPE
     TERADATA(
-             11,
+             10,
              SupportDBUrlType.TERADATADEFAULTURL.getLanguage(),
              SupportDBUrlType.TERADATADEFAULTURL.getLanguage(),
              PatternToExcelEnum.Teradata);
