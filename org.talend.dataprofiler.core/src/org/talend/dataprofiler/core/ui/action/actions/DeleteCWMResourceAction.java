@@ -13,7 +13,12 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -57,6 +62,8 @@ public class DeleteCWMResourceAction extends Action {
 
     private IFile[] selectedFiles;
 
+    private List<ModelElement> modelElementList;
+
     public DeleteCWMResourceAction(IFile[] files) {
         super("Delete"); //$NON-NLS-1$
         selectedFiles = files;
@@ -71,10 +78,23 @@ public class DeleteCWMResourceAction extends Action {
     }
 
     public void deleteResource() {
+        DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
 
         final IResource[] resources = selectedFiles;
         if (!checkDeleteContent(resources)) {
             return;
+        }
+        List<Map<String, String>> driverList = driverPreferCustInfo();
+        for (Map<String, String> driverInfoMap : driverList) {
+            String connectionURI = driverInfoMap.get("CONNECTIONFILEURI");
+            for (ModelElement tdDataProvider : modelElementList) {
+                if (tdDataProvider.eResource().getURI().toString().trim().equals(connectionURI.trim())) {
+                    String customDriverId = driverInfoMap.get("CUSTOMDRIVERID");
+                    if (driverManager.getDriver(customDriverId) != null) {
+                        driverManager.removeDriver(driverManager.getDriver(customDriverId));
+                    }
+                }
+            }
         }
         delRelatedResource(isDeleteContent, resources);
         EObjectHelper.removeDependencys(resources);
@@ -97,7 +117,7 @@ public class DeleteCWMResourceAction extends Action {
     }
 
     private boolean checkDeleteContent(IResource[] selectedResources) {
-        List<ModelElement> modelElementList = new ArrayList<ModelElement>();
+        modelElementList = new ArrayList<ModelElement>();
         IFile file;
         ModelElement modelElement;
         boolean otherFilesExistFlag = false;
@@ -203,5 +223,34 @@ public class DeleteCWMResourceAction extends Action {
                             DefaultMessagesImpl.getString("DeleteCWMResourceAction.confirmDeleteResource"), DefaultMessagesImpl.getString("DeleteCWMResourceAction.deleteResource", resourceName)); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return isDeleteContent;
+    }
+
+    private List<Map<String, String>> driverPreferCustInfo() {
+        List<Map<String, String>> driverPreferList = new ArrayList<Map<String, String>>();
+        String driverPrefer = CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER");
+        if (driverPrefer != null && !driverPrefer.trim().equals("")) {
+            String[] driverCustPrefers = driverPrefer.split("};");
+            for (String driverCustPrefer : driverCustPrefers) {
+                String[] driverCells = driverCustPrefer.substring(1).split(",");
+                Map<String, String> driverCellMap = new HashMap<String, String>();
+                for (int i = 0; i < driverCells.length; i++) {
+                    if (i == 0) {
+                        driverCellMap.put("DRIVERPATH", driverCells[i]);
+                    } else if (i == 1) {
+                        driverCellMap.put("DRIVERNAME", driverCells[i]);
+                    } else if (i == 2) {
+                        driverCellMap.put("DRIVERURL", driverCells[i]);
+                    } else if (i == 3) {
+                        driverCellMap.put("CONNECTIONFILEURI", driverCells[i]);
+                    } else if (i == 4) {
+                        driverCellMap.put("CUSTOMDRIVERID", driverCells[i]);
+                    }
+                    driverPreferList.add(driverCellMap);
+                }
+            }
+        } else {
+            return null;
+        }
+        return driverPreferList;
     }
 }

@@ -41,4 +41,7 @@ public class UIMessages {
 
     public static final String MSG_INDICATOR_VALUE_OUT_OF_RANGE = "These percent value must between 0-100.";
 
+    public static final String MSG_SELECT_GENERIC_JDBC = "Generic connection is provided mainly for trying to connect to untested databases. Use it only if your database does not appear in the list of supported databases. \n"
+            + "When using a custom driver, generic SQL queries will be generated to compute indicators. These queries may not work on some databases. Help us to know these issues by reporting a bug at http://talendforge.org/bugs/my_view_page.php";
+
 }

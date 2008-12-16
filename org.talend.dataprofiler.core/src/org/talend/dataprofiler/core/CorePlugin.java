@@ -13,8 +13,10 @@
 package org.talend.dataprofiler.core;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
+import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
@@ -48,6 +50,12 @@ import org.talend.utils.sugars.TypedReturnCode;
  * The activator class controls the plug-in life cycle.
  */
 public class CorePlugin extends AbstractUIPlugin {
+
+    private static final String DRIVERPATHS = "DRIVERPATHS";
+
+    private static final String DRIVERNAME = "DRIVERNAME";
+
+    private static final String DRIVERURL = "DRIVERURL";
 
     private DQRespositoryView respositoryView;
 
@@ -92,7 +100,6 @@ public class CorePlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
         getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
-
         try {
             for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
                 BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
@@ -154,6 +161,32 @@ public class CorePlugin extends AbstractUIPlugin {
      */
     public boolean isUsed() {
         return this.getPreferenceStore().getBoolean(PluginConstant.PROJECTCREATED_FLAG);
+    }
+
+    // public void loadExternalDrivers() {
+    // String driverpaths = getPreferenceStore().getString(DRIVERPATHS);
+    // String drivername = getPreferenceStore().getString(DRIVERNAME);
+    // if (driverpaths != null && drivername != null) {
+    // String[] driverPaths = driverpaths.split(";");
+    // for (String driverPath : driverPaths) {
+    // loadExternalDriver(driverPath, drivername);
+    // }
+    // }
+    //
+    // }
+
+    public void loadExternalDriver(String driverPaths, String driverName, String url) {
+        String[] driverJarPath = driverPaths.split(";");
+        LinkedList<String> driverFile = new LinkedList<String>();
+        for (String driverpath : driverJarPath) {
+            driverFile.add(driverpath);
+        }
+        ManagedDriver driver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
+        driver.setJars(driverFile);
+        driver.setDriverClassName(driverName);
+        driver.setUrl(url);
+        SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
+
     }
 
     public void checkDQStructure() {

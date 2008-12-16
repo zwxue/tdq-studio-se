@@ -68,8 +68,14 @@ public enum PatternLanguageType {
             SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
             SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
             PatternToExcelEnum.SQLite3Regexp),
+    GENERICJDBC(
+                10,
+                SupportDBUrlType.GENERICJDBCDEFAULTURL.getLanguage(),
+                SupportDBUrlType.GENERICJDBCDEFAULTURL.getLanguage(),
+                PatternToExcelEnum.GenericJDBCRegexp),
+    // PatternToExcelEnum.GenericJDBCRegexp),
     TERADATA(
-             10,
+             11,
              SupportDBUrlType.TERADATADEFAULTURL.getLanguage(),
              SupportDBUrlType.TERADATADEFAULTURL.getLanguage(),
              PatternToExcelEnum.Teradata);

@@ -12,6 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.database;
 
+import java.util.LinkedList;
+
+import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.cwm.management.api.ConnectionService;
@@ -38,6 +43,8 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     private DBConnectionParameter connectionParam;
 
     private DatabaseWizardPage databaseWizardPage;
+
+    private ManagedDriver driver;
 
     /**
      * Constructor for DatabaseWizard. Analyse Iselection to extract DatabaseConnection and the pathToSave. Start the
@@ -81,12 +88,43 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      * wizard.
      */
     public boolean performFinish() {
+        if (connectionParam.getDriverPath() != null) {
+            int repeatDriverCount = 0;
+            driver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
+
+            // CorePlugin.getDefault().getPreferenceStore().putValue("DRIVERPATHS", connectionParam.getDriverPath());
+            // CorePlugin.getDefault().getPreferenceStore().putValue("DRIVERNAME",
+            // connectionParam.getDriverClassName());
+            // CorePlugin.getDefault().getPreferenceStore().putValue("DRIVERURL", connectionParam.getJdbcUrl());
+            LinkedList<String> driverFile = new LinkedList<String>();
+            for (String driverpath : connectionParam.getDriverPath().split(";")) {
+                driverFile.add(driverpath);
+            }
+            String newDriverName = connectionParam.getJdbcUrl().substring(0, 10);
+            for (ManagedDriver checkedDriver : SQLExplorerPlugin.getDefault().getDriverModel().getDrivers()) {
+                String driverName = checkedDriver.getName();
+                if (driverName != null && driverName.trim().equals(newDriverName.trim())) {
+                    newDriverName += repeatDriverCount++;
+                }
+            }
+            driver.setName(connectionParam.getJdbcUrl().substring(0, 12));
+            driver.setJars(driverFile);
+            driver.setDriverClassName(connectionParam.getDriverClassName());
+            driver.setUrl(connectionParam.getJdbcUrl());
+            SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
+
+        }
         TypedReturnCode<TdDataProvider> rc = ConnectionService.createConnection(this.connectionParam);
         if (!rc.isOk()) {
-            MessageDialog.openInformation(getShell(), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnections"), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnectionFailure") + rc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+            SQLExplorerPlugin.getDefault().getDriverModel().removeDriver(driver);
+            MessageDialog
+                    .openInformation(
+                            getShell(),
+                            DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnections"), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnectionFailure") + rc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
         TdDataProvider dataProvider = rc.getObject();
+
         // MODSCA 2008-03-10 save the provider
         IFile returnFile = DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionParam
                 .getFolderProvider());
@@ -96,6 +134,23 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
             CorePlugin.getDefault().openEditor(returnFile, ConnectionEditor.class.getName());
         }
+        if (connectionParam.getDriverPath() != null) {
+            StringBuilder driverPara = new StringBuilder();
+            if (CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") != null
+                    && !CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER").equals("")) {
+                driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{"
+                        + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + ","
+                        + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + ","
+                        + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};");
+            } else {
+                driverPara.append("{"
+                        + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + ","
+                        + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + ","
+                        + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};");
+            }
+            CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString());
+        }
+
         return true;
     }
 

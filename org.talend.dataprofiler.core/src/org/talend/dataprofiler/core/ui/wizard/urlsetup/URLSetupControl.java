@@ -24,19 +24,20 @@ import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
 /**
  * 
  */
 public abstract class URLSetupControl extends Composite {
-    
+
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-//    private String urlPattern;
-//    private Map properties = Collections.synchronizedMap(new HashMap());
-//    private final JDBCDriver driver;
+
+    // private String urlPattern;
+    // private Map properties = Collections.synchronizedMap(new HashMap());
+    // private final JDBCDriver driver;
     private String connectionURL;
-    
+
     protected SupportDBUrlType dbType;
 
     /**
@@ -47,9 +48,9 @@ public abstract class URLSetupControl extends Composite {
         super(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         setLayout(layout);
-//        this.urlPattern = AdapterFactory.getInstance().getURLPattern(driver.getClassName());
-        
-//        setPropertyDefaults();
+        // this.urlPattern = AdapterFactory.getInstance().getURLPattern(driver.getClassName());
+
+        // setPropertyDefaults();
         this.dbType = dbType;
         setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType));
     }
@@ -57,69 +58,71 @@ public abstract class URLSetupControl extends Composite {
     /**
      * 
      */
-    protected void createPart() {
+    protected void createPart(DBConnectionParameter connectionParam) {
         Group group = new Group(this, SWT.SHADOW_ETCHED_IN);
-        group.setText(DefaultMessagesImpl.getString("URLSetupControl.URL"));  //$NON-NLS-1$
+        group.setText(DefaultMessagesImpl.getString("URLSetupControl.URL")); //$NON-NLS-1$
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        
-        createPart(group);
+
+        createPart(group, dbType.getLanguage(), connectionParam);
     }
 
     /**
-     * Gets the possible default values for the properties (for example the port has usually a default)
-     * and uses them in the text boxes.
+     * Gets the possible default values for the properties (for example the port has usually a default) and uses them in
+     * the text boxes.
      */
-//    private void setPropertyDefaults() {
-//        DatabaseAdapter adapter = 
-//            AdapterFactory.getInstance().getAdapter(getDriver().getType());
-//        Map properties = (adapter == null) ? new HashMap() : adapter.getDefaultConnectionParameters();
-//        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
-//            String key = (String) i.next();
-//            putProperty(key, (String) properties.get(key));
-//            
-//        }
-//    }
-
+    // private void setPropertyDefaults() {
+    // DatabaseAdapter adapter =
+    // AdapterFactory.getInstance().getAdapter(getDriver().getType());
+    // Map properties = (adapter == null) ? new HashMap() : adapter.getDefaultConnectionParameters();
+    // for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
+    // String key = (String) i.next();
+    // putProperty(key, (String) properties.get(key));
+    //            
+    // }
+    // }
     /**
-     * This function will be redefined in subclasses, with a different format for
-     * each defined set of parameters.
+     * This function will be redefined in subclasses, with a different format for each defined set of parameters.
      * 
-     * TODO: Make something more generic, where simply adding an URL with a set of parameters will generate the appropiate text boxes
-     *
+     * TODO: Make something more generic, where simply adding an URL with a set of parameters will generate the
+     * appropiate text boxes
+     * 
      * @param parent
      */
-    protected abstract void createPart(Composite parent);
-    
-//    private Map getProperties() {
-//        return this.properties;
-//    }
+    protected abstract void createPart(Composite parent, String dbLiteral, DBConnectionParameter connectionParam);
 
-//    protected String getProperty(String name) {
-//        String value = (String) this.properties.get(name);
-//        return value == null ? "" : value;
-//    }
+    // private Map getProperties() {
+    // return this.properties;
+    // }
 
-//    protected void putProperty(String name, String value) {
-//        this.properties.put(name, value);
-//        setConnectionURL(DBUrlStore.getInstance().getDBUrl(dbType, host, port, dbName));
-//    }
-    
+    // protected String getProperty(String name) {
+    // String value = (String) this.properties.get(name);
+    // return value == null ? "" : value;
+    // }
+
+    // protected void putProperty(String name, String value) {
+    // this.properties.put(name, value);
+    // setConnectionURL(DBUrlStore.getInstance().getDBUrl(dbType, host, port, dbName));
+    // }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         this.propertyChangeSupport.addPropertyChangeListener(listener);
     }
+
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.propertyChangeSupport.removePropertyChangeListener(listener);
     }
+
     protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         this.propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
-    
-//    protected JDBCDriver getDriver() {
-//        return this.driver;
-//    }
+
+    // protected JDBCDriver getDriver() {
+    // return this.driver;
+    // }
     public String getConnectionURL() {
         return this.connectionURL == null ? "" : this.connectionURL; //$NON-NLS-1$
     }
+
     public void setConnectionURL(String connectionURL) {
         if (connectionURL != null && !connectionURL.equals(this.connectionURL)) {
             String original = this.connectionURL;

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.urlsetup;
 
 import org.eclipse.swt.widgets.Composite;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
 /**
  * 
@@ -24,12 +25,12 @@ public class URLSetupControlFactory {
         return null != getControlClass(dbType);
     }
 
-    public static URLSetupControl create(SupportDBUrlType dbType, Composite composite) {
+    public static URLSetupControl create(SupportDBUrlType dbType, Composite composite, DBConnectionParameter connectionParam) {
         Class controlClass = getControlClass(dbType);
 
         if (BasicThreePartURLSetupControl.class == controlClass) {
             URLSetupControl control = new BasicThreePartURLSetupControl(composite, dbType);
-            control.createPart();
+            control.createPart(connectionParam);
             return control;
         } else {
             return null;

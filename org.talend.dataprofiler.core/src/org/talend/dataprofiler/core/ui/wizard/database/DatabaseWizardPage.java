@@ -14,7 +14,14 @@ package org.talend.dataprofiler.core.ui.wizard.database;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -32,8 +39,10 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.ConnectionService;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControlFactory;
@@ -137,12 +146,16 @@ class DatabaseWizardPage extends AbstractWizardPage {
         dbTypeCombo.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
+                if (dbTypeCombo.getText().trim().equals("Generic JDBC")) {
+                    updateStatus(IStatus.WARNING, UIMessages.MSG_SELECT_GENERIC_JDBC);
+                }
                 String selectedItem = ((Combo) e.getSource()).getText();
                 setDBType(selectedItem);
                 dbTypeSwitchFlag = true;
                 rebuildJDBCControls(SupportDBUrlStore.getInstance().getDBUrlType(selectedItem));
             }
         });
+
         String defalutItem = SupportDBUrlType.MYSQLDEFAULTURL.getDBKey();
         dbTypeCombo.setText(defalutItem);
         setDBType(defalutItem);
@@ -160,10 +173,16 @@ class DatabaseWizardPage extends AbstractWizardPage {
             public void widgetSelected(SelectionEvent e) {
                 ReturnCode code = checkDBConnection();
                 if (code.isOk()) {
-                    MessageDialog.openInformation(getShell(), DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnections"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog
+                            .openInformation(
+                                    getShell(),
+                                    DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnections"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
-                    MessageDialog.openInformation(getShell(), DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
-                            + code.getMessage());
+                    MessageDialog
+                            .openInformation(
+                                    getShell(),
+                                    DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
+                                            + code.getMessage());
                 }
             }
 
@@ -216,9 +235,52 @@ class DatabaseWizardPage extends AbstractWizardPage {
     }
 
     private ReturnCode checkDBConnection() {
-        ReturnCode returnCode = ConnectionService.checkConnection(this.connectionParam.getJdbcUrl(), this.connectionParam
-                .getDriverClassName(), this.connectionParam.getParameters());
-        return returnCode;
+        if (this.connectionParam.getDriverPath() != null) {
+            CorePlugin corePlugin = CorePlugin.getDefault();
+            ReturnCode rc = new ReturnCode();
+            // String[] driverpaths = this.connectionParam.getDriverPath().split(";");
+            Driver externalDriver = createGenericJDBC(this.connectionParam.getDriverPath(), this.connectionParam
+                    .getDriverClassName());
+            if (externalDriver != null) {
+                try {
+                    DriverManager.registerDriver(externalDriver);
+                    Connection connection = externalDriver.connect(this.connectionParam.getJdbcUrl(), this.connectionParam
+                            .getParameters());
+                    if (connection == null) {
+                        rc.setOk(false);
+                    }
+                } catch (Exception e) {
+                    rc.setOk(false);
+                    e.printStackTrace();
+                }
+            } else {
+                rc.setOk(false);
+            }
+            return rc;
+        } else {
+            ReturnCode returnCode = ConnectionService.checkConnection(this.connectionParam.getJdbcUrl(), this.connectionParam
+                    .getDriverClassName(), this.connectionParam.getParameters());
+            return returnCode;
+        }
+    }
+
+    private Driver createGenericJDBC(String driverJars, String driverName) {
+        Driver driver = null;
+        String[] driverJarPath = driverJars.split(";");
+        try {
+            int driverCount = 0;
+            URL[] driverUrl = new URL[driverJarPath.length];
+            for (String dirverpath : driverJarPath) {
+                driverUrl[driverCount++] = new File(dirverpath).toURL();
+            }
+            URLClassLoader cl = URLClassLoader.newInstance(driverUrl, Thread.currentThread().getContextClassLoader());
+            Class c = cl.loadClass(driverName);
+            driver = (Driver) c.newInstance();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return driver;
     }
 
     /**
@@ -231,7 +293,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
         if (URLSetupControlFactory.hasControl(dbType)) {
             disposeOfCurrentJDBCControls();
 
-            this.urlSetupControl = URLSetupControlFactory.create(dbType, this.container);
+            this.urlSetupControl = URLSetupControlFactory.create(dbType, this.container, connectionParam);
             GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
             data.horizontalSpan = 2;
             this.urlSetupControl.setLayoutData(data);
@@ -258,7 +320,11 @@ class DatabaseWizardPage extends AbstractWizardPage {
         this.container.layout();
         this.container.setVisible(true);
         this.container.redraw();
-        updateButtonState();
+        if (dbType.getLanguage().trim().equals("Generic JDBC")) {
+            // updateEditableState();
+        } else {
+            updateButtonState();
+        }
     }
 
     /**
@@ -294,19 +360,48 @@ class DatabaseWizardPage extends AbstractWizardPage {
 
     /**
      * 
+     * DOC zhaoxinyi Comment method "updateEditableState".
+     */
+
+    private void updateEditableState() {
+        String user = connectionParam.getParameters().getProperty(PluginConstant.USER_PROPERTY);
+        String password = connectionParam.getParameters().getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
+        boolean isPasswordBlank = password != null && !password.trim().equals("");
+        boolean isUserBlank = user != null && !user.trim().equals("");
+        boolean isUrlBlank = connectionParam.getJdbcUrl() != null && !connectionParam.getJdbcUrl().trim().equals("");
+        boolean isDriverNameBlank = connectionParam.getDriverClassName() != null
+                && !connectionParam.getDriverClassName().trim().equals("");
+        boolean isDriverFileBlank = connectionParam.getDriverPath() != null && !connectionParam.getDriverPath().equals("");
+        boolean isComplete = isPasswordBlank && isUserBlank && isDriverNameBlank && isUrlBlank && isDriverFileBlank;
+        if (isComplete) {
+            checkButton.setEnabled(!isComplete);
+            setPageComplete(!isComplete);
+        }
+        setPageComplete(isComplete);
+    }
+
+    /**
+     * 
      */
     private void updateButtonState() {
         boolean complete = true;
-        complete &= (this.connectionURL != null && this.connectionURL.trim().length() > 0 && ((this.userid != null && this.userid
-                .trim().length() > 0)
-        // MOD scorreia bug 5366 fixed: allow MSSQL user to connect without setting a login/password
-        || SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(
-                SupportDBUrlStore.getInstance().getDBPameterProperties(connectionURL).getProperty(
-                        org.talend.dq.PluginConstant.DBTYPE_PROPERTY))));
-        if (checkButton != null) {
-            checkButton.setEnabled(complete);
+        if (connectionURL.trim().equals("")) {
+            if (checkButton != null) {
+                checkButton.setEnabled(complete);
+            }
+            setPageComplete(complete);
+        } else {
+            complete &= (this.connectionURL != null && this.connectionURL.trim().length() > 0 && ((this.userid != null && this.userid
+                    .trim().length() > 0)
+            // MOD scorreia bug 5366 fixed: allow MSSQL user to connect without setting a login/password
+            || SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(
+                    SupportDBUrlStore.getInstance().getDBPameterProperties(connectionURL).getProperty(
+                            org.talend.dq.PluginConstant.DBTYPE_PROPERTY))));
+            if (checkButton != null) {
+                checkButton.setEnabled(complete);
+            }
+            setPageComplete(complete);
         }
-        setPageComplete(complete);
     }
 
     /**
