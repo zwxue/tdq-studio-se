@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -30,6 +31,7 @@ public class DuplicateCWMResourceAction extends Action {
 
     public DuplicateCWMResourceAction(IFile[] files) {
         super("Duplicate ...");
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EDIT_COPY));
         this.files = files;
     }
 
