@@ -248,8 +248,6 @@ public class DeleteCWMResourceAction extends Action {
                     driverPreferList.add(driverCellMap);
                 }
             }
-        } else {
-            return null;
         }
         return driverPreferList;
     }
