@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.eclipse.emf.common.util.EList;
 import org.jfree.data.category.CategoryDataset;
@@ -170,7 +172,7 @@ public final class ChartDatasetUtils {
      */
     private static Map<String, DateValueAggregate> fillGanttDataset(final EList<Column> nominalColumns,
             final List<Object[]> listRows, final int firstDateColumnIdx) {
-        Map<String, DateValueAggregate> valueAggregators = new HashMap<String, DateValueAggregate>();
+        Map<String, DateValueAggregate> valueAggregators = new TreeMap<String, DateValueAggregate>();
 
         int minPos = firstDateColumnIdx;
         int maxPos = firstDateColumnIdx + 1;
@@ -178,10 +180,10 @@ public final class ChartDatasetUtils {
             String key = createKey(nominalColumns, i);
             for (Object[] row : listRows) {
                 final Object minObj = row[minPos];
-                final Date minDate = minObj != null ? (Date) minObj : null; 
+                final Date minDate = minObj != null ? (Date) minObj : null;
                 final Object maxobj = row[maxPos];
                 final Date maxDate = maxobj != null ? (Date) maxobj : null;
-                
+
                 DateValueAggregate valueAggregator = valueAggregators.get(key);
                 if (valueAggregator == null) {
                     valueAggregator = new DateValueAggregate();
@@ -226,7 +228,7 @@ public final class ChartDatasetUtils {
         public List<String> getLabels(String seriesKey) {
             return seriesKeyToLabel.get(seriesKey);
         }
-        
+
         /*
          * (non-Javadoc)
          * 
@@ -259,7 +261,7 @@ public final class ChartDatasetUtils {
 
             keyToVal.put(key, doubles);
         }
-        
+
         /**
          * Method "addSeriesToXYZDataset" adds a new series of data to the given dataset.
          * 
@@ -277,7 +279,7 @@ public final class ChartDatasetUtils {
             int i = 0;
             for (MultipleKey key : keyToVal.keySet()) {
                 final Double[] doubles = keyToVal.get(key);
-                xDouble[i] = doubles[0]; 
+                xDouble[i] = doubles[0];
                 yDouble[i] = doubles[1];
                 zDouble[i] = doubles[2];
                 MultiMapHelper.addUniqueObjectToListMap(keyOfDataset, key.toString(), this.seriesKeyToLabel);
@@ -347,7 +349,7 @@ public final class ChartDatasetUtils {
         public void addSeriesToGanttDataset(TaskSeriesCollection ganttDataset, String keyOfDataset) {
             // System.out.println(keyOfDataset);
             TaskSeries series = new TaskSeries(keyOfDataset);
-            for (MultipleKey key : keyToVal.keySet()) {
+            for (MultipleKey key : new TreeSet<MultipleKey>(keyToVal.keySet())) {
                 final Date[] date = keyToVal.get(key);
                 series.add(new Task(((MultipleKey) key).toString(), new SimpleTimePeriod(date[0], date[1])));
                 MultiMapHelper.addUniqueObjectToListMap(keyOfDataset, key.toString(), this.seriesKeyToLabel);

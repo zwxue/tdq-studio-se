@@ -275,6 +275,10 @@ public final class TopChartFactory {
         final Map<String, DateValueAggregate> createGannttDatasets = ChartDatasetUtils.createGanttDatasets(indic, dateColumn);
 
         TaskSeriesCollection ganttDataset = new TaskSeriesCollection();
+        // TreeSet<String> ganttTreeSet = new TreeSet<String>(createGannttDatasets.keySet());
+        // for (String key : ganttTreeSet) {
+        // createGannttDatasets.get(key).addSeriesToGanttDataset(ganttDataset, key);
+        // }
         final Iterator<String> iterator = createGannttDatasets.keySet().iterator();
         while (iterator.hasNext()) {
             final String next = iterator.next();
@@ -282,7 +286,7 @@ public final class TopChartFactory {
         }
         String chartAxies = "'" + dateColumn.getName() + "' Range per nominal values";
         JFreeChart chart = ChartFactory.createGanttChart("", // chart title
-                "Task", // domain axis label
+                "Categories", // domain axis label
                 chartAxies, // range axis label
                 ganttDataset, // data
                 true, // include legend

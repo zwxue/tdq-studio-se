@@ -216,7 +216,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                                     Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
                                     frameComp.setLayout(new GridLayout());
                                     GridData gd = new GridData();
-                                    gd.heightHint = 500;
+                                    gd.heightHint = 1200;
                                     gd.widthHint = 1000;
                                     frameComp.setLayoutData(gd);
 

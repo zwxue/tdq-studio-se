@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,10 +37,12 @@ import org.jfree.chart.annotations.CategoryTextAnnotation;
 import org.jfree.chart.axis.CategoryAnchor;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.labels.CategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.ui.TextAnchor;
@@ -144,11 +147,13 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             if (byte0 >= 0) {
                 boolean flag = ganttRenderer.getItemVisible(byte0, 0);
                 ganttRenderer.setSeriesVisible(byte0, new Boolean(!flag));
+                // ganttRenderer.getPlot().clearAnnotations();
             }
         }
 
     }
 
+    @SuppressWarnings("deprecation")
     public HideSeriesPanel(ColumnSetMultiValueIndicator columnMultiIndicator, TdColumn columnPara) {
         super(new BorderLayout());
         this.countIndicator = columnMultiIndicator;
@@ -157,7 +162,6 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
         Iterator<String> iterator;
         if (columnMultiIndicator instanceof CountAvgNullIndicator) {
             Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(columnMultiIndicator, tdColumn);
-
             iterator = createXYZDatasets.keySet().iterator();
             chart = TopChartFactory.createBubbleChart(columnMultiIndicator, columnPara);
             XYPlot plot = chart.getXYPlot();
@@ -182,13 +186,34 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             iterator = createGanttDatasets.keySet().iterator();
             chart = TopChartFactory.createGanttChart(columnMultiIndicator, columnPara);
             createAnnotOnGantt(chart, rowList, nbNominalColumns + nbDateFunctions * indexOfDateCol + 3, nbNominalColumns);
-            CategoryPlot plot = (CategoryPlot) chart.getPlot();
+            final CategoryPlot plot = (CategoryPlot) chart.getPlot();
             plot.setRenderer(new CustomHideSeriesGantt());
             plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
             ganttRenderer = plot.getRenderer();
+            CategoryToolTipGenerator toolTipGenerator = new CategoryToolTipGenerator() {
+
+                @SuppressWarnings("unchecked")
+                public String generateToolTip(CategoryDataset dataset, int row, int column) {
+                    TaskSeriesCollection taskSeriesColl = (TaskSeriesCollection) dataset;
+                    List<Task> taskList = new ArrayList<Task>();
+                    for (int i = 0; i < taskSeriesColl.getSeriesCount(); i++) {
+                        for (int j = 0; j < taskSeriesColl.getSeries(i).getItemCount(); j++) {
+                            taskList.add(taskSeriesColl.getSeries(i).get(j));
+                        }
+                    }
+                    Task task = taskList.get(column);
+                    // Task task = taskSeriesColl.getSeries(row).get(column);
+                    String taskDescription = task.getDescription();
+                    Date startDate = task.getDuration().getStart();
+                    Date endDate = task.getDuration().getEnd();
+                    return taskDescription + ",     " + startDate + "---->" + endDate;
+                    // return "this is a tooltip";
+                }
+            };
+            ganttRenderer.setToolTipGenerator(toolTipGenerator);
         }
         HideChartPanel chartpanel = new HideChartPanel(chart);
-        chartpanel.setPreferredSize(new Dimension(1000, 500));
+        chartpanel.setPreferredSize(new Dimension(2000, 500));
         JPanel jpanel = new JPanel();
         while (iterator.hasNext()) {
             String next = iterator.next();
@@ -251,7 +276,9 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
                 String taskDescription = task.getDescription();
                 String[] taskArray = taskDescription.split("\\|");
                 boolean isSameTime = task.getDuration().getStart().getTime() == task.getDuration().getEnd().getTime();
-                if (!isSameTime && !((rowList.get(indexOfRow))[multiDateColumn]).equals(new BigDecimal(0L))) {
+                if (!isSameTime && (rowList.get(indexOfRow))[multiDateColumn - 3] != null
+                        && (rowList.get(indexOfRow))[multiDateColumn - 2] != null
+                        && !((rowList.get(indexOfRow))[multiDateColumn]).equals(new BigDecimal(0L))) {
                     RowColumPair pair = new RowColumPair();
                     pair.setRow(seriesCount);
                     pair.setColumn(columnCount);
@@ -264,11 +291,15 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
                 }
                 if (taskArray.length == nominal) {
                     indexOfRow++;
+
+                    if (rowList.size() != indexOfRow
+                            && ((rowList.get(indexOfRow))[multiDateColumn - 3] == null || (rowList.get(indexOfRow))[multiDateColumn - 2] == null)) {
+                        indexOfRow++;
+                    }
                 }
             }
         }
     }
-
 }
 
 /**
