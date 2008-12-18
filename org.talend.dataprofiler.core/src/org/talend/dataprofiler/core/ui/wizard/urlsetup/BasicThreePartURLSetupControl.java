@@ -12,7 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.urlsetup;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.Driver;
+
+import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -87,16 +92,16 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             });
             Label labelDriver = new Label(parent, SWT.NONE);
             labelDriver.setText("Driver Class Name");
-            int comboUrlCount = 0;
-            String[] dbDriverName = new String[SupportDBUrlType.values().length - 1];
-            for (SupportDBUrlType dbType : SupportDBUrlType.values()) {
-                if (!dbType.getDbDriver().trim().equals("")) {
-                    dbDriverName[comboUrlCount++] = dbType.getDbDriver();
-                }
-            }
+            // int comboUrlCount = 0;
+            // String[] dbDriverName = new String[SupportDBUrlType.values().length - 1];
+            // for (SupportDBUrlType dbType : SupportDBUrlType.values()) {
+            // if (!dbType.getDbDriver().trim().equals("")) {
+            // dbDriverName[comboUrlCount++] = dbType.getDbDriver();
+            // }
+            // }
             final Combo comboDriver = new Combo(parent, SWT.READ_ONLY);
             comboDriver.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            comboDriver.setItems(dbDriverName);
+            // comboDriver.setItems(dbDriverName);
             comboDriver.addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -106,17 +111,44 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             });
 
-            Label whiteLabel = new Label(parent, SWT.NONE);
-            whiteLabel.setText("");
+            Button listDriverBtn = new Button(parent, SWT.PUSH);
+            listDriverBtn.setText("List Drivers");
+            listDriverBtn.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    comboDriver.removeAll();
+                    for (String stringToFile : jarText.getText().trim().split(";")) {
+                        File file = new File(stringToFile);
+                        if (file != null) {
+                            try {
+                                MyURLClassLoader cl = new MyURLClassLoader(file.toURL());
+                                Class[] classes = cl.getAssignableClasses(Driver.class);
+                                for (int i = 0; i < classes.length; ++i) {
+                                    comboDriver.add(classes[i].getName());
+                                }
+                            } catch (MalformedURLException ex) {
+                                ex.printStackTrace();
+
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+
+                            }
+                        }
+                    }
+                    if (comboDriver.getItemCount() > 0) {
+                        comboDriver.setText(comboDriver.getItem(0));
+                    }
+                }
+            });
 
             Label labelUrl = new Label(parent, SWT.NONE);
             labelUrl.setText("Url");
-            final Text textUrl = new Text(parent, SWT.BORDER | SWT.SINGLE);
-            textUrl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            textUrl.addModifyListener(new ModifyListener() {
+            final Text urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            urlText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
-                    connectionParam.setJdbcUrl(textUrl.getText());
+                    connectionParam.setJdbcUrl(urlText.getText());
                 }
 
             });

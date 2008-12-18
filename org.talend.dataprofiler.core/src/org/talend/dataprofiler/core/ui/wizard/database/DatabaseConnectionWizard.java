@@ -116,7 +116,9 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         }
         TypedReturnCode<TdDataProvider> rc = ConnectionService.createConnection(this.connectionParam);
         if (!rc.isOk()) {
-            SQLExplorerPlugin.getDefault().getDriverModel().removeDriver(driver);
+            if (driver != null) {
+                SQLExplorerPlugin.getDefault().getDriverModel().removeDriver(driver);
+            }
             MessageDialog
                     .openInformation(
                             getShell(),
