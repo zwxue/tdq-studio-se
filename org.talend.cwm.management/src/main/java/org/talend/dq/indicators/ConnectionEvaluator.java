@@ -107,7 +107,11 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         } else { // catalogs exist
             for (TdCatalog tdCatalog : catalogs) {
                 String catName = tdCatalog.getName();
-                connection.setCatalog(catName);
+                try {
+                    connection.setCatalog(catName);
+                } catch (Exception e) {
+                    log.warn("Exception while executing SQL query " + sqlStatement, e);
+                }
                 CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
                 this.addToConnectionIndicator(catalogIndic);
                 List<TdSchema> schemas = CatalogHelper.getSchemas(tdCatalog);
