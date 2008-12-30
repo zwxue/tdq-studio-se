@@ -40,6 +40,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -200,11 +201,17 @@ public class CorePlugin extends AbstractUIPlugin {
         if (editorName == null) {
             editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
-        SQLExplorerPlugin sqlexplorer = SQLExplorerPlugin.getDefault();
-        Collection<Alias> aliases = sqlexplorer.getAliasManager().getAliases();
+
         TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
         TdProviderConnection providerConnection = tdPc.getObject();
         String url = providerConnection.getConnectionString();
+
+        SQLExplorerPlugin sqlexplorer = SQLExplorerPlugin.getDefault();
+        Collection<Alias> aliases = sqlexplorer.getAliasManager().getAliases();
+        if (aliases.isEmpty()) {
+            new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+        }
+
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
                 SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$
