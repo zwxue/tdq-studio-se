@@ -83,6 +83,8 @@ public class DataFilterDND {
                             while (it.hasNext()) {
                                 DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
                                 targetControl.insert(language.quote(it.next().getName()));
+                                // Focus text.
+                                targetControl.forceFocus();
                             }
                         }
                     }
