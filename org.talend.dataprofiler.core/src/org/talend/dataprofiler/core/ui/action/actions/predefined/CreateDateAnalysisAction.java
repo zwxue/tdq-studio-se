@@ -26,7 +26,6 @@ import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm;
-import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm.ICheckListener;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTimeSliceForm;
@@ -149,9 +148,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-            AbstractIndicatorForm.setParameters(parameters);
-
-            FreqTimeSliceForm timeSliceForm = new FreqTimeSliceForm(comp, SWT.NONE);
+            FreqTimeSliceForm timeSliceForm = new FreqTimeSliceForm(comp, SWT.NONE, parameters);
             timeSliceForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             timeSliceForm.setListener(listener);
 

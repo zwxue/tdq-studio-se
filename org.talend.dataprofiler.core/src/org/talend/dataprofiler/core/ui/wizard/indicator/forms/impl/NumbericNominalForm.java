@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -42,8 +43,8 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
      * @param style
      * @param parameter
      */
-    public NumbericNominalForm(Composite parent, int style) {
-        super(parent, style);
+    public NumbericNominalForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
 
         setupForm();
     }

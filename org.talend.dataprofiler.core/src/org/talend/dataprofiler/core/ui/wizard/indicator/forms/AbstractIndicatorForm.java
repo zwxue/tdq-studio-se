@@ -37,32 +37,25 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     public static final String MSG_OK = UIMessages.MSG_VALID_FIELD;
 
-    protected final String limitResultsGrp = DefaultMessagesImpl.getString("AbstractIndicatorForm.limitResult"); //$NON-NLS-1$
+    protected final String limitResultsGrp = DefaultMessagesImpl.getString("AbstractIndicatorForm.limitResult");
 
-    protected static IndicatorParameters parameters;
-
-    protected static int sqltype;
+    protected IndicatorParameters parameters;
 
     /**
-     * DOC zqin AbstractIndicatorForm constructor comment.
+     * DOC Administrator AbstractIndicatorForm constructor comment.
      * 
      * @param parent
      * @param style
+     * @param parameters
      */
-    public AbstractIndicatorForm(Composite parent, int style) {
+    public AbstractIndicatorForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style);
+
+        this.parameters = parameters;
     }
 
     public String getFormName() {
         return getFormEnum().getFormName();
-    }
-
-    public static void setParameters(IndicatorParameters parameters) {
-        AbstractIndicatorForm.parameters = parameters;
-    }
-
-    public static void setSqltype(int sqltype) {
-        AbstractIndicatorForm.sqltype = sqltype;
     }
 
     public void showHelp() {

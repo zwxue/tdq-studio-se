@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -41,7 +42,9 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
-import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -53,8 +56,6 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     protected Text lowerText, higherText;
 
-    private boolean canUsed;
-
     private static final double MIN = 0;
 
     private static final double MAX = 100;
@@ -63,8 +64,20 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private static final String PERCENTAGE_THRESHOLD = "Percentage Threshold";
 
-    public IndicatorThresholdsForm(Composite parent, int style) {
-        super(parent, style);
+    private boolean isContainRowCount;
+
+    private boolean isRangeForDate;
+
+    private boolean isOptionForRowCount;
+
+    public IndicatorThresholdsForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
+
+        Indicator currentIndicator = (Indicator) parameters.eContainer();
+        int sqltype = ((TdColumn) currentIndicator.getAnalyzedElement()).getJavaType();
+        IndicatorEnum currentIndicatorType = IndicatorEnum.findIndicatorEnum(currentIndicator.eClass());
+        isRangeForDate = Java2SqlType.isDateInSQL(sqltype) && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
+        isOptionForRowCount = currentIndicatorType == IndicatorEnum.RowCountIndicatorEnum;
 
         setupForm();
     }
@@ -88,7 +101,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         higherText = new Text(group, SWT.BORDER);
         higherText.setLayoutData(gdText);
 
-        if (!(parameters.eContainer() instanceof RowCountIndicator) && !Java2SqlType.isDateInSQL(sqltype)) {
+        if (!isOptionForRowCount && !isRangeForDate) {
             Group pGroup = new Group(this, SWT.NONE);
             pGroup.setLayout(new GridLayout(2, false));
             pGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -120,11 +133,11 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         }
 
         if (masterPage != null) {
-            canUsed = AnalysisHelper.containsRowCount(masterPage.getAnalysisHandler().getAnalysis());
+            isContainRowCount = AnalysisHelper.containsRowCount(masterPage.getAnalysisHandler().getAnalysis());
         }
 
-        pLowerText.setEnabled(canUsed);
-        pHigherText.setEnabled(canUsed);
+        pLowerText.setEnabled(isContainRowCount);
+        pHigherText.setEnabled(isContainRowCount);
     }
 
     @Override
@@ -136,7 +149,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
     public boolean performFinish() {
         boolean isMinEmpty = CheckValueUtils.isEmpty(lowerText.getText());
         boolean isMaxEmpty = CheckValueUtils.isEmpty(higherText.getText());
-        if (canUsed) {
+        if (isContainRowCount) {
             boolean isPerMinEmpty = CheckValueUtils.isEmpty(pLowerText.getText());
             boolean isPerMaxEmpty = CheckValueUtils.isEmpty(pHigherText.getText());
 
@@ -194,16 +207,15 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 String max = higherText.getText();
 
                 if (!CheckValueUtils.isEmpty(min)) {
-                    if (Java2SqlType.isDateInSQL(sqltype)) {
+                    if (isRangeForDate) {
                         if (!CheckValueUtils.isDateValue(min)) {
                             updateStatus(IStatus.ERROR, MSG_ONLY_DATE);
+                        } else {
+                            updateStatus(IStatus.OK, MSG_OK);
                         }
-                    } else {
-                        if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
-                            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                        }
-                    }
-                    if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
+                    } else if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
+                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                    } else if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
                         updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                     } else {
                         updateStatus(IStatus.OK, MSG_OK);
@@ -222,16 +234,15 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 String max = higherText.getText();
 
                 if (!CheckValueUtils.isEmpty(max)) {
-                    if (Java2SqlType.isDateInSQL(sqltype)) {
+                    if (isRangeForDate) {
                         if (!CheckValueUtils.isDateValue(max)) {
                             updateStatus(IStatus.ERROR, MSG_ONLY_DATE);
+                        } else {
+                            updateStatus(IStatus.OK, MSG_OK);
                         }
-                    } else {
-                        if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
-                            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                        }
-                    }
-                    if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
+                    } else if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
+                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                    } else if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
                         updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                     } else {
                         updateStatus(IStatus.OK, MSG_OK);
@@ -243,7 +254,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
         });
 
-        if (canUsed) {
+        if (isContainRowCount) {
             pLowerText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
@@ -293,7 +304,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     protected void addUtilsButtonListeners() {
-        if (Java2SqlType.isDateInSQL(sqltype)) {
+        if (isRangeForDate) {
             lowerText.addMouseListener(new MouseAdapter() {
 
                 @Override
@@ -333,7 +344,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             higherText.setText(indicatorThreshold[1]);
         }
         String[] indicatorPersentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(parameters);
-        if (indicatorPersentThreshold != null && canUsed) {
+        if (indicatorPersentThreshold != null && isContainRowCount) {
             pLowerText.setText(indicatorPersentThreshold[0]);
             pHigherText.setText(indicatorPersentThreshold[1]);
         }

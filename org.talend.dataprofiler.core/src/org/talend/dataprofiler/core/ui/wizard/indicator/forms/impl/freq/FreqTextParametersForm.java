@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextParametersForm;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -33,8 +34,8 @@ public class FreqTextParametersForm extends TextParametersForm {
 
     private Text numberTxt;
 
-    public FreqTextParametersForm(Composite parent, int style) {
-        super(parent, style);
+    public FreqTextParametersForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
     }
 
     @Override

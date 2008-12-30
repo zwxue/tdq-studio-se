@@ -16,14 +16,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextLengthForm;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
 public class FreqTextLengthForm extends TextLengthForm {
 
-    public FreqTextLengthForm(Composite parent, int style) {
-        super(parent, style);
+    public FreqTextLengthForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
     }
 
     @Override

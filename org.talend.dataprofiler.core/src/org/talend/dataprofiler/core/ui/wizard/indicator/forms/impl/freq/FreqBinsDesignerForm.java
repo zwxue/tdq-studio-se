@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.BinsDesignerForm;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -33,8 +34,8 @@ public class FreqBinsDesignerForm extends BinsDesignerForm {
 
     private Text numberTxt;
 
-    public FreqBinsDesignerForm(Composite parent, int style) {
-        super(parent, style);
+    public FreqBinsDesignerForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
     }
 
     @Override

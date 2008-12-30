@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqBins
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTextLengthForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTextParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq.FreqTimeSliceForm;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -38,70 +39,70 @@ public final class IndicatorFormFactory {
 
     }
 
-    public static AbstractIndicatorForm createForm(Composite parent, FormEnum formEnum) {
+    public static AbstractIndicatorForm createForm(Composite parent, FormEnum formEnum, IndicatorParameters parameters) {
         AbstractIndicatorForm form = null;
 
         switch (formEnum) {
         case BinsDesignerForm:
 
-            form = new BinsDesignerForm(parent, SWT.NONE);
+            form = new BinsDesignerForm(parent, SWT.NONE, parameters);
 
             break;
         case TextLengthForm:
 
-            form = new TextLengthForm(parent, SWT.NONE);
+            form = new TextLengthForm(parent, SWT.NONE, parameters);
 
             break;
         case FreqTextLengthForm:
 
-            form = new FreqTextLengthForm(parent, SWT.NONE);
+            form = new FreqTextLengthForm(parent, SWT.NONE, parameters);
 
             break;
         case TextParametersForm:
 
-            form = new TextParametersForm(parent, SWT.NONE);
+            form = new TextParametersForm(parent, SWT.NONE, parameters);
 
             break;
         case DataThresholdsForm:
 
-            form = new DataThresholdsForm(parent, SWT.NONE);
+            form = new DataThresholdsForm(parent, SWT.NONE, parameters);
 
             break;
         case TimeSlicesForm:
 
-            form = new TimeSlicesForm(parent, SWT.NONE);
+            form = new TimeSlicesForm(parent, SWT.NONE, parameters);
 
             break;
         case FreqBinsDesignerForm:
 
-            form = new FreqBinsDesignerForm(parent, SWT.NONE);
+            form = new FreqBinsDesignerForm(parent, SWT.NONE, parameters);
 
             break;
         case FreqTextParametersForm:
 
-            form = new FreqTextParametersForm(parent, SWT.NONE);
+            form = new FreqTextParametersForm(parent, SWT.NONE, parameters);
 
             break;
         case FreqTimeSliceForm:
 
-            form = new FreqTimeSliceForm(parent, SWT.NONE);
+            form = new FreqTimeSliceForm(parent, SWT.NONE, parameters);
 
             break;
 
         case IndicatorThresholdsForm:
 
-            form = new IndicatorThresholdsForm(parent, SWT.NONE);
+            form = new IndicatorThresholdsForm(parent, SWT.NONE, parameters);
 
             break;
 
         case NumbericNominalForm:
 
-            form = new NumbericNominalForm(parent, SWT.NONE);
+            form = new NumbericNominalForm(parent, SWT.NONE, parameters);
             break;
 
         case ExpectedValueForm:
 
-            form = new ExpectedValueForm(parent, SWT.NONE);
+            form = new ExpectedValueForm(parent, SWT.NONE, parameters);
             break;
 
         default:

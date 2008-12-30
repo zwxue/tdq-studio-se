@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorF
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 
 /**
@@ -38,8 +39,8 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
 
     private ArrayList<Button> allBtns = new ArrayList<Button>();
 
-    public TimeSlicesForm(Composite parent, int style) {
-        super(parent, style);
+    public TimeSlicesForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
 
         setupForm();
     }

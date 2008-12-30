@@ -51,6 +51,7 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.RealNumberValue;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -65,8 +66,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     private TableViewer tableViewer;
 
-    public BinsDesignerForm(Composite parent, int style) {
-        super(parent, style);
+    public BinsDesignerForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
         setupForm();
     }
 

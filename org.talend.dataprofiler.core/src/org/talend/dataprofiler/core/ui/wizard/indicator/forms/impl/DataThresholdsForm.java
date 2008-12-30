@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorF
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -41,8 +42,8 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
     protected Group group;
 
-    public DataThresholdsForm(Composite parent, int style) {
-        super(parent, style);
+    public DataThresholdsForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
 
         setupForm();
     }

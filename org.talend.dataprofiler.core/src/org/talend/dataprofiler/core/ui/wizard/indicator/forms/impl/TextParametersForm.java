@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Group;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.TextParameters;
 
@@ -34,8 +35,8 @@ public class TextParametersForm extends AbstractIndicatorForm {
 
     private Button caseBtn;
 
-    public TextParametersForm(Composite parent, int style) {
-        super(parent, style);
+    public TextParametersForm(Composite parent, int style, IndicatorParameters parameters) {
+        super(parent, style, parameters);
 
         setupForm();
     }
