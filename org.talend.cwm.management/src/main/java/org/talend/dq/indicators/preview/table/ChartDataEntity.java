@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
@@ -175,19 +176,31 @@ public class ChartDataEntity {
             range = "[" + definedRange[0] + "," + definedRange[1] + "]";
 
             int sqltype = ((TdColumn) indicator.getAnalyzedElement()).getJavaType();
-            if (Java2SqlType.isDateInSQL(sqltype)) {
+
+            if (Java2SqlType.isDateInSQL(sqltype) && indicator.eContainer() instanceof RangeIndicator) {
+
                 try {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    Date min = format.parse(definedRange[0]);
-                    Date max = format.parse(definedRange[1]);
-
                     Date dValue = format.parse(value);
 
-                    return dValue.after(max) || dValue.before(min);
+                    if ("".equals(definedRange[0])) {
+                        Date max = format.parse(definedRange[1]);
+                        range = "[*, " + definedRange[1] + "]";
+                        return dValue.after(max);
+                    } else if ("".equals(definedRange[1])) {
+                        Date min = format.parse(definedRange[0]);
+                        range = "[" + definedRange[0] + ", *]";
+                        return dValue.before(min);
+                    } else {
+                        Date min = format.parse(definedRange[0]);
+                        Date max = format.parse(definedRange[1]);
+                        return dValue.after(max) || dValue.before(min);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;
                 }
+
             } else {
                 Double min = StringFormatUtil.formatDouble(definedRange[0]);
                 Double max = StringFormatUtil.formatDouble(definedRange[1]);

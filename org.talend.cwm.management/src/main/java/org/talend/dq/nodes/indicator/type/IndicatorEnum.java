@@ -298,4 +298,15 @@ public enum IndicatorEnum {
         return indicatorEnumn != RegexpMatchingIndicatorEnum && indicatorEnumn != SqlPatternMatchingIndicatorEnum;
     }
 
+    public boolean isAChildOf(IndicatorEnum parent) {
+        if (parent.getChildren() != null) {
+            for (IndicatorEnum child : parent.getChildren()) {
+                if (child == this) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
