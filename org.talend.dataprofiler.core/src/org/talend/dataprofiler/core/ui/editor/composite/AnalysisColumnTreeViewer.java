@@ -327,6 +327,25 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         tree.setData(VIEWER_KEY, this);
         this.columnIndicators = elements;
         addItemElements(elements);
+
+        this.tree.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseDoubleClick(MouseEvent e) {
+                TreeItem item = tree.getSelection()[0];
+                if (item != null) {
+                    Object indicatorobj = item.getData(INDICATOR_UNIT_KEY);
+                    Object columnobj = item.getData(COLUMN_INDICATOR_KEY);
+                    if (columnobj != null && indicatorobj == null) {
+                        // open indicator selector
+                        openIndicatorSelectDialog(null);
+                    } else if (columnobj != null && indicatorobj != null) {
+                        // open indicator option wizard
+                        openIndicatorOptionDialog(null, item);
+                    }
+                }
+            }
+        });
     }
 
     private void addItemElements(final ColumnIndicator[] elements) {
@@ -542,24 +561,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
              */
             @Override
             public void mouseDown(MouseEvent e) {
-
-                IndicatorUnit indicatorUnit = (IndicatorUnit) ((Label) e.getSource()).getData();
-                IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
-
-                if (FormEnum.isExsitingForm(indicatorUnit)) {
-                    String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
-                    OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(null, wizard, href);
-                    optionDialog.create();
-                    if (Window.OK == optionDialog.open()) {
-                        setDirty(wizard.isDirty());
-                        createIndicatorParameters(indicatorItem, indicatorUnit);
-                    }
-                } else {
-                    MessageDialogWithToggle
-                            .openInformation(
-                                    null,
-                                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ //$NON-NLS-2$
-                }
+                openIndicatorOptionDialog(null, indicatorItem);
             }
 
         });
@@ -751,6 +753,24 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
             this.setElements(result);
             return;
+        }
+    }
+
+    public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
+        IndicatorUnit indicatorUnit = (IndicatorUnit) indicatorItem.getData(INDICATOR_UNIT_KEY);
+        IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
+
+        if (FormEnum.isExsitingForm(indicatorUnit)) {
+            String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
+            OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(shell, wizard, href);
+            optionDialog.create();
+            if (Window.OK == optionDialog.open()) {
+                setDirty(wizard.isDirty());
+                createIndicatorParameters(indicatorItem, indicatorUnit);
+            }
+        } else {
+            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"),
+                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
