@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.model;
 import java.util.Collection;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbdetail.DetailTabManager;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.User;
@@ -47,7 +46,7 @@ public final class SqlExplorerBridge {
 
     @SuppressWarnings("unchecked")
     public static TypedReturnCode<TableNode> findSqlExplorerTableNode(TdProviderConnection providerConnection,
-            Package parentPackageElement, String tableName) {
+            Package parentPackageElement, String tableName, String activeTabName) {
         // Open data explore perspective.
         ChangePerspectiveAction perspectiveAction = new ChangePerspectiveAction(PluginConstant.SE_ID);
         perspectiveAction.run();
@@ -106,7 +105,7 @@ public final class SqlExplorerBridge {
                 typedReturnCode.setObject((TableNode) node);
                 DatabaseStructureView dsView = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
                 dsView.setSessionSelectionNode(currentUser.getMetaDataSession(), new StructuredSelection(node));
-                DetailTabManager.setActiveTabName(Messages.getString("DatabaseDetailView.Tab.PrimaryKeys"));
+                DetailTabManager.setActiveTabName(activeTabName);
                 return typedReturnCode;
             }
         }

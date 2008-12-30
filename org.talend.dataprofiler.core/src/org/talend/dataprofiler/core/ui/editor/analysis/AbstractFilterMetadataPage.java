@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.TableNode;
 
 import org.apache.log4j.Logger;
@@ -104,6 +105,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private static final int VIEW_COLUMN_INDEX = 2;
 
+    private static final int VIEW_COLUMN_INDEXES = 3;
+
     private static final int COLUMN_TABLE_WIDTH = 100;
 
     private static final int COLUMN_VIEW_WIDTH = 150;
@@ -119,6 +122,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private static final int COL_WIDTH = 100;
 
     private Text tableFilterText;
+
+    private static Logger log1 = Logger.getLogger(ConnectionMasterDetailsPage.class);
 
     private Text viewFilterText;
 
@@ -665,12 +670,17 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             cursor.setLayout(new FillLayout());
             // cursor.setVisible(true);
             final Menu menu = new Menu(catalogOrSchemaTable);
-            MenuItem item = new MenuItem(menu, SWT.PUSH);
-            item.setText("View keys");
-            item.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
+            MenuItem keyitem = new MenuItem(menu, SWT.PUSH);
+            keyitem.setText("View keys");
+            keyitem.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
+
+            final Menu menu1 = new Menu(catalogOrSchemaTable);
+            MenuItem indexitem = new MenuItem(menu1, SWT.PUSH);
+            indexitem.setText("View indexes");
+            indexitem.setImage(ImageLib.getImage(ImageLib.INDEX_VIEW));
 
             // catalogOrSchemaTable.setMenu(menu);
-            item.addSelectionListener(new SelectionAdapter() {
+            keyitem.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
                     TableItem tableItem = cursor.getRow();
@@ -678,7 +688,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     TdProviderConnection providerConnection = tdPc.getObject();
                     TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
                             providerConnection, (Package) currentSelectionSchemaIndicator.getAnalyzedElement(), tableItem
-                                    .getText(0));
+                                    .getText(0), Messages.getString("DatabaseDetailView.Tab.PrimaryKeys"));
 
                     if (!findSqlExplorerTableNode.isOk()) {
                         log.error(findSqlExplorerTableNode.getMessage());
@@ -693,6 +703,35 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     if (column == VIEW_COLUMN_INDEX) {
                         cursor.setMenu(menu);
                         menu.setVisible(true);
+                    } else {
+                        cursor.setMenu(null);
+                    }
+                }
+            });
+
+            indexitem.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    TableItem tableItem = cursor.getRow();
+                    TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
+                    TdProviderConnection providerConnection = tdPc.getObject();
+                    TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
+                            providerConnection, (Package) schemaIndicator.getAnalyzedElement(), tableItem.getText(0), Messages
+                                    .getString("DatabaseDetailView.Tab.Indexes"));
+
+                    if (!findSqlExplorerTableNode.isOk()) {
+                        log.error(findSqlExplorerTableNode.getMessage());
+                    }
+                }
+
+            });
+            cursor.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    int column = cursor.getColumn();
+                    if (column == VIEW_COLUMN_INDEXES) {
+                        cursor.setMenu(menu1);
+                        menu1.setVisible(true);
                     } else {
                         cursor.setMenu(null);
                     }
