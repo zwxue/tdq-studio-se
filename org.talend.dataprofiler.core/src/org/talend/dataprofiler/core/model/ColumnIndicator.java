@@ -30,6 +30,7 @@ import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -487,7 +488,7 @@ public class ColumnIndicator {
 
             // for 4225, the frequency indicator need be initialized
             int sqlType = this.tdColumn.getJavaType();
-            if (indicatorEnum == IndicatorEnum.FrequencyIndicatorEnum && Java2SqlType.isDateInSQL(sqlType)) {
+            if (indicator instanceof FrequencyIndicator && Java2SqlType.isDateInSQL(sqlType)) {
                 IndicatorParameters parameters = indicator.getParameters();
                 if (parameters == null) {
                     parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();

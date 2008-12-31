@@ -101,6 +101,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
@@ -615,7 +616,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             return;
         }
         TreeItem iParamItem;
-        if (indicatorUnit.getType() == IndicatorEnum.FrequencyIndicatorEnum) {
+        if (indicatorUnit.getIndicator() instanceof FrequencyIndicator) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
             iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.resultsShown") + parameters.getTopN()); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
@@ -744,6 +745,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
+
+        if (isDirty()) {
+            masterPage.doSave(null);
+        }
+
         IndicatorUnit indicatorUnit = (IndicatorUnit) indicatorItem.getData(INDICATOR_UNIT_KEY);
         IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
 
@@ -995,10 +1001,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
-
-                if (isDirty()) {
-                    masterPage.doSave(null);
-                }
                 TreeItem item = tree.getSelection()[0];
                 if (item != null) {
                     Object indicatorobj = item.getData(INDICATOR_UNIT_KEY);
