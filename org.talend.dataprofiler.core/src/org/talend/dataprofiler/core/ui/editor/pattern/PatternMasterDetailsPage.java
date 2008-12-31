@@ -52,14 +52,11 @@ import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
-import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import orgomg.cwm.objectmodel.core.CoreFactory;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -168,13 +165,14 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         EList<PatternComponent> components = this.pattern.getComponents();
         for (int i = 0; i < components.size(); i++) {
             RegularExpression regularExpress = (RegularExpression) components.get(i);
-            RegularExpressionImpl newRegularExpress = (RegularExpressionImpl) PatternFactory.eINSTANCE.createRegularExpression();
-            Expression newExpression = CoreFactory.eINSTANCE.createExpression();
-            newExpression.setBody(regularExpress.getExpression().getBody());
-            newExpression.setLanguage(regularExpress.getExpression().getLanguage());
-            newRegularExpress.setExpression(newExpression);
-            tempPatternComponents.add(newRegularExpress);
-            creatNewExpressLine(newRegularExpress);
+            // RegularExpressionImpl newRegularExpress = (RegularExpressionImpl)
+            // PatternFactory.eINSTANCE.createRegularExpression();
+            // Expression newExpression = CoreFactory.eINSTANCE.createExpression();
+            // newExpression.setBody(regularExpress.getExpression().getBody());
+            // newExpression.setLanguage(regularExpress.getExpression().getLanguage());
+            // newRegularExpress.setExpression(newExpression);
+            tempPatternComponents.add(regularExpress);
+            creatNewExpressLine(regularExpress);
         }
         createAddButton(newComp);
 
