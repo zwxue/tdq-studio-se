@@ -20,7 +20,11 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -28,9 +32,9 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
@@ -65,6 +69,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ColumnHelper;
@@ -101,6 +106,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dq.helper.ColumnSetNameHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -815,15 +821,95 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      */
     private void showSelectedElements(Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
+
         DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
-
         if (selection.length == 1) {
-            ColumnIndicator columnIndicator = (ColumnIndicator) selection[0].getData(COLUMN_INDICATOR_KEY);
-            TdColumn column = columnIndicator.getTdColumn();
+            try {
+                ColumnIndicator columnIndicator = (ColumnIndicator) selection[0].getData(COLUMN_INDICATOR_KEY);
+                TdColumn column = columnIndicator.getTdColumn();
+                CommonViewer commonViewer = dqview.getCommonViewer();
+                ITreeContentProvider provider = (ITreeContentProvider) commonViewer.getContentProvider();
+                StructuredSelection structSel = new StructuredSelection(column);
+                commonViewer.setSelection(structSel);
+                // If not select,unfold tree structure to this column.
+                StructuredSelection selectionTarge = (StructuredSelection) commonViewer.getSelection();
+                if (!selectionTarge.equals(structSel)) {
+                    recursiveExpandTree(commonViewer, provider, column);
+                    commonViewer.setSelection(structSel);
+                }
 
-            TreeViewer commonViewer = dqview.getCommonViewer();
-            commonViewer.setSelection(new StructuredSelection(column));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private void recursiveExpandTree(CommonViewer commonViewer, ITreeContentProvider provider, Object item) {
+
+        if (item instanceof EObject) {
+            Object parent = provider.getParent(item);
+            Object[] tbFolderNodes = provider.getChildren(parent);
+            boolean isFind = false;
+            IFolderNode fn = null;
+            for (Object folderNode : tbFolderNodes) {
+                fn = (IFolderNode) folderNode;
+                Object[] folderChilds = provider.getChildren(fn);
+                for (Object child : folderChilds) {
+                    if (child == item) {
+                        isFind = true;
+                        break;
+                    }
+                }
+                if (isFind) {
+                    break;
+                }
+            }
+            // If EMF node,get folder parent.
+            if (fn != null) {
+                recursiveExpandTree(commonViewer, provider, fn);
+                commonViewer.expandToLevel(fn, 1);
+            } else {
+                Object emfParent = provider.getParent(item);
+                // EMF XMI resources
+                if (emfParent instanceof Resource) {
+                    Resource cwmResource = (Resource) emfParent;
+                    IFile resourceFile = null;
+                    URI uri = cwmResource.getURI();
+                    uri = cwmResource.getResourceSet().getURIConverter().normalize(uri);
+                    String scheme = uri.scheme();
+                    if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) {
+                        StringBuffer platformResourcePath = new StringBuffer();
+                        for (int j = 1, size = uri.segmentCount(); j < size; ++j) {
+                            platformResourcePath.append('/');
+                            platformResourcePath.append(uri.segment(j));
+                        }
+                        resourceFile = ResourcesPlugin.getWorkspace().getRoot()
+                                .getFile(new Path(platformResourcePath.toString()));
+                    }
+                    emfParent = resourceFile;
+                }
+
+                recursiveExpandTree(commonViewer, provider, emfParent);
+                commonViewer.expandToLevel(emfParent, 1);
+            }
+        }
+        // User provider get IFolderNode parent will be null, here must call IFolderNode.getParent.
+        else if (item instanceof IFolderNode) {
+            IFolderNode folderNode = (IFolderNode) item;
+            Object eo = folderNode.getParent();
+            recursiveExpandTree(commonViewer, provider, eo);
+            commonViewer.expandToLevel(eo, 1);
+        }
+        // Workspace resources
+        else {
+            Object workspaceParent = provider.getParent(item);
+            if (workspaceParent == null) {
+                return;
+            }
+            commonViewer.expandToLevel(workspaceParent, 1);
+            recursiveExpandTree(commonViewer, provider, workspaceParent);
+        }
+
     }
 
     private void removeItemBranch(TreeItem item) {
