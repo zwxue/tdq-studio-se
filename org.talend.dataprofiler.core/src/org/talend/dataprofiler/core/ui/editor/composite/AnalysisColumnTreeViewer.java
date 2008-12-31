@@ -327,25 +327,17 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         tree.setData(VIEWER_KEY, this);
         this.columnIndicators = elements;
         addItemElements(elements);
+    }
 
-        this.tree.addMouseListener(new MouseAdapter() {
+    public void addElements(final ColumnIndicator[] elements) {
 
-            @Override
-            public void mouseDoubleClick(MouseEvent e) {
-                TreeItem item = tree.getSelection()[0];
-                if (item != null) {
-                    Object indicatorobj = item.getData(INDICATOR_UNIT_KEY);
-                    Object columnobj = item.getData(COLUMN_INDICATOR_KEY);
-                    if (columnobj != null && indicatorobj == null) {
-                        // open indicator selector
-                        openIndicatorSelectDialog(null);
-                    } else if (columnobj != null && indicatorobj != null) {
-                        // open indicator option wizard
-                        openIndicatorOptionDialog(null, item);
-                    }
-                }
-            }
-        });
+        ColumnIndicator[] newsArray = new ColumnIndicator[this.columnIndicators.length + elements.length];
+        System.arraycopy(this.columnIndicators, 0, newsArray, 0, this.columnIndicators.length);
+        for (int i = 0; i < elements.length; i++) {
+            newsArray[this.columnIndicators.length + i] = elements[i];
+        }
+        this.columnIndicators = newsArray;
+        this.addItemElements(elements);
     }
 
     private void addItemElements(final ColumnIndicator[] elements) {
@@ -503,17 +495,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             treeItem.setExpanded(true);
         }
         this.setDirty(true);
-    }
-
-    public void addElements(final ColumnIndicator[] elements) {
-
-        ColumnIndicator[] newsArray = new ColumnIndicator[this.columnIndicators.length + elements.length];
-        System.arraycopy(this.columnIndicators, 0, newsArray, 0, this.columnIndicators.length);
-        for (int i = 0; i < elements.length; i++) {
-            newsArray[this.columnIndicators.length + i] = elements[i];
-        }
-        this.columnIndicators = newsArray;
-        this.addItemElements(elements);
     }
 
     private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
@@ -922,6 +903,29 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 form.reflow(true);
             }
 
+        });
+
+        tree.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseDoubleClick(MouseEvent e) {
+
+                if (isDirty()) {
+                    masterPage.doSave(null);
+                }
+                TreeItem item = tree.getSelection()[0];
+                if (item != null) {
+                    Object indicatorobj = item.getData(INDICATOR_UNIT_KEY);
+                    Object columnobj = item.getData(COLUMN_INDICATOR_KEY);
+                    if (columnobj != null && indicatorobj == null) {
+                        // open indicator selector
+                        openIndicatorSelectDialog(null);
+                    } else if (columnobj != null && indicatorobj != null) {
+                        // open indicator option wizard
+                        openIndicatorOptionDialog(null, item);
+                    }
+                }
+            }
         });
     }
 
