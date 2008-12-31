@@ -60,7 +60,12 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
 
         // --- run analysis
-        boolean ok = runAnalysis(analysis, sql);
+        boolean ok = false;
+        try { // catch any exception
+            ok = runAnalysis(analysis, sql);
+        } catch (Exception e) {
+            log.error(e, e);
+        }
 
         // --- set metadata information of analysis
         resultMetadata.setLastRunOk(ok);
