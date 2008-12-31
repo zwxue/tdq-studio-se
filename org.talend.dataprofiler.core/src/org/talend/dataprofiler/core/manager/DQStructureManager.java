@@ -55,6 +55,8 @@ public final class DQStructureManager {
 
     private static final String PATTERN_PATH = "/patterns"; //$NON-NLS-1$
 
+    private static final String SQL_LIKE_PATH = "/sql_like";
+
     public static final String REPORTS = DefaultMessagesImpl.getString("DQStructureManager.reports"); //$NON-NLS-1$
 
     public static final String SOURCE_FILES = DefaultMessagesImpl.getString("DQStructureManager.sourceFiles"); //$NON-NLS-1$
@@ -144,6 +146,8 @@ public final class DQStructureManager {
             this.copyFilesToFolder(PATTERN_PATH, true, createNewFoler);
             createNewFoler = this.createNewFoler(project, SQL_PATTERNS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SQLPATTERNS_FOLDER_PROPERTY);
+            // Copy the internet folder from 'org.talend.dataprofiler.core/sql_like' to folder "Libraries/SQL Patterns".
+            this.copyFilesToFolder(SQL_LIKE_PATH, true, createNewFoler);
             createNewFoler = this.createNewFoler(project, SOURCE_FILES);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SOURCEFILES_FOLDER_PROPERTY);
             // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to folder "Libraries/Source Files".
