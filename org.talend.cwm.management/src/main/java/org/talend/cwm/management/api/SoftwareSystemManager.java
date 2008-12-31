@@ -14,10 +14,9 @@ package org.talend.cwm.management.api;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
@@ -28,13 +27,11 @@ import org.talend.utils.sugars.TypedReturnCode;
 /**
  * @author scorreia
  * 
- * This class manages the software systems. TODO scorreia store SoftwareSystem in Namespace object.
+ * This class manages the software systems.
  */
 public final class SoftwareSystemManager {
 
     private static Logger log = Logger.getLogger(SoftwareSystemManager.class);
-
-    private Map<TdDataProvider, TdSoftwareSystem> urlToSoftwareSystem = new HashMap<TdDataProvider, TdSoftwareSystem>();
 
     private static SoftwareSystemManager instance;
 
@@ -48,7 +45,7 @@ public final class SoftwareSystemManager {
         return instance;
     }
 
-    // FIXME handle delete of data provider
+    // FIXME handle when data provider is not saved in a resource
     /**
      * Method "getSoftwareSystem".
      * 
@@ -67,10 +64,10 @@ public final class SoftwareSystemManager {
                     softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
                     if (softwareSystem != null) { // store it
                         if (DataProviderHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
-                            DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
+                                DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
+                            }
                         }
                     }
-                }
             } catch (SQLException e) {
                 log.error(e, e);
             }
