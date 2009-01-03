@@ -274,6 +274,21 @@
          </enablement>
       </actionProvider>        
       <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.DuplicateReportResourceProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.DuplicateReportResourceProvider">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.eclipse.core.resources.IFile">
+               </instanceof>
+                  <test
+                        property="org.eclipse.core.resources.name"
+                        value="*.rep">
+                  </test>   
+			</and>
+         </enablement>
+      </actionProvider>         
+      <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnProvider">
          <enablement>

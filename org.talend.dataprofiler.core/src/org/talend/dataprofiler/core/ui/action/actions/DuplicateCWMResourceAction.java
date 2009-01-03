@@ -20,6 +20,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -44,7 +45,7 @@ public class DuplicateCWMResourceAction extends Action {
 
                 if (oldObject != null) {
                     ModelElement newObject = (ModelElement) EMFSharedResources.getInstance().copyEObject(oldObject);
-                    
+
                     IFile newFile = getNewFile(file);
                     newObject.setName("copy of " + newObject.getName());
                     EMFSharedResources.getInstance().addEObjectToResourceSet(newFile.getFullPath().toString(), newObject);
@@ -56,6 +57,7 @@ public class DuplicateCWMResourceAction extends Action {
 
     /**
      * DOC scorreia Comment method "getNewFile".
+     * 
      * @param file
      * @return
      */
@@ -82,7 +84,10 @@ public class DuplicateCWMResourceAction extends Action {
         if (file.getFileExtension().equals(FactoriesUtil.PATTERN)) {
             object = PatternResourceFileHelper.getInstance().findPattern(file);
         }
-
+        // MOD 2009-01-03 mzhao Support duplicate report files.
+        if (file.getFileExtension().equals(FactoriesUtil.REP)) {
+            object = RepResourceFileHelper.getInstance().findReport(file);
+        }
         return object;
     }
 }
