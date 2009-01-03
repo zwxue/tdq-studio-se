@@ -28,6 +28,8 @@ import orgomg.cwm.objectmodel.core.Package;
  */
 public class CatalogAnalysisWizard extends AnalysisFilterWizard {
 
+    public CatalogAnalysisDPSelectionPage catalogAnaDPSelectionPage = null;
+
     /**
      * DOC rli CatalogAnalysisWizard constructor comment.
      * 
@@ -39,10 +41,19 @@ public class CatalogAnalysisWizard extends AnalysisFilterWizard {
 
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
+
+        if (anaFilterParameter.getTdDataProvider() == null) {
+            catalogAnaDPSelectionPage = new CatalogAnalysisDPSelectionPage();
+            addPage(catalogAnaDPSelectionPage);
+        }
+
         anaFilterPage = new CatalogAnalysisFilterPage();
         addPage(anaFilterPage);
     }
 
+    /**
+     *Mod mzhao 2008-12-31
+     */
     @Override
     protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
         PackagesAnalyisParameter packageParameter = (PackagesAnalyisParameter) anaFilterParameter;

@@ -28,6 +28,8 @@ import orgomg.cwm.objectmodel.core.Package;
  */
 public class SchemaAnalysisWizard extends AnalysisFilterWizard {
 
+    private SchemaAnalysisDPSelectionPage tableAnaDPSelectionPage = null;
+
     /**
      * DOC rli SchemaAnalysisWizard constructor comment.
      * 
@@ -39,6 +41,11 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
 
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
+        if (anaFilterParameter.getTdDataProvider() == null) {
+            tableAnaDPSelectionPage = new SchemaAnalysisDPSelectionPage();
+            addPage(tableAnaDPSelectionPage);
+        }
+
         anaFilterPage = new SchemaAnalysisFilterPage();
         addPage(anaFilterPage);
     }

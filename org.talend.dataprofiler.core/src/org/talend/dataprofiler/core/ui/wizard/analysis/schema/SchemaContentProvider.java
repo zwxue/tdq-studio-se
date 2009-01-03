@@ -10,28 +10,29 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
+package org.talend.dataprofiler.core.ui.wizard.analysis.schema;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import orgomg.cwm.resource.relational.NamedColumnSet;
+import org.talend.dq.PluginConstant;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 
 /**
- * @author zqin
  * 
+ * DOC mzhao class global comment. This class provide schema content provider.
  */
-public class ConnectionsContentProvider extends AdapterFactoryContentProvider {
+public class SchemaContentProvider extends AdapterFactoryContentProvider {
 
-    private static Logger log = Logger.getLogger(ConnectionsContentProvider.class);
+    private static Logger log = Logger.getLogger(SchemaContentProvider.class);
 
-    /**
-     * @param adapterFactory
-     */
-    public ConnectionsContentProvider() {
+    public SchemaContentProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
     }
 
@@ -47,7 +48,13 @@ public class ConnectionsContentProvider extends AdapterFactoryContentProvider {
                 return ((IContainer) parentElement).members();
             } catch (CoreException e) {
                 log
-                        .error(DefaultMessagesImpl.getString("ConnectionsContentProvider.cannotGetChildren") + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+                        .error(DefaultMessagesImpl.getString("SchemaContentProvider.cannotGetChildren") + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+            }
+        } else if (parentElement instanceof IFile) {
+            IFile prvFile = (IFile) parentElement;
+            if (prvFile.getName().endsWith(PluginConstant.PRV_SUFFIX)) {
+                parentElement = PrvResourceFileHelper.getInstance().getFileResource((IFile) parentElement);
+                return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             }
         }
         return super.getChildren(parentElement);
@@ -84,8 +91,6 @@ public class ConnectionsContentProvider extends AdapterFactoryContentProvider {
      */
     @Override
     public boolean hasChildren(Object element) {
-
-        return !(element instanceof NamedColumnSet);
+        return !(element instanceof TdTable);
     }
-
 }

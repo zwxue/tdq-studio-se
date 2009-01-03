@@ -24,7 +24,7 @@ public class SchemaAnalysisFilterPage extends AnalysisFilterPage {
      * DOC rli SchemaAnalysisFilterPage constructor comment.
      */
     public SchemaAnalysisFilterPage() {
-        setTitle(DefaultMessagesImpl.getString("ConnAnalysisPageStep1.newAnalysis")); //$NON-NLS-1$
+        setTitle(DefaultMessagesImpl.getString("SchemaAnalysisPageStep1.newAnalysis")); //$NON-NLS-1$
         setMessage("Add the filters for schema Analysis");
     }
 

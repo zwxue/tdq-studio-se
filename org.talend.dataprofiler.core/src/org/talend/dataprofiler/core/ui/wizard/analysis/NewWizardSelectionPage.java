@@ -35,6 +35,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 
 /**
  * @author zqin
@@ -123,6 +124,18 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         connParam.setFolderProvider(currentFolderProvider);
                         parameter = connParam;
 
+                        break;
+                    // MOD mzhao 2008-12-31 CATALOG and SCHEMA added here.
+
+                    case CATALOG:
+                        PackagesAnalyisParameter catalogParam = new PackagesAnalyisParameter();
+                        catalogParam.setFolderProvider(currentFolderProvider);
+                        parameter = catalogParam;
+                        break;
+                    case SCHEMA:
+                        PackagesAnalyisParameter schemaParam = new PackagesAnalyisParameter();
+                        schemaParam.setFolderProvider(currentFolderProvider);
+                        parameter = schemaParam;
                         break;
                     default:
 

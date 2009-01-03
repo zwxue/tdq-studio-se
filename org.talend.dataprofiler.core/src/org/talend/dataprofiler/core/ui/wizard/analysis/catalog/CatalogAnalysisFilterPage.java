@@ -24,7 +24,8 @@ public class CatalogAnalysisFilterPage extends AnalysisFilterPage {
      * @param pageName
      */
     public CatalogAnalysisFilterPage() {
-        setTitle(DefaultMessagesImpl.getString("ConnAnalysisPageStep1.newAnalysis")); //$NON-NLS-1$
-        setMessage("Add the filters for Connection Analysis");
+        setTitle(DefaultMessagesImpl.getString("CatologAnalysisPageStep1.newAnalysis")); //$NON-NLS-1$
+        setMessage(DefaultMessagesImpl.getString("CatologAnalysisPageStep1.addFiltersCatalogAnalysis"));
+
     }
 }
