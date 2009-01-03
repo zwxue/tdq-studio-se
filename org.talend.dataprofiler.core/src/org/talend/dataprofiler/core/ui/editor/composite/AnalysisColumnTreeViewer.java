@@ -461,8 +461,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                                 IFile file = (IFile) obj;
                                 IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, columnIndicator,
                                         getAnalysis());
-                                createOneUnit(treeItem, addIndicatorUnit);
-                                setDirty(true);
+                                if (addIndicatorUnit != null) {
+                                    createOneUnit(treeItem, addIndicatorUnit);
+                                    setDirty(true);
+                                }
                             }
                         }
                     }

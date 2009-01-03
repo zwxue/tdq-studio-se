@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -110,16 +111,20 @@ public final class PatternUtilities {
                 .getExpressionType())) ? PatternIndicatorFactory.createSqlPatternMatchingIndicator(pattern)
                 : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
 
-       final DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
+        final DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
         if (ExpressionType.REGEXP.getLiteral().equals(expression.getExpressionType()) && dbmsLanguage.getRegexp(pattern) == null) {
             // TODO xzhao this is when we must tell the user that the database cannot support regular expression
+            MessageDialogWithToggle.openInformation(null, "Pattern", DefaultMessagesImpl
+                    .getString("PatternUtilities.couldnotSetIndicator"));
+
+            return null;
         }
-                
+
         // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
         if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(patternMatchingIndicator)) {
             log.error(DefaultMessagesImpl.getString("PatternUtilities.couldnotSetDef") + patternMatchingIndicator.getName()); //$NON-NLS-1$
         }
-              
+
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());
         IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);

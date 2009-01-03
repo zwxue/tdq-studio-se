@@ -198,8 +198,10 @@ public class ColumnViewerDND {
             Analysis analysis = viewer.getAnalysis();
 
             IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-            viewer.createOneUnit(item, addIndicatorUnit);
-            viewer.setDirty(true);
+            if (addIndicatorUnit != null) {
+                viewer.createOneUnit(item, addIndicatorUnit);
+                viewer.setDirty(true);
+            }
         }
 
     }
