@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -26,6 +27,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -74,6 +76,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * This page show the comparisons information of column set.
+ */
+/**
+ * DOC Administrator class global comment. Detailled comment
  */
 public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadataPage {
 
@@ -248,6 +253,19 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnList.get(0)).getName();
             columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element") + tableName); //$NON-NLS-1$
         }
+
+        // add by xqliu for bug 5940 2009-1-3
+        ColumnViewerSorter cSorter = new ColumnViewerSorter(columnsElementViewer, columnHeader) {
+
+            protected int doCompare(Viewer viewer, Object e1, Object e2) {
+                Column c1 = (Column) e1;
+                Column c2 = (Column) e2;
+                return c1.getName().compareToIgnoreCase(c2.getName());
+            }
+
+        };
+        cSorter.setSorter(cSorter, ColumnViewerSorter.NONE);
+
         ColumnsElementViewerProvider provider = new ColumnsElementViewerProvider();
         columnsElementViewer.setContentProvider(provider);
         columnsElementViewer.setLabelProvider(provider);
@@ -538,6 +556,75 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             return PluginConstant.EMPTY_STRING;
         }
 
+    }
+
+    /**
+     * The Sorter for ColumnViewer.
+     */
+    private abstract class ColumnViewerSorter extends ViewerComparator {
+
+        public static final int ASC = 1;
+
+        public static final int NONE = 0;
+
+        public static final int DESC = -1;
+
+        private int direction = 0;
+
+        private TableColumn column;
+
+        private ColumnViewer viewer;
+
+        public ColumnViewerSorter(ColumnViewer viewer, TableColumn column) {
+            this.column = column;
+            this.viewer = viewer;
+            this.column.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    if (ColumnViewerSorter.this.viewer.getComparator() != null) {
+                        if (ColumnViewerSorter.this.viewer.getComparator() == ColumnViewerSorter.this) {
+                            int tdirection = ColumnViewerSorter.this.direction;
+                            if (tdirection == ASC) {
+                                setSorter(ColumnViewerSorter.this, DESC);
+                            } else if (tdirection == DESC) {
+                                setSorter(ColumnViewerSorter.this, NONE);
+                            }
+                        } else {
+                            setSorter(ColumnViewerSorter.this, ASC);
+                        }
+                    } else {
+                        setSorter(ColumnViewerSorter.this, ASC);
+                    }
+                }
+            });
+        }
+
+        public void setSorter(ColumnViewerSorter sorter, int direction) {
+            if (direction == NONE) {
+                column.getParent().setSortColumn(null);
+                column.getParent().setSortDirection(SWT.NONE);
+                viewer.setComparator(null);
+            } else {
+                column.getParent().setSortColumn(column);
+                sorter.direction = direction;
+                if (direction == ASC) {
+                    column.getParent().setSortDirection(SWT.DOWN);
+                } else {
+                    column.getParent().setSortDirection(SWT.UP);
+                }
+                if (viewer.getComparator() == sorter) {
+                    viewer.refresh();
+                } else {
+                    viewer.setComparator(sorter);
+                }
+            }
+        }
+
+        public int compare(Viewer viewer, Object e1, Object e2) {
+            return direction * doCompare(viewer, e1, e2);
+        }
+
+        protected abstract int doCompare(Viewer viewer, Object e1, Object e2);
     }
 
     public void fireRuningItemChanged(boolean status) {
