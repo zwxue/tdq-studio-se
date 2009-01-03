@@ -32,7 +32,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTablePro
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.SummaryLabelProvider;
 import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
 import org.talend.dq.analysis.explore.DataExplorer;
-import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
+import org.talend.dq.analysis.explore.SummaryStastictisExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
@@ -129,7 +129,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
     public DataExplorer getDataExplorer() {
         // TODO Auto-generated method stub
-        return new SimpleStatisticsExplorer();
+        return new SummaryStastictisExplorer();
     }
 
     public JFreeChart getExampleChart() {
