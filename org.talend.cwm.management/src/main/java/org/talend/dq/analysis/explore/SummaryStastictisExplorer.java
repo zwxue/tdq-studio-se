@@ -69,7 +69,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
                 }
             } else if (where2 != null) {
                 whereClause = where2;
-            }            
+            }
         }
 
         // add the data filter where clause
@@ -105,8 +105,10 @@ public class SummaryStastictisExplorer extends DataExplorer {
         case MeanIndicatorEnum:
             break;
         default:
+            if (entity.isOutOfRange(entity.getValue())) {
+                map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement());
+            }
             map.put(MENU_VIEW_ROWS, getMatchingRowsStatement());
-            map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement());
         }
 
         return map;
