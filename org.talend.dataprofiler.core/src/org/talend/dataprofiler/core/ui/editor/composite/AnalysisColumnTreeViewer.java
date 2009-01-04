@@ -89,6 +89,7 @@ import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -105,10 +106,13 @@ import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.ColumnSetNameHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -145,7 +149,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     private MenuItem editPatternMenuItem;
 
-    private MenuItem showMenuItem, previewMenuItem;
+    private MenuItem showMenuItem, previewMenuItem, showQueryMenuItem;
 
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
@@ -182,7 +186,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
 
         parent.layout();
-        createTreeMenu(newTree, false);
+        createTreeMenu(newTree, false, false);
 
         AbstractAnalysisActionHandler actionHandler = new AbstractAnalysisActionHandler(parent) {
 
@@ -206,7 +210,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @param newTree
      * @param containEdit
      */
-    private void createTreeMenu(final Tree newTree, boolean containEdit) {
+    private void createTreeMenu(final Tree newTree, boolean containEdit, boolean hookIndicator) {
         Menu oldMenu = newTree.getMenu();
         if (oldMenu != null && !oldMenu.isDisposed()) {
             oldMenu.dispose();
@@ -298,6 +302,25 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     }
                 }
 
+            });
+        }
+        // MOD 2009-01-04 mzhao
+        if (hookIndicator) {
+            showQueryMenuItem = new MenuItem(menu, SWT.CASCADE);
+            showQueryMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.viewQuery")); //$NON-NLS-1$
+            showQueryMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+            showQueryMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    viewQueryForSelectedElement(newTree);
+
+                }
             });
         }
         newTree.setMenu(menu);
@@ -823,6 +846,34 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
+     * 
+     * DOC mzhao Comment method "viewQueryForSelectedElement".
+     * 
+     * @param newTree
+     */
+    private void viewQueryForSelectedElement(Tree newTree) {
+        TreeItem[] selection = newTree.getSelection();
+        for (TreeItem item : selection) {
+            ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
+            TdColumn column = columnIndicator.getTdColumn();
+            TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(column);
+
+            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+
+            DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
+            Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
+            if (expression == null) {
+                // TODO setInstantiatedExpression
+                return;
+            }
+            // Open perspective of Data Explorer.
+            new ChangePerspectiveAction(PluginConstant.DATAEXPLORER_PERSPECTIVE).run();
+            String query = expression.getBody();
+            CorePlugin.getDefault().openInSqlEditor(dataprovider, query, column.getName());
+        }
+    }
+
+    /**
      * DOC Zqin Comment method "showSelectedElements".
      * 
      * @param newTree
@@ -852,6 +903,14 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
     }
 
+    /**
+     * 
+     * DOC mzhao Comment method "recursiveExpandTree".
+     * 
+     * @param commonViewer
+     * @param provider
+     * @param item
+     */
     private void recursiveExpandTree(CommonViewer commonViewer, ITreeContentProvider provider, Object item) {
 
         if (item instanceof EObject) {
@@ -948,7 +1007,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 boolean con = false;
-
+                boolean hookIndicator = false;
                 if (e.item instanceof TreeItem) {
                     TreeItem item = (TreeItem) e.item;
                     if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
@@ -959,9 +1018,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         IndicatorEnum type = indicatorUnit.getType();
                         con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
                                 || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0;
+                        hookIndicator = true;
                     }
                 }
-                createTreeMenu(tree, con);
+                createTreeMenu(tree, con, hookIndicator);
             }
 
         });

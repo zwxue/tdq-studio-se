@@ -198,6 +198,22 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param query
      */
     public void runInDQViewer(TdDataProvider tdDataProvider, String query, String editorName) {
+        SQLEditor sqlEditor = openInSqlEditor(tdDataProvider, query, editorName);
+        if (sqlEditor != null) {
+            ExecSQLAction execSQLAction = new ExecSQLAction(sqlEditor);
+            execSQLAction.run();
+        }
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "openInSqlEditor".
+     * 
+     * @param tdDataProvider
+     * @param query
+     * @param editorName
+     */
+    public SQLEditor openInSqlEditor(TdDataProvider tdDataProvider, String query, String editorName) {
         if (editorName == null) {
             editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
@@ -211,7 +227,7 @@ public class CorePlugin extends AbstractUIPlugin {
         if (aliases.isEmpty()) {
             new ChangePerspectiveAction(PluginConstant.SE_ID).run();
         }
-
+        SQLEditor editorPart = null;
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
                 SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$
@@ -219,10 +235,8 @@ public class CorePlugin extends AbstractUIPlugin {
                 try {
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
                             .getActivePage();
-                    SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+                    editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
                     editorPart.setText(query);
-                    ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
-                    execSQLAction.run();
                     // MOD scorreia 2008-12-12 avoid to execute several times the same query when several connections
                     // with the same url exist
                     break;
@@ -231,6 +245,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 }
             }
         }
+        return editorPart;
     }
 
     public IEditorPart openEditor(IFile file, String editorId) {
