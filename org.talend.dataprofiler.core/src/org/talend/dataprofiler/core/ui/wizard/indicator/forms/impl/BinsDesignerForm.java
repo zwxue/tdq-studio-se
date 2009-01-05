@@ -45,6 +45,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
+import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.domain.Domain;
@@ -59,6 +60,10 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 public class BinsDesignerForm extends AbstractIndicatorForm {
 
     private Text minValue, maxValue, numbOfBins;
+
+    private int numb;
+
+    private double min, max;
 
     private Button addSlice, delSlice;
 
@@ -170,13 +175,17 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         minValue.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String min = minValue.getText();
+                String mintxt = minValue.getText();
+                String maxtxt = maxValue.getText();
 
-                if (min == "") { //$NON-NLS-1$
+                if (mintxt == "") { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isRealNumberValue(min)) {
+                } else if (!CheckValueUtils.isRealNumberValue(mintxt)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                } else if (!maxtxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) {
+                    updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                 } else {
+                    min = Double.parseDouble(mintxt);
                     updateStatus(IStatus.OK, MSG_OK);
                 }
             }
@@ -186,13 +195,17 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         maxValue.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String max = maxValue.getText();
+                String mintxt = minValue.getText();
+                String maxtxt = maxValue.getText();
 
-                if (max == "") { //$NON-NLS-1$
+                if (maxtxt == "") { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isRealNumberValue(max)) {
+                } else if (!CheckValueUtils.isRealNumberValue(maxtxt)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                } else if (!mintxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) {
+                    updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                 } else {
+                    max = Double.parseDouble(maxtxt);
                     updateStatus(IStatus.OK, MSG_OK);
                 }
             }
@@ -203,13 +216,14 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
             public void modifyText(ModifyEvent e) {
 
-                String numb = numbOfBins.getText();
+                String numbtxt = numbOfBins.getText();
 
-                if (numb == "") { //$NON-NLS-1$
+                if (numbtxt == "") { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isNumberValue(numb)) {
+                } else if (!CheckValueUtils.isNumberValue(numbtxt)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else {
+                    numb = Integer.parseInt(numbtxt);
                     updateStatus(IStatus.OK, MSG_OK);
                 }
             }
@@ -221,7 +235,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                int numb = numbOfBins.getText().equals("") ? 0 : Integer.parseInt(numbOfBins.getText());
                 boolean flag = ((Button) e.getSource()).getSelection();
 
                 if (flag && numb > 0) {
@@ -232,8 +245,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     maxValue.setEnabled(false);
                     numbOfBins.setEnabled(false);
 
-                    double min = Double.parseDouble(minValue.getText());
-                    double max = Double.parseDouble(maxValue.getText());
                     Domain customerDomin = DomainHelper.createContiguousClosedBinsIntoDomain("", numb, min, max);
                     tableViewer.setInput(customerDomin.getRanges());
 
@@ -331,6 +342,10 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             List<RangeRestriction> eInputList = (List<RangeRestriction>) inputList;
             userDomain.getRanges().addAll(eInputList);
             parameters.setBins(userDomain);
+            return true;
+        } else if (min != 0 && max != 0 && numb != 0 && min < max) {
+            Domain domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numb, min, max);
+            parameters.setBins(domain);
             return true;
         } else {
             parameters.setBins(null);

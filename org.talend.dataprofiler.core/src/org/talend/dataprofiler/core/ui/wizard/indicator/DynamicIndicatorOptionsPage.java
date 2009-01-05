@@ -60,10 +60,10 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
 
             public void checkPerformed(AbstractForm source) {
                 if (source.isStatusOnError()) {
-                    DynamicIndicatorOptionsPage.this.setPageComplete(false);
+                    setPageComplete(false);
                     setErrorMessage(source.getStatus());
                 } else {
-                    DynamicIndicatorOptionsPage.this.setPageComplete(true);
+                    setPageComplete(true);
                     setErrorMessage(null);
                     setMessage(source.getStatus(), source.getStatusLevel());
                 }
