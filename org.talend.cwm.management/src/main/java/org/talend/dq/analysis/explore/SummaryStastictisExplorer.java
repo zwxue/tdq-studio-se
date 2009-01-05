@@ -15,6 +15,7 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -86,10 +87,19 @@ public class SummaryStastictisExplorer extends DataExplorer {
      * @return
      */
     private String getWhereInvalidClause(double value, Domain domain) {
-        double max = Double.valueOf(DomainHelper.getMaxValue(domain.getRanges().get(0)));
-        double min = Double.valueOf(DomainHelper.getMinValue(domain.getRanges().get(0)));
-        String whereClause = (value < min || value > max) ? columnName + dbmsLanguage.less() + min + dbmsLanguage.or()
-                + columnName + dbmsLanguage.greater() + max : null;
+        final String maxValue = DomainHelper.getMaxValue(domain.getRanges().get(0));
+        final String minValue = DomainHelper.getMinValue(domain.getRanges().get(0));
+        String whereClause = null;
+        boolean hasLowerThreshold = !StringUtils.isEmpty(minValue);
+        boolean hasHigherThreshold = !StringUtils.isEmpty(maxValue);
+        if (hasLowerThreshold && hasHigherThreshold) {
+            whereClause = columnName + dbmsLanguage.less() + minValue + dbmsLanguage.or() + columnName + dbmsLanguage.greater()
+                    + maxValue;
+        } else if (hasLowerThreshold) { // no higher threshold
+            whereClause = columnName + dbmsLanguage.less() + minValue;
+        } else if (hasHigherThreshold) { // no lower threshold
+            whereClause = columnName + dbmsLanguage.greater() + maxValue;            
+        }
         return whereClause;
     }
 
