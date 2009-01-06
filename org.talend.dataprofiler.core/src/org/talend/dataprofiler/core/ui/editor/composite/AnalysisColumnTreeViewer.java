@@ -86,6 +86,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
+import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
@@ -169,7 +170,16 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      * @param parent
      */
     private Tree createTree(Composite parent) {
-        final Tree newTree = new Tree(parent, SWT.MULTI | SWT.BORDER);
+        final Tree newTree = new TooltipTree(parent, SWT.MULTI | SWT.BORDER) {
+
+            protected String getItemTooltipText(TreeItem item) {
+                String expCont = isExpressionNull(item);
+                if (expCont == null) {
+                    return DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.queryNotGen");
+                }
+                return expCont;
+            }
+        };
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newTree);
 
         newTree.setHeaderVisible(true);
@@ -307,24 +317,23 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             });
         }
         // MOD 2009-01-04 mzhao
-        if (hookIndicator) {
-            showQueryMenuItem = new MenuItem(menu, SWT.CASCADE);
-            showQueryMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.viewQuery")); //$NON-NLS-1$
-            showQueryMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-            showQueryMenuItem.addSelectionListener(new SelectionAdapter() {
+        showQueryMenuItem = new MenuItem(menu, SWT.CASCADE);
+        showQueryMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.viewQuery")); //$NON-NLS-1$
+        showQueryMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        showQueryMenuItem.addSelectionListener(new SelectionAdapter() {
 
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    viewQueryForSelectedElement(newTree);
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                viewQueryForSelectedElement(newTree);
 
-                }
-            });
-        }
+            }
+        });
+        showQueryMenuItem.setEnabled(hookIndicator);
 
         MenuItem addTaskItem = new MenuItem(menu, SWT.CASCADE);
         addTaskItem.setText("Add task..."); //$NON-NLS-1$
@@ -891,13 +900,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
             TdColumn column = columnIndicator.getTdColumn();
             TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(column);
-
             IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-
             DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
             Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
             if (expression == null) {
-                // TODO setInstantiatedExpression
                 return;
             }
             // Open perspective of Data Explorer.
@@ -1035,13 +1041,28 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         this.setDirty(true);
     }
 
+    private String isExpressionNull(TreeItem item) {
+        String expressContent = null;
+        IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+        ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
+        TdColumn column = columnIndicator.getTdColumn();
+        TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(column);
+
+        DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
+        Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
+        if (expression != null) {
+            expressContent = expression.getBody();
+        }
+        return expressContent;
+    }
+
     private void addTreeListener(final Tree tree) {
         tree.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 boolean con = false;
-                boolean hookIndicator = false;
+                boolean hookIndicatorEnabled = false;
                 if (e.item instanceof TreeItem) {
                     TreeItem item = (TreeItem) e.item;
                     if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
@@ -1052,10 +1073,14 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         IndicatorEnum type = indicatorUnit.getType();
                         con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
                                 || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0;
-                        hookIndicator = true;
+
+                        if (isExpressionNull(item) != null) {
+                            hookIndicatorEnabled = true;
+                        }
+
                     }
                 }
-                createTreeMenu(tree, con, hookIndicator);
+                createTreeMenu(tree, con, hookIndicatorEnabled);
             }
 
         });
