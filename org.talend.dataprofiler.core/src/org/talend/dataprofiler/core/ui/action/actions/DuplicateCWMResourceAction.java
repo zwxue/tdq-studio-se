@@ -12,12 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
@@ -48,6 +54,15 @@ public class DuplicateCWMResourceAction extends Action {
 
                     IFile newFile = getNewFile(file);
                     newObject.setName("copy of " + newObject.getName());
+                    // MOD 2009-01-06 mzhao copy analysis reference.
+                    if (oldObject instanceof TdReport) {
+                        List<Analysis> anaLs = ReportHelper.getAnalyses((TdReport) oldObject);
+                        for (Analysis analysis : anaLs) {
+                            DependenciesHandler.getInstance().setDependencyOn((TdReport) newObject, analysis);
+                            ((TdReport) newObject).addAnalysis(analysis);
+                        }
+                    }
+
                     EMFSharedResources.getInstance().addEObjectToResourceSet(newFile.getFullPath().toString(), newObject);
                     EMFSharedResources.getInstance().saveLastResource();
                 }
