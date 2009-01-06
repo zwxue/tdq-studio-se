@@ -17,11 +17,15 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdSchema;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
+import org.talend.dataprofiler.core.ui.wizard.analysis.provider.SchemaContentProvider;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
+import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * 
@@ -47,7 +51,7 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
             public void doubleClick(DoubleClickEvent event) {
                 // TODO Auto-generated method stub
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                if (object instanceof TdTable) {
+                if (object instanceof TdSchema) {
                     advanceToNextPageOrFinish();
                 }
             }
@@ -57,19 +61,16 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
             public void selectionChanged(SelectionChangedEvent event) {
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
-                PackagesAnalyisParameter tablePanameter = (PackagesAnalyisParameter) getConnectionParams();
-                if (object instanceof TdTable || object instanceof TdView) {
-                    // Package schema = ColumnSetHelper.getParentCatalogOrSchema((ColumnSet) object);
-                    // if (schema != null && RelationalPackage.eINSTANCE.getTdSchema().equals(schema.eClass())) {
-                    // TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
-                    // .doSwitch(schema));
-                    // if (tdProvider != null && tablePanameter != null) {
-                    // tablePanameter.setTdDataProvider(tdProvider);
-                    // tablePanameter.setPackages(new Package[] { SwitchHelpers.PACKAGE_SWITCH.doSwitch(schema) });
-                    // }
-                    // setPageComplete(true);
-                    // }
-
+                PackagesAnalyisParameter schemaPanameter = (PackagesAnalyisParameter) getConnectionParams();
+                if (object instanceof TdSchema) {
+                    TdSchema schema = (TdSchema) object;
+                    TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
+                            .doSwitch(schema));
+                    if (tdProvider != null && schemaPanameter != null) {
+                        schemaPanameter.setTdDataProvider(tdProvider);
+                        schemaPanameter.setPackages(new Package[] { SwitchHelpers.PACKAGE_SWITCH.doSwitch(schema) });
+                    }
+                    setPageComplete(true);
                 } else {
                     setPageComplete(false);
                 }

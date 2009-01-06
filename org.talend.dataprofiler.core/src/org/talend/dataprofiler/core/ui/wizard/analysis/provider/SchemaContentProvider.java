@@ -10,14 +10,14 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.wizard.analysis.schema;
+package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
@@ -91,6 +91,6 @@ public class SchemaContentProvider extends AdapterFactoryContentProvider {
      */
     @Override
     public boolean hasChildren(Object element) {
-        return !(element instanceof TdTable);
+        return !(element instanceof TdSchema);
     }
 }

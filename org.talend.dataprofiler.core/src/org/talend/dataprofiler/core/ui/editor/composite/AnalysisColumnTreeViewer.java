@@ -71,6 +71,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.views.markers.internal.DialogTaskProperties;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -113,6 +114,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -323,6 +325,38 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 }
             });
         }
+
+        MenuItem addTaskItem = new MenuItem(menu, SWT.CASCADE);
+        addTaskItem.setText("Add task..."); //$NON-NLS-1$
+        addTaskItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        addTaskItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @SuppressWarnings("restriction")
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TreeItem[] selection = tree.getSelection();
+                if (selection.length > 0) {
+                    TreeItem treeItem = selection[0];
+                    ColumnIndicator columnIndicator = (ColumnIndicator) treeItem.getData(COLUMN_INDICATOR_KEY);
+                    TdColumn column = columnIndicator.getTdColumn();
+                    if (column instanceof ModelElement) {
+                        // IResource resource = (IResource) selData;
+                        // if (resource != null) {
+                        DialogTaskProperties dialog = new DialogTaskProperties(newTree.getShell());
+
+                        dialog.setResource(null);
+                        dialog.open();
+                        // }
+                    }
+                }
+
+            }
+        });
         newTree.setMenu(menu);
     }
 
