@@ -87,8 +87,11 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
             public void modifyText(ModifyEvent e) {
 
                 String min = lowerText.getText();
-                if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
+                String max = higherText.getText();
+                if (!min.equals("") && !CheckValueUtils.isNumberWithNegativeValue(min)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                } else if (CheckValueUtils.isAoverB(min, max)) {
+                    updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                 }
@@ -101,8 +104,11 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
             public void modifyText(ModifyEvent e) {
 
                 String max = higherText.getText();
-                if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
+                String min = lowerText.getText();
+                if (!max.equals("") && !CheckValueUtils.isNumberWithNegativeValue(max)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                } else if (CheckValueUtils.isAoverB(min, max)) {
+                    updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
                 }
@@ -134,9 +140,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     public boolean performFinish() {
-        if (!checkFieldsValue()) {
-            return false;
-        }
 
         String min = lowerText.getText();
         String max = higherText.getText();
@@ -181,15 +184,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        String min = lowerText.getText();
-        String max = higherText.getText();
-
-        if (CheckValueUtils.isAoverB(min, max)) {
-            updateStatus(IStatus.ERROR, LOWER_LESS_HIGHER);
-        } else {
-            updateStatus(IStatus.OK, MSG_OK);
-            return true;
-        }
 
         return false;
     }
