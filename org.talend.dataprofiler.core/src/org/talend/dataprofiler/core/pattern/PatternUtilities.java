@@ -33,9 +33,9 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
-import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.factories.PatternIndicatorFactory;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -106,17 +106,32 @@ public final class PatternUtilities {
      */
     public static IndicatorUnit createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis) {
         Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(pfile);
-        RegularExpression expression = (RegularExpression) pattern.getComponents().get(0);
-        PatternMatchingIndicator patternMatchingIndicator = (ExpressionType.SQL_LIKE.getLiteral().equals(expression
-                .getExpressionType())) ? PatternIndicatorFactory.createSqlPatternMatchingIndicator(pattern)
+
+        // MOD scorreia 2009-01-06: when expression type is not set (version TOP-1.1.x), then it's supposed to be a
+        // regexp pattern. This could be false because expression type was not set into SQL pattern neither in TOP-1.1.
+        // This means that there could exist the need for a migration task to set the expression type depending on the
+        // folder where the pattern is stored. The method DomainHelper.getExpressionType(pattern) tries to find the type
+        // of pattern.
+        String expressionType = DomainHelper.getExpressionType(pattern);
+        boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
+        PatternMatchingIndicator patternMatchingIndicator = isSQLPattern ? PatternIndicatorFactory
+                .createSqlPatternMatchingIndicator(pattern)
                 : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
 
         final DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
-        if (ExpressionType.REGEXP.getLiteral().equals(expression.getExpressionType()) && dbmsLanguage.getRegexp(pattern) == null) {
-            // TODO xzhao this is when we must tell the user that the database cannot support regular expression
+        if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && dbmsLanguage.getRegexp(pattern) == null) {
+            // this is when we must tell the user that no regular expression exists for the selected database
+            MessageDialogWithToggle.openInformation(null, "Pattern", DefaultMessagesImpl
+                    .getString("PatternUtilities.noRegexForDB"));
+
+            return null;
+        }
+        // TODO Currently the previous condition checks only whether there exist a regular expression for the analyzed
+        // database, but we probably test also whether the analyzed database support the regular expressions (=> check
+        // DB type, DB number version, existence of UDF)
+        if (false) { // FIXME implement a function here to check the support of regexp by the analyzed DB
             MessageDialogWithToggle.openInformation(null, "Pattern", DefaultMessagesImpl
                     .getString("PatternUtilities.couldnotSetIndicator"));
-
             return null;
         }
 
