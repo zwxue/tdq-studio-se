@@ -16,17 +16,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.LiteralValue;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.domain.RealNumberValue;
 import org.talend.dataquality.domain.TextValue;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -72,6 +76,44 @@ public class DomainHelper {
         Domain domain = DOMAIN.createDomain();
         domain.setName(name);
         return domain;
+    }
+
+    /**
+     * Method "getRegexp".
+     * 
+     * @param pattern a pattern
+     * @return the body of the regular expression applicable to this dbms or null
+     */
+    public static String getSQLRegexp(Pattern pattern) {
+        EList<PatternComponent> components = pattern.getComponents();
+        for (PatternComponent patternComponent : components) {
+            if (patternComponent != null) {
+                Expression expression = getExpression(patternComponent, "SQL");
+                if (expression != null) {
+                    return expression.getBody();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Method "getExpression".
+     * 
+     * @param patternComponent
+     * @param language a language (see DbmsLanguage)
+     * @return the expression for the given language or null
+     */
+    public static Expression getExpression(PatternComponent patternComponent, String language) {
+        if (patternComponent != null && patternComponent.eClass().equals(PatternPackage.eINSTANCE.getRegularExpression())) {
+            RegularExpression regExp = (RegularExpression) patternComponent;
+            Expression expr = regExp.getExpression();
+            if (language.equals(regExp.getExpression().getLanguage())) {
+                return expr;
+            }
+        }
+        // not a regular expression
+        return null;
     }
 
     /**
@@ -414,6 +456,12 @@ public class DomainHelper {
         return pattern;
     }
 
+    /**
+     * Method "getExpressionType".
+     * 
+     * @param pattern
+     * @return the expression type of the regular expression contained in the given pattern or null
+     */
     public static String getExpressionType(Pattern pattern) {
         if (pattern != null) {
             PatternComponent component = pattern.getComponents().get(0);
@@ -421,7 +469,25 @@ public class DomainHelper {
                 return null;
             } else {
                 RegularExpression regexp = DataqualitySwitchHelper.REGULAR_EXPR_SWITCH.doSwitch(component);
-                return (regexp != null) ? regexp.getExpressionType() : null;
+                if (regexp != null) {
+                    String expressionType = regexp.getExpressionType();
+                    if (StringUtils.isEmpty(expressionType)) {
+                        // identify the expression from the path where it is stored (useful for old patterns created in
+                        // version 1.1 and before)
+                        final Resource resource = regexp.eResource();
+                        if (resource != null) {
+                            final String SQL_PATTERN_FOLDER = "SQL Patterns"; //$NON-NLS-1$
+                            final String PATTERN_FOLDER = "Patterns"; //$NON-NLS-1$
+                            // do not replace these strings. They are the folder names in version 1.1
+                            if (resource.getURI().toFileString().contains(SQL_PATTERN_FOLDER)) {
+                                expressionType = ExpressionType.SQL_LIKE.getLiteral();
+                            } else if (resource.getURI().toFileString().contains(PATTERN_FOLDER)) {
+                                expressionType = ExpressionType.REGEXP.getLiteral();
+                            }
+                        }
+                    }
+                    return expressionType;
+                }
             }
         }
 
