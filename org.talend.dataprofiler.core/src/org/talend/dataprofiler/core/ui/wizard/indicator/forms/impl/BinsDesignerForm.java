@@ -61,10 +61,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     private Text minValue, maxValue, numbOfBins;
 
-    private int numb;
-
-    private double min, max;
-
     private Button addSlice, delSlice;
 
     private Button isSetRange;
@@ -185,7 +181,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 } else if (!maxtxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) {
                     updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                 } else {
-                    min = Double.parseDouble(mintxt);
                     updateStatus(IStatus.OK, MSG_OK);
                 }
             }
@@ -205,7 +200,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 } else if (!mintxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) {
                     updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                 } else {
-                    max = Double.parseDouble(maxtxt);
                     updateStatus(IStatus.OK, MSG_OK);
                 }
             }
@@ -223,7 +217,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 } else if (!CheckValueUtils.isNumberValue(numbtxt)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else {
-                    numb = Integer.parseInt(numbtxt);
                     updateStatus(IStatus.OK, MSG_OK);
                 }
             }
@@ -236,8 +229,9 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             public void widgetSelected(SelectionEvent e) {
 
                 boolean flag = ((Button) e.getSource()).getSelection();
+                boolean validSelect = !CheckValueUtils.isEmpty(numbOfBins.getText(), minValue.getText(), maxValue.getText());
 
-                if (flag && numb > 0) {
+                if (flag && validSelect) {
                     addSlice.setEnabled(true);
                     delSlice.setEnabled(true);
 
@@ -245,6 +239,9 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     maxValue.setEnabled(false);
                     numbOfBins.setEnabled(false);
 
+                    int numb = Integer.parseInt(numbOfBins.getText());
+                    double min = Double.parseDouble(minValue.getText());
+                    double max = Double.parseDouble(maxValue.getText());
                     Domain customerDomin = DomainHelper.createContiguousClosedBinsIntoDomain("", numb, min, max);
                     tableViewer.setInput(customerDomin.getRanges());
 
@@ -336,21 +333,28 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     @SuppressWarnings("unchecked")
     @Override
     public boolean performFinish() {
-        Object inputList = tableViewer.getInput();
-        Domain userDomain = DomainHelper.createDomain("test");
-        if (inputList != null && (inputList instanceof List)) {
-            List<RangeRestriction> eInputList = (List<RangeRestriction>) inputList;
-            userDomain.getRanges().addAll(eInputList);
-            parameters.setBins(userDomain);
-            return true;
-        } else if (min != 0 && max != 0 && numb != 0 && min < max) {
-            Domain domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numb, min, max);
-            parameters.setBins(domain);
-            return true;
-        } else {
+
+        if (minValue.getText().equals("") || maxValue.getText().equals("") || numbOfBins.getText().equals("0")) {
             parameters.setBins(null);
-            return false;
+        } else {
+            double min = Double.parseDouble(minValue.getText());
+            double max = Double.parseDouble(maxValue.getText());
+            int numb = Integer.parseInt(numbOfBins.getText());
+
+            Object inputList = tableViewer.getInput();
+            Domain domain = DomainHelper.createDomain("test");
+
+            if (inputList != null && (inputList instanceof List)) {
+                List<RangeRestriction> eInputList = (List<RangeRestriction>) inputList;
+                domain.getRanges().addAll(eInputList);
+                parameters.setBins(domain);
+            } else {
+                domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numb, min, max);
+                parameters.setBins(domain);
+            }
         }
+
+        return true;
     }
 
     @Override
@@ -381,6 +385,17 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     @Override
     protected void addUtilsButtonListeners() {
 
+    }
+
+    @Override
+    protected void updateStatus(int status, String statusLabelText) {
+        // TODO Auto-generated method stub
+        super.updateStatus(status, statusLabelText);
+        if (status == IStatus.ERROR) {
+            isSetRange.setEnabled(false);
+        } else {
+            isSetRange.setEnabled(true);
+        }
     }
 
     /**
