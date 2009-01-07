@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -57,6 +58,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         TypedReturnCode<TdDataProvider> rc = providerMap.get(file);
         if (rc != null) {
             return rc;
+
         }
         return readFromFile(file);
     }
@@ -86,6 +88,10 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         this.remove(file);
         rc = new TypedReturnCode<TdDataProvider>();
         Resource resource = getFileResource(file);
+
+        // add by hcheng
+        PasswordHelper.decryptResource(resource);
+
         Iterator<IFile> fileIterator = providerMap.keySet().iterator();
         while (fileIterator.hasNext()) {
             IFile key = fileIterator.next();
@@ -128,8 +134,15 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     }
 
     public ReturnCode save(TdDataProvider dataProvider) {
+        Resource resource = dataProvider.eResource();
+        PasswordHelper.encryptResource(resource);
         ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
         return returnCode;
     }
 
+    public IFile createPrvResourceFile(TdDataProvider dataprovider, FolderProvider folderprovider) {
+        PasswordHelper.encryptDataProvider(dataprovider);
+        IFile prvfile = DqRepositoryViewService.saveDataProviderAndStructure(dataprovider, folderprovider);
+        return prvfile;
+    }
 }

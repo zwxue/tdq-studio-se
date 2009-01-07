@@ -388,6 +388,7 @@ public final class DqRepositoryViewService {
 
     /**
      * DOC scorreia Comment method "saveSoftwareSystem".
+     * 
      * @param util
      * @param softwareSystem
      */
@@ -418,7 +419,10 @@ public final class DqRepositoryViewService {
             rc.setReturnCode("No resource in given Data provider " + dataProvider.getName()
                     + ". Data provider must be saved first.", false);
         } else {
+            // add by hcheng
+            // PasswordHelper.encryptResource(resource);
             rc.setOk(EMFUtil.saveResource(resource));
+            // PasswordHelper.decryptResource(resource);
         }
         return rc;
     }
