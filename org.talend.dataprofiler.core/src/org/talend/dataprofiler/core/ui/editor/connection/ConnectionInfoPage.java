@@ -158,7 +158,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                // saveTextChange();
+                saveTextChange();
             }
 
         };

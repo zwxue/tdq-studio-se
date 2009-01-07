@@ -20,7 +20,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.cwm.management.api.ConnectionService;
-import org.talend.cwm.management.api.FolderProvider;
+import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.resourcehelper.PasswordHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -125,11 +126,11 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                             DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnections"), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnectionFailure") + rc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
-        TdDataProvider dataProvider = rc.getObject();
+        TdDataProvider dataProvider = PasswordHelper.encryptDataProvider2(rc.getObject());
 
         // MODSCA 2008-03-10 save the provider
-        FolderProvider folderProvider = this.connectionParam.getFolderProvider();
-        IFile returnFile = PrvResourceFileHelper.getInstance().createPrvResourceFile(dataProvider, folderProvider);
+        IFile returnFile = DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionParam
+                .getFolderProvider());
         PrvResourceFileHelper.getInstance().register(returnFile, dataProvider.eResource());
 
         if (returnFile != null) {
