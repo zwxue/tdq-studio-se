@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -53,12 +54,14 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.TableViewerDNDDecorate;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
@@ -270,6 +273,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         columnsElementViewer.setContentProvider(provider);
         columnsElementViewer.setLabelProvider(provider);
         columnsElementViewer.setInput(columnList);
+
         // DragAndDropDecorate decorate = new DragAndDropDecorate();
         // decorate.toDecorateDragAndDrop(columnsElementViewer);
         TableViewerDNDDecorate dndDecorate = new TableViewerDNDDecorate();
@@ -302,20 +306,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             }
         });
 
-        Menu menu = new Menu(table);
-        MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-        menuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        menuItem.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.removeElement")); //$NON-NLS-1$
-        table.setMenu(menu);
-        menuItem.addSelectionListener(new SelectionAdapter() {
-
-            public void widgetSelected(SelectionEvent e) {
-                columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement());
-                columnsElementViewer.setInput(columnList);
-                enabledButtons(buttons, false);
-            }
-        });
-
+        // ADD 2009-01-07 mzhao for feature:0005664
+        createTableViewerMenu(columnsElementViewer, columnList, buttons);
         delButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -366,6 +358,44 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         columnSetElementSection.setClient(sectionComp);
         return columnSetElementSection;
 
+    }
+
+    private void createTableViewerMenu(final TableViewer columnsElementViewer, final List<Column> columnList,
+            final Button[] buttons) {
+        Table table = columnsElementViewer.getTable();
+
+        Menu menu = new Menu(table);
+        MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+        menuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        menuItem.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.removeElement")); //$NON-NLS-1$
+
+        menuItem.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement());
+                columnsElementViewer.setInput(columnList);
+                enabledButtons(buttons, false);
+            }
+        });
+
+        MenuItem showMenuItem = new MenuItem(menu, SWT.CASCADE);
+        showMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
+        showMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        showMenuItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                showSelectedElements(columnsElementViewer);
+            }
+
+        });
+
+        table.setMenu(menu);
     }
 
     private void enabledButtons(Button[] buttons, boolean enabled) {
@@ -637,4 +667,23 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         return rowMatchingIndicatorA.getColumnSetA().size() != 0;
     }
 
+    /**
+     * 
+     * DOC mzhao Comment method "showSelectedElements".
+     * 
+     * @param newTree
+     */
+    private void showSelectedElements(TableViewer tableView) {
+        TableItem[] selection = tableView.getTable().getSelection();
+
+        DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+        if (selection.length == 1) {
+            try {
+                Column column = (Column) selection[0].getData();
+                dqview.showSelectedElements(column);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

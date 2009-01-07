@@ -20,11 +20,17 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -59,6 +65,7 @@ import org.talend.dataprofiler.core.ui.views.filters.ReportingFilter;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
+import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
 /**
@@ -72,6 +79,10 @@ public class DQRespositoryView extends CommonNavigator {
     private Map<String, AbstractViewerFilter> filterMap = new HashMap<String, AbstractViewerFilter>();
 
     private static final String VIEW_CONTEXT_ID = "org.talend.dataprofiler.core.ui.views.DQRespositoryView.viewScope"; //$NON-NLS-1$
+
+    private TreeViewer commonViewer = null;
+
+    private ITreeContentProvider provider = null;
 
     public DQRespositoryView() {
         super();
@@ -106,9 +117,11 @@ public class DQRespositoryView extends CommonNavigator {
                 getNavigatorActionService().fillContextMenu(manager);
             }
         });
-        TreeViewer commonViewer = getCommonViewer();
+        commonViewer = getCommonViewer();
         Menu menu = menuMgr.createContextMenu(commonViewer.getTree());
         commonViewer.getTree().setMenu(menu);
+        // MOD 2009-01-05 mzhao for feature 0005666
+        getSite().registerContextMenu(menuMgr, commonViewer);
 
         this.addViewerFilter(EMFObjFilter.FILTER_ID);
         this.addViewerFilter(ReportingFilter.FILTER_ID);
@@ -235,6 +248,105 @@ public class DQRespositoryView extends CommonNavigator {
             this.getCommonViewer().removeFilter(filterMap.get(filterKey));
             this.filterMap.remove(filterKey);
         }
+    }
+
+    /**
+     * DOC Zqin Comment method "showSelectedElements".MOD 2009-01-07 mzhao for feature:0005664
+     * 
+     * @param newTree
+     */
+    public void showSelectedElements(Object selectedElement) {
+        try {
+            StructuredSelection structSel = new StructuredSelection(selectedElement);
+            commonViewer.setSelection(structSel);
+            // If not select,unfold tree structure to this column.
+            StructuredSelection selectionTarge = (StructuredSelection) commonViewer.getSelection();
+            if (!selectionTarge.equals(structSel)) {
+                recursiveExpandTree(selectedElement);
+                commonViewer.setSelection(structSel);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "recursiveExpandTree".
+     * 
+     * @param commonViewer
+     * @param provider
+     * @param item
+     */
+    private void recursiveExpandTree(Object item) {
+        if (provider == null) {
+            provider = (ITreeContentProvider) commonViewer.getContentProvider();
+        }
+        if (item instanceof EObject) {
+            Object parent = provider.getParent(item);
+            Object[] tbFolderNodes = provider.getChildren(parent);
+            boolean isFind = false;
+            IFolderNode fn = null;
+            for (Object folderNode : tbFolderNodes) {
+                fn = (IFolderNode) folderNode;
+                Object[] folderChilds = provider.getChildren(fn);
+                for (Object child : folderChilds) {
+                    if (child == item) {
+                        isFind = true;
+                        break;
+                    }
+                }
+                if (isFind) {
+                    break;
+                }
+            }
+            // If EMF node,get folder parent.
+            if (fn != null) {
+                recursiveExpandTree(fn);
+                commonViewer.expandToLevel(fn, 1);
+            } else {
+                Object emfParent = provider.getParent(item);
+                // EMF XMI resources
+                if (emfParent instanceof Resource) {
+                    Resource cwmResource = (Resource) emfParent;
+                    IFile resourceFile = null;
+                    URI uri = cwmResource.getURI();
+                    uri = cwmResource.getResourceSet().getURIConverter().normalize(uri);
+                    String scheme = uri.scheme();
+                    if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) {
+                        StringBuffer platformResourcePath = new StringBuffer();
+                        for (int j = 1, size = uri.segmentCount(); j < size; ++j) {
+                            platformResourcePath.append('/');
+                            platformResourcePath.append(uri.segment(j));
+                        }
+                        resourceFile = ResourcesPlugin.getWorkspace().getRoot()
+                                .getFile(new Path(platformResourcePath.toString()));
+                    }
+                    emfParent = resourceFile;
+                }
+
+                recursiveExpandTree(emfParent);
+                commonViewer.expandToLevel(emfParent, 1);
+            }
+        }
+        // User provider get IFolderNode parent will be null, here must call IFolderNode.getParent.
+        else if (item instanceof IFolderNode) {
+            IFolderNode folderNode = (IFolderNode) item;
+            Object eo = folderNode.getParent();
+            recursiveExpandTree(eo);
+            commonViewer.expandToLevel(eo, 1);
+        }
+        // Workspace resources
+        else {
+            Object workspaceParent = provider.getParent(item);
+            if (workspaceParent == null) {
+                return;
+            }
+            commonViewer.expandToLevel(workspaceParent, 1);
+            recursiveExpandTree(workspaceParent);
+        }
+
     }
 
 }

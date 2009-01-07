@@ -50,6 +50,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -60,6 +61,7 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -216,6 +218,35 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             }
 
         });
+
+        // ADD 2009-01-07 mzhao for feature:0005664
+        MenuItem showMenuItem = new MenuItem(menu, SWT.CASCADE);
+        showMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
+        showMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        showMenuItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TreeItem[] selection = newTree.getSelection();
+
+                if (selection.length == 1) {
+                    DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+                    try {
+                        TdColumn tdColumn = (TdColumn) selection[0].getData(COLUMN_INDICATOR_KEY);
+                        dqview.showSelectedElements(tdColumn);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
         if (containEdit) {
             editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
             editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.editPattern")); //$NON-NLS-1$
