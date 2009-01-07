@@ -60,6 +60,7 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.dq.helper.resourcehelper.PasswordHelper;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -420,9 +421,9 @@ public final class DqRepositoryViewService {
                     + ". Data provider must be saved first.", false);
         } else {
             // add by hcheng
-            // PasswordHelper.encryptResource(resource);
+            PasswordHelper.encryptResource(resource);
             rc.setOk(EMFUtil.saveResource(resource));
-            // PasswordHelper.decryptResource(resource);
+            PasswordHelper.decryptResource(resource);
         }
         return rc;
     }

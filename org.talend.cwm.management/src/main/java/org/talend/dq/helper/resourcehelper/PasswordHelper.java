@@ -96,7 +96,7 @@ public class PasswordHelper {
         return resource;
     }
 
-    public static TdDataProvider encryptDataProvider(TdDataProvider dataProvider) {
+    public static TdDataProvider encryptDataProvider2(TdDataProvider dataProvider) {
         // DataProvider password encrypt
         EList dpList = dataProvider.getTaggedValue();
         if (dpList != null && dpList.size() > 0) {
