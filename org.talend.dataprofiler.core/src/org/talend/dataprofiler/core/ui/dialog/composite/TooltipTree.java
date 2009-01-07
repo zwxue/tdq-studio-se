@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -108,14 +107,20 @@ public class TooltipTree extends Tree {
                         FillLayout layout = new FillLayout();
                         layout.marginWidth = 2;
                         tip.setLayout(layout);
-                        label = new Label(tip, SWT.NONE);
+                        label = new Label(tip, SWT.WRAP);
                         label.setForeground(parent.getShell().getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
                         label.setBackground(parent.getShell().getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
                         label.setData(TREEITEM, item);
-                        label.setText(getItemTooltipText(item));
+                        String displayedText = getItemTooltipText(item);
+                        label.setText(displayedText);
                         label.addListener(SWT.MouseExit, labelListener);
                         label.addListener(SWT.MouseDown, labelListener);
-                        Point size = tip.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+                        // MOD 2009-01-07 mzhao wrap text if length too long.
+                        int widthHit = SWT.DEFAULT;
+                        if (displayedText.length() > 100) {
+                            widthHit = 500;
+                        }
+                        Point size = tip.computeSize(widthHit, SWT.DEFAULT);
                         Rectangle rect = item.getBounds(0);
                         Point pt = toDisplay(rect.x, rect.y);
                         tip.setBounds(pt.x, pt.y, size.x, size.y);
@@ -137,6 +142,10 @@ public class TooltipTree extends Tree {
 
     protected String getItemTooltipText(TreeItem item) {
         return item.getText();
+    }
+
+    public static void main(String args[]) {
+
     }
 
 }

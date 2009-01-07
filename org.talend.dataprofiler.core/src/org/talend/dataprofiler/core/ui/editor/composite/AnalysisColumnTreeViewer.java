@@ -172,6 +172,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private Tree createTree(Composite parent) {
         final Tree newTree = new TooltipTree(parent, SWT.MULTI | SWT.BORDER) {
 
+            @Override
+            protected boolean isValidItem(TreeItem item) {
+                IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                return indicatorUnit != null;
+            }
+
             protected String getItemTooltipText(TreeItem item) {
                 String expCont = isExpressionNull(item);
                 if (expCont == null) {
