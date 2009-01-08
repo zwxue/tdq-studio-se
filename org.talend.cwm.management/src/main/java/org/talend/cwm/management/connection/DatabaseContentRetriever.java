@@ -294,6 +294,7 @@ public final class DatabaseContentRetriever {
                     log.debug(prop.name + "=" + prop.value);
                 }
 
+                // TODO hcheng encode password here
                 TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(prop.name, prop.value);
                 provider.getTaggedValue().add(taggedValue);
 
@@ -323,6 +324,7 @@ public final class DatabaseContentRetriever {
         Enumeration<?> propertyNames = props.propertyNames();
         while (propertyNames.hasMoreElements()) {
             String key = propertyNames.nextElement().toString();
+            // TODO hcheng encode password here
             String property = props.getProperty(key);
             TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(key, property);
             prov.getTaggedValue().add(taggedValue);

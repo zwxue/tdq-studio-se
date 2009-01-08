@@ -25,20 +25,40 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * 
  * A class that helps to encrypt and decrypt password.
  */
-public class PasswordHelper {
+public class PasswordHelper extends CryptoHelper { // MOD scorreia 2008-01-08 extend CryptoHelper and use passphrase
+    private static final String PASSPHRASE = "99ZwBDt1L9yMX2ApJx fnv94o99OeHbCGbih5Vg8nl8m5FH0jbN9ZVSKCuIHTy22 V9O6cZ2i374fVjdV76VX9g49DG1r3n90hT5c1";
 
     private static final int ENCRYPT = 0;
 
     private static final int DECRYPT = 1;
 
+    /**
+     * PasswordHelper constructor.
+     * 
+     * Uses a static passphrase to encrypt and decrypt strings.
+     */
+    public PasswordHelper() {
+        super(PASSPHRASE);
+    }
+
+
+    /**
+     * @deprecated TODO hcheng remove this method
+     */
     public static Resource encryptResource(Resource resource) {
         return dealResource(resource, ENCRYPT);
     }
 
+    /**
+     * @deprecated TODO hcheng remove this method
+     */
     public static Resource decryptResource(Resource resource) {
         return dealResource(resource, DECRYPT);
     }
 
+    /**
+     * @deprecated TODO hcheng remove this method
+     */
     private static Resource dealResource(Resource resource, int type) {
         EList el = resource.getContents();
         if (el != null) {
