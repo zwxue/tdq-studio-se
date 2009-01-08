@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Collection;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
@@ -22,6 +24,10 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -40,9 +46,11 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
+import org.talend.utils.ProductVersion;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -103,6 +111,8 @@ public class CorePlugin extends AbstractUIPlugin {
             for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
                 BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
             }
+
+            doMigrationTask();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -295,5 +305,46 @@ public class CorePlugin extends AbstractUIPlugin {
 
         }
         refreshAction.run();
+    }
+
+    public void doMigrationTask() {
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        IProject project = root.getProject(DQStructureManager.LIBRARIES);
+
+        IFile versionfile = project.getFile(new Path(PluginConstant.VERSION_FILE_PATH));
+        if (versionfile.exists()) {
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(versionfile.getContents()));
+                String oldversion = br.readLine();
+
+                boolean ismatch = ProductVersion.fromString(oldversion).equals(getProductVersion());
+                if (!ismatch) {
+
+                    MigrationTaskManager.getValidMigrationTasks().execute();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * DOC bzhou Comment method "getProductVersionString".
+     * 
+     * @return
+     */
+    public String getProductVersionString() {
+        Object obj = plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
+        return obj.toString();
+    }
+
+    /**
+     * DOC bzhou Comment method "getProductVersion".
+     * 
+     * @return
+     */
+    public ProductVersion getProductVersion() {
+        ProductVersion currentVersion = ProductVersion.fromString(getProductVersionString());
+        return currentVersion;
     }
 }

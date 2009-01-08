@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.manager;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,9 +42,11 @@ import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.utils.ProductVersion;
 
 /**
  * Create the folder structure for the DQ Reponsitory view.
@@ -142,6 +145,8 @@ public final class DQStructureManager {
             project = this.createNewProject(LIBRARIES, shell);
             createNewFoler = this.createNewFoler(project, PATTERNS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, PATTERNS_FOLDER_PROPERTY);
+            // check version File
+            checkVersionFile(project);
             // Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
             this.copyFilesToFolder(PATTERN_PATH, true, createNewFoler);
             createNewFoler = this.createNewFoler(project, SQL_PATTERNS);
@@ -161,6 +166,7 @@ public final class DQStructureManager {
             ExceptionHandler.process(ex);
             return false;
         }
+
         return true;
     }
 
@@ -283,5 +289,21 @@ public final class DQStructureManager {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
         IFolder newFolder = folder.getFolder(label);
         return !newFolder.exists();
+    }
+
+    private void checkVersionFile(IProject project) {
+        IPath path = new Path(PluginConstant.VERSION_FILE_PATH);
+        ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
+
+        IFile versionfile = project.getFile(path);
+
+        if (!versionfile.exists()) {
+            try {
+                InputStream is = new ByteArrayInputStream(currentVersion.toString().getBytes());
+                versionfile.create(is, true, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

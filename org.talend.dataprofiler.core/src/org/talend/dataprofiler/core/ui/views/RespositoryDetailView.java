@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.views;
 
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
@@ -47,10 +46,8 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.service.GlobalServiceRegister;
-import org.talend.dataprofiler.core.service.IDetailViewSwitchService;
-import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -85,13 +82,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * DOC qzhang RespositoryDetailView constructor comment.
      */
     public RespositoryDetailView() {
-        List<IService> filterList = GlobalServiceRegister.getDefault().getServiceGroup(IDetailViewSwitchService.class);
-        for (IService service : filterList) {
-            if (service instanceof IDetailViewSwitchService) {
-                IDetailViewSwitchService switchService = (IDetailViewSwitchService) service;
-                switchFlag = switchService.isShow();
-            }
-        }
+
+        switchFlag = PluginChecker.isTDQLoaded();
     }
 
     @Override

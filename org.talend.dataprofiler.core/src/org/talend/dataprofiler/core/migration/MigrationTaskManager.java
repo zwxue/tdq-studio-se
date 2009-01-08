@@ -10,19 +10,16 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.service;
+package org.talend.dataprofiler.core.migration;
+
+import org.talend.dataprofiler.core.migration.impl.CopyDefineFileTask;
 
 /**
- * DOC Zqin class global comment. Detailled comment
+ * DOC bzhou class global comment. Detailled comment
  */
-public interface IDetailViewSwitchService extends IService {
+public class MigrationTaskManager {
 
-    /**
-     * DOC Zqin Comment method "isShow".
-     * 
-     * this method is to judge whether the special detail group show or not.
-     * 
-     * @return retrun true, if show the special detail group, false will not.
-     */
-    public boolean isShow();
+    public static IWorkspaceMigrationTask getValidMigrationTasks() {
+        return new CopyDefineFileTask();
+    }
 }
