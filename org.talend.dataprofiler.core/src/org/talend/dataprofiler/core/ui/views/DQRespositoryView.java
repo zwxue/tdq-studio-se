@@ -120,8 +120,6 @@ public class DQRespositoryView extends CommonNavigator {
         commonViewer = getCommonViewer();
         Menu menu = menuMgr.createContextMenu(commonViewer.getTree());
         commonViewer.getTree().setMenu(menu);
-        // MOD 2009-01-05 mzhao for feature 0005666
-        getSite().registerContextMenu(menuMgr, commonViewer);
 
         this.addViewerFilter(EMFObjFilter.FILTER_ID);
         this.addViewerFilter(ReportingFilter.FILTER_ID);
