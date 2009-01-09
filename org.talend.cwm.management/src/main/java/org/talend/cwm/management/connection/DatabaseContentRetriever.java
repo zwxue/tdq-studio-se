@@ -295,6 +295,9 @@ public final class DatabaseContentRetriever {
                 }
 
                 // TODO hcheng encode password here
+                // if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(prop.name)) {
+                // prop.value = new PasswordHelper().encrypt(prop.value);
+                // }
                 TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(prop.name, prop.value);
                 provider.getTaggedValue().add(taggedValue);
 
@@ -326,6 +329,9 @@ public final class DatabaseContentRetriever {
             String key = propertyNames.nextElement().toString();
             // TODO hcheng encode password here
             String property = props.getProperty(key);
+            // if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(key)) {
+            // property = new PasswordHelper().encrypt(property);
+            // }
             TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(key, property);
             prov.getTaggedValue().add(taggedValue);
         }

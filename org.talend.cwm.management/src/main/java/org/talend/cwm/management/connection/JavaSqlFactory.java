@@ -53,6 +53,7 @@ public final class JavaSqlFactory {
         if (!rc.isOk()) {
             log.error(rc.getMessage());
             TypedReturnCode<Connection> rcConn = new TypedReturnCode<Connection>();
+
             rcConn.setReturnCode(rc.getMessage(), false);
             return rcConn;
         }
@@ -83,6 +84,10 @@ public final class JavaSqlFactory {
         Collection<TaggedValue> taggedValues = providerConnection.getTaggedValue();
         Properties props = TaggedValueHelper.createProperties(taggedValues);
         // TODO hcheng decrypt password here and update props object
+        // String pass = props.getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
+        // if (pass != null) {
+        // props.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, new PasswordHelper().decrypt(pass));
+        // }
         try {
             Connection connection = ConnectionUtils.createConnection(url, driverClassName, props);
             rc.setObject(connection);
