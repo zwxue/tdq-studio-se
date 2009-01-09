@@ -14,6 +14,7 @@ package org.talend.dq.helper.resourcehelper;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.utils.security.CryptoHelper;
@@ -24,9 +25,13 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * @author hcheng
  * 
  * A class that helps to encrypt and decrypt password.
+ * 
+ * @deprecated do not use this class for password encryption/decryption. Note: this class could be used (adapted) for
+ * the migration task.
  */
 public class PasswordHelper extends CryptoHelper { // MOD scorreia 2008-01-08 extend CryptoHelper and use passphrase
-    private static final String PASSPHRASE = "99ZwBDt1L9yMX2ApJx fnv94o99OeHbCGbih5Vg8nl8m5FH0jbN9ZVSKCuIHTy22 V9O6cZ2i374fVjdV76VX9g49DG1r3n90hT5c1";
+
+    private static final String PASSPHRASE = DataProviderHelper.PASSPHRASE;
 
     private static final int ENCRYPT = 0;
 

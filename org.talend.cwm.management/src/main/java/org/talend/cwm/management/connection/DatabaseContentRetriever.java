@@ -289,15 +289,17 @@ public final class DatabaseContentRetriever {
             for (int i = 0; i < driverProps.length; i++) {
                 DriverPropertyInfo prop = driverProps[i];
 
+                // MOD scorreia 2009-01-09 skip password properties because it is not used and would result in a
+                // security hole
+                if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(prop.name)) {
+                    continue;
+                }
+                
                 if (log.isDebugEnabled()) { // TODO use logger here
                     log.debug("Prop description = " + prop.description);
                     log.debug(prop.name + "=" + prop.value);
                 }
 
-                // TODO hcheng encode password here
-                // if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(prop.name)) {
-                // prop.value = new PasswordHelper().encrypt(prop.value);
-                // }
                 TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(prop.name, prop.value);
                 provider.getTaggedValue().add(taggedValue);
 
@@ -327,13 +329,14 @@ public final class DatabaseContentRetriever {
         Enumeration<?> propertyNames = props.propertyNames();
         while (propertyNames.hasMoreElements()) {
             String key = propertyNames.nextElement().toString();
-            // TODO hcheng encode password here
+            // hcheng encode password here
             String property = props.getProperty(key);
-            // if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(key)) {
-            // property = new PasswordHelper().encrypt(property);
-            // }
-            TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(key, property);
-            prov.getTaggedValue().add(taggedValue);
+            if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(key)) {
+                DataProviderHelper.encryptAndSetPassword(prov, property);
+            } else {
+                TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(key, property);
+                prov.getTaggedValue().add(taggedValue);
+            }
         }
 
         // TODO scorreia set name? or let it be set outside of this class?
@@ -356,6 +359,9 @@ public final class DatabaseContentRetriever {
             // TODO scorreia see if store in CWM structure is done elsewhere
         } catch (RuntimeException e) {
             // happens for Sybase ASE for example
+            if (log.isDebugEnabled()) {
+                log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + " " + e, e);
+            }
         }
 
         // --- create and fill the software system

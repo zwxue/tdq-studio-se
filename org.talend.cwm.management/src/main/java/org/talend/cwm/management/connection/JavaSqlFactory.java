@@ -83,11 +83,12 @@ public final class JavaSqlFactory {
         String driverClassName = providerConnection.getDriverClassName();
         Collection<TaggedValue> taggedValues = providerConnection.getTaggedValue();
         Properties props = TaggedValueHelper.createProperties(taggedValues);
-        // TODO hcheng decrypt password here and update props object
-        // String pass = props.getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
-        // if (pass != null) {
-        // props.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, new PasswordHelper().decrypt(pass));
-        // }
+        // hcheng decrypt password here and update props object
+        String pass = props.getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
+        if (pass != null) {
+            props.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, DataProviderHelper
+                    .getClearTextPassword(providerConnection));
+        }
         try {
             Connection connection = ConnectionUtils.createConnection(url, driverClassName, props);
             rc.setObject(connection);

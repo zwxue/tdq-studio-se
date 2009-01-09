@@ -89,7 +89,8 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         Resource resource = getFileResource(file);
 
         // add by hcheng
-        PasswordHelper.decryptResource(resource);
+        // MOD scorreia 2009-01-09 password decryption is handled elsewhere
+        // PasswordHelper.decryptResource(resource);
 
         Iterator<IFile> fileIterator = providerMap.keySet().iterator();
         while (fileIterator.hasNext()) {
