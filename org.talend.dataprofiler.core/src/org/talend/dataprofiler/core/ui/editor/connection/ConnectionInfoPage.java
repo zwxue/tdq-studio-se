@@ -142,7 +142,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         String loginValue = TaggedValueHelper.getValue(PluginConstant.USER_PROPERTY, connection);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
 
-        String passwordValue = TaggedValueHelper.getValue(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, connection);
+        // MOD scorreia 2009-01-09 handle encrypted password
+        String passwordValue = DataProviderHelper.getClearTextPassword(connection);
+        // TaggedValueHelper.getValue(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, connection);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
@@ -186,7 +188,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
         TaggedValueHelper.setTaggedValue(connection, PluginConstant.USER_PROPERTY, loginText.getText());
-        TaggedValueHelper.setTaggedValue(connection, org.talend.dq.PluginConstant.PASSWORD_PROPERTY, passwordText.getText());
+        // MOD scorreia 2009-01-09 handle encrypted password
+        DataProviderHelper.encryptAndSetPassword(connection, passwordText.getText());
+        // TaggedValueHelper.setTaggedValue(connection, org.talend.dq.PluginConstant.PASSWORD_PROPERTY,
+        // passwordText.getText());
     }
 
     @Override

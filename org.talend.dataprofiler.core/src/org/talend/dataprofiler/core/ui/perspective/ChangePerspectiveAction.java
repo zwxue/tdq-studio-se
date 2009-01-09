@@ -50,7 +50,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -167,7 +166,8 @@ public class ChangePerspectiveAction extends Action {
                 String url = providerConnection.getConnectionString();
                 Alias alias = new Alias(tdDataProvider.getName());
                 String user = TaggedValueHelper.getValue("user", providerConnection); //$NON-NLS-1$
-                String password = TaggedValueHelper.getValue("password", providerConnection); //$NON-NLS-1$
+                // MOD scorreia 2009-01-09 password decryption
+                String password = DataProviderHelper.getClearTextPassword(providerConnection);
                 User previousUser = new User(user, password);
                 alias.setDefaultUser(previousUser);
                 alias.setAutoLogon(false);

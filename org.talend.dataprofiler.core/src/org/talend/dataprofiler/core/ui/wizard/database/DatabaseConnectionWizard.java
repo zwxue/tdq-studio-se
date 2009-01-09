@@ -30,7 +30,6 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.helper.resourcehelper.PasswordHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -126,7 +125,9 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                             DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnections"), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnectionFailure") + rc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
-        TdDataProvider dataProvider = PasswordHelper.encryptDataProvider2(rc.getObject());
+        // MOD scorreia 2009-01-09 password decryption is handled elsewhere
+        // TdDataProvider dataProvider = PasswordHelper.encryptDataProvider2(rc.getObject());
+        TdDataProvider dataProvider = rc.getObject();
 
         // MODSCA 2008-03-10 save the provider
         IFile returnFile = DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionParam
