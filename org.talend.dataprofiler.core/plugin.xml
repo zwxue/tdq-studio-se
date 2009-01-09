@@ -298,6 +298,34 @@
 	        </and>
          </enablement>
       </actionProvider> 
+      
+       <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.ModelElementTaskProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.ModelElementTaskProvider">
+         <enablement>
+            <or>
+               <instanceof
+                     value="orgomg.cwm.objectmodel.core.ModelElement">
+               </instanceof>
+               <and>
+                  <instanceof
+                        value="org.eclipse.core.resources.IFile">
+                  </instanceof>
+                  <or>
+                     <test
+                           property="org.eclipse.core.resources.name"
+                           value="*.rep">
+                     </test>
+                     <test
+                           property="org.eclipse.core.resources.name"
+                           value="*.ana">
+                     </test>
+                  </or></and>
+            </or>
+         </enablement>
+      </actionProvider> 
+      
+      
       <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider">

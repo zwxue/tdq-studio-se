@@ -64,7 +64,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.views.markers.internal.DialogTaskProperties;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -78,6 +77,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
+import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -335,7 +335,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         MenuItem addTaskItem = new MenuItem(menu, SWT.CASCADE);
         addTaskItem.setText("Add task..."); //$NON-NLS-1$
-        addTaskItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        addTaskItem.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
         addTaskItem.addSelectionListener(new SelectionAdapter() {
 
             /*
@@ -352,13 +352,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     ColumnIndicator columnIndicator = (ColumnIndicator) treeItem.getData(COLUMN_INDICATOR_KEY);
                     TdColumn column = columnIndicator.getTdColumn();
                     if (column instanceof ModelElement) {
-                        // IResource resource = (IResource) selData;
-                        // if (resource != null) {
-                        DialogTaskProperties dialog = new DialogTaskProperties(newTree.getShell());
-
-                        dialog.setResource(null);
-                        dialog.open();
-                        // }
+                        (new TdAddTaskAction(newTree.getShell(), (ModelElement) column)).run();
                     }
                 }
 
