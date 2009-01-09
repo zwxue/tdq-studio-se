@@ -24,6 +24,7 @@ import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.utils.security.CryptoHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -40,6 +41,10 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * Utility class for data provider handling.
  */
 public final class DataProviderHelper {
+
+    public static final String PASSWORD = "password";
+
+    public static final String PASSPHRASE = "99ZwBDt1L9yMX2ApJx fnv94o99OeHbCGuIHTy22 V9O6cZ2i374fVjdV76VX9g49DG1r3n90hT5c1";
 
     private DataProviderHelper() {
     }
@@ -220,11 +225,11 @@ public final class DataProviderHelper {
         final EList<ModelElement> ownedElements = softwareSystem.getOwnedElement();
         for (ModelElement modelElement : ownedElements) {
             if (modelElement != null) {
-            Component component = SwitchHelpers.COMPONENT_SWITCH.doSwitch(modelElement);
-            if (component != null) {
+                Component component = SwitchHelpers.COMPONENT_SWITCH.doSwitch(modelElement);
+                if (component != null) {
                     dataProvider.setComponent(component);
                     return true;
-            }
+                }
             }
         }
         return false;
@@ -329,5 +334,57 @@ public final class DataProviderHelper {
      */
     public static List<TdSchema> getTdSchema(DataProvider dataProvider) {
         return SchemaHelper.getSchemas(dataProvider.getDataPackage());
+    }
+
+    /**
+     * Method "getClearTextPassword".
+     * 
+     * @param dataProvider a Data provider
+     * @return the password in clear text or null
+     */
+    public static String getClearTextPassword(DataProvider dataProvider) {
+        TypedReturnCode<TdProviderConnection> rc = getTdProviderConnection(dataProvider);
+        return rc.isOk() ? getClearTextPassword(rc.getObject()) : null;
+    }
+
+    /**
+     * Method "getClearTextPassword".
+     * 
+     * @param provConnection the provider connection
+     * @return the password in clear text or null
+     */
+    public static String getClearTextPassword(TdProviderConnection provConnection) {
+        String encryptedPassword = TaggedValueHelper.getValue(PASSWORD, provConnection);
+        if (encryptedPassword == null) {
+            return null;
+        }
+        CryptoHelper cryptoHelper = new CryptoHelper(PASSPHRASE);
+        return cryptoHelper.decrypt(encryptedPassword);
+    }
+
+    /**
+     * Method "encryptAndSetPassword" encrypts and store the encrypted into the provider connection of the data
+     * provider.
+     * 
+     * @param dataProvider a data provider
+     * @param clearTextPassword the password in clear text (can be null)
+     * @return true when set
+     */
+    public static boolean encryptAndSetPassword(DataProvider dataProvider, String clearTextPassword) {
+        TypedReturnCode<TdProviderConnection> rc = getTdProviderConnection(dataProvider);
+        return rc.isOk() ? encryptAndSetPassword(rc.getObject(), clearTextPassword) : false;
+    }
+    
+    /**
+     * Method "encryptAndSetPassword" encrypts and store the encrypted into the provider connection.
+     * 
+     * @param provConnection the provider connection
+     * @param clearTextPassword the password in clear text (can be null)
+     * @return true when set
+     */
+    public static boolean encryptAndSetPassword(TdProviderConnection provConnection, String clearTextPassword) {
+        CryptoHelper cryptoHelper = new CryptoHelper(PASSPHRASE);
+        String encryptedPassword = clearTextPassword != null ? cryptoHelper.encrypt(clearTextPassword) : null;
+        return TaggedValueHelper.setTaggedValue(provConnection, PASSWORD, encryptedPassword);
     }
 }
