@@ -19,6 +19,10 @@ package org.talend.dq.analysis.parameters;
  * 
  */
 public class AnalysisLabelParameter extends AnalysisParameter {
+    
+    public static final String NUMBERIC_CORRELATION = "Numerical Correlation Analysis";
+    
+    public static final String DATE_CORRELATION = "Date Correlation Analysis";
 
     protected String categoryLabel;
 
