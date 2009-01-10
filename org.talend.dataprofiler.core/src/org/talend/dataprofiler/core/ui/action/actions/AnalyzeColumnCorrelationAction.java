@@ -26,6 +26,8 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
+import org.talend.utils.sql.Java2SqlType;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -77,11 +79,24 @@ public class AnalyzeColumnCorrelationAction extends Action {
     }
 
     private int openStandardAnalysisDialog(AnalysisType type) {
-        Wizard wizard = WizardFactory.createAnalysisWizard(type);
+        AnalysisLabelParameter parameter = new AnalysisLabelParameter();
+
+        if (isContainNumber()) {
+            parameter.setCategoryLabel(AnalysisLabelParameter.NUMBERIC_CORRELATION);
+        } else {
+            parameter.setCategoryLabel(AnalysisLabelParameter.DATE_CORRELATION);
+        }
+
+        Wizard wizard = WizardFactory.createAnalysisWizard(type, parameter);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);
 
         return dialog.open();
+    }
+
+    private boolean isContainNumber() {
+        TdColumn column = (TdColumn) selection.getFirstElement();
+        return Java2SqlType.isNumbericInSQL(column.getJavaType());
     }
 }
