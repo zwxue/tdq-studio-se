@@ -1,44 +1,48 @@
-// ============================================================================
-//
-// Copyright (C) 2006-2007 Talend Inc. - www.talend.com
-//
-// This source code is available under agreement available at
-// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
-//
-// You should have received a copy of the agreement
-// along with this program; if not, write to Talend SA
-// 9 rue Pages 92150 Suresnes, France
-//
-// ============================================================================
 package org.talend.dataprofiler.help.actions;
 
-import org.eclipse.help.browser.IBrowser;
 import org.eclipse.help.internal.base.BaseHelpSystem;
-import org.eclipse.help.internal.server.WebappManager;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.help.TdHelpView;
 
-/**
- * DOC Zqin class global comment. Detailled comment
- */
-public class ViewBookMarksAction extends Action {
+@SuppressWarnings("restriction")
+public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
 
-    public ViewBookMarksAction() {
-        super("View Bookmarks");
+    public void dispose() {
+        // TODO Auto-generated method stub
+
     }
 
-    @Override
-    public void run() {
+    public void init(IWorkbenchWindow window) {
+        // TODO Auto-generated method stub
 
+    }
+
+    @SuppressWarnings( { "static-access" })
+    public void run(IAction action) {
         try {
-            // HelpPlugin.getDefault().getWorkbench().getHelpSystem().displayHelp();
-            // IWebBrowser browser = HelpPlugin.getDefault().getWorkbench().getBrowserSupport().getExternalBrowser();
-            // URL url = new URL("http://127.0.0.1:2754/help/advanced/bookmarksView.jsp?view=bookmarks");
-            // browser.openURL(url);
 
             if (BaseHelpSystem.getInstance().ensureWebappRunning()) {
-                IBrowser browser = BaseHelpSystem.getInstance().getHelpBrowser(false);
-
-                browser.displayURL(getFramesetURL());
+                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                if (window != null) {
+                    IWorkbenchPage page = window.getActivePage();
+                    if (page != null) {
+                        try {
+                            IViewPart part = page.findView(TdHelpView.HELP_VIEW_ID);
+                            if (part == null) {
+                                page.showView(TdHelpView.HELP_VIEW_ID);
+                            }
+                        } catch (PartInitException e) {
+                        }
+                    }
+                }
+                // DefaultHelpUI.getInstance().displayHelp();
             }
 
         } catch (Exception e) {
@@ -47,13 +51,9 @@ public class ViewBookMarksAction extends Action {
         }
     }
 
-    private String getBaseURL() {
-        return "http://" //$NON-NLS-1$
-                + WebappManager.getHost() + ":" //$NON-NLS-1$
-                + WebappManager.getPort() + "/help/"; //$NON-NLS-1$
+    public void selectionChanged(IAction action, ISelection selection) {
+        // TODO Auto-generated method stub
+
     }
 
-    private String getFramesetURL() {
-        return getBaseURL() + "index.jsp"; //$NON-NLS-1$
-    }
 }

@@ -16,5 +16,42 @@
             plugin="org.talend.dataprofiler.help">
       </contexts>
    </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.talend.dataprofiler.help.actionSet"
+            label="actionSet"
+            visible="true">
+         <action
+               class="org.talend.dataprofiler.help.actions.ViewBookMarksAction"
+               id="org.talend.dataprofiler.help.openBookmarkAction"
+               label="View Bookmarks"
+               menubarPath="help/helpStart"
+               style="push">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.help.index">
+      <index
+            file="html/wizard/indicator_select/advanced_statistics.html">
+      </index>
+   </extension>
+   <extension
+         point="org.eclipse.ui.helpSupport">
+      <config
+            class="org.talend.dataprofiler.help.TdAbstractHelpUI">
+      </config>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.eclipse.help.ui"
+            class="org.talend.dataprofiler.help.TdHelpView"
+            id="org.talend.dataprofiler.help.TdHelpView"
+            name="Book view"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>
