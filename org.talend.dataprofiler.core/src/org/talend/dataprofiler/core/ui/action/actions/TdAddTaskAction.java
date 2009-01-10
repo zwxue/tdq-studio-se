@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.model.TdResourceModel;
 import org.talend.dataprofiler.core.ui.dialog.TdTaskPropertiesDialog;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -56,7 +57,12 @@ public class TdAddTaskAction extends Action {
             IFile fileResource = null;
             if (navObj instanceof IFile) {
                 fileResource = (IFile) navObj;
-                modelElement = AnaResourceFileHelper.getInstance().findAnalysis(fileResource);
+                if (fileResource.getName().endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)) {
+                    modelElement = AnaResourceFileHelper.getInstance().findAnalysis(fileResource);
+                } else if (fileResource.getName().endsWith(org.talend.dq.PluginConstant.REP_SUFFIX)) {
+                    modelElement = RepResourceFileHelper.getInstance().findReport(fileResource);
+                }
+
             } else if (navObj instanceof ModelElement) {
                 modelElement = (ModelElement) navObj;
                 fileResource = WorkspaceResourceHelper.getModelElementResource(modelElement);
