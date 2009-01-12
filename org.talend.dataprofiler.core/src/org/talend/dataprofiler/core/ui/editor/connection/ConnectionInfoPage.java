@@ -67,6 +67,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     private Text urlText;
 
+    private Section infomatioinSection = null;
+
     public ConnectionInfoPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -113,6 +115,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
 
         });
+        currentEditor.registerSections(new Section[] { infomatioinSection });
     }
 
     /**
@@ -121,12 +124,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     void createInformationSection(final ScrolledForm form, Composite topComp) {
-        Section section = createSection(
+        infomatioinSection = createSection(
                 form,
                 topComp,
                 DefaultMessagesImpl.getString("ConnectionInfoPage.connectionInformations"), false, DefaultMessagesImpl.getString("ConnectionInfoPage.informationsOfConnection")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        Composite sectionClient = toolkit.createComposite(section);
+        Composite sectionClient = toolkit.createComposite(infomatioinSection);
         sectionClient.setLayout(new GridLayout(2, false));
         Label loginLabel = new Label(sectionClient, SWT.NONE);
         loginLabel.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.Login")); //$NON-NLS-1$
@@ -166,7 +169,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         };
         loginText.addModifyListener(listener);
         passwordText.addModifyListener(listener);
-        section.setClient(sectionClient);
+        infomatioinSection.setClient(sectionClient);
     }
 
     private ReturnCode checkDBConnection() {

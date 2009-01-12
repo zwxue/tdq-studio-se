@@ -89,6 +89,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     private String executeData;
 
+    private Section graphicsAndTableSection = null;
+
     /**
      * DOC zqin ColumnAnalysisResultPage constructor comment.
      * 
@@ -112,6 +114,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         graphicsAndTableComp.setLayout(new GridLayout());
         createResultSection(graphicsAndTableComp);
         form.reflow(true);
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
+        currentEditor.registerSections(new Section[] { graphicsAndTableSection });
     }
 
     @Override
@@ -121,7 +125,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     protected void createResultSection(Composite parent) {
         executeData = getColumnAnalysisHandler().getExecuteData();
-        Section graphicsAndTableSection = this.createSection(form, parent, "Analysis Result", false, null); //$NON-NLS-1$
+        graphicsAndTableSection = this.createSection(form, parent, "Analysis Result", false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));

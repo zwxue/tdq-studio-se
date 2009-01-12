@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -42,8 +43,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     private Button runBtn;
 
+    protected CommonFormEditor currentEditor = null;
+
     public AbstractAnalysisMetadataPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+        currentEditor = (CommonFormEditor) editor;
     }
 
     @Override

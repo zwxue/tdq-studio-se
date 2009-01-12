@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -110,6 +112,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     private AnalysisEditor currentEditor;
 
+    private Section dataFilterSection = null;
+
+    private Section analysisColumnSection = null;
+
+    private Section previewSection = null;
+
+    private List<ExpandableComposite> previewChartList = null;
+
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
@@ -174,13 +184,17 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         createPreviewSection(form, previewComp);
 
         runButton = createRunButton(form);
+
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
+        currentEditor
+                .registerSections(new Section[] { analysisColumnSection, metadataSection, dataFilterSection, previewSection });
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
-        Section section = createSection(form, anasisDataComp, DefaultMessagesImpl
+        analysisColumnSection = createSection(form, anasisDataComp, DefaultMessagesImpl
                 .getString("ColumnMasterDetailsPage.analyzeColumn"), false, null); //$NON-NLS-1$
 
-        Composite topComp = toolkit.createComposite(section);
+        Composite topComp = toolkit.createComposite(analysisColumnSection);
         topComp.setLayout(new GridLayout());
 
         Hyperlink clmnBtn = toolkit.createHyperlink(topComp, DefaultMessagesImpl
@@ -200,10 +214,39 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         indcBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
-
                 treeViewer.openIndicatorSelectDialog(null);
             }
 
+        });
+
+        Composite actionBarComp = toolkit.createComposite(topComp);
+        GridLayout gdLayout = new GridLayout();
+        gdLayout.numColumns = 2;
+        actionBarComp.setLayout(gdLayout);
+
+        ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns"));
+        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            public void linkActivated(HyperlinkEvent e) {
+                TreeItem[] items = treeViewer.getTree().getItems();
+                expandTreeItems(items, true);
+                packOtherColumns();
+            }
+        });
+
+        ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns"));
+        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            public void linkActivated(HyperlinkEvent e) {
+                TreeItem[] items = treeViewer.getTree().getItems();
+                expandTreeItems(items, false);
+                packOtherColumns();
+
+            }
         });
 
         Composite tree = toolkit.createComposite(topComp, SWT.NONE);
@@ -214,8 +257,36 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         treeViewer = new AnalysisColumnTreeViewer(tree, this);
         treeViewer.setDirty(false);
         treeViewer.addPropertyChangeListener(this);
-        section.setClient(topComp);
+        analysisColumnSection.setClient(topComp);
 
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "packOtherColumns".
+     */
+    private void packOtherColumns() {
+        TreeColumn columns[] = treeViewer.getTree().getColumns();
+        for (TreeColumn column : columns) {
+            column.pack();
+        }
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "expandTreeItems".
+     * 
+     * @param items
+     * @param expandOrCollapse
+     */
+    private void expandTreeItems(TreeItem[] items, boolean expandOrCollapse) {
+        for (TreeItem item : items) {
+            item.setExpanded(expandOrCollapse);
+            TreeItem[] its = item.getItems();
+            if (its != null && its.length > 0) {
+                expandTreeItems(its, expandOrCollapse);
+            }
+        }
     }
 
     /**
@@ -239,13 +310,54 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
-        Section section = createSection(form, parent, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true,
+        previewSection = createSection(form, parent, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space"));
-        section.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        Composite sectionClient = toolkit.createComposite(section);
+        previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
+        Composite sectionClient = toolkit.createComposite(previewSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Composite actionBarComp = toolkit.createComposite(sectionClient);
+        GridLayout gdLayout = new GridLayout();
+        gdLayout.numColumns = 2;
+        actionBarComp.setLayout(gdLayout);
+
+        ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns"));
+        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            public void linkActivated(HyperlinkEvent e) {
+                if (previewChartList != null && !previewChartList.isEmpty()) {
+                    for (ExpandableComposite comp : previewChartList) {
+                        comp.setExpanded(true);
+                        comp.getParent().pack();
+                        // for (Object composite : comp.getChildren()) {
+                        // ((Composite) composite).pack();
+                        // }
+                    }
+                }
+            }
+        });
+
+        ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns"));
+        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            public void linkActivated(HyperlinkEvent e) {
+                if (previewChartList != null && !previewChartList.isEmpty()) {
+                    for (ExpandableComposite comp : previewChartList) {
+                        comp.setExpanded(false);
+                        comp.getParent().pack();
+                        // for (Object composite : comp.getChildren()) {
+                        // ((Composite) composite).pack();
+                        // }
+                    }
+                }
+
+            }
+        });
 
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
         refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
@@ -296,12 +408,12 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         });
 
-        section.setClient(sectionClient);
+        previewSection.setClient(sectionClient);
     }
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
 
-        List<Composite> previewChartList = new ArrayList<Composite>();
+        previewChartList = new ArrayList<ExpandableComposite>();
 
         for (final ColumnIndicator columnIndicator : this.treeViewer.getColumnIndicator()) {
 
@@ -370,6 +482,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 public void expansionStateChanged(ExpansionEvent e) {
                     getChartComposite().layout();
                     form.reflow(true);
+                    composite.pack();
                 }
 
             });
@@ -412,15 +525,15 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @param anasisDataComp
      */
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        Section section = createSection(
+        dataFilterSection = createSection(
                 form,
                 anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), false, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        Composite sectionClient = toolkit.createComposite(section);
+        Composite sectionClient = toolkit.createComposite(dataFilterSection);
         dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
         dataFilterComp.addPropertyChangeListener(this);
-        section.setClient(sectionClient);
+        dataFilterSection.setClient(sectionClient);
     }
 
     /**

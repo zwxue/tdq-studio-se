@@ -101,6 +101,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     private Button checkComputeButton;
 
+    private Section columnsComparisonSection = null;
+
     public ColumnsComparisonMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -176,10 +178,12 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         createAnalyzedColumnSetsSection(topComp);
         createRunButton(form);
         this.setDirty(false);
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
+        currentEditor.registerSections(new Section[] { columnsComparisonSection });
     }
 
     private void createAnalyzedColumnSetsSection(Composite parentComp) {
-        Section columnsComparisonSection = this
+        columnsComparisonSection = this
                 .createSection(
                         form,
                         parentComp,

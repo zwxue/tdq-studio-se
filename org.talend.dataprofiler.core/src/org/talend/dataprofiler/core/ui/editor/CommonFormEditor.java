@@ -16,6 +16,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -24,6 +33,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
@@ -36,6 +46,16 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
  * DOC rli class global comment. Detailled comment
  */
 public abstract class CommonFormEditor extends FormEditor {
+
+    private TdEditorToolBar toolBar = null;
+
+    private TdEditorBarWrapper editorBarWrap = null;
+
+    @Override
+    protected void addPages() {
+        // TODO Auto-generated method stub
+
+    }
 
     private static Logger log = Logger.getLogger(CommonFormEditor.class);
 
@@ -67,6 +87,50 @@ public abstract class CommonFormEditor extends FormEditor {
         public void elementMoved(Object originalElement, Object movedElement) {
             close(true);
         }
+    }
+
+    @Override
+    protected Composite createPageContainer(Composite parent) {
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.verticalSpacing = 0;
+        gridLayout.numColumns = 1;
+        gridLayout.marginWidth = 0;
+        gridLayout.marginHeight = 0;
+        parent.setLayout(gridLayout);
+
+        Composite barComp = new Composite(parent, SWT.NONE);
+        GridData gdData = new GridData(GridData.FILL_HORIZONTAL);
+        barComp.setLayoutData(gdData);
+
+        barComp.setLayout(new FormLayout());
+        createToolbar(barComp);
+        FormData data = new FormData();
+        data.top = new FormAttachment(0, 0);
+        data.left = new FormAttachment(0, 0);
+        data.right = new FormAttachment(100, 0);
+        toolBar.getToolbarControl().setLayoutData(data);
+
+        Composite mainParent = new Composite(parent, SWT.NONE);
+        GridData gdData1 = new GridData(GridData.FILL_BOTH);
+        gdData1.grabExcessVerticalSpace = true;
+        mainParent.setLayoutData(gdData1);
+        return super.createPageContainer(mainParent);
+    }
+
+    private void createToolbar(final Composite parent) {
+        editorBarWrap = new TdEditorBarWrapper();
+        toolBar = new TdEditorToolBar(parent, editorBarWrap);
+
+        toolBar.addResizeListener(new ControlListener() {
+
+            public void controlMoved(ControlEvent e) {
+            }
+
+            public void controlResized(ControlEvent e) {
+                parent.getParent().layout(true);
+                parent.layout(true);
+            }
+        });
     }
 
     protected void setInput(IEditorInput input) {
@@ -177,6 +241,16 @@ public abstract class CommonFormEditor extends FormEditor {
     public void setDirty(boolean isDirty) {
         this.isDirty = isDirty;
         firePropertyChange(IEditorPart.PROP_DIRTY);
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method
+     * "register each page sections to CommonFormEditor,that could contribute to Editor actions like collapse or expand all."
+     * .
+     */
+    public void registerSections(Section[] sections) {
+        editorBarWrap.setSections(sections);
     }
 
 }

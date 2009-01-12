@@ -82,6 +82,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     ColumnMasterDetailsPage masterPage;
 
+    private Section resultSection = null;
+
     /**
      * DOC zqin ColumnAnalysisResultPage constructor comment.
      * 
@@ -104,6 +106,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         resultComp.setLayout(new GridLayout());
         createResultSection(resultComp);
 
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
+        currentEditor.registerSections(new Section[] { resultSection });
         form.reflow(true);
     }
 
@@ -113,9 +117,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     }
 
     protected void createResultSection(Composite parent) {
-        Section section = createSection(form, parent,
+        resultSection = createSection(form, parent,
                 DefaultMessagesImpl.getString("ColumnAnalysisResultPage.analysisResult"), true, null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(section);
+        Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -145,7 +149,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             });
         }
 
-        section.setClient(sectionClient);
+        resultSection.setClient(sectionClient);
     }
 
     private void createResultDataComposite(final Composite comp, final ColumnIndicator columnIndicator) {

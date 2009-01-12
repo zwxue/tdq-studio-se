@@ -110,6 +110,12 @@ public class ImageLib {
     /** index icon from SQL Explorer. */
     public static final String INDEX_VIEW = "index.gif"; //$NON-NLS-1$
 
+    /** Collapse all icon. */
+    public static final String COLLAPSE_ALL = "collapseall.gif"; //$NON-NLS-1$
+
+    /** Expand all icon. */
+    public static final String EXPAND_ALL = "expandall.gif"; //$NON-NLS-1$
+
     /**
      * get <code>ImageDescriptor</code> with special imageName.
      * 

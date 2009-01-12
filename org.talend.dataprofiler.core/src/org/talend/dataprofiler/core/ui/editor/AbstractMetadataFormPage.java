@@ -60,8 +60,11 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected ModelElement currentModelElement;
 
+    protected CommonFormEditor currentEditor = null;
+
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+        currentEditor = (CommonFormEditor) editor;
     }
 
     public void initialize(FormEditor editor) {
@@ -83,6 +86,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         topComp.setLayoutData(anasisData);
         topComp.setLayout(new GridLayout(1, false));
         metadataSection = creatMetadataSection(form, topComp);
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
+        currentEditor.registerSections(new Section[] { metadataSection });
     }
 
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);

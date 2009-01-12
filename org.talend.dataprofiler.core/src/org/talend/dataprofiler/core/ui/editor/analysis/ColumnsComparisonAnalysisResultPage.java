@@ -72,6 +72,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     private String setBMatchPercent;
 
+    private Section resultSection = null;
+
+    private Section columnSetSection = null;
+
     /**
      * DOC rli ColumnsComparisonAnalysisResultPage constructor comment.
      * 
@@ -103,6 +107,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         // createResultSection(resultComp);
 
         form.reflow(true);
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
+        currentEditor.registerSections(new Section[] { resultSection, columnSetSection });
     }
 
     @Override
@@ -112,9 +118,9 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     }
 
     private void createAnalyzedColumnSetsSection(Composite parent) {
-        Section section = createSection(form, parent, DefaultMessagesImpl
+        columnSetSection = createSection(form, parent, DefaultMessagesImpl
                 .getString("ColumnsComparisonAnalysisResultPage.analyzedColumnSets"), true, null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(section);
+        Composite sectionClient = toolkit.createComposite(columnSetSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -153,17 +159,17 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         elementsTableViewer.setContentProvider(provider);
         elementsTableViewer.setLabelProvider(provider);
         elementsTableViewer.setInput(rowMatchingIndicatorA);
-        section.setClient(sectionClient);
+        columnSetSection.setClient(sectionClient);
     }
 
     @Override
     protected void createResultSection(Composite parent) {
-        Section section = createSection(form, parent, DefaultMessagesImpl
+        resultSection = createSection(form, parent, DefaultMessagesImpl
                 .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), true, ""); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(section);
+        Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        section.setClient(sectionClient);
+        resultSection.setClient(sectionClient);
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         }
@@ -196,8 +202,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         } else {
             description.append(".");
         }
-        section.setDescription(description.toString());
-        section.layout();
+        resultSection.setDescription(description.toString());
+        resultSection.layout();
     }
 
     private void createTableItems(Table resultTable) {

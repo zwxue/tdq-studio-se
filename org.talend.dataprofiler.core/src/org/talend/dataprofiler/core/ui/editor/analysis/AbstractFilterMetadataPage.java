@@ -123,7 +123,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private Text tableFilterText;
 
-    private static Logger log1 = Logger.getLogger(ConnectionMasterDetailsPage.class);
+    // private static Logger log1 = Logger.getLogger(ConnectionMasterDetailsPage.class);
 
     private Text viewFilterText;
 
@@ -146,6 +146,12 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private TableViewer viewOfCatalogOrSchemaViewer;
 
     private SchemaIndicator currentSelectionSchemaIndicator;
+
+    private Section analysisParamSection = null;
+
+    private Section summarySection = null;
+
+    private Section statisticalSection = null;
 
     /**
      * 
@@ -275,12 +281,15 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         createAnalysisSummarySection(topComp);
         createStatisticalSection(topComp);
         createRunButton(form);
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
+        currentEditor
+                .registerSections(new Section[] { analysisParamSection, statisticalSection, metadataSection, summarySection });
     }
 
     private void createAnalysisParamSection(Composite topComp) {
-        Section statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
+        analysisParamSection = this.createSection(form, topComp, DefaultMessagesImpl
                 .getString("ConnectionMasterDetailsPage.analysisParameter"), false, null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(statisticalSection);
+        Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(2, false));
         Label tableFilterLabel = new Label(sectionClient, SWT.None);
         tableFilterLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.filterOnTable")); //$NON-NLS-1$
@@ -315,11 +324,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             }
 
         });
-        statisticalSection.setClient(sectionClient);
+        analysisParamSection.setClient(sectionClient);
     }
 
     private void createAnalysisSummarySection(Composite topComp) {
-        Section summarySection = this.createSection(form, topComp, DefaultMessagesImpl
+        summarySection = this.createSection(form, topComp, DefaultMessagesImpl
                 .getString("ConnectionMasterDetailsPage.analysisSummary"), false, null); //$NON-NLS-1$
         sumSectionClient = toolkit.createComposite(summarySection);
         sumSectionClient.setLayout(new GridLayout(2, false));
@@ -428,7 +437,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     private void createStatisticalSection(Composite topComp) {
-        Section statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
+        statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
                 .getString("ConnectionMasterDetailsPage.statisticalinformations"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
         sectionClient.setLayout(new GridLayout());

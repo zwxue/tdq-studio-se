@@ -23,6 +23,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
+import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dq.analysis.AnalysisHandler;
 
 /**
@@ -36,8 +37,13 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage {
 
     protected Composite summaryComp;
 
+    protected Section summarySection = null;
+
+    protected CommonFormEditor currentEditor;
+
     public AbstractAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+        currentEditor = (CommonFormEditor) editor;
     }
 
     protected void createFormContent(IManagedForm managedForm) {
@@ -49,15 +55,17 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage {
         summaryComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         summaryComp.setLayout(new GridLayout());
         createSummarySection(form, summaryComp, getColumnAnalysisHandler());
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
+        currentEditor.registerSections(new Section[] { summarySection });
 
     }
 
     protected abstract AnalysisHandler getColumnAnalysisHandler();
 
     protected void createSummarySection(ScrolledForm form, Composite parent, AnalysisHandler analysisHandler) {
-        Section section = createSection(form, parent,
+        summarySection = createSection(form, parent,
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.analysisSummary"), true, null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(section);
+        Composite sectionClient = toolkit.createComposite(summarySection);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -107,7 +115,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage {
         toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.lastSucessfulExecution")); //$NON-NLS-1$
         toolkit.createLabel(executionComp, analysisHandler.getLastExecutionNumberOk());
 
-        section.setClient(sectionClient);
+        summarySection.setClient(sectionClient);
     }
 
     protected abstract void createResultSection(Composite parent);

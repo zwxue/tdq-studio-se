@@ -112,6 +112,12 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private EList<ModelElement> analyzedColumns;
 
+    private Section analysisColSection;
+
+    private Section dataFilterSection;
+
+    private Section previewSection;
+
     public ColumnCorrelationNominalAndIntervalMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -188,13 +194,15 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         createPreviewSection(form, previewComp);
         runButton = createRunButton(form);
+        // MOD 2009-01-12 mzhao, for register sections that would be collapse or expand later.
+        currentEditor.registerSections(new Section[] { analysisColSection, metadataSection, dataFilterSection, previewSection });
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
-        Section section = createSection(form, anasisDataComp, DefaultMessagesImpl
+        analysisColSection = createSection(form, anasisDataComp, DefaultMessagesImpl
                 .getString("ColumnMasterDetailsPage.analyzeColumn"), false, null); //$NON-NLS-1$
 
-        Composite topComp = toolkit.createComposite(section);
+        Composite topComp = toolkit.createComposite(analysisColSection);
         topComp.setLayout(new GridLayout());
 
         Hyperlink clmnBtn = toolkit.createHyperlink(topComp, DefaultMessagesImpl
@@ -217,7 +225,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         treeViewer.addPropertyChangeListener(this);
         treeViewer.setInput(analyzedColumns.toArray());
         treeViewer.setDirty(false);
-        section.setClient(topComp);
+        analysisColSection.setClient(topComp);
 
     }
 
@@ -241,13 +249,13 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
-        Section section = createSection(
+        previewSection = createSection(
                 form,
                 parent,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
-        section.setLayoutData(new GridData(GridData.FILL_BOTH));
+        previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        Composite sectionClient = toolkit.createComposite(section);
+        Composite sectionClient = toolkit.createComposite(previewSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -300,7 +308,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         });
 
-        section.setClient(sectionClient);
+        previewSection.setClient(sectionClient);
     }
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
@@ -422,15 +430,15 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * @param anasisDataComp
      */
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        Section section = createSection(
+        dataFilterSection = createSection(
                 form,
                 anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), false, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        Composite sectionClient = toolkit.createComposite(section);
+        Composite sectionClient = toolkit.createComposite(dataFilterSection);
         dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
         dataFilterComp.addPropertyChangeListener(this);
-        section.setClient(sectionClient);
+        dataFilterSection.setClient(sectionClient);
     }
 
     /**
