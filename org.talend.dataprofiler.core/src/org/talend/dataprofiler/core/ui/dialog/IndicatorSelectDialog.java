@@ -88,7 +88,8 @@ public class IndicatorSelectDialog extends TrayDialog {
         super(parentShell);
         this.title = title;
         this.columnIndicators = columnIndicators;
-        this.setShellStyle(SWT.MAX | SWT.RESIZE);
+        int shellStyle = getShellStyle();
+        setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
     }
 
     /*
