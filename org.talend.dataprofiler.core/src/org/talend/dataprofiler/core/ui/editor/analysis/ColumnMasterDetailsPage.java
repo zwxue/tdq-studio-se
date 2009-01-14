@@ -225,25 +225,25 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         actionBarComp.setLayout(gdLayout);
 
         ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns"));
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns"));
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
-                expandTreeItems(items, true);
+                expandTreeItems(items, false);
                 packOtherColumns();
             }
         });
 
         ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns"));
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns"));
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
-                expandTreeItems(items, false);
+                expandTreeItems(items, true);
                 packOtherColumns();
 
             }
@@ -323,14 +323,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         actionBarComp.setLayout(gdLayout);
 
         ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns"));
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns"));
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
-                        comp.setExpanded(true);
+                        comp.setExpanded(false);
                         comp.getParent().pack();
                         // for (Object composite : comp.getChildren()) {
                         // ((Composite) composite).pack();
@@ -341,14 +341,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         });
 
         ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns"));
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns"));
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
-                        comp.setExpanded(false);
+                        comp.setExpanded(true);
                         comp.getParent().pack();
                         // for (Object composite : comp.getChildren()) {
                         // ((Composite) composite).pack();

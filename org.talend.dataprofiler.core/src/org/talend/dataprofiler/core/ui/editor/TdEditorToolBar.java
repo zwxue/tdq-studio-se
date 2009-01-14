@@ -84,14 +84,14 @@ public class TdEditorToolBar {
     private class CollapseSectionAction extends Action {
 
         public CollapseSectionAction(TdEditorBarWrapper editorBarWrap) {
-            super(DefaultMessagesImpl.getString("CollapseAll"));
+            super(DefaultMessagesImpl.getString("ExpandAll"));
             this.setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPAND_ALL));
         }
 
         @Override
         public void run() {
             for (Section section : editorBarWrap.getSections()) {
-                section.setExpanded(false);
+                section.setExpanded(true);
             }
         }
 
@@ -104,14 +104,14 @@ public class TdEditorToolBar {
     private class ExpandSectionAction extends Action {
 
         public ExpandSectionAction(TdEditorBarWrapper editorBarWrap) {
-            super(DefaultMessagesImpl.getString("ExpandAll"));
+            super(DefaultMessagesImpl.getString("CollapseAll"));
             this.setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.COLLAPSE_ALL));
         }
 
         @Override
         public void run() {
             for (Section section : editorBarWrap.getSections()) {
-                section.setExpanded(true);
+                section.setExpanded(false);
             }
         }
 
