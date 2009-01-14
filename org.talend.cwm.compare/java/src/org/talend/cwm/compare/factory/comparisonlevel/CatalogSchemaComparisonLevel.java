@@ -51,8 +51,26 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
+    private boolean isCompareTabel;
+
+    private boolean isCompareView;
+
     public CatalogSchemaComparisonLevel(Object selectedObj) {
         super(selectedObj);
+    }
+
+    public CatalogSchemaComparisonLevel(EObject parentObj, EObject childObj) {
+        this(parentObj);
+
+        if (childObj != null) {
+            if (SwitchHelpers.TABLE_SWITCH.doSwitch(childObj) != null) {
+                isCompareTabel = true;
+            }
+
+            if (SwitchHelpers.VIEW_SWITCH.doSwitch(childObj) != null) {
+                isCompareView = true;
+            }
+        }
     }
 
     @Override
@@ -127,8 +145,15 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         Package selectedPackage = (Package) selectedObj;
         Package findMatchPackage = findMatchedPackage(selectedPackage, copyedDataProvider);
         List<ColumnSet> columnSets = new ArrayList<ColumnSet>();
-        columnSets.addAll(PackageHelper.getTables(findMatchPackage));
-        columnSets.addAll(PackageHelper.getViews(findMatchPackage));
+
+        if (isCompareTabel) {
+            columnSets.addAll(PackageHelper.getTables(findMatchPackage));
+        }
+
+        if (isCompareView) {
+            columnSets.addAll(PackageHelper.getViews(findMatchPackage));
+        }
+
         Resource leftResource = copyedDataProvider.eResource();
 
         // ComparatorsFactory.sort(columnSets, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
@@ -171,26 +196,44 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
             TdCatalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(toReloadObj);
             TdSchema schemaObj = SwitchHelpers.SCHEMA_SWITCH.doSwitch(toReloadObj);
             if (catalogObj != null) {
-                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
-                CatalogHelper.addTables(tables, catalogObj);
-                columnSetList.addAll(tables);
-                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
-                CatalogHelper.addViews(views, catalogObj);
-                columnSetList.addAll(views);
+                if (isCompareTabel) {
+                    List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
+                    CatalogHelper.addTables(tables, catalogObj);
+                    columnSetList.addAll(tables);
+                }
+
+                if (isCompareView) {
+                    List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
+                    CatalogHelper.addViews(views, catalogObj);
+                    columnSetList.addAll(views);
+                }
             } else if (schemaObj != null) {
-                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, schemaObj, null, true);
-                SchemaHelper.addTables(tables, schemaObj);
-                columnSetList.addAll(tables);
-                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, schemaObj, null, true);
-                SchemaHelper.addViews(views, schemaObj);
-                columnSetList.addAll(views);
+                if (isCompareTabel) {
+                    List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, schemaObj, null, true);
+                    SchemaHelper.addTables(tables, schemaObj);
+                    columnSetList.addAll(tables);
+                }
+
+                if (isCompareView) {
+                    List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, schemaObj, null, true);
+                    SchemaHelper.addViews(views, schemaObj);
+                    columnSetList.addAll(views);
+                }
+
             } else {
-                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, (Schema) toReloadObj, null, true);
-                SchemaHelper.addTables(tables, (Schema) toReloadObj);
-                columnSetList.addAll(tables);
-                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, (Schema) toReloadObj, null, true);
-                SchemaHelper.addViews(views, (Schema) toReloadObj);
-                columnSetList.addAll(views);
+                if (isCompareTabel) {
+                    List<TdTable> tables = DqRepositoryViewService
+                            .getTables(tempReloadProvider, (Schema) toReloadObj, null, true);
+                    SchemaHelper.addTables(tables, (Schema) toReloadObj);
+                    columnSetList.addAll(tables);
+                }
+
+                if (isCompareView) {
+                    List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, (Schema) toReloadObj, null, true);
+                    SchemaHelper.addViews(views, (Schema) toReloadObj);
+                    columnSetList.addAll(views);
+                }
+
             }
         } catch (TalendException e1) {
             throw new ReloadCompareException(e1);

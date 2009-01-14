@@ -38,12 +38,13 @@ public final class ComparisonLevelFactory {
 
         if (selectedObject instanceof AbstractDatabaseFolderNode) {
             AbstractDatabaseFolderNode dbFolderNode = (AbstractDatabaseFolderNode) selectedObject;
-            EObject theEObject = dbFolderNode.getParent();
-            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(theEObject);
+            EObject parentEObject = dbFolderNode.getParent();
+            EObject childEObject = (EObject) dbFolderNode.getChildren()[0];
+            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(parentEObject);
             if (ctatlogSwtich != null) {
-                comparisonLevel = new CatalogSchemaComparisonLevel(ctatlogSwtich);
+                comparisonLevel = new CatalogSchemaComparisonLevel(ctatlogSwtich, childEObject);
             }
-            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(theEObject);
+            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(parentEObject);
             if (columnSet != null) {
                 comparisonLevel = new TableViewComparisonLevel(columnSet);
             }
