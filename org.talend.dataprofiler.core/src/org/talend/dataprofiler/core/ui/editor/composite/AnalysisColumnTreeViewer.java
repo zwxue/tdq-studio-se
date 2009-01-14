@@ -95,6 +95,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.FrequencyIndicator;
@@ -166,8 +167,19 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             @Override
             protected boolean isValidItem(TreeItem item) {
-                IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                return indicatorUnit != null;
+                if (item == null) {
+                    return false;
+                }
+                Object itemData = item.getData(INDICATOR_UNIT_KEY);
+                if (itemData != null) {
+                    IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                    if (indicatorUnit != null && !(indicatorUnit.getIndicator() instanceof CompositeIndicator)) {
+                        return true;
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
             }
 
             protected String getItemTooltipText(TreeItem item) {
