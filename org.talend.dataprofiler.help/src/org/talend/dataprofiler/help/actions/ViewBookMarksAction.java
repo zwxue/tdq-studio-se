@@ -9,7 +9,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataprofiler.help.TdHelpView;
+import org.talend.dataprofiler.help.BookmarksHelpView;
 
 @SuppressWarnings("restriction")
 public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
@@ -34,9 +34,9 @@ public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
                     IWorkbenchPage page = window.getActivePage();
                     if (page != null) {
                         try {
-                            IViewPart part = page.findView(TdHelpView.HELP_VIEW_ID);
+                            IViewPart part = page.findView(BookmarksHelpView.HELP_VIEW_ID);
                             if (part == null) {
-                                page.showView(TdHelpView.HELP_VIEW_ID);
+                                page.showView(BookmarksHelpView.HELP_VIEW_ID);
                             }
                         } catch (PartInitException e) {
                         }

@@ -24,6 +24,7 @@
             visible="true">
          <action
                class="org.talend.dataprofiler.help.actions.ViewBookMarksAction"
+               icon="icons/bookmarks_view.gif"
                id="org.talend.dataprofiler.help.openBookmarkAction"
                label="View Bookmarks"
                menubarPath="help/helpStart"
@@ -47,9 +48,10 @@
          point="org.eclipse.ui.views">
       <view
             category="org.eclipse.help.ui"
-            class="org.talend.dataprofiler.help.TdHelpView"
-            id="org.talend.dataprofiler.help.TdHelpView"
-            name="Book view"
+            class="org.talend.dataprofiler.help.BookmarksHelpView"
+            icon="icons/bookmarks_view.gif"
+            id="org.talend.dataprofiler.help.BookmarksHelpView"
+            name="Bookmarks"
             restorable="true">
       </view>
    </extension>
