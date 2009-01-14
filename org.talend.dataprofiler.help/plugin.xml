@@ -26,7 +26,7 @@
                class="org.talend.dataprofiler.help.actions.ViewBookMarksAction"
                icon="icons/bookmarks_view.gif"
                id="org.talend.dataprofiler.help.openBookmarkAction"
-               label="View Bookmarks"
+               label="%ViewBookmark"
                menubarPath="help/helpStart"
                style="push">
          </action>
@@ -51,7 +51,7 @@
             class="org.talend.dataprofiler.help.BookmarksHelpView"
             icon="icons/bookmarks_view.gif"
             id="org.talend.dataprofiler.help.BookmarksHelpView"
-            name="Bookmarks"
+            name="%Bookmarks"
             restorable="true">
       </view>
    </extension>
