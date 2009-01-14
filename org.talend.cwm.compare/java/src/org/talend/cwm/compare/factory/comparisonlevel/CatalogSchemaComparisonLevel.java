@@ -42,6 +42,7 @@ import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
@@ -59,17 +60,15 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         super(selectedObj);
     }
 
-    public CatalogSchemaComparisonLevel(EObject parentObj, EObject childObj) {
+    public CatalogSchemaComparisonLevel(EObject parentObj, int folderType) {
         this(parentObj);
 
-        if (childObj != null) {
-            if (SwitchHelpers.TABLE_SWITCH.doSwitch(childObj) != null) {
-                isCompareTabel = true;
-            }
+        if (folderType == IFolderNode.TABLEFOLDER_NODE_TYPE) {
+            isCompareTabel = true;
+        }
 
-            if (SwitchHelpers.VIEW_SWITCH.doSwitch(childObj) != null) {
-                isCompareView = true;
-            }
+        if (folderType == IFolderNode.VIEWFOLDER_NODE_TYPE) {
+            isCompareView = true;
         }
     }
 

@@ -39,10 +39,10 @@ public final class ComparisonLevelFactory {
         if (selectedObject instanceof AbstractDatabaseFolderNode) {
             AbstractDatabaseFolderNode dbFolderNode = (AbstractDatabaseFolderNode) selectedObject;
             EObject parentEObject = dbFolderNode.getParent();
-            EObject childEObject = (EObject) dbFolderNode.getChildren()[0];
+            int folderNodeType = dbFolderNode.getFolderNodeType();
             Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(parentEObject);
             if (ctatlogSwtich != null) {
-                comparisonLevel = new CatalogSchemaComparisonLevel(ctatlogSwtich, childEObject);
+                comparisonLevel = new CatalogSchemaComparisonLevel(ctatlogSwtich, folderNodeType);
             }
             ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(parentEObject);
             if (columnSet != null) {
