@@ -17,6 +17,7 @@ import java.util.Date;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -100,7 +101,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         scomp.setExpandHorizontal(true);
         scomp.setExpandVertical(true);
         scomp.setMinWidth(400);
-        scomp.setMinHeight(300);
+        scomp.setMinHeight(350);
         scomp.setContent(composite);
 
         gContainer = new Group(composite, SWT.NONE);
@@ -122,6 +123,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
         createDefault();
         getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+        initializeToolBar();
 
     }
 
@@ -509,6 +511,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 control.dispose();
             }
         }
+    }
+
+    private void initializeToolBar() {
+        IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
     }
 
 }
