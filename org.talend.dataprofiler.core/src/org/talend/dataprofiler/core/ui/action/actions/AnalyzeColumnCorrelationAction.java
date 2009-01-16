@@ -96,7 +96,17 @@ public class AnalyzeColumnCorrelationAction extends Action {
     }
 
     private boolean isContainNumber() {
-        TdColumn column = (TdColumn) selection.getFirstElement();
-        return Java2SqlType.isNumbericInSQL(column.getJavaType());
+        if (!selection.isEmpty()) {
+            Iterator it = selection.iterator();
+
+            while (it.hasNext()) {
+                TdColumn column = (TdColumn) it.next();
+                if (Java2SqlType.isNumbericInSQL(column.getJavaType())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
