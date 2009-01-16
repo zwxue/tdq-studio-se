@@ -181,7 +181,7 @@
     <taggedValue xmi:id="_GrBFETh9Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of null rows"/>
     <sqlGenericExpression xmi:id="_GrBFEjh9Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> WHERE &lt;%=__COLUMN_NAMES__%> IS NULL &lt;%=__AND_WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
-  <indicatorDefinitions xmi:id="_jMh4gJE3Ed2HGNmGoaS-_w" name="Row Comparison" label="Row Comparison">
+  <indicatorDefinitions xmi:id="_jMh4gJE3Ed2HGNmGoaS-_w" name="Row Comparison" categories="_as5yEJOuEd2Iyo0dtkB9pA" label="Row Comparison">
     <taggedValue xmi:id="_l9ZdoJE3Ed2HGNmGoaS-_w" tag="Purpose" value="Compare content of two column sets"/>
     <taggedValue xmi:id="_txkkkJE3Ed2HGNmGoaS-_w" tag="Description" value="Counts the number of data from a column set A that match data of a column set B"/>
     <sqlGenericExpression xmi:id="_4xpm0JE3Ed2HGNmGoaS-_w" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> LEFT JOIN &lt;%=__TABLE_NAME_2__%> ON (&lt;%=__JOIN_CLAUSE__%>) WHERE (&lt;%=__WHERE_CLAUSE__%>)" language="SQL"/>
