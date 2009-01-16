@@ -171,8 +171,10 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
             throw new ReloadCompareException(returnProvider.getMessage());
         }
         tempReloadProvider = returnProvider.getObject();
+        tempReloadProvider.setComponent(oldDataProvider.getComponent());
         DqRepositoryViewService.saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
                 tempConnectionFile);
+        tempReloadProvider.setComponent(null);
     }
 
     // private void testInit() throws ReloadCompareException {
