@@ -249,12 +249,12 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
      * @return
      * @throws ReloadCompareException
      */
-    private DiffModel openDiffCompareEditor(Resource leftResource, Resource rightResource, Map<String, Object> options)
+    private DiffModel openDiffCompareEditor(Resource leftResource, Resource rightResource, Map<String, Object> opt)
             throws ReloadCompareException {
 
         MatchModel match = null;
         try {
-            match = MatchService.doResourceMatch(leftResource, rightResource, options);
+            match = MatchService.doResourceMatch(leftResource, rightResource, opt);
         } catch (InterruptedException e) {
             throw new ReloadCompareException(e);
         }
@@ -321,22 +321,22 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         }
     }
 
-    protected TypedReturnCode<TdDataProvider> getRefreshedDataProvider(TdDataProvider oldDataProvider) {
-        TypedReturnCode<TdProviderConnection> tdProviderConnection = DataProviderHelper.getTdProviderConnection(oldDataProvider);
+    protected TypedReturnCode<TdDataProvider> getRefreshedDataProvider(TdDataProvider prevDataProvider) {
+        TypedReturnCode<TdProviderConnection> tdProviderConnection = DataProviderHelper.getTdProviderConnection(prevDataProvider);
         String urlString = tdProviderConnection.getObject().getConnectionString();
         String driverClassName = tdProviderConnection.getObject().getDriverClassName();
         Properties properties = new Properties();
         properties.setProperty(PluginConstant.USER_PROPERTY, TaggedValueHelper.getValue(PluginConstant.USER_PROPERTY,
                 tdProviderConnection.getObject()));
         properties.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, DataProviderHelper
-                .getClearTextPassword(oldDataProvider));
+                .getClearTextPassword(prevDataProvider));
         DBConnectionParameter connectionParameters = new DBConnectionParameter();
 
-        connectionParameters.setName(oldDataProvider.getName());
-        connectionParameters.setAuthor(TaggedValueHelper.getAuthor(oldDataProvider));
-        connectionParameters.setDescription(TaggedValueHelper.getDescription(oldDataProvider));
-        connectionParameters.setPurpose(TaggedValueHelper.getPurpose(oldDataProvider));
-        connectionParameters.setStatus(TaggedValueHelper.getDevStatus(oldDataProvider).getLiteral());
+        connectionParameters.setName(prevDataProvider.getName());
+        connectionParameters.setAuthor(TaggedValueHelper.getAuthor(prevDataProvider));
+        connectionParameters.setDescription(TaggedValueHelper.getDescription(prevDataProvider));
+        connectionParameters.setPurpose(TaggedValueHelper.getPurpose(prevDataProvider));
+        connectionParameters.setStatus(TaggedValueHelper.getDevStatus(prevDataProvider).getLiteral());
 
         connectionParameters.setJdbcUrl(urlString);
         connectionParameters.setDriverClassName(driverClassName);

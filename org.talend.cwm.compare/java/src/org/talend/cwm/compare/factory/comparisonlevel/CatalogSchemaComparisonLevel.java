@@ -13,9 +13,7 @@
 package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
@@ -23,7 +21,6 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
@@ -81,9 +78,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected boolean compareWithReloadObject() throws ReloadCompareException {
 
-        // add option for ignoring some elements
-        Map<String, Object> options = new HashMap<String, Object>();
-        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        // MOD scorreia 2009-01-16 option initialized in CTOR
         MatchModel match = null;
         try {
             match = MatchService.doContentMatch((Package) selectedObj, getSavedReloadObject(), options);
