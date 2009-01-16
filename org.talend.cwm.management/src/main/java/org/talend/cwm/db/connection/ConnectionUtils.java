@@ -81,6 +81,8 @@ public final class ConnectionUtils {
             Connection connection = null;
             if (driverClassName.equals("org.hsqldb.jdbcDriver")) {
                 connection = DriverManager.getConnection(url, props);
+            } else if (driverClassName.equals("org.sqlite.JDBC")) {
+                connection = DriverManager.getConnection(url);
             } else {
                 connection = driver.connect(url, props);
             }

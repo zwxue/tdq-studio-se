@@ -110,7 +110,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
 
         Label label = new Label(tempComp, SWT.NULL);
         label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.login")); //$NON-NLS-1$
-        Text username = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
+        final Text username = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
 
         GridData fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
         username.setLayoutData(fullHorizontal);
@@ -149,11 +149,17 @@ class DatabaseWizardPage extends AbstractWizardPage {
                 if (dbTypeCombo.getText().trim().equals("Generic JDBC")) {
                     updateStatus(IStatus.WARNING, UIMessages.MSG_SELECT_GENERIC_JDBC);
                 }
+                if (dbTypeCombo.getText().trim().equals("SQLite3")) {
+                    username.setEnabled(false);
+                    passwordText.setEnabled(false);
+                }
                 String selectedItem = ((Combo) e.getSource()).getText();
                 setDBType(selectedItem);
                 dbTypeSwitchFlag = true;
+
                 rebuildJDBCControls(SupportDBUrlStore.getInstance().getDBUrlType(selectedItem));
             }
+
         });
 
         String defalutItem = SupportDBUrlType.MYSQLDEFAULTURL.getDBKey();
@@ -291,6 +297,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
         Point oldSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
         if (URLSetupControlFactory.hasControl(dbType)) {
+
             disposeOfCurrentJDBCControls();
 
             this.urlSetupControl = URLSetupControlFactory.create(dbType, this.container, connectionParam);
@@ -307,6 +314,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
             this.urlSetupControl.addPropertyChangeListener(this.listener);
 
             resizeWindow(windowSize, oldSize);
+            // }
 
         } else if (this.jdbcLabel == null || this.jdbcUrl == null) {
 
@@ -391,12 +399,19 @@ class DatabaseWizardPage extends AbstractWizardPage {
             }
             setPageComplete(complete);
         } else {
-            complete &= (this.connectionURL != null && this.connectionURL.trim().length() > 0 && ((this.userid != null && this.userid
-                    .trim().length() > 0)
-            // MOD scorreia bug 5366 fixed: allow MSSQL user to connect without setting a login/password
-            || SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(
-                    SupportDBUrlStore.getInstance().getDBPameterProperties(connectionURL).getProperty(
-                            org.talend.dq.PluginConstant.DBTYPE_PROPERTY))));
+
+            String dbTypeName = this.connectionParam.getSqlTypeName();
+
+            if (!SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(dbTypeName)) {
+                if (!SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbTypeName)) {
+                    complete &= this.userid != null && !this.userid.trim().equals("");
+                } else {
+                    // deal with sqlite;
+                    String filename = this.connectionParam.getFilePath();
+                    complete &= filename != null && !filename.trim().equals("");
+                }
+            }
+
             if (checkButton != null) {
                 checkButton.setEnabled(complete);
             }
@@ -422,6 +437,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
     }
 
     public void setDBType(String dbType) {
+        this.connectionParam.setSqlTypeName(dbType);
         this.connectionParam.setDriverClassName(SupportDBUrlStore.getInstance().getDBUrlType(dbType).getDbDriver());
     }
 

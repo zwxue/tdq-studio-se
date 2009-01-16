@@ -24,12 +24,32 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     private String driverPath;
 
+    private String sqlTypeName;
+
+    private String filePath;
+
+    public void setSqlTypeName(String sqlTypeName) {
+        this.sqlTypeName = sqlTypeName;
+    }
+
+    public String getSqlTypeName() {
+        return sqlTypeName;
+    }
+
     public String getDriverPath() {
         return driverPath;
     }
 
     public void setDriverPath(String driverPath) {
         this.driverPath = driverPath;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     private String jdbcUrl;

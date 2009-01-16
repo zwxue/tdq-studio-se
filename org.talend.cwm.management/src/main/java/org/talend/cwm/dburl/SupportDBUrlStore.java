@@ -117,6 +117,8 @@ public final class SupportDBUrlStore {
                 dbType.getParamSeprator() != null ? PluginConstant.DEFAULT_PARAMETERS : PluginConstant.EMPTY_STRING);
     }
 
+    // }
+
     /**
      * Get dburl which content are replaced by parameter value.
      * 
@@ -135,7 +137,7 @@ public final class SupportDBUrlStore {
         if (propUrlValue == null) {
             return PluginConstant.EMPTY_STRING;
         }
-
+        
         String argHost = (host == null) ? PluginConstant.EMPTY_STRING : host;
         String argPort = (port == null) ? PluginConstant.EMPTY_STRING : port;
         String argDBName = (dbName == null) ? PluginConstant.EMPTY_STRING : dbName;
@@ -184,8 +186,14 @@ public final class SupportDBUrlStore {
                 MessageFormat mf = new MessageFormat(value);
                 Object[] parseResult = mf.parse(connectionStr, new ParsePosition(0));
                 if (parseResult != null) {
-                    paramProperties.setProperty(PluginConstant.HOSTNAME_PROPERTY, (String) parseResult[0]);
-                    paramProperties.setProperty(PluginConstant.PORT_PROPERTY, (String) parseResult[1]);
+                    if (parseResult[0] != null) {
+                        paramProperties.setProperty(PluginConstant.HOSTNAME_PROPERTY, (String) parseResult[0]);
+                    }
+
+                    if (parseResult[1] != null) {
+                        paramProperties.setProperty(PluginConstant.PORT_PROPERTY, (String) parseResult[1]);
+                    }
+
                     break;
                 }
             }

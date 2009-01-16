@@ -158,12 +158,15 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         String urlValue = (trc.isOk()) ? trc.getObject().getConnectionString() : PluginConstant.EMPTY_STRING;
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
         urlText.setEnabled(false);
-
+        if (trc.getObject().getDriverClassName().startsWith("org.sqlite")) {
+            loginText.setEnabled(false);
+            passwordText.setEnabled(false);
+        }
         ModifyListener listener = new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                saveTextChange();
+                // saveTextChange();
             }
 
         };

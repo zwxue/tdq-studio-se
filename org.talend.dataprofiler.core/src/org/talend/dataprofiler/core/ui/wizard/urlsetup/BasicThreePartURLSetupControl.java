@@ -153,6 +153,80 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             });
 
+        } else if (dbLiteral.trim().equals("SQLite3")) {
+            GridLayout layout = new GridLayout();
+            layout.numColumns = 3;
+            parent.setLayout(layout);
+
+            Label labelfile = new Label(parent, SWT.NONE);
+            final Text fileText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            final Button selectFile = new Button(parent, SWT.PUSH);
+            Label labelUrl = new Label(parent, SWT.NONE);
+            final Text urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+
+            labelfile.setText("File");
+            fileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            fileText.setEditable(false);
+            fileText.addModifyListener(new ModifyListener() {
+
+                public void modifyText(ModifyEvent e) {
+                    connectionParam.setFilePath(fileText.getText());
+                }
+
+            });
+
+            selectFile.setText("Browser...");
+
+            labelUrl.setText("Url");
+            urlText.setEditable(false);
+            urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", ""));
+            urlText.setText(getConnectionURL());
+            urlText.setEditable(false);
+
+            urlText.addKeyListener(new KeyAdapter() {
+
+                public void keyReleased(KeyEvent e) {
+                    setConnectionURL(urlText.getText());
+                }
+
+            });
+
+            urlText.addFocusListener(new FocusAdapter() {
+
+                public void focusGained(FocusEvent e) {
+                    urlText.setEditable(true);
+                }
+
+                public void focusLost(FocusEvent e) {
+                    urlText.setEditable(false);
+                }
+            });
+
+            selectFile.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent event) {
+                    FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
+                    String filename = dialog.open();
+                    if (filename != null) {
+                        fileText.setText(filename);
+                    } else {
+                        fileText.setText("");
+                    }
+                    String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", "");
+                    String validURL = getValidURL(url);
+                    setConnectionURL(validURL);
+                    urlText.setText(getConnectionURL());
+                }
+
+                private String getValidURL(String url) {
+                    if (url.indexOf("\\") != 0) {
+                        url = url.replace("\\", "\\\\");
+                    }
+                    return url;
+                }
+            });
+
         } else {
             GridLayout layout = new GridLayout();
             layout.numColumns = 2;
