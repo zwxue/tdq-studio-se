@@ -169,7 +169,21 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 connectionIndicator.setCatalogCount(connectionIndicator.getCatalogCount() + 1);
                 // increment schema count
                 connectionIndicator.setSchemaCount(connectionIndicator.getSchemaCount() + object.getSchemaCount());
+
+                // MOD scorreia 2009-01-16 increment other counts
+                incrementCounts(connectionIndicator, object);
+
                 return true;
+            }
+
+           
+            private void incrementCounts(final ConnectionIndicator connIndicator, SchemaIndicator childIndicator) {
+                connIndicator.setTableCount(connIndicator.getTableCount() + childIndicator.getTableCount());
+                connIndicator.setTableRowCount(connIndicator.getTableRowCount() + childIndicator.getTableRowCount());
+                connIndicator.setViewRowCount(connIndicator.getViewRowCount() + childIndicator.getViewRowCount());
+                connIndicator.setTableRowCount(connIndicator.getTableRowCount() + childIndicator.getTableRowCount());
+                connIndicator.setKeyCount(connIndicator.getKeyCount() + childIndicator.getKeyCount());
+                connIndicator.setIndexCount(connIndicator.getIndexCount() + childIndicator.getIndexCount());
             }
 
             /*
@@ -183,6 +197,9 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
             public Boolean caseSchemaIndicator(SchemaIndicator object) {
                 connectionIndicator.addSchemaIndicator(object);
                 connectionIndicator.setSchemaCount(connectionIndicator.getSchemaCount() + 1);
+
+                // MOD scorreia 2009-01-16 increment other counts
+                incrementCounts(connectionIndicator, object);
                 return true;
             }
 
