@@ -19,6 +19,7 @@ import java.sql.Driver;
 
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -47,6 +48,8 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
  * 
  */
 public class BasicThreePartURLSetupControl extends URLSetupControl {
+
+    private static Logger log = Logger.getLogger(BasicThreePartURLSetupControl.class);
 
     private Text urlText;
 
@@ -214,16 +217,13 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                         fileText.setText("");
                     }
                     String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", "");
-                    String validURL = getValidURL(url);
-                    setConnectionURL(validURL);
-                    urlText.setText(getConnectionURL());
-                }
 
-                private String getValidURL(String url) {
-                    if (url.indexOf("\\") != 0) {
-                        url = url.replace("\\", "\\\\");
+                    if (log.isInfoEnabled()) {
+                        log.info("the formated url is :" + url);
                     }
-                    return url;
+
+                    setConnectionURL(url);
+                    urlText.setText(getConnectionURL());
                 }
             });
 

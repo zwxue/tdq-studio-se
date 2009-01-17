@@ -152,6 +152,9 @@ class DatabaseWizardPage extends AbstractWizardPage {
                 if (dbTypeCombo.getText().trim().equals("SQLite3")) {
                     username.setEnabled(false);
                     passwordText.setEnabled(false);
+                } else {
+                    username.setEnabled(true);
+                    passwordText.setEnabled(true);
                 }
                 String selectedItem = ((Combo) e.getSource()).getText();
                 setDBType(selectedItem);
@@ -314,7 +317,6 @@ class DatabaseWizardPage extends AbstractWizardPage {
             this.urlSetupControl.addPropertyChangeListener(this.listener);
 
             resizeWindow(windowSize, oldSize);
-            // }
 
         } else if (this.jdbcLabel == null || this.jdbcUrl == null) {
 
