@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -57,7 +59,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.TableViewerDNDDecorate;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -253,12 +254,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         table.setDragDetect(true);
         table.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.reorderElementsByDragAnddrop")); //$NON-NLS-1$
         final TableColumn columnHeader = new TableColumn(table, SWT.CENTER);
-        // MOD xqliu 2009-01-14 bug 5940
-        TableColumn[] columns = new TableColumn[1];
-        columns[0] = columnHeader;
-        ColumnSetSorter[][] tableSorters = { { new ColumnSetSorter(ColumnSetSorter.COLUMN),
-                new ColumnSetSorter(-ColumnSetSorter.COLUMN) } };
-        columnHeader.addSelectionListener(new ColumnSortListener(columns, 0, columnsElementViewer, tableSorters));
 
         columnHeader.setWidth(260);
         columnHeader.setAlignment(SWT.CENTER);
@@ -335,8 +330,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         sortButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                // TODO Auto-generated method stub
-
+                // MOD xqliu 2009-01-17, bug 5940: achieve the function of sort button
+                sortElement(columnList, columnsElementViewer);
             }
 
         });
@@ -553,6 +548,34 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
         }
         columnsElementViewer.setInput(columnList);
+    }
+
+    /**
+     * 
+     * DOC xqliu Comment method "sortElement".
+     * 
+     * @param columnList
+     * @param columnsElementViewer
+     * @param asc
+     */
+    private void sortElement(List<Column> columnList, TableViewer columnsElementViewer) {
+        Collections.sort(columnList, new CaseInsensitiveComparator());
+        columnsElementViewer.setInput(columnList);
+    }
+
+    /**
+     * 
+     * DOC xqliu ColumnsComparisonMasterDetailsPage class global comment. Detailled comment
+     */
+    private class CaseInsensitiveComparator implements Comparator {
+
+        public int compare(Object element1, Object element2) {
+            Column col1 = (Column) element1;
+            Column col2 = (Column) element2;
+            String lower1 = col1.getName().toLowerCase();
+            String lower2 = col2.getName().toLowerCase();
+            return lower1.compareTo(lower2);
+        }
     }
 
     /**
