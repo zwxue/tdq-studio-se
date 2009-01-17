@@ -405,9 +405,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 					ColumnIndicator columnIndicator = (ColumnIndicator) treeItem
 							.getData(COLUMN_INDICATOR_KEY);
 					TdColumn column = columnIndicator.getTdColumn();
+					ModelElement me = getAnalysis();
+					me.setName(column.getName());
 					if (column instanceof ModelElement) {
-						(new TdAddTaskAction(newTree.getShell(), getAnalysis()))
-								.run();
+						(new TdAddTaskAction(newTree.getShell(), me)).run();
 					}
 				}
 
