@@ -86,8 +86,14 @@ public final class JavaSqlFactory {
         // hcheng decrypt password here and update props object
         String pass = props.getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
         if (pass != null) {
-            props.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, DataProviderHelper
-                    .getClearTextPassword(providerConnection));
+            String clearTextPassword = DataProviderHelper.getClearTextPassword(providerConnection);
+            if (clearTextPassword == null) {
+                rc
+                        .setMessage("Unable to decrypt given password correctly. It's probably due to a change in the passphrase used in encryption.");
+                rc.setOk(false);
+            } else {
+                props.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, clearTextPassword);
+            }
         }
         try {
             Connection connection = ConnectionUtils.createConnection(url, driverClassName, props);

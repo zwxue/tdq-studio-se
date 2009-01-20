@@ -16,7 +16,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
@@ -56,6 +55,9 @@ public final class SoftwareSystemManager {
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
         if (softwareSystem == null) {
             // else create it and store it
+            if (log.isDebugEnabled()) {
+                log.debug("Trying to create the softwareSystem object from the given data provider " + dataProvider.getName());
+            }
             try {
                 // create it
                 TypedReturnCode<Connection> trc = JavaSqlFactory.createConnection(dataProvider);
@@ -71,8 +73,10 @@ public final class SoftwareSystemManager {
             } catch (SQLException e) {
                 log.error(e, e);
             }
+        } else if (log.isDebugEnabled()) { // only debug
+            log.debug("The softwareSystem " + softwareSystem.getName() + " has been found for the given data provider "
+                    + dataProvider.getName());
         }
-        // else not null
         return softwareSystem;
     }
 
