@@ -62,7 +62,7 @@ public final class ExampleLauncher {
      * @param args Arguments of the launch.
      */
     public static void main(String[] args) {
-        EMFUtil util = new EMFUtil(); // MODSCA 2008-03-31 added for correct loading of XMI files.
+        new EMFUtil(); // MODSCA 2008-03-31 added for correct loading of XMI files.
 
         if (args.length == 2 && new File(args[0]).canRead() && new File(args[1]).canRead()) {
             // Creates the resourceSet where we'll load the models
