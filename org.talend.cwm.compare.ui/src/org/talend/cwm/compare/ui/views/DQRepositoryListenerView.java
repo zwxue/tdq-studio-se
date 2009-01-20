@@ -44,7 +44,7 @@ public class DQRepositoryListenerView extends ViewPart implements ISelectionList
 
     public void createPartControl(Composite parent) {
         label = new Label(parent, 0);
-        label.setText(Messages.getString("DQRepositoryListenerView.helloWorld")); //$NON-NLS-1$
+        label.setText(""); //$NON-NLS-1$
         getViewSite().getPage().addSelectionListener(this);
     }
 
