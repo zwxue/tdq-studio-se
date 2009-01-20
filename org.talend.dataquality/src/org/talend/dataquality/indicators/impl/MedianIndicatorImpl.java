@@ -412,11 +412,11 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
                 log.error("Median is null!!");
                 return false;
             }
-            this.setMedian(this.getRealValue(javaType, med));
+            this.setMedian(MedianIndicatorImpl.getRealValue(javaType, med));
             return true;
         } else if (objects.size() == 2) { // case when 2 rows are returned
-            Double r1 = this.getRealValue(javaType, String.valueOf(objects.get(0)[0]));
-            Double r2 = this.getRealValue(javaType, String.valueOf(objects.get(1)[0]));
+            Double r1 = MedianIndicatorImpl.getRealValue(javaType, String.valueOf(objects.get(0)[0]));
+            Double r2 = MedianIndicatorImpl.getRealValue(javaType, String.valueOf(objects.get(1)[0]));
             if (r1 == null || r2 == null) {
                 log.error("Cannot compute the median: At least one of the rows is null: " + r1 + " | " + r2);
                 return false;

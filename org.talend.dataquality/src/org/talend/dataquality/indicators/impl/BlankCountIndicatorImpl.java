@@ -8,7 +8,6 @@ package org.talend.dataquality.indicators.impl;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -29,7 +28,6 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  */
 public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCountIndicator {
 
-    private static Logger log = Logger.getLogger(BlankCountIndicatorImpl.class);
 
     /**
      * The default value of the '{@link #getBlankCount() <em>Blank Count</em>}' attribute.

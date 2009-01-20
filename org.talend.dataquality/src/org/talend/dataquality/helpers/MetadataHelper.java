@@ -43,7 +43,7 @@ public class MetadataHelper {
         return DataminingType.get(column.getContentType());
     }
     
-    public static DataminingType getDefaultDataminingType (int javaSqlType) {
+    public static DataminingType getDefaultDataminingType(int javaSqlType) {
         
         if (Java2SqlType.isTextInSQL(javaSqlType)) {
             return DataminingType.NOMINAL;

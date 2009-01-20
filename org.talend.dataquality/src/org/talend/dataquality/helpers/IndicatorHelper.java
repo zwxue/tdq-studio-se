@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
@@ -54,8 +53,9 @@ import org.talend.dataquality.indicators.ValueIndicator;
  */
 public final class IndicatorHelper {
 
-    private static Logger log = Logger.getLogger(IndicatorHelper.class);
-
+    /**
+     * The available threshold types.
+     */
     private static enum ThresholdType {
         VALUE_THRESHOLD("Value Threshold"),
         PERCENTAGE_THRESHOLD("Percentage Threshold");

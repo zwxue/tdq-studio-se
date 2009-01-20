@@ -31,7 +31,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  * 
  * Helper class.
  */
-public class AnalysisHelper {
+public final class AnalysisHelper {
 
     private AnalysisHelper() {
     }

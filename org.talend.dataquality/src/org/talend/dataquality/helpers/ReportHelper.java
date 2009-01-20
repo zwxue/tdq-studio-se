@@ -31,6 +31,9 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  */
 public final class ReportHelper {
 
+    /**
+     * The report types.
+     */
     public static enum ReportType {
         BASIC("Basic", "/reports/column/report_01.jrxml"),
         EVOLUTION("Evolution", "/reports/column/report_02.jrxml"),

@@ -105,7 +105,7 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
             return null;
         }
 
-    };
+    }
 
     protected GenericSum<?> genericSum;
 

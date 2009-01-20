@@ -8,7 +8,6 @@ package org.talend.dataquality.indicators.impl;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -28,8 +27,6 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * @generated
  */
 public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements AverageLengthIndicator {
-
-    private static Logger log = Logger.getLogger(AverageLengthIndicatorImpl.class);
 
     /**
      * The default value of the '{@link #getSumLength() <em>Sum Length</em>}' attribute.

@@ -57,7 +57,7 @@ public class BinsHandler {
         return bins;
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         double min = 33;
         double max = 100;
         int n = 6;
