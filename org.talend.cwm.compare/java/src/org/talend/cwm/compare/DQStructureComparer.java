@@ -27,11 +27,11 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
  */
 public final class DQStructureComparer {
 
-    private static final String NEED_RELOAD_ELEMENTS_PRV = ".needReloadElements.comp";
+    private static final String NEED_RELOAD_ELEMENTS_PRV = ".needReloadElements.comp"; //$NON-NLS-1$
 
-    private static final String RESULT_EMFDIFF_FILE = ".result.emfdiff";
+    private static final String RESULT_EMFDIFF_FILE = ".result.emfdiff"; //$NON-NLS-1$
 
-    private static final String TEMP_REFRESH_FILE = ".refresh.comp";
+    private static final String TEMP_REFRESH_FILE = ".refresh.comp"; //$NON-NLS-1$
 
     private static final Class<DQStructureComparer> THAT = DQStructureComparer.class;
 
