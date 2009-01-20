@@ -215,13 +215,14 @@ public final class DataProviderHelper {
     }
 
     /**
-     * Method "setSoftwareSystem".
+     * Method "setSoftwareSystem" sets the relation between the dataprovider and the software system.
      * 
-     * @param dataProvider
-     * @param softwareSystem
+     * @param dataProvider (must not be null)
+     * @param softwareSystem (must not be null)
      * @return true if the link between the data provider and the software system is set
      */
     public static boolean setSoftwareSystem(TdDataProvider dataProvider, TdSoftwareSystem softwareSystem) {
+        assert softwareSystem != null;
         final EList<ModelElement> ownedElements = softwareSystem.getOwnedElement();
         for (ModelElement modelElement : ownedElements) {
             if (modelElement != null) {

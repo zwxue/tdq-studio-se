@@ -71,7 +71,7 @@ public final class TableHelper {
     }
 
     /**
-     * Method "addColumn" adds a column to the given table
+     * Method "addColumn" adds a column to the given table.
      * 
      * @param table the table in which the column is added (must not be null)
      * @param column the column to add (must not be null)

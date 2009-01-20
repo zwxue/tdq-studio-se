@@ -23,7 +23,7 @@ import org.talend.cwm.relational.TdView;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class ViewHelper {
+public final class ViewHelper {
 
     private ViewHelper() {
     }

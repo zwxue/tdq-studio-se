@@ -25,7 +25,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * Helper class for getting elements of Schema or Catalog indifferently.
  */
-public class PackageHelper {
+public final class PackageHelper {
 
     private PackageHelper() {
     }
