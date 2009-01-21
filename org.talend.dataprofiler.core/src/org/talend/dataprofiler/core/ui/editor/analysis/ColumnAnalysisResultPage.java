@@ -199,7 +199,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                     // create chart
                                     JFreeChart chart = chartTypeState.getChart();
                                     if (chart != null) {
-                                        GridData gd = new GridData(GridData.FILL_BOTH);
+                                        GridData gd = new GridData();
+                                        gd.widthHint = 450;
+                                        gd.heightHint = 240;
                                         ChartPanel chartPanel = ChartUtils.createAWTSWTComp(composite, gd, chart);
                                         addMouseListenerForChart(chartPanel, dataExplorer, analysis);
                                     }
