@@ -60,7 +60,32 @@
              </and>
            </or>
          </enablement>
-      </actionProvider>        
+      </actionProvider>
+     <actionProvider
+           class="org.talend.cwm.compare.ui.actions.provider.SelectedCompareUIProvider"
+           id="org.talend.cwm.compare.ui.actions.provider.SelectedCompareUIProvider">
+        <enablement>
+           <or>
+              <instanceof
+                    value="orgomg.cwm.objectmodel.core.Package">
+              </instanceof>
+              <instanceof
+                    value="orgomg.cwm.resource.relational.ColumnSet">
+              </instanceof>
+              <and>
+                 <instanceof
+                       value="org.eclipse.core.resources.IFile">
+                 </instanceof>
+                 <test
+                       property="org.eclipse.core.resources.name"
+                       value="*.prv">
+                 </test>
+              </and>
+              <instanceof
+                    value="orgomg.cwm.resource.relational.Column">
+              </instanceof></or>
+        </enablement>
+     </actionProvider>        
    </extension>
    
    <!-- extension
