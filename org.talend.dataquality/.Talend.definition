@@ -6,12 +6,12 @@
     <sqlGenericExpression xmi:id="_wmX5MGoAEd20k7biVpOSRw" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0BF2Ed2PKb6nEJEvhw" name="Distinct Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Distinct Count">
-    <taggedValue xmi:id="_ybpowDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of distinct rows"/>
+    <taggedValue xmi:id="_ybpowDh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of distinct rows (like a &quot;SELECT DISTINCT&quot; SQL statement)"/>
     <taggedValue xmi:id="_ybqP0Dh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of distinct records"/>
     <sqlGenericExpression xmi:id="_ybqP0jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0RF2Ed2PKb6nEJEvhw" name="Unique Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Unique Count">
-    <taggedValue xmi:id="_ybq24Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of unique rows (i.e. rows that are not duplicated)"/>
+    <taggedValue xmi:id="_ybq24Dh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of unique rows (i.e. distinct rows with only one instance: rows that are not duplicated)"/>
     <taggedValue xmi:id="_ybq24Th8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of unique records"/>
     <sqlGenericExpression xmi:id="_ybq24jh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) AS myquery" language="SQL"/>
     <sqlGenericExpression xmi:id="_ybq24zh8Ed2XmO7pl5Yuyg" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount = 1) AS myquery" language="MySQL"/>

@@ -21,7 +21,21 @@
 	&nbsp;&nbsp;Does some simple counts on your data. 
 	<br>
 	&nbsp;&nbsp;It gives an overview of the content of the column, how many null data there is, how many distinct data...
-	
+	<br>
+	<br>
+	"Distinct count" counts the number of distinct values of your column (SELECT DISTINCT ...)
+	<br>
+    "Unique count" counts the number of distinct values with only one instance. It is necessarily less or equal to "distinct counts"
+    <br>
+    "Duplicate count" count the number of values appearing more than once.
+	<br>
+	<br>
+    These counts are related through the relation:
+    <br>
+	<code>"Duplicate count" + "Unique count" = "Distinct count"</code>
+	<br>
+	<br>
+	For example, a,a,a,a,b,b,c,d,e => 9 values, 5 distinct values, 3 unique values, 2 duplicate values.
 	</span>
 	
 	<span id="foot">
