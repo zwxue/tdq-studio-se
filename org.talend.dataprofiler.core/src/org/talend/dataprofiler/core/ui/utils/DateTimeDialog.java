@@ -17,10 +17,12 @@ import java.util.Calendar;
 
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -28,7 +30,11 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class DateTimeDialog extends TrayDialog {
 
-    private DateTime timec;
+    private DateTime timed;
+
+    private DateTime timet;
+
+    private boolean isDatetime;
 
     private String selectDate;
 
@@ -37,28 +43,54 @@ public class DateTimeDialog extends TrayDialog {
      * 
      * @param shell
      */
-    public DateTimeDialog(Shell shell) {
+    public DateTimeDialog(Shell shell, boolean isDatetime) {
         super(shell);
+        this.isDatetime = isDatetime;
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite top = new Composite(parent, SWT.NONE);
-        top.setLayout(new FillLayout());
-        timec = new DateTime(top, SWT.CALENDAR);
+        top.setLayout(new GridLayout(2, false));
+
+        Label dl = new Label(top, SWT.NONE);
+        dl.setText("Set the date:");
+        dl.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+        timed = new DateTime(top, SWT.CALENDAR);
+        timed.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        if (isDatetime) {
+            Label dt = new Label(top, SWT.NONE);
+            dt.setText("Set the time:");
+            timet = new DateTime(top, SWT.TIME);
+            timet.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        }
+
         return top;
     }
 
     @Override
     protected void okPressed() {
-        int year = timec.getYear();
-        int month = timec.getMonth();
-        int day = timec.getDay();
-
         Calendar cenlendar = Calendar.getInstance();
-        cenlendar.set(year, month, day);
+        SimpleDateFormat format = null;
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        int year = timed.getYear();
+        int month = timed.getMonth();
+        int day = timed.getDay();
+
+        if (timet != null) {
+            format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+            int hour = timet.getHours();
+            int mnts = timet.getMinutes();
+            int secds = timet.getSeconds();
+
+            cenlendar.set(year, month, day, hour, mnts, secds);
+        } else {
+            format = new SimpleDateFormat("yyyy-MM-dd");
+            cenlendar.set(year, month, day);
+        }
+
         selectDate = format.format(cenlendar.getTime());
 
         super.okPressed();

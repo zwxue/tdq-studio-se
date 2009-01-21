@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -168,7 +169,8 @@ public class CheckValueUtils {
 
         if (!isEmpty(inputString)) {
             try {
-                DateFormat df = DateFormat.getDateInstance();
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                df.setLenient(false);
                 df.parse(inputString);
                 return true;
             } catch (Exception e) {

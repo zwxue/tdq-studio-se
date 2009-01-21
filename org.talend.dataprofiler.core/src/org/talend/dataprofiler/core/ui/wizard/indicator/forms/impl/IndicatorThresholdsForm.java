@@ -19,10 +19,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
@@ -56,6 +58,10 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     protected Text lowerText, higherText;
 
+    private Button lowerBTN, higherBTN;
+
+    private Button lowerDelBTN, higherDelBTN;
+
     private static final double MIN = 0;
 
     private static final double MAX = 100;
@@ -68,6 +74,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private boolean isRangeForDate;
 
+    private boolean isDatetime;
+
     private boolean isOptionForRowCount;
 
     public IndicatorThresholdsForm(Composite parent, int style, IndicatorParameters parameters) {
@@ -77,6 +85,11 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         int sqltype = ((TdColumn) currentIndicator.getAnalyzedElement()).getJavaType();
         IndicatorEnum currentIndicatorType = IndicatorEnum.findIndicatorEnum(currentIndicator.eClass());
         isRangeForDate = Java2SqlType.isDateInSQL(sqltype) && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
+
+        if (isRangeForDate) {
+            isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
+        }
+
         isOptionForRowCount = currentIndicatorType == IndicatorEnum.RowCountIndicatorEnum;
 
         setupForm();
@@ -84,8 +97,14 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     protected void addFields() {
+        int colsForLayout = 2;
+
+        if (isRangeForDate) {
+            colsForLayout = 4;
+        }
+
         Group group = new Group(this, SWT.NONE);
-        group.setLayout(new GridLayout(2, false));
+        group.setLayout(new GridLayout(colsForLayout, false));
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         group.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.setThresholds")); //$NON-NLS-1$
 
@@ -95,11 +114,29 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         lowerLabel.setText(DefaultMessagesImpl.getString("DataThresholdsForm.lowerThreshold")); //$NON-NLS-1$
         lowerText = new Text(group, SWT.BORDER);
         lowerText.setLayoutData(gdText);
+        if (isRangeForDate) {
+            lowerBTN = new Button(group, SWT.PUSH);
+            lowerBTN.setText("...");
+            lowerDelBTN = new Button(group, SWT.PUSH);
+            lowerDelBTN.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+
+            lowerText.setEditable(false);
+            lowerText.setEnabled(false);
+        }
 
         Label higherLabel = new Label(group, SWT.NONE);
         higherLabel.setText(DefaultMessagesImpl.getString("DataThresholdsForm.higherThreshold")); //$NON-NLS-1$
         higherText = new Text(group, SWT.BORDER);
         higherText.setLayoutData(gdText);
+        if (isRangeForDate) {
+            higherBTN = new Button(group, SWT.PUSH);
+            higherBTN.setText("...");
+            higherDelBTN = new Button(group, SWT.PUSH);
+            higherDelBTN.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+
+            higherText.setEditable(false);
+            higherText.setEnabled(false);
+        }
 
         if (!isOptionForRowCount && !isRangeForDate) {
             Group pGroup = new Group(this, SWT.NONE);
@@ -305,27 +342,43 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
     @Override
     protected void addUtilsButtonListeners() {
         if (isRangeForDate) {
-            lowerText.addMouseListener(new MouseAdapter() {
+
+            lowerBTN.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void mouseDown(MouseEvent e) {
-                    DateTimeDialog dialog = new DateTimeDialog(null);
+                public void widgetSelected(SelectionEvent e) {
+                    DateTimeDialog dialog = new DateTimeDialog(null, isDatetime);
                     if (Window.OK == dialog.open()) {
                         lowerText.setText(dialog.getSelectDate());
                     }
                 }
-
             });
-            higherText.addMouseListener(new MouseAdapter() {
+
+            higherBTN.addSelectionListener(new SelectionAdapter() {
 
                 @Override
-                public void mouseDown(MouseEvent e) {
-                    DateTimeDialog dialog = new DateTimeDialog(null);
+                public void widgetSelected(SelectionEvent e) {
+                    DateTimeDialog dialog = new DateTimeDialog(null, isDatetime);
                     if (Window.OK == dialog.open()) {
                         higherText.setText(dialog.getSelectDate());
                     }
                 }
+            });
 
+            lowerDelBTN.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    lowerText.setText("");
+                }
+            });
+
+            higherDelBTN.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    higherText.setText("");
+                }
             });
         }
     }

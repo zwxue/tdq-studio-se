@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.utils.sql.Java2SqlType;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -32,8 +34,17 @@ public class SummaryStastictisExplorer extends DataExplorer {
      * @return the query to get the rows with a matching value
      */
     private String getMatchingRowsStatement() {
-        double value = Double.valueOf(entity.getValue());
-        String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + value;
+
+        String whereClause = "";
+
+        if (Java2SqlType.isDateInSQL(sqltype)) {
+            Date date = new Date(entity.getValue());
+            whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + date.toString();
+        } else {
+            double value = Double.valueOf(entity.getValue());
+            whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + value;
+        }
+
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         return "select * from " + getFullyQualifiedTableName(column) + whereClause;
     }
@@ -98,7 +109,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         } else if (hasLowerThreshold) { // no higher threshold
             whereClause = columnName + dbmsLanguage.less() + minValue;
         } else if (hasHigherThreshold) { // no lower threshold
-            whereClause = columnName + dbmsLanguage.greater() + maxValue;            
+            whereClause = columnName + dbmsLanguage.greater() + maxValue;
         }
         return whereClause;
     }
