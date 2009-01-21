@@ -34,6 +34,7 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -140,6 +141,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      */
     private void createViewIndicator(NamedColumnSet t, SchemaIndicator schemaIndic, long rowCount) {
         ViewIndicator viewIndicator = SchemaFactory.eINSTANCE.createViewIndicator();
+        // MOD xqliu 2009-1-21 feature 4715
+        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(viewIndicator);
         // t is not stored in xmi file. tableIndicator.setAnalyzedElement(t);
         viewIndicator.setTableName(t.getName());
         viewIndicator.setRowCount(rowCount);
@@ -167,6 +170,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      */
     private void createTableIndicator(NamedColumnSet t, SchemaIndicator schemaIndic, long rowCount, int pkCount, int idxCount) {
         TableIndicator tableIndicator = SchemaFactory.eINSTANCE.createTableIndicator();
+        // MOD xqliu 2009-1-21 feature 4715
+        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(tableIndicator);
         // t is not stored in xmi file. tableIndicator.setAnalyzedElement(t);
         tableIndicator.setTableName(t.getName());
         tableIndicator.setRowCount(rowCount);
@@ -360,6 +365,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     protected void evalSchemaIndic(TdSchema tdSchema, ReturnCode ok) throws SQLException {
         // --- create SchemaIndicator for each catalog
         SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
+        // MOD xqliu 2009-1-21 feature 4715
+        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(schemaIndic);
         this.evalSchemaIndicLow(null, schemaIndic, null, tdSchema, ok);
     }
 

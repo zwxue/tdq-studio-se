@@ -36,6 +36,7 @@ import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisWriter;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -123,6 +124,8 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
     protected void addSchemaIndicator(List<TdSchema> tdSchemas, CatalogIndicator catalogIndicator) {
         for (TdSchema schema : tdSchemas) {
             SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
+            // MOD xqliu 2009-1-21 feature 4715
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createSchemaIndicator);
             createSchemaIndicator.setAnalyzedElement(schema);
             catalogIndicator.addSchemaIndicator(createSchemaIndicator);
         }

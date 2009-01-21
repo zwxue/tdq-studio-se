@@ -25,6 +25,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.resource.relational.Catalog;
@@ -83,6 +84,8 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
                 for (TdSchema tdSchema : schemas) {
                     // --- create SchemaIndicator for each catalog
                     SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
+                    // MOD xqliu 2009-1-21 feature 4715
+                    DefinitionHandler.getInstance().setDefaultIndicatorDefinition(schemaIndic);
                     evalSchemaIndicLow(catalogIndicator, schemaIndic, catalog, tdSchema, ok);
                 }
                 catalogIndicator.setSchemaCount(schemas.size());

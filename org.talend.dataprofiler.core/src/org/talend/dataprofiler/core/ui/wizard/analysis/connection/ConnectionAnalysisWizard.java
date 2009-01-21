@@ -25,6 +25,7 @@ import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * @author zqin
@@ -65,6 +66,8 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
         TdDataProvider tdProvider = anaFilterParameter.getTdDataProvider();
         analysisBuilder.setAnalysisConnection(tdProvider);
         ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
+        // MOD xqliu 2009-1-21 feature 4715
+        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         indicator.setAnalyzedElement(tdProvider);
         List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdProvider);
         if (tdSchemas.size() != 0) {
@@ -73,6 +76,8 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
         List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tdProvider);
         for (TdCatalog tdCatalog : tdCatalogs) {
             CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
+            // MOD xqliu 2009-1-21 feature 4715
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);
             createCatalogIndicator.setAnalyzedElement(tdCatalog);
             indicator.addSchemaIndicator(createCatalogIndicator);
             addSchemaIndicator(CatalogHelper.getSchemas(tdCatalog), indicator);

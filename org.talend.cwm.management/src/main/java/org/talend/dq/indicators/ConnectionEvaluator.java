@@ -29,6 +29,7 @@ import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
@@ -113,6 +114,8 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                     log.warn("Exception while executing SQL query " + sqlStatement, e);
                 }
                 CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
+                // MOD xqliu 2009-1-21 feature 4715
+                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(catalogIndic);
                 this.addToConnectionIndicator(catalogIndic);
                 List<TdSchema> schemas = CatalogHelper.getSchemas(tdCatalog);
                 if (schemas.isEmpty()) { // no schema
@@ -123,6 +126,8 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                     for (TdSchema tdSchema : schemas) {
                         // --- create SchemaIndicator for each catalog
                         SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
+                        // MOD xqliu 2009-1-21 feature 4715
+                        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(schemaIndic);
                         evalSchemaIndicLow(catalogIndic, schemaIndic, tdCatalog, tdSchema, ok);
                     }
                     catalogIndic.setSchemaCount(schemas.size());
@@ -176,7 +181,6 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 return true;
             }
 
-           
             private void incrementCounts(final ConnectionIndicator connIndicator, SchemaIndicator childIndicator) {
                 connIndicator.setTableCount(connIndicator.getTableCount() + childIndicator.getTableCount());
                 connIndicator.setTableRowCount(connIndicator.getTableRowCount() + childIndicator.getTableRowCount());

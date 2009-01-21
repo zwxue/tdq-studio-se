@@ -21,6 +21,7 @@ import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
@@ -60,6 +61,8 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
         int i = 0;
         for (Package tdSchema : packageParameter.getPackages()) {
             SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
+            // MOD xqliu 2009-1-21 feature 4715
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createSchemaIndicator);
             createSchemaIndicator.setAnalyzedElement(tdSchema);
             indicators[i] = createSchemaIndicator;
             i++;
