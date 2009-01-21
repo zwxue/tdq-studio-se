@@ -112,7 +112,8 @@ public final class RepResourceFileHelper extends ResourceFileMap {
             log.error("No content in " + fileResource);
             return null;
         }
-        log.info("Nb elements in contents " + contents.size());
+        if (log.isDebugEnabled())
+            log.debug("Nb elements in contents " + contents.size());
         ReportsSwitch<TdReport> mySwitch = new ReportsSwitch<TdReport>() {
 
             public TdReport caseTdReport(TdReport object) {

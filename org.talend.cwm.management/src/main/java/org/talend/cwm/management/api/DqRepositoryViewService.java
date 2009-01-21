@@ -356,7 +356,9 @@ public final class DqRepositoryViewService {
 
         // save software system
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
-        saveSoftwareSystem(softwareSystem);
+        if (softwareSystem != null) {
+            saveSoftwareSystem(softwareSystem);
+        }
 
         // save each catalog is its own file
         Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
