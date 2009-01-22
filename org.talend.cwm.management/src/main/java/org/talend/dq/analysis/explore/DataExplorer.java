@@ -58,8 +58,6 @@ public abstract class DataExplorer implements IDataExplorer {
 
     protected IndicatorEnum indicatorEnum;
 
-    protected int sqltype;
-
     /**
      * Column name with quotes.
      */
@@ -139,7 +137,6 @@ public abstract class DataExplorer implements IDataExplorer {
         this.indicator = entity.getIndicator();
         this.indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
         this.columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
-        this.sqltype = ((TdColumn) entity.getIndicator().getAnalyzedElement()).getJavaType();
     }
 
     protected String getFullyQualifiedTableName(Column column) {

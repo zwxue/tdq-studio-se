@@ -128,7 +128,9 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     }
 
     public DataExplorer getDataExplorer() {
-        // TODO Auto-generated method stub
+        if (Java2SqlType.isDateInSQL(sqltype)) {
+            return null;
+        }
         return new SummaryStastictisExplorer();
     }
 
