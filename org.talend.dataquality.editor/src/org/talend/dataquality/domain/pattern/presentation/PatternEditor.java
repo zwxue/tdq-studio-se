@@ -180,6 +180,7 @@ import org.talend.dataquality.indicators.schema.provider.SchemaItemProviderAdapt
 import org.talend.dataquality.indicators.sql.provider.IndicatorSqlItemProviderAdapterFactory;
 import org.talend.dataquality.reports.provider.ReportsItemProviderAdapterFactory;
 
+import org.talend.dataquality.rules.provider.RulesItemProviderAdapterFactory;
 import orgomg.cwm.analysis.businessnomenclature.provider.BusinessnomenclatureItemProviderAdapterFactory;
 
 import orgomg.cwm.analysis.datamining.provider.DataminingItemProviderAdapterFactory;
@@ -786,6 +787,7 @@ public class PatternEditor
         adapterFactory.addAdapterFactory(new ExpressionsItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new DomainItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new PatternItemProviderAdapterFactory());
+        adapterFactory.addAdapterFactory(new RulesItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new CoreItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new BehavioralItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new RelationshipsItemProviderAdapterFactory());

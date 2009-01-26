@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.talend.dataquality.expressions.presentation;
+package org.talend.dataquality.rules.presentation;
 
 
 import java.io.IOException;
@@ -157,7 +157,7 @@ import org.eclipse.emf.edit.ui.util.EditUIUtil;
 
 import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
-import org.talend.dataquality.expressions.provider.ExpressionsItemProviderAdapterFactory;
+import org.talend.dataquality.rules.provider.RulesItemProviderAdapterFactory;
 
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
@@ -171,16 +171,20 @@ import org.talend.dataquality.domain.pattern.provider.PatternItemProviderAdapter
 
 import org.talend.dataquality.domain.provider.DomainItemProviderAdapterFactory;
 
+import org.talend.dataquality.expressions.provider.ExpressionsItemProviderAdapterFactory;
+
 import org.talend.dataquality.indicators.columnset.provider.ColumnsetItemProviderAdapterFactory;
+
 import org.talend.dataquality.indicators.definition.provider.DefinitionItemProviderAdapterFactory;
+
 import org.talend.dataquality.indicators.provider.IndicatorsItemProviderAdapterFactory;
 
 import org.talend.dataquality.indicators.schema.provider.SchemaItemProviderAdapterFactory;
 
 import org.talend.dataquality.indicators.sql.provider.IndicatorSqlItemProviderAdapterFactory;
+
 import org.talend.dataquality.reports.provider.ReportsItemProviderAdapterFactory;
 
-import org.talend.dataquality.rules.provider.RulesItemProviderAdapterFactory;
 import orgomg.cwm.analysis.businessnomenclature.provider.BusinessnomenclatureItemProviderAdapterFactory;
 
 import orgomg.cwm.analysis.datamining.provider.DataminingItemProviderAdapterFactory;
@@ -245,12 +249,12 @@ import orgomg.mof.model.provider.ModelItemProviderAdapterFactory;
 
 
 /**
- * This is an example of a Expressions model editor.
+ * This is an example of a Rules model editor.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ExpressionsEditor
+public class RulesEditor
     extends MultiPageEditorPart
     implements IEditingDomainProvider, ISelectionProvider, IMenuListener, IViewerProvider, IGotoMarker {
     /**
@@ -412,18 +416,18 @@ public class ExpressionsEditor
             public void partActivated(IWorkbenchPart p) {
                 if (p instanceof ContentOutline) {
                     if (((ContentOutline)p).getCurrentPage() == contentOutlinePage) {
-                        getActionBarContributor().setActiveEditor(ExpressionsEditor.this);
+                        getActionBarContributor().setActiveEditor(RulesEditor.this);
 
                         setCurrentViewer(contentOutlineViewer);
                     }
                 }
                 else if (p instanceof PropertySheet) {
                     if (((PropertySheet)p).getCurrentPage() == propertySheetPage) {
-                        getActionBarContributor().setActiveEditor(ExpressionsEditor.this);
+                        getActionBarContributor().setActiveEditor(RulesEditor.this);
                         handleActivate();
                     }
                 }
-                else if (p == ExpressionsEditor.this) {
+                else if (p == RulesEditor.this) {
                     handleActivate();
                 }
             }
@@ -586,7 +590,7 @@ public class ExpressionsEditor
                             getSite().getShell().getDisplay().asyncExec
                                 (new Runnable() {
                                      public void run() {
-                                         getSite().getPage().closeEditor(ExpressionsEditor.this, false);
+                                         getSite().getPage().closeEditor(RulesEditor.this, false);
                                      }
                                  });
                         }
@@ -594,7 +598,7 @@ public class ExpressionsEditor
 
                     if (!visitor.getChangedResources().isEmpty()) {
                         changedResources.addAll(visitor.getChangedResources());
-                        if (getSite().getPage().getActiveEditor() == ExpressionsEditor.this) {
+                        if (getSite().getPage().getActiveEditor() == RulesEditor.this) {
                             getSite().getShell().getDisplay().asyncExec
                                 (new Runnable() {
                                      public void run() {
@@ -629,7 +633,7 @@ public class ExpressionsEditor
 
         if (!removedResources.isEmpty()) {
             if (handleDirtyConflict()) {
-                getSite().getPage().closeEditor(ExpressionsEditor.this, false);
+                getSite().getPage().closeEditor(RulesEditor.this, false);
             }
             else {
                 removedResources.clear();
@@ -759,7 +763,7 @@ public class ExpressionsEditor
      * <!-- end-user-doc -->
      * @generated
      */
-    public ExpressionsEditor() {
+    public RulesEditor() {
         super();
         initializeEditingDomain();
     }
@@ -1138,7 +1142,7 @@ public class ExpressionsEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), ExpressionsEditor.this) {
+                    new ViewerPane(getSite().getPage(), RulesEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             Tree tree = new Tree(composite, SWT.MULTI);
@@ -1172,7 +1176,7 @@ public class ExpressionsEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), ExpressionsEditor.this) {
+                    new ViewerPane(getSite().getPage(), RulesEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             Tree tree = new Tree(composite, SWT.MULTI);
@@ -1201,7 +1205,7 @@ public class ExpressionsEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), ExpressionsEditor.this) {
+                    new ViewerPane(getSite().getPage(), RulesEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             return new ListViewer(composite);
@@ -1226,7 +1230,7 @@ public class ExpressionsEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), ExpressionsEditor.this) {
+                    new ViewerPane(getSite().getPage(), RulesEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             return new TreeViewer(composite);
@@ -1253,7 +1257,7 @@ public class ExpressionsEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), ExpressionsEditor.this) {
+                    new ViewerPane(getSite().getPage(), RulesEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             return new TableViewer(composite);
@@ -1296,7 +1300,7 @@ public class ExpressionsEditor
             //
             {
                 ViewerPane viewerPane =
-                    new ViewerPane(getSite().getPage(), ExpressionsEditor.this) {
+                    new ViewerPane(getSite().getPage(), RulesEditor.this) {
                         @Override
                         public Viewer createViewer(Composite composite) {
                             return new TreeViewer(composite);
@@ -1517,8 +1521,8 @@ public class ExpressionsEditor
                 new ExtendedPropertySheetPage(editingDomain) {
                     @Override
                     public void setSelectionToViewer(List<?> selection) {
-                        ExpressionsEditor.this.setSelectionToViewer(selection);
-                        ExpressionsEditor.this.setFocus();
+                        RulesEditor.this.setSelectionToViewer(selection);
+                        RulesEditor.this.setFocus();
                     }
 
                     @Override
