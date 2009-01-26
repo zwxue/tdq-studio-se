@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.talend.dataquality.indicators.sql.provider;
+package org.talend.dataquality.rules.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +25,7 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
-import org.talend.dataquality.indicators.sql.util.IndicatorSqlAdapterFactory;
+import org.talend.dataquality.rules.util.RulesAdapterFactory;
 
 /**
  * This is the factory that is used to provide the interfaces needed to support Viewers.
@@ -36,7 +36,7 @@ import org.talend.dataquality.indicators.sql.util.IndicatorSqlAdapterFactory;
  * <!-- end-user-doc -->
  * @generated
  */
-public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
+public class RulesItemProviderAdapterFactory extends RulesAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**
      * This keeps track of the root adapter factory that delegates to this adapter factory.
      * <!-- begin-user-doc -->
@@ -67,7 +67,7 @@ public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterF
      * <!-- end-user-doc -->
      * @generated
      */
-    public IndicatorSqlItemProviderAdapterFactory() {
+    public RulesItemProviderAdapterFactory() {
         supportedTypes.add(IEditingDomainItemProvider.class);
         supportedTypes.add(IStructuredItemContentProvider.class);
         supportedTypes.add(ITreeItemContentProvider.class);
@@ -76,49 +76,95 @@ public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterF
     }
 
     /**
-     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.sql.UserDefIndicator} instances.
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.rules.DQRule} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected UserDefIndicatorItemProvider userDefIndicatorItemProvider;
+    protected DQRuleItemProvider dqRuleItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.talend.dataquality.indicators.sql.UserDefIndicator}.
+     * This creates an adapter for a {@link org.talend.dataquality.rules.DQRule}.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
-    public Adapter createUserDefIndicatorAdapter() {
-        if (userDefIndicatorItemProvider == null) {
-            userDefIndicatorItemProvider = new UserDefIndicatorItemProvider(this);
+    public Adapter createDQRuleAdapter() {
+        if (dqRuleItemProvider == null) {
+            dqRuleItemProvider = new DQRuleItemProvider(this);
         }
 
-        return userDefIndicatorItemProvider;
+        return dqRuleItemProvider;
     }
 
     /**
-     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.sql.WhereRuleIndicator} instances.
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.rules.SpecifiedDQRule} instances.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected WhereRuleIndicatorItemProvider whereRuleIndicatorItemProvider;
+    protected SpecifiedDQRuleItemProvider specifiedDQRuleItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.talend.dataquality.indicators.sql.WhereRuleIndicator}.
+     * This creates an adapter for a {@link org.talend.dataquality.rules.SpecifiedDQRule}.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     @Override
-    public Adapter createWhereRuleIndicatorAdapter() {
-        if (whereRuleIndicatorItemProvider == null) {
-            whereRuleIndicatorItemProvider = new WhereRuleIndicatorItemProvider(this);
+    public Adapter createSpecifiedDQRuleAdapter() {
+        if (specifiedDQRuleItemProvider == null) {
+            specifiedDQRuleItemProvider = new SpecifiedDQRuleItemProvider(this);
         }
 
-        return whereRuleIndicatorItemProvider;
+        return specifiedDQRuleItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.rules.InferredDQRule} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected InferredDQRuleItemProvider inferredDQRuleItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.rules.InferredDQRule}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createInferredDQRuleAdapter() {
+        if (inferredDQRuleItemProvider == null) {
+            inferredDQRuleItemProvider = new InferredDQRuleItemProvider(this);
+        }
+
+        return inferredDQRuleItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.rules.WhereRule} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected WhereRuleItemProvider whereRuleItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.rules.WhereRule}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createWhereRuleAdapter() {
+        if (whereRuleItemProvider == null) {
+            whereRuleItemProvider = new WhereRuleItemProvider(this);
+        }
+
+        return whereRuleItemProvider;
     }
 
     /**
@@ -220,8 +266,10 @@ public class IndicatorSqlItemProviderAdapterFactory extends IndicatorSqlAdapterF
      * @generated
      */
     public void dispose() {
-        if (userDefIndicatorItemProvider != null) userDefIndicatorItemProvider.dispose();
-        if (whereRuleIndicatorItemProvider != null) whereRuleIndicatorItemProvider.dispose();
+        if (dqRuleItemProvider != null) dqRuleItemProvider.dispose();
+        if (specifiedDQRuleItemProvider != null) specifiedDQRuleItemProvider.dispose();
+        if (inferredDQRuleItemProvider != null) inferredDQRuleItemProvider.dispose();
+        if (whereRuleItemProvider != null) whereRuleItemProvider.dispose();
     }
 
 }

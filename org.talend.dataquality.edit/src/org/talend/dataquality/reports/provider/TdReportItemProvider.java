@@ -42,6 +42,7 @@ import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.TdReport;
 
+import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
 
@@ -511,7 +512,12 @@ public class TdReportItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 IndicatorSqlFactory.eINSTANCE.createSqlIndicator()));
+                 IndicatorSqlFactory.eINSTANCE.createUserDefIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
@@ -552,6 +558,26 @@ public class TdReportItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  PatternFactory.eINSTANCE.createPattern()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RulesFactory.eINSTANCE.createDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RulesFactory.eINSTANCE.createSpecifiedDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RulesFactory.eINSTANCE.createInferredDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RulesFactory.eINSTANCE.createWhereRule()));
 
         newChildDescriptors.add
             (createChildParameter

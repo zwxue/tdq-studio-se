@@ -39,6 +39,7 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.reports.ReportsFactory;
+import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.provider.NamespaceItemProvider;
 import orgomg.cwm.objectmodel.core.provider.ModelElementItemProvider;
@@ -471,7 +472,12 @@ public class DomainItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
-                 IndicatorSqlFactory.eINSTANCE.createSqlIndicator()));
+                 IndicatorSqlFactory.eINSTANCE.createUserDefIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator()));
 
         newChildDescriptors.add
             (createChildParameter
@@ -502,6 +508,26 @@ public class DomainItemProvider
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  PatternFactory.eINSTANCE.createPattern()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RulesFactory.eINSTANCE.createDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RulesFactory.eINSTANCE.createSpecifiedDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RulesFactory.eINSTANCE.createInferredDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 RulesFactory.eINSTANCE.createWhereRule()));
     }
 
     /**

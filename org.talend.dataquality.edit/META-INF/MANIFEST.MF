@@ -19,6 +19,7 @@ Export-Package: org.talend.dataquality.analysis.category.provider,
  org.talend.dataquality.indicators.schema.provider,
  org.talend.dataquality.indicators.sql.provider,
  org.talend.dataquality.reports.provider,
+ org.talend.dataquality.rules.provider,
  org.talend.dataquality.utils
 Require-Bundle: org.eclipse.core.runtime,
  org.talend.dataquality;visibility:=reexport,

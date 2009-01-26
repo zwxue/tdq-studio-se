@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 
+import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.objectmodel.core.provider.ModelElementItemProvider;
 
 /**
@@ -163,6 +164,26 @@ public class IndicatorsDefinitionsItemProvider
             (createChildParameter
                 (DefinitionPackage.Literals.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS,
                  DefinitionFactory.eINSTANCE.createIndicatorDefinition()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS,
+                 RulesFactory.eINSTANCE.createDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS,
+                 RulesFactory.eINSTANCE.createSpecifiedDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS,
+                 RulesFactory.eINSTANCE.createInferredDQRule()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (DefinitionPackage.Literals.INDICATORS_DEFINITIONS__INDICATOR_DEFINITIONS,
+                 RulesFactory.eINSTANCE.createWhereRule()));
 
         newChildDescriptors.add
             (createChildParameter
