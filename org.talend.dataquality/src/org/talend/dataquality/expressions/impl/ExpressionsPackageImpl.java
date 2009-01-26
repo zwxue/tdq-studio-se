@@ -47,6 +47,8 @@ import org.talend.dataquality.reports.ReportsPackage;
 
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 
+import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dataquality.rules.impl.RulesPackageImpl;
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
 
 import orgomg.cwm.analysis.datamining.DataminingPackage;
@@ -222,6 +224,7 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
         SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
+        RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
 
         // Create package meta-data objects
         theExpressionsPackage.createPackageContents();
@@ -236,6 +239,7 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
         theDomainPackage.createPackageContents();
         thePatternPackage.createPackageContents();
         theSQLPackage.createPackageContents();
+        theRulesPackage.createPackageContents();
 
         // Initialize created meta-data
         theExpressionsPackage.initializePackageContents();
@@ -250,6 +254,7 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
         theDomainPackage.initializePackageContents();
         thePatternPackage.initializePackageContents();
         theSQLPackage.initializePackageContents();
+        theRulesPackage.initializePackageContents();
 
         // Mark meta-data to indicate it can't be changed
         theExpressionsPackage.freeze();

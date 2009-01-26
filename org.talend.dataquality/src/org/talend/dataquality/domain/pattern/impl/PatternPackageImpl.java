@@ -53,6 +53,8 @@ import org.talend.dataquality.reports.ReportsPackage;
 
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 
+import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dataquality.rules.impl.RulesPackageImpl;
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
 
 import orgomg.cwm.analysis.datamining.DataminingPackage;
@@ -265,6 +267,7 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
         SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
+        RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
 
         // Create package meta-data objects
         thePatternPackage.createPackageContents();
@@ -279,6 +282,7 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         theExpressionsPackage_1.createPackageContents();
         theDomainPackage.createPackageContents();
         theSQLPackage.createPackageContents();
+        theRulesPackage.createPackageContents();
 
         // Initialize created meta-data
         thePatternPackage.initializePackageContents();
@@ -293,6 +297,7 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         theExpressionsPackage_1.initializePackageContents();
         theDomainPackage.initializePackageContents();
         theSQLPackage.initializePackageContents();
+        theRulesPackage.initializePackageContents();
 
         // Mark meta-data to indicate it can't be changed
         thePatternPackage.freeze();

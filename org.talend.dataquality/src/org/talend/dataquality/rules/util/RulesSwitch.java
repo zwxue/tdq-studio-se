@@ -4,16 +4,16 @@
  *
  * $Id$
  */
-package org.talend.dataquality.indicators.sql.util;
+package org.talend.dataquality.rules.util;
 
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
-import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
-import org.talend.dataquality.indicators.sql.*;
+import org.talend.dataquality.rules.*;
 
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -28,17 +28,17 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage
+ * @see org.talend.dataquality.rules.RulesPackage
  * @generated
  */
-public class IndicatorSqlSwitch<T> {
+public class RulesSwitch<T> {
     /**
      * The cached model package
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected static IndicatorSqlPackage modelPackage;
+    protected static RulesPackage modelPackage;
 
     /**
      * Creates an instance of the switch.
@@ -46,9 +46,9 @@ public class IndicatorSqlSwitch<T> {
      * <!-- end-user-doc -->
      * @generated
      */
-    public IndicatorSqlSwitch() {
+    public RulesSwitch() {
         if (modelPackage == null) {
-            modelPackage = IndicatorSqlPackage.eINSTANCE;
+            modelPackage = RulesPackage.eINSTANCE;
         }
     }
 
@@ -92,22 +92,43 @@ public class IndicatorSqlSwitch<T> {
      */
     protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-            case IndicatorSqlPackage.USER_DEF_INDICATOR: {
-                UserDefIndicator userDefIndicator = (UserDefIndicator)theEObject;
-                T result = caseUserDefIndicator(userDefIndicator);
-                if (result == null) result = caseIndicator(userDefIndicator);
-                if (result == null) result = caseModelElement(userDefIndicator);
-                if (result == null) result = caseElement(userDefIndicator);
+            case RulesPackage.DQ_RULE: {
+                DQRule dqRule = (DQRule)theEObject;
+                T result = caseDQRule(dqRule);
+                if (result == null) result = caseIndicatorDefinition(dqRule);
+                if (result == null) result = caseModelElement(dqRule);
+                if (result == null) result = caseElement(dqRule);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
-            case IndicatorSqlPackage.WHERE_RULE_INDICATOR: {
-                WhereRuleIndicator whereRuleIndicator = (WhereRuleIndicator)theEObject;
-                T result = caseWhereRuleIndicator(whereRuleIndicator);
-                if (result == null) result = caseUserDefIndicator(whereRuleIndicator);
-                if (result == null) result = caseIndicator(whereRuleIndicator);
-                if (result == null) result = caseModelElement(whereRuleIndicator);
-                if (result == null) result = caseElement(whereRuleIndicator);
+            case RulesPackage.SPECIFIED_DQ_RULE: {
+                SpecifiedDQRule specifiedDQRule = (SpecifiedDQRule)theEObject;
+                T result = caseSpecifiedDQRule(specifiedDQRule);
+                if (result == null) result = caseDQRule(specifiedDQRule);
+                if (result == null) result = caseIndicatorDefinition(specifiedDQRule);
+                if (result == null) result = caseModelElement(specifiedDQRule);
+                if (result == null) result = caseElement(specifiedDQRule);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.INFERRED_DQ_RULE: {
+                InferredDQRule inferredDQRule = (InferredDQRule)theEObject;
+                T result = caseInferredDQRule(inferredDQRule);
+                if (result == null) result = caseDQRule(inferredDQRule);
+                if (result == null) result = caseIndicatorDefinition(inferredDQRule);
+                if (result == null) result = caseModelElement(inferredDQRule);
+                if (result == null) result = caseElement(inferredDQRule);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.WHERE_RULE: {
+                WhereRule whereRule = (WhereRule)theEObject;
+                T result = caseWhereRule(whereRule);
+                if (result == null) result = caseSpecifiedDQRule(whereRule);
+                if (result == null) result = caseDQRule(whereRule);
+                if (result == null) result = caseIndicatorDefinition(whereRule);
+                if (result == null) result = caseModelElement(whereRule);
+                if (result == null) result = caseElement(whereRule);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -116,32 +137,62 @@ public class IndicatorSqlSwitch<T> {
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>User Def Indicator</em>'.
+     * Returns the result of interpreting the object as an instance of '<em>DQ Rule</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
      * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>User Def Indicator</em>'.
+     * @return the result of interpreting the object as an instance of '<em>DQ Rule</em>'.
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseUserDefIndicator(UserDefIndicator object) {
+    public T caseDQRule(DQRule object) {
         return null;
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Where Rule Indicator</em>'.
+     * Returns the result of interpreting the object as an instance of '<em>Specified DQ Rule</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
      * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Where Rule Indicator</em>'.
+     * @return the result of interpreting the object as an instance of '<em>Specified DQ Rule</em>'.
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseWhereRuleIndicator(WhereRuleIndicator object) {
+    public T caseSpecifiedDQRule(SpecifiedDQRule object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Inferred DQ Rule</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Inferred DQ Rule</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseInferredDQRule(InferredDQRule object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Where Rule</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Where Rule</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseWhereRule(WhereRule object) {
         return null;
     }
 
@@ -176,17 +227,17 @@ public class IndicatorSqlSwitch<T> {
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>Indicator</em>'.
+     * Returns the result of interpreting the object as an instance of '<em>Indicator Definition</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
      * returning a non-null result will terminate the switch.
      * <!-- end-user-doc -->
      * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>Indicator</em>'.
+     * @return the result of interpreting the object as an instance of '<em>Indicator Definition</em>'.
      * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
      * @generated
      */
-    public T caseIndicator(Indicator object) {
+    public T caseIndicatorDefinition(IndicatorDefinition object) {
         return null;
     }
 
@@ -205,4 +256,4 @@ public class IndicatorSqlSwitch<T> {
         return null;
     }
 
-} //IndicatorSqlSwitch
+} //RulesSwitch

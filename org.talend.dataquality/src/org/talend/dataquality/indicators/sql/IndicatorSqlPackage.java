@@ -62,14 +62,14 @@ public interface IndicatorSqlPackage extends EPackage {
     IndicatorSqlPackage eINSTANCE = org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl.init();
 
     /**
-     * The meta object id for the '{@link org.talend.dataquality.indicators.sql.impl.SqlIndicatorImpl <em>Sql Indicator</em>}' class.
+     * The meta object id for the '{@link org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl <em>User Def Indicator</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.talend.dataquality.indicators.sql.impl.SqlIndicatorImpl
-     * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getSqlIndicator()
+     * @see org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl
+     * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getUserDefIndicator()
      * @generated
      */
-    int SQL_INDICATOR = 0;
+    int USER_DEF_INDICATOR = 0;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -78,7 +78,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__NAME = IndicatorsPackage.INDICATOR__NAME;
+    int USER_DEF_INDICATOR__NAME = IndicatorsPackage.INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -87,7 +87,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__VISIBILITY = IndicatorsPackage.INDICATOR__VISIBILITY;
+    int USER_DEF_INDICATOR__VISIBILITY = IndicatorsPackage.INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -96,7 +96,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__CLIENT_DEPENDENCY = IndicatorsPackage.INDICATOR__CLIENT_DEPENDENCY;
+    int USER_DEF_INDICATOR__CLIENT_DEPENDENCY = IndicatorsPackage.INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -105,7 +105,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__SUPPLIER_DEPENDENCY = IndicatorsPackage.INDICATOR__SUPPLIER_DEPENDENCY;
+    int USER_DEF_INDICATOR__SUPPLIER_DEPENDENCY = IndicatorsPackage.INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -114,7 +114,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__CONSTRAINT = IndicatorsPackage.INDICATOR__CONSTRAINT;
+    int USER_DEF_INDICATOR__CONSTRAINT = IndicatorsPackage.INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -123,7 +123,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__NAMESPACE = IndicatorsPackage.INDICATOR__NAMESPACE;
+    int USER_DEF_INDICATOR__NAMESPACE = IndicatorsPackage.INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -132,7 +132,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__IMPORTER = IndicatorsPackage.INDICATOR__IMPORTER;
+    int USER_DEF_INDICATOR__IMPORTER = IndicatorsPackage.INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -141,7 +141,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__STEREOTYPE = IndicatorsPackage.INDICATOR__STEREOTYPE;
+    int USER_DEF_INDICATOR__STEREOTYPE = IndicatorsPackage.INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -150,7 +150,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__TAGGED_VALUE = IndicatorsPackage.INDICATOR__TAGGED_VALUE;
+    int USER_DEF_INDICATOR__TAGGED_VALUE = IndicatorsPackage.INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -159,7 +159,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__DOCUMENT = IndicatorsPackage.INDICATOR__DOCUMENT;
+    int USER_DEF_INDICATOR__DOCUMENT = IndicatorsPackage.INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -168,7 +168,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__DESCRIPTION = IndicatorsPackage.INDICATOR__DESCRIPTION;
+    int USER_DEF_INDICATOR__DESCRIPTION = IndicatorsPackage.INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -177,7 +177,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__RESPONSIBLE_PARTY = IndicatorsPackage.INDICATOR__RESPONSIBLE_PARTY;
+    int USER_DEF_INDICATOR__RESPONSIBLE_PARTY = IndicatorsPackage.INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -186,7 +186,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__ELEMENT_NODE = IndicatorsPackage.INDICATOR__ELEMENT_NODE;
+    int USER_DEF_INDICATOR__ELEMENT_NODE = IndicatorsPackage.INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -195,7 +195,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__SET = IndicatorsPackage.INDICATOR__SET;
+    int USER_DEF_INDICATOR__SET = IndicatorsPackage.INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -204,7 +204,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__RENDERED_OBJECT = IndicatorsPackage.INDICATOR__RENDERED_OBJECT;
+    int USER_DEF_INDICATOR__RENDERED_OBJECT = IndicatorsPackage.INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -213,7 +213,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__VOCABULARY_ELEMENT = IndicatorsPackage.INDICATOR__VOCABULARY_ELEMENT;
+    int USER_DEF_INDICATOR__VOCABULARY_ELEMENT = IndicatorsPackage.INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -222,7 +222,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__MEASUREMENT = IndicatorsPackage.INDICATOR__MEASUREMENT;
+    int USER_DEF_INDICATOR__MEASUREMENT = IndicatorsPackage.INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -231,7 +231,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__CHANGE_REQUEST = IndicatorsPackage.INDICATOR__CHANGE_REQUEST;
+    int USER_DEF_INDICATOR__CHANGE_REQUEST = IndicatorsPackage.INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -240,7 +240,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__DASDL_PROPERTY = IndicatorsPackage.INDICATOR__DASDL_PROPERTY;
+    int USER_DEF_INDICATOR__DASDL_PROPERTY = IndicatorsPackage.INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -249,7 +249,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__COUNT = IndicatorsPackage.INDICATOR__COUNT;
+    int USER_DEF_INDICATOR__COUNT = IndicatorsPackage.INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -258,7 +258,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__NULL_COUNT = IndicatorsPackage.INDICATOR__NULL_COUNT;
+    int USER_DEF_INDICATOR__NULL_COUNT = IndicatorsPackage.INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -267,7 +267,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__PARAMETERS = IndicatorsPackage.INDICATOR__PARAMETERS;
+    int USER_DEF_INDICATOR__PARAMETERS = IndicatorsPackage.INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -276,7 +276,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__ANALYZED_ELEMENT = IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT;
+    int USER_DEF_INDICATOR__ANALYZED_ELEMENT = IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -285,7 +285,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__DATAMINING_TYPE = IndicatorsPackage.INDICATOR__DATAMINING_TYPE;
+    int USER_DEF_INDICATOR__DATAMINING_TYPE = IndicatorsPackage.INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -294,7 +294,7 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__INDICATOR_DEFINITION = IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION;
+    int USER_DEF_INDICATOR__INDICATOR_DEFINITION = IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -303,67 +303,290 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__INSTANTIATED_EXPRESSIONS = IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int USER_DEF_INDICATOR__INSTANTIATED_EXPRESSIONS = IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
-     * The feature id for the '<em><b>Creation Date</b></em>' attribute.
+     * The number of structural features of the '<em>User Def Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__CREATION_DATE = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 0;
+    int USER_DEF_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 0;
 
     /**
-     * The feature id for the '<em><b>Last Modification Date</b></em>' attribute.
+     * The meta object id for the '{@link org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl <em>Where Rule Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl
+     * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getWhereRuleIndicator()
+     * @generated
+     */
+    int WHERE_RULE_INDICATOR = 1;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR__LAST_MODIFICATION_DATE = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 1;
+    int WHERE_RULE_INDICATOR__NAME = USER_DEF_INDICATOR__NAME;
 
     /**
-     * The number of structural features of the '<em>Sql Indicator</em>' class.
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 2;
+    int WHERE_RULE_INDICATOR__VISIBILITY = USER_DEF_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__CLIENT_DEPENDENCY = USER_DEF_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__SUPPLIER_DEPENDENCY = USER_DEF_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__CONSTRAINT = USER_DEF_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__NAMESPACE = USER_DEF_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__IMPORTER = USER_DEF_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__STEREOTYPE = USER_DEF_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__TAGGED_VALUE = USER_DEF_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__DOCUMENT = USER_DEF_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__DESCRIPTION = USER_DEF_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__RESPONSIBLE_PARTY = USER_DEF_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__ELEMENT_NODE = USER_DEF_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__SET = USER_DEF_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__RENDERED_OBJECT = USER_DEF_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__VOCABULARY_ELEMENT = USER_DEF_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__MEASUREMENT = USER_DEF_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__CHANGE_REQUEST = USER_DEF_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__DASDL_PROPERTY = USER_DEF_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__COUNT = USER_DEF_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__NULL_COUNT = USER_DEF_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__PARAMETERS = USER_DEF_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__ANALYZED_ELEMENT = USER_DEF_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__DATAMINING_TYPE = USER_DEF_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__INDICATOR_DEFINITION = USER_DEF_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__INSTANTIATED_EXPRESSIONS = USER_DEF_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The number of structural features of the '<em>Where Rule Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR_FEATURE_COUNT = USER_DEF_INDICATOR_FEATURE_COUNT + 0;
 
 
     /**
-     * Returns the meta object for class '{@link org.talend.dataquality.indicators.sql.SqlIndicator <em>Sql Indicator</em>}'.
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.sql.UserDefIndicator <em>User Def Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Sql Indicator</em>'.
-     * @see org.talend.dataquality.indicators.sql.SqlIndicator
+     * @return the meta object for class '<em>User Def Indicator</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator
      * @generated
      */
-    EClass getSqlIndicator();
+    EClass getUserDefIndicator();
 
     /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.SqlIndicator#getCreationDate <em>Creation Date</em>}'.
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.sql.WhereRuleIndicator <em>Where Rule Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Creation Date</em>'.
-     * @see org.talend.dataquality.indicators.sql.SqlIndicator#getCreationDate()
-     * @see #getSqlIndicator()
+     * @return the meta object for class '<em>Where Rule Indicator</em>'.
+     * @see org.talend.dataquality.indicators.sql.WhereRuleIndicator
      * @generated
      */
-    EAttribute getSqlIndicator_CreationDate();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.SqlIndicator#getLastModificationDate <em>Last Modification Date</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Last Modification Date</em>'.
-     * @see org.talend.dataquality.indicators.sql.SqlIndicator#getLastModificationDate()
-     * @see #getSqlIndicator()
-     * @generated
-     */
-    EAttribute getSqlIndicator_LastModificationDate();
+    EClass getWhereRuleIndicator();
 
     /**
      * Returns the factory that creates the instances of the model.
@@ -388,30 +611,24 @@ public interface IndicatorSqlPackage extends EPackage {
      */
     interface Literals {
         /**
-         * The meta object literal for the '{@link org.talend.dataquality.indicators.sql.impl.SqlIndicatorImpl <em>Sql Indicator</em>}' class.
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl <em>User Def Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see org.talend.dataquality.indicators.sql.impl.SqlIndicatorImpl
-         * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getSqlIndicator()
+         * @see org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl
+         * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getUserDefIndicator()
          * @generated
          */
-        EClass SQL_INDICATOR = eINSTANCE.getSqlIndicator();
+        EClass USER_DEF_INDICATOR = eINSTANCE.getUserDefIndicator();
 
         /**
-         * The meta object literal for the '<em><b>Creation Date</b></em>' attribute feature.
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl <em>Where Rule Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl
+         * @see org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl#getWhereRuleIndicator()
          * @generated
          */
-        EAttribute SQL_INDICATOR__CREATION_DATE = eINSTANCE.getSqlIndicator_CreationDate();
-
-        /**
-         * The meta object literal for the '<em><b>Last Modification Date</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute SQL_INDICATOR__LAST_MODIFICATION_DATE = eINSTANCE.getSqlIndicator_LastModificationDate();
+        EClass WHERE_RULE_INDICATOR = eINSTANCE.getWhereRuleIndicator();
 
     }
 

@@ -9,5 +9,6 @@
         <filter-data value="src/org/talend/dataquality/expressions"/>
         <filter-data value="src/org/talend/dataquality/indicators"/>
         <filter-data value="src/org/talend/dataquality/reports"/>
+        <filter-data value="src/org/talend/dataquality/rules"/>
     </filter>
 </fileset-config>

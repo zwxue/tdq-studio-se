@@ -643,10 +643,15 @@
       </eClassifiers>
     </eSubpackages>
     <eSubpackages name="sql" nsURI="http://dataquality.indicators.sql" nsPrefix="dataquality.indicators.sql">
-      <eClassifiers xsi:type="ecore:EClass" name="SqlIndicator" eSuperTypes="#//indicators/Indicator">
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="creationDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastModificationDate"
-            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+      <eClassifiers xsi:type="ecore:EClass" name="UserDefIndicator" eSuperTypes="#//indicators/Indicator">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="Indicator defined by the user. "/>
+        </eAnnotations>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="WhereRuleIndicator" eSuperTypes="#//indicators/sql/UserDefIndicator">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="Indicator defined by a where clause."/>
+        </eAnnotations>
       </eClassifiers>
     </eSubpackages>
     <eSubpackages name="columnset" nsURI="http://dataquality.indicators.columnset"
@@ -816,5 +821,39 @@
         <eLiterals name="RIGHT" value="1" literal=")"/>
       </eClassifiers>
     </eSubpackages>
+  </eSubpackages>
+  <eSubpackages name="rules" nsURI="http://dataquality.rules" nsPrefix="dataquality.rules">
+    <eClassifiers xsi:type="ecore:EClass" name="DQRule" eSuperTypes="#//indicators/definition/IndicatorDefinition">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The data quality rule base class."/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticalityLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The criticality level. An integer specified by the user. The higher it is, the more critical is the Data quality rule. Suggested values are between 1 and 10, but they are not restricted to this range."/>
+        </eAnnotations>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
+          eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="the elements to which the DQ rule applies."/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SpecifiedDQRule" eSuperTypes="#//rules/DQRule">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="A DQ rule written by someone. (as opposed to inferred)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InferredDQRule" eSuperTypes="#//rules/DQRule">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="An inferred DQ rule."/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="WhereRule" eSuperTypes="#//rules/SpecifiedDQRule">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This kind of rule contains a &quot;where&quot; clause which may be used to compute user defined indicators. "/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="whereExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
   </eSubpackages>
 </ecore:EPackage>

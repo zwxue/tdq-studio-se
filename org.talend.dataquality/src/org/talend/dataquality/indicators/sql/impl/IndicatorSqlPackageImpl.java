@@ -51,12 +51,16 @@ import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
 
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.sql.SqlIndicator;
 
 import org.talend.dataquality.reports.ReportsPackage;
 
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 
+import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dataquality.rules.impl.RulesPackageImpl;
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
 
 import orgomg.cwm.analysis.datamining.DataminingPackage;
@@ -131,8 +135,13 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass sqlIndicatorEClass = null;
-
+    private EClass userDefIndicatorEClass = null;
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass whereRuleIndicatorEClass = null;
     /**
      * Creates an instance of the model <b>Package</b>, registered with
      * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
@@ -234,6 +243,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
         SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
+        RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
 
         // Create package meta-data objects
         theIndicatorSqlPackage.createPackageContents();
@@ -248,6 +258,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         theDomainPackage.createPackageContents();
         thePatternPackage.createPackageContents();
         theSQLPackage.createPackageContents();
+        theRulesPackage.createPackageContents();
 
         // Initialize created meta-data
         theIndicatorSqlPackage.initializePackageContents();
@@ -262,6 +273,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         theDomainPackage.initializePackageContents();
         thePatternPackage.initializePackageContents();
         theSQLPackage.initializePackageContents();
+        theRulesPackage.initializePackageContents();
 
         // Mark meta-data to indicate it can't be changed
         theIndicatorSqlPackage.freeze();
@@ -274,8 +286,8 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * <!-- end-user-doc -->
      * @generated
      */
-    public EClass getSqlIndicator() {
-        return sqlIndicatorEClass;
+    public EClass getUserDefIndicator() {
+        return userDefIndicatorEClass;
     }
 
     /**
@@ -283,17 +295,8 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getSqlIndicator_CreationDate() {
-        return (EAttribute)sqlIndicatorEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EAttribute getSqlIndicator_LastModificationDate() {
-        return (EAttribute)sqlIndicatorEClass.getEStructuralFeatures().get(1);
+    public EClass getWhereRuleIndicator() {
+        return whereRuleIndicatorEClass;
     }
 
     /**
@@ -324,9 +327,9 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         isCreated = true;
 
         // Create classes and their features
-        sqlIndicatorEClass = createEClass(SQL_INDICATOR);
-        createEAttribute(sqlIndicatorEClass, SQL_INDICATOR__CREATION_DATE);
-        createEAttribute(sqlIndicatorEClass, SQL_INDICATOR__LAST_MODIFICATION_DATE);
+        userDefIndicatorEClass = createEClass(USER_DEF_INDICATOR);
+
+        whereRuleIndicatorEClass = createEClass(WHERE_RULE_INDICATOR);
     }
 
     /**
@@ -360,12 +363,13 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         // Set bounds for type parameters
 
         // Add supertypes to classes
-        sqlIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
+        userDefIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
+        whereRuleIndicatorEClass.getESuperTypes().add(this.getUserDefIndicator());
 
         // Initialize classes and features; add operations and parameters
-        initEClass(sqlIndicatorEClass, SqlIndicator.class, "SqlIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getSqlIndicator_CreationDate(), ecorePackage.getEDate(), "creationDate", null, 0, 1, SqlIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSqlIndicator_LastModificationDate(), ecorePackage.getEDate(), "lastModificationDate", null, 0, 1, SqlIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(userDefIndicatorEClass, UserDefIndicator.class, "UserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(whereRuleIndicatorEClass, WhereRuleIndicator.class, "WhereRuleIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     }
 
 } //IndicatorSqlPackageImpl

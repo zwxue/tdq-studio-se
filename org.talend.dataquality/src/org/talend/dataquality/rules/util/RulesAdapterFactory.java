@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package org.talend.dataquality.indicators.sql.util;
+package org.talend.dataquality.rules.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -13,9 +13,9 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
-import org.talend.dataquality.indicators.sql.*;
+import org.talend.dataquality.rules.*;
 
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -25,17 +25,17 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage
+ * @see org.talend.dataquality.rules.RulesPackage
  * @generated
  */
-public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
+public class RulesAdapterFactory extends AdapterFactoryImpl {
     /**
      * The cached model package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected static IndicatorSqlPackage modelPackage;
+    protected static RulesPackage modelPackage;
 
     /**
      * Creates an instance of the adapter factory.
@@ -43,9 +43,9 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
      * <!-- end-user-doc -->
      * @generated
      */
-    public IndicatorSqlAdapterFactory() {
+    public RulesAdapterFactory() {
         if (modelPackage == null) {
-            modelPackage = IndicatorSqlPackage.eINSTANCE;
+            modelPackage = RulesPackage.eINSTANCE;
         }
     }
 
@@ -74,15 +74,23 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected IndicatorSqlSwitch<Adapter> modelSwitch =
-        new IndicatorSqlSwitch<Adapter>() {
+    protected RulesSwitch<Adapter> modelSwitch =
+        new RulesSwitch<Adapter>() {
             @Override
-            public Adapter caseUserDefIndicator(UserDefIndicator object) {
-                return createUserDefIndicatorAdapter();
+            public Adapter caseDQRule(DQRule object) {
+                return createDQRuleAdapter();
             }
             @Override
-            public Adapter caseWhereRuleIndicator(WhereRuleIndicator object) {
-                return createWhereRuleIndicatorAdapter();
+            public Adapter caseSpecifiedDQRule(SpecifiedDQRule object) {
+                return createSpecifiedDQRuleAdapter();
+            }
+            @Override
+            public Adapter caseInferredDQRule(InferredDQRule object) {
+                return createInferredDQRuleAdapter();
+            }
+            @Override
+            public Adapter caseWhereRule(WhereRule object) {
+                return createWhereRuleAdapter();
             }
             @Override
             public Adapter caseElement(Element object) {
@@ -93,8 +101,8 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
                 return createModelElementAdapter();
             }
             @Override
-            public Adapter caseIndicator(Indicator object) {
-                return createIndicatorAdapter();
+            public Adapter caseIndicatorDefinition(IndicatorDefinition object) {
+                return createIndicatorDefinitionAdapter();
             }
             @Override
             public Adapter defaultCase(EObject object) {
@@ -117,30 +125,58 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
 
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.sql.UserDefIndicator <em>User Def Indicator</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.DQRule <em>DQ Rule</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.indicators.sql.UserDefIndicator
+     * @see org.talend.dataquality.rules.DQRule
      * @generated
      */
-    public Adapter createUserDefIndicatorAdapter() {
+    public Adapter createDQRuleAdapter() {
         return null;
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.sql.WhereRuleIndicator <em>Where Rule Indicator</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.SpecifiedDQRule <em>Specified DQ Rule</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.indicators.sql.WhereRuleIndicator
+     * @see org.talend.dataquality.rules.SpecifiedDQRule
      * @generated
      */
-    public Adapter createWhereRuleIndicatorAdapter() {
+    public Adapter createSpecifiedDQRuleAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.InferredDQRule <em>Inferred DQ Rule</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.InferredDQRule
+     * @generated
+     */
+    public Adapter createInferredDQRuleAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.WhereRule <em>Where Rule</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.WhereRule
+     * @generated
+     */
+    public Adapter createWhereRuleAdapter() {
         return null;
     }
 
@@ -173,16 +209,16 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.definition.IndicatorDefinition <em>Indicator Definition</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
      * @return the new adapter.
-     * @see org.talend.dataquality.indicators.Indicator
+     * @see org.talend.dataquality.indicators.definition.IndicatorDefinition
      * @generated
      */
-    public Adapter createIndicatorAdapter() {
+    public Adapter createIndicatorDefinitionAdapter() {
         return null;
     }
 
@@ -198,4 +234,4 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
         return null;
     }
 
-} //IndicatorSqlAdapterFactory
+} //RulesAdapterFactory

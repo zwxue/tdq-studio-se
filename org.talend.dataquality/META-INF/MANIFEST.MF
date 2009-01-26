@@ -42,7 +42,9 @@ Export-Package: org.talend.commons.emf,
  org.talend.dataquality.indicators.util,
  org.talend.dataquality.reports,
  org.talend.dataquality.reports.impl,
- org.talend.dataquality.reports.util
+ org.talend.dataquality.reports.util,
+ org.talend.dataquality.rules,
+ org.talend.dataquality.rules.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.talend.cwm.mip;visibility:=reexport,

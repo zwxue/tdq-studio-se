@@ -60,7 +60,8 @@ public class IndicatorSqlFactoryImpl extends EFactoryImpl implements IndicatorSq
     @Override
     public EObject create(EClass eClass) {
         switch (eClass.getClassifierID()) {
-            case IndicatorSqlPackage.SQL_INDICATOR: return createSqlIndicator();
+            case IndicatorSqlPackage.USER_DEF_INDICATOR: return createUserDefIndicator();
+            case IndicatorSqlPackage.WHERE_RULE_INDICATOR: return createWhereRuleIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -71,9 +72,19 @@ public class IndicatorSqlFactoryImpl extends EFactoryImpl implements IndicatorSq
      * <!-- end-user-doc -->
      * @generated
      */
-    public SqlIndicator createSqlIndicator() {
-        SqlIndicatorImpl sqlIndicator = new SqlIndicatorImpl();
-        return sqlIndicator;
+    public UserDefIndicator createUserDefIndicator() {
+        UserDefIndicatorImpl userDefIndicator = new UserDefIndicatorImpl();
+        return userDefIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public WhereRuleIndicator createWhereRuleIndicator() {
+        WhereRuleIndicatorImpl whereRuleIndicator = new WhereRuleIndicatorImpl();
+        return whereRuleIndicator;
     }
 
     /**

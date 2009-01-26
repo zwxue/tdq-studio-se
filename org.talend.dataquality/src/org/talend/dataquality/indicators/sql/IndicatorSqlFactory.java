@@ -26,13 +26,22 @@ public interface IndicatorSqlFactory extends EFactory {
     IndicatorSqlFactory eINSTANCE = org.talend.dataquality.indicators.sql.impl.IndicatorSqlFactoryImpl.init();
 
     /**
-     * Returns a new object of class '<em>Sql Indicator</em>'.
+     * Returns a new object of class '<em>User Def Indicator</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Sql Indicator</em>'.
+     * @return a new object of class '<em>User Def Indicator</em>'.
      * @generated
      */
-    SqlIndicator createSqlIndicator();
+    UserDefIndicator createUserDefIndicator();
+
+    /**
+     * Returns a new object of class '<em>Where Rule Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Where Rule Indicator</em>'.
+     * @generated
+     */
+    WhereRuleIndicator createWhereRuleIndicator();
 
     /**
      * Returns the package supported by this factory.

@@ -1,66 +1,131 @@
-package org.talend.dataquality.domain.sql.impl;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id$
+ */
+package org.talend.dataquality.rules.impl;
 
-
-import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import org.talend.dataquality.analysis.AnalysisPackage;
+
 import org.talend.dataquality.analysis.category.CategoryPackage;
+
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;
+
 import org.talend.dataquality.analysis.impl.AnalysisPackageImpl;
+
 import org.talend.dataquality.domain.DomainPackage;
+
 import org.talend.dataquality.domain.impl.DomainPackageImpl;
+
 import org.talend.dataquality.domain.pattern.PatternPackage;
+
 import org.talend.dataquality.domain.pattern.impl.PatternPackageImpl;
-import org.talend.dataquality.domain.sql.Bracket;
-import org.talend.dataquality.domain.sql.SQLFactory;
+
 import org.talend.dataquality.domain.sql.SQLPackage;
-import org.talend.dataquality.domain.sql.SqlPredicate;
+
+import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
+
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
+
 import org.talend.dataquality.indicators.IndicatorsPackage;
+
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
+
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
+
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
+
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
+
 import org.talend.dataquality.indicators.schema.SchemaPackage;
+
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
+
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
+
 import org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl;
+
 import org.talend.dataquality.reports.ReportsPackage;
+
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
+
+import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.InferredDQRule;
+import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.RulesPackage;
-import org.talend.dataquality.rules.impl.RulesPackageImpl;
+import org.talend.dataquality.rules.SpecifiedDQRule;
+import org.talend.dataquality.rules.WhereRule;
+
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
+
 import orgomg.cwm.analysis.datamining.DataminingPackage;
+
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
+
 import orgomg.cwm.analysis.olap.OlapPackage;
+
 import orgomg.cwm.analysis.transformation.TransformationPackage;
+
 import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
+
 import orgomg.cwm.foundation.datatypes.DatatypesPackage;
+
 import orgomg.cwm.foundation.expressions.ExpressionsPackage;
+
 import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
+
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
+
 import orgomg.cwm.foundation.typemapping.TypemappingPackage;
+
 import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
+
 import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
+
 import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
+
 import orgomg.cwm.objectmodel.core.CorePackage;
+
 import orgomg.cwm.objectmodel.instance.InstancePackage;
+
 import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
+
 import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
+
 import orgomg.cwm.resource.record.RecordPackage;
+
 import orgomg.cwm.resource.relational.RelationalPackage;
+
 import orgomg.cwm.resource.xml.XmlPackage;
+
 import orgomg.cwmmip.CwmmipPackage;
+
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
+
 import orgomg.cwmx.analysis.informationset.InformationsetPackage;
+
 import orgomg.cwmx.foundation.er.ErPackage;
+
 import orgomg.cwmx.resource.coboldata.CoboldataPackage;
+
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
+
 import orgomg.cwmx.resource.essbase.EssbasePackage;
+
 import orgomg.cwmx.resource.express.ExpressPackage;
+
 import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
+
 import orgomg.mof.model.ModelPackage;
 
 /**
@@ -69,20 +134,34 @@ import orgomg.mof.model.ModelPackage;
  * <!-- end-user-doc -->
  * @generated
  */
-public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
+public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EEnum sqlPredicateEEnum = null;
+    private EClass dqRuleEClass = null;
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    private EEnum bracketEEnum = null;
+    private EClass specifiedDQRuleEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass inferredDQRuleEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass whereRuleEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -95,12 +174,12 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see org.eclipse.emf.ecore.EPackage.Registry
-     * @see org.talend.dataquality.domain.sql.SQLPackage#eNS_URI
+     * @see org.talend.dataquality.rules.RulesPackage#eNS_URI
      * @see #init()
      * @generated
      */
-    private SQLPackageImpl() {
-        super(eNS_URI, SQLFactory.eINSTANCE);
+    private RulesPackageImpl() {
+        super(eNS_URI, RulesFactory.eINSTANCE);
     }
 
     /**
@@ -132,11 +211,11 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
      * @see #initializePackageContents()
      * @generated
      */
-    public static SQLPackage init() {
-        if (isInited) return (SQLPackage)EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI);
+    public static RulesPackage init() {
+        if (isInited) return (RulesPackage)EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI);
 
         // Obtain or create and register package
-        SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new SQLPackageImpl());
+        RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new RulesPackageImpl());
 
         isInited = true;
 
@@ -185,10 +264,10 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
         ExpressionsPackageImpl theExpressionsPackage_1 = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.expressions.ExpressionsPackage.eNS_URI) : org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE);
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
-        RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
+        SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
 
         // Create package meta-data objects
-        theSQLPackage.createPackageContents();
+        theRulesPackage.createPackageContents();
         theAnalysisPackage.createPackageContents();
         theCategoryPackage.createPackageContents();
         theReportsPackage.createPackageContents();
@@ -200,10 +279,10 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
         theExpressionsPackage_1.createPackageContents();
         theDomainPackage.createPackageContents();
         thePatternPackage.createPackageContents();
-        theRulesPackage.createPackageContents();
+        theSQLPackage.createPackageContents();
 
         // Initialize created meta-data
-        theSQLPackage.initializePackageContents();
+        theRulesPackage.initializePackageContents();
         theAnalysisPackage.initializePackageContents();
         theCategoryPackage.initializePackageContents();
         theReportsPackage.initializePackageContents();
@@ -215,12 +294,12 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
         theExpressionsPackage_1.initializePackageContents();
         theDomainPackage.initializePackageContents();
         thePatternPackage.initializePackageContents();
-        theRulesPackage.initializePackageContents();
+        theSQLPackage.initializePackageContents();
 
         // Mark meta-data to indicate it can't be changed
-        theSQLPackage.freeze();
+        theRulesPackage.freeze();
 
-        return theSQLPackage;
+        return theRulesPackage;
     }
 
     /**
@@ -228,8 +307,8 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getSqlPredicate() {
-        return sqlPredicateEEnum;
+    public EClass getDQRule() {
+        return dqRuleEClass;
     }
 
     /**
@@ -237,8 +316,8 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EEnum getBracket() {
-        return bracketEEnum;
+    public EAttribute getDQRule_CriticalityLevel() {
+        return (EAttribute)dqRuleEClass.getEStructuralFeatures().get(0);
     }
 
     /**
@@ -246,8 +325,53 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public SQLFactory getSQLFactory() {
-        return (SQLFactory)getEFactoryInstance();
+    public EReference getDQRule_Elements() {
+        return (EReference)dqRuleEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getSpecifiedDQRule() {
+        return specifiedDQRuleEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getInferredDQRule() {
+        return inferredDQRuleEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getWhereRule() {
+        return whereRuleEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getWhereRule_WhereExpression() {
+        return (EAttribute)whereRuleEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public RulesFactory getRulesFactory() {
+        return (RulesFactory)getEFactoryInstance();
     }
 
     /**
@@ -268,9 +392,17 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
         if (isCreated) return;
         isCreated = true;
 
-        // Create enums
-        sqlPredicateEEnum = createEEnum(SQL_PREDICATE);
-        bracketEEnum = createEEnum(BRACKET);
+        // Create classes and their features
+        dqRuleEClass = createEClass(DQ_RULE);
+        createEAttribute(dqRuleEClass, DQ_RULE__CRITICALITY_LEVEL);
+        createEReference(dqRuleEClass, DQ_RULE__ELEMENTS);
+
+        specifiedDQRuleEClass = createEClass(SPECIFIED_DQ_RULE);
+
+        inferredDQRuleEClass = createEClass(INFERRED_DQ_RULE);
+
+        whereRuleEClass = createEClass(WHERE_RULE);
+        createEAttribute(whereRuleEClass, WHERE_RULE__WHERE_EXPRESSION);
     }
 
     /**
@@ -296,31 +428,34 @@ public class SQLPackageImpl extends EPackageImpl implements SQLPackage {
         setNsPrefix(eNS_PREFIX);
         setNsURI(eNS_URI);
 
-        // Initialize enums and add enum literals
-        initEEnum(sqlPredicateEEnum, SqlPredicate.class, "SqlPredicate");
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.EQUAL);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.NOT_EQUAL);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.GREATER);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.LESS);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.GREATER_EQUAL);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.LESS_EQUAL);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.IS_NULL);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.BETWEEN);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.LIKE);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.IN);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.NOT_EQUAL2);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.NOT_IN);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.NOT_BETWEEN);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.NOT_LIKE);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.IS_NOT_NULL);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.AND);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.OR);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.UNION);
-        addEEnumLiteral(sqlPredicateEEnum, SqlPredicate.ALL);
+        // Obtain other dependent packages
+        DefinitionPackage theDefinitionPackage = (DefinitionPackage)EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI);
+        CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
 
-        initEEnum(bracketEEnum, Bracket.class, "Bracket");
-        addEEnumLiteral(bracketEEnum, Bracket.LEFT);
-        addEEnumLiteral(bracketEEnum, Bracket.RIGHT);
+        // Create type parameters
+
+        // Set bounds for type parameters
+
+        // Add supertypes to classes
+        dqRuleEClass.getESuperTypes().add(theDefinitionPackage.getIndicatorDefinition());
+        specifiedDQRuleEClass.getESuperTypes().add(this.getDQRule());
+        inferredDQRuleEClass.getESuperTypes().add(this.getDQRule());
+        whereRuleEClass.getESuperTypes().add(this.getSpecifiedDQRule());
+
+        // Initialize classes and features; add operations and parameters
+        initEClass(dqRuleEClass, DQRule.class, "DQRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getDQRule_CriticalityLevel(), ecorePackage.getEInt(), "criticalityLevel", null, 0, 1, DQRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDQRule_Elements(), theCorePackage.getModelElement(), null, "elements", null, 0, -1, DQRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(specifiedDQRuleEClass, SpecifiedDQRule.class, "SpecifiedDQRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(inferredDQRuleEClass, InferredDQRule.class, "InferredDQRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(whereRuleEClass, WhereRule.class, "WhereRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getWhereRule_WhereExpression(), ecorePackage.getEString(), "whereExpression", null, 0, 1, WhereRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        // Create resource
+        createResource(eNS_URI);
     }
 
-} //SQLPackageImpl
+} //RulesPackageImpl
