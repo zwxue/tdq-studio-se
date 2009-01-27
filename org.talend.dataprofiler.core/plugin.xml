@@ -3,7 +3,7 @@
 <plugin>
    <extension-point id="dataprofilerperspectives" name="Data Profiler Perspectives" schema="schema/Dataprofilerperspectives.exsd"/>
    <extension-point id="service" name="Data Profiler Service" schema="schema/service.exsd"/>
-   <extension-point id="routinesProvider" name="Routines Provider" schema="schema/routines_provider.exsd"/>
+     
    <extension-point id="migrationTask" name="Migration tool atomic task" schema="schema/migrationTask.exsd"/>
      <extension
          point="org.eclipse.ui.views">
