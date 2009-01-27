@@ -22,6 +22,7 @@ import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.AnalysisParameters;
 
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
@@ -38,6 +39,7 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getDataValidationDomains <em>Data Validation Domains</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getAnalysisType <em>Analysis Type</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getDeactivatedIndicators <em>Deactivated Indicators</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisParametersImpl#getExecutionLanguage <em>Execution Language</em>}</li>
  * </ul>
  * </p>
  *
@@ -103,6 +105,26 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * @ordered
      */
     protected EList<Indicator> deactivatedIndicators;
+
+    /**
+     * The default value of the '{@link #getExecutionLanguage() <em>Execution Language</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getExecutionLanguage()
+     * @generated
+     * @ordered
+     */
+    protected static final ExecutionLanguage EXECUTION_LANGUAGE_EDEFAULT = ExecutionLanguage.SQL;
+
+    /**
+     * The cached value of the '{@link #getExecutionLanguage() <em>Execution Language</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getExecutionLanguage()
+     * @generated
+     * @ordered
+     */
+    protected ExecutionLanguage executionLanguage = EXECUTION_LANGUAGE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -197,6 +219,27 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
      * <!-- end-user-doc -->
      * @generated
      */
+    public ExecutionLanguage getExecutionLanguage() {
+        return executionLanguage;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setExecutionLanguage(ExecutionLanguage newExecutionLanguage) {
+        ExecutionLanguage oldExecutionLanguage = executionLanguage;
+        executionLanguage = newExecutionLanguage == null ? EXECUTION_LANGUAGE_EDEFAULT : newExecutionLanguage;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE, oldExecutionLanguage, executionLanguage));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -210,6 +253,8 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 return getAnalysisType();
             case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
                 return getDeactivatedIndicators();
+            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+                return getExecutionLanguage();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -242,6 +287,9 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 getDeactivatedIndicators().clear();
                 getDeactivatedIndicators().addAll((Collection<? extends Indicator>)newValue);
                 return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+                setExecutionLanguage((ExecutionLanguage)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -269,6 +317,9 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
             case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
                 getDeactivatedIndicators().clear();
                 return;
+            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+                setExecutionLanguage(EXECUTION_LANGUAGE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -291,6 +342,8 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
                 return analysisType != ANALYSIS_TYPE_EDEFAULT;
             case AnalysisPackage.ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS:
                 return deactivatedIndicators != null && !deactivatedIndicators.isEmpty();
+            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
+                return executionLanguage != EXECUTION_LANGUAGE_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -307,6 +360,8 @@ public class AnalysisParametersImpl extends ReportGroupImpl implements AnalysisP
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (analysisType: ");
         result.append(analysisType);
+        result.append(", executionLanguage: ");
+        result.append(executionLanguage);
         result.append(')');
         return result.toString();
     }

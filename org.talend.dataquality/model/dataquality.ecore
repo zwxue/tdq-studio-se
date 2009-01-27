@@ -49,6 +49,11 @@
           <details key="documentation" value="Gives a list of indicators that must not be evaluated. This is mainly useful in Comparison analyses when two indicators are always created but only one needs to be computed sometimes. "/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionLanguage" eType="#//analysis/ExecutionLanguage">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The execution language: either analysis is computed by using SQL queries or by using Java code."/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="AnalysisResult" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwmx/analysis/informationreporting/ReportGroup">
       <eStructuralFeatures xsi:type="ecore:EReference" name="analysis" eType="#//analysis/Analysis"
@@ -95,6 +100,10 @@
       <eLiterals name="MULTIPLE_COLUMN" value="6" literal="Multiple Column Analysis"/>
       <eLiterals name="CATALOG" value="7" literal="Catalog Analysis"/>
       <eLiterals name="COLUMN_CORRELATION" value="8" literal="Column Correlation Analysis"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="ExecutionLanguage">
+      <eLiterals name="SQL"/>
+      <eLiterals name="JAVA" value="1" literal="Java"/>
     </eClassifiers>
     <eSubpackages name="category" nsURI="http://org.talend.dataquality.category" nsPrefix="dataquality.category">
       <eClassifiers xsi:type="ecore:EClass" name="AnalysisCategory">

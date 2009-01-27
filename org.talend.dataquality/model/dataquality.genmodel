@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="// ============================================================================&#xA;//&#xA;// Copyright (C) 2006-2007 Talend Inc. - www.talend.com&#xA;//&#xA;// This source code is available under agreement available at&#xA;// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt&#xA;//&#xA;// You should have received a copy of the agreement&#xA;// along with this program; if not, write to Talend SA&#xA;// 9 rue Pages 92150 Suresnes, France&#xA;//&#xA;// ============================================================================&#xA;"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText=""
     modelDirectory="/org.talend.dataquality/src" modelPluginID="org.talend.dataquality"
     modelName="Dataquality" importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0"
     copyrightFields="false" usedGenPackages="../../org.talend.cwm.mip/model/cwm_mip.genmodel#//orgomg">
@@ -20,6 +20,10 @@
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/MULTIPLE_COLUMN"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/CATALOG"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/AnalysisType/COLUMN_CORRELATION"/>
+      </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="dataquality.ecore#//analysis/ExecutionLanguage">
+        <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/ExecutionLanguage/SQL"/>
+        <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//analysis/ExecutionLanguage/JAVA"/>
       </genEnums>
       <genClasses ecoreClass="dataquality.ecore#//analysis/Analysis">
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//analysis/Analysis/context"/>
@@ -43,6 +47,7 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/AnalysisParameters/analysisType"/>
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
             ecoreFeature="ecore:EReference dataquality.ecore#//analysis/AnalysisParameters/deactivatedIndicators"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/AnalysisParameters/executionLanguage"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//analysis/AnalysisResult">
         <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference dataquality.ecore#//analysis/AnalysisResult/analysis"/>

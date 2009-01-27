@@ -27,6 +27,7 @@ import orgomg.cwmx.analysis.informationreporting.ReportGroup;
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getDataValidationDomains <em>Data Validation Domains</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getAnalysisType <em>Analysis Type</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getDeactivatedIndicators <em>Deactivated Indicators</em>}</li>
+ *   <li>{@link org.talend.dataquality.analysis.AnalysisParameters#getExecutionLanguage <em>Execution Language</em>}</li>
  * </ul>
  * </p>
  *
@@ -129,5 +130,33 @@ public interface AnalysisParameters extends ReportGroup {
      * @generated
      */
     EList<Indicator> getDeactivatedIndicators();
+
+    /**
+     * Returns the value of the '<em><b>Execution Language</b></em>' attribute.
+     * The literals are from the enumeration {@link org.talend.dataquality.analysis.ExecutionLanguage}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The execution language: either analysis is computed by using SQL queries or by using Java code.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Execution Language</em>' attribute.
+     * @see org.talend.dataquality.analysis.ExecutionLanguage
+     * @see #setExecutionLanguage(ExecutionLanguage)
+     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysisParameters_ExecutionLanguage()
+     * @model
+     * @generated
+     */
+    ExecutionLanguage getExecutionLanguage();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.analysis.AnalysisParameters#getExecutionLanguage <em>Execution Language</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Execution Language</em>' attribute.
+     * @see org.talend.dataquality.analysis.ExecutionLanguage
+     * @see #getExecutionLanguage()
+     * @generated
+     */
+    void setExecutionLanguage(ExecutionLanguage value);
 
 } // AnalysisParameters

@@ -1506,13 +1506,22 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 4;
 
     /**
+     * The feature id for the '<em><b>Execution Language</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 5;
+
+    /**
      * The number of structural features of the '<em>Parameters</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_PARAMETERS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 5;
+    int ANALYSIS_PARAMETERS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 6;
 
 
     /**
@@ -2088,6 +2097,17 @@ public interface AnalysisPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.analysis.ExecutionLanguage <em>Execution Language</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.analysis.ExecutionLanguage
+     * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getExecutionLanguage()
+     * @generated
+     */
+    int EXECUTION_LANGUAGE = 6;
+
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.analysis.Analysis <em>Analysis</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2239,6 +2259,17 @@ public interface AnalysisPackage extends EPackage {
     EReference getAnalysisParameters_DeactivatedIndicators();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.AnalysisParameters#getExecutionLanguage <em>Execution Language</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Execution Language</em>'.
+     * @see org.talend.dataquality.analysis.AnalysisParameters#getExecutionLanguage()
+     * @see #getAnalysisParameters()
+     * @generated
+     */
+    EAttribute getAnalysisParameters_ExecutionLanguage();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.analysis.AnalysisResult <em>Result</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2377,6 +2408,16 @@ public interface AnalysisPackage extends EPackage {
      * @generated
      */
     EEnum getAnalysisType();
+
+    /**
+     * Returns the meta object for enum '{@link org.talend.dataquality.analysis.ExecutionLanguage <em>Execution Language</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for enum '<em>Execution Language</em>'.
+     * @see org.talend.dataquality.analysis.ExecutionLanguage
+     * @generated
+     */
+    EEnum getExecutionLanguage();
 
     /**
      * Returns the factory that creates the instances of the model.
@@ -2519,6 +2560,14 @@ public interface AnalysisPackage extends EPackage {
         EReference ANALYSIS_PARAMETERS__DEACTIVATED_INDICATORS = eINSTANCE.getAnalysisParameters_DeactivatedIndicators();
 
         /**
+         * The meta object literal for the '<em><b>Execution Language</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE = eINSTANCE.getAnalysisParameters_ExecutionLanguage();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.AnalysisResultImpl <em>Result</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -2627,6 +2676,16 @@ public interface AnalysisPackage extends EPackage {
          * @generated
          */
         EEnum ANALYSIS_TYPE = eINSTANCE.getAnalysisType();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.analysis.ExecutionLanguage <em>Execution Language</em>}' enum.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.analysis.ExecutionLanguage
+         * @see org.talend.dataquality.analysis.impl.AnalysisPackageImpl#getExecutionLanguage()
+         * @generated
+         */
+        EEnum EXECUTION_LANGUAGE = eINSTANCE.getExecutionLanguage();
 
     }
 

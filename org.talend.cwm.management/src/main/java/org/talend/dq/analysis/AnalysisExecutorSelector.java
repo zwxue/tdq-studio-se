@@ -15,6 +15,7 @@ package org.talend.dq.analysis;
 import org.apache.log4j.Logger;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -43,10 +44,11 @@ public final class AnalysisExecutorSelector {
             log.error("Analysis type is not set for analysis " + analysis.getName());
             return null;
         }
+        ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(analysis);        
         AnalysisExecutor exec = null;
         switch (analysisType) {
         case MULTIPLE_COLUMN:
-            exec = new ColumnAnalysisSqlExecutor();
+            exec = ExecutionLanguage.SQL.equals(executionEngine) ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
             break;
         case CONNECTION:
             exec = new ConnectionAnalysisExecutor();

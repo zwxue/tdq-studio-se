@@ -84,6 +84,7 @@ public class AnalysisParametersItemProvider
             addDataValidationDomainsPropertyDescriptor(object);
             addAnalysisTypePropertyDescriptor(object);
             addDeactivatedIndicatorsPropertyDescriptor(object);
+            addExecutionLanguagePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -199,6 +200,28 @@ public class AnalysisParametersItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Execution Language feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addExecutionLanguagePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AnalysisParameters_executionLanguage_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AnalysisParameters_executionLanguage_feature", "_UI_AnalysisParameters_type"),
+                 AnalysisPackage.Literals.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns AnalysisParameters.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -236,6 +259,7 @@ public class AnalysisParametersItemProvider
 
         switch (notification.getFeatureID(AnalysisParameters.class)) {
             case AnalysisPackage.ANALYSIS_PARAMETERS__ANALYSIS_TYPE:
+            case AnalysisPackage.ANALYSIS_PARAMETERS__EXECUTION_LANGUAGE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

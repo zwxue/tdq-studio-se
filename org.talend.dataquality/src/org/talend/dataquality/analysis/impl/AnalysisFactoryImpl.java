@@ -81,6 +81,8 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
         switch (eDataType.getClassifierID()) {
             case AnalysisPackage.ANALYSIS_TYPE:
                 return createAnalysisTypeFromString(eDataType, initialValue);
+            case AnalysisPackage.EXECUTION_LANGUAGE:
+                return createExecutionLanguageFromString(eDataType, initialValue);
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
@@ -96,6 +98,8 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
         switch (eDataType.getClassifierID()) {
             case AnalysisPackage.ANALYSIS_TYPE:
                 return convertAnalysisTypeToString(eDataType, instanceValue);
+            case AnalysisPackage.EXECUTION_LANGUAGE:
+                return convertExecutionLanguageToString(eDataType, instanceValue);
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
@@ -168,6 +172,26 @@ public class AnalysisFactoryImpl extends EFactoryImpl implements AnalysisFactory
      * @generated
      */
     public String convertAnalysisTypeToString(EDataType eDataType, Object instanceValue) {
+        return instanceValue == null ? null : instanceValue.toString();
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public ExecutionLanguage createExecutionLanguageFromString(EDataType eDataType, String initialValue) {
+        ExecutionLanguage result = ExecutionLanguage.get(initialValue);
+        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+        return result;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String convertExecutionLanguageToString(EDataType eDataType, Object instanceValue) {
         return instanceValue == null ? null : instanceValue.toString();
     }
 

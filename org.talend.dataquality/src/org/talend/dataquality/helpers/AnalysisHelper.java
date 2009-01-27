@@ -18,6 +18,7 @@ import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
@@ -63,6 +64,20 @@ public final class AnalysisHelper {
         return parameters.getAnalysisType();
     }
 
+    /**
+     * Method "getExecutionEngine".
+     * 
+     * @param analysis the analysis
+     * @return the execution language (SQL by default)
+     */
+    public static ExecutionLanguage getExecutionEngine(Analysis analysis) {
+        AnalysisParameters parameters = analysis.getParameters();
+        if (parameters == null) {
+            return ExecutionLanguage.SQL;
+        }
+        // else
+        return parameters.getExecutionLanguage();
+    }
     /**
      * Method "setAnalysisType".
      * 
