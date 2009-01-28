@@ -881,6 +881,29 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.DefValueCountIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected DefValueCountIndicatorItemProvider defValueCountIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.DefValueCountIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createDefValueCountIndicatorAdapter() {
+        if (defValueCountIndicatorItemProvider == null) {
+            defValueCountIndicatorItemProvider = new DefValueCountIndicatorItemProvider(this);
+        }
+
+        return defValueCountIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1014,6 +1037,7 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (lowFrequencyIndicatorItemProvider != null) lowFrequencyIndicatorItemProvider.dispose();
         if (patternFreqIndicatorItemProvider != null) patternFreqIndicatorItemProvider.dispose();
         if (patternLowFreqIndicatorItemProvider != null) patternLowFreqIndicatorItemProvider.dispose();
+        if (defValueCountIndicatorItemProvider != null) defValueCountIndicatorItemProvider.dispose();
     }
 
 }

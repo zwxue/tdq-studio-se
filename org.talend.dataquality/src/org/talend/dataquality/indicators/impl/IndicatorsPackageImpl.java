@@ -37,6 +37,7 @@ import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.EnumStatistics;
@@ -353,6 +354,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass patternLowFreqIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass defValueCountIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1218,6 +1226,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * <!-- end-user-doc -->
      * @generated
      */
+    public EReference getCountsIndicator_DefaultValueIndicator() {
+        return (EReference)countsIndicatorEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getDateParameters() {
         return dateParametersEClass;
     }
@@ -1310,6 +1327,24 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      */
     public EClass getPatternLowFreqIndicator() {
         return patternLowFreqIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getDefValueCountIndicator() {
+        return defValueCountIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getDefValueCountIndicator_DefaultValCount() {
+        return (EAttribute)defValueCountIndicatorEClass.getEStructuralFeatures().get(0);
     }
 
     /**
@@ -1519,6 +1554,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEReference(countsIndicatorEClass, COUNTS_INDICATOR__UNIQUE_COUNT_INDICATOR);
         createEReference(countsIndicatorEClass, COUNTS_INDICATOR__DISTINCT_COUNT_INDICATOR);
         createEReference(countsIndicatorEClass, COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR);
+        createEReference(countsIndicatorEClass, COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR);
 
         dateParametersEClass = createEClass(DATE_PARAMETERS);
         createEAttribute(dateParametersEClass, DATE_PARAMETERS__DATE_AGGREGATION_TYPE);
@@ -1538,6 +1574,9 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         patternFreqIndicatorEClass = createEClass(PATTERN_FREQ_INDICATOR);
 
         patternLowFreqIndicatorEClass = createEClass(PATTERN_LOW_FREQ_INDICATOR);
+
+        defValueCountIndicatorEClass = createEClass(DEF_VALUE_COUNT_INDICATOR);
+        createEAttribute(defValueCountIndicatorEClass, DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT);
 
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
@@ -1627,6 +1666,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         lowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         patternFreqIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         patternLowFreqIndicatorEClass.getESuperTypes().add(this.getLowFrequencyIndicator());
+        defValueCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1798,6 +1838,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEReference(getCountsIndicator_UniqueCountIndicator(), this.getUniqueCountIndicator(), null, "UniqueCountIndicator", null, 0, 1, CountsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getCountsIndicator_DistinctCountIndicator(), this.getDistinctCountIndicator(), null, "distinctCountIndicator", null, 0, 1, CountsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getCountsIndicator_DuplicateCountIndicator(), this.getDuplicateCountIndicator(), null, "duplicateCountIndicator", null, 0, 1, CountsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getCountsIndicator_DefaultValueIndicator(), this.getDefValueCountIndicator(), null, "defaultValueIndicator", null, 0, 1, CountsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(dateParametersEClass, DateParameters.class, "DateParameters", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getDateParameters_DateAggregationType(), this.getDateGrain(), "dateAggregationType", "year", 0, 1, DateParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1817,6 +1858,9 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEClass(patternFreqIndicatorEClass, PatternFreqIndicator.class, "PatternFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(patternLowFreqIndicatorEClass, PatternLowFreqIndicator.class, "PatternLowFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(defValueCountIndicatorEClass, DefValueCountIndicator.class, "DefValueCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getDefValueCountIndicator_DefaultValCount(), ecorePackage.getELongObject(), "defaultValCount", null, 0, 1, DefValueCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

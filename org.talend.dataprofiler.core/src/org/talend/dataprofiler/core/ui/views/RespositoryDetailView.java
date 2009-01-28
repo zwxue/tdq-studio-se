@@ -17,7 +17,6 @@ import java.util.Date;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -63,13 +62,13 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC qzhang class global comment. Detailled comment <br/>
+ * @author qzhang
  * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
- * 
+ * Detail view of the Data profiler.
  */
 public class RespositoryDetailView extends ViewPart implements ISelectionListener {
 
@@ -83,7 +82,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      * DOC qzhang RespositoryDetailView constructor comment.
      */
     public RespositoryDetailView() {
-
         switchFlag = PluginChecker.isTDQLoaded();
     }
 
@@ -128,13 +126,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createTechnicalDetail(EObject fe) {
-        Label idLab = new Label(tContainer, SWT.NONE);
-        idLab.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.Identifier"));
-        newText(tContainer, ResourceHelper.getUUID(fe));
-
-        Label pathLab = new Label(tContainer, SWT.NONE);
-        pathLab.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"));
-        newText(tContainer, fe.eResource().getURI().toPlatformString(false));
+        newLabelAndText(tContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.group.Identifier"), ResourceHelper.getUUID(fe)); //$NON-NLS-1$
+        
+        newLabelAndText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"), fe.eResource() //$NON-NLS-1$
+                .getURI().toPlatformString(false));
     }
 
     private void createTechnicalDetail(IFile fe) {
@@ -145,9 +141,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         }
     }
 
-    /**
-     * DOC qzhang Comment method "createDefault".
-     */
     private void createDefault() {
         newText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
     }
@@ -223,13 +216,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         }
     }
 
-    /**
-     * DOC qzhang Comment method "createFileDetail".
-     * 
-     * @param is
-     * @param fe2
-     * @return
-     */
     private boolean createFileDetail(boolean is, IFile fe2) {
         if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
             TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
@@ -273,19 +259,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         return object;
     }
 
-    /**
-     * DOC qzhang Comment method "createPatternDetail".
-     * 
-     * @param pattern
-     */
+    
     private void createPatternDetail(Pattern pattern) {
         createName(pattern);
         createPurpose(pattern);
         createDescription(pattern);
-        Label label;
-
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.type")); //$NON-NLS-1$
 
         EList<PatternComponent> components = pattern.getComponents();
         StringBuilder description = new StringBuilder();
@@ -295,42 +273,38 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 description.append("  ").append(expression.getExpression().getLanguage()); //$NON-NLS-1$
             }
         }
-        newText(gContainer, description.toString());
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type"), description.toString()); //$NON-NLS-1$
     }
 
-    /**
-     * DOC qzhang Comment method "createAnaysisDetail".
-     * 
-     * @param ana
-     */
     private void createAnaysisDetail(Analysis ana) {
         createName(ana);
         createPurpose(ana);
         createDescription(ana);
-        Label label;
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.otherType")); //$NON-NLS-1$
+        
         String description = ana.getParameters().getAnalysisType().getLiteral();
-        newText(gContainer, description);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.otherType"), description); //$NON-NLS-1$
 
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyzedElements")); //$NON-NLS-1$
         AnalysisContext context = ana.getContext();
         int numn = context.getAnalysedElements().size();
-        newText(gContainer, String.valueOf(numn));
+        newLabelAndText(gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyzedElements"), String.valueOf(numn)); //$NON-NLS-1$
 
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.connection")); //$NON-NLS-1$
         DataManager connection = context.getConnection();
         if (connection == null) {
             description = null;
         } else {
             description = connection.getName();
         }
-        newText(gContainer, description);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.connection"), description); //$NON-NLS-1$
     }
 
     private void newText(Composite composite, String inputText) {
+        newText(composite, inputText, DefaultMessagesImpl.getString("RespositoryDetailView.none")); //$NON-NLS-1$
+    }
+
+    private void newLabelAndText(Composite composite, String labelString, String inputText) {
+        Label label = new Label(composite, SWT.NONE);
+        label.setText(labelString);
         newText(composite, inputText, DefaultMessagesImpl.getString("RespositoryDetailView.none")); //$NON-NLS-1$
     }
 
@@ -347,156 +321,82 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         text.setLayoutData(data);
     }
 
-    /**
-     * DOC qzhang Comment method "createSqlFileDetail".
-     * 
-     * @param fe2
-     */
     private void createSqlFileDetail(IFile fe2) {
-        Label label;
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.filename")); //$NON-NLS-1$
-        newText(gContainer, fe2.getFullPath().toPortableString());
-
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.modificationDate")); //$NON-NLS-1$
+        newLabelAndText(gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.filename"), fe2.getFullPath().toPortableString()); //$NON-NLS-1$
 
         // MODSCA 20080728 changed to getLocalTimeStamp() because modificationStamp was 1 or 2 (=> year 1970)
         // long modificationStamp = fe2.getModificationStamp();
         long modificationStamp = fe2.getLocalTimeStamp();
-        newText(gContainer, new Date(modificationStamp).toString());
+        newLabelAndText(gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.modificationDate"), new Date(modificationStamp).toString()); //$NON-NLS-1$
     }
-
-    /**
-     * DOC qzhang Comment method "createReportDetail".
-     * 
-     * @param rep
-     */
+   
     private void createReportDetail(TdReport rep) {
         createName(rep);
         createPurpose(rep);
-        createDescription(rep);
-        Label label;
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyses")); //$NON-NLS-1$
+        createDescription(rep);        
         int description = ReportHelper.getAnalyses(rep).size();
-        newText(gContainer, String.valueOf(description));
+        newLabelAndText(gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyses"), String.valueOf(description)); //$NON-NLS-1$
     }
 
-    /**
-     * DOC qzhang Comment method "createTdColumn".
-     * 
-     * @param column
-     */
     private void createTdColumn(TdColumn column) {
         createTdTVDetail(column);
-        Label label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.typex")); //$NON-NLS-1$
-        newText(gContainer, column.getSqlDataType().getName());
-
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.nullable")); //$NON-NLS-1$
+        newLabelAndText(gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.typex"), column.getSqlDataType().getName()); //$NON-NLS-1$
         String purpose = column.getIsNullable().isNullable();
-        newText(gContainer, purpose);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.nullable"), purpose); //$NON-NLS-1$
+        final Expression initialValue = column.getInitialValue();
+        String defValueText = (initialValue != null) ? initialValue.getBody() : null;
+        newLabelAndText(gContainer, "Default value:", defValueText);
+        newLabelAndText(gContainer, "Size:", String.valueOf(column.getLength()));
     }
 
-    /**
-     * DOC qzhang Comment method "createTdTVDetail".
-     * 
-     * @param element
-     */
     private void createTdTVDetail(ModelElement element) {
-        Label label;
         createName(element);
-
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.remarks")); //$NON-NLS-1$
         String purpose = TaggedValueHelper.getComment(element);
-        newText(gContainer, purpose);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.remarks"), purpose); //$NON-NLS-1$
     }
 
-    /**
-     * DOC qzhang Comment method "createName".
-     * 
-     * @param element
-     */
     private void createName(ModelElement element) {
-        Label label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.name")); //$NON-NLS-1$
-        newText(gContainer, element.getName());
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.name"), element.getName()); //$NON-NLS-1$
     }
 
-    /**
-     * DOC qzhang Comment method "createTdSchemaDetail".
-     * 
-     * @param schema
-     */
     private void createTdSchemaDetail(TdSchema schema) {
         createName(schema);
     }
 
-    /**
-     * DOC qzhang Comment method "createTdCatalogDetail".
-     * 
-     * @param catalog
-     */
     private void createTdCatalogDetail(TdCatalog catalog) {
         createName(catalog);
     }
 
-    /**
-     * DOC qzhang Comment method "createDataProviderDetail".
-     */
     private void createDataProviderDetail(TdDataProvider dataProvider) {
         createName(dataProvider);
-
-        Label label;
         createPurpose(dataProvider);
         createDescription(dataProvider);
-
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.URL")); //$NON-NLS-1$
+        
         String connectionString = DataProviderHelper.getTdProviderConnection(dataProvider).getObject().getConnectionString();
-        newText(gContainer, connectionString);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
 
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.type2")); //$NON-NLS-1$
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
         if (softwareSystem == null) {
             softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
         }
         String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype();
-        newText(gContainer, subtype);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
     }
 
-    /**
-     * DOC qzhang Comment method "createDescription".
-     * 
-     * @param dataProvider
-     */
-    private void createDescription(ModelElement dataProvider) {
-        Label label;
-        label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.description")); //$NON-NLS-1$
+    private void createDescription(ModelElement dataProvider) {        
         String description = TaggedValueHelper.getDescription(dataProvider);
-        newText(gContainer, description);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.description"), description); //$NON-NLS-1$
     }
 
-    /**
-     * DOC qzhang Comment method "createPurpose".
-     * 
-     * @param dataProvider
-     */
-    private void createPurpose(ModelElement dataProvider) {
-        Label label = new Label(gContainer, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("RespositoryDetailView.purpose")); //$NON-NLS-1$
+    private void createPurpose(ModelElement dataProvider) {        
         String purpose = TaggedValueHelper.getPurpose(dataProvider);
-        newText(gContainer, purpose);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.purpose"), purpose); //$NON-NLS-1$
     }
 
-    /**
-     * DOC qzhang Comment method "clearContainer".
-     */
     private void clearContainer() {
         if (gContainer != null && !gContainer.isDisposed()) {
             Control[] children = gContainer.getChildren();
@@ -514,7 +414,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void initializeToolBar() {
-        IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+        getViewSite().getActionBars().getToolBarManager();
     }
 
 }

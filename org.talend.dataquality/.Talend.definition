@@ -241,6 +241,11 @@
     <taggedValue xmi:id="_lNIE0cbNEd2d_JPxxDRSfQ" tag="Purpose" value="Give an overview of the content of a view"/>
     <taggedValue xmi:id="_lNIE0sbNEd2d_JPxxDRSfQ" tag="Description" value="Counts the number of rows..."/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_xnOs8O1MEd2L4a5zyMnylw" name="Default Value Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Default Value Count">
+    <taggedValue xmi:id="_xnOs8e1MEd2L4a5zyMnylw" tag="Description" value="counts the number of rows that are equal to the default value of the column"/>
+    <taggedValue xmi:id="_xnOs8u1MEd2L4a5zyMnylw" tag="Purpose" value="evaluates the number of default values"/>
+    <sqlGenericExpression xmi:id="_xnOs8-1MEd2L4a5zyMnylw" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+  </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>

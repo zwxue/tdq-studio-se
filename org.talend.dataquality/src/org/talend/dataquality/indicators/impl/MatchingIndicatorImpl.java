@@ -32,10 +32,10 @@ public abstract class MatchingIndicatorImpl extends IndicatorImpl implements Mat
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #getMatchingValueCount()
-     * @generated
+     * @generated NOT
      * @ordered
      */
-    protected static final Long MATCHING_VALUE_COUNT_EDEFAULT = null;
+    protected static final Long MATCHING_VALUE_COUNT_EDEFAULT = 0L;
 
     /**
      * The cached value of the '{@link #getMatchingValueCount() <em>Matching Value Count</em>}' attribute.
@@ -48,14 +48,14 @@ public abstract class MatchingIndicatorImpl extends IndicatorImpl implements Mat
     protected Long matchingValueCount = MATCHING_VALUE_COUNT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getNotMatchingValueCount() <em>Not Matching Value Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getNotMatchingValueCount() <em>Not Matching Value Count</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getNotMatchingValueCount()
-     * @generated
+     * @generated NOT
      * @ordered
      */
-    protected static final Long NOT_MATCHING_VALUE_COUNT_EDEFAULT = null;
+    protected static final Long NOT_MATCHING_VALUE_COUNT_EDEFAULT = 0L;
 
     /**
      * The cached value of the '{@link #getNotMatchingValueCount() <em>Not Matching Value Count</em>}' attribute.

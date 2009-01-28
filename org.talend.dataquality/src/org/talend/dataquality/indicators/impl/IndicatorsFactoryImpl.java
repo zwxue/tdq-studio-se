@@ -101,6 +101,7 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.LOW_FREQUENCY_INDICATOR: return createLowFrequencyIndicator();
             case IndicatorsPackage.PATTERN_FREQ_INDICATOR: return createPatternFreqIndicator();
             case IndicatorsPackage.PATTERN_LOW_FREQ_INDICATOR: return createPatternLowFreqIndicator();
+            case IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR: return createDefValueCountIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -516,6 +517,16 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public PatternLowFreqIndicator createPatternLowFreqIndicator() {
         PatternLowFreqIndicatorImpl patternLowFreqIndicator = new PatternLowFreqIndicatorImpl();
         return patternLowFreqIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DefValueCountIndicator createDefValueCountIndicator() {
+        DefValueCountIndicatorImpl defValueCountIndicator = new DefValueCountIndicatorImpl();
+        return defValueCountIndicator;
     }
 
     /**

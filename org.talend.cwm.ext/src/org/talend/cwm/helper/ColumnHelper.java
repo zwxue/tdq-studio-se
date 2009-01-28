@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import orgomg.cwm.objectmodel.core.Classifier;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -148,5 +149,16 @@ public final class ColumnHelper {
             return null;
         }
         return SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
+    }
+
+    /**
+     * Method "getDefaultValue".
+     * 
+     * @param column a column
+     * @return the default value of a column or null
+     */
+    public static String getDefaultValue(Column column) {
+        Expression initialValue = column.getInitialValue();
+        return initialValue != null ? initialValue.getBody() : null;
     }
 }

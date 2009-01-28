@@ -25,6 +25,7 @@ import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
+import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
@@ -486,6 +487,18 @@ public final class DefinitionHandler {
         public Boolean defaultCase(EObject object) {
             // try with columnSetSwitch
             return columnIndicatorSwitch.doSwitch(object);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * org.talend.dataquality.indicators.util.IndicatorsSwitch#caseDefValueCountIndicator(org.talend.dataquality
+         * .indicators.DefValueCountIndicator)
+         */
+        @Override
+        public Boolean caseDefValueCountIndicator(DefValueCountIndicator object) {
+            return setIndicatorDefinition(object, "Default Value Count");
         }
 
         /*

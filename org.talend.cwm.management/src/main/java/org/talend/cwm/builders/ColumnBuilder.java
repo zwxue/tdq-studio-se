@@ -24,7 +24,9 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.utils.sql.metadata.constants.GetColumn;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.enumerations.NullableType;
 
 /**
@@ -77,7 +79,12 @@ public class ColumnBuilder extends CwmBuilder {
             TaggedValueHelper.setComment(colComment, column);
 
             // TODO scorreia other informations for columns can be retrieved here
-
+            // get the default value
+            Object defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
+            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
+            Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
+            column.setInitialValue(defExpression);
+            
             // --- create and set type of column
             // TODO scorreia get type of column on demand, not on creation of column
             TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);

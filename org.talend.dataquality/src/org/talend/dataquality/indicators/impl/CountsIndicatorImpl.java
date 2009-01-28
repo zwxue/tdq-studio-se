@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
+import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -37,6 +38,7 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
  *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getUniqueCountIndicator <em>Unique Count Indicator</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDistinctCountIndicator <em>Distinct Count Indicator</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDuplicateCountIndicator <em>Duplicate Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.CountsIndicatorImpl#getDefaultValueIndicator <em>Default Value Indicator</em>}</li>
  * </ul>
  * </p>
  *
@@ -97,6 +99,16 @@ public class CountsIndicatorImpl extends CompositeIndicatorImpl implements Count
      * @ordered
      */
     protected DuplicateCountIndicator duplicateCountIndicator;
+
+    /**
+     * The cached value of the '{@link #getDefaultValueIndicator() <em>Default Value Indicator</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getDefaultValueIndicator()
+     * @generated
+     * @ordered
+     */
+    protected DefValueCountIndicator defaultValueIndicator;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -358,6 +370,49 @@ public class CountsIndicatorImpl extends CompositeIndicatorImpl implements Count
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DefValueCountIndicator getDefaultValueIndicator() {
+        return defaultValueIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public NotificationChain basicSetDefaultValueIndicator(DefValueCountIndicator newDefaultValueIndicator, NotificationChain msgs) {
+        DefValueCountIndicator oldDefaultValueIndicator = defaultValueIndicator;
+        defaultValueIndicator = newDefaultValueIndicator;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR, oldDefaultValueIndicator, newDefaultValueIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setDefaultValueIndicator(DefValueCountIndicator newDefaultValueIndicator) {
+        if (newDefaultValueIndicator != defaultValueIndicator) {
+            NotificationChain msgs = null;
+            if (defaultValueIndicator != null)
+                msgs = ((InternalEObject)defaultValueIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR, null, msgs);
+            if (newDefaultValueIndicator != null)
+                msgs = ((InternalEObject)newDefaultValueIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR, null, msgs);
+            msgs = basicSetDefaultValueIndicator(newDefaultValueIndicator, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR, newDefaultValueIndicator, newDefaultValueIndicator));
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -376,6 +431,8 @@ public class CountsIndicatorImpl extends CompositeIndicatorImpl implements Count
                 return basicSetDistinctCountIndicator(null, msgs);
             case IndicatorsPackage.COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR:
                 return basicSetDuplicateCountIndicator(null, msgs);
+            case IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR:
+                return basicSetDefaultValueIndicator(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -399,6 +456,8 @@ public class CountsIndicatorImpl extends CompositeIndicatorImpl implements Count
                 return getDistinctCountIndicator();
             case IndicatorsPackage.COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR:
                 return getDuplicateCountIndicator();
+            case IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR:
+                return getDefaultValueIndicator();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -427,6 +486,9 @@ public class CountsIndicatorImpl extends CompositeIndicatorImpl implements Count
                 return;
             case IndicatorsPackage.COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR:
                 setDuplicateCountIndicator((DuplicateCountIndicator)newValue);
+                return;
+            case IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR:
+                setDefaultValueIndicator((DefValueCountIndicator)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -457,6 +519,9 @@ public class CountsIndicatorImpl extends CompositeIndicatorImpl implements Count
             case IndicatorsPackage.COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR:
                 setDuplicateCountIndicator((DuplicateCountIndicator)null);
                 return;
+            case IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR:
+                setDefaultValueIndicator((DefValueCountIndicator)null);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -480,6 +545,8 @@ public class CountsIndicatorImpl extends CompositeIndicatorImpl implements Count
                 return distinctCountIndicator != null;
             case IndicatorsPackage.COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR:
                 return duplicateCountIndicator != null;
+            case IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR:
+                return defaultValueIndicator != null;
         }
         return super.eIsSet(featureID);
     }

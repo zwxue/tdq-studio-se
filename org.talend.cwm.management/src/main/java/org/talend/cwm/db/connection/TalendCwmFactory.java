@@ -46,7 +46,9 @@ import org.talend.utils.time.TimeTracer;
 import orgomg.cwm.objectmodel.core.Classifier;
 
 /**
- * DOC scorreia class global comment. Detailled comment
+ * @author scorreia
+ * 
+ * Factory to create CWM classes from a DBConnect object.
  */
 public final class TalendCwmFactory {
 

@@ -527,6 +527,8 @@
           eType="#//indicators/DistinctCountIndicator" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="duplicateCountIndicator"
           eType="#//indicators/DuplicateCountIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="defaultValueIndicator"
+          eType="#//indicators/DefValueCountIndicator" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="DateParameters">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateAggregationType"
@@ -553,6 +555,12 @@
     <eClassifiers xsi:type="ecore:EClass" name="LowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="PatternFreqIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="PatternLowFreqIndicator" eSuperTypes="#//indicators/LowFrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DefValueCountIndicator" eSuperTypes="#//indicators/Indicator">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="An indicator that gives the number of rows of a column that have the default value set."/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+    </eClassifiers>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eOperations name="addTableIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">

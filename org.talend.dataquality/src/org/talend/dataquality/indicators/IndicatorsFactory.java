@@ -341,6 +341,15 @@ public interface IndicatorsFactory extends EFactory {
     PatternLowFreqIndicator createPatternLowFreqIndicator();
 
     /**
+     * Returns a new object of class '<em>Def Value Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Def Value Count Indicator</em>'.
+     * @generated
+     */
+    DefValueCountIndicator createDefValueCountIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

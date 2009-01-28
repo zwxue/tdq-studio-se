@@ -249,7 +249,9 @@ public class DQRespositoryView extends CommonNavigator {
     }
 
     /**
-     * DOC Zqin Comment method "showSelectedElements".MOD 2009-01-07 mzhao for feature:0005664
+     * DOC Zqin Comment method "showSelectedElements".
+     * 
+     * MOD 2009-01-07 mzhao for feature:0005664
      * 
      * @param newTree
      */

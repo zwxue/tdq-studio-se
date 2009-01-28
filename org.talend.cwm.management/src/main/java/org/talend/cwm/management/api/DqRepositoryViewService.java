@@ -435,6 +435,14 @@ public final class DqRepositoryViewService {
         return element != null ? element.getName() : null;
     }
 
+    /**
+     * @deprecated do not use this method. It is used for test purpose only.
+     * 
+     * Method "saveDomain".
+     * @param domain
+     * @param folderProvider
+     * @return
+     */
     public static boolean saveDomain(Domain domain, FolderProvider folderProvider) {
         assert domain != null;
 
@@ -447,9 +455,12 @@ public final class DqRepositoryViewService {
             return false;
         }
 
-        String filename = createFilename(domain.getName(), DomainPackage.eNAME);
-        IFile file = folderProvider.getFolderResource().getFile(filename);
-        return saveDomain(domain, file);
+        String filename = folderProvider.getFolder() + File.separator + createFilename(domain.getName(), DomainPackage.eNAME);
+        EMFUtil util = new EMFUtil();
+        util.setUsePlatformRelativePath(false);
+        util.addPoolToResourceSet(new File(filename), domain);
+
+        return util.save();
     }
 
     private static boolean saveDomain(Domain domain, IFile file) {

@@ -21,6 +21,7 @@ package org.talend.dataquality.indicators;
  *   <li>{@link org.talend.dataquality.indicators.CountsIndicator#getUniqueCountIndicator <em>Unique Count Indicator</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.CountsIndicator#getDistinctCountIndicator <em>Distinct Count Indicator</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.CountsIndicator#getDuplicateCountIndicator <em>Duplicate Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.CountsIndicator#getDefaultValueIndicator <em>Default Value Indicator</em>}</li>
  * </ul>
  * </p>
  *
@@ -184,5 +185,31 @@ public interface CountsIndicator extends CompositeIndicator {
      * @generated
      */
     void setDuplicateCountIndicator(DuplicateCountIndicator value);
+
+    /**
+     * Returns the value of the '<em><b>Default Value Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Default Value Indicator</em>' containment reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Default Value Indicator</em>' containment reference.
+     * @see #setDefaultValueIndicator(DefValueCountIndicator)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getCountsIndicator_DefaultValueIndicator()
+     * @model containment="true"
+     * @generated
+     */
+    DefValueCountIndicator getDefaultValueIndicator();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.CountsIndicator#getDefaultValueIndicator <em>Default Value Indicator</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Default Value Indicator</em>' containment reference.
+     * @see #getDefaultValueIndicator()
+     * @generated
+     */
+    void setDefaultValueIndicator(DefValueCountIndicator value);
 
 } // CountsIndicator

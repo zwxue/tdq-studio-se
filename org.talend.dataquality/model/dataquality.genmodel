@@ -324,6 +324,7 @@
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/CountsIndicator/UniqueCountIndicator"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/CountsIndicator/distinctCountIndicator"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/CountsIndicator/duplicateCountIndicator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/CountsIndicator/defaultValueIndicator"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/DateParameters">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/DateParameters/dateAggregationType"/>
@@ -338,6 +339,9 @@
       <genClasses ecoreClass="dataquality.ecore#//indicators/LowFrequencyIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/PatternFreqIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/PatternLowFreqIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/DefValueCountIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/DefValueCountIndicator/defaultValCount"/>
+      </genClasses>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">

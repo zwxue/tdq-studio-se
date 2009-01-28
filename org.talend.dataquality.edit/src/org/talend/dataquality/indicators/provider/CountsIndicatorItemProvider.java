@@ -88,6 +88,7 @@ public class CountsIndicatorItemProvider
             childrenFeatures.add(IndicatorsPackage.Literals.COUNTS_INDICATOR__UNIQUE_COUNT_INDICATOR);
             childrenFeatures.add(IndicatorsPackage.Literals.COUNTS_INDICATOR__DISTINCT_COUNT_INDICATOR);
             childrenFeatures.add(IndicatorsPackage.Literals.COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR);
+            childrenFeatures.add(IndicatorsPackage.Literals.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR);
         }
         return childrenFeatures;
     }
@@ -148,6 +149,7 @@ public class CountsIndicatorItemProvider
             case IndicatorsPackage.COUNTS_INDICATOR__UNIQUE_COUNT_INDICATOR:
             case IndicatorsPackage.COUNTS_INDICATOR__DISTINCT_COUNT_INDICATOR:
             case IndicatorsPackage.COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR:
+            case IndicatorsPackage.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -194,6 +196,11 @@ public class CountsIndicatorItemProvider
             (createChildParameter
                 (IndicatorsPackage.Literals.COUNTS_INDICATOR__DUPLICATE_COUNT_INDICATOR,
                  IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.COUNTS_INDICATOR__DEFAULT_VALUE_INDICATOR,
+                 IndicatorsFactory.eINSTANCE.createDefValueCountIndicator()));
     }
 
 }

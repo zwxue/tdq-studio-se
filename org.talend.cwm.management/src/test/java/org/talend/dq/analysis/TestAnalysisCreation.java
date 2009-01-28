@@ -63,6 +63,21 @@ public class TestAnalysisCreation {
     /**
      * 
      */
+    private static final String COLUMN_ANALYZED = "TEST_CHAR";
+
+    /**
+     * 
+     */
+    private static final String TABLE_ANALYZED = "TEST_COUNT";
+
+    /**
+     * 
+     */
+    private static final String DB_TO_ANALYZE = "TEST_DATAPROFILER";
+
+    /**
+     * 
+     */
     private static final String REGEXP = "'su.*'";
 
     private static final String FILENAME = ".Talend.definition";
@@ -115,7 +130,7 @@ public class TestAnalysisCreation {
 
         // get the domain constraint
         Domain dataFilter = getDataFilter(dataManager, (Column) column); // CAST here for test
-        analysisBuilder.addFilterOnData(dataFilter);
+        // analysisBuilder.addFilterOnData(dataFilter);
 
         // TODO scorreia save domain with analysisbuilder?
         FolderProvider folderProvider = new FolderProvider();
@@ -216,6 +231,7 @@ public class TestAnalysisCreation {
         List<Indicator> allIndicators = new ArrayList<Indicator>();
         PatternMatchingIndicator patternMatchingIndicator = createPatternMatchingIndicator();
         allIndicators.add(patternMatchingIndicator);
+        allIndicators.add(IndicatorsFactory.eINSTANCE.createDefValueCountIndicator());
         // allIndicators.add(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
         // allIndicators.add(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
         // allIndicators.add(IndicatorsFactory.eINSTANCE.createDistinctCountIndicator());
@@ -286,6 +302,12 @@ public class TestAnalysisCreation {
         System.out.println("Catalogs: " + tdCatalogs);
         Assert.assertFalse(tdCatalogs.isEmpty());
         TdCatalog catalog = tdCatalogs.get(0);
+        for (TdCatalog tdCatalog : tdCatalogs) {
+            if (DB_TO_ANALYZE.equals(tdCatalog.getName())) {
+                catalog = tdCatalog;
+                break;
+            }
+        }
         Assert.assertNotNull(catalog);
         System.out.println("analysed Catalog: " + catalog.getName());
         List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, catalog, null, true);
@@ -295,6 +317,12 @@ public class TestAnalysisCreation {
 
         Assert.assertFalse(tables.isEmpty());
         TdTable tdTable = tables.get(0);
+        for (TdTable table : tables) {
+            if (TABLE_ANALYZED.equals(table.getName())) {
+                tdTable = table;
+                break;
+            }
+        }
         System.out.println("analyzed Table: " + tdTable.getName());
         List<TdColumn> columns;
         columns = DqRepositoryViewService.getColumns(dataManager, tdTable, null, true);
@@ -302,6 +330,12 @@ public class TestAnalysisCreation {
 
         Assert.assertFalse(columns.isEmpty());
         TdColumn col = columns.get(0);
+        for (TdColumn tdColumn : columns) {
+            if (COLUMN_ANALYZED.equals(tdColumn.getName())) {
+                col = tdColumn;
+                break;
+            }
+        }
         System.out.println("analyzed Column: " + col.getName());
         return col;
     }

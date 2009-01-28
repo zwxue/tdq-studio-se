@@ -74,7 +74,10 @@ import orgomg.cwm.resource.relational.ColumnSet;
 import Zql.ParseException;
 
 /**
- * DOC scorreia class global comment. Detailled comment
+ * @author scorreia
+ * 
+ * Generates the SQL queries for each indicator and each column to be analyzed. Then executes the queries and stores the
+ * results.
  */
 public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
@@ -130,7 +133,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "createSqlQuery".
+     * Method "createSqlQuery".
      * 
      * @param dataFilterExpression
      * 
@@ -306,6 +309,20 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table, patterns);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
         } else {
+            // --- handle case of default value count -> create the where clause
+            if (IndicatorsPackage.eINSTANCE.getDefValueCountIndicator().equals(indicatorEclass)) {
+                String defValue = ColumnHelper.getDefaultValue(tdColumn);
+                if (defValue == null) {
+                    return traceError("No default value exits for this column " + colName + ". The indicator "
+                            + indicator.getName() + " cannot be evaluated.");
+                }
+                // need to generate different SQL where clause for each type.
+                int javaType = tdColumn.getJavaType();
+                if (!Java2SqlType.isNumbericInSQL(javaType)) {
+                    defValue = "'" + defValue + "'";
+                }
+                whereExpression.add(colName + dbmsLanguage.equal() + defValue);
+            }                        
 
             // --- default case
             completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(sqlGenericExpression.getBody(), colName, table);
@@ -450,7 +467,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "castColumn".
+     * Method "castColumn".
      * 
      * @param indicator
      * @param tdColumn
@@ -932,7 +949,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             for (Indicator indicator : indicators) {
                 // skip composite indicators that do not require a sql execution
                 if (indicator instanceof CompositeIndicator) {
-                    // TODO scorreia we will have to handle possible options of composite indicators elsewhere?
+                    // options of composite indicators are handled elsewhere
                     continue;
                 }
                 // set the connection's catalog
