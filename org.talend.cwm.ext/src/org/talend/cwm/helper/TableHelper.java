@@ -16,10 +16,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
+import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.Table;
 
 /**
@@ -92,5 +97,89 @@ public final class TableHelper {
     public static Table getParentTable(Column column) {
         TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(column.getOwner());
         return table;
+    }
+
+    /**
+     * Method "addPrimaryKey".
+     * 
+     * @param table
+     * @param pk the primary key of the table
+     */
+    public static boolean addPrimaryKey(Table table, PrimaryKey pk) {
+        assert table != null;
+        assert pk != null;
+        return table.getOwnedElement().add(pk);
+    }
+
+    /**
+     * Method "addAllPrimaryKeys".
+     * 
+     * @param table
+     * @param primaryKeys the primary keys of the table.
+     */
+    public static boolean addPrimaryKeys(ColumnSet table, List<PrimaryKey> primaryKeys) {
+        assert table != null;
+        assert primaryKeys != null;
+        return table.getOwnedElement().addAll(primaryKeys);
+    }
+
+    /**
+     * Method "addForeignKey".
+     * 
+     * @param table
+     * @param foreignKey the foreign key of the given table
+     */
+    public static boolean addForeignKey(ColumnSet table, ForeignKey foreignKey) {
+        assert table != null;
+        assert foreignKey != null;
+        return table.getOwnedElement().add(foreignKey);
+    }
+
+    /**
+     * Method "addForeignKeys".
+     * 
+     * @param table
+     * @param foreignKeys the foreign keys of this table
+     */
+    public static boolean addForeignKeys(ColumnSet table, List<ForeignKey> foreignKeys) {
+        assert table != null;
+        assert foreignKeys != null;
+        return table.getOwnedElement().addAll(foreignKeys);
+    }
+
+    /**
+     * Method "getPrimaryKeys".
+     * 
+     * @param table a table
+     * @return a list of all primary keys of the given table
+     */
+    public static List<PrimaryKey> getPrimaryKeys(Table table) {
+        List<PrimaryKey> primarykeys = new ArrayList<PrimaryKey>();
+        EList<ModelElement> ownedElements = table.getOwnedElement();
+        for (ModelElement modelElement : ownedElements) {
+            PrimaryKey pk = SwitchHelpers.PRIMARY_KEY_SWITCH.doSwitch(modelElement);
+            if (pk != null) {
+                primarykeys.add(pk);
+            }
+        }
+        return primarykeys;
+    }
+
+    /**
+     * Method "getForeignKeys".
+     * 
+     * @param table a table
+     * @return a list of all foreign keys of the given table
+     */
+    public static List<ForeignKey> getForeignKeys(Table table) {
+        List<ForeignKey> foreignkeys = new ArrayList<ForeignKey>();
+        EList<ModelElement> ownedElements = table.getOwnedElement();
+        for (ModelElement modelElement : ownedElements) {
+            ForeignKey pk = SwitchHelpers.FOREIGN_KEY_SWITCH.doSwitch(modelElement);
+            if (pk != null) {
+                foreignkeys.add(pk);
+            }
+        }
+        return foreignkeys;
     }
 }

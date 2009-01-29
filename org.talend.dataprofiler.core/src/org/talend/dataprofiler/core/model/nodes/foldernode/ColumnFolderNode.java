@@ -70,7 +70,8 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                 MessageBoxExceptionHandler.process(e);
             }
             // store tables in catalog
-            ColumnSetHelper.addColumns(columnSet, columnList);
+            // MOD scorreia 2009-01-29 columns are stored in the table
+            // ColumnSetHelper.addColumns(columnSet, columnList);
             this.setChildren(columnList.toArray());
             NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
         }

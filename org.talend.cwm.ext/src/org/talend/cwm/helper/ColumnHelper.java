@@ -22,10 +22,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
+import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.PrimaryKey;
 
 /**
  * @author scorreia
@@ -160,5 +162,34 @@ public final class ColumnHelper {
     public static String getDefaultValue(Column column) {
         Expression initialValue = column.getInitialValue();
         return initialValue != null ? initialValue.getBody() : null;
+    }
+
+    /**
+     * Method "isPrimaryKey".
+     * 
+     * @param column a column
+     * @return true if the given column is a primary key
+     */
+    public static boolean isPrimaryKey(Column column) {
+        return getPrimaryKey(column) != null;
+    }
+
+    /**
+     * Method "getPrimaryKey".
+     * 
+     * @param column a column
+     * @return the primary key object if this column is a primary key
+     */
+    public static PrimaryKey getPrimaryKey(Column column) {
+        EList<UniqueKey> uniqueKeys = column.getUniqueKey();
+        for (UniqueKey uniqueKey : uniqueKeys) {
+            if (uniqueKey != null) {
+                PrimaryKey pk = SwitchHelpers.PRIMARY_KEY_SWITCH.doSwitch(uniqueKey);
+                if (pk != null) {
+                    return pk;
+                }
+            }
+        }
+        return null;
     }
 }

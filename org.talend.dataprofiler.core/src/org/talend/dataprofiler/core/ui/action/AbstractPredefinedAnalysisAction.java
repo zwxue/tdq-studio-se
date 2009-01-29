@@ -96,7 +96,8 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
                     try {
                         List<TdColumn> columns = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
-                        ColumnSetHelper.addColumns(columnSet, columns);
+                        // MOD scorreia 2009-01-29 columns are stored in the table
+                        // ColumnSetHelper.addColumns(columnSet, columns);
                         list.addAll(columns);
                         NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
                     } catch (TalendException e) {

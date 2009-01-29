@@ -74,7 +74,7 @@ public class ColumnSetHelper {
     }
 
     /**
-     * Method "addColumns".
+     * Method "setColumns" replaces the previous columns by the new ones.
      * 
      * @param columnSet the column set in which to add the columns (must not be null)
      * @param columns the columns to add (must not be null)

@@ -25,6 +25,8 @@ import org.talend.cwm.softwaredeployment.util.SoftwaredeploymentSwitch;
 import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.PrimaryKey;
 
 /**
  * @author scorreia
@@ -42,6 +44,39 @@ public final class SwitchHelpers {
         public Package casePackage(Package object) {
             return object;
         }
+    };
+
+    public static final orgomg.cwm.resource.relational.util.RelationalSwitch<PrimaryKey> PRIMARY_KEY_SWITCH = new orgomg.cwm.resource.relational.util.RelationalSwitch<PrimaryKey>() {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * orgomg.cwm.resource.relational.util.RelationalSwitch#casePrimaryKey(orgomg.cwm.resource.relational.PrimaryKey
+         * )
+         */
+        @Override
+        public PrimaryKey casePrimaryKey(PrimaryKey object) {
+            return object;
+        }
+
+    };
+    
+    public static final orgomg.cwm.resource.relational.util.RelationalSwitch<ForeignKey> FOREIGN_KEY_SWITCH = new orgomg.cwm.resource.relational.util.RelationalSwitch<ForeignKey>() {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * orgomg.cwm.resource.relational.util.RelationalSwitch#caseForeignKey(orgomg.cwm.resource.relational.ForeignKey
+         * )
+         */
+        @Override
+        public ForeignKey caseForeignKey(ForeignKey object) {
+            return object;
+        }
+
+
     };
 
     public static final RelationalSwitch<TdCatalog> CATALOG_SWITCH = new RelationalSwitch<TdCatalog>() {

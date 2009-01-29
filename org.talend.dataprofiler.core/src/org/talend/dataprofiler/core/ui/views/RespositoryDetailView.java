@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.views;
 
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
@@ -37,6 +38,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdCatalog;
@@ -64,6 +66,9 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.ForeignKey;
+import orgomg.cwm.resource.relational.PrimaryKey;
+import orgomg.cwm.resource.relational.Table;
 
 /**
  * @author qzhang
@@ -177,9 +182,13 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 TdSchema schema = (TdSchema) fe;
                 createTdSchemaDetail(schema);
                 is = false;
-            } else if ((fe instanceof TdTable) || fe instanceof TdView) {
+            } else if (fe instanceof TdTable) {
                 ModelElement element = (ModelElement) fe;
-                createTdTVDetail(element);
+                createTableDetail((Table) element);
+                is = false;
+            } else if (fe instanceof TdView) {
+                ModelElement element = (ModelElement) fe;
+                createNameCommentDetail(element);
                 is = false;
             } else if (fe instanceof TdColumn) {
                 TdColumn column = (TdColumn) fe;
@@ -214,6 +223,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (tContainer != null) {
             tContainer.layout();
         }
+    }
+
+    private void createTableDetail(Table table) {
+        createNameCommentDetail(table);
+        List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
+        newLabelAndText(gContainer, "Primary keys: ", primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.size()));
+        List<ForeignKey> foreignKeys = TableHelper.getForeignKeys(table);
+        newLabelAndText(gContainer, "Foreign keys: ", foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.size()));        
     }
 
     private boolean createFileDetail(boolean is, IFile fe2) {
@@ -342,7 +359,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createTdColumn(TdColumn column) {
-        createTdTVDetail(column);
+        createNameCommentDetail(column);
         newLabelAndText(gContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.typex"), column.getSqlDataType().getName()); //$NON-NLS-1$
         String purpose = column.getIsNullable().isNullable();
@@ -353,7 +370,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         newLabelAndText(gContainer, "Size:", String.valueOf(column.getLength()));
     }
 
-    private void createTdTVDetail(ModelElement element) {
+    private void createNameCommentDetail(ModelElement element) {
         createName(element);
         String purpose = TaggedValueHelper.getComment(element);
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.remarks"), purpose); //$NON-NLS-1$

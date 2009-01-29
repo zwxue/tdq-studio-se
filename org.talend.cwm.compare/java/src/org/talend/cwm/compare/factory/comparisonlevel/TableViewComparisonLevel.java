@@ -14,6 +14,7 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -40,6 +41,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -47,7 +49,12 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
-	public TableViewComparisonLevel(Object selectedObj) {
+	/**
+     * 
+     */
+    private static final List<Column> EMPTY_COLUMN_LIST = Collections.emptyList();
+
+    public TableViewComparisonLevel(Object selectedObj) {
 		super(selectedObj);
 	}
 
@@ -154,14 +161,17 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 		ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
 		ColumnSet toReloadcolumnSet = DQStructureComparer.findMatchedColumnSet(
 				selectedColumnSet, tempReloadProvider);
-		List<TdColumn> columns = null;
+        // MOD scorreia 2009-01-29 clear content of findMatchedColumnSet
+        ColumnSetHelper.setColumns(toReloadcolumnSet, EMPTY_COLUMN_LIST);
+
 		try {
-			columns = DqRepositoryViewService.getColumns(tempReloadProvider,
+			DqRepositoryViewService.getColumns(tempReloadProvider,
 					toReloadcolumnSet, null, true);
 		} catch (TalendException e1) {
 			throw new ReloadCompareException(e1);
 		}
-		ColumnSetHelper.setColumns(toReloadcolumnSet, columns);
+        // MOD scorreia 2009-01-29 columns are stored in the table
+        // ColumnSetHelper.setColumns(toReloadcolumnSet, columns);
 		return toReloadcolumnSet;
 	}
 
@@ -199,12 +209,16 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 				.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
 		List<TdColumn> columns = null;
 		try {
+		    // MOD scorreia 2009-01-29 clear content of findMatchedColumnSet
+		    ColumnSetHelper.setColumns(findMatchedColumnSet, EMPTY_COLUMN_LIST);
 			columns = DqRepositoryViewService.getColumns(tempReloadProvider,
 					findMatchedColumnSet, null, true);
 		} catch (TalendException e1) {
 			throw new ReloadCompareException(e1);
 		}
-		ColumnSetHelper.setColumns(findMatchedColumnSet, columns);
+		
+        // MOD scorreia 2009-01-29 columns are stored in the table
+        // ColumnSetHelper.addColumns(findMatchedColumnSet, columns);
 
 		URI uri = tempReloadProvider.eResource().getURI();
 		Resource rightResource = null;

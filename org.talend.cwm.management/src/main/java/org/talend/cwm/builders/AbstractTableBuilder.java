@@ -104,7 +104,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
      * @return
      * @throws SQLException
      */
-    private T createTable(String catalogName, String schemaPattern, ResultSet tablesSet) throws SQLException {
+    protected T createTable(String catalogName, String schemaPattern, ResultSet tablesSet) throws SQLException {
         String tableName = tablesSet.getString(GetTable.TABLE_NAME.name());
         String tableComment = getTableComment(tableName, tablesSet);
 

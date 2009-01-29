@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.api.FolderProvider;
@@ -326,7 +325,8 @@ public class TestAnalysisCreation {
         System.out.println("analyzed Table: " + tdTable.getName());
         List<TdColumn> columns;
         columns = DqRepositoryViewService.getColumns(dataManager, tdTable, null, true);
-        TableHelper.addColumns(tdTable, columns);
+        // MOD scorreia 2009-01-29 columns are stored in the table
+        // TableHelper.addColumns(tdTable, columns);
 
         Assert.assertFalse(columns.isEmpty());
         TdColumn col = columns.get(0);

@@ -48,6 +48,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdCatalog;
@@ -68,7 +69,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.NamedColumnSet;
+import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -277,12 +280,12 @@ public final class DqRepositoryViewService {
     }
 
     /**
-     * Method "getColumns".
+     * Method "getColumns". The link between the column set and its columns is set in this method when required.
      * 
      * @param dataProvider the data provider for connecting to database (can be null when the columns are not loaded
      * from the database)
      * @param columnSet a column set (Table or View)
-     * @param columnPattern the pattern of the columns to get
+     * @param columnPattern the pattern of the columns to get (can be null)
      * @param loadFromDB true if columns must be loaded from the database
      * @return
      * @throws TalendException
@@ -570,8 +573,31 @@ public final class DqRepositoryViewService {
 
         try {
             columns = colBuilder.getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
+            ColumnSetHelper.addColumns(table, columns);
+            // MOD scorreia 2009-01-29 get primary keys of the table
+            if (orgomg.cwm.resource.relational.RelationalPackage.eINSTANCE.getTable().isSuperTypeOf(table.eClass())) {
+                TableBuilder tableBuild = new TableBuilder(connection);
+                // link PKs to Columns
+                List<PrimaryKey> primaryKeys = tableBuild.getPrimaryKeys(catalogName, schemaPattern, tablePattern);
+                TableHelper.addPrimaryKeys(table, primaryKeys);
+                List<ForeignKey> foreignKeys = tableBuild.getForeignKeys(catalogName, schemaPattern, tablePattern);
+                TableHelper.addForeignKeys(table, foreignKeys);
+                for (TdColumn tdColumn : columns) {
+                    String colname = tdColumn.getName();
+                    PrimaryKey primaryKey = tableBuild.getPrimaryKey(colname);
+                    if (primaryKey != null) {
+                        tdColumn.getUniqueKey().add(primaryKey);
+                    }
+                    ForeignKey foreignKey = tableBuild.getForeignKey(colname);
+                    if (foreignKey != null) {
+                        tdColumn.getKeyRelationship().add(foreignKey);
+                    }
+                    // TODO scorreia should create relationship between FK and PK
+                }
+            }
         } catch (SQLException e) {
             log.error(e, e);
+            throw new TalendException(e);
         } finally {
             ConnectionUtils.closeConnection(connection);
         }

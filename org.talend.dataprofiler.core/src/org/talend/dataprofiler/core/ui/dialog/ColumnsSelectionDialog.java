@@ -483,7 +483,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             List<TdColumn> columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
                             columns = columnList.toArray(new TdColumn[columnList.size()]);
                             // store tables in catalog
-                            ColumnSetHelper.addColumns(columnSet, columnList);
+                            // MOD scorreia 2009-01-29 columns are stored in the table
+                            // ColumnSetHelper.addColumns(columnSet, columnList);
                         } catch (TalendException e) {
                             MessageBoxExceptionHandler.process(e);
                         }
