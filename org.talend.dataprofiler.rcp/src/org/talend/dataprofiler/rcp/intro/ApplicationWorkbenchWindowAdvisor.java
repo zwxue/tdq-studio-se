@@ -41,7 +41,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         configurer.setInitialSize(new Point(1024, 768));
         configurer.setShowCoolBar(true);
         configurer.setShowStatusLine(false);
-        Object buildId = CorePlugin.getDefault().getProductVersionString();
+        String buildId = CorePlugin.getDefault().getProductVersion().toString();
         IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
                 IBrandingService.class);
         configurer.setTitle(brandingService.getFullProductName() + " (" + buildId + ")"); //$NON-NLS-1$ //$NON-NLS-2$

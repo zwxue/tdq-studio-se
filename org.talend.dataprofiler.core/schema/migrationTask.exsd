@@ -61,10 +61,26 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
-                  <meta.attribute translatable="true"/>
-               </appinfo>
             </annotation>
+         </attribute>
+         <attribute name="version" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="1.0.0">
+                  </enumeration>
+                  <enumeration value="1.1.0">
+                  </enumeration>
+                  <enumeration value="1.2.0">
+                  </enumeration>
+                  <enumeration value="1.3.0">
+                  </enumeration>
+               </restriction>
+            </simpleType>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>

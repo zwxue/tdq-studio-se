@@ -12,9 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.List;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -24,10 +23,6 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -46,7 +41,9 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
+import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
@@ -308,34 +305,16 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     public void doMigrationTask() {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject project = root.getProject(DQStructureManager.LIBRARIES);
 
-        IFile versionfile = project.getFile(new Path(PluginConstant.VERSION_FILE_PATH));
-        if (versionfile.exists()) {
-            try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(versionfile.getContents()));
-                String oldversion = br.readLine();
+        List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
 
-                boolean ismatch = ProductVersion.fromString(oldversion).equals(getProductVersion());
-                if (!ismatch) {
-
-                    MigrationTaskManager.getValidMigrationTasks().execute();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (!tasks.isEmpty()) {
+            for (IWorkspaceMigrationTask task : tasks) {
+                task.execute();
             }
-        }
-    }
 
-    /**
-     * DOC bzhou Comment method "getProductVersionString".
-     * 
-     * @return
-     */
-    public String getProductVersionString() {
-        Object obj = plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
-        return obj.toString();
+            WorkspaceVersionHelper.storeVersion();
+        }
     }
 
     /**
@@ -344,7 +323,8 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return
      */
     public ProductVersion getProductVersion() {
-        ProductVersion currentVersion = ProductVersion.fromString(getProductVersionString());
+        Object obj = plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
+        ProductVersion currentVersion = ProductVersion.fromString(obj.toString());
         return currentVersion;
     }
 }

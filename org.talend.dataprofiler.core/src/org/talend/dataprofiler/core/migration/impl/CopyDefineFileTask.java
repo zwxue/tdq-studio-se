@@ -12,14 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 
 /**
@@ -27,17 +27,28 @@ import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
  */
 public class CopyDefineFileTask extends AbstractMigrationTask {
 
+    private static final String TALEND_DEFINITION_FILENAME = ".Talend.definition";
+
+    private static final String TALEND_DEFINITION_BAK_FILENAME = ".Talend.definition.bak";
+
     public boolean execute() {
-        IPath path = new Path("/libraries/.Talend.definition");
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        if (root.exists(path)) {
-            // do copy
-            IFile file = root.getFile(path);
-            path = new Path("/libraries/.Talend.definition.bak");
+        IProject project = root.getProject(DQStructureManager.LIBRARIES);
+
+        IFile file = project.getFile(TALEND_DEFINITION_FILENAME);
+        IFile bakfile = project.getFile(TALEND_DEFINITION_BAK_FILENAME);
+
+        if (file.exists()) {
             try {
-                file.copy(path, true, null);
+
+                if (bakfile.exists()) {
+                    bakfile.delete(true, null);
+                }
+
+                file.copy(bakfile.getFullPath(), true, null);
+
                 return true;
-            } catch (CoreException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
@@ -46,7 +57,9 @@ public class CopyDefineFileTask extends AbstractMigrationTask {
     }
 
     public Date getOrder() {
-        return null;
+        Calendar calender = Calendar.getInstance();
+        calender.set(2009, 1, 29);
+        return calender.getTime();
     }
 
 }
