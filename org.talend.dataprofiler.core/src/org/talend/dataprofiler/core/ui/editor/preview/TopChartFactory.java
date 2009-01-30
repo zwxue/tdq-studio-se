@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -24,8 +23,6 @@ import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
@@ -318,12 +315,11 @@ public final class TopChartFactory {
         renderer3d.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         renderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
         renderer3d.setItemMargin(0.2);
         plot.setForegroundAlpha(0.50f);
 
-        CategoryAxis domainAxis = plot.getDomainAxis();
-        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
+        // CategoryAxis domainAxis = plot.getDomainAxis();
+        // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
 
         return chart;
     }
@@ -349,7 +345,7 @@ public final class TopChartFactory {
      */
     public static JFreeChart createBoxAndWhiskerChart(String title, BoxAndWhiskerCategoryDataset dataset) {
 
-        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, title, "value", dataset, false);
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, title, "Value", dataset, false);
         CategoryPlot plot = chart.getCategoryPlot();
 
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();

@@ -52,6 +52,7 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
+import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -68,7 +69,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
-import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -451,12 +451,15 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                                     List<IndicatorUnit> units = indicatorComposite.get(chartType);
                                     if (!units.isEmpty()) {
                                         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
-                                        JFreeChart chart = chartTypeState.getChart();
+                                        JFreeChart chart = chartTypeState.getFeatChart();
+
                                         if (chart != null) {
+                                            ChartComposite cc = new ChartComposite(comp, SWT.NONE, chart, true);
+
                                             GridData gd = new GridData();
-                                            gd.widthHint = 450;
+                                            gd.widthHint = 550;
                                             gd.heightHint = 250;
-                                            ChartUtils.createAWTSWTComp(comp, gd, chart);
+                                            cc.setLayoutData(gd);
                                         }
                                     }
                                 }

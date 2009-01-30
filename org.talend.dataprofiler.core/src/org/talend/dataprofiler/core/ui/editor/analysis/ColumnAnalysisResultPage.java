@@ -12,10 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -27,10 +23,14 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -40,10 +40,10 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
+import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -60,7 +60,6 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
-import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
@@ -197,13 +196,21 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                     ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
                                     // create chart
-                                    JFreeChart chart = chartTypeState.getChart();
+                                    JFreeChart chart = chartTypeState.getFeatChart();
                                     if (chart != null) {
+                                        // GridData gd = new GridData();
+                                        // gd.widthHint = 450;
+                                        // gd.heightHint = 240;
+                                        // ChartPanel chartPanel = ChartUtils.createAWTSWTComp(composite, gd, chart);
+                                        // addMouseListenerForChart(chartPanel, dataExplorer, analysis);
+                                        ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+
                                         GridData gd = new GridData();
-                                        gd.widthHint = 450;
-                                        gd.heightHint = 240;
-                                        ChartPanel chartPanel = ChartUtils.createAWTSWTComp(composite, gd, chart);
-                                        addMouseListenerForChart(chartPanel, dataExplorer, analysis);
+                                        gd.widthHint = 550;
+                                        gd.heightHint = 250;
+                                        cc.setLayoutData(gd);
+
+                                        addMouseListenerForChart(cc, dataExplorer, analysis);
                                     }
 
                                     subComp.setClient(composite);
@@ -262,10 +269,15 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         createFormContent(getManagedForm());
     }
 
-    private void addMouseListenerForChart(final ChartPanel chartPanel, final IDataExplorer explorer, final Analysis analysis) {
-        chartPanel.addChartMouseListener(new ChartMouseListener() {
+    private void addMouseListenerForChart(final ChartComposite chartComp, final IDataExplorer explorer, final Analysis analysis) {
+        chartComp.addChartMouseListener(new ChartMouseListener() {
 
+            @SuppressWarnings("unchecked")
             public void chartMouseClicked(ChartMouseEvent event) {
+                if (event.getTrigger().getButton() != 3) {
+                    return;
+                }
+
                 ChartEntity chartEntity = event.getEntity();
                 if (chartEntity != null) {
                     CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
@@ -287,16 +299,21 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                         }
                     }
 
-                    PopupMenu menu = new PopupMenu(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.popupMenu")); //$NON-NLS-1$
                     if (currentDataEntity != null) {
+                        // create menu
+                        Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
+                        chartComp.setMenu(menu);
+
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
                         int createPatternFlag = 0;
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
                         for (final MenuItemEntity itemEntity : itemEntities) {
-                            MenuItem item = new MenuItem(itemEntity.getLabel());
-                            item.addActionListener(new ActionListener() {
+                            MenuItem item = new MenuItem(menu, SWT.PUSH);
+                            item.setText(itemEntity.getLabel());
+                            item.addSelectionListener(new SelectionAdapter() {
 
-                                public void actionPerformed(ActionEvent arg0) {
+                                @Override
+                                public void widgetSelected(SelectionEvent e) {
                                     Display.getDefault().asyncExec(new Runnable() {
 
                                         public void run() {
@@ -309,17 +326,18 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
                                     });
                                 }
-
                             });
-                            menu.add(item);
+
                             if ((currentIndicator instanceof PatternFreqIndicator || currentIndicator instanceof PatternLowFreqIndicator)
                                     && createPatternFlag == 0) {
-                                MenuItem itemCreatePatt = new MenuItem("Generate Regular Pattern");
+                                MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
+                                itemCreatePatt.setText("Generate Regular Pattern");
                                 final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
                                         .createDbmsLanguage(analysis));
-                                itemCreatePatt.addActionListener(new ActionListener() {
+                                itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
-                                    public void actionPerformed(ActionEvent e) {
+                                    @Override
+                                    public void widgetSelected(SelectionEvent e) {
                                         Display.getDefault().asyncExec(new Runnable() {
 
                                             public void run() {
@@ -328,13 +346,12 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                         });
                                     }
                                 });
-                                menu.add(itemCreatePatt);
                             }
+
+                            createPatternFlag++;
                         }
 
-                        chartPanel.add(menu);
-                        menu.show(chartPanel, event.getTrigger().getX(), event.getTrigger().getY());
-                        createPatternFlag++;
+                        menu.setVisible(true);
                     }
                 }
             }
@@ -343,6 +360,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                 // TODO Auto-generated method stub
 
             }
+
         });
     }
 }
