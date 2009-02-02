@@ -19,6 +19,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -88,6 +89,13 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      * wizard.
      */
     public boolean performFinish() {
+        // MOD xqliu 2009-02-02 bug 5261
+        if (ConnectionUtils.isTimeout()) {
+            if (this.connectionParam.getParameters() != null) {
+                this.connectionParam.getParameters().put(ConnectionUtils.LOGIN_TIMEOUT_STR,
+                        String.valueOf(ConnectionUtils.LOGIN_TIMEOUT));
+            }
+        }
         if (connectionParam.getDriverPath() != null) {
             int repeatDriverCount = 0;
             driver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());

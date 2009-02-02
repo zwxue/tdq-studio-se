@@ -41,6 +41,21 @@ public final class ConnectionUtils {
 
     private static Logger log = Logger.getLogger(ConnectionUtils.class);
 
+    // MOD xqliu 2009-02-02 bug 5261
+    public static final String LOGIN_TIMEOUT_STR = "loginTimeout";
+
+    public static final int LOGIN_TIMEOUT = 20;
+
+    private static boolean timeout = true;
+
+    public static boolean isTimeout() {
+        return timeout;
+    }
+
+    public static void setTimeout(boolean timeout) {
+        ConnectionUtils.timeout = timeout;
+    }
+
     /**
      * The query to execute in order to verify the connection.
      */
@@ -67,6 +82,10 @@ public final class ConnectionUtils {
      */
     public static Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
             InstantiationException, IllegalAccessException, ClassNotFoundException {
+        // MOD xqliu 2009-02-02 bug 5261
+        if (isTimeout()) {
+            props.put(LOGIN_TIMEOUT_STR, String.valueOf(LOGIN_TIMEOUT));
+        }
         Driver driver = getClassDriver(driverClassName);
         if (driver != null) {
             DriverManager.registerDriver(driver);
