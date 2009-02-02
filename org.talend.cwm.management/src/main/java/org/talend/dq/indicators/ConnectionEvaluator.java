@@ -116,7 +116,6 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
                 // MOD xqliu 2009-1-21 feature 4715
                 DefinitionHandler.getInstance().setDefaultIndicatorDefinition(catalogIndic);
-                this.addToConnectionIndicator(catalogIndic);
                 List<TdSchema> schemas = CatalogHelper.getSchemas(tdCatalog);
                 if (schemas.isEmpty()) { // no schema
                     evalCatalogIndic(catalogIndic, tdCatalog, ok);

@@ -435,7 +435,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     }
 
     protected void addToConnectionIndicator(Indicator indicator) {
-
+        // does nothing: implemented only in ConnectionEvaluator
     }
 
     protected void resetCounts(final Indicator indicator) {
