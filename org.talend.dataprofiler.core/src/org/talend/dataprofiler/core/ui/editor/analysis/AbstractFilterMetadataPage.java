@@ -608,7 +608,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * @param table
      */
     private void createCommonStatisticalColumns(Table table) {
-        // FIXME add the icon to each element.
         TableColumn tableColumn;
         tableColumn = new TableColumn(table, SWT.LEFT);
         tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.table")); //$NON-NLS-1$
