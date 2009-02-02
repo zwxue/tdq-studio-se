@@ -14,9 +14,10 @@ package org.talend.dataprofiler.core.ui.views.provider;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
@@ -37,6 +38,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else if (element instanceof TdDataProvider) {
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+        } else if (element instanceof TdColumn) {
+            if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
+                // TODO get the icon for primary key
+                return ImageLib.getImage(ImageLib.PK_COLUMN);
+            }
         }
         return super.getImage(element);
     }
