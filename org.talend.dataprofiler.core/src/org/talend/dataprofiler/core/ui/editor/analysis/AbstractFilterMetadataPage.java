@@ -65,6 +65,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.SqlExplorerBridge;
@@ -556,6 +557,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private void createCatalogTableColumns(Table table) {
         TableColumn tableColumn = new TableColumn(table, SWT.LEFT | SWT.FILL);
         tableColumn.setText(CATALOG);
+        tableColumn.setImage(CWMImageEnum.Catalog.getImg());
         tableColumn.setWidth(COL1_WIDTH);
         createNbRowsCol(table, CATALOG);
         createCommonStatisticalColumns(table);
@@ -564,6 +566,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private void createSchemaTableColumns(Table table) {
         TableColumn tableColumn = new TableColumn(table, SWT.LEFT);
         tableColumn.setText(SCHEMA);
+        tableColumn.setImage(CWMImageEnum.Schema.getImg());
         tableColumn.setWidth(COL1_WIDTH);
         createNbRowsCol(table, SCHEMA);
         createCommonStatisticalColumns(table);
@@ -586,6 +589,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private void createCatalogSchemaColumns(Table table) {
         TableColumn tableColumn = new TableColumn(table, SWT.LEFT);
         tableColumn.setText(CATALOG);
+        tableColumn.setImage(CWMImageEnum.Catalog.getImg());
         tableColumn.setWidth(COL1_WIDTH);
         createNbRowsCol(table, CATALOG);
         tableColumn = new TableColumn(table, SWT.LEFT);
@@ -604,6 +608,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * @param table
      */
     private void createCommonStatisticalColumns(Table table) {
+        // FIXME add the icon to each element.
         TableColumn tableColumn;
         tableColumn = new TableColumn(table, SWT.LEFT);
         tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.table")); //$NON-NLS-1$
@@ -667,7 +672,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
             layoutData.heightHint = 150;
             catalogOrSchemaTable.setLayoutData(layoutData);
-            String[] columnTexts = new String[] { "Table", "#Rows", "#Keys", "#Indexs" };
+            String[] columnTexts = new String[] { "Table", "#rows", "#keys", "#indexs" };
             createSorterColumns(tableOfCatalogOrSchemaViewer, columnTexts, tableSorters, COLUMN_TABLE_WIDTH);
             TableOfCatalogOrSchemaProvider providerTable = new TableOfCatalogOrSchemaProvider();
             tableOfCatalogOrSchemaViewer.setLabelProvider(providerTable);
@@ -755,7 +760,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
             layoutData.heightHint = 150;
             tableCatalogOrSchemaView.setLayoutData(layoutData);
-            columnTexts = new String[] { "View", "#Rows" };
+            columnTexts = new String[] { "View", "#rows" };
             createSorterColumns(viewOfCatalogOrSchemaViewer, columnTexts, viewSorters, COLUMN_VIEW_WIDTH);
             ViewOfCatalogOrSchemaProvider viewProvider = new ViewOfCatalogOrSchemaProvider();
             viewOfCatalogOrSchemaViewer.setLabelProvider(viewProvider);
@@ -779,6 +784,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             columns[i].setText(columnTexts[i]);
             columns[i].setWidth(columnWidth);
             columns[i].addSelectionListener(new ColumnSortListener(columns, i, tableViewer, sorters));
+            columns[i].setImage(CWMImageEnum.getImageByLabel(columns[i].getText()));
         }
     }
 
@@ -816,4 +822,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         return true;
     }
 
+    @Override
+    protected void refresh() {
+        // TODO Auto-generated method stub
+
+    }
 }

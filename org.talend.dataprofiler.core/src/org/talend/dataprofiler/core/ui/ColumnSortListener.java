@@ -19,6 +19,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Item;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
 
 /**
  * The class extends SelectionAdapter can be used on column sorting for StructuredViewer.
@@ -65,7 +66,10 @@ public class ColumnSortListener extends SelectionAdapter {
                     columns[j].setImage(descImage);
                 }
             } else {
-                columns[j].setImage(null);
+                Image imageByLabel = CWMImageEnum.getImageByLabel(columns[j].getText());
+                if (imageByLabel != null) {
+                    columns[j].setImage(imageByLabel);
+                }
             }
         }
         viewer.setSorter(flag ? sorters[i][0] : sorters[i][1]);

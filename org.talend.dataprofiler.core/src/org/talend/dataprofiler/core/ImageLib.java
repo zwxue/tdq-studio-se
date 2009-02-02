@@ -102,6 +102,12 @@ public class ImageLib {
 
     public static final String DESC_SORT = "desc.gif"; //$NON-NLS-1$
 
+    public static final String SCHEMA = "schema.gif";
+
+    public static final String TABLE = "TdTable.gif";
+
+    public static final String VIEW = "view.gif";
+
     /** PK icon from SQL Explorer. */
     public static final String PK_DECORATE = "pk_decorate.gif"; //$NON-NLS-1$
 
@@ -115,6 +121,9 @@ public class ImageLib {
 
     /** Expand all icon. */
     public static final String EXPAND_ALL = "expandall.gif"; //$NON-NLS-1$
+
+    /** Icon for primary key. */
+    public static final String PK_COLUMN = "pkColumn.gif";
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.
@@ -192,6 +201,45 @@ public class ImageLib {
             imageRegistry.put(iconName, descriptor);
         } catch (MalformedURLException e) {
             // skip, but try to go on to the next one...
+        }
+    }
+
+    /**
+     * DOC bzhou ImageLib class global comment. Detailled comment
+     */
+    public enum CWMImageEnum {
+        Connection("Connection", getImage(CONNECTION)),
+        Catalog("Catalog", getImage(CATALOG)),
+        Schema("Schema", getImage(SCHEMA)),
+        Table("Table", getImage(TABLE)),
+        View("View", getImage(VIEW)),
+        Column("Column", getImage(TD_COLUMN));
+
+        private String label;
+
+        private Image img;
+
+        private CWMImageEnum(String label, Image img) {
+            this.label = label;
+            this.img = img;
+        }
+
+        public Image getImg() {
+            return img;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static Image getImageByLabel(String label) {
+            for (CWMImageEnum cwmImage : values()) {
+                if (cwmImage.getLabel().equalsIgnoreCase(label)) {
+                    return cwmImage.getImg();
+                }
+            }
+
+            return null;
         }
     }
 
