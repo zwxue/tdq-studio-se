@@ -1060,8 +1060,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 				return;
 			}
 			// Open perspective of Data Explorer.
-			new ChangePerspectiveAction(PluginConstant.DATAEXPLORER_PERSPECTIVE)
-					.run();
+			new ChangePerspectiveAction(PluginConstant.SE_ID).run();
 			String query = expression.getBody();
 			CorePlugin.getDefault().openInSqlEditor(dataprovider, query,
 					column.getName());
