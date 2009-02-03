@@ -38,7 +38,6 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
     public FrequencyTypeStates(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
     }
 
     public JFreeChart getChart() {
@@ -89,6 +88,11 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     }
 
     public JFreeChart getExampleChart() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public String getReferenceLink() {
         // TODO Auto-generated method stub
         return null;
     }

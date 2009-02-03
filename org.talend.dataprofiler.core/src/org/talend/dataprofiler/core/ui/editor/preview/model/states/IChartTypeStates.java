@@ -81,4 +81,11 @@ public interface IChartTypeStates {
      * @return the table form of the specified chart data.
      */
     public TableViewer getTableForm(Composite parent);
+
+    /**
+     * DOC Administrator Comment method "getReferenceLink".
+     * 
+     * @return
+     */
+    public String getReferenceLink();
 }

@@ -94,4 +94,9 @@ public class TextStatisticsState extends AbstractChartTypeStates {
         // TODO Auto-generated method stub
         return new CommonContenteProvider();
     }
+
+    public String getReferenceLink() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

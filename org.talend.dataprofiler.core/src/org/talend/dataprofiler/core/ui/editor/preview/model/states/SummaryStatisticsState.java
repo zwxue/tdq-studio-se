@@ -162,4 +162,15 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     private boolean isIntact() {
         return units.size() == FULL_FLAG;
     }
+
+    public String getReferenceLink() {
+        String url = null;
+
+        if (getDataset() instanceof BoxAndWhiskerCategoryDataset) {
+            url = "http://en.wikipedia.org/wiki/Box_plot";
+        } else {
+            url = "http://en.wikipedia.org/wiki/Histogram";
+        }
+        return url;
+    }
 }

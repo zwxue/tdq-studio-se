@@ -90,4 +90,9 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
 
         return new CommonContenteProvider();
     }
+
+    public String getReferenceLink() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

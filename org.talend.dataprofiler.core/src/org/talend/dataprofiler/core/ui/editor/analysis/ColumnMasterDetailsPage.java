@@ -30,6 +30,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -37,6 +39,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
@@ -51,6 +55,8 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -69,6 +75,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -429,7 +436,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             final Composite comp = toolkit.createComposite(exComp);
             comp.setLayout(new GridLayout());
-            // comp.setLayout(new FillLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             if (columnIndicator.getIndicators().length != 0) {
@@ -450,21 +456,23 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                                 for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
                                     List<IndicatorUnit> units = indicatorComposite.get(chartType);
                                     if (!units.isEmpty()) {
-                                        IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+                                        final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType,
+                                                units);
                                         JFreeChart chart = chartTypeState.getFeatChart();
 
                                         if (chart != null) {
-                                            ChartComposite cc = new ChartComposite(comp, SWT.NONE, chart, true);
+                                            final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
 
                                             GridData gd = new GridData();
                                             gd.widthHint = 550;
                                             gd.heightHint = 250;
-                                            cc.setLayoutData(gd);
+                                            chartComp.setLayoutData(gd);
+
+                                            addListenerToChartComp(chartComp, chartTypeState);
                                         }
                                     }
                                 }
                             }
-
                         });
 
                         monitor.done();
@@ -641,6 +649,36 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (dataFilterComp != null) {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
+    }
+
+    private void addListenerToChartComp(final ChartComposite chartComp, final IChartTypeStates chartTypeState) {
+        chartComp.addChartMouseListener(new ChartMouseListener() {
+
+            public void chartMouseClicked(ChartMouseEvent event) {
+                final String referenceLink = chartTypeState.getReferenceLink();
+                if (event.getTrigger().getButton() == 1 && referenceLink != null) {
+                    Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
+                    chartComp.setMenu(menu);
+
+                    MenuItem item = new MenuItem(menu, SWT.PUSH);
+                    item.setText("what's it?");
+                    item.addSelectionListener(new SelectionAdapter() {
+
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            ChartUtils.openReferenceLink(referenceLink);
+                        }
+                    });
+
+                    menu.setVisible(true);
+                }
+            }
+
+            public void chartMouseMoved(ChartMouseEvent event) {
+
+            }
+
+        });
     }
 
     /**

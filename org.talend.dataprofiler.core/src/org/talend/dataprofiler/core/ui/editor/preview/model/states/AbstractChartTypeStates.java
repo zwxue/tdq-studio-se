@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,7 +42,7 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  */
 public abstract class AbstractChartTypeStates implements IChartTypeStates {
 
-    protected List<IndicatorUnit> units = null;
+    protected List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
 
     public AbstractChartTypeStates(List<IndicatorUnit> units) {
 
@@ -55,7 +56,9 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
             }
         }
 
-        this.units = units;
+        if (units != null) {
+            this.units.addAll(units);
+        }
     }
 
     public ChartDataEntity[] getDataEntity() {

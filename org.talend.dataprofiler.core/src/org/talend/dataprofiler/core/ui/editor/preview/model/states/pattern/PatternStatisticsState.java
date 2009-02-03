@@ -38,7 +38,6 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
 
     public PatternStatisticsState(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
     }
 
     public JFreeChart getChart() {
@@ -97,5 +96,10 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     protected IStructuredContentProvider getContentProvider() {
         // TODO Auto-generated method stub
         return new CommonContenteProvider();
+    }
+
+    public String getReferenceLink() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
