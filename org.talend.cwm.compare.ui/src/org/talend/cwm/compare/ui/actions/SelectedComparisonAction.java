@@ -33,69 +33,66 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
  * DOC mzhao class global comment. Compare selected model elements action.
  */
 public class SelectedComparisonAction extends Action {
-	private static Logger log = Logger
-			.getLogger(SelectedComparisonAction.class);
 
-	private Object selectedObj1, selectedObj2;
+    private static Logger log = Logger.getLogger(SelectedComparisonAction.class);
 
-	public SelectedComparisonAction(String menuText) {
-		super(menuText);
-		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.UPDATE_IMAGE));
+    private Object selectedObj1, selectedObj2;
 
-	}
+    public SelectedComparisonAction(String menuText) {
+        super(menuText);
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.COMPARE_IMAGE));
 
-	/**
-	 * 
-	 * DOC mzhao Refrech selected object when selection changed.
-	 * 
-	 * @param selectedObj1
-	 * @param selectedObj2
-	 */
-	public void refreshSelectedObj(Object selectedObj1, Object selectedObj2) {
-		this.selectedObj1 = selectedObj1;
-		this.selectedObj2 = selectedObj2;
-	}
+    }
 
-	@Override
-	public void run() {
-		final Shell shell = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getShell();
+    /**
+     * 
+     * DOC mzhao Refrech selected object when selection changed.
+     * 
+     * @param selectedObj1
+     * @param selectedObj2
+     */
+    public void refreshSelectedObj(Object selectedObj1, Object selectedObj2) {
+        this.selectedObj1 = selectedObj1;
+        this.selectedObj2 = selectedObj2;
+    }
 
-		IRunnableWithProgress op = new IRunnableWithProgress() {
+    @Override
+    public void run() {
+        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException {
-				final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory
-						.creatComparisonLevel(selectedObj1, selectedObj2);
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							creatComparisonLevel
-									.popComparisonUI(new UiHandler());
-						} catch (ReloadCompareException e) {
-							log.error(e, e);
-						}
+        IRunnableWithProgress op = new IRunnableWithProgress() {
 
-					}
-				});
-			}
-		};
-		try {
-			ProgressUI.popProgressDialog(op, shell);
-			// ((DQRespositoryView)
-			// CorePlugin.getDefault().findView(DQRespositoryView
-			// .ID)).getCommonViewer().refresh();
-		} catch (InvocationTargetException e) {
-			MessageDialog
-					.openInformation(
-							shell,
-							Messages
-									.getString("PopComparisonUIAction.connectionFailure"), Messages.getString("PopComparisonUIAction.checkConnectionFailure") + e.getCause().getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-			log.error(e, e);
-		} catch (InterruptedException e) {
-			log.error(e, e);
-		}
+            public void run(IProgressMonitor monitor) throws InvocationTargetException {
+                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(selectedObj1,
+                        selectedObj2);
+                Display.getDefault().asyncExec(new Runnable() {
 
-	}
+                    public void run() {
+                        try {
+                            creatComparisonLevel.popComparisonUI(new UiHandler());
+                        } catch (ReloadCompareException e) {
+                            log.error(e, e);
+                        }
+
+                    }
+                });
+            }
+        };
+        try {
+            ProgressUI.popProgressDialog(op, shell);
+            // ((DQRespositoryView)
+            // CorePlugin.getDefault().findView(DQRespositoryView
+            // .ID)).getCommonViewer().refresh();
+        } catch (InvocationTargetException e) {
+            MessageDialog
+                    .openInformation(
+                            shell,
+                            Messages.getString("PopComparisonUIAction.connectionFailure"), Messages.getString("PopComparisonUIAction.checkConnectionFailure") + e.getCause().getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+            log.error(e, e);
+        } catch (InterruptedException e) {
+            log.error(e, e);
+        }
+
+    }
 
 }

@@ -41,7 +41,7 @@ public class PopComparisonUIAction extends Action {
     public PopComparisonUIAction(Object selectedNode, String menuText) {
         super(menuText);
         this.selectedObject = selectedNode;
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.UPDATE_IMAGE));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.COMPARE_IMAGE));
     }
 
     /*
@@ -73,7 +73,10 @@ public class PopComparisonUIAction extends Action {
             ProgressUI.popProgressDialog(op, shell);
             // ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         } catch (InvocationTargetException e) {
-            MessageDialog.openInformation(shell, Messages.getString("PopComparisonUIAction.connectionFailure"), Messages.getString("PopComparisonUIAction.checkConnectionFailure") + e.getCause().getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog
+                    .openInformation(
+                            shell,
+                            Messages.getString("PopComparisonUIAction.connectionFailure"), Messages.getString("PopComparisonUIAction.checkConnectionFailure") + e.getCause().getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
             log.error(e, e);
         } catch (InterruptedException e) {
             log.error(e, e);
