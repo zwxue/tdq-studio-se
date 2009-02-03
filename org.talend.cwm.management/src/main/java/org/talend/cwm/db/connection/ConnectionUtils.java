@@ -42,9 +42,9 @@ public final class ConnectionUtils {
     private static Logger log = Logger.getLogger(ConnectionUtils.class);
 
     // MOD xqliu 2009-02-02 bug 5261
-    public static final String LOGIN_TIMEOUT_STR = "loginTimeout";
+    public static final int LOGIN_TEMEOUT_MILLISECOND = 20000;
 
-    public static final int LOGIN_TIMEOUT = 20;
+    public static final int LOGIN_TIMEOUT_SECOND = 20;
 
     private static boolean timeout = true;
 
@@ -82,10 +82,6 @@ public final class ConnectionUtils {
      */
     public static Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
             InstantiationException, IllegalAccessException, ClassNotFoundException {
-        // MOD xqliu 2009-02-02 bug 5261
-        if (isTimeout()) {
-            props.put(LOGIN_TIMEOUT_STR, String.valueOf(LOGIN_TIMEOUT));
-        }
         Driver driver = getClassDriver(driverClassName);
         if (driver != null) {
             DriverManager.registerDriver(driver);
@@ -99,15 +95,58 @@ public final class ConnectionUtils {
             }
             Connection connection = null;
             if (driverClassName.equals("org.hsqldb.jdbcDriver")) {
+                // MOD xqliu 2009-02-02 bug 5261
+                if (isTimeout()) {
+                    DriverManager.setLoginTimeout(LOGIN_TIMEOUT_SECOND);
+                }
                 connection = DriverManager.getConnection(url, props);
             } else {
-                connection = driver.connect(url, props);
+                // MOD xqliu 2009-02-02 bug 5261
+                connection = createConnectionWithTimeout(driver, url, props);
             }
 
             return connection;
         }
         return null;
 
+    }
+
+    /**
+     * 
+     * DOC xqliu Comment method "createConnectionWithTimeout".
+     * 
+     * @param driver
+     * @param url
+     * @param props
+     * @return
+     * @throws SQLException
+     */
+    public static Connection createConnectionWithTimeout(Driver driver, String url, Properties props) throws SQLException {
+        Connection ret = null;
+        if (isTimeout()) {
+            ConnectionCreator cc = new ConnectionCreator(driver, url, props);
+            new Thread(cc).start();
+            long begin = System.currentTimeMillis();
+            while (true) {
+                if (System.currentTimeMillis() - begin > LOGIN_TEMEOUT_MILLISECOND) {
+                    break;
+                }
+                if (cc.getConnection() != null) {
+                    ret = cc.getConnection();
+                    break;
+                }
+                if (cc.getExecption() != null) {
+                    throw cc.getExecption();
+                }
+            }
+            cc = null;
+            if (ret == null) {
+                throw new SQLException("Connection Timeout!");
+            }
+        } else {
+            ret = driver.connect(url, props);
+        }
+        return ret;
     }
 
     /**

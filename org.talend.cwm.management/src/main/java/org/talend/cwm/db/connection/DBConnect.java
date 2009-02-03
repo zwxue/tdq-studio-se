@@ -351,7 +351,8 @@ public class DBConnect {
         boolean ok = true;
         try {
             driver = ConnectionUtils.getClassDriver(driverClassName);
-            connection = driver.connect(dbUrl, props);
+            // MOD xqliu 2009-02-03 bug 5261
+            connection = ConnectionUtils.createConnectionWithTimeout(driver, dbUrl, props);
             // connection = DriverManager.getConnection(dbUrl, props);
 
             this.providerConnection = DatabaseContentRetriever.getProviderConnection(dbUrl, driverClassName, props, connection);

@@ -254,15 +254,9 @@ class DatabaseWizardPage extends AbstractWizardPage {
             if (externalDriver != null) {
                 try {
                     DriverManager.registerDriver(externalDriver);
-                    // MOD xqliu 2009-02-02 bug 5261
-                    if (ConnectionUtils.isTimeout()) {
-                        if (this.connectionParam.getParameters() != null) {
-                            this.connectionParam.getParameters().put(ConnectionUtils.LOGIN_TIMEOUT_STR,
-                                    String.valueOf(ConnectionUtils.LOGIN_TIMEOUT));
-                        }
-                    }
-                    Connection connection = externalDriver.connect(this.connectionParam.getJdbcUrl(), this.connectionParam
-                            .getParameters());
+                    // MOD xqliu 2009-02-03 bug 5261
+                    Connection connection = ConnectionUtils.createConnectionWithTimeout(externalDriver, this.connectionParam
+                            .getJdbcUrl(), this.connectionParam.getParameters());
                     if (connection == null) {
                         rc.setOk(false);
                     }
