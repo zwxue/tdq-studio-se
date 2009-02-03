@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 
 /**
@@ -60,7 +61,11 @@ public class ViewOfCatalogOrSchemaProvider extends LabelProvider implements ITab
     }
 
     public Image getColumnImage(Object element, int columnIndex) {
+        if (element instanceof ViewIndicator && columnIndex == 0) {
+            return CWMImageEnum.View.getImg();
+        }
         return null;
+
     }
 
 }

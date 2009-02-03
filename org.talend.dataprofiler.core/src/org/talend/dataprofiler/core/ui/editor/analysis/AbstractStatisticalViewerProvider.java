@@ -20,6 +20,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 
 /**
@@ -64,6 +66,14 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
     protected abstract String getOtherColumnText(int columnIndex, SchemaIndicator schemaIndicator);
 
     public Image getColumnImage(Object element, int columnIndex) {
-        return null;
-    }
+        if (element instanceof SchemaIndicator && !(element instanceof CatalogIndicator) && columnIndex == 0) {
+
+            return CWMImageEnum.Schema.getImg();
+        }
+
+        else if (element instanceof CatalogIndicator && columnIndex == 0) {
+            return CWMImageEnum.Catalog.getImg();
+        }else{
+        return null;}
+            }
 }
