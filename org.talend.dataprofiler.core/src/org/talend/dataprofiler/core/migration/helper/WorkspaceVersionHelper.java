@@ -63,7 +63,7 @@ public class WorkspaceVersionHelper {
             try {
                 pros.load(versionFile.getContents());
                 String version = pros.getProperty(VERSION);
-                if (!"".equals(version)) {
+                if (version != null && !"".equals(version)) {
                     return ProductVersion.fromString(version);
                 }
             } catch (Exception e) {
