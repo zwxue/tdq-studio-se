@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Create a time column correlation analysiss">
+   <intro>
+      <description>
+         <b>Body</b>
+      </description>
+   </intro>
+   <item dialog="true"
+         title="Set the analysis metadata">
+      <description>
+         <b>Body</b>
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8" param2="1"/>
+   </item>
+   <item
+         title="Select columns to analysis">
+      <description>
+         <b>Body</b>
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
+      </action>
+   </item>
+   <item
+         skip="true"
+         title="Select the right data mining type">
+      <description>
+         <b>Body</b>
+      </description>
+   </item>
+   <item
+         title="Analyse">
+      <description>
+         <b>Body</b>
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      </action>
+   </item>
+      <item title="Refresh the graphics" dialog="true" skip="false">
+      <description>
+        
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
+      </action>
+   </item>
+</cheatsheet>

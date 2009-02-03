@@ -9,7 +9,7 @@
       <description>
          This step opens the analysis creation wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a column</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens an editor in which you can define the settings of the analysis.
       </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="6">
       </action>
    </item>
    <item title="Select the columns to analyze." dialog="true" skip="false">
@@ -18,7 +18,7 @@
 
 If you know the content of a column, set its type to either &quot;Nominal&quot;, or &quot;Interval&quot;. &quot;Nominal&quot; means that the column contains textual values (no order, no mathematical function applicable). On the other hand, &quot;Interval&quot; means that mathematical functions (such as the average) can be used. This type is to be set in the editor.
       </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="6">
       </action>
    </item>
    <item title="Choose the indicators to compute." dialog="true" skip="false">

@@ -30,6 +30,7 @@ import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 
 /**
  * @author zqin
@@ -37,96 +38,113 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
  */
 public class WizardFactory {
 
-    public static Wizard createAnalysisWizard(AnalysisType type, AnalysisParameter parameter) {
-        assert type != null;
+	public static Wizard createAnalysisWizard(AnalysisType type,
+			AnalysisParameter parameter) {
+		assert type != null;
 
-        switch (type) {
-        case COLUMN_CORRELATION:
-            if (parameter == null) {
-                parameter = new AnalysisParameter();
-            }
-            parameter.setAnalysisTypeName(type.getLiteral());
-            if (((AnalysisLabelParameter) parameter).getCategoryLabel().equals(AnalysisLabelParameter.NUMBERIC_CORRELATION)) {
-                return new ColumnWizard(parameter);
-            } else {
-                return new ColumnTimeWizard(parameter);
-            }
-        case MULTIPLE_COLUMN:
-            if (parameter == null) {
-                parameter = new AnalysisParameter();
-            }
-            parameter.setAnalysisTypeName(type.getLiteral());
-            return new ColumnWizard(parameter);
-        case COLUMNS_COMPARISON:
-            if (parameter == null) {
-                parameter = new AnalysisParameter();
-            }
-            parameter.setAnalysisTypeName(type.getLiteral());
-            return new ColumnWizard(parameter);
-        case CONNECTION:
-            if (parameter == null) {
-                parameter = new AnalysisFilterParameter();
-            }
-            parameter.setAnalysisTypeName(type.getLiteral());
-            return new ConnectionAnalysisWizard((AnalysisFilterParameter) parameter);
-        case CATALOG:
-            if (parameter == null) {
-                parameter = new AnalysisFilterParameter();
-            }
-            parameter.setAnalysisTypeName(type.getLiteral());
-            return new CatalogAnalysisWizard((AnalysisFilterParameter) parameter);
-        case SCHEMA:
-            if (parameter == null) {
-                parameter = new AnalysisFilterParameter();
-            }
-            parameter.setAnalysisTypeName(type.getLiteral());
-            return new SchemaAnalysisWizard((AnalysisFilterParameter) parameter);
-        default:
-            return null;
-        }
-    }
+		switch (type) {
+		case COLUMN_CORRELATION:
+			// ~ MOD mzhao 2009-02-03 Handle NullPointerException when parameter
+			// is null.
+			if (parameter == null) {
+				parameter = new AnalysisParameter();
+				parameter.setAnalysisTypeName(type.getLiteral());
+				// Default is numerical analysis
+				return new ColumnWizard(parameter);
+			} else {
+				if (((AnalysisLabelParameter) parameter).getCategoryLabel()
+						.equals(AnalysisLabelParameter.NUMBERIC_CORRELATION)) {
+					return new ColumnWizard(parameter);
+				} else {
+					return new ColumnTimeWizard(parameter);
+				}
+			}
+			// ~
+		case MULTIPLE_COLUMN:
+			if (parameter == null) {
+				parameter = new AnalysisParameter();
+			}
+			parameter.setAnalysisTypeName(type.getLiteral());
+			return new ColumnWizard(parameter);
+		case COLUMNS_COMPARISON:
+			if (parameter == null) {
+				parameter = new AnalysisParameter();
+			}
+			parameter.setAnalysisTypeName(type.getLiteral());
+			return new ColumnWizard(parameter);
+		case CONNECTION:
+			if (parameter == null) {
+				parameter = new AnalysisFilterParameter();
+			}
+			parameter.setAnalysisTypeName(type.getLiteral());
+			return new ConnectionAnalysisWizard(
+					(AnalysisFilterParameter) parameter);
 
-    public static Wizard createAnalysisWizard(AnalysisType type) {
-        return createAnalysisWizard(type, null);
-    }
+			// MOD mzhao 2009-02-03 CATALOG and SCHEMA should use
+			// PackagesAnalyisParameter.
+		case CATALOG:
+			if (parameter == null) {
+				parameter = new PackagesAnalyisParameter();
+			}
+			parameter.setAnalysisTypeName(type.getLiteral());
+			return new CatalogAnalysisWizard(
+					(PackagesAnalyisParameter) parameter);
 
-    public static CreateNewAnalysisWizard createNewAnalysisWizard() {
-        return new CreateNewAnalysisWizard();
-    }
+		case SCHEMA:
+			if (parameter == null) {
+				parameter = new PackagesAnalyisParameter();
+			}
+			parameter.setAnalysisTypeName(type.getLiteral());
+			return new SchemaAnalysisWizard(
+					(PackagesAnalyisParameter) parameter);
+		default:
+			return null;
+		}
+	}
 
-    public static Wizard createSqlFileWizard(IFolder folder) {
-        ConnectionParameter parameter = new AnalysisFilterParameter();
-        FolderProvider folderProvider = parameter.getFolderProvider();
-        if (folderProvider == null) {
-            folderProvider = new FolderProvider();
-        }
+	public static Wizard createAnalysisWizard(AnalysisType type) {
+		return createAnalysisWizard(type, null);
+	}
 
-        folderProvider.setFolderResource(folder);
-        parameter.setFolderProvider(folderProvider);
-        return new CreateSqlFileWizard(parameter);
-    }
+	public static CreateNewAnalysisWizard createNewAnalysisWizard() {
+		return new CreateNewAnalysisWizard();
+	}
 
-    public static Wizard createPatternWizard(ExpressionType type) {
-        return createPatternWizard(type, null);
-    }
+	public static Wizard createSqlFileWizard(IFolder folder) {
+		ConnectionParameter parameter = new AnalysisFilterParameter();
+		FolderProvider folderProvider = parameter.getFolderProvider();
+		if (folderProvider == null) {
+			folderProvider = new FolderProvider();
+		}
 
-    public static Wizard createPatternWizard(ExpressionType type, ConnectionParameter parameter) {
-        if (parameter == null) {
-            parameter = new ConnectionParameter();
-        }
-        return new CreatePatternWizard(parameter, type);
-    }
+		folderProvider.setFolderResource(folder);
+		parameter.setFolderProvider(folderProvider);
+		return new CreateSqlFileWizard(parameter);
+	}
 
-    public static Wizard createPatternWizard(ExpressionType type, ConnectionParameter parameter, String expression,
-            String language) {
-        if (parameter == null) {
-            parameter = new ConnectionParameter();
-        }
-        return new CreatePatternWizard(parameter, type, expression, language);
-    }
+	public static Wizard createPatternWizard(ExpressionType type) {
+		return createPatternWizard(type, null);
+	}
 
-    public static Wizard createDatabaseConnectionWizard(DBConnectionParameter connectionParam) {
+	public static Wizard createPatternWizard(ExpressionType type,
+			ConnectionParameter parameter) {
+		if (parameter == null) {
+			parameter = new ConnectionParameter();
+		}
+		return new CreatePatternWizard(parameter, type);
+	}
 
-        return new DatabaseConnectionWizard(connectionParam);
-    }
+	public static Wizard createPatternWizard(ExpressionType type,
+			ConnectionParameter parameter, String expression, String language) {
+		if (parameter == null) {
+			parameter = new ConnectionParameter();
+		}
+		return new CreatePatternWizard(parameter, type, expression, language);
+	}
+
+	public static Wizard createDatabaseConnectionWizard(
+			DBConnectionParameter connectionParam) {
+
+		return new DatabaseConnectionWizard(connectionParam);
+	}
 }

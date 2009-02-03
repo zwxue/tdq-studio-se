@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Create a new schema analysis">
+   <intro>
+      <description>
+         This tutorial guides you through the creation of a schema analysis.
+      </description>
+   </intro>
+   <item skip="false" dialog="true"
+         title="Select schema to analyse">
+      <description>
+         <b>Body</b>
+      </description>
+       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core"  param1="5" confirm="false"/>
+   </item>
+   <item
+         skip="true"
+         title="Review your settings">
+      <description>
+         <b>Body</b>
+      </description>
+   </item>
+   <item
+         title="Analyse">
+      <description>
+         <b>Body</b>
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
+   </item>
+</cheatsheet>

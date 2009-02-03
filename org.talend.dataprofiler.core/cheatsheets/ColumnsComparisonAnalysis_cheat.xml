@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Create a new columns comprision analysis">
+   <intro>
+      <description>
+         <b>Body</b>
+      </description>
+   </intro>
+   <item
+         skip="false" dialog="true"
+         title="Set the analysis metadata">
+      <description>
+         <b>Body</b>
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="1"/>
+   </item>
+   <item dialog="true"
+         title="Select columns for A set">
+      <description>
+         <b>Body</b>
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="1" param2="0"/>
+   </item>
+   <item dialog="true"
+         title="Select columns for B set">
+      <description>
+         <b>Body</b>
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="1" param2="1"/>
+   </item>
+   <item
+         title="Analyse">
+      <description>
+         <b>Body</b>
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
+   </item>
+</cheatsheet>

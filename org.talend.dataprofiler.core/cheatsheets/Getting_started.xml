@@ -37,5 +37,55 @@
          <param name="path" value="ConnectionAnalysis_cheat.xml">
          </param>
       </task>
+      <task kind="cheatsheet" name="CatalogAnalysis" skip="false">
+         <intro>
+            This tutorial guides you through the creation of an analysis of the content of a catalog.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="CatalogAnalysis_cheat.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="SchemaAnalysis" skip="false">
+         <intro>
+            <b>Introduction</b>
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="SchemaAnalysis_cheat.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="ColumnsComparisonAnalysis" skip="false">
+         <intro>
+            <b>Introduction</b>
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="ColumnsComparisonAnalysis_cheat.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="NumericalColumnCorrelationAnalysis" skip="false">
+         <intro>
+            <b>Introduction</b>
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="NumericalColumnCorrelationAnalysis_cheat.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="TimeColumnCorrelationAnalysis" skip="false">
+         <intro>
+            <b>Introduction</b>
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="TimeColumnCorrelationAnalysis_cheat.xml">
+         </param>
+      </task>
    </taskGroup>
 </compositeCheatsheet>

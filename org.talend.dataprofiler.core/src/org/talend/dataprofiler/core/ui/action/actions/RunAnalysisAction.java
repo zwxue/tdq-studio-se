@@ -35,6 +35,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
@@ -50,137 +51,166 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
-    private static Logger log = Logger.getLogger(RunAnalysisAction.class);
+	private static Logger log = Logger.getLogger(RunAnalysisAction.class);
 
-    private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00"); //$NON-NLS-1$
+	private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat(
+			"0.00"); //$NON-NLS-1$
 
-    private Analysis analysis = null;
+	private Analysis analysis = null;
 
-    private IRuningStatusListener listener;
+	private IRuningStatusListener listener;
 
-    private IFile selectionFile;
+	private IFile selectionFile;
 
-    public IFile getSelectionFile() {
-        return selectionFile;
-    }
+	public IFile getSelectionFile() {
+		return selectionFile;
+	}
 
-    public void setSelectionFile(IFile selectionFile) {
-        this.selectionFile = selectionFile;
-    }
+	public void setSelectionFile(IFile selectionFile) {
+		this.selectionFile = selectionFile;
+	}
 
-    public RunAnalysisAction() {
-        super("run"); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
-    }
+	public RunAnalysisAction() {
+		super("run"); //$NON-NLS-1$
+		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
+	}
 
-    public RunAnalysisAction(IRuningStatusListener listener) {
-        this();
-        this.listener = listener;
-    }
+	public RunAnalysisAction(IRuningStatusListener listener) {
+		this();
+		this.listener = listener;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.Action#run()
-     */
-    @Override
-    public void run() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.action.Action#run()
+	 */
+	@Override
+	public void run() {
 
-        if (getSelectionFile() == null) {
-            IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            if (editor != null && editor instanceof AnalysisEditor) {
-                AnalysisEditor anaEditor = (AnalysisEditor) editor;
-                IFormPage masterPage = anaEditor.getMasterPage();
-                masterPage.doSave(null);
-                IFile afile = ((FileEditorInput) masterPage.getEditorInput()).getFile();
+		if (getSelectionFile() == null) {
+			IEditorPart editor = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage()
+					.getActiveEditor();
+			if (editor != null && editor instanceof AnalysisEditor) {
+				AnalysisEditor anaEditor = (AnalysisEditor) editor;
+				IFormPage masterPage = anaEditor.getMasterPage();
+				editor.doSave(null);
+				IFile afile = ((FileEditorInput) masterPage.getEditorInput())
+						.getFile();
 
-                analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
-            }
-        } else {
-            analysis = AnaResourceFileHelper.getInstance().findAnalysis(getSelectionFile());
-        }
+				analysis = AnaResourceFileHelper.getInstance().findAnalysis(
+						afile);
+			}
+		} else {
+			analysis = AnaResourceFileHelper.getInstance().findAnalysis(
+					getSelectionFile());
+		}
 
-        final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
+		final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
 
-            @Override
-            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			@Override
+			public IStatus runInWorkspace(IProgressMonitor monitor)
+					throws CoreException {
 
-                monitor.beginTask(
-                        DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
+				monitor
+						.beginTask(
+								DefaultMessagesImpl
+										.getString(
+												"RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
 
-                Display.getDefault().asyncExec(new Runnable() {
+				Display.getDefault().asyncExec(new Runnable() {
 
-                    public void run() {
-                        if (listener != null) {
-                            listener.fireRuningItemChanged(false);
-                        }
-                    }
+					public void run() {
+						if (listener != null) {
+							listener.fireRuningItemChanged(false);
+						}
+					}
 
-                });
+				});
 
-                ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(analysis);
-                monitor.done();
-                AnaResourceFileHelper.getInstance().save(analysis);
+				ReturnCode executed = AnalysisExecutorSelector
+						.executeAnalysis(analysis);
+				monitor.done();
+				AnaResourceFileHelper.getInstance().save(analysis);
 
-                Display.getDefault().asyncExec(new Runnable() {
+				Display.getDefault().asyncExec(new Runnable() {
 
-                    public void run() {
-                        if (listener != null) {
-                            listener.fireRuningItemChanged(true);
-                        }
-                    }
+					public void run() {
+						if (listener != null) {
+							listener.fireRuningItemChanged(true);
+						}
+					}
 
-                });
+				});
 
-                return getResultStatus(executed);
-            }
+				return getResultStatus(executed);
+			}
 
-        };
+		};
 
-        job.setUser(true);
-        job.schedule();
+		job.setUser(true);
+		job.schedule();
 
-        DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
-        view.getCommonViewer().refresh();
-    }
+		DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault()
+				.findView(PluginConstant.DQ_VIEW_ID);
+		view.getCommonViewer().refresh();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
-     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
-     */
-    public void run(String[] params, ICheatSheetManager manager) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
+	 * org.eclipse.ui.cheatsheets.ICheatSheetManager)
+	 */
+	public void run(String[] params, ICheatSheetManager manager) {
+		// ADD mzhao 2009-02-03 If there is no active editor opened, run
+		// analysis action from cheat sheets will do nothing.
+		IEditorPart editor = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		if (editor == null) {
+			return;
+		}
+		AnalysisEditor anaEditor = (AnalysisEditor) editor;
+		AbstractAnalysisMetadataPage masterPage = (AbstractAnalysisMetadataPage) anaEditor
+				.getMasterPage();
+		listener = masterPage;
+		// ~
+		run();
+	}
 
-        run();
-    }
+	private IStatus getResultStatus(final ReturnCode executed) {
+		if (executed.isOk()) {
+			if (log.isInfoEnabled()) {
+				int executionDuration = analysis.getResults()
+						.getResultMetadata().getExecutionDuration();
+				log
+						.info("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								+ FORMAT_SECONDS.format(Double
+										.valueOf(executionDuration) / 1000)
+								+ " s."); //$NON-NLS-1$
+			}
+			return Status.OK_STATUS;
+		} else {
+			int executionDuration = analysis.getResults().getResultMetadata()
+					.getExecutionDuration();
+			log
+					.warn(DefaultMessagesImpl
+							.getString(
+									"RunAnalysisAction.analysis", analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			// open error dialog
+			Display.getDefault().syncExec(new Runnable() {
 
-    private IStatus getResultStatus(final ReturnCode executed) {
-        if (executed.isOk()) {
-            if (log.isInfoEnabled()) {
-                int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-                log.info("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                        + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s."); //$NON-NLS-1$
-            }
-            return Status.OK_STATUS;
-        } else {
-            int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-            log
-                    .warn(DefaultMessagesImpl
-                            .getString(
-                                    "RunAnalysisAction.analysis", analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            // open error dialog
-            Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					MessageDialogWithToggle
+							.openError(
+									null,
+									DefaultMessagesImpl
+											.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+			});
 
-                public void run() {
-                    MessageDialogWithToggle
-                            .openError(
-                                    null,
-                                    DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-            });
-
-            return Status.CANCEL_STATUS;
-        }
-    }
+			return Status.CANCEL_STATUS;
+		}
+	}
 }
