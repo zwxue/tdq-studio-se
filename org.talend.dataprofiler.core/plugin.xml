@@ -782,6 +782,12 @@
   <extension
         point="org.talend.dataprofiler.core.migrationtask">
      <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateTdqIndicatorValueTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateTdqIndicatorValueTask"
+           name="org.talend.dataprofiler.core.migration.impl.UpdateTdqIndicatorValueTask"
+           version="1.2.0">
+     </workspacetask>
+     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.CopyDefineFileTask"
            id="org.talend.dataprofiler.core.migration.impl.CopyDefineFileTask"
            name="org.talend.dataprofiler.core.migration.impl.CopyDefineFileTask"
