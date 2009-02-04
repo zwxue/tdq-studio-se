@@ -14,6 +14,7 @@ package org.talend.dq.dbms;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.utils.ProductVersion;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -33,14 +34,13 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
     }
 
     /**
-     * DOC scorreia MySQLDbmsLanguage constructor comment.
+     * DOC bzhou MySQLDbmsLanguage constructor comment.
      * 
      * @param dbmsType
-     * @param majorVersion
-     * @param minorVersion
+     * @param dbVersion
      */
-    public MySQLDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
-        super(dbmsType, majorVersion, minorVersion);
+    public MySQLDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+        super(dbmsType, dbVersion);
     }
 
     /*
@@ -162,4 +162,15 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
         return "\\\\";
     }
 
+    @Override
+    public boolean supportRegexp() {
+
+        ProductVersion dbVersion = getDbVersion();
+        if (dbVersion != null) {
+
+            return dbVersion.getMajor() >= 5;
+        }
+
+        return false;
+    }
 }

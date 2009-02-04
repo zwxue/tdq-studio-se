@@ -13,6 +13,7 @@
 package org.talend.dq.dbms;
 
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.utils.ProductVersion;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -33,8 +34,8 @@ public class DB2DbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public DB2DbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
-        super(dbmsType, majorVersion, minorVersion);
+    public DB2DbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+        super(dbmsType, dbVersion);
         // TODO Auto-generated constructor stub
     }
 

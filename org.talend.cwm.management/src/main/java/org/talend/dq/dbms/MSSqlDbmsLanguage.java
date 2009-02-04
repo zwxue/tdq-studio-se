@@ -14,6 +14,7 @@ package org.talend.dq.dbms;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.utils.ProductVersion;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -34,8 +35,8 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public MSSqlDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
-        super(dbmsType, majorVersion, minorVersion);
+    public MSSqlDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+        super(dbmsType, dbVersion);
         // TODO Auto-generated constructor stub
     }
 

@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,12 +21,17 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.management.connection.DatabaseContentRetriever;
+import org.talend.cwm.management.connection.JavaSqlFactory;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -42,6 +49,9 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -115,10 +125,9 @@ public final class PatternUtilities {
         String expressionType = DomainHelper.getExpressionType(pattern);
         boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
         PatternMatchingIndicator patternMatchingIndicator = isSQLPattern ? PatternIndicatorFactory
-                .createSqlPatternMatchingIndicator(pattern)
-                : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
+                .createSqlPatternMatchingIndicator(pattern) : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
 
-        final DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && dbmsLanguage.getRegexp(pattern) == null) {
             // this is when we must tell the user that no regular expression exists for the selected database
             MessageDialogWithToggle.openInformation(null, "Pattern", DefaultMessagesImpl
@@ -129,7 +138,21 @@ public final class PatternUtilities {
         // TODO Currently the previous condition checks only whether there exist a regular expression for the analyzed
         // database, but we probably test also whether the analyzed database support the regular expressions (=> check
         // DB type, DB number version, existence of UDF)
-        if (false) { // FIXME implement a function here to check the support of regexp by the analyzed DB
+        DataManager dm = analysis.getContext().getConnection();
+        TypedReturnCode<Connection> trc = JavaSqlFactory.createConnection((TdDataProvider) dm);
+
+        if (trc != null) {
+            Connection conn = trc.getObject();
+
+            try {
+                SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
+                dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!(dbmsLanguage.supportRegexp() || isDBDefinedUDF(dbmsLanguage))) {
             MessageDialogWithToggle.openInformation(null, "Pattern", DefaultMessagesImpl
                     .getString("PatternUtilities.couldnotSetIndicator"));
             return null;
@@ -144,6 +167,25 @@ public final class PatternUtilities {
         IndicatorUnit addIndicatorUnit = columnIndicator.addSpecialIndicator(type, patternMatchingIndicator);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
         return addIndicatorUnit;
+    }
+
+    /**
+     * DOC bzhou Comment method "isDBDefinedUDF".
+     * 
+     * This method is to check if user have defined the related funciton to this database type.
+     * 
+     * @param dbmsLanguage
+     * @return
+     */
+    private static boolean isDBDefinedUDF(DbmsLanguage dbmsLanguage) {
+        Preferences prefers = ResourcesPlugin.getPlugin().getPluginPreferences();
+        if (prefers != null) {
+            String udfValue = prefers.getString(dbmsLanguage.getDbmsName());
+            if (udfValue != null && !"".equals(udfValue)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static Set<String> getAllPatternNames(IFolder folder) {

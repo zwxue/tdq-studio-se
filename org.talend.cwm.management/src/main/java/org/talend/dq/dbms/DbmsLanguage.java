@@ -30,6 +30,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -65,7 +66,7 @@ public class DbmsLanguage {
     static final String SQLITE3 = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
 
     static final String TERADATA = SupportDBUrlType.TERADATADEFAULTURL.getLanguage();
-    
+
     /**
      * Ansi SQL.
      */
@@ -82,6 +83,11 @@ public class DbmsLanguage {
      * in upper case.
      */
     private final String dbmsName;
+
+    /**
+     * version for current database.
+     */
+    private ProductVersion dbVersion;
 
     /**
      * the quoting string or an empty string if quoting is not supported.
@@ -108,12 +114,12 @@ public class DbmsLanguage {
     /**
      * DbmsLanguage constructor. Use this constructor when functions are specific to a given release of the DBMS.
      * 
-     * @param dbmsType the name of the DBMS (MySQL, Oracle,...)
-     * @param majorVersion the major version number
-     * @param minorVersion the minor version number
+     * @param dbmsType
+     * @param dbVersion
      */
-    DbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
+    DbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         this.dbmsName = dbmsType;
+        this.dbVersion = dbVersion;
         // PTODO scorreia handle dbms versions if needed
     }
 
@@ -233,6 +239,10 @@ public class DbmsLanguage {
         return this.dbmsName;
     }
 
+    public ProductVersion getDbVersion() {
+        return dbVersion;
+    }
+
     /**
      * Method "getDefaultLanguage".
      * 
@@ -258,7 +268,7 @@ public class DbmsLanguage {
             log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName));
         }
         return qualName.toString();
-    } 
+    }
 
     /**
      * Method "getPatternFinderDefaultFunction".
@@ -525,7 +535,7 @@ public class DbmsLanguage {
         }
         return Collections.emptyList();
     }
-    
+
     /**
      * Method "getRegexPatternString".
      * 
@@ -583,7 +593,7 @@ public class DbmsLanguage {
         }
         return null;
     }
-    
+
     public String getBackSlashForRegex() {
         return "\\";
     }
@@ -804,4 +814,14 @@ public class DbmsLanguage {
         return " CHAR_LENGTH(" + columnName + ") ";
     }
 
+    /**
+     * DOC bzhou Comment method "supportRegexp".
+     * 
+     * check if the database surpport the Regexp.
+     * 
+     * @return false by default.
+     */
+    public boolean supportRegexp() {
+        return false;
+    }
 }

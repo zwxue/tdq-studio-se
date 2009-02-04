@@ -14,6 +14,7 @@ package org.talend.dq.dbms;
 
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.utils.ProductVersion;
 import org.talend.utils.properties.PropertiesLoader;
 
 /**
@@ -22,7 +23,7 @@ import org.talend.utils.properties.PropertiesLoader;
 public class OracleDbmsLanguage extends DbmsLanguage {
 
     private static final Class<OracleDbmsLanguage> THAT = OracleDbmsLanguage.class;
-    
+
     private static final String NUM = getProperties("ORACLE_NUM", "1234567890");
 
     private static final String LOWER = getProperties("ORACLE_LOWER", "abcdefghijklmnopqrstuvwxyz");
@@ -37,7 +38,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * DOC scorreia OracleDbmsLanguage constructor comment.
      */
     public OracleDbmsLanguage() {
-        super(DbmsLanguage.ORACLE);     
+        super(DbmsLanguage.ORACLE);
     }
 
     /**
@@ -47,8 +48,8 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public OracleDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
-        super(dbmsType, majorVersion, minorVersion);
+    public OracleDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+        super(dbmsType, dbVersion);
         // TODO Auto-generated constructor stub
     }
 
@@ -217,4 +218,14 @@ public class OracleDbmsLanguage extends DbmsLanguage {
         return " LENGTH(" + columnName + ") ";
     }
 
+    @Override
+    public boolean supportRegexp() {
+        ProductVersion dbVersion = getDbVersion();
+        if (dbVersion != null) {
+
+            return dbVersion.getMajor() >= 10;
+        }
+
+        return false;
+    }
 }

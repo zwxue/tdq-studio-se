@@ -24,7 +24,9 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.utils.ProductVersion;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 
 /**
  * @author scorreia
@@ -100,17 +102,51 @@ public final class DbmsLanguageFactory {
         if (isSybaseASE(dbmsSubtype)) {
             return new SybaseASEDbmsLanguage();
         }
-         if (isSQLite(dbmsSubtype)) {
+        if (isSQLite(dbmsSubtype)) {
             return new SQLiteDbmsLanguage();
         }
-         if (isTeradata(dbmsSubtype)) {
+        if (isTeradata(dbmsSubtype)) {
             return new TeradataDbmsLanguage();
         }
         // TODO other supported databases here
         return new DbmsLanguage();
     }
 
-  
+    /**
+     * Method "createDbmsLanguage".
+     * 
+     * @param dbmsSubtype
+     * @return the appropriate DbmsLanguage
+     */
+    private static DbmsLanguage createDbmsLanguage(String dbmsSubtype, ProductVersion dbVersion) {
+        if (isMySQL(dbmsSubtype)) {
+            return new MySQLDbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        if (isOracle(dbmsSubtype)) {
+            return new OracleDbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        if (isDB2(dbmsSubtype)) {
+            return new DB2DbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        if (isMSSQL(dbmsSubtype)) {
+            return new MSSqlDbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        if (isPostgresql(dbmsSubtype)) {
+            return new PostgresqlDbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        if (isSybaseASE(dbmsSubtype)) {
+            return new SybaseASEDbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        if (isSQLite(dbmsSubtype)) {
+            return new SQLiteDbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        if (isTeradata(dbmsSubtype)) {
+            return new TeradataDbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        // TODO other supported databases here
+        return new DbmsLanguage(dbmsSubtype, dbVersion);
+    }
+
     /**
      * Method "createDbmsLanguage".
      * 
@@ -162,7 +198,7 @@ public final class DbmsLanguageFactory {
     private static boolean isTeradata(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.TERADATA, dbms);
     }
-    
+
     static boolean compareDbmsLanguage(String lang1, String lang2) {
         if (lang1 == null || lang2 == null) {
             return false;
@@ -189,6 +225,14 @@ public final class DbmsLanguageFactory {
                 return createDbmsLanguage(dm);
             }
         }
+        return new DbmsLanguage();
+    }
+
+    public static DbmsLanguage createDbmsLanguage(SoftwareSystem softwareSystem) {
+        if (softwareSystem != null) {
+            return createDbmsLanguage(softwareSystem.getName(), ProductVersion.fromString(softwareSystem.getVersion()));
+        }
+
         return new DbmsLanguage();
     }
 }

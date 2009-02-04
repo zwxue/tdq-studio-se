@@ -294,7 +294,7 @@ public final class DatabaseContentRetriever {
                 if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(prop.name)) {
                     continue;
                 }
-                
+
                 if (log.isDebugEnabled()) { // TODO use logger here
                     log.debug("Prop description = " + prop.description);
                     log.debug(prop.name + "=" + prop.value);
@@ -349,10 +349,14 @@ public final class DatabaseContentRetriever {
         // --- get informations
         String databaseProductName = databaseMetadata.getDatabaseProductName();
         String databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
+        String version = "";
         try {
             int databaseMinorVersion = databaseMetadata.getDatabaseMinorVersion();
             int databaseMajorVersion = databaseMetadata.getDatabaseMajorVersion();
-            String version = Integer.toString(databaseMajorVersion) + "." + databaseMinorVersion;
+            version = Integer.toString(databaseMajorVersion) + "." + databaseMinorVersion;
+
+            // FIXME here to append the micro version by 0.
+            version += ".0";
             if (log.isDebugEnabled()) {
                 log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + " " + version);
             }
@@ -369,7 +373,7 @@ public final class DatabaseContentRetriever {
         system.setName(databaseProductName);
         system.setType(SoftwareSystemConstants.DBMS.toString());
         system.setSubtype(databaseProductName);
-        system.setVersion(databaseProductVersion);
+        system.setVersion(version);
         Component component = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory.eINSTANCE.createComponent();
         system.getOwnedElement().add(component);
 

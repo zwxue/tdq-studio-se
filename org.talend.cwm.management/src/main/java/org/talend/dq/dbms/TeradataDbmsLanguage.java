@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import org.talend.utils.ProductVersion;
 
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 public class TeradataDbmsLanguage extends DbmsLanguage {
 
@@ -27,12 +28,13 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC scorreia TeradataDbmsLanguage constructor comment.
+     * 
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
      */
-    public TeradataDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
-        super(dbmsType, majorVersion, minorVersion);
+    public TeradataDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+        super(dbmsType, dbVersion);
     }
 
 }

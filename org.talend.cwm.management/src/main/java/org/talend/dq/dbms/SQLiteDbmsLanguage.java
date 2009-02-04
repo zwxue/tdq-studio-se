@@ -13,10 +13,10 @@
 package org.talend.dq.dbms;
 
 import org.apache.commons.lang.StringUtils;
-
+import org.talend.utils.ProductVersion;
 
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 public class SQLiteDbmsLanguage extends DbmsLanguage {
 
@@ -29,12 +29,13 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC scorreia SQLiteDbmsLanguage constructor comment.
+     * 
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
      */
-    public SQLiteDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
-        super(dbmsType, majorVersion, minorVersion);
+    public SQLiteDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+        super(dbmsType, dbVersion);
     }
 
     /*

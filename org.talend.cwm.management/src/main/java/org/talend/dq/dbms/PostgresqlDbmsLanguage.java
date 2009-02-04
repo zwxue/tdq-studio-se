@@ -13,12 +13,14 @@
 package org.talend.dq.dbms;
 
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.utils.ProductVersion;
 import org.talend.utils.properties.PropertiesLoader;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
 public class PostgresqlDbmsLanguage extends DbmsLanguage {
+
     private static final Class<PostgresqlDbmsLanguage> THAT = PostgresqlDbmsLanguage.class;
 
     private static final String NUM = getProperties("POSTGRES_NUM", "1234567890");
@@ -45,8 +47,8 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public PostgresqlDbmsLanguage(String dbmsType, int majorVersion, int minorVersion) {
-        super(dbmsType, majorVersion, minorVersion);
+    public PostgresqlDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+        super(dbmsType, dbVersion);
     }
 
     /*
@@ -143,4 +145,8 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
         return false;
     }
 
+    @Override
+    public boolean supportRegexp() {
+        return true;
+    }
 }
