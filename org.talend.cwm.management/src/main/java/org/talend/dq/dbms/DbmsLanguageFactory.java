@@ -64,7 +64,7 @@ public final class DbmsLanguageFactory {
                 log.debug("Software system subtype (Database type): " + dbmsSubtype);
             }
             if (StringUtils.isNotBlank(dbmsSubtype)) {
-                dbmsLanguage = createDbmsLanguage(dbmsSubtype);
+                dbmsLanguage = createDbmsLanguage(dbmsSubtype, softwareSystem.getVersion());
             }
         }
         String identifierQuoteString = DataProviderHelper.getIdentifierQuoteString(dataprovider);
@@ -83,42 +83,8 @@ public final class DbmsLanguageFactory {
      * @param dbmsSubtype
      * @return the appropriate DbmsLanguage
      */
-    private static DbmsLanguage createDbmsLanguage(String dbmsSubtype) {
-        if (isMySQL(dbmsSubtype)) {
-            return new MySQLDbmsLanguage();
-        }
-        if (isOracle(dbmsSubtype)) {
-            return new OracleDbmsLanguage();
-        }
-        if (isDB2(dbmsSubtype)) {
-            return new DB2DbmsLanguage();
-        }
-        if (isMSSQL(dbmsSubtype)) {
-            return new MSSqlDbmsLanguage();
-        }
-        if (isPostgresql(dbmsSubtype)) {
-            return new PostgresqlDbmsLanguage();
-        }
-        if (isSybaseASE(dbmsSubtype)) {
-            return new SybaseASEDbmsLanguage();
-        }
-        if (isSQLite(dbmsSubtype)) {
-            return new SQLiteDbmsLanguage();
-        }
-        if (isTeradata(dbmsSubtype)) {
-            return new TeradataDbmsLanguage();
-        }
-        // TODO other supported databases here
-        return new DbmsLanguage();
-    }
-
-    /**
-     * Method "createDbmsLanguage".
-     * 
-     * @param dbmsSubtype
-     * @return the appropriate DbmsLanguage
-     */
-    private static DbmsLanguage createDbmsLanguage(String dbmsSubtype, ProductVersion dbVersion) {
+    private static DbmsLanguage createDbmsLanguage(String dbmsSubtype, String databaseVersion) {
+        ProductVersion dbVersion = ProductVersion.fromString(databaseVersion, true);
         if (isMySQL(dbmsSubtype)) {
             return new MySQLDbmsLanguage(dbmsSubtype, dbVersion);
         }
@@ -158,7 +124,13 @@ public final class DbmsLanguageFactory {
         String databaseProductName;
         try {
             databaseProductName = connection.getMetaData().getDatabaseProductName();
-            DbmsLanguage dbmsLanguage = createDbmsLanguage(databaseProductName);
+            String databaseProductVersion = null;
+            try {
+                databaseProductVersion = connection.getMetaData().getDatabaseProductVersion();
+            } catch (Exception e) {
+                log.warn("Exception when retrieving database product version of " + databaseProductName, e);
+            }
+            DbmsLanguage dbmsLanguage = createDbmsLanguage(databaseProductName, databaseProductVersion);
             dbmsLanguage.setDbQuoteString(connection.getMetaData().getIdentifierQuoteString());
             return dbmsLanguage;
         } catch (SQLException e) {
@@ -230,7 +202,7 @@ public final class DbmsLanguageFactory {
 
     public static DbmsLanguage createDbmsLanguage(SoftwareSystem softwareSystem) {
         if (softwareSystem != null) {
-            return createDbmsLanguage(softwareSystem.getName(), ProductVersion.fromString(softwareSystem.getVersion()));
+            return createDbmsLanguage(softwareSystem.getName(), softwareSystem.getVersion());
         }
 
         return new DbmsLanguage();

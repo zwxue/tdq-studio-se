@@ -22,7 +22,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
     /**
      * DOC scorreia SybaseASEDbmsLanguage constructor comment.
      */
-    public SybaseASEDbmsLanguage() {
+    SybaseASEDbmsLanguage() {
         super(DbmsLanguage.SYBASE_ASE);
     }
 
@@ -33,7 +33,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public SybaseASEDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    SybaseASEDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
         // TODO Auto-generated constructor stub
     }

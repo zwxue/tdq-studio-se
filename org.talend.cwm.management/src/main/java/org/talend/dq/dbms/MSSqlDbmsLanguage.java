@@ -24,7 +24,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     /**
      * DOC scorreia MSSqlDbmsLanguage constructor comment.
      */
-    public MSSqlDbmsLanguage() {
+    MSSqlDbmsLanguage() {
         super(DbmsLanguage.MSSQL);
     }
 
@@ -35,7 +35,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public MSSqlDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    MSSqlDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
         // TODO Auto-generated constructor stub
     }

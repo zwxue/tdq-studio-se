@@ -349,18 +349,16 @@ public final class DatabaseContentRetriever {
         // --- get informations
         String databaseProductName = databaseMetadata.getDatabaseProductName();
         String databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
-        String version = "";
         try {
             int databaseMinorVersion = databaseMetadata.getDatabaseMinorVersion();
             int databaseMajorVersion = databaseMetadata.getDatabaseMajorVersion();
-            version = Integer.toString(databaseMajorVersion) + "." + databaseMinorVersion;
+            // simplify the database product version when these informations are accessible
+            databaseProductVersion = Integer.toString(databaseMajorVersion) + "." + databaseMinorVersion;
 
-            // FIXME here to append the micro version by 0.
-            version += ".0";
             if (log.isDebugEnabled()) {
-                log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + " " + version);
+                log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + ". DB version: "
+                        + databaseMajorVersion + "." + databaseMinorVersion);
             }
-            // TODO scorreia see if store in CWM structure is done elsewhere
         } catch (RuntimeException e) {
             // happens for Sybase ASE for example
             if (log.isDebugEnabled()) {
@@ -373,7 +371,7 @@ public final class DatabaseContentRetriever {
         system.setName(databaseProductName);
         system.setType(SoftwareSystemConstants.DBMS.toString());
         system.setSubtype(databaseProductName);
-        system.setVersion(version);
+        system.setVersion(databaseProductVersion);
         Component component = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory.eINSTANCE.createComponent();
         system.getOwnedElement().add(component);
 

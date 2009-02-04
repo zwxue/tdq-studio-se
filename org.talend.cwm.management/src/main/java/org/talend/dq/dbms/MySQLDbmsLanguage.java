@@ -29,7 +29,7 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
     /**
      * DOC scorreia MySQLDbmsLanguage constructor comment.
      */
-    public MySQLDbmsLanguage() {
+    MySQLDbmsLanguage() {
         super(DbmsLanguage.MYSQL);
     }
 
@@ -39,7 +39,7 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      * @param dbmsType
      * @param dbVersion
      */
-    public MySQLDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    MySQLDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
     }
 

@@ -22,7 +22,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
     /**
      * DOC scorreia TeradataDbmsLanguage constructor comment.
      */
-    public TeradataDbmsLanguage() {
+    TeradataDbmsLanguage() {
         super(DbmsLanguage.TERADATA);
     }
 
@@ -33,7 +33,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public TeradataDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    TeradataDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
     }
 

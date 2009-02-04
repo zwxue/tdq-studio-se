@@ -37,7 +37,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     /**
      * DOC scorreia OracleDbmsLanguage constructor comment.
      */
-    public OracleDbmsLanguage() {
+    OracleDbmsLanguage() {
         super(DbmsLanguage.ORACLE);
     }
 
@@ -48,7 +48,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public OracleDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    OracleDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
         // TODO Auto-generated constructor stub
     }
@@ -222,7 +222,6 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     public boolean supportRegexp() {
         ProductVersion dbVersion = getDbVersion();
         if (dbVersion != null) {
-
             return dbVersion.getMajor() >= 10;
         }
 

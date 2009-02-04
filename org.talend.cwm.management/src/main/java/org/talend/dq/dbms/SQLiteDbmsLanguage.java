@@ -23,7 +23,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
     /**
      * DOC scorreia SQLiteDbmsLanguage constructor comment.
      */
-    public SQLiteDbmsLanguage() {
+    SQLiteDbmsLanguage() {
         super(DbmsLanguage.SQLITE3);
     }
 
@@ -34,7 +34,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public SQLiteDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    SQLiteDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
     }
 

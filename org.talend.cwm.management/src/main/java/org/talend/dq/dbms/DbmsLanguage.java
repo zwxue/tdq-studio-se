@@ -87,7 +87,7 @@ public class DbmsLanguage {
     /**
      * version for current database.
      */
-    private ProductVersion dbVersion;
+    private final ProductVersion dbVersion;
 
     /**
      * the quoting string or an empty string if quoting is not supported.
@@ -98,7 +98,7 @@ public class DbmsLanguage {
      * DbmsLanguage constructor for generic ANSI SQL (independent of any DBMS).
      */
     DbmsLanguage() {
-        this.dbmsName = SQL;
+        this(SQL);
     }
 
     /**
@@ -109,18 +109,18 @@ public class DbmsLanguage {
     DbmsLanguage(String dbmsType) {
         assert dbmsType != null : "DBMS type must not be null!!";
         this.dbmsName = dbmsType;
+        this.dbVersion = null;
     }
 
     /**
      * DbmsLanguage constructor. Use this constructor when functions are specific to a given release of the DBMS.
      * 
-     * @param dbmsType
-     * @param dbVersion
+     * @param dbmsType the database name
+     * @param dbVersion the database version number
      */
     DbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         this.dbmsName = dbmsType;
         this.dbVersion = dbVersion;
-        // PTODO scorreia handle dbms versions if needed
     }
 
     /**

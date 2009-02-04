@@ -36,7 +36,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
     /**
      * DOC scorreia PostgresqlDbmsLanguage constructor comment.
      */
-    public PostgresqlDbmsLanguage() {
+    PostgresqlDbmsLanguage() {
         super(DbmsLanguage.POSTGRESQL);
     }
 
@@ -47,7 +47,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public PostgresqlDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    PostgresqlDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
     }
 

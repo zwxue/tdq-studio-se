@@ -23,7 +23,7 @@ public class DB2DbmsLanguage extends DbmsLanguage {
     /**
      * DOC scorreia DB2DbmsLanguage constructor comment.
      */
-    public DB2DbmsLanguage() {
+    DB2DbmsLanguage() {
         super(DbmsLanguage.DB2);
     }
 
@@ -34,7 +34,7 @@ public class DB2DbmsLanguage extends DbmsLanguage {
      * @param majorVersion
      * @param minorVersion
      */
-    public DB2DbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+    DB2DbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
         // TODO Auto-generated constructor stub
     }
