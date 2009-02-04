@@ -402,6 +402,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         }
         String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype();
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
+        String version = (softwareSystem == null) ? "" : softwareSystem.getVersion();
+        newLabelAndText(gContainer, "Version: ", version); //$NON-NLS-1$
+
     }
 
     private void createDescription(ModelElement dataProvider) {        

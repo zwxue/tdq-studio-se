@@ -40,7 +40,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
         } else if (element instanceof TdColumn) {
             if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
-                // TODO get the icon for primary key
+                // get the icon for primary key
                 return ImageLib.getImage(ImageLib.PK_COLUMN);
             }
         }

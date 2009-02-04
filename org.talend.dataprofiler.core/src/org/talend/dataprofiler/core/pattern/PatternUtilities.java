@@ -148,7 +148,7 @@ public final class PatternUtilities {
                 SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
                 dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
 
