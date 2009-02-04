@@ -156,7 +156,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             });
 
-        } else if (dbLiteral.trim().equals("SQLite3")) {
+        } else if (dbLiteral.trim().equals(SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage())) {
             GridLayout layout = new GridLayout();
             layout.numColumns = 3;
             parent.setLayout(layout);

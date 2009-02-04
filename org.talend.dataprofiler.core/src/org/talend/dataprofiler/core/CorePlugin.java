@@ -231,9 +231,18 @@ public class CorePlugin extends AbstractUIPlugin {
 
         SQLExplorerPlugin sqlexplorer = SQLExplorerPlugin.getDefault();
         Collection<Alias> aliases = sqlexplorer.getAliasManager().getAliases();
-        if (aliases.isEmpty()) {
+
+        boolean isExisted = false;
+        for (Alias alias : aliases) {
+            if (alias.getUrl().equals(url)) {
+                isExisted = true;
+            }
+        }
+
+        if (!isExisted) {
             new ChangePerspectiveAction(PluginConstant.SE_ID).run();
         }
+
         SQLEditor editorPart = null;
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
