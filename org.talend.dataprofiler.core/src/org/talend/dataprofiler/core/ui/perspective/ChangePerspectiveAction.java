@@ -161,27 +161,27 @@ public class ChangePerspectiveAction extends Action {
                 log.error(e1, e1);
             }
             for (TdDataProvider tdDataProvider : listTdDataProviders) {
-                TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-                TdProviderConnection providerConnection = tdPc.getObject();
-                String url = providerConnection.getConnectionString();
-                Alias alias = new Alias(tdDataProvider.getName());
-                String user = TaggedValueHelper.getValue("user", providerConnection); //$NON-NLS-1$
-                // MOD scorreia 2009-01-09 password decryption
-                String password = DataProviderHelper.getClearTextPassword(providerConnection);
-                User previousUser = new User(user, password);
-                alias.setDefaultUser(previousUser);
-                alias.setAutoLogon(false);
-                alias.setConnectAtStartup(true);
-                alias.setUrl(url);
-                ManagedDriver manDr = default1.getDriverModel().getDriver(
-                        EDriverName.getId(providerConnection.getDriverClassName()));
-                alias.setDriver(manDr);
                 try {
+                    TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
+                    TdProviderConnection providerConnection = tdPc.getObject();
+                    String url = providerConnection.getConnectionString();
+                    Alias alias = new Alias(tdDataProvider.getName());
+                    String user = TaggedValueHelper.getValue("user", providerConnection); //$NON-NLS-1$
+                    // MOD scorreia 2009-01-09 password decryption
+                    String password = DataProviderHelper.getClearTextPassword(providerConnection);
+                    User previousUser = new User(user, password);
+                    alias.setDefaultUser(previousUser);
+                    alias.setAutoLogon(false);
+                    alias.setConnectAtStartup(true);
+                    alias.setUrl(url);
+                    ManagedDriver manDr = default1.getDriverModel().getDriver(
+                            EDriverName.getId(providerConnection.getDriverClassName()));
+                    alias.setDriver(manDr);
                     aliasManager.addAlias(alias);
+                    users.add(previousUser);
                 } catch (ExplorerException e) {
                     log.error(e, e);
                 }
-                users.add(previousUser);
             }
             aliasManager.modelChanged();
             // SQLExplorerPlugin.getDefault().getPluginPreferences().setValue(IConstants.AUTO_OPEN_EDITOR, false);
