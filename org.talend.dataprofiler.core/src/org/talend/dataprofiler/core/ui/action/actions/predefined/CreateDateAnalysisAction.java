@@ -58,12 +58,12 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected ColumnIndicator[] getPredefinedColumnIndicator() {
 
-        IndicatorEnum[] allwedEnumes = new IndicatorEnum[5];
-        allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
-        allwedEnumes[1] = IndicatorEnum.MinValueIndicatorEnum;
-        allwedEnumes[2] = IndicatorEnum.MaxValueIndicatorEnum;
-        allwedEnumes[3] = IndicatorEnum.LowFrequencyIndicatorEnum;
-        allwedEnumes[4] = IndicatorEnum.FrequencyIndicatorEnum;
+        IndicatorEnum[] allwedEnumes = new IndicatorEnum[2];
+        // allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
+        // allwedEnumes[1] = IndicatorEnum.MinValueIndicatorEnum;
+        // allwedEnumes[2] = IndicatorEnum.MaxValueIndicatorEnum;
+        allwedEnumes[0] = IndicatorEnum.LowFrequencyIndicatorEnum;
+        allwedEnumes[1] = IndicatorEnum.FrequencyIndicatorEnum;
 
         ColumnIndicator[] returnColumnIndicator = composePredefinedColumnIndicator(allwedEnumes);
 
@@ -71,7 +71,8 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             for (ColumnIndicator columnIndicator : returnColumnIndicator) {
                 for (Indicator indicator : columnIndicator.getIndicators()) {
                     if (indicator instanceof FrequencyIndicator) {
-                        indicator.setParameters(parameters);
+                        indicator.getParameters().getDateParameters().setDateAggregationType(
+                                parameters.getDateParameters().getDateAggregationType());
                     }
                 }
             }
