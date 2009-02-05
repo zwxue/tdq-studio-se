@@ -13,9 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -67,7 +65,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -80,6 +77,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -107,13 +105,11 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.ColumnSetNameHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
-import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author rli
@@ -1117,30 +1113,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
          */
         private void previewSelectedElements(Tree newTree) {
             TreeItem[] items = newTree.getSelection();
+            TdColumn[] columns = new TdColumn[items.length];
 
-            if (isSelectedSameDataProvider(items)) {
-
-                TreeItem oneItem = items[0];
-                ColumnIndicator oneColumnIndicator = (ColumnIndicator) oneItem.getData(COLUMN_INDICATOR_KEY);
-                TdColumn oneColumn = oneColumnIndicator.getTdColumn();
-                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(oneColumn);
-                ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(oneColumn);
-                String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
-
-                String columnClause = "";
-                for (TreeItem item : items) {
-                    ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
-                    TdColumn column = columnIndicator.getTdColumn();
-                    String columnName = ColumnHelper.getFullName(column);
-                    columnClause += columnName + ",";
-                }
-                columnClause = columnClause.substring(0, columnClause.length() - 1);
-                String query = "select " + columnClause + " from " + tableName;
-
-                CorePlugin.getDefault().runInDQViewer(dataprovider, query, tableName);
-            } else {
-                MessageDialogWithToggle.openWarning(null, "Warning", "\r\nYou must preview columns of one table.");
+            for (int i = 0; i < items.length; i++) {
+                ColumnIndicator columnIndicator = (ColumnIndicator) items[i].getData(COLUMN_INDICATOR_KEY);
+                TdColumn column = columnIndicator.getTdColumn();
+                columns[i] = column;
             }
+
+            new PreviewColumnAction(columns).run();
         }
 
         /**
@@ -1170,7 +1151,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
 
         /**
-         * DOC Zqin Comment method "showSelectedElements".MOD 2009-01-07 mzhao
+         * DOC Zqin Comment method "showSelectedElements".MOD 2009-01-07 mzhao.
          * 
          * @param newTree
          */
@@ -1222,25 +1203,16 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             for (TreeItem item : items) {
                 IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                Indicator indicator = unit.getIndicator();
-                if (!(indicator instanceof PatternMatchingIndicator)) {
-                    return false;
+                if (unit != null) {
+
+                    Indicator indicator = unit.getIndicator();
+                    if (!(indicator instanceof PatternMatchingIndicator)) {
+                        return false;
+                    }
                 }
             }
 
             return true;
-        }
-
-        private boolean isSelectedSameDataProvider(TreeItem[] items) {
-            Set<ColumnSet> columnSets = new HashSet<ColumnSet>();
-            for (TreeItem item : items) {
-                ColumnIndicator columnIndicator = (ColumnIndicator) item.getData(COLUMN_INDICATOR_KEY);
-                TdColumn column = columnIndicator.getTdColumn();
-                ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
-                columnSets.add(columnSetOwner);
-            }
-
-            return columnSets.size() == 1;
         }
     }
 }

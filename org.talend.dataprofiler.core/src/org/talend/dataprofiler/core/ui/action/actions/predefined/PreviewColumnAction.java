@@ -12,7 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -27,23 +31,45 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class PreviewColumnAction extends Action {
 
-    private TdColumn column;
+    private TdColumn[] columns;
 
-    public PreviewColumnAction(TdColumn column) {
+    public PreviewColumnAction(TdColumn[] columns) {
         super("Preview");
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE));
-        this.column = column;
+        this.columns = columns;
     }
 
     @Override
     public void run() {
-        if (column != null) {
-            TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(column);
-            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+
+        if (isSelectedSameDataProvider()) {
+            TdColumn oneColumn = columns[0];
+            TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(oneColumn);
+            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(oneColumn);
             String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
-            String columnName = ColumnHelper.getFullName(column);
-            String query = "select " + columnName + " from " + tableName;
-            CorePlugin.getDefault().runInDQViewer(dataprovider, query, column.getName());
+
+            String columnClause = "";
+            for (TdColumn column : columns) {
+                String columnName = ColumnHelper.getFullName(column);
+                columnClause += columnName + ",";
+            }
+            columnClause = columnClause.substring(0, columnClause.length() - 1);
+
+            String query = "select " + columnClause + " from " + tableName;
+            CorePlugin.getDefault().runInDQViewer(dataprovider, query, tableName);
+        } else {
+            MessageDialogWithToggle.openWarning(null, "Warning", "\r\nYou must preview columns from one table.");
         }
+    }
+
+    private boolean isSelectedSameDataProvider() {
+        assert columns != null;
+
+        Set<ColumnSet> columnSets = new HashSet<ColumnSet>();
+        for (TdColumn column : columns) {
+            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+            columnSets.add(columnSetOwner);
+        }
+        return columnSets.size() == 1;
     }
 }

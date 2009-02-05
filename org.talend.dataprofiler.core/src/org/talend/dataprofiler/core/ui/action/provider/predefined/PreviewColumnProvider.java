@@ -26,8 +26,14 @@ public class PreviewColumnProvider extends CommonActionProvider {
     @Override
     public void fillContextMenu(IMenuManager menu) {
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
-        TdColumn column = (TdColumn) treeSelection.getFirstElement();
-        PreviewColumnAction action = new PreviewColumnAction(column);
+
+        Object[] selectedObjs = treeSelection.toArray();
+        TdColumn[] columns = new TdColumn[selectedObjs.length];
+
+        for (int i = 0; i < selectedObjs.length; i++) {
+            columns[i] = (TdColumn) selectedObjs[i];
+        }
+        PreviewColumnAction action = new PreviewColumnAction(columns);
         menu.add(action);
     }
 }
