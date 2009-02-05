@@ -79,7 +79,7 @@ public class DateTimeDialog extends TrayDialog {
         int day = timed.getDay();
 
         if (timet != null) {
-            format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             int hour = timet.getHours();
             int mnts = timet.getMinutes();
