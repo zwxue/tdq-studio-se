@@ -586,6 +586,7 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
         this.viewRowCount = VIEW_ROW_COUNT_EDEFAULT;
         this.triggerCount = TRIGGER_COUNT_EDEFAULT;
         this.getTableIndicators().clear();
+        this.getViewIndicators().clear();
         return ok;
     }
 

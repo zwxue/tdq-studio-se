@@ -15,17 +15,12 @@ package org.talend.dq.indicators;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
-import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.schema.CatalogIndicator;
-import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.resource.relational.Schema;
@@ -68,19 +63,15 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             return ok;
         }
 
-        CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
-        // MOD xqliu 2009-1-21 feature 4715
-        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);
         for (Indicator indicator : indics) {
             SchemaIndicator schemaIndicator = DataqualitySwitchHelper.SCHEMA_SWITCH.doSwitch(indicator);
             if (schemaIndicator == null) {
                 continue;
             }
             TdSchema schema = (TdSchema) schemaIndicator.getAnalyzedElement();
-            TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schema);
             String catName = schema.getName();
             connection.setCatalog(catName);
-            evalSchemaIndicLow(createCatalogIndicator, schemaIndicator, parentCatalog, schema, ok);
+            evalSchemaIndicLow(null, schemaIndicator, null, schema, ok);
         }
         return ok;
     }
