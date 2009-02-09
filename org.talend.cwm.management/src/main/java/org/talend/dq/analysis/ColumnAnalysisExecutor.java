@@ -67,6 +67,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         IndicatorEvaluator eval = new IndicatorEvaluator();
+        // MOD xqliu 2009-02-09 bug 6237
+        eval.setMonitor(getMonitor());
         // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
@@ -223,6 +225,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "checkAnalyzedElements".
+     * 
      * @param analysis
      * @param context
      */

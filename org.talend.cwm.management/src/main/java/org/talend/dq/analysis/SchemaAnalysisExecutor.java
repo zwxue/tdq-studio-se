@@ -34,6 +34,8 @@ public class SchemaAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         SchemaEvaluator eval = new SchemaEvaluator();
+        // MOD xqliu 2009-02-09 bug 6237
+        eval.setMonitor(getMonitor());
         // // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {

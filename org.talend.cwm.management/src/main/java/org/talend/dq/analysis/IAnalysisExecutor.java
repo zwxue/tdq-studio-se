@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -30,4 +31,11 @@ public interface IAnalysisExecutor {
      */
     public abstract ReturnCode execute(final Analysis analysis);
 
+    /**
+     * 
+     * DOC xqliu Comment method "setMonitor".
+     * 
+     * @param monitor
+     */
+    public void setMonitor(IProgressMonitor monitor);
 }

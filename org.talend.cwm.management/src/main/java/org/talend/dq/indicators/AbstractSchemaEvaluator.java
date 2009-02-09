@@ -292,7 +292,10 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             if (log.isInfoEnabled()) {
                 log.info("Executing SQL statement: " + sqlStatement);
             }
-            statement.execute(sqlStatement);
+            // MOD xqliu 2009-02-09 bug 6237
+            if (continueRun()) {
+                statement.execute(sqlStatement);
+            }
         } catch (SQLException e) {
             statement.close();
             log.warn(e.getMessage() + " for SQL statement: " + sqlStatement);
@@ -311,7 +314,11 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             String mess = "No result set for this statement: " + sqlStatement;
             log.warn(mess);
         } else {
-            while (resultSet.next()) {
+            while (resultSet != null && resultSet.next()) {
+                // MOD xqliu 2009-02-09 bug 6237
+                if (!continueRun()) {
+                    break;
+                }
                 // List<Indicator> indicators = getIndicators(col);
                 // ResultSetUtils.printResultSet(resultSet, 0);
                 // --- get content of column

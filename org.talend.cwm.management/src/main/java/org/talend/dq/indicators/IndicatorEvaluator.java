@@ -44,7 +44,10 @@ public class IndicatorEvaluator extends Evaluator<String> {
         Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY,
                 ResultSet.CLOSE_CURSORS_AT_COMMIT);
         statement.setFetchSize(fetchSize);
-        statement.execute(sqlStatement);
+        // MOD xqliu 2009-02-09 bug 6237
+        if (continueRun()) {
+            statement.execute(sqlStatement);
+        }
 
         // get the results
         ResultSet resultSet = statement.getResultSet();
@@ -54,7 +57,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
             ok.setReturnCode(mess, false);
             return ok;
         }
-        while (resultSet.next()) {
+        label: while (resultSet.next()) {
 
             // --- for each column
             for (String col : columns) {
@@ -65,6 +68,10 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
                 // --- give row to handle to indicators
                 for (Indicator indicator : indicators) {
+                    // MOD xqliu 2009-02-09 bug 6237
+                    if (!continueRun()) {
+                        break label;
+                    }
                     indicator.handle(object);
                 }
             }

@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -173,4 +174,21 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     }
 
+    private IProgressMonitor monitor;
+
+    public IProgressMonitor getMonitor() {
+        return monitor;
+    }
+
+    public void setMonitor(IProgressMonitor monitor) {
+        this.monitor = monitor;
+    }
+
+    protected boolean continueRun() {
+        boolean ret = true;
+        if (getMonitor() != null && getMonitor().isCanceled()) {
+            ret = false;
+        }
+        return ret;
+    }
 }

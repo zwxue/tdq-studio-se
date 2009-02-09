@@ -33,7 +33,10 @@ public class ConnectionAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
      */
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+
         ConnectionEvaluator eval = new ConnectionEvaluator();
+        // MOD xqliu 2009-02-09 bug 6237
+        eval.setMonitor(getMonitor());
         // // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
@@ -52,5 +55,4 @@ public class ConnectionAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
 
         return runAnalysisLow(analysis, sqlStatement, eval);
     }
-
 }

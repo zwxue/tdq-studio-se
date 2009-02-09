@@ -13,6 +13,7 @@
 package org.talend.dq.analysis;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -44,7 +45,7 @@ public final class AnalysisExecutorSelector {
             log.error("Analysis type is not set for analysis " + analysis.getName());
             return null;
         }
-        ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(analysis);        
+        ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(analysis);
         AnalysisExecutor exec = null;
         switch (analysisType) {
         case MULTIPLE_COLUMN:
@@ -80,8 +81,22 @@ public final class AnalysisExecutorSelector {
      * @return a return code with an error message when the analysis failed to run.
      */
     public static ReturnCode executeAnalysis(Analysis analysis) {
+        return executeAnalysis(analysis, null);
+    }
+
+    /**
+     * 
+     * DOC xqliu Comment method "executeAnalysis".
+     * 
+     * @param analysis
+     * @param monitor
+     * @return
+     */
+    public static ReturnCode executeAnalysis(Analysis analysis, IProgressMonitor monitor) {
         IAnalysisExecutor analysisExecutor = getAnalysisExecutor(analysis);
         if (analysisExecutor != null) {
+            // MOD xqliu 2009-02-09 bug 6237
+            analysisExecutor.setMonitor(monitor);
             return analysisExecutor.execute(analysis);
         }
         // else

@@ -322,7 +322,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     defValue = "'" + defValue + "'";
                 }
                 whereExpression.add(colName + dbmsLanguage.equal() + defValue);
-            }                        
+            }
 
             // --- default case
             completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(sqlGenericExpression.getBody(), colName, table);
@@ -1114,7 +1114,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (log.isInfoEnabled()) {
             log.info("Executing query: " + queryStmt);
         }
-        statement.execute(queryStmt);
+        // MOD xqliu 2009-02-09 bug 6237
+        if (continueRun()) {
+            statement.execute(queryStmt);
+        }
 
         // get the results
         ResultSet resultSet = statement.getResultSet();

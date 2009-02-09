@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.utils.collections.MultiMapHelper;
@@ -216,4 +217,21 @@ public abstract class Evaluator<T> {
         return this.allIndicators.toArray(new Indicator[allIndicators.size()]);
     }
 
+    private IProgressMonitor monitor;
+
+    public IProgressMonitor getMonitor() {
+        return monitor;
+    }
+
+    public void setMonitor(IProgressMonitor monitor) {
+        this.monitor = monitor;
+    }
+
+    protected boolean continueRun() {
+        boolean ret = true;
+        if (getMonitor() != null && getMonitor().isCanceled()) {
+            ret = false;
+        }
+        return ret;
+    }
 }
