@@ -32,7 +32,6 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -107,8 +106,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     private static final int TREE_MAX_LENGTH = 400;
 
     private Composite[] previewChartCompsites;
-
-    private Button runButton;
 
     private EList<ModelElement> analyzedColumns;
 
@@ -193,7 +190,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         previewComp.setLayout(new GridLayout());
 
         createPreviewSection(form, previewComp);
-        runButton = createRunButton(form);
+
         // MOD 2009-01-12 mzhao, for register sections that would be collapse or expand later.
         currentEditor.registerSections(new Section[] { analysisColSection, metadataSection, dataFilterSection, previewSection });
     }
@@ -402,11 +399,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         }
     }
 
-    /**
-     * DOC xzhao Comment method "refreshChart".
-     * 
-     * @param form
-     */
+    @Override
     public void refreshChart() {
         if (chartComposite != null) {
             try {
@@ -616,17 +609,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     public Composite getChartComposite() {
         return chartComposite;
-    }
-
-    public void fireRuningItemChanged(boolean status) {
-
-        this.runButton.setEnabled(status);
-
-        if (status) {
-            ((AnalysisEditor) getEditor()).setRefreshResultPage(true);
-            refreshChart();
-        }
-
     }
 
     protected boolean canSave() {

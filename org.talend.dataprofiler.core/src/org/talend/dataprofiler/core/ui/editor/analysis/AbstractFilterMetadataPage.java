@@ -280,7 +280,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         createAnalysisParamSection(topComp);
         createAnalysisSummarySection(topComp);
         createStatisticalSection(topComp);
-        createRunButton(form);
+
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
         currentEditor
                 .registerSections(new Section[] { analysisParamSection, statisticalSection, metadataSection, summarySection });
@@ -806,6 +806,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     public void fireRuningItemChanged(boolean status) {
 
+        currentEditor.setRunActionButtonState(status);
+
         if (status) {
             doSetInput();
         }
@@ -816,9 +818,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         return true;
     }
 
-    // @Override
-    // protected void refresh() {
-    // // TODO Auto-generated method stub
-    //
-    // }
+    @Override
+    public void refreshChart() {
+        // TODO Auto-generated method stub
+
+    }
 }

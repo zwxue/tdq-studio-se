@@ -34,7 +34,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -115,8 +114,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     private Composite[] previewChartCompsites;
 
-    private Button runButton;
-
     private AnalysisEditor currentEditor;
 
     private Section dataFilterSection = null;
@@ -189,8 +186,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         previewComp.setLayout(new GridLayout());
 
         createPreviewSection(form, previewComp);
-
-        runButton = createRunButton(form);
 
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
         currentEditor
@@ -508,11 +503,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
     }
 
-    /**
-     * DOC zqin Comment method "refreshChart".
-     * 
-     * @param form
-     */
+    @Override
     public void refreshChart() {
         if (chartComposite != null) {
             try {
@@ -521,12 +512,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 }
 
                 createPreviewCharts(form, chartComposite, true);
+                chartComposite.getParent().layout();
                 chartComposite.layout();
-                getForm().reflow(true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
         }
     }
 
@@ -712,17 +702,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     public Composite getChartComposite() {
         return chartComposite;
-    }
-
-    public void fireRuningItemChanged(boolean status) {
-
-        this.runButton.setEnabled(status);
-
-        if (status) {
-            currentEditor.setRefreshResultPage(true);
-            refreshChart();
-        }
-
     }
 
     @Override

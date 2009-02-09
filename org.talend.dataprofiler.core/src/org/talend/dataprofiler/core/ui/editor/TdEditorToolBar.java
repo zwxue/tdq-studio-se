@@ -34,106 +34,117 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  */
 public class TdEditorToolBar {
 
-	private CoolBar coolBar = null;
+    private CoolBar coolBar = null;
 
-	private CoolBarManager coolBarMgr;
+    private CoolBarManager coolBarMgr;
 
-	private ToolBarManager defaultToolBarMgr;
+    private ToolBarManager defaultToolBarMgr;
 
-	private TdEditorBarWrapper editorBarWrap;
+    private TdEditorBarWrapper editorBarWrap;
 
-	private LinkedList<Action> actions = new LinkedList<Action>();
+    private LinkedList<Action> actions = new LinkedList<Action>();
 
-	public TdEditorToolBar(Composite parent, TdEditorBarWrapper editorBarWrap) {
-		this.editorBarWrap = editorBarWrap;
-		// create coolbar
-		coolBar = new CoolBar(parent, SWT.FLAT);
-		coolBarMgr = new CoolBarManager(coolBar);
+    public TdEditorToolBar(Composite parent, TdEditorBarWrapper editorBarWrap) {
+        this.editorBarWrap = editorBarWrap;
+        // create coolbar
+        coolBar = new CoolBar(parent, SWT.FLAT);
+        coolBarMgr = new CoolBarManager(coolBar);
 
-		GridData gid = new GridData();
-		gid.horizontalAlignment = GridData.FILL;
-		coolBar.setLayoutData(gid);
+        GridData gid = new GridData();
+        gid.horizontalAlignment = GridData.FILL;
+        coolBar.setLayoutData(gid);
 
-		// initialize default actions
-		defaultToolBarMgr = new ToolBarManager(SWT.FLAT);
+        // initialize default actions
+        defaultToolBarMgr = new ToolBarManager(SWT.FLAT);
 
-		actions.add(new ExpandSectionAction(editorBarWrap));
-		actions.add(new CollapseSectionAction(editorBarWrap));
+        actions.add(new ExpandSectionAction(editorBarWrap));
+        actions.add(new CollapseSectionAction(editorBarWrap));
 
-		for (Action action : actions) {
-			action.setEnabled(action.isEnabled());
-			defaultToolBarMgr.add(action);
-		}
+        for (Action action : actions) {
+            defaultToolBarMgr.add(action);
+        }
 
-		// add all toolbars to parent coolbar
-		coolBarMgr.add(new ToolBarContributionItem(defaultToolBarMgr));
-		coolBarMgr.update(true);
-	}
+        // add all toolbars to parent coolbar
+        coolBarMgr.add(new ToolBarContributionItem(defaultToolBarMgr));
+        coolBarMgr.update(true);
+    }
 
-	public void addResizeListener(ControlListener listener) {
-		coolBar.addControlListener(listener);
-	}
+    public void addResizeListener(ControlListener listener) {
+        coolBar.addControlListener(listener);
+    }
 
-	public CoolBar getToolbarControl() {
-		return coolBar;
-	}
+    public CoolBar getToolbarControl() {
+        return coolBar;
+    }
 
-	/**
-	 * 
-	 * DOC mzhao TdEditorToolBar class global comment. Detailled comment
-	 */
-	private class CollapseSectionAction extends Action {
+    public TdEditorBarWrapper getEditorBarWrap() {
+        return editorBarWrap;
+    }
 
-		public CollapseSectionAction(TdEditorBarWrapper editorBarWrap) {
-			super(DefaultMessagesImpl.getString("ExpandAll"));
-			this.setImageDescriptor(ImageLib
-					.getImageDescriptor(ImageLib.EXPAND_ALL));
-		}
+    public void addActions(Action... actions) {
+        assert actions != null;
 
-		@Override
-		public void run() {
-			Iterator<Section> it = editorBarWrap.getSections().iterator();
-			Section section = null;
-			while (it.hasNext()) {
-				section = it.next();
-				if (section == null || section.isDisposed()) {
-					it.remove();
-					continue;
-				}
-				section.setExpanded(true);
-			}
-			section = null;
-		}
+        if (coolBarMgr != null) {
+            for (Action action : actions) {
+                defaultToolBarMgr.add(action);
+            }
 
-	}
+            coolBarMgr.add(new ToolBarContributionItem(defaultToolBarMgr));
+            coolBarMgr.update(true);
+        }
+    }
 
-	/**
-	 * 
-	 * DOC mzhao TdEditorToolBar class global comment. Detailled comment
-	 */
-	private class ExpandSectionAction extends Action {
+    /**
+     * 
+     * DOC mzhao TdEditorToolBar class global comment. Detailled comment
+     */
+    private class CollapseSectionAction extends Action {
 
-		public ExpandSectionAction(TdEditorBarWrapper editorBarWrap) {
-			super(DefaultMessagesImpl.getString("CollapseAll"));
-			this.setImageDescriptor(ImageLib
-					.getImageDescriptor(ImageLib.COLLAPSE_ALL));
-		}
+        public CollapseSectionAction(TdEditorBarWrapper editorBarWrap) {
+            super(DefaultMessagesImpl.getString("ExpandAll"));
+            this.setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPAND_ALL));
+        }
 
-		@Override
-		public void run() {
-			Iterator<Section> it = editorBarWrap.getSections().iterator();
-			Section section = null;
-			while (it.hasNext()) {
-				section = it.next();
-				if (section == null || section.isDisposed()) {
-					it.remove();
-					continue;
-				}
-				section.setExpanded(false);
-			}
-			section = null;
-		}
+        @Override
+        public void run() {
+            Iterator<Section> it = editorBarWrap.getSections().iterator();
 
-	}
+            while (it.hasNext()) {
+                Section section = it.next();
+                if (section == null || section.isDisposed()) {
+                    it.remove();
+                    continue;
+                }
+                section.setExpanded(true);
+            }
+        }
 
+    }
+
+    /**
+     * 
+     * DOC mzhao TdEditorToolBar class global comment. Detailled comment
+     */
+    private class ExpandSectionAction extends Action {
+
+        public ExpandSectionAction(TdEditorBarWrapper editorBarWrap) {
+            super(DefaultMessagesImpl.getString("CollapseAll"));
+            this.setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.COLLAPSE_ALL));
+        }
+
+        @Override
+        public void run() {
+            Iterator<Section> it = editorBarWrap.getSections().iterator();
+
+            while (it.hasNext()) {
+                Section section = it.next();
+                if (section == null || section.isDisposed()) {
+                    it.remove();
+                    continue;
+                }
+                section.setExpanded(false);
+            }
+        }
+
+    }
 }

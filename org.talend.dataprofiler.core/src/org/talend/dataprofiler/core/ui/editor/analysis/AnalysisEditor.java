@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
@@ -22,7 +21,10 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
+import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
+import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -43,11 +45,15 @@ public class AnalysisEditor extends CommonFormEditor {
 
     private static final int RESULT_PAGE_INDEX = 1;
 
-    private IFormPage masterPage;
+    private AbstractAnalysisMetadataPage masterPage;
 
     private IFormPage columnResultPage;
 
     private AnalysisType analysisType;
+
+    private RunAnalysisAction runAction;
+
+    private RefreshChartAction refreshAction;
 
     private boolean isRefreshResultPage = false;
 
@@ -125,12 +131,20 @@ public class AnalysisEditor extends CommonFormEditor {
 
         }
 
+        TdEditorToolBar toolbar = getToolBar();
+        if (toolbar != null && masterPage != null) {
+            runAction = new RunAnalysisAction(masterPage);
+            refreshAction = new RefreshChartAction();
+            toolbar.addActions(runAction, refreshAction);
+        }
+
     }
 
     public void doSave(IProgressMonitor monitor) {
         if (masterPage != null && masterPage.isDirty()) {
             masterPage.doSave(monitor);
 
+            setRunActionButtonState(masterPage.canRun());
         }
 
         super.doSave(monitor);
@@ -139,11 +153,8 @@ public class AnalysisEditor extends CommonFormEditor {
     protected void firePropertyChange(final int propertyId) {
         super.firePropertyChange(propertyId);
         if (propertyId == IEditorPart.PROP_DIRTY) {
-            if (isDirty() && this.getMasterPage() != null) {
-                Button runButton = ((AbstractAnalysisMetadataPage) this.getMasterPage()).getRunButton();
-                if (runButton != null) {
-                    runButton.setEnabled(false);
-                }
+            if (isDirty() && masterPage != null) {
+                setRunActionButtonState(false);
             }
         }
     }
@@ -160,20 +171,24 @@ public class AnalysisEditor extends CommonFormEditor {
     @Override
     protected void pageChange(int newPageIndex) {
         super.pageChange(newPageIndex);
-        if (getMasterPage().isDirty() && (newPageIndex == RESULT_PAGE_INDEX)) {
-            getMasterPage().doSave(null);
+        if (masterPage.isDirty() && (newPageIndex == RESULT_PAGE_INDEX)) {
+            masterPage.doSave(null);
         }
 
         if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()
                 && columnResultPage instanceof ColumnAnalysisResultPage) {
-            ((ColumnAnalysisResultPage) columnResultPage).refresh((ColumnMasterDetailsPage) getMasterPage());
+            ((ColumnAnalysisResultPage) columnResultPage).refresh((ColumnMasterDetailsPage) masterPage);
             isRefreshResultPage = false;
         }
         if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()
                 && columnResultPage instanceof ColumnCorrelationNominalIntervalResultPage) {
             ((ColumnCorrelationNominalIntervalResultPage) columnResultPage)
-                    .refresh((ColumnCorrelationNominalAndIntervalMasterPage) getMasterPage());
+                    .refresh((ColumnCorrelationNominalAndIntervalMasterPage) masterPage);
             isRefreshResultPage = false;
+        }
+
+        if (masterPage != null) {
+            setRunActionButtonState(masterPage.canRun());
         }
     }
 
@@ -182,7 +197,7 @@ public class AnalysisEditor extends CommonFormEditor {
      * 
      * @return the masterPage
      */
-    public IFormPage getMasterPage() {
+    public AbstractAnalysisMetadataPage getMasterPage() {
         return this.masterPage;
     }
 
@@ -200,4 +215,7 @@ public class AnalysisEditor extends CommonFormEditor {
         return analysisType;
     }
 
+    public void setRunActionButtonState(boolean state) {
+        runAction.setEnabled(state);
+    }
 }

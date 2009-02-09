@@ -101,36 +101,15 @@ public abstract class CommonFormEditor extends FormEditor {
         Composite barComp = new Composite(parent, SWT.NONE);
         GridData gdData = new GridData(GridData.FILL_HORIZONTAL);
         barComp.setLayoutData(gdData);
-
         barComp.setLayout(new FormLayout());
+
         createToolbar(barComp);
-        FormData data = new FormData();
-        data.top = new FormAttachment(0, 0);
-        data.left = new FormAttachment(0, 0);
-        data.right = new FormAttachment(100, 0);
-        toolBar.getToolbarControl().setLayoutData(data);
 
         Composite mainParent = new Composite(parent, SWT.NONE);
         GridData gdData1 = new GridData(GridData.FILL_BOTH);
         gdData1.grabExcessVerticalSpace = true;
         mainParent.setLayoutData(gdData1);
         return super.createPageContainer(mainParent);
-    }
-
-    private void createToolbar(final Composite parent) {
-        editorBarWrap = new TdEditorBarWrapper();
-        toolBar = new TdEditorToolBar(parent, editorBarWrap);
-
-        toolBar.addResizeListener(new ControlListener() {
-
-            public void controlMoved(ControlEvent e) {
-            }
-
-            public void controlResized(ControlEvent e) {
-                parent.getParent().layout(true);
-                parent.layout(true);
-            }
-        });
     }
 
     protected void setInput(IEditorInput input) {
@@ -241,6 +220,42 @@ public abstract class CommonFormEditor extends FormEditor {
     public void setDirty(boolean isDirty) {
         this.isDirty = isDirty;
         firePropertyChange(IEditorPart.PROP_DIRTY);
+    }
+
+    /**
+     * DOC bzhou Comment method "createToolbar".
+     * 
+     * @param parent
+     */
+    protected void createToolbar(final Composite parent) {
+        editorBarWrap = new TdEditorBarWrapper();
+        toolBar = new TdEditorToolBar(parent, editorBarWrap);
+
+        FormData data = new FormData();
+        data.top = new FormAttachment(0, 0);
+        data.left = new FormAttachment(0, 0);
+        data.right = new FormAttachment(100, 0);
+        toolBar.getToolbarControl().setLayoutData(data);
+
+        toolBar.addResizeListener(new ControlListener() {
+
+            public void controlMoved(ControlEvent e) {
+            }
+
+            public void controlResized(ControlEvent e) {
+                parent.getParent().layout(true);
+                parent.layout(true);
+            }
+        });
+    }
+
+    /**
+     * DOC bzhou Comment method "getToolBar".
+     * 
+     * @return
+     */
+    public TdEditorToolBar getToolBar() {
+        return toolBar;
     }
 
     /**
