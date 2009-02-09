@@ -453,6 +453,27 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR: {
+                SoundexFreqIndicator soundexFreqIndicator = (SoundexFreqIndicator)theEObject;
+                T result = caseSoundexFreqIndicator(soundexFreqIndicator);
+                if (result == null) result = caseFrequencyIndicator(soundexFreqIndicator);
+                if (result == null) result = caseIndicator(soundexFreqIndicator);
+                if (result == null) result = caseModelElement(soundexFreqIndicator);
+                if (result == null) result = caseElement(soundexFreqIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.SOUNDEX_LOW_FREQ_INDICATOR: {
+                SoundexLowFreqIndicator soundexLowFreqIndicator = (SoundexLowFreqIndicator)theEObject;
+                T result = caseSoundexLowFreqIndicator(soundexLowFreqIndicator);
+                if (result == null) result = caseSoundexFreqIndicator(soundexLowFreqIndicator);
+                if (result == null) result = caseFrequencyIndicator(soundexLowFreqIndicator);
+                if (result == null) result = caseIndicator(soundexLowFreqIndicator);
+                if (result == null) result = caseModelElement(soundexLowFreqIndicator);
+                if (result == null) result = caseElement(soundexLowFreqIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -932,6 +953,36 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseDefValueCountIndicator(DefValueCountIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Soundex Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Soundex Freq Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseSoundexFreqIndicator(SoundexFreqIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Soundex Low Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Soundex Low Freq Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseSoundexLowFreqIndicator(SoundexLowFreqIndicator object) {
         return null;
     }
 

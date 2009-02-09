@@ -233,6 +233,14 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
                 return createDefValueCountIndicatorAdapter();
             }
             @Override
+            public Adapter caseSoundexFreqIndicator(SoundexFreqIndicator object) {
+                return createSoundexFreqIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseSoundexLowFreqIndicator(SoundexLowFreqIndicator object) {
+                return createSoundexLowFreqIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -789,6 +797,34 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createDefValueCountIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.SoundexFreqIndicator <em>Soundex Freq Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.SoundexFreqIndicator
+     * @generated
+     */
+    public Adapter createSoundexFreqIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.SoundexLowFreqIndicator <em>Soundex Low Freq Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.SoundexLowFreqIndicator
+     * @generated
+     */
+    public Adapter createSoundexLowFreqIndicatorAdapter() {
         return null;
     }
 

@@ -48,6 +48,8 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.SoundexFreqIndicator;
+import org.talend.dataquality.indicators.SoundexLowFreqIndicator;
 import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
 import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
@@ -655,6 +657,29 @@ public final class DefinitionHandler {
         @Override
         public Boolean caseFrequencyIndicator(FrequencyIndicator object) {
             return setIndicatorDefinition(object, "Frequency Table");
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @seeorg.talend.dataquality.indicators.util.IndicatorsSwitch#caseSoundexFreqIndicator(org.talend.dataquality.
+         * indicators.SoundexFreqIndicator)
+         */
+        @Override
+        public Boolean caseSoundexFreqIndicator(SoundexFreqIndicator object) {
+            return setIndicatorDefinition(object, "Soundex Frequency Table");
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * org.talend.dataquality.indicators.util.IndicatorsSwitch#caseSoundexLowFreqIndicator(org.talend.dataquality
+         * .indicators.SoundexLowFreqIndicator)
+         */
+        @Override
+        public Boolean caseSoundexLowFreqIndicator(SoundexLowFreqIndicator object) {
+            return setIndicatorDefinition(object, "Soundex Low Frequency Table");
         }
 
         @Override

@@ -67,6 +67,8 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.SoundexFreqIndicator;
+import org.talend.dataquality.indicators.SoundexLowFreqIndicator;
 import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
 import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
@@ -361,6 +363,20 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass defValueCountIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass soundexFreqIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass soundexLowFreqIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1348,6 +1364,24 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getSoundexFreqIndicator() {
+        return soundexFreqIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getSoundexLowFreqIndicator() {
+        return soundexLowFreqIndicatorEClass;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1578,6 +1612,10 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         defValueCountIndicatorEClass = createEClass(DEF_VALUE_COUNT_INDICATOR);
         createEAttribute(defValueCountIndicatorEClass, DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT);
 
+        soundexFreqIndicatorEClass = createEClass(SOUNDEX_FREQ_INDICATOR);
+
+        soundexLowFreqIndicatorEClass = createEClass(SOUNDEX_LOW_FREQ_INDICATOR);
+
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
         dataminingTypeEEnum = createEEnum(DATAMINING_TYPE);
@@ -1667,6 +1705,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         patternFreqIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         patternLowFreqIndicatorEClass.getESuperTypes().add(this.getLowFrequencyIndicator());
         defValueCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        soundexFreqIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        soundexLowFreqIndicatorEClass.getESuperTypes().add(this.getSoundexFreqIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1861,6 +1901,10 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
 
         initEClass(defValueCountIndicatorEClass, DefValueCountIndicator.class, "DefValueCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getDefValueCountIndicator_DefaultValCount(), ecorePackage.getELongObject(), "defaultValCount", null, 0, 1, DefValueCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(soundexFreqIndicatorEClass, SoundexFreqIndicator.class, "SoundexFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(soundexLowFreqIndicatorEClass, SoundexLowFreqIndicator.class, "SoundexLowFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

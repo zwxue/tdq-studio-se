@@ -402,6 +402,16 @@ public class AnalysisItemProvider
         newChildDescriptors.add
             (createChildParameter
                 (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 IndicatorsFactory.eINSTANCE.createSoundexFreqIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
+                 IndicatorsFactory.eINSTANCE.createSoundexLowFreqIndicator()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (CorePackage.Literals.NAMESPACE__OWNED_ELEMENT,
                  SchemaFactory.eINSTANCE.createSchemaIndicator()));
 
         newChildDescriptors.add

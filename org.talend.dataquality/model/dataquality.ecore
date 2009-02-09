@@ -563,6 +563,8 @@
       </eAnnotations>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
     </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SoundexFreqIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SoundexLowFreqIndicator" eSuperTypes="#//indicators/SoundexFreqIndicator"/>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">
         <eOperations name="addTableIndicator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">

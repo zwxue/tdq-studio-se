@@ -904,6 +904,52 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.SoundexFreqIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected SoundexFreqIndicatorItemProvider soundexFreqIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.SoundexFreqIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createSoundexFreqIndicatorAdapter() {
+        if (soundexFreqIndicatorItemProvider == null) {
+            soundexFreqIndicatorItemProvider = new SoundexFreqIndicatorItemProvider(this);
+        }
+
+        return soundexFreqIndicatorItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.SoundexLowFreqIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected SoundexLowFreqIndicatorItemProvider soundexLowFreqIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.SoundexLowFreqIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createSoundexLowFreqIndicatorAdapter() {
+        if (soundexLowFreqIndicatorItemProvider == null) {
+            soundexLowFreqIndicatorItemProvider = new SoundexLowFreqIndicatorItemProvider(this);
+        }
+
+        return soundexLowFreqIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1038,6 +1084,8 @@ public class IndicatorsItemProviderAdapterFactory extends IndicatorsAdapterFacto
         if (patternFreqIndicatorItemProvider != null) patternFreqIndicatorItemProvider.dispose();
         if (patternLowFreqIndicatorItemProvider != null) patternLowFreqIndicatorItemProvider.dispose();
         if (defValueCountIndicatorItemProvider != null) defValueCountIndicatorItemProvider.dispose();
+        if (soundexFreqIndicatorItemProvider != null) soundexFreqIndicatorItemProvider.dispose();
+        if (soundexLowFreqIndicatorItemProvider != null) soundexLowFreqIndicatorItemProvider.dispose();
     }
 
 }

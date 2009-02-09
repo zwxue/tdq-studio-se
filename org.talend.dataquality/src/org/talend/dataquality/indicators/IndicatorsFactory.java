@@ -350,6 +350,24 @@ public interface IndicatorsFactory extends EFactory {
     DefValueCountIndicator createDefValueCountIndicator();
 
     /**
+     * Returns a new object of class '<em>Soundex Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Soundex Freq Indicator</em>'.
+     * @generated
+     */
+    SoundexFreqIndicator createSoundexFreqIndicator();
+
+    /**
+     * Returns a new object of class '<em>Soundex Low Freq Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Soundex Low Freq Indicator</em>'.
+     * @generated
+     */
+    SoundexLowFreqIndicator createSoundexLowFreqIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

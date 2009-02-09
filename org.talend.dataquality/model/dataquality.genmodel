@@ -86,6 +86,8 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/outputReportFolder"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/reportType"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//reports/TdReport/ExecInformations"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/dateFrom"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/dateTo"/>
         <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/addAnalysis">
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis/analysis"/>
         </genOperations>
@@ -342,6 +344,8 @@
       <genClasses ecoreClass="dataquality.ecore#//indicators/DefValueCountIndicator">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/DefValueCountIndicator/defaultValCount"/>
       </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/SoundexFreqIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/SoundexLowFreqIndicator"/>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">

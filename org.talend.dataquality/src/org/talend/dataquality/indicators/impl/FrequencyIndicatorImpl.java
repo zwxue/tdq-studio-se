@@ -511,7 +511,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
      * @param value2freq
      * @return
      */
-    private Object getValueFields(Object[] value2freq) {
+    protected Object getValueFields(Object[] value2freq) {
         int nbFields = value2freq.length;
         if (nbFields == 2) {
             return value2freq[0];

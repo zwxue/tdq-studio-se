@@ -246,6 +246,26 @@
     <taggedValue xmi:id="_xnOs8u1MEd2L4a5zyMnylw" tag="Purpose" value="evaluates the number of default values"/>
     <sqlGenericExpression xmi:id="_xnOs8-1MEd2L4a5zyMnylw" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_VGep4Pa7Ed24-N3PsP_o-w" name="Soundex Frequency Table" categories="_entEUPbCEd298st2mPm9SA" label="Soundex Frequency Table">
+    <taggedValue xmi:id="_VGfQ8Pa7Ed24-N3PsP_o-w" tag="Description" value="counts the number of records for each record with a distinct soundex"/>
+    <taggedValue xmi:id="_VGfQ8fa7Ed24-N3PsP_o-w" tag="Purpose" value="evaluates the most frequent records with respect to their soundex value"/>
+    <sqlGenericExpression xmi:id="_VGfQ8_a7Ed24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>) , COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY c DESC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_VGfQ9Pa7Ed24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c DESC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_VGfQ9fa7Ed24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY COUNT(*) DESC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_VGfQ9va7Ed24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c DESC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_VGfQ9_a7Ed24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c DESC" language="Teradata"/>
+    <sqlGenericExpression xmi:id="_qqWBsPbAEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c DESC" language="Microsoft SQL Server"/>
+  </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_AjKIEPbBEd24-N3PsP_o-w" name="Soundex Low Frequency Table" categories="_entEUPbCEd298st2mPm9SA" label="Soundex Low Frequency Table">
+    <taggedValue xmi:id="_AjKIEfbBEd24-N3PsP_o-w" tag="Description" value="counts the number of records for each record with a distinct soundex"/>
+    <taggedValue xmi:id="_AjKIEvbBEd24-N3PsP_o-w" tag="Purpose" value="evaluates the most frequent records with respect to their soundex value"/>
+    <sqlGenericExpression xmi:id="_AjKIE_bBEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>) , COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY c ASC" language="MySQL"/>
+    <sqlGenericExpression xmi:id="_AjKIFPbBEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c ASC" language="Oracle"/>
+    <sqlGenericExpression xmi:id="_AjKIFfbBEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY COUNT(*) ASC" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_AjKIFvbBEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c ASC" language="DB2"/>
+    <sqlGenericExpression xmi:id="_AjKIF_bBEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c ASC" language="Teradata"/>
+    <sqlGenericExpression xmi:id="_AjKIGPbBEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c ASC" language="Microsoft SQL Server"/>
+  </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>
@@ -281,6 +301,10 @@
   <categories xmi:id="_ccKuIxF2Ed2PKb6nEJEvhw" name="Frequency" label="Frequency">
     <taggedValue xmi:id="_ycBcNDh8Ed2XmO7pl5Yuyg" tag="Description" value="for each distinct record, counts the number of records."/>
     <taggedValue xmi:id="_ycCDQDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate the most frequent records"/>
+  </categories>
+  <categories xmi:id="_entEUPbCEd298st2mPm9SA" name="Soundex" label="Soundex">
+    <taggedValue xmi:id="_jXDvYPbCEd298st2mPm9SA" tag="Purpose" value="use Soundex algorithm to analyze data"/>
+    <taggedValue xmi:id="_sYi-APbCEd298st2mPm9SA" tag="Description" value="uses SOUNDEX algorithm provided by database in the indicator"/>
   </categories>
   <categories xmi:id="_0n3BsJR-Ed2XO-JvLwVAwg" name="Pattern Finder" label="Pattern Finder">
     <taggedValue xmi:id="_3MEq4JR-Ed2XO-JvLwVAwg" tag="Description" value="for each distinct pattern, counts the number of patterns."/>

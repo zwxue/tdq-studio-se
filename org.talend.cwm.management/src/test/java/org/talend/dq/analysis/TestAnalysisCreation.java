@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
@@ -231,6 +232,8 @@ public class TestAnalysisCreation {
         PatternMatchingIndicator patternMatchingIndicator = createPatternMatchingIndicator();
         allIndicators.add(patternMatchingIndicator);
         allIndicators.add(IndicatorsFactory.eINSTANCE.createDefValueCountIndicator());
+        allIndicators.add(IndicatorsFactory.eINSTANCE.createSoundexFreqIndicator());
+        allIndicators.add(IndicatorsFactory.eINSTANCE.createSoundexLowFreqIndicator());
         // allIndicators.add(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
         // allIndicators.add(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
         // allIndicators.add(IndicatorsFactory.eINSTANCE.createDistinctCountIndicator());
@@ -357,7 +360,7 @@ public class TestAnalysisCreation {
         params.setParameters(connectionParams);
 
         // create connection
-
+        ConnectionUtils.setTimeout(false);
         TdDataProvider dataProvider = ConnectionService.createConnection(params).getObject();
 
         dataProvider.setName("My data provider");
