@@ -141,4 +141,9 @@
     <url>jdbc:teradata:&lt;host&gt;/&lt;DBNAME&gt;</url>
     <jars/>
   </driver>
+   <driver id="-30">
+  <name>SQlite</name>
+  <url>jdbc:sqlite:&lt;DBNAME&gt;</url>
+  <jars></jars>
+  </driver>
 </drivers>

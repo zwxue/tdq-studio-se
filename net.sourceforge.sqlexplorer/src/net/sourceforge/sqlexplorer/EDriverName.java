@@ -80,7 +80,8 @@ public enum EDriverName {
                        "-50",
                        "lib/terajdbc4.jar",
                        "lib/tdgssconfig.jar",
-                       "lib/tdgssjava.jar");
+                       "lib/tdgssjava.jar"),
+    SQLITE3DEFAULTURL("SQLite3", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar");
 
     private final String dbKey;
 
@@ -154,6 +155,9 @@ public enum EDriverName {
             break;
         case INFORMIXDEFAULTURL:
             plugins = "org.talend.libraries.jdbc.informix";
+            break;
+        case SQLITE3DEFAULTURL:
+            plugins = "org.talend.libraries.jdbc.sqlite3";
             break;
         default:
             return linkedList;
