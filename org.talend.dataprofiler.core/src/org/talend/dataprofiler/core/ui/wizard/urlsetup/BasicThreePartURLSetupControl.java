@@ -169,7 +169,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             labelfile.setText("File");
             fileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            fileText.setEditable(false);
+            fileText.setEditable(true);
             fileText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
