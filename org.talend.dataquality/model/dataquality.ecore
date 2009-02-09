@@ -164,6 +164,8 @@
       </eStructuralFeatures>
       <eStructuralFeatures xsi:type="ecore:EReference" name="ExecInformations" eType="#//analysis/ExecutionInformations"
           containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateFrom" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateTo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="PresentationParameter" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/analysis/informationvisualization/Rendering">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="plotType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">

@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +34,12 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  */
 public final class ReportHelper {
 
+    // ~ADD mzhao 2009-02-05
+    public final static int DATE_FROM = 0;
+
+    public final static int DATE_TO = 1;
+
+    // ~
     /**
      * The report types.
      */
@@ -219,6 +228,33 @@ public final class ReportHelper {
             ok = false;
             break;
         }
+        return ok;
+    }
+
+    /**
+     * 
+     * DOC mzhao Set analysis filter date from.
+     * 
+     * @param report
+     * @param dateText
+     * @return
+     */
+    public static boolean setAnalysisFilterDate(TdReport report, String dateText, int datePos) {
+        boolean ok = true;
+        Date date = null;
+        String pattern = "MM/dd/yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        try {
+            date = sdf.parse(dateText);
+        } catch (ParseException e) {
+            ok = false;
+        }
+        if (datePos == DATE_FROM) {
+            report.setDateFrom(date);
+        } else {
+            report.setDateTo(date);
+        }
+        sdf = null;
         return ok;
     }
 }

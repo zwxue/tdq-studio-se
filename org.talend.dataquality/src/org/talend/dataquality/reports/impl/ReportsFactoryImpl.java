@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.reports.impl;
@@ -9,24 +8,24 @@ package org.talend.dataquality.reports.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.reports.*;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.PresentationParameter;
+import org.talend.dataquality.reports.ReportsFactory;
+import org.talend.dataquality.reports.ReportsPackage;
+import org.talend.dataquality.reports.TdReport;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * @generated
  */
 public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
+
     /**
      * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public static ReportsFactory init() {
@@ -44,8 +43,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
 
     /**
      * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public ReportsFactoryImpl() {
@@ -53,8 +51,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -69,8 +66,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public TdReport createTdReport() {
@@ -79,8 +75,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public PresentationParameter createPresentationParameter() {
@@ -89,8 +84,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AnalysisMap createAnalysisMap() {
@@ -99,8 +93,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public ReportsPackage getReportsPackage() {
@@ -108,8 +101,7 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @deprecated
      * @generated
      */
@@ -118,4 +110,4 @@ public class ReportsFactoryImpl extends EFactoryImpl implements ReportsFactory {
         return ReportsPackage.eINSTANCE;
     }
 
-} //ReportsFactoryImpl
+} // ReportsFactoryImpl

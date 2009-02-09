@@ -39,6 +39,8 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportImpl;
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getOutputReportFolder <em>Output Report Folder</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getReportType <em>Report Type</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getExecInformations <em>Exec Informations</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getDateFrom <em>Date From</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getDateTo <em>Date To</em>}</li>
  * </ul>
  * </p>
  *
@@ -156,6 +158,46 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     protected ExecutionInformations execInformations;
 
     /**
+     * The default value of the '{@link #getDateFrom() <em>Date From</em>}' attribute.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @see #getDateFrom()
+     * @generated
+     * @ordered
+     */
+	protected static final Date DATE_FROM_EDEFAULT = null;
+
+				/**
+     * The cached value of the '{@link #getDateFrom() <em>Date From</em>}' attribute.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @see #getDateFrom()
+     * @generated
+     * @ordered
+     */
+	protected Date dateFrom = DATE_FROM_EDEFAULT;
+
+				/**
+     * The default value of the '{@link #getDateTo() <em>Date To</em>}' attribute.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @see #getDateTo()
+     * @generated
+     * @ordered
+     */
+	protected static final Date DATE_TO_EDEFAULT = null;
+
+				/**
+     * The cached value of the '{@link #getDateTo() <em>Date To</em>}' attribute.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @see #getDateTo()
+     * @generated
+     * @ordered
+     */
+	protected Date dateTo = DATE_TO_EDEFAULT;
+
+				/**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -311,6 +353,48 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     }
 
     /**
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @generated
+     */
+	public Date getDateFrom() {
+        return dateFrom;
+    }
+
+				/**
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @generated
+     */
+	public void setDateFrom(Date newDateFrom) {
+        Date oldDateFrom = dateFrom;
+        dateFrom = newDateFrom;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__DATE_FROM, oldDateFrom, dateFrom));
+    }
+
+				/**
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @generated
+     */
+	public Date getDateTo() {
+        return dateTo;
+    }
+
+				/**
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @generated
+     */
+	public void setDateTo(Date newDateTo) {
+        Date oldDateTo = dateTo;
+        dateTo = newDateTo;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__DATE_TO, oldDateTo, dateTo));
+    }
+
+				/**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated NOT addAnalysis(Analysis analysis)
@@ -455,6 +539,10 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return getReportType();
             case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
                 return getExecInformations();
+            case ReportsPackage.TD_REPORT__DATE_FROM:
+                return getDateFrom();
+            case ReportsPackage.TD_REPORT__DATE_TO:
+                return getDateTo();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -490,6 +578,12 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
                 setExecInformations((ExecutionInformations)newValue);
                 return;
+            case ReportsPackage.TD_REPORT__DATE_FROM:
+                setDateFrom((Date)newValue);
+                return;
+            case ReportsPackage.TD_REPORT__DATE_TO:
+                setDateTo((Date)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -522,6 +616,12 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
                 setExecInformations((ExecutionInformations)null);
                 return;
+            case ReportsPackage.TD_REPORT__DATE_FROM:
+                setDateFrom(DATE_FROM_EDEFAULT);
+                return;
+            case ReportsPackage.TD_REPORT__DATE_TO:
+                setDateTo(DATE_TO_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -547,6 +647,10 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return REPORT_TYPE_EDEFAULT == null ? reportType != null : !REPORT_TYPE_EDEFAULT.equals(reportType);
             case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
                 return execInformations != null;
+            case ReportsPackage.TD_REPORT__DATE_FROM:
+                return DATE_FROM_EDEFAULT == null ? dateFrom != null : !DATE_FROM_EDEFAULT.equals(dateFrom);
+            case ReportsPackage.TD_REPORT__DATE_TO:
+                return DATE_TO_EDEFAULT == null ? dateTo != null : !DATE_TO_EDEFAULT.equals(dateTo);
         }
         return super.eIsSet(featureID);
     }
@@ -568,6 +672,10 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         result.append(outputReportFolder);
         result.append(", reportType: ");
         result.append(reportType);
+        result.append(", dateFrom: ");
+        result.append(dateFrom);
+        result.append(", dateTo: ");
+        result.append(dateTo);
         result.append(')');
         return result.toString();
     }

@@ -27,6 +27,8 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  *   <li>{@link org.talend.dataquality.reports.TdReport#getOutputReportFolder <em>Output Report Folder</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getReportType <em>Report Type</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getExecInformations <em>Exec Informations</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.TdReport#getDateFrom <em>Date From</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.TdReport#getDateTo <em>Date To</em>}</li>
  * </ul>
  * </p>
  *
@@ -196,6 +198,58 @@ public interface TdReport extends Report {
     void setExecInformations(ExecutionInformations value);
 
     /**
+     * Returns the value of the '<em><b>Date From</b></em>' attribute.
+     * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Date From</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+     * @return the value of the '<em>Date From</em>' attribute.
+     * @see #setDateFrom(Date)
+     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_DateFrom()
+     * @model
+     * @generated
+     */
+	Date getDateFrom();
+
+				/**
+     * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getDateFrom <em>Date From</em>}' attribute.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Date From</em>' attribute.
+     * @see #getDateFrom()
+     * @generated
+     */
+	void setDateFrom(Date value);
+
+				/**
+     * Returns the value of the '<em><b>Date To</b></em>' attribute.
+     * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Date To</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+     * @return the value of the '<em>Date To</em>' attribute.
+     * @see #setDateTo(Date)
+     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_DateTo()
+     * @model
+     * @generated
+     */
+	Date getDateTo();
+
+				/**
+     * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getDateTo <em>Date To</em>}' attribute.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Date To</em>' attribute.
+     * @see #getDateTo()
+     * @generated
+     */
+	void setDateTo(Date value);
+
+				/**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @model

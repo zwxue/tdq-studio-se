@@ -550,13 +550,31 @@ public interface ReportsPackage extends EPackage {
     int TD_REPORT__EXEC_INFORMATIONS = InformationreportingPackage.REPORT_FEATURE_COUNT + 6;
 
     /**
+     * The feature id for the '<em><b>Date From</b></em>' attribute.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+	int TD_REPORT__DATE_FROM = InformationreportingPackage.REPORT_FEATURE_COUNT + 7;
+
+				/**
+     * The feature id for the '<em><b>Date To</b></em>' attribute.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+	int TD_REPORT__DATE_TO = InformationreportingPackage.REPORT_FEATURE_COUNT + 8;
+
+				/**
      * The number of structural features of the '<em>Td Report</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 7;
+    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 9;
 
 
     /**
@@ -1002,6 +1020,28 @@ public interface ReportsPackage extends EPackage {
     EReference getTdReport_ExecInformations();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getDateFrom <em>Date From</em>}'.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Date From</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getDateFrom()
+     * @see #getTdReport()
+     * @generated
+     */
+	EAttribute getTdReport_DateFrom();
+
+				/**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getDateTo <em>Date To</em>}'.
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Date To</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getDateTo()
+     * @see #getTdReport()
+     * @generated
+     */
+	EAttribute getTdReport_DateTo();
+
+				/**
      * Returns the meta object for class '{@link org.talend.dataquality.reports.PresentationParameter <em>Presentation Parameter</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1146,6 +1186,20 @@ public interface ReportsPackage extends EPackage {
          */
         EReference TD_REPORT__EXEC_INFORMATIONS = eINSTANCE.getTdReport_ExecInformations();
         /**
+         * The meta object literal for the '<em><b>Date From</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+         * @generated
+         */
+		EAttribute TD_REPORT__DATE_FROM = eINSTANCE.getTdReport_DateFrom();
+								/**
+         * The meta object literal for the '<em><b>Date To</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+         * @generated
+         */
+		EAttribute TD_REPORT__DATE_TO = eINSTANCE.getTdReport_DateTo();
+								/**
          * The meta object literal for the '{@link org.talend.dataquality.reports.impl.PresentationParameterImpl <em>Presentation Parameter</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
