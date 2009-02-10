@@ -89,7 +89,8 @@ public class TdEditorToolBar {
                 defaultToolBarMgr.add(action);
             }
 
-            coolBarMgr.add(new ToolBarContributionItem(defaultToolBarMgr));
+            // coolBarMgr.add(new ToolBarContributionItem(defaultToolBarMgr));
+            defaultToolBarMgr.update(true);
             coolBarMgr.update(true);
         }
     }

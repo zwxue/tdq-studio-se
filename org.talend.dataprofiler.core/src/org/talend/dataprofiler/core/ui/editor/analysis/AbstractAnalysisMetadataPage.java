@@ -54,6 +54,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
         try {
             saveAnalysis();
+            currentEditor.setRunActionButtonState(canRun());
             this.isDirty = false;
         } catch (DataprofilerCoreException e) {
             ExceptionHandler.process(e, Level.ERROR);

@@ -143,8 +143,6 @@ public class AnalysisEditor extends CommonFormEditor {
     public void doSave(IProgressMonitor monitor) {
         if (masterPage != null && masterPage.isDirty()) {
             masterPage.doSave(monitor);
-
-            setRunActionButtonState(masterPage.canRun());
         }
 
         super.doSave(monitor);
