@@ -29,8 +29,11 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -48,6 +51,8 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -186,6 +191,31 @@ public class DQRespositoryView extends CommonNavigator {
             }
 
         });
+        // ~ADD mzhao for feature 6233 Load columns when selecting a table (or view) in DQ Repository view
+        commonViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+            public void selectionChanged(SelectionChangedEvent event) {
+                TreeSelection selection = (TreeSelection) event.getSelection();
+                if (selection.size() != 1) {
+                    return;
+                }
+                Object selectedElement = selection.getFirstElement();
+                if (selectedElement instanceof TdTable || selectedElement instanceof TdView) {
+                    if (provider == null) {
+                        provider = (ITreeContentProvider) commonViewer.getContentProvider();
+                    }
+                    for (Object child : provider.getChildren(selectedElement)) {
+                        if (child instanceof IFolderNode
+                                && ((IFolderNode) child).getFolderNodeType() == ColumnFolderNode.COLUMNFOLDER_NODE_TYPE) {
+                            ((IFolderNode) child).loadChildren();
+                            break;
+                        }
+                    }
+                }
+            }
+
+        });
+        // ~
     }
 
     /**
