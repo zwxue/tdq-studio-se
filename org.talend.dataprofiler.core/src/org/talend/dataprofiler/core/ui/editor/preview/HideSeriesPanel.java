@@ -15,7 +15,9 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.MenuItem;
 import java.awt.Paint;
+import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -31,6 +33,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.swt.widgets.Display;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.CategoryTextAnnotation;
@@ -48,6 +53,7 @@ import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.ui.TextAnchor;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
+import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.DateValueAggregate;
 import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.ValueAggregator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
@@ -96,7 +102,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
     class HideChartPanel extends ChartPanel {
 
         public HideChartPanel(JFreeChart chart) {
-            super(chart);
+            super(chart, false, false, false, false, true);
         }
 
         public void mouseEntered(MouseEvent e) {
@@ -212,8 +218,49 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             };
             ganttRenderer.setToolTipGenerator(toolTipGenerator);
         }
-        HideChartPanel chartpanel = new HideChartPanel(chart);
+        final HideChartPanel chartpanel = new HideChartPanel(chart);
         chartpanel.setPreferredSize(new Dimension(2000, 500));
+        chartpanel.addChartMouseListener(new ChartMouseListener() {
+
+            public void chartMouseClicked(ChartMouseEvent event) {
+
+                if (event.getTrigger().getButton() != 3) {
+                    return;
+                }
+
+                if (chartpanel.getPopupMenu() != null) {
+                    chartpanel.remove(chartpanel.getPopupMenu());
+                }
+
+                PopupMenu menu = new PopupMenu("");
+                MenuItem item = new MenuItem("Show in full screen");
+
+                item.addActionListener(new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        Display.getDefault().asyncExec(new Runnable() {
+
+                            public void run() {
+                                ChartUtils.showChartInFillScreen(chartpanel.getChart());
+                            }
+                        });
+
+                    }
+                });
+
+                menu.add(item);
+
+                chartpanel.add(menu);
+                menu.show(chartpanel, event.getTrigger().getX(), event.getTrigger().getY());
+            }
+
+            public void chartMouseMoved(ChartMouseEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+
         JPanel jpanel = new JPanel();
         while (iterator.hasNext()) {
             String next = iterator.next();

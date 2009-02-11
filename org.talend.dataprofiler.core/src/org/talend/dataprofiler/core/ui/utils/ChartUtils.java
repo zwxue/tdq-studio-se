@@ -20,6 +20,7 @@ import java.io.PipedOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -27,7 +28,9 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.internal.browser.WebBrowserEditor;
 import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 import org.jfree.chart.ChartPanel;
@@ -118,6 +121,43 @@ public final class ChartUtils {
             } catch (MalformedURLException e1) {
                 ExceptionHandler.process(e1);
             }
+        }
+    }
+
+    public static void showChartInFillScreen(JFreeChart chart) {
+        new FullScreenChartDialog(null, chart).open();
+    }
+
+    /**
+     * DOC bzhou class global comment. Detailled comment
+     */
+    private static class FullScreenChartDialog extends TrayDialog {
+
+        private JFreeChart chart;
+
+        protected FullScreenChartDialog(Shell shell, JFreeChart chart) {
+            super(shell);
+            this.chart = chart;
+            setShellStyle(SWT.RESIZE | SWT.CLOSE | SWT.MIN | SWT.MAX);
+        }
+
+        @Override
+        protected void configureShell(Shell newShell) {
+            super.configureShell(newShell);
+
+            newShell.setMaximized(true);
+            // newShell.setFullScreen(true);
+        }
+
+        @Override
+        protected Control createContents(Composite parent) {
+            Composite comp = new Composite(parent, SWT.NONE);
+            comp.setLayout(new GridLayout());
+            comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+            createAWTSWTComp(comp, new GridData(GridData.FILL_BOTH), chart);
+
+            return comp;
         }
     }
 }

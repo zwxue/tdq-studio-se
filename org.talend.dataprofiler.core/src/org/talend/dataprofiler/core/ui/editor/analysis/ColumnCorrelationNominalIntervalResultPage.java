@@ -130,9 +130,6 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
         Composite graphicsComp = toolkit.createComposite(sectionClient);
-        GridData graphicsGridData = new GridData(GridData.FILL_BOTH);
-        graphicsGridData.heightHint = 1000;
-        graphicsGridData.widthHint = 1000;
         graphicsComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         graphicsComp.setLayout(new GridLayout());
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
@@ -201,7 +198,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             previewChartList.add(exComp);
 
             final Composite comp = toolkit.createComposite(exComp);
-            comp.setLayout(new GridLayout());
+            comp.setLayout(new GridLayout(2, false));
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             if (tdColumn != null) {
@@ -220,8 +217,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                                     Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
                                     frameComp.setLayout(new GridLayout());
                                     GridData gd = new GridData();
-                                    gd.heightHint = 1200;
-                                    gd.widthHint = 1000;
+                                    gd.heightHint = 300;
+                                    gd.widthHint = 600;
                                     frameComp.setLayoutData(gd);
 
                                     Frame frame = SWT_AWT.new_Frame(frameComp);
@@ -277,8 +274,9 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
 
         Composite simpleComposite = toolkit.createComposite(sectionClient);
-        simpleComposite.setLayout(new GridLayout(2, false));
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).grab(true, true).applyTo(simpleComposite);
+        simpleComposite.setLayout(new GridLayout(2, true));
+        simpleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
         createSimpleTable(form, simpleComposite, columnSetMultiValueIndicator);
         createSimpleStatistics(form, simpleComposite, columnSetMultiValueIndicator);
         section.setClient(sectionClient);
@@ -289,10 +287,10 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         // final TableViewer tbViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
         NumberFormat doubleFormat = new DecimalFormat("0.00");
-        final Table table = new Table(composite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).grab(true, true).applyTo(table);
-        ((GridData) table.getLayoutData()).heightHint = 200;
-        ((GridData) table.getLayoutData()).widthHint = 300;
+        final Table table = new Table(composite, SWT.FULL_SELECTION | SWT.BORDER);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.heightHint = 200;
+        table.setLayoutData(gd);
         table.setVisible(true);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -350,30 +348,22 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
         renderer3d.setItemMargin(0.2);
         plot.setForegroundAlpha(0.50f);
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd.heightHint = 200;
-        gd.widthHint = 500;
-        ChartUtils.createAWTSWTComp(composite, gd, chart);
+        ChartUtils.createAWTSWTComp(composite, new GridData(GridData.FILL_BOTH), chart);
     }
 
     private Section createTableSectionPart(Composite parentComp, String title,
             ColumnSetMultiValueIndicator columnSetMultiIndicator) {
         Section columnSetElementSection = this.createSection(form, parentComp, title, true, null);
         Composite sectionTableComp = toolkit.createComposite(columnSetElementSection);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).grab(true, true).applyTo(sectionTableComp);
+        sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionTableComp.setLayout(new GridLayout());
 
-        Composite columsComp = toolkit.createComposite(sectionTableComp, SWT.NULL);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).grab(true, true).applyTo(columsComp);
-        columsComp.setLayout(new GridLayout());
-
-        final TableViewer columnsElementViewer = new TableViewer(columsComp, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        final TableViewer columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
         Table table = columnsElementViewer.getTable();
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
-        ((GridData) table.getLayoutData()).heightHint = 280;
+        table.setLayoutData(new GridData(GridData.FILL_BOTH));
+
         List<String> tableColumnNames = columnSetMultiIndicator.getColumnHeaders();
         for (String tableColumnName : tableColumnNames) {
-            // System.out.println(tableColumnName);
             final TableColumn columnHeader = new TableColumn(table, SWT.NONE);
             columnHeader.setText(tableColumnName);
         }
