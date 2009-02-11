@@ -42,9 +42,9 @@ public class NewConnectionDropDownAction extends Action implements IMenuCreator,
 
 
     public NewConnectionDropDownAction() {
-        setText(Messages.getString("ConnectionsView.Actions.NewConnection"));
-        setToolTipText(Messages.getString("ConnectionsView.Actions.NewConnectionToolTip"));
-        setImageDescriptor(ImageUtil.getDescriptor("Images.NewConnectionIcon"));
+        setText(Messages.getString("ConnectionsView.Actions.NewConnection")); //$NON-NLS-1$
+        setToolTipText(Messages.getString("ConnectionsView.Actions.NewConnectionToolTip")); //$NON-NLS-1$
+        setImageDescriptor(ImageUtil.getDescriptor("Images.NewConnectionIcon")); //$NON-NLS-1$
         setMenuCreator(this);
     }
 

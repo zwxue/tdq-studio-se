@@ -36,7 +36,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class About extends Action implements IWorkbenchWindowActionDelegate {
 
-    private ImageDescriptor _image = ImageUtil.getDescriptor("Images.AboutDialog");
+    private ImageDescriptor _image = ImageUtil.getDescriptor("Images.AboutDialog"); //$NON-NLS-1$
     
     private Shell _shell = null;
     

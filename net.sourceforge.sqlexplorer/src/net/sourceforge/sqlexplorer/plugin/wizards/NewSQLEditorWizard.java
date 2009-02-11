@@ -55,12 +55,12 @@ public class NewSQLEditorWizard extends Wizard implements INewWizard {
 	}
 
     public Image getDefaultPageImage() {
-        return ImageUtil.getImage("Images.WizardLogo");
+        return ImageUtil.getImage("Images.WizardLogo"); //$NON-NLS-1$
     }
 
     public void dispose() {
         super.dispose();
-        ImageUtil.disposeImage("Images.WizardLogo");
+        ImageUtil.disposeImage("Images.WizardLogo"); //$NON-NLS-1$
     }
 
 

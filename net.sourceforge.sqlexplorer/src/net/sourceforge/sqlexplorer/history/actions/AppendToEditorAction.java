@@ -13,7 +13,7 @@ import org.eclipse.ui.IWorkbenchPage;
 
 public class AppendToEditorAction extends AbstractHistoryContextAction {
 
-    private ImageDescriptor _imageOpenInEditor = ImageUtil.getDescriptor("Images.AppendToEditor");
+    private ImageDescriptor _imageOpenInEditor = ImageUtil.getDescriptor("Images.AppendToEditor"); //$NON-NLS-1$
 
 
     public ImageDescriptor getImageDescriptor() {
@@ -24,7 +24,7 @@ public class AppendToEditorAction extends AbstractHistoryContextAction {
 
     public String getText() {
 
-        return Messages.getString("SQLHistoryView.AppendToEditor");
+        return Messages.getString("SQLHistoryView.AppendToEditor"); //$NON-NLS-1$
     }
 
 
@@ -71,7 +71,7 @@ public class AppendToEditorAction extends AbstractHistoryContextAction {
                 copiedText.append(queryDelimiter);
 
                 if (ti.length > 1) {
-                    copiedText.append("\n");
+                    copiedText.append("\n"); //$NON-NLS-1$
                 }
             }
 
@@ -80,10 +80,10 @@ public class AppendToEditorAction extends AbstractHistoryContextAction {
                 return;
             }
             SQLEditor editorPart = (SQLEditor) page.getActiveEditor();
-            editorPart.setText(editorPart.getSQLToBeExecuted() + "\n" + copiedText.toString());
+            editorPart.setText(editorPart.getSQLToBeExecuted() + "\n" + copiedText.toString()); //$NON-NLS-1$
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error creating sql editor", e);
+            SQLExplorerPlugin.error(Messages.getString("AppendToEditorAction.ErrorCreatSqlEditor"), e); //$NON-NLS-1$
         }
     }
 }

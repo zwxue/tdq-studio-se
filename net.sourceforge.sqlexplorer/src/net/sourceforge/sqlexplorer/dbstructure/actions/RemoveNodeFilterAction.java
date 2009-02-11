@@ -33,7 +33,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class RemoveNodeFilterAction extends AbstractDBTreeContextAction {
 
-    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.FilterIcon");
+    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.FilterIcon"); //$NON-NLS-1$
 
 
     /**
@@ -52,7 +52,7 @@ public class RemoveNodeFilterAction extends AbstractDBTreeContextAction {
      * @see org.eclipse.jface.action.IAction#getText()
      */
     public String getText() {
-        return Messages.getString("DatabaseStructureView.Actions.RemoveNodeFilter");
+        return Messages.getString("DatabaseStructureView.Actions.RemoveNodeFilter"); //$NON-NLS-1$
     }
 
 
@@ -64,9 +64,9 @@ public class RemoveNodeFilterAction extends AbstractDBTreeContextAction {
     public void run() {
 
         Alias alias = (Alias) _selectedNodes[0].getSession().getUser().getAlias();
-        alias.setNameFilterExpression("");
-        alias.setFolderFilterExpression("");
-        alias.setSchemaFilterExpression("");
+        alias.setNameFilterExpression(""); //$NON-NLS-1$
+        alias.setFolderFilterExpression(""); //$NON-NLS-1$
+        alias.setSchemaFilterExpression(""); //$NON-NLS-1$
         
         getView().refreshSessionTrees(_selectedNodes[0].getSession());
     }

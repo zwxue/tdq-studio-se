@@ -23,7 +23,7 @@ public class OptionsDropDownAction extends AbstractEditorAction implements IMenu
 	
 	public OptionsDropDownAction(SQLEditor editor, Composite parent) {
 		super(editor);
-        setText("Options");
+        setText(Messages.getString("OptionsDropDownAction.Options")); //$NON-NLS-1$
         setMenuCreator(this);
 	}
 
@@ -42,7 +42,7 @@ public class OptionsDropDownAction extends AbstractEditorAction implements IMenu
 		if (menu != null)
 			menu.dispose();
         menu = new Menu(parent);
-		Action action = new Action(Messages.getString("SQLEditor.Options.AutoCommit"), IAction.AS_CHECK_BOX) {
+		Action action = new Action(Messages.getString("SQLEditor.Options.AutoCommit"), IAction.AS_CHECK_BOX) { //$NON-NLS-1$
 			public void run(){
 				try {
 					_editor.getSession().setAutoCommit(isChecked());
@@ -54,7 +54,7 @@ public class OptionsDropDownAction extends AbstractEditorAction implements IMenu
 		};
 		action.setChecked(_editor.getSession().isAutoCommit());
 		addActionToMenu(menu, action);
-		action = new Action(Messages.getString("SQLEditor.Options.CommitOnClose"), IAction.AS_CHECK_BOX) {
+		action = new Action(Messages.getString("SQLEditor.Options.CommitOnClose"), IAction.AS_CHECK_BOX) { //$NON-NLS-1$
 			public void run(){
 				_editor.getSession().setCommitOnClose(isChecked());
 				_editor.getEditorToolBar().refresh();
@@ -78,17 +78,17 @@ public class OptionsDropDownAction extends AbstractEditorAction implements IMenu
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		return ImageUtil.getDescriptor("Images.OptionsDropDown");
+		return ImageUtil.getDescriptor("Images.OptionsDropDown"); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getText() {
-		return Messages.getString("SQLEditor.Actions.OptionsDropDown");
+		return Messages.getString("SQLEditor.Actions.OptionsDropDown"); //$NON-NLS-1$
 	}
 
 	@Override
 	public String getToolTipText() {
-		return Messages.getString("SQLEditor.Actions.OptionsDropDown.Tooltip");
+		return Messages.getString("SQLEditor.Actions.OptionsDropDown.Tooltip"); //$NON-NLS-1$
 	}
 
 	@Override

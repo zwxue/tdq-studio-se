@@ -33,7 +33,7 @@ public class TableInfoTab extends AbstractDataSetTab {
     
     
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.Info");
+        return Messages.getString("DatabaseDetailView.Tab.Info"); //$NON-NLS-1$
     }
  
     public DataSet getDataSet() throws Exception {                
@@ -50,22 +50,22 @@ public class TableInfoTab extends AbstractDataSetTab {
             ITableInfo tableInfo = tableNode.getTableInfo();
                        
             String[] header = new String[2];
-            header[0] = Messages.getString("DatabaseDetailView.Tab.Info.Property");
-            header[1] = Messages.getString("DatabaseDetailView.Tab.Info.Value");
+            header[0] = Messages.getString("DatabaseDetailView.Tab.Info.Property"); //$NON-NLS-1$
+            header[1] = Messages.getString("DatabaseDetailView.Tab.Info.Value"); //$NON-NLS-1$
             
             String[][] data = new String[6][2];
             
-            data[0][0] = Messages.getString("DatabaseDetailView.Tab.Info.Name");
+            data[0][0] = Messages.getString("DatabaseDetailView.Tab.Info.Name"); //$NON-NLS-1$
             data[0][1] = tableInfo.getSimpleName();
-            data[1][0] = Messages.getString("DatabaseDetailView.Tab.Info.QualifiedName");
+            data[1][0] = Messages.getString("DatabaseDetailView.Tab.Info.QualifiedName"); //$NON-NLS-1$
             data[1][1] = tableInfo.getQualifiedName();
-            data[2][0] = Messages.getString("DatabaseDetailView.Tab.Info.Catalog");
+            data[2][0] = Messages.getString("DatabaseDetailView.Tab.Info.Catalog"); //$NON-NLS-1$
             data[2][1] = tableInfo.getCatalogName();
-            data[3][0] = Messages.getString("DatabaseDetailView.Tab.Info.Schema");
+            data[3][0] = Messages.getString("DatabaseDetailView.Tab.Info.Schema"); //$NON-NLS-1$
             data[3][1] = tableInfo.getSchemaName();
-            data[4][0] = Messages.getString("DatabaseDetailView.Tab.Info.Type");
+            data[4][0] = Messages.getString("DatabaseDetailView.Tab.Info.Type"); //$NON-NLS-1$
             data[4][1] = tableInfo.getType();
-            data[5][0] = Messages.getString("DatabaseDetailView.Tab.Info.Remarks");
+            data[5][0] = Messages.getString("DatabaseDetailView.Tab.Info.Remarks"); //$NON-NLS-1$
             data[5][1] = tableInfo.getRemarks();
             
             DataSet dataSet = new DataSet(header, data);
@@ -78,6 +78,6 @@ public class TableInfoTab extends AbstractDataSetTab {
     
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.Info.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.Info.status") + " " + getNode().getQualifiedName(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

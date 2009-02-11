@@ -36,14 +36,14 @@ public class ColumnNode extends AbstractNode {
 
    
     public ColumnNode(INode parent, String name, MetaDataSession session, TableNode parentTable, boolean showKeyLabels) {
-    	super(parent, name, session, "column");
+    	super(parent, name, session, "column"); //$NON-NLS-1$
         _parentTable = parentTable;
-        setImageKey("Images.ColumnNodeIcon");
+        setImageKey("Images.ColumnNodeIcon"); //$NON-NLS-1$
 
         if (showKeyLabels) {
 	        if (_parentTable.getPrimaryKeyNames().contains(_name)) {
 	            _isPrimaryKey = true;
-	            _imageKey = "Images.PrimaryKeyIcon";
+	            _imageKey = "Images.PrimaryKeyIcon"; //$NON-NLS-1$
 	        }
 	        // this has been disabled for now.
 	        // foreign key determination turns out to be a real performance hog for oracle
@@ -77,7 +77,7 @@ public class ColumnNode extends AbstractNode {
      */
     public String getQualifiedName() {
 
-        return _parentTable.getName() + "." + _name;
+        return _parentTable.getName() + "." + _name; //$NON-NLS-1$
     }
 
 
@@ -88,7 +88,7 @@ public class ColumnNode extends AbstractNode {
      */
     public String getUniqueIdentifier() {
 
-        return _parentTable.getQualifiedName() + "." + _name;
+        return _parentTable.getQualifiedName() + "." + _name; //$NON-NLS-1$
     }
 
 

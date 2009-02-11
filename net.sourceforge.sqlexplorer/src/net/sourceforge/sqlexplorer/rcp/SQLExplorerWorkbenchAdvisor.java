@@ -29,7 +29,7 @@ public class SQLExplorerWorkbenchAdvisor extends WorkbenchAdvisor {
      * @see org.eclipse.ui.application.WorkbenchAdvisor#getInitialWindowPerspectiveId()
      */
     public String getInitialWindowPerspectiveId() {
-        return "net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective";
+        return "net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"; //$NON-NLS-1$
     }
 
     

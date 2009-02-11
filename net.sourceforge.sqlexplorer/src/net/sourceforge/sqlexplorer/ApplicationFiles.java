@@ -32,24 +32,24 @@ public class ApplicationFiles {
     public static final String JFACEDBC_FOLDER = System.getProperty(IJavaPropertyNames.USER_DIR);
 
     /** Name of file that contains database aliases. */
-    public static final String USER_ALIAS_FILE_NAME = USER_SETTINGS_FOLDER + File.separator + "SQLAliases.xml";
+    public static final String USER_ALIAS_FILE_NAME = USER_SETTINGS_FOLDER + File.separator + "SQLAliases.xml"; //$NON-NLS-1$
 
     /** Name of file that contains users saved queries. */
 
     /** Name of file that contains user settings. */
-    public static final String USER_PREFS_FILE_NAME = USER_SETTINGS_FOLDER + File.separator + "prefs.txt";
+    public static final String USER_PREFS_FILE_NAME = USER_SETTINGS_FOLDER + File.separator + "prefs.txt"; //$NON-NLS-1$
 
     /** Name of file that contains users database driver information. */
-    public static final String USER_DRIVER_FILE_NAME = USER_SETTINGS_FOLDER + File.separator + "SQLDrivers.xml";
+    public static final String USER_DRIVER_FILE_NAME = USER_SETTINGS_FOLDER + File.separator + "SQLDrivers.xml"; //$NON-NLS-1$
 
     /** Flle to log execution information to. */
-    public static final String EXECUTION_LOG_FILE = USER_SETTINGS_FOLDER + File.separator + "jfacedbc-sql.log";
+    public static final String EXECUTION_LOG_FILE = USER_SETTINGS_FOLDER + File.separator + "jfacedbc-sql.log"; //$NON-NLS-1$
 
     /** File used to persist sql history */
-    public static final String SQLHISTORY_FILE_NAME_V300 = USER_SETTINGS_FOLDER + File.separator + "SQLHistory.txt";
-    public static final String SQLHISTORY_FILE_NAME_V350 = USER_SETTINGS_FOLDER + File.separator + "SQLHistory.xml";
+    public static final String SQLHISTORY_FILE_NAME_V300 = USER_SETTINGS_FOLDER + File.separator + "SQLHistory.txt"; //$NON-NLS-1$
+    public static final String SQLHISTORY_FILE_NAME_V350 = USER_SETTINGS_FOLDER + File.separator + "SQLHistory.xml"; //$NON-NLS-1$
 
-    private String jfacedbcPluginsDir = JFACEDBC_FOLDER + File.separator + "plugins";
+    private String jfacedbcPluginsDir = JFACEDBC_FOLDER + File.separator + Messages.getString("ApplicationFiles.Plugins"); //$NON-NLS-1$
 
     static {
         new File(USER_SETTINGS_FOLDER).mkdir();

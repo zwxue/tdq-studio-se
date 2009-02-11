@@ -18,6 +18,7 @@
  */
 package net.sourceforge.sqlexplorer.parsers;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.util.BackedCharSequence;
 
 /**
@@ -288,7 +289,7 @@ public class Tokenizer {
 			// A Number
 			if (Character.isDigit(c)) {
 				// If we're not in a token yet, OR: if we'd started punctuation but it's just a dot, then convert to a decimal (missing zero prefix)
-				if (tokenType == null || (tokenType == TokenType.PUNCTUATION && sql.substring(start, nextToken).equals("."))) {
+				if (tokenType == null || (tokenType == TokenType.PUNCTUATION && sql.substring(start, nextToken).equals("."))) { //$NON-NLS-1$
 					tokenType = TokenType.NUMBER;
 					continue;
 					
@@ -329,14 +330,14 @@ public class Tokenizer {
 		
 		// Check for unterminated strings
 		if (currentQuote != 0)
-			throw new ParserException("Unterminated string literal", startLineNo, startCharNo);
+			throw new ParserException(Messages.getString("Tokenizer.UnterminatedString"), startLineNo, startCharNo); //$NON-NLS-1$
 		if (tokenType == TokenType.ML_COMMENT && (c != '*' | nextC != '/'))
-			throw new ParserException("Unterminated multi-line comment", startLineNo, startCharNo);
+			throw new ParserException(Messages.getString("Tokenizer.UnterminatedComment"), startLineNo, startCharNo); //$NON-NLS-1$
 		
 		// Nothing found?
 		if (tokenType == null) {
 			if (nextToken < sql.length())
-				throw new RuntimeException("Internal error: could not find a token but buffer is not exhausted");
+				throw new RuntimeException(Messages.getString("Tokenizer.InternalError")); //$NON-NLS-1$
 			return null;
 			
 		// If we found a token but the last character found was a CR, then we have to reduce

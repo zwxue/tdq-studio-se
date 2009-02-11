@@ -67,11 +67,11 @@ public class ConnectionJob extends Job {
 	 * @param requirePassword Whether to always prompt the user for a password, even if one is already known
 	 */
 	public ConnectionJob(Alias alias, User user, SessionEstablishedListener listener, boolean requirePassword) {
-		super(Messages.getString("Progress.Connection.Title") + " " + alias.getName() + '/' + ((user != null) ? user.getUserName() : "?"));
+		super(Messages.getString("Progress.Connection.Title") + " " + alias.getName() + '/' + ((user != null) ? user.getUserName() : "?")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		this.alias = alias;
 		this.user = user;
 		if (user != null && user.getAlias() != alias)
-			throw new RuntimeException("Invalid User - users alias must match the alias provided");
+			throw new RuntimeException(Messages.getString("ConnectionJob.InvalidUser")); //$NON-NLS-1$
 		this.listener = listener;
 		this.requirePassword = user == null || requirePassword;
     	if (alias.hasNoUserName())
@@ -125,7 +125,7 @@ public class ConnectionJob extends Job {
 					}
 					if (listener != null)
 						listener.sessionEstablished(session);
-			        return new Status(IStatus.OK, getClass().getName(), IStatus.OK, Messages.getString("Progress.Connection.Success"), null);
+			        return new Status(IStatus.OK, getClass().getName(), IStatus.OK, Messages.getString("Progress.Connection.Success"), null); //$NON-NLS-1$
 				}
 			} catch(SQLException e) {
 				exception = e;
@@ -143,7 +143,7 @@ public class ConnectionJob extends Job {
 		// Can't do it
 		if (listener != null)
 			listener.cannotEstablishSession(user);
-        return new Status(IStatus.CANCEL, getClass().getName(), IStatus.CANCEL, Messages.getString("Progress.Connection.Cancelled"), null);
+        return new Status(IStatus.CANCEL, getClass().getName(), IStatus.CANCEL, Messages.getString("Progress.Connection.Cancelled"), null); //$NON-NLS-1$
 	}
 	
 	/**
@@ -159,12 +159,12 @@ public class ConnectionJob extends Job {
     	shell.getDisplay().syncExec(new Runnable() {
             public void run() {
             	if (message != null) {
-            		String title = Messages.getString("Progress.Connection.Title") + ' ' + alias.getName();
+            		String title = Messages.getString("Progress.Connection.Title") + ' ' + alias.getName(); //$NON-NLS-1$
             		if (user != null && !alias.hasNoUserName())
             			title += '/' + user.getUserName();
             		if (alias.hasNoUserName()) {
 	            		MessageDialog dlg = new MessageDialog(shell, title, null, 
-	            				Messages.getString("Progress.Connection.ErrorMessage_Part1") + "\n\n" +
+	            				Messages.getString("Progress.Connection.ErrorMessage_Part1") + "\n\n" + //$NON-NLS-1$ //$NON-NLS-2$
 	            				message, 
 	            				MessageDialog.ERROR, new String[] { IDialogConstants.OK_LABEL }, 0);
 	            		dlg.open();
@@ -172,9 +172,9 @@ public class ConnectionJob extends Job {
             			return;
             		} else {
 	            		MessageDialog dlg = new MessageDialog(shell, title, null, 
-	            				Messages.getString("Progress.Connection.ErrorMessage_Part1") + "\n\n" +
-	            				message + "\n\n" + 
-	            				Messages.getString("Progress.Connection.ErrorMessage_Part2"), 
+	            				Messages.getString("Progress.Connection.ErrorMessage_Part1") + "\n\n" + //$NON-NLS-1$ //$NON-NLS-2$
+	            				message + "\n\n" +  //$NON-NLS-1$
+	            				Messages.getString("Progress.Connection.ErrorMessage_Part2"),  //$NON-NLS-1$
 	            				MessageDialog.ERROR, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
 	            		boolean retry = dlg.open() == 0;
 	            		if (!retry) {

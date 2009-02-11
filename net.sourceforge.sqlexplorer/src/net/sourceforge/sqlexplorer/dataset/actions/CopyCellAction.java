@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.TableItem;
  */
 public class CopyCellAction extends AbstractDataSetTableContextAction {
 
-    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.ExportToClipBoardIcon");
+    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.ExportToClipBoardIcon"); //$NON-NLS-1$
 
 
     /*
@@ -45,7 +45,7 @@ public class CopyCellAction extends AbstractDataSetTableContextAction {
      * @see org.eclipse.jface.action.IAction#getText()
      */
     public String getText() {
-        return Messages.getString("DataSetTable.Actions.CopyCell");
+        return Messages.getString("DataSetTable.Actions.CopyCell"); //$NON-NLS-1$
     }
 
 
@@ -82,7 +82,7 @@ public class CopyCellAction extends AbstractDataSetTableContextAction {
             clipBoard.setContents(new Object[] {items[0].getText(columnIndex)}, new Transfer[] {textTransfer});
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Error exporting cell to clipboard ", e);
+            SQLExplorerPlugin.error(Messages.getString("CopyCellAction.ErrorExportCellToClipboard"), e); //$NON-NLS-1$
         }
     }
 

@@ -33,7 +33,7 @@ import net.sourceforge.sqlexplorer.dbstructure.nodes.TableNode;
 public class RowCountTab extends AbstractDataSetTab {
 
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.RowCount");
+        return Messages.getString("DatabaseDetailView.Tab.RowCount"); //$NON-NLS-1$
     }
 
     public DataSet getDataSet() throws ExplorerException {       
@@ -46,13 +46,13 @@ public class RowCountTab extends AbstractDataSetTab {
         }
         
         try {
-        	return new DataSet(null, "select count(*) from " + nodeName, null, getNode().getSession());
+        	return new DataSet(null, "select count(*) from " + nodeName, null, getNode().getSession()); //$NON-NLS-1$
         }catch(SQLException e) {
         	throw new ExplorerException(e);
         }
     }
  
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.RowCount.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.RowCount.status") + " " + getNode().getQualifiedName(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

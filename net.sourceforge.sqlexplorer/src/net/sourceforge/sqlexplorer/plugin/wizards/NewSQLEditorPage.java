@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.core.resources.IFile;
@@ -49,10 +50,10 @@ public class NewSQLEditorPage extends WizardNewFileCreationPage {
 	 * @param selection
 	 */
 	public NewSQLEditorPage(IWorkbench iworkbench, IStructuredSelection selection) {
-		super("Create a new empty SQL File", selection);
+		super(Messages.getString("NewSQLEditorPage.NewEmptySQLFile"), selection); //$NON-NLS-1$
 		//c = null;
-		setTitle("Create a new empty SQL File");
-		setDescription("Create a new empty SQL File");
+		setTitle(Messages.getString("NewSQLEditorPage.CreateNewSQLFile")); //$NON-NLS-1$
+		setDescription(Messages.getString("NewSQLEditorPage.CreateNewEmptySQLFile")); //$NON-NLS-1$
 		workbench = iworkbench;
 
 	}
@@ -74,7 +75,7 @@ public class NewSQLEditorPage extends WizardNewFileCreationPage {
 					IDE.openEditor(page,file,true);
 			}
 		} catch (PartInitException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "File Resource Error", e.getMessage());
+			MessageDialog.openError(Display.getDefault().getActiveShell(), "File Resource Error", e.getMessage()); //$NON-NLS-1$
 		}
 				
 		return true;
@@ -129,7 +130,7 @@ public class NewSQLEditorPage extends WizardNewFileCreationPage {
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		setFileName("sql_"+SQLExplorerPlugin.getDefault().getEditorSerialNo()+"_.sql");
+		setFileName("sql_"+SQLExplorerPlugin.getDefault().getEditorSerialNo()+"_.sql"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

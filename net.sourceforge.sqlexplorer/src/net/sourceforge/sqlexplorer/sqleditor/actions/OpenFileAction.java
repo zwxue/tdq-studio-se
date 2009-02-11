@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.FileDialog;
 
 public class OpenFileAction extends AbstractEditorAction {
 
-    private ImageDescriptor img = ImageUtil.getDescriptor("Images.OpenFileIcon");
+    private ImageDescriptor img = ImageUtil.getDescriptor("Images.OpenFileIcon"); //$NON-NLS-1$
 
     public OpenFileAction(SQLEditor editor) {
 		super(editor);
@@ -52,7 +52,7 @@ public class OpenFileAction extends AbstractEditorAction {
 
         FileDialog dlg = new FileDialog(_editor.getSite().getShell(), SWT.OPEN | SWT.MULTI);
 
-        dlg.setFilterExtensions(new String[] {"*.sql;*.txt"});
+        dlg.setFilterExtensions(new String[] {"*.sql;*.txt"}); //$NON-NLS-1$
 
         String path = dlg.open();
         if (path != null) {
@@ -91,7 +91,7 @@ public class OpenFileAction extends AbstractEditorAction {
 
             for (int i = 0; i < files.length; i++) {
 
-                String path = "";
+                String path = ""; //$NON-NLS-1$
                 if (filePath != null) {
                     path += filePath + File.separator;
                 }
@@ -112,7 +112,7 @@ public class OpenFileAction extends AbstractEditorAction {
             _editor.setText(all.toString());
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error loading document", e);
+            SQLExplorerPlugin.error(Messages.getString("OpenFileAction.ErrorLoadDocument"), e); //$NON-NLS-1$
 
         } finally {
             try {
@@ -126,7 +126,7 @@ public class OpenFileAction extends AbstractEditorAction {
     
     
     public String getToolTipText() {
-        return Messages.getString("Open_2"); 
+        return Messages.getString("Open_2");  //$NON-NLS-1$
     }
 
 

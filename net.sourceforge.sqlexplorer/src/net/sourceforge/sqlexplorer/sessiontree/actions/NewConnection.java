@@ -27,7 +27,7 @@ public class NewConnection extends Action {
 
     public String getText() {
         String name = user.getAlias().getName() + '/' + user.getUserName();
-        name = TextUtil.replaceChar(name, '@', "_");
+        name = TextUtil.replaceChar(name, '@', "_"); //$NON-NLS-1$
         return name;
     }
 

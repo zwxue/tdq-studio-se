@@ -90,14 +90,14 @@ public abstract class AbstractSQLExecution extends Job {
 	 * @param _session the session
 	 */
 	public AbstractSQLExecution(SQLEditor editor, QueryParser queryParser) {
-		super(Messages.getString("SQLExecution.Progress"));
+		super(Messages.getString("SQLExecution.Progress")); //$NON-NLS-1$
 		this._editor = editor;
 		this._session = editor.getSession();
 		this.queryParser = queryParser;
 	}
 	
 	public IStatus run(IProgressMonitor monitor) {
-		monitor.setTaskName(Messages.getString("SQLExecution.Progress"));
+		monitor.setTaskName(Messages.getString("SQLExecution.Progress")); //$NON-NLS-1$
 		
 		try {
 			// Wait until we can get a free connection from the queue
@@ -113,13 +113,13 @@ public abstract class AbstractSQLExecution extends Job {
 			}
 
 		} catch (final RuntimeException e) {
-			errorDialog(Messages.getString("SQLResultsView.Error.Title"), e.getClass().getName() + ":" + e.getMessage());
+			errorDialog(Messages.getString("SQLResultsView.Error.Title"), e.getClass().getName() + ":" + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 			
 		} catch (final Exception e) {
 			// only log non-sql errors
 			if (!(e instanceof java.sql.SQLException || e instanceof InterruptedException))
-				SQLExplorerPlugin.error("Error executing.", e);
-			errorDialog(Messages.getString("SQLResultsView.Error.Title"), e.getMessage());
+				SQLExplorerPlugin.error(Messages.getString("AbstractSQLExecution.ErrorExecute"), e); //$NON-NLS-1$
+			errorDialog(Messages.getString("SQLResultsView.Error.Title"), e.getMessage()); //$NON-NLS-1$
 
 		} finally {
 			if (_connection != null)
@@ -128,7 +128,7 @@ public abstract class AbstractSQLExecution extends Job {
 			_editor.getEditorToolBar().refresh();
 		}
 		
-		return new Status(IStatus.OK, getClass().getName(), IStatus.OK, "OK", null);
+		return new Status(IStatus.OK, getClass().getName(), IStatus.OK, "OK", null); //$NON-NLS-1$
 	}
 	
 	/**
@@ -158,7 +158,7 @@ public abstract class AbstractSQLExecution extends Job {
 			return null;
 		boolean longCaptions = SQLExplorerPlugin.getDefault().getPreferenceStore().getBoolean(IConstants.USE_LONG_CAPTIONS_ON_RESULTS);
 		if (longCaptions) {
-			String caption = resultsTab.getTabItem().getText() + " [" + TextUtil.compressWhitespace(query.getQuerySql(), MAX_CAPTION_LENGTH) + "]";
+			String caption = resultsTab.getTabItem().getText() + " [" + TextUtil.compressWhitespace(query.getQuerySql(), MAX_CAPTION_LENGTH) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 			resultsTab.getTabItem().setText(caption);
 		}
 		return resultsTab;
@@ -324,8 +324,8 @@ public abstract class AbstractSQLExecution extends Job {
 		
 		// Get the log files; if the current log is too big, retire it
 		File dir = SQLExplorerPlugin.getDefault().getStateLocation().toFile();
-		File log = new File(dir.getAbsolutePath() + '/' + "query-debug.log");
-		File oldLog = new File(dir.getAbsolutePath() + '/' + "query-debug.old.log");
+		File log = new File(dir.getAbsolutePath() + '/' + "query-debug.log"); //$NON-NLS-1$
+		File oldLog = new File(dir.getAbsolutePath() + '/' + "query-debug.old.log"); //$NON-NLS-1$
 		
 		// Too big?  Then delete the old and archive the current  
 		if (log.exists() && log.length() > MAX_DEBUG_LOG_SIZE) {
@@ -339,21 +339,21 @@ public abstract class AbstractSQLExecution extends Job {
 			FileWriter fw = new FileWriter(log, true);
 			writer = new PrintWriter(fw);
 			try {
-				writer.write("==============================================\r\n");
+				writer.write("==============================================\r\n"); //$NON-NLS-1$
 				StringBuffer sb = new StringBuffer(query.toString());
 				for (int i = 0; i < sb.length(); i++)
 					if (sb.charAt(i) == '\n')
 						sb.insert(i++, '\r');
-				sb.append("\r\n");
+				sb.append("\r\n"); //$NON-NLS-1$
 				writer.write(sb.toString());
 				if (sqlException != null)
-					writer.write("FAILED: " + sqlException.getMessage() + "\r\n");
+					writer.write("FAILED: " + sqlException.getMessage() + "\r\n");  //$NON-NLS-1$//$NON-NLS-2$
 			} finally {
 				writer.flush();
 				writer.close();
 			}
 		} catch(IOException e) {
-			SQLExplorerPlugin.error("Failed to log query", e);
+			SQLExplorerPlugin.error(Messages.getString("AbstractSQLExecution.FailToLogQuery"), e); //$NON-NLS-1$
 		}
 	}
 

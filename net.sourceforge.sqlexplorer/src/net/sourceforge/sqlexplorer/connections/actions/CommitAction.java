@@ -30,7 +30,7 @@ import org.eclipse.ui.IViewActionDelegate;
 public class CommitAction extends AbstractConnectionTreeAction implements IViewActionDelegate {
 
     public CommitAction() {
-    	super("ConnectionsView.Actions.Commit", null, "Images.CommitIcon");
+    	super("ConnectionsView.Actions.Commit", null, "Images.CommitIcon"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public void run() {

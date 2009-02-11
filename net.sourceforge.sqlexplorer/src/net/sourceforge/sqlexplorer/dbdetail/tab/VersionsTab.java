@@ -34,7 +34,7 @@ public class VersionsTab extends AbstractDataSetTab {
     
     
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.Versions");
+        return Messages.getString("DatabaseDetailView.Tab.Versions"); //$NON-NLS-1$
     }
  
     public DataSet getDataSet() throws Exception {                
@@ -60,6 +60,6 @@ public class VersionsTab extends AbstractDataSetTab {
     
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.Versions.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.Versions.status") + " " + getNode().getQualifiedName();  //$NON-NLS-1$//$NON-NLS-2$
     }
 }

@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Display;
 public class CopyUserAction extends AbstractConnectionTreeAction {
 
 	public CopyUserAction() {
-		super("ConnectionsView.Actions.CopyUser", "ConnectionsView.Actions.CopyUser.ToolTip", "Images.ConnectionsView.CopyUser");
+		super("ConnectionsView.Actions.CopyUser", "ConnectionsView.Actions.CopyUser.ToolTip", "Images.ConnectionsView.CopyUser"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/* (non-Javadoc)

@@ -38,7 +38,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class RefreshNodeAction extends AbstractDBTreeContextAction {
 
-    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.RefreshIcon");
+    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.RefreshIcon"); //$NON-NLS-1$
     
     /**
      * Custom image for refresh action
@@ -53,7 +53,7 @@ public class RefreshNodeAction extends AbstractDBTreeContextAction {
      * @see org.eclipse.jface.action.IAction#getText()
      */
     public String getText() {
-        return Messages.getString("DatabaseStructureView.Actions.Refresh");
+        return Messages.getString("DatabaseStructureView.Actions.Refresh"); //$NON-NLS-1$
     }
 
     /**

@@ -160,8 +160,8 @@ public class FilterStructureDialog extends Dialog {
     protected void configureShell(Shell shell) {
 
         super.configureShell(shell);
-        String title = Messages.getString("FilterStructureDialog.Title.prefix") + " " + _db.getSession().toString()
-                + " " + Messages.getString("FilterStructureDialog.Title.postfix");
+        String title = Messages.getString("FilterStructureDialog.Title.prefix") + " " + _db.getSession().toString() //$NON-NLS-1$ //$NON-NLS-2$
+                + " " + Messages.getString("FilterStructureDialog.Title.postfix"); //$NON-NLS-1$ //$NON-NLS-2$
         shell.setText(title);
     }
 
@@ -211,7 +211,7 @@ public class FilterStructureDialog extends Dialog {
             // add schema text
             Label selectSchemaLabel = new Label(composite, SWT.WRAP);
             selectSchemaLabel.setLayoutData(tGridData);
-            selectSchemaLabel.setText(Messages.getString("FilterStructureDialog.SelectSchema"));
+            selectSchemaLabel.setText(Messages.getString("FilterStructureDialog.SelectSchema")); //$NON-NLS-1$
 
             // add schema selection table
             final TableViewer schemaTable = new TableViewer(composite, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL);
@@ -240,7 +240,7 @@ public class FilterStructureDialog extends Dialog {
             // add schema selection buttons
             Button selectAllSchemas = new Button(composite, SWT.PUSH);
             selectAllSchemas.setLayoutData(bData);
-            selectAllSchemas.setText(Messages.getString("FilterStructureDialog.Buttons.SelectAll"));
+            selectAllSchemas.setText(Messages.getString("FilterStructureDialog.Buttons.SelectAll")); //$NON-NLS-1$
             selectAllSchemas.addMouseListener(new MouseAdapter() {
 
                 public void mouseUp(MouseEvent e) {
@@ -257,7 +257,7 @@ public class FilterStructureDialog extends Dialog {
             });
 
             Button deselectAllSchemas = new Button(composite, SWT.PUSH);
-            deselectAllSchemas.setText(Messages.getString("FilterStructureDialog.Buttons.DeselectAll"));
+            deselectAllSchemas.setText(Messages.getString("FilterStructureDialog.Buttons.DeselectAll")); //$NON-NLS-1$
             deselectAllSchemas.addMouseListener(new MouseAdapter() {
 
                 public void mouseUp(MouseEvent e) {
@@ -276,7 +276,7 @@ public class FilterStructureDialog extends Dialog {
             // add folder text
             Label selectFolderLabel = new Label(composite, SWT.WRAP);
             selectFolderLabel.setLayoutData(t2GridData);
-            selectFolderLabel.setText(Messages.getString("FilterStructureDialog.SelectFolder"));
+            selectFolderLabel.setText(Messages.getString("FilterStructureDialog.SelectFolder")); //$NON-NLS-1$
 
             // add folder selection table
             final TableViewer folderTable = new TableViewer(composite, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL);
@@ -302,7 +302,7 @@ public class FilterStructureDialog extends Dialog {
             // add folder selection buttons
             Button selectAllFolders = new Button(composite, SWT.PUSH);
             selectAllFolders.setLayoutData(bData);
-            selectAllFolders.setText(Messages.getString("FilterStructureDialog.Buttons.SelectAll"));
+            selectAllFolders.setText(Messages.getString("FilterStructureDialog.Buttons.SelectAll")); //$NON-NLS-1$
             selectAllFolders.addMouseListener(new MouseAdapter() {
 
                 public void mouseUp(MouseEvent e) {
@@ -319,7 +319,7 @@ public class FilterStructureDialog extends Dialog {
             });
 
             Button deselectAllFolders = new Button(composite, SWT.PUSH);
-            deselectAllFolders.setText(Messages.getString("FilterStructureDialog.Buttons.DeselectAll"));
+            deselectAllFolders.setText(Messages.getString("FilterStructureDialog.Buttons.DeselectAll")); //$NON-NLS-1$
             deselectAllFolders.addMouseListener(new MouseAdapter() {
 
                 public void mouseUp(MouseEvent e) {
@@ -338,7 +338,7 @@ public class FilterStructureDialog extends Dialog {
             // add filter text
             _patternButton = new Button(composite, SWT.CHECK | SWT.WRAP);
             _patternButton.setLayoutData(t2GridData);
-            _patternButton.setText(Messages.getString("FilterStructureDialog.ElementPattern"));
+            _patternButton.setText(Messages.getString("FilterStructureDialog.ElementPattern")); //$NON-NLS-1$
 
             final Text pattern = new Text(composite, SWT.BORDER);
             _filterText = pattern;
@@ -361,7 +361,7 @@ public class FilterStructureDialog extends Dialog {
             GridData helpData = new GridData(GridData.FILL_HORIZONTAL);
             helpData.horizontalSpan = 2;
             filterHelpLabel.setLayoutData(helpData);
-            filterHelpLabel.setText(Messages.getString("FilterStructureDialog.ElementPattern.help"));
+            filterHelpLabel.setText(Messages.getString("FilterStructureDialog.ElementPattern.help")); //$NON-NLS-1$
             filterHelpLabel.setEnabled(_patternButton.getSelection());
 
             // activate field and help when checkbox is selected
@@ -388,7 +388,7 @@ public class FilterStructureDialog extends Dialog {
             return composite;
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Couldn't create dialog.", e);
+            SQLExplorerPlugin.error(Messages.getString("FilterStructureDialog.CouldnotCreateDialog"), e); //$NON-NLS-1$
         }
 
         return null;

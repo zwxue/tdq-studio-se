@@ -43,7 +43,7 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
 
-    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.SqlEditorIcon");
+    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.SqlEditorIcon"); //$NON-NLS-1$
 
 
     /**
@@ -51,9 +51,9 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
      */
     private String createColumnSelect() {
 
-        StringBuffer query = new StringBuffer("select ");
-        String sep = "";
-        String table = "";
+        StringBuffer query = new StringBuffer("select "); //$NON-NLS-1$
+        String sep = ""; //$NON-NLS-1$
+        String table = ""; //$NON-NLS-1$
 
         for (int i = 0; i < _selectedNodes.length; i++) {
 
@@ -71,12 +71,12 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
 
                     query.append(sep);
                     query.append(column.getName());
-                    sep = ", ";
+                    sep = ", "; //$NON-NLS-1$
                 }
             }
         }
 
-        query.append(" from ");
+        query.append(" from "); //$NON-NLS-1$
         query.append(table);
 
         return query.toString();
@@ -91,8 +91,8 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
 
         TableNode node = (TableNode) _selectedNodes[0];
 
-        StringBuffer query = new StringBuffer("select ");
-        String sep = "";
+        StringBuffer query = new StringBuffer("select "); //$NON-NLS-1$
+        String sep = ""; //$NON-NLS-1$
 
         List columnNames = node.getColumnNames();
         Iterator it = columnNames.iterator();
@@ -102,10 +102,10 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
             query.append(sep);
             String column = (String) it.next();
             query.append(column);
-            sep = ", ";
+            sep = ", "; //$NON-NLS-1$
         }
 
-        query.append(" from ");
+        query.append(" from "); //$NON-NLS-1$
         query.append(node.getQualifiedName());
 
         return query.toString();
@@ -130,7 +130,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
      */
     public String getText() {
 
-        return Messages.getString("DatabaseStructureView.Actions.GenerateSelectSQL");
+        return Messages.getString("DatabaseStructureView.Actions.GenerateSelectSQL"); //$NON-NLS-1$
     }
 
 
@@ -180,8 +180,8 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
                 return;
             }
 
-            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo()
-                    + ").sql");
+            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() //$NON-NLS-1$
+                    + ").sql"); //$NON-NLS-1$
             input.setUser(_selectedNodes[0].getSession().getUser());
             IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
@@ -189,7 +189,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
             editorPart.setText(query);
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Could generate sql.", e);
+            SQLExplorerPlugin.error("Could generate sql.", e); //$NON-NLS-1$
         }
     }
 }

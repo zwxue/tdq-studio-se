@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2006 Davy Vanherbergen
- * dvanherbergen@users.sourceforge.net
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2006 Davy Vanherbergen dvanherbergen@users.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package net.sourceforge.sqlexplorer.dbstructure.nodes;
 
@@ -23,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbproduct.MetaDataSession;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.ImageUtil;
@@ -56,18 +53,17 @@ public class TableNode extends AbstractNode {
      * @param sessionNode session for this node
      */
     public TableNode(INode parent, String name, MetaDataSession sessionNode, ITableInfo tableInfo) {
-    	super(parent, name, sessionNode, tableInfo.getType());
+        super(parent, name, sessionNode, tableInfo.getType());
         _tableInfo = tableInfo;
-        setImageKey("Images.TableNodeIcon");
+        setImageKey("Images.TableNodeIcon"); //$NON-NLS-1$
     }
-
 
     private void addExtensionNodes() {
 
         String databaseProductName = getSession().getRoot().getDatabaseProductName().toLowerCase().trim();
 
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "node");
+        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "node"); //$NON-NLS-1$ //$NON-NLS-2$
         IExtension[] extensions = point.getExtensions();
 
         for (int i = 0; i < extensions.length; i++) {
@@ -81,13 +77,13 @@ public class TableNode extends AbstractNode {
 
                     // include only nodes that are attachted to the schema
                     // node..
-                    String parent = ces[j].getAttribute("parent-node");
-                    if (parent.indexOf("table") == -1) {
+                    String parent = ces[j].getAttribute("parent-node"); //$NON-NLS-1$
+                    if (parent.indexOf("table") == -1) { //$NON-NLS-1$
                         continue;
                     }
 
                     boolean isValidProduct = false;
-                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
+                    String[] validProducts = ces[j].getAttribute("database-product-name").split(","); //$NON-NLS-1$//$NON-NLS-2$
 
                     // include only nodes valid for this database
                     for (int k = 0; k < validProducts.length; k++) {
@@ -98,12 +94,12 @@ public class TableNode extends AbstractNode {
                             continue;
                         }
 
-                        if (product.equals("*")) {
+                        if (product.equals("*")) { //$NON-NLS-1$
                             isValidProduct = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(product, '*', ".*");
+                        String regex = TextUtil.replaceChar(product, '*', ".*"); //$NON-NLS-1$
                         if (databaseProductName.matches(regex)) {
                             isValidProduct = true;
                             break;
@@ -115,29 +111,28 @@ public class TableNode extends AbstractNode {
                         continue;
                     }
 
-                    AbstractNode childNode = (AbstractNode) ces[j].createExecutableExtension("class");
-                    
-                    String imagePath = ces[j].getAttribute("icon");
-                    String id = ces[j].getAttribute("id");
+                    AbstractNode childNode = (AbstractNode) ces[j].createExecutableExtension("class"); //$NON-NLS-1$
+
+                    String imagePath = ces[j].getAttribute("icon"); //$NON-NLS-1$
+                    String id = ces[j].getAttribute("id"); //$NON-NLS-1$
                     String fragmentId = id.substring(0, id.indexOf('.', 28));
                     if (imagePath != null && imagePath.trim().length() != 0) {
                         childNode.setImage(ImageUtil.getFragmentImage(fragmentId, imagePath));
                     }
-                    
+
                     childNode.setParent(this);
                     childNode.setSession(_session);
 
                     addChildNode(childNode);
                     _folderNames.add(childNode.getName());
-                    
+
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error("Could not create child node", ex);
+                    SQLExplorerPlugin.error(Messages.getString("TableNode.NotCreateChildNode"), ex); //$NON-NLS-1$
                 }
             }
         }
 
     }
-
 
     /**
      * @return List of column names for this table.
@@ -148,18 +143,17 @@ public class TableNode extends AbstractNode {
 
             _columnNames = new ArrayList<String>();
             try {
-            	TableColumnInfo[] columns = _session.getMetaData().getColumnInfo(_tableInfo);
-            	for (TableColumnInfo col : columns)
-            		_columnNames.add(col.getColumnName());
+                TableColumnInfo[] columns = _session.getMetaData().getColumnInfo(_tableInfo);
+                for (TableColumnInfo col : columns)
+                    _columnNames.add(col.getColumnName());
             } catch (SQLException e) {
-                SQLExplorerPlugin.error("Could not load column names", e);
+                SQLExplorerPlugin.error(Messages.getString("TableNode.NotLoadColumnNames"), e); //$NON-NLS-1$
             }
 
         }
 
         return _columnNames;
     }
-
 
     /**
      * @return List of column names for this table.
@@ -176,14 +170,13 @@ public class TableNode extends AbstractNode {
                 }
 
             } catch (Exception e) {
-                SQLExplorerPlugin.error("Could not load foreign key names", e);
+                SQLExplorerPlugin.error(Messages.getString("TableNode.NotLoadForeignKeyName"), e); //$NON-NLS-1$
             }
 
         }
 
         return _foreignKeyNames;
     }
-
 
     /**
      * @return List of column names for this table.
@@ -200,14 +193,13 @@ public class TableNode extends AbstractNode {
                 }
 
             } catch (Exception e) {
-                SQLExplorerPlugin.error("Could not load primary key names", e);
+                SQLExplorerPlugin.error(Messages.getString("TableNode.NotLoadPrimaryKeyNames"), e); //$NON-NLS-1$
             }
 
         }
 
         return _primaryKeyNames;
     }
-
 
     /**
      * @return Qualified table name
@@ -217,7 +209,6 @@ public class TableNode extends AbstractNode {
         return _tableInfo.getQualifiedName();
     }
 
-
     /**
      * @return // TODO fix this for sql completion?
      */
@@ -226,7 +217,6 @@ public class TableNode extends AbstractNode {
         return getTableInfo().getQualifiedName();
     }
 
-
     /**
      * @return TableInfo for this node
      */
@@ -234,7 +224,6 @@ public class TableNode extends AbstractNode {
 
         return _tableInfo;
     }
-
 
     /*
      * (non-Javadoc)
@@ -246,7 +235,6 @@ public class TableNode extends AbstractNode {
         return getQualifiedName();
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -257,33 +245,29 @@ public class TableNode extends AbstractNode {
         return false;
     }
 
-
     /**
      * @return true if this node is a synonym
      */
     public boolean isSynonym() {
 
-        return _tableInfo.getType().equalsIgnoreCase("SYNONYM");
+        return _tableInfo.getType().equalsIgnoreCase("SYNONYM"); //$NON-NLS-1$
     }
-
 
     /**
      * @return true if this node is a table
      */
     public boolean isTable() {
 
-        return _tableInfo.getType().equalsIgnoreCase("TABLE");
+        return _tableInfo.getType().equalsIgnoreCase("TABLE"); //$NON-NLS-1$
     }
-
 
     /**
      * @return true if this node is a view
      */
     public boolean isView() {
 
-        return _tableInfo.getType().equalsIgnoreCase("VIEW");
+        return _tableInfo.getType().equalsIgnoreCase("VIEW"); //$NON-NLS-1$
     }
-
 
     /**
      * 
@@ -292,24 +276,23 @@ public class TableNode extends AbstractNode {
      */
     public void loadChildren() {
 
-        try {            
+        try {
             addExtensionNodes();
-            
-            // add column and index nodes if they don't exist yet. 
-            
-            ColumnFolderNode colNode = new ColumnFolderNode(this, _tableInfo);            
+
+            // add column and index nodes if they don't exist yet.
+
+            ColumnFolderNode colNode = new ColumnFolderNode(this, _tableInfo);
             if (!_folderNames.contains(colNode.getName())) {
                 addChildNode(colNode);
             }
-            
+
             IndexFolderNode indexNode = new IndexFolderNode(this, _tableInfo);
             if (!_folderNames.contains(indexNode.getName())) {
                 addChildNode(indexNode);
             }
-            
-            
+
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Could not create child nodes for " + getName(), e);
+            SQLExplorerPlugin.error(Messages.getString("TableNode.NotCreateChildNodes", getName()), e); //$NON-NLS-1$
         }
 
     }

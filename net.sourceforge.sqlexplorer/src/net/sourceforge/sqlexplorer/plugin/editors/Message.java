@@ -29,15 +29,15 @@ public class Message {
 	public static enum Status {
 		FAILURE {
 			protected String getText() {
-				return Messages.getString("SQLEditor.Results.Messages.Failure");
+				return Messages.getString("SQLEditor.Results.Messages.Failure"); //$NON-NLS-1$
 			}
 		}, SUCCESS {
 			protected String getText() {
-				return Messages.getString("SQLEditor.Results.Messages.Success");
+				return Messages.getString("SQLEditor.Results.Messages.Success"); //$NON-NLS-1$
 			}
 		}, STATUS {
 			protected String getText() {
-				return Messages.getString("SQLEditor.Results.Messages.Status");
+				return Messages.getString("SQLEditor.Results.Messages.Status"); //$NON-NLS-1$
 			}
 		};
 		
@@ -112,17 +112,17 @@ public class Message {
 	 * @return
 	 */
 	/*package*/ String[] getTableText() {
-		String location = "";
+		String location = ""; //$NON-NLS-1$
 		if (lineNo > 0) {
-			location = "line " + lineNo;
+			location = "line " + lineNo; //$NON-NLS-1$
 			if (charNo > 0)
-				location += ", col " + charNo;
+				location += ", col " + charNo; //$NON-NLS-1$
 		}
 		
 		String[] result = new String[] {
 			status.getText(),
 			location,
-			(sql == null) ? "" : sql,
+			(sql == null) ? "" : sql, //$NON-NLS-1$
 			TextUtil.getWrappedText(message)
 		};
 		return result; 
@@ -191,6 +191,6 @@ public class Message {
 	}
 	
 	public String toString() {
-		return "[" + lineNo + "," + charNo + "] " + message;
+		return "[" + lineNo + "," + charNo + "] " + message; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

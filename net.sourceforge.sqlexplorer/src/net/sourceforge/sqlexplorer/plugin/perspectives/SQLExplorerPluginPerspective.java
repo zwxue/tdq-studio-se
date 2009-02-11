@@ -71,18 +71,18 @@ public class SQLExplorerPluginPerspective implements IPerspectiveFactory {
         layout.setEditorAreaVisible(true);
         String editorArea = layout.getEditorArea();
 
-        IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, 0.15f, editorArea);
+        IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, 0.15f, editorArea); //$NON-NLS-1$
         topLeft.addView(SqlexplorerViewConstants.SQLEXPLORER_CONNECTIONS);
         // PTODO qzhang fixed bug 3905 remove "project explorer" view from perspective
         // topLeft.addView("org.eclipse.ui.navigator.ProjectExplorer");
 
-        IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.3f, "topLeft");
+        IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.3f, "topLeft"); //$NON-NLS-1$ //$NON-NLS-2$
         bottomLeft.addView(SqlexplorerViewConstants.SQLEXPLORER_SQLHISTORY);
 
-        IFolderLayout main = layout.createFolder("right", IPageLayout.RIGHT, 0.70f, editorArea);
+        IFolderLayout main = layout.createFolder("right", IPageLayout.RIGHT, 0.70f, editorArea); //$NON-NLS-1$
         main.addView(SqlexplorerViewConstants.SQLEXPLORER_DBSTRUCTURE);
 
-        IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.6f, editorArea);
+        IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.6f, editorArea); //$NON-NLS-1$
         bottom.addView(SqlexplorerViewConstants.SQLEXPLORER_DBDETAIL);
         // PTODO qzhang fixed bug 3905 remove "progress" view
         // IFolderLayout bottomRight = layout.createFolder("bottomRight", IPageLayout.BOTTOM, 0.90f, "right");

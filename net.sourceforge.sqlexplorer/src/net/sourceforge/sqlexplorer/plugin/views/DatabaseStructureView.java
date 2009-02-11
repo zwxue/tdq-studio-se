@@ -142,7 +142,7 @@ public class DatabaseStructureView extends ViewPart {
         	throw e;
         }catch(SQLException e) {
         	SQLExplorerPlugin.error(e);
-        	MessageDialog.openError(getSite().getShell(), "Cannot connect", e.getMessage());
+        	MessageDialog.openError(getSite().getShell(), "Cannot connect", e.getMessage()); //$NON-NLS-1$
         }
         DatabaseNode rootNode = session.getRoot();
         if (rootNode == null)
@@ -227,7 +227,7 @@ public class DatabaseStructureView extends ViewPart {
 
             public void dragFinished(DragSourceEvent event) {
 
-                System.out.println("$drag finished");
+                System.out.println("$drag finished"); //$NON-NLS-1$
                 TableNodeTransfer.getInstance().setSelection(null);
             }
 
@@ -350,7 +350,7 @@ public class DatabaseStructureView extends ViewPart {
 
         // add context menu
         final DBTreeActionGroup actionGroup = new DBTreeActionGroup(treeViewer);
-        MenuManager menuManager = new MenuManager("DBTreeContextMenu");
+        MenuManager menuManager = new MenuManager("DBTreeContextMenu"); //$NON-NLS-1$
         menuManager.setRemoveAllWhenShown(true);
         Menu contextMenu = menuManager.createContextMenu(treeViewer.getTree());
         treeViewer.getTree().setMenu(contextMenu);
@@ -399,7 +399,7 @@ public class DatabaseStructureView extends ViewPart {
     public void createPartControl(Composite parent) {
 
         PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-                SQLExplorerPlugin.PLUGIN_ID + ".DatabaseStructureView");
+                SQLExplorerPlugin.PLUGIN_ID + ".DatabaseStructureView"); //$NON-NLS-1$
 
         _parent = parent;
 
@@ -479,7 +479,7 @@ public class DatabaseStructureView extends ViewPart {
         clearParent();
 
         // add message
-        String message = Messages.getString("DatabaseStructureView.NoSession");
+        String message = Messages.getString("DatabaseStructureView.NoSession"); //$NON-NLS-1$
         Label label = new Label(_parent, SWT.FILL);
         label.setText(message);
         label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));

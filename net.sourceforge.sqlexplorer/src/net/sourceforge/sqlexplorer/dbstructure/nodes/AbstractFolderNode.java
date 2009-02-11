@@ -20,8 +20,8 @@ public abstract class AbstractFolderNode extends AbstractNode {
 
 	public AbstractFolderNode(INode parent, String name, MetaDataSession session, String type) {
 		super(parent, name, session, type);
-        setImageKey("Images.closedFolder");
-        setExpandedImageKey("Images.OpenFolder");
+        setImageKey("Images.closedFolder"); //$NON-NLS-1$
+        setExpandedImageKey("Images.OpenFolder"); //$NON-NLS-1$
     }
 
     /**
@@ -50,7 +50,7 @@ public abstract class AbstractFolderNode extends AbstractNode {
         if (_filterExpressions == null) {
             String filter = getSession().getUser().getAlias().getNameFilterExpression();
             if (filter != null) {
-                _filterExpressions = filter.split(",");
+                _filterExpressions = filter.split(","); //$NON-NLS-1$
             }
         }
         if (_filterExpressions == null || _filterExpressions.length == 0) {
@@ -61,8 +61,8 @@ public abstract class AbstractFolderNode extends AbstractNode {
         for (int i = 0; i < _filterExpressions.length; i++) {
 
             String regex = _filterExpressions[i].trim();
-            regex = TextUtil.replaceChar(regex, '?', ".");
-            regex = TextUtil.replaceChar(regex, '*', ".*");
+            regex = TextUtil.replaceChar(regex, '?', "."); //$NON-NLS-1$
+            regex = TextUtil.replaceChar(regex, '*', ".*"); //$NON-NLS-1$
 
             if (regex.length() != 0 && name.matches(regex)) {
                 // we have a match, exclude node..

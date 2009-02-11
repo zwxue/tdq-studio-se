@@ -60,7 +60,7 @@ public class SaveOutsideProjectDlg extends TitleAreaDialog {
 
 	protected void configureShell(Shell shell) {
         super.configureShell(shell);
-        shell.setText(Messages.getString("Confirm.SaveOutsideProject.Title"));
+        shell.setText(Messages.getString("Confirm.SaveOutsideProject.Title")); //$NON-NLS-1$
     }
 
     @Override
@@ -72,7 +72,7 @@ public class SaveOutsideProjectDlg extends TitleAreaDialog {
 	@Override
 	protected Control createContents(Composite parent) {
 		Control control = super.createContents(parent);
-        setTitle(Messages.getString("Confirm.SaveOutsideProject.Title"));
+        setTitle(Messages.getString("Confirm.SaveOutsideProject.Title")); //$NON-NLS-1$
         return control;
 	}
 
@@ -93,11 +93,11 @@ public class SaveOutsideProjectDlg extends TitleAreaDialog {
         composite.setFont(parentComposite.getFont());
 
         Label label = new Label(composite, SWT.WRAP);
-        String msg = Messages.getString("Confirm.SaveOutsideProject.Intro") + "\n\n";
+        String msg = Messages.getString("Confirm.SaveOutsideProject.Intro") + "\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
         if (projects == null || projects.length == 0)
-        	msg = msg + Messages.getString("Confirm.SaveOutsideProject.NoProjectsConfigured");
-    	msg = msg + Messages.getString("Confirm.SaveOutsideProject.SaveInProject");
+        	msg = msg + Messages.getString("Confirm.SaveOutsideProject.NoProjectsConfigured"); //$NON-NLS-1$
+    	msg = msg + Messages.getString("Confirm.SaveOutsideProject.SaveInProject"); //$NON-NLS-1$
         label.setText(msg);
         
         return parentComposite;

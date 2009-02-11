@@ -122,7 +122,7 @@ public class SQLHistoryView extends ViewPart implements SQLHistoryChangedListene
         final SQLHistory history = SQLExplorerPlugin.getDefault().getSQLHistory();
 
         history.sort(1, SWT.DOWN);
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".SQLHistoryView");
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".SQLHistoryView"); //$NON-NLS-1$
 
         history.addListener(this);
 
@@ -141,7 +141,7 @@ public class SQLHistoryView extends ViewPart implements SQLHistoryChangedListene
         // add search box
         _searchBox = new Text(composite, SWT.BORDER);
         _searchBox.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-        _searchBox.setText(Messages.getString("SQLHistoryView.SearchText"));
+        _searchBox.setText(Messages.getString("SQLHistoryView.SearchText")); //$NON-NLS-1$
         _searchBox.selectAll();
 
         SQLHistorySearchListener searchListener = new SQLHistorySearchListener(history);
@@ -152,8 +152,8 @@ public class SQLHistoryView extends ViewPart implements SQLHistoryChangedListene
 
                 Text searchbox = (Text) e.widget;
                 if (searchbox.getText() != null
-                        && searchbox.getText().equals(Messages.getString("SQLHistoryView.SearchText"))) {
-                    searchbox.setText("");
+                        && searchbox.getText().equals(Messages.getString("SQLHistoryView.SearchText"))) { //$NON-NLS-1$
+                    searchbox.setText(""); //$NON-NLS-1$
                 }
             }
 
@@ -221,10 +221,10 @@ public class SQLHistoryView extends ViewPart implements SQLHistoryChangedListene
             }
         };
 
-        String[] columnLabels = new String[] {Messages.getString("SQLHistoryView.Column.SQL"),
-                Messages.getString("SQLHistoryView.Column.Time"),
-                Messages.getString("SQLHistoryView.Column.Connection"),
-                Messages.getString("SQLHistoryView.Column.Executions")};
+        String[] columnLabels = new String[] {Messages.getString("SQLHistoryView.Column.SQL"), //$NON-NLS-1$
+                Messages.getString("SQLHistoryView.Column.Time"), //$NON-NLS-1$
+                Messages.getString("SQLHistoryView.Column.Connection"), //$NON-NLS-1$
+                Messages.getString("SQLHistoryView.Column.Executions")}; //$NON-NLS-1$
 
         _tableViewer.setColumnProperties(columnLabels);
 
@@ -285,7 +285,7 @@ public class SQLHistoryView extends ViewPart implements SQLHistoryChangedListene
         });
 
         // add context menus
-        final MenuManager menuMgr = new MenuManager("#HistoryPopupMenu");
+        final MenuManager menuMgr = new MenuManager(Messages.getString("SQLHistoryView.HistoryPopupMenu")); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
 
         Menu historyContextMenu = menuMgr.createContextMenu(_table);
@@ -398,12 +398,12 @@ public class SQLHistoryView extends ViewPart implements SQLHistoryChangedListene
                 SQLHistoryElement sqlString = (SQLHistoryElement) tableItem.getData();
                 String text = TextUtil.getWrappedText(sqlString.getRawSQLString());
 
-                if (text == null || text.equals("")) {
+                if (text == null || text.equals("")) { //$NON-NLS-1$
                     _tipWidget = null;
                     return;
                 }
                 // Set off the table tooltip as we provide our own
-                _table.setToolTipText("");
+                _table.setToolTipText(""); //$NON-NLS-1$
                 _tipLabelText.setText(text);
                 _tipShell.pack();
                 setHoverLocation(_tipShell, _tipPosition, _tipLabelText.getBounds().height);

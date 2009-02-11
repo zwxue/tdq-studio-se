@@ -28,10 +28,10 @@ import net.sourceforge.sqlexplorer.parsers.scp.StructuredCommentParser.CommandTy
 	public UndefCommand(StructuredCommentParser parser, Token comment, Tokenizer tokenizer, CharSequence data) throws ParserException {
 		super(parser, CommandType.UNDEF, comment, tokenizer, data);
 		if (tokens.size() != 1)
-			throw new StructuredCommentException("undef has extra text after the macro name", comment);
+			throw new StructuredCommentException("undef has extra text after the macro name", comment); //$NON-NLS-1$
 	}
 	
 	public String toString() {
-		return "undef " + tokens.get(0);
+		return "undef " + tokens.get(0); //$NON-NLS-1$
 	}
 }

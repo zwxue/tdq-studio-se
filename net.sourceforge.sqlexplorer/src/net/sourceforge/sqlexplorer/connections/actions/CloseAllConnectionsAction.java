@@ -40,8 +40,8 @@ import org.eclipse.ui.IViewActionDelegate;
 public class CloseAllConnectionsAction extends AbstractConnectionTreeAction implements IViewActionDelegate {
 
     public CloseAllConnectionsAction() {
-		super("ConnectionsView.Actions.CloseAllConnections", "ConnectionsView.Actions.CloseAllConnectionsToolTip", "Images.CloseAllConnsIcon");
-		setDisabledImageDescriptor(ImageUtil.getDescriptor("Images.DisabledCloseAllConnsIcon"));
+		super("ConnectionsView.Actions.CloseAllConnections", "ConnectionsView.Actions.CloseAllConnectionsToolTip", "Images.CloseAllConnsIcon"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		setDisabledImageDescriptor(ImageUtil.getDescriptor("Images.DisabledCloseAllConnsIcon")); //$NON-NLS-1$
 	}
 
     /*
@@ -53,9 +53,9 @@ public class CloseAllConnectionsAction extends AbstractConnectionTreeAction impl
     	boolean confirm = SQLExplorerPlugin.getDefault().getPluginPreferences().getBoolean(IConstants.CONFIRM_BOOL_CLOSE_ALL_CONNECTIONS);
     	if (confirm) {
 	    	MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(getView().getSite().getShell(), 
-	    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Title"), 
-	    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Message"), 
-	    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Toggle"), 
+	    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Title"),  //$NON-NLS-1$
+	    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Message"),  //$NON-NLS-1$
+	    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Toggle"),  //$NON-NLS-1$
 	    			false, null, null);
 	    	
 	    	if (dialog.getToggleState() && dialog.getReturnCode() == IDialogConstants.YES_ID)

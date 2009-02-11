@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.TabItem;
 
 public class CloseSQLResultTab extends Action {
 
-	private ImageDescriptor img=ImageUtil.getDescriptor("Images.CloseIcon");
+	private ImageDescriptor img=ImageUtil.getDescriptor("Images.CloseIcon"); //$NON-NLS-1$
 	/**
 	 * Holds a reference to the TableItem we should close
 	 */

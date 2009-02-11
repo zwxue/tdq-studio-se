@@ -20,6 +20,7 @@ package net.sourceforge.sqlexplorer.plugin.editors;
 
 import java.util.ArrayList;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.INode;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.TableNode;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -542,7 +543,7 @@ class MouseClickListener implements KeyListener, MouseListener,
 
 					} catch (Exception e1) {
 						SQLExplorerPlugin
-								.error("Error selecting table", e1);
+								.error(Messages.getString("MouseClickListener.ErrorSelectTable"), e1); //$NON-NLS-1$
 					}
 				}
 			});

@@ -31,22 +31,22 @@ import net.sourceforge.squirrel_sql.fw.sql.TableColumnInfo;
 public class ColumnInfoTab extends AbstractDataSetTab {
 
     private static final String COLUMN_LABELS[] = {
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.ColumnName"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.DataType"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.TypeName"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.ColumnSize"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.DecimalDigits"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.Radix"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.IsNullAllowed"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.Remarks"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.DefaultValue"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.OctetLength"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.OrdinalPosition"),
-    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.IsNullable")
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.ColumnName"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.DataType"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.TypeName"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.ColumnSize"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.DecimalDigits"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.Radix"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.IsNullAllowed"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.Remarks"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.DefaultValue"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.OctetLength"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.OrdinalPosition"), //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.ColumnInfo.Col.IsNullable") //$NON-NLS-1$
     };
     
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.ColumnInfo");
+        return Messages.getString("DatabaseDetailView.Tab.ColumnInfo"); //$NON-NLS-1$
     }
  
     public DataSet getDataSet() throws Exception {                
@@ -81,7 +81,7 @@ public class ColumnInfoTab extends AbstractDataSetTab {
             	row[i++] = col.getOrdinalPosition();
             	row[i++] = col.isNullable();
             	if (i != COLUMN_LABELS.length)
-            		throw new RuntimeException("Internal error: ColumnInfoTab: wrong number of columns");
+            		throw new RuntimeException(Messages.getString("ColumnInfoTab.InternalError")); //$NON-NLS-1$
             }
             DataSet dataSet = new DataSet(COLUMN_LABELS, dataRows);
             return dataSet;
@@ -91,7 +91,7 @@ public class ColumnInfoTab extends AbstractDataSetTab {
     }
 
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.ColumnInfo.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.ColumnInfo.status") + " " + getNode().getQualifiedName();  //$NON-NLS-1$//$NON-NLS-2$
     }
     
 }

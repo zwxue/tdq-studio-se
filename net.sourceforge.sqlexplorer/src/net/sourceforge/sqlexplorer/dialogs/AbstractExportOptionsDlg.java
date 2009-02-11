@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Text;
 public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 
 	private static final ImageDescriptor _image = ImageUtil
-			.getDescriptor("Images.ExportIconLarge");
+			.getDescriptor("Images.ExportIconLarge"); //$NON-NLS-1$
 
 	private Combo uiCharset;
 
@@ -101,7 +101,7 @@ public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 	 */
 	public static final int OPT_RTRIM = 1 << 5;
 
-	private static final String[] DELIMS = { ";", "|", "\\t [TAB]", "," };
+	private static final String[] DELIMS = { ";", "|", "\\t [TAB]", "," }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	/**
 	 * Create new base dialog.
@@ -167,19 +167,19 @@ public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 
 		if ((flags & FMT_CHARSET) != 0 || (flags & FMT_DELIM) != 0 || (flags & FMT_NULL) != 0) {
 			Group fmtGroup = new Group(comp, SWT.SHADOW_ETCHED_IN);
-			fmtGroup.setText(Messages.getString("ExportDialog.group.format"));
+			fmtGroup.setText(Messages.getString("ExportDialog.group.format")); //$NON-NLS-1$
 			fmtGroup.setLayout(new GridLayout(2, false));
 			int i = 0, def = 0;
 
 			if ((flags & FMT_CHARSET) != 0) {
 				l = new Label(fmtGroup, SWT.NONE);
-				l.setText(Messages.getString("ExportDialog.format.cs"));
+				l.setText(Messages.getString("ExportDialog.format.cs")); //$NON-NLS-1$
 				uiCharset = new Combo(fmtGroup, SWT.READ_ONLY);
 				SortedMap m = Charset.availableCharsets();
 				for (Iterator it = m.keySet().iterator(); it.hasNext(); i++) {
 					Charset cs = (Charset) m.get(it.next());
 					uiCharset.add(cs.displayName());
-					if (cs.displayName().toLowerCase().equals("utf-8"))
+					if (cs.displayName().toLowerCase().equals("utf-8")) //$NON-NLS-1$
 						def = i;
 				}
 				uiCharset.select(def);
@@ -187,7 +187,7 @@ public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 
 			if ((flags & FMT_DELIM) != 0) {
 				l = new Label(fmtGroup, SWT.NONE);
-				l.setText(Messages.getString("ExportDialog.format.delim"));
+				l.setText(Messages.getString("ExportDialog.format.delim")); //$NON-NLS-1$
 				uiDelim = new Combo(fmtGroup, SWT.NONE);
 				for (i = 0, def = 0; i < DELIMS.length; i++) {
 					uiDelim.add(DELIMS[i]);
@@ -199,9 +199,9 @@ public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 			
 			if ((flags & FMT_NULL) != 0) {
 				l = new Label(fmtGroup, SWT.NONE);
-				l.setText(Messages.getString("ExportDialog.format.null"));
+				l.setText(Messages.getString("ExportDialog.format.null")); //$NON-NLS-1$
 				uiNullValue = new Text(fmtGroup, SWT.SINGLE | SWT.BORDER | SWT.FILL);
-				uiNullValue.setText("<null>");
+				uiNullValue.setText("<null>"); //$NON-NLS-1$
 				uiNullValue.setLayoutData(new GridData(50, SWT.DEFAULT));
 			}
 		}
@@ -210,29 +210,29 @@ public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 				|| (flags & OPT_RTRIM) != 0) {
 			Group optionsGroup = new Group(comp, SWT.SHADOW_ETCHED_IN);
 			optionsGroup.setText(Messages
-					.getString("ExportDialog.group.options"));
+					.getString("ExportDialog.group.options")); //$NON-NLS-1$
 			optionsGroup.setLayout(new GridLayout(1, true));
 
 			if ((flags & OPT_HDR) != 0) {
 				uiIncHeaders = new Button(optionsGroup, SWT.CHECK);
 				uiIncHeaders.setText(Messages
-						.getString("ExportDialog.options.hdr"));
+						.getString("ExportDialog.options.hdr")); //$NON-NLS-1$
 				uiIncHeaders.setSelection(hdr);
 			}
 			if ((flags & OPT_QUOTE) != 0) {
 				uiQuoteText = new Button(optionsGroup, SWT.CHECK);
 				uiQuoteText.setText(Messages
-						.getString("ExportDialog.options.quote"));
+						.getString("ExportDialog.options.quote")); //$NON-NLS-1$
 			}
 			if ((flags & OPT_RTRIM) != 0) {
 				uiRtrim = new Button(optionsGroup, SWT.CHECK);
 				uiRtrim.setText(Messages
-						.getString("ExportDialog.options.rtrim"));
+						.getString("ExportDialog.options.rtrim")); //$NON-NLS-1$
 			}
 		}
 
 		Group fileGroup = new Group(comp, SWT.SHADOW_ETCHED_IN);
-		fileGroup.setText(Messages.getString("ExportDialog.group.file"));
+		fileGroup.setText(Messages.getString("ExportDialog.group.file")); //$NON-NLS-1$
 		fileGroup.setLayout(new GridLayout(2, false));
 
 		uiFile = new Text(fileGroup, SWT.BORDER | SWT.FILL | SWT.SINGLE);
@@ -248,7 +248,7 @@ public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 			}
 		});
 		Button choose = new Button(fileGroup, SWT.NONE);
-		choose.setText(Messages.getString("ExportDialog.file.choose"));
+		choose.setText(Messages.getString("ExportDialog.file.choose")); //$NON-NLS-1$
 		choose.addSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -281,7 +281,7 @@ public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 	private void sync() {
 		String filename = uiFile.getText();
 		if (filename == null || filename.trim().length() == 0)
-			setErrorMessage(Messages.getString("ExportDialog.error.file"));
+			setErrorMessage(Messages.getString("ExportDialog.error.file")); //$NON-NLS-1$
 		else
 			setErrorMessage(null);
 		Button ok = getButton(IDialogConstants.OK_ID);
@@ -329,8 +329,8 @@ public abstract class AbstractExportOptionsDlg extends TitleAreaDialog {
 	public String getDelimiter() {
 		if (delim == null)
 			return null;
-		if (delim.toLowerCase().startsWith("\\t"))
-			return "\t";
+		if (delim.toLowerCase().startsWith("\\t")) //$NON-NLS-1$
+			return "\t"; //$NON-NLS-1$
 		return delim;
 	}
 

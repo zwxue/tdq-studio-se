@@ -88,20 +88,20 @@ public class AboutDlg extends Dialog {
         TabFolder tabFolder = new TabFolder(parentComposite, SWT.NULL);
 
         TabItem tabItem1 = new TabItem(tabFolder, SWT.NULL);
-        tabItem1.setText(Messages.getString("AboutDialog.Tab.About"));
-        tabItem1.setToolTipText(Messages.getString("AboutDialog.Tab.AboutToolTip"));
+        tabItem1.setText(Messages.getString("AboutDialog.Tab.About")); //$NON-NLS-1$
+        tabItem1.setToolTipText(Messages.getString("AboutDialog.Tab.AboutToolTip")); //$NON-NLS-1$
 
         TabItem tabItem2 = new TabItem(tabFolder, SWT.NULL);
-        tabItem2.setText(Messages.getString("AboutDialog.Tab.Credits"));
-        tabItem2.setToolTipText(Messages.getString("AboutDialog.Tab.CreditsToolTip"));
+        tabItem2.setText(Messages.getString("AboutDialog.Tab.Credits")); //$NON-NLS-1$
+        tabItem2.setToolTipText(Messages.getString("AboutDialog.Tab.CreditsToolTip")); //$NON-NLS-1$
 
         TabItem tabItem3 = new TabItem(tabFolder, SWT.NULL);
-        tabItem3.setText(Messages.getString("AboutDialog.Tab.License"));
-        tabItem3.setToolTipText(Messages.getString("AboutDialog.Tab.LicenseToolTip"));
+        tabItem3.setText(Messages.getString("AboutDialog.Tab.License")); //$NON-NLS-1$
+        tabItem3.setToolTipText(Messages.getString("AboutDialog.Tab.LicenseToolTip")); //$NON-NLS-1$
         
         TabItem tabItem4 = new TabItem(tabFolder, SWT.NULL);
-        tabItem4.setText(Messages.getString("AboutDialog.Tab.System"));
-        tabItem4.setToolTipText(Messages.getString("AboutDialog.Tab.SystemToolTip"));
+        tabItem4.setText(Messages.getString("AboutDialog.Tab.System")); //$NON-NLS-1$
+        tabItem4.setToolTipText(Messages.getString("AboutDialog.Tab.SystemToolTip")); //$NON-NLS-1$
 
         new AboutItem(tabItem1, tabFolder);
         new CreditsItem(tabItem2, tabFolder);
@@ -130,13 +130,13 @@ class AboutItem {
 
     AboutItem(TabItem item, Composite parent) {
 
-        logoImage = ImageUtil.getImage("Images.Logo");
+        logoImage = ImageUtil.getImage("Images.Logo"); //$NON-NLS-1$
         
 
         parent.addDisposeListener(new DisposeListener() {
 
             public void widgetDisposed(DisposeEvent event) {
-                ImageUtil.disposeImage("Images.Logo");
+                ImageUtil.disposeImage("Images.Logo"); //$NON-NLS-1$
             }
         });
         
@@ -149,7 +149,7 @@ class AboutItem {
         cmp.setLayout(lay);
 
         Label lb = new Label(cmp, SWT.NULL);
-        lb.setText(Messages.getString("AboutDialog.About.copyright"));
+        lb.setText(Messages.getString("AboutDialog.About.copyright")); //$NON-NLS-1$
 
         GridData data = new GridData(GridData.VERTICAL_ALIGN_CENTER | GridData.CENTER);
         lb.setLayoutData(data);
@@ -169,7 +169,7 @@ class AboutItem {
         final Color imageBackgroundColor = new Color(parent.getDisplay(), 255, 255, 255);
         final Color fontColor = new Color(parent.getDisplay(), 102, 118, 145);
         
-        final String version = Messages.getString("AboutDialog.About.versionPrefix") + SQLExplorerPlugin.getDefault().getVersion();        
+        final String version = Messages.getString("AboutDialog.About.versionPrefix") + SQLExplorerPlugin.getDefault().getVersion();         //$NON-NLS-1$
         imgComposite.addPaintListener(new PaintListener() {
 
             public void paintControl(PaintEvent event) {
@@ -182,7 +182,7 @@ class AboutItem {
         });
 
         Link link = new Link(cmp, SWT.CENTER);
-        link.setText(Messages.getString("AboutDialog.About.url"));
+        link.setText(Messages.getString("AboutDialog.About.url")); //$NON-NLS-1$
         data = new GridData(SWT.FILL);
         
         
@@ -260,33 +260,33 @@ class CreditsItem {
         String separator = System.getProperty("line.separator"); //$NON-NLS-1$
 
         final String credits =    
-            "Developers (versions 3.5.0):" + separator +
-            " - John Spackman (Zenesis Limited - www.zenesis.com)" + separator + 
+            "Developers (versions 3.5.0):" + separator + //$NON-NLS-1$
+            " - John Spackman (Zenesis Limited - www.zenesis.com)" + separator +  //$NON-NLS-1$
             separator +              
-            "Developers (versions 3.0.0):" + separator +
-            " - Davy Vanherbergen" + separator + 
+            "Developers (versions 3.0.0):" + separator + //$NON-NLS-1$
+            " - Davy Vanherbergen" + separator +  //$NON-NLS-1$
             separator +              
-            "Developers (version 2.2.5 (never released)):" + separator +
-            " - Alexandre Luti Telles" + separator +
-            " - Davy Vanherbergen" + separator + 
+            "Developers (version 2.2.5 (never released)):" + separator + //$NON-NLS-1$
+            " - Alexandre Luti Telles" + separator + //$NON-NLS-1$
+            " - Davy Vanherbergen" + separator +  //$NON-NLS-1$
             separator +        
-            "Previous Developers (versions 2.2.3 and 2.2.4):" + separator +
-            " - Alexandre Luti Telles" + separator +            
-            " - Gert Wohlgemuth" + separator +            
+            "Previous Developers (versions 2.2.3 and 2.2.4):" + separator + //$NON-NLS-1$
+            " - Alexandre Luti Telles" + separator +             //$NON-NLS-1$
+            " - Gert Wohlgemuth" + separator +             //$NON-NLS-1$
             separator +        
-            "Other Contributors (versions 2.2.2 and before):" + separator +
-            " - Andrea Mazzolini (original version of JFacedb)" + separator +
-            " - Johan Compagner" + separator +
-            " - Jouneau Luc" + separator +
-            " - Stephen Schaub" + separator +
-            " - Chris Potter (Sybase plugin, Sql Server plugin)" + separator +
-            " - Joao Reis Belo (Sql Server plugin)" + separator + 
+            "Other Contributors (versions 2.2.2 and before):" + separator + //$NON-NLS-1$
+            " - Andrea Mazzolini (original version of JFacedb)" + separator + //$NON-NLS-1$
+            " - Johan Compagner" + separator + //$NON-NLS-1$
+            " - Jouneau Luc" + separator + //$NON-NLS-1$
+            " - Stephen Schaub" + separator + //$NON-NLS-1$
+            " - Chris Potter (Sybase plugin, Sql Server plugin)" + separator + //$NON-NLS-1$
+            " - Joao Reis Belo (Sql Server plugin)" + separator +  //$NON-NLS-1$
             separator +        
-            "The SQL stuff is based on SquirreL SQL (http://squirrel-sql.sourceforge.net)." + separator +
+            "The SQL stuff is based on SquirreL SQL (http://squirrel-sql.sourceforge.net)." + separator + //$NON-NLS-1$
             separator+
-            "SQLExplorer uses the following libraries too:" + separator +
-            " - NanoXML (http://NanoXML.sourceforge.net/) Java XML API" + separator +
-            " - log4j (http://jakarta.apache.org/log4j) Logging API" + separator;
+            "SQLExplorer uses the following libraries too:" + separator + //$NON-NLS-1$
+            " - NanoXML (http://NanoXML.sourceforge.net/) Java XML API" + separator + //$NON-NLS-1$
+            " - log4j (http://jakarta.apache.org/log4j) Logging API" + separator; //$NON-NLS-1$
 
         st.setText(credits);
         GridData data = new GridData(GridData.FILL_BOTH | GridData.VERTICAL_ALIGN_CENTER | GridData.CENTER);

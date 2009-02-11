@@ -42,7 +42,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class ExecSQLAction extends AbstractEditorAction {
 
-    private ImageDescriptor img = ImageUtil.getDescriptor("Images.ExecSQLIcon");
+    private ImageDescriptor img = ImageUtil.getDescriptor("Images.ExecSQLIcon"); //$NON-NLS-1$
 
     public ExecSQLAction(SQLEditor editor) {
 		super(editor);
@@ -53,11 +53,11 @@ public class ExecSQLAction extends AbstractEditorAction {
     }
 
     public String getText() {
-        return Messages.getString("SQLEditor.Actions.Execute");
+        return Messages.getString("SQLEditor.Actions.Execute"); //$NON-NLS-1$
     }
 
     public String getToolTipText() {
-        return Messages.getString("SQLEditor.Actions.Execute.ToolTip");
+        return Messages.getString("SQLEditor.Actions.Execute.ToolTip"); //$NON-NLS-1$
     }
 
     public void run() {
@@ -67,12 +67,12 @@ public class ExecSQLAction extends AbstractEditorAction {
             if (iMax == null)
     	        _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
     	            public void run() {
-    	                MessageDialog.openError(_editor.getSite().getShell(), Messages.getString("SQLEditor.Error.InvalidRowLimit.Title"), Messages.getString("SQLEditor.Error.InvalidRowLimit"));
+    	                MessageDialog.openError(_editor.getSite().getShell(), Messages.getString("SQLEditor.Error.InvalidRowLimit.Title"), Messages.getString("SQLEditor.Error.InvalidRowLimit")); //$NON-NLS-1$ //$NON-NLS-2$
     	            }
     	        });
             final int maxresults = (iMax == null) ? 0 : iMax.intValue();
             if (maxresults < 0)
-                throw new Exception(Messages.getString("SQLEditor.LimitRows.Error"));
+                throw new Exception(Messages.getString("SQLEditor.LimitRows.Error")); //$NON-NLS-1$
 
             final ExecSQLAction action = this;
 
@@ -86,9 +86,9 @@ public class ExecSQLAction extends AbstractEditorAction {
                     public void run() {
 
                         MessageDialogWithToggle dlg = MessageDialogWithToggle.openOkCancelConfirm(_editor.getSite().getShell(),
-                                Messages.getString("SQLEditor.LimitRows.ConfirmNoLimit.Title"),
-                                Messages.getString("SQLEditor.LimitRows.ConfirmNoLimit.Message"),
-                                Messages.getString("SQLEditor.LimitRows.ConfirmNoLimit.Toggle"),
+                                Messages.getString("SQLEditor.LimitRows.ConfirmNoLimit.Title"), //$NON-NLS-1$
+                                Messages.getString("SQLEditor.LimitRows.ConfirmNoLimit.Message"), //$NON-NLS-1$
+                                Messages.getString("SQLEditor.LimitRows.ConfirmNoLimit.Toggle"), //$NON-NLS-1$
                                 false, null, null);
                         if (dlg.getReturnCode() == IDialogConstants.OK_ID) {
                         	if (dlg.getToggleState())
@@ -107,7 +107,7 @@ public class ExecSQLAction extends AbstractEditorAction {
             _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 
                 public void run() {
-                    MessageDialog.openError(_editor.getSite().getShell(), Messages.getString("SQLResultsView.Error.Title"), e.getClass().getCanonicalName() + ": " + e.getMessage());
+                    MessageDialog.openError(_editor.getSite().getShell(), Messages.getString("SQLResultsView.Error.Title"), e.getClass().getCanonicalName() + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             });
         }
@@ -124,7 +124,7 @@ public class ExecSQLAction extends AbstractEditorAction {
         }catch(final ParserException e) {
             _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
                 public void run() {
-                    MessageDialog.openError(_editor.getSite().getShell(), Messages.getString("SQLResultsView.Error.Title"), e.getMessage());
+                    MessageDialog.openError(_editor.getSite().getShell(), Messages.getString("SQLResultsView.Error.Title"), e.getMessage()); //$NON-NLS-1$
                 }
             });
         }

@@ -111,7 +111,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
     private static final Color SASH_COLOR = IConstants.TAB_BORDER_COLOR;
 
     // Typical file extensions
-    public static final String[] SUPPORTED_FILETYPES = new String[] { "*.sql", "*.txt", "*.*" };
+    public static final String[] SUPPORTED_FILETYPES = new String[] { "*.sql", "*.txt", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     // The Session node from the Connections view
     private Session session;
@@ -264,10 +264,10 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
                 toolBar.onEditorSessionChanged(session);
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Couldn't create text editor", e);
-            MessageDialog.openError(getSite().getShell(), Messages.getString("SQLEditor.Init.CreateTextEditor"), e.getClass()
+            SQLExplorerPlugin.error(Messages.getString("SQLEditor.NotCreatTextEditor"), e); //$NON-NLS-1$
+            MessageDialog.openError(getSite().getShell(), Messages.getString("SQLEditor.Init.CreateTextEditor"), e.getClass() //$NON-NLS-1$
                     .getCanonicalName()
-                    + ": " + e.getMessage());
+                    + ": " + e.getMessage()); //$NON-NLS-1$
         }
     }
 
@@ -369,7 +369,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
                 new Color(null, 175, 201, 246), IConstants.TAB_BORDER_COLOR }, new int[] { 25, 50, 75 }, true);
 
         messagesTab = new CTabItem(tabFolder, SWT.NONE);
-        messagesTab.setText(Messages.getString("SQLEditor.Results.Messages.Caption"));
+        messagesTab.setText(Messages.getString("SQLEditor.Results.Messages.Caption")); //$NON-NLS-1$
 
         messagesTable = new Table(tabFolder, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
         messagesTab.setControl(messagesTable);
@@ -386,19 +386,19 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         });
 
         TableColumn col = new TableColumn(messagesTable, SWT.NONE);
-        col.setText(Messages.getString("SQLEditor.Results.Messages.Status"));
+        col.setText(Messages.getString("SQLEditor.Results.Messages.Status")); //$NON-NLS-1$
         col.pack();
 
         col = new TableColumn(messagesTable, SWT.NONE);
-        col.setText(Messages.getString("SQLEditor.Results.Messages.Location"));
+        col.setText(Messages.getString("SQLEditor.Results.Messages.Location")); //$NON-NLS-1$
         col.pack();
 
         col = new TableColumn(messagesTable, SWT.NONE);
-        col.setText(Messages.getString("SQLEditor.Results.Messages.SQL"));
+        col.setText(Messages.getString("SQLEditor.Results.Messages.SQL")); //$NON-NLS-1$
         col.pack();
 
         col = new TableColumn(messagesTable, SWT.NONE);
-        col.setText(Messages.getString("SQLEditor.Results.Messages.Text"));
+        col.setText(Messages.getString("SQLEditor.Results.Messages.Text")); //$NON-NLS-1$
         col.pack();
 
         tabFolder.setSelection(messagesTab);
@@ -524,14 +524,14 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
             // If we're supposed to ask the user...
             if (confirm == IConstants.Confirm.ASK) {
                 // Build up the message to ask
-                String msg = Messages.getString("Confirm.SaveInsideProject.Intro") + "\n\n";
+                String msg = Messages.getString("Confirm.SaveInsideProject.Intro") + "\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
                 if (!haveProjects)
-                    msg = msg + Messages.getString("Confirm.SaveInsideProject.NoProjectsConfigured") + "\n\n";
-                msg = msg + Messages.getString("Confirm.SaveInsideProject.SaveInProject");
+                    msg = msg + Messages.getString("Confirm.SaveInsideProject.NoProjectsConfigured") + "\n\n"; //$NON-NLS-1$ //$NON-NLS-2$
+                msg = msg + Messages.getString("Confirm.SaveInsideProject.SaveInProject"); //$NON-NLS-1$
 
                 // Ask them
                 MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoCancelQuestion(getSite().getShell(), Messages
-                        .getString("SQLEditor.SaveAsDialog.Title"), msg, Messages.getString("Confirm.SaveInsideProject.Toggle"),
+                        .getString("SQLEditor.SaveAsDialog.Title"), msg, Messages.getString("Confirm.SaveInsideProject.Toggle"), //$NON-NLS-1$ //$NON-NLS-2$
                         false, null, null);
                 if (dialog.getReturnCode() == IDialogConstants.CANCEL_ID)
                     return false;
@@ -552,8 +552,8 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         // Saving inside a project - convert SQLEditorInput into a Resource by letting TextEditor do the work for us
         if (saveInsideProject) {
             if (!haveProjects) {
-                MessageDialog.openError(getSite().getShell(), Messages.getString("Confirm.SaveInsideProject.Title"), Messages
-                        .getString("Confirm.SaveInsideProject.CreateAProject"));
+                MessageDialog.openError(getSite().getShell(), Messages.getString("Confirm.SaveInsideProject.Title"), Messages //$NON-NLS-1$
+                        .getString("Confirm.SaveInsideProject.CreateAProject")); //$NON-NLS-1$
                 return false;
             }
             if (input instanceof SQLEditorInput)
@@ -580,10 +580,10 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
             try {
                 if (file == null || saveAs) {
                     FileDialog dialog = new FileDialog(getSite().getShell(), SWT.SAVE);
-                    dialog.setText(Messages.getString("SQLEditor.SaveAsDialog.Title"));
+                    dialog.setText(Messages.getString("SQLEditor.SaveAsDialog.Title")); //$NON-NLS-1$
                     dialog.setFilterExtensions(SUPPORTED_FILETYPES);
                     dialog.setFilterNames(SUPPORTED_FILETYPES);
-                    dialog.setFileName("*.sql");
+                    dialog.setFileName("*.sql"); //$NON-NLS-1$
 
                     String path = dialog.open();
                     if (path == null)
@@ -601,8 +601,8 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
                 setTitleToolTip(input.getToolTipText());
 
             } catch (IOException e) {
-                SQLExplorerPlugin.error("Couldn't save sql", e);
-                MessageDialog.openError(getSite().getShell(), Messages.getString("SQLEditor.SaveAsDialog.Error"), e.getMessage());
+                SQLExplorerPlugin.error(Messages.getString("SQLEditor.NotSaveSQL"), e); //$NON-NLS-1$
+                MessageDialog.openError(getSite().getShell(), Messages.getString("SQLEditor.SaveAsDialog.Error"), e.getMessage()); //$NON-NLS-1$
                 return false;
             }
 
@@ -922,7 +922,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         }
         sql = sb.toString();
 
-        return sql != null ? sql : "";
+        return sql != null ? sql : ""; //$NON-NLS-1$
     }
 
     /**

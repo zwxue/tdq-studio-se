@@ -34,7 +34,7 @@ public class PrimaryKeysTab extends AbstractDataSetTab {
     
     
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.PrimaryKeys");
+        return Messages.getString("DatabaseDetailView.Tab.PrimaryKeys"); //$NON-NLS-1$
     }
  
     public DataSet getDataSet() throws Exception {                
@@ -59,6 +59,6 @@ public class PrimaryKeysTab extends AbstractDataSetTab {
     }
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.ColumnInfo.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.ColumnInfo.status") + " " + getNode().getQualifiedName(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

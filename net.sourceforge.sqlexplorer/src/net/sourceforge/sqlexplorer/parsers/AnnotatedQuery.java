@@ -67,7 +67,7 @@ public class AnnotatedQuery extends AbstractQuery {
 	 */
 	@Override
 	public String toString() {
-		return Integer.toString(lineNo) + ": " + buffer.toString();
+		return Integer.toString(lineNo) + ": " + buffer.toString(); //$NON-NLS-1$
 	}
 
 	/**

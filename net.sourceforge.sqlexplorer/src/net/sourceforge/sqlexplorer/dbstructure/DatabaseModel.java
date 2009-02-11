@@ -49,7 +49,7 @@ public class DatabaseModel implements INode {
      * @param pm
      */
     public DatabaseModel(MetaDataSession session) throws SQLException {
-        _root = new DatabaseNode(Messages.getString("Database_1"), session);
+        _root = new DatabaseNode(Messages.getString("Database_1"), session); //$NON-NLS-1$
 
     }
 
@@ -146,7 +146,7 @@ public class DatabaseModel implements INode {
      */
     public String getQualifiedName() {
 
-        return "databaseModel";
+        return "databaseModel"; //$NON-NLS-1$
     }
 
 
@@ -189,7 +189,7 @@ public class DatabaseModel implements INode {
      */
     public String getType() {
 
-        return "model";
+        return "model"; //$NON-NLS-1$
     }
 
 

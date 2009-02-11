@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Driver;
 import java.util.HashMap;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 /**
@@ -41,7 +42,7 @@ public final class DatabaseProductFactory {
 
 	// Name of the accessor function that returns a platform-specific singleton
 	//	instance of DatabaseProduct
-	private static final String GET_PRODUCT_INSTANCE = "getProductInstance";
+	private static final String GET_PRODUCT_INSTANCE = "getProductInstance"; //$NON-NLS-1$
 	
 	// We guarantee to always be able to provide an instance; this is the one we
 	//	provide if none has been implemented for the given database platform
@@ -79,7 +80,7 @@ public final class DatabaseProductFactory {
 		// This gets us, eg, "oracle" or "mssql"
         //String productName = node.getRoot().getDatabaseProductName().toLowerCase().trim();
 		String str = driver.getUrl();
-		String[] strs = (str != null) ? str.split(":") : null;
+		String[] strs = (str != null) ? str.split(":") : null; //$NON-NLS-1$
 		String productName = (strs != null && strs.length > 1) ? strs[1] : null;
         DatabaseProduct result = productName != null ? instances.get(productName) : null;
         if (result != null)
@@ -88,8 +89,8 @@ public final class DatabaseProductFactory {
         // Insert the database name just before our package name, eg so we get
         //	net.sourceforge.sqlexplorer.database-platform-name.dbproduct.DatabaseProduct
         StringBuffer sb = new StringBuffer(DatabaseProduct.class.getName());
-        int pos = sb.lastIndexOf(".");
-        pos = sb.lastIndexOf(".", pos - 1);
+        int pos = sb.lastIndexOf("."); //$NON-NLS-1$
+        pos = sb.lastIndexOf(".", pos - 1); //$NON-NLS-1$
         sb.insert(pos, '.' + productName);
         String className = sb.toString();
         
@@ -114,7 +115,7 @@ public final class DatabaseProductFactory {
         	ex = e;
         }
         if (ex != null)
-        	SQLExplorerPlugin.error("Could not instantiate DatabasePlatform", ex);
+        	SQLExplorerPlugin.error(Messages.getString("DatabaseProductFactory.NotInstantiateDatabasePlatform"), ex); //$NON-NLS-1$
 
         return null;
 	}

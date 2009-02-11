@@ -71,7 +71,7 @@ public class BasicQueryParser extends AbstractQueryParser {
             _querySeparator = querySeparator.substring(0, 1);
         } else {
             // failsave..
-            _querySeparator = ";";
+            _querySeparator = ";"; //$NON-NLS-1$
         }
         
         if (alternateSeparator != null && alternateSeparator.trim().length() > 0) {
@@ -87,7 +87,7 @@ public class BasicQueryParser extends AbstractQueryParser {
         }
         
         if (sql == null)
-        	sql = "";
+        	sql = ""; //$NON-NLS-1$
         this.sql = sql;
 	}
 
@@ -185,7 +185,7 @@ public class BasicQueryParser extends AbstractQueryParser {
         _sNextQuery = doParse();
         if (sReturnQuery == null)
         	return null;
-        if (sReturnQuery.startsWith("--"))
+        if (sReturnQuery.startsWith("--")) //$NON-NLS-1$
         	return nextQuery();
     	
         return new BasicQuery(sReturnQuery, thisLineNo);
@@ -288,7 +288,7 @@ public class BasicQueryParser extends AbstractQueryParser {
                 }
             } else {
                 String sNextQuery = _sQuerys;
-                _sQuerys = "";
+                _sQuerys = ""; //$NON-NLS-1$
                 if (_solComment != null && sNextQuery.startsWith(_solComment)) {
                     return doParse();
                 }
@@ -306,7 +306,7 @@ public class BasicQueryParser extends AbstractQueryParser {
     private String prepareSQL(String sql) {
         StringBuffer results = new StringBuffer(1024);
 
-        for (StringTokenizer tok = new StringTokenizer(sql.trim(), "\n", false); tok.hasMoreTokens();) {
+        for (StringTokenizer tok = new StringTokenizer(sql.trim(), "\n", false); tok.hasMoreTokens();) { //$NON-NLS-1$
             String line = tok.nextToken();
             if (!line.startsWith(_solComment)) {
                 results.append(line).append('\n');

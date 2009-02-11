@@ -10,7 +10,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 public class AutoCommitAction extends AbstractConnectionTreeAction {
 
     public AutoCommitAction() {
-		super("SQLEditor.Options.AutoCommit", "SQLEditor.Options.AutoCommit.Tooltip", "Images.CommitIcon", AS_CHECK_BOX);
+		super("SQLEditor.Options.AutoCommit", "SQLEditor.Options.AutoCommit.Tooltip", "Images.CommitIcon", AS_CHECK_BOX); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
     public void run() {

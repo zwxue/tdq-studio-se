@@ -35,14 +35,14 @@ import org.eclipse.swt.widgets.Display;
 public class DeleteAction extends AbstractConnectionTreeAction {
 
     public DeleteAction() {
-    	super("ConnectionsView.Actions.Delete", "ConnectionsView.Actions.DeleteToolTip", "Images.Delete");
+    	super("ConnectionsView.Actions.Delete", "ConnectionsView.Actions.DeleteToolTip", "Images.Delete"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     public void run() {
 
         boolean okToDelete = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(),
-                Messages.getString("ConnectionsView.ConfirmDelete.WindowTitle"),
-                Messages.getString("ConnectionsView.ConfirmDelete.Message"));
+                Messages.getString("ConnectionsView.ConfirmDelete.WindowTitle"), //$NON-NLS-1$
+                Messages.getString("ConnectionsView.ConfirmDelete.Message")); //$NON-NLS-1$
 
         if (!okToDelete)
             return;

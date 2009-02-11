@@ -45,7 +45,7 @@ public class DatabaseNode extends AbstractNode {
 
     private List _childNames = new ArrayList();
 
-    private String _databaseProductName = "";
+    private String _databaseProductName = ""; //$NON-NLS-1$
 
     private String[] _filterExpressions;
 
@@ -53,7 +53,7 @@ public class DatabaseNode extends AbstractNode {
 
     private boolean _supportsSchemas = false;
 
-    private String _databaseVersion = "";
+    private String _databaseVersion = ""; //$NON-NLS-1$
     
 
     /**
@@ -64,7 +64,7 @@ public class DatabaseNode extends AbstractNode {
      */
     public DatabaseNode(String name, MetaDataSession session) throws SQLException {
     	super(name, session);
-    	setImageKey("Images.DatabaseIcon");
+    	setImageKey("Images.DatabaseIcon"); //$NON-NLS-1$
         
         try {
             SQLDatabaseMetaData metadata = _session.getMetaData();
@@ -78,15 +78,15 @@ public class DatabaseNode extends AbstractNode {
             _databaseProductName = metadata.getDatabaseProductName();
             try { // MOD scorreia 2008-10-23 surround with try/catch to caught error when the getDatabaseMajorVersion()
                 // method is not implemented by the driver (e.g. for sybase).
-                _databaseVersion = " [v" + metadata.getJDBCMetaData().getDatabaseMajorVersion() + "." 
-                    + metadata.getJDBCMetaData().getDatabaseMinorVersion() + "]";
+                _databaseVersion = " [v" + metadata.getJDBCMetaData().getDatabaseMajorVersion() + "."   //$NON-NLS-1$//$NON-NLS-2$
+                    + metadata.getJDBCMetaData().getDatabaseMinorVersion() + "]"; //$NON-NLS-1$
             } catch (Exception e) {
-                SQLExplorerPlugin.error("Cannot get database version", e);
-                _databaseVersion = " undefined ";
+                SQLExplorerPlugin.error(Messages.getString("DatabaseNode.CannotGetDatabaseVersion"), e); //$NON-NLS-1$
+                _databaseVersion = " undefined "; //$NON-NLS-1$
             }
             
         } catch (AbstractMethodError e) {
-            SQLExplorerPlugin.error("Error loading database product name.", e);
+            SQLExplorerPlugin.error(Messages.getString("DatabaseNode.ErrorLoadDatabaseName"), e); //$NON-NLS-1$
         }
     }
 
@@ -133,9 +133,9 @@ public class DatabaseNode extends AbstractNode {
     public String getLabelText() {
 
         if (_session.getUser().getAlias().isFiltered()) {
-            return _databaseProductName + " " + _databaseVersion + " " + Messages.getString("DatabaseStructureView.filteredPostfix");
+            return _databaseProductName + " " + _databaseVersion + " " + Messages.getString("DatabaseStructureView.filteredPostfix"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         } else {
-            return _databaseProductName + " " + _databaseVersion;
+            return _databaseProductName + " " + _databaseVersion; //$NON-NLS-1$
         }
     }
 
@@ -166,7 +166,7 @@ public class DatabaseNode extends AbstractNode {
      */
     public String getType() {
 
-        return "database";
+        return "database"; //$NON-NLS-1$
     }
 
 
@@ -197,8 +197,8 @@ public class DatabaseNode extends AbstractNode {
         for (int i = 0; i < _filterExpressions.length; i++) {
 
             String regex = _filterExpressions[i].trim();
-            regex = TextUtil.replaceChar(regex, '?', ".");
-            regex = TextUtil.replaceChar(regex, '*', ".*");
+            regex = TextUtil.replaceChar(regex, '?', "."); //$NON-NLS-1$
+            regex = TextUtil.replaceChar(regex, '*', ".*"); //$NON-NLS-1$
 
             if (regex.length() != 0 && name.matches(regex)) {
                 // we have a match, exclude node..
@@ -223,7 +223,7 @@ public class DatabaseNode extends AbstractNode {
 
         String metaFilterExpression = _session.getUser().getAlias().getSchemaFilterExpression();
         if (metaFilterExpression != null && metaFilterExpression.trim().length() != 0) {
-            _filterExpressions = metaFilterExpression.split(",");
+            _filterExpressions = metaFilterExpression.split(","); //$NON-NLS-1$
         } else {
             _filterExpressions = null;
         }
@@ -261,14 +261,14 @@ public class DatabaseNode extends AbstractNode {
             } 
             if (!_supportsCatalogs && !_supportsSchemas) {
 
-                addChildNode(new CatalogNode(this, Messages.getString("NoCatalog_2"), _session));
+                addChildNode(new CatalogNode(this, Messages.getString("NoCatalog_2"), _session)); //$NON-NLS-1$
             }
 
             // load extension nodes
             String databaseProductName = _databaseProductName.toLowerCase().trim();
 
             IExtensionRegistry registry = Platform.getExtensionRegistry();
-            IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "node");
+            IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "node"); //$NON-NLS-1$ //$NON-NLS-2$
             IExtension[] extensions = point.getExtensions();
 
             for (int i = 0; i < extensions.length; i++) {
@@ -282,13 +282,13 @@ public class DatabaseNode extends AbstractNode {
 
                         // include only nodes that are attachted to the root
                         // node..
-                        String parent = ces[j].getAttribute("parent-node");
-                        if (!parent.equalsIgnoreCase("root")) {
+                        String parent = ces[j].getAttribute("parent-node"); //$NON-NLS-1$
+                        if (!parent.equalsIgnoreCase("root")) { //$NON-NLS-1$
                             continue;
                         }
 
                         boolean isValidProduct = false;
-                        String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
+                        String[] validProducts = ces[j].getAttribute("database-product-name").split(",");  //$NON-NLS-1$//$NON-NLS-2$
 
                         // include only nodes valid for this database
                         for (int k = 0; k < validProducts.length; k++) {
@@ -299,12 +299,12 @@ public class DatabaseNode extends AbstractNode {
                                 continue;
                             }
 
-                            if (product.equals("*")) {
+                            if (product.equals("*")) { //$NON-NLS-1$
                                 isValidProduct = true;
                                 break;
                             }
 
-                            String regex = TextUtil.replaceChar(product, '*', ".*");
+                            String regex = TextUtil.replaceChar(product, '*', ".*"); //$NON-NLS-1$
                             if (databaseProductName.matches(regex)) {
                                 isValidProduct = true;
                                 break;
@@ -316,9 +316,9 @@ public class DatabaseNode extends AbstractNode {
                             continue;
                         }
 
-                        String type = ces[j].getAttribute("table-type").trim();
+                        String type = ces[j].getAttribute("table-type").trim(); //$NON-NLS-1$
 
-                        AbstractNode childNode = (AbstractNode) ces[j].createExecutableExtension("class");
+                        AbstractNode childNode = (AbstractNode) ces[j].createExecutableExtension("class"); //$NON-NLS-1$
                         childNode.setParent(this);
                         childNode.setSession(_session);
                         childNode.setType(type);
@@ -326,13 +326,13 @@ public class DatabaseNode extends AbstractNode {
                         addChildNode(childNode);
 
                     } catch (Throwable ex) {
-                        SQLExplorerPlugin.error("Could not create child node", ex);
+                        SQLExplorerPlugin.error(Messages.getString("DatabaseNode.NotCreateChildNode"), ex); //$NON-NLS-1$
                     }
                 }
             }
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Error loading children", e);
+            SQLExplorerPlugin.error(Messages.getString("DatabaseNode.ErrorLoadChildren"), e); //$NON-NLS-1$
         }
 
     }

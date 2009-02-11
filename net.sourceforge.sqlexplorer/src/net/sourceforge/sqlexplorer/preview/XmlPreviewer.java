@@ -135,7 +135,7 @@ public class XmlPreviewer implements Previewer {
 			 * @see net.sourceforge.sqlexplorer.preview.PreviewerFactory.Resolver#canAcceptMimeType(java.lang.String)
 			 */
 			public boolean canAcceptMimeType(String mimeType) {
-				return mimeType.equals("text/xml");
+				return mimeType.equals("text/xml"); //$NON-NLS-1$
 			}
 
 			/* (non-JavaDoc)

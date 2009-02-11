@@ -39,7 +39,7 @@ public class ExplainAction2 extends AbstractEditorAction {
     }
 
     public String getText() {
-        return Messages.getString("oracle.editor.actions.explain");
+        return Messages.getString("oracle.editor.actions.explain"); //$NON-NLS-1$
     }
 
     public String getToolTipText() {
@@ -65,14 +65,14 @@ public class ExplainAction2 extends AbstractEditorAction {
             createPlanTable = false;
             notFoundTable = true;
             try {
-                rs = st.executeQuery("select statement_id from plan_table");
+                rs = st.executeQuery("select statement_id from plan_table"); //$NON-NLS-1$
                 notFoundTable = false;
                 rs.close();
                 rs = null;
             } catch (SQLException _ex) {
                 createPlanTable = MessageDialog.openQuestion(null, Messages
-                        .getString("oracle.editor.actions.explain.notFound.Title"), Messages
-                        .getString("oracle.editor.actions.explain.notFound"));
+                        .getString("oracle.editor.actions.explain.notFound.Title"), Messages //$NON-NLS-1$
+                        .getString("oracle.editor.actions.explain.notFound")); //$NON-NLS-1$
             }
             st.close();
             st = null;
@@ -81,13 +81,13 @@ public class ExplainAction2 extends AbstractEditorAction {
                     try {
                         rs.close();
                     } catch (SQLException e) {
-                        SQLExplorerPlugin.error("Cannot close result set", e);
+                        SQLExplorerPlugin.error(Messages.getString("ExplainAction2.NotCloseResultSet"), e); //$NON-NLS-1$
                     }
                 if (stmt != null)
                     try {
                         stmt.close();
                     } catch (SQLException e) {
-                        SQLExplorerPlugin.error("Cannot close statement", e);
+                        SQLExplorerPlugin.error(Messages.getString("ExplainAction2.NotCloseStatement"), e); //$NON-NLS-1$
                     }
                 if (connection != null)
                     session.releaseConnection(connection);
@@ -97,7 +97,7 @@ public class ExplainAction2 extends AbstractEditorAction {
                 if (notFoundTable && createPlanTable) {
                     st = connection.createStatement();
                     st
-                            .execute("CREATE TABLE PLAN_TABLE (  STATEMENT_ID                    VARCHAR2(30), TIMESTAMP                       DATE,  REMARKS                         VARCHAR2(80),  OPERATION                       VARCHAR2(30),  OPTIONS                         VARCHAR2(30),  OBJECT_NODE                     VARCHAR2(128),  OBJECT_OWNER                    VARCHAR2(30),  OBJECT_NAME                     VARCHAR2(30),  OBJECT_INSTANCE                 NUMBER(38),  OBJECT_TYPE                     VARCHAR2(30),  OPTIMIZER                       VARCHAR2(255),  SEARCH_COLUMNS                  NUMBER,  ID                              NUMBER(38),  PARENT_ID                       NUMBER(38),  POSITION                        NUMBER(38),  COST                            NUMBER(38),  CARDINALITY                     NUMBER(38),  BYTES                           NUMBER(38),  OTHER_TAG                       VARCHAR2(255),  PARTITION_START                 VARCHAR2(255),  PARTITION_STOP                  VARCHAR2(255),  PARTITION_ID                    NUMBER(38),  OTHER                           LONG,  DISTRIBUTION                    VARCHAR2(30))");
+                            .execute("CREATE TABLE PLAN_TABLE (  STATEMENT_ID                    VARCHAR2(30), TIMESTAMP                       DATE,  REMARKS                         VARCHAR2(80),  OPERATION                       VARCHAR2(30),  OPTIONS                         VARCHAR2(30),  OBJECT_NODE                     VARCHAR2(128),  OBJECT_OWNER                    VARCHAR2(30),  OBJECT_NAME                     VARCHAR2(30),  OBJECT_INSTANCE                 NUMBER(38),  OBJECT_TYPE                     VARCHAR2(30),  OPTIMIZER                       VARCHAR2(255),  SEARCH_COLUMNS                  NUMBER,  ID                              NUMBER(38),  PARENT_ID                       NUMBER(38),  POSITION                        NUMBER(38),  COST                            NUMBER(38),  CARDINALITY                     NUMBER(38),  BYTES                           NUMBER(38),  OTHER_TAG                       VARCHAR2(255),  PARTITION_START                 VARCHAR2(255),  PARTITION_STOP                  VARCHAR2(255),  PARTITION_ID                    NUMBER(38),  OTHER                           LONG,  DISTRIBUTION                    VARCHAR2(30))"); //$NON-NLS-1$
                     st.close();
                     st = null;
                 }
@@ -106,21 +106,21 @@ public class ExplainAction2 extends AbstractEditorAction {
                 qt.parse();
                 (new ExplainExecution(_editor, qt)).schedule();
             } catch (SQLException e) {
-                SQLExplorerPlugin.error("Error creating explain plan", e);
+                SQLExplorerPlugin.error(Messages.getString("ExplainAction2.ErrorCreatPlan"), e); //$NON-NLS-1$
             } catch (ParserException e) {
-                SQLExplorerPlugin.error("Cannot parse query", e);
+                SQLExplorerPlugin.error(Messages.getString("ExplainAction2.NotParseQuery"), e); //$NON-NLS-1$
             }
             if (rs != null)
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Cannot close result set", e);
+                    SQLExplorerPlugin.error(Messages.getString("ExplainAction2.NotCloseResultSet"), e); //$NON-NLS-1$
                 }
             if (stmt != null)
                 try {
                     stmt.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Cannot close statement", e);
+                    SQLExplorerPlugin.error(Messages.getString("ExplainAction2.NotCloseState"), e); //$NON-NLS-1$
                 }
             if (connection != null)
                 session.releaseConnection(connection);
@@ -128,13 +128,13 @@ public class ExplainAction2 extends AbstractEditorAction {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Cannot close result set", e);
+                    SQLExplorerPlugin.error(Messages.getString("ExplainAction2.NotCloseResultSet"), e); //$NON-NLS-1$
                 }
             if (stmt != null)
                 try {
                     stmt.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Cannot close statement", e);
+                    SQLExplorerPlugin.error(Messages.getString("ExplainAction2.NotCloseStatement"), e); //$NON-NLS-1$
                 }
             if (connection != null)
                 session.releaseConnection(connection);
@@ -142,5 +142,5 @@ public class ExplainAction2 extends AbstractEditorAction {
         }
     }
 
-    static final String createPlanTableScript = "CREATE TABLE PLAN_TABLE (  STATEMENT_ID                    VARCHAR2(30), TIMESTAMP                       DATE,  REMARKS                         VARCHAR2(80),  OPERATION                       VARCHAR2(30),  OPTIONS                         VARCHAR2(30),  OBJECT_NODE                     VARCHAR2(128),  OBJECT_OWNER                    VARCHAR2(30),  OBJECT_NAME                     VARCHAR2(30),  OBJECT_INSTANCE                 NUMBER(38),  OBJECT_TYPE                     VARCHAR2(30),  OPTIMIZER                       VARCHAR2(255),  SEARCH_COLUMNS                  NUMBER,  ID                              NUMBER(38),  PARENT_ID                       NUMBER(38),  POSITION                        NUMBER(38),  COST                            NUMBER(38),  CARDINALITY                     NUMBER(38),  BYTES                           NUMBER(38),  OTHER_TAG                       VARCHAR2(255),  PARTITION_START                 VARCHAR2(255),  PARTITION_STOP                  VARCHAR2(255),  PARTITION_ID                    NUMBER(38),  OTHER                           LONG,  DISTRIBUTION                    VARCHAR2(30))";
+    static final String createPlanTableScript = "CREATE TABLE PLAN_TABLE (  STATEMENT_ID                    VARCHAR2(30), TIMESTAMP                       DATE,  REMARKS                         VARCHAR2(80),  OPERATION                       VARCHAR2(30),  OPTIONS                         VARCHAR2(30),  OBJECT_NODE                     VARCHAR2(128),  OBJECT_OWNER                    VARCHAR2(30),  OBJECT_NAME                     VARCHAR2(30),  OBJECT_INSTANCE                 NUMBER(38),  OBJECT_TYPE                     VARCHAR2(30),  OPTIMIZER                       VARCHAR2(255),  SEARCH_COLUMNS                  NUMBER,  ID                              NUMBER(38),  PARENT_ID                       NUMBER(38),  POSITION                        NUMBER(38),  COST                            NUMBER(38),  CARDINALITY                     NUMBER(38),  BYTES                           NUMBER(38),  OTHER_TAG                       VARCHAR2(255),  PARTITION_START                 VARCHAR2(255),  PARTITION_STOP                  VARCHAR2(255),  PARTITION_ID                    NUMBER(38),  OTHER                           LONG,  DISTRIBUTION                    VARCHAR2(30))"; //$NON-NLS-1$
 }

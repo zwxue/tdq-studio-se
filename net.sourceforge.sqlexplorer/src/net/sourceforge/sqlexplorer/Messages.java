@@ -34,7 +34,7 @@ import org.osgi.framework.Bundle;
  */
 public class Messages {
 
-    private static final String BUNDLE_NAME = "messages";
+    private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
@@ -103,15 +103,15 @@ public class Messages {
      * @return The translated message or !key! if not found.
      * @see MessageFormat#format(String, Object[])
      */
-    public static String getString(String key, Object[] params) {
+    public static String getString(String key, Object... params) {
         String pattern = getString(key);
         return MessageFormat.format(pattern, params);
     }
 
     /**
      * Parse some input string and translate all special tokens. This is similar to a string template engine: it
-     * extracts <em>key</em> from <tt>${key}</tt> sequences in the input string and uses {@link #getString(String)}
-     * to translate it. Contents in between <tt>${}</tt> sequences are copied as-is.
+     * extracts <em>key</em> from <tt>${key}</tt> sequences in the input string and uses {@link #getString(String)} to
+     * translate it. Contents in between <tt>${}</tt> sequences are copied as-is.
      * 
      * @param input The input string.
      * @return String with all special tokens replaced.
@@ -135,8 +135,8 @@ public class Messages {
                 } catch (Exception e) {
                 }
                 if (text == null || text.contains(key)) {
-                    logger.error("Failed to lookup key [" + key + "]");
-                    sb.append("${" + key + "}");
+                    logger.error(Messages.getString("Messages.FailedLookupKey", key)); //$NON-NLS-1$
+                    sb.append("${" + key + "}"); //$NON-NLS-1$ //$NON-NLS-2$
                 } else
                     sb.append(text);
                 last = j + 1;
@@ -167,8 +167,8 @@ public class Messages {
                 try {
                     resources[i + 1] = ResourceBundle.getBundle(fragments[i].getSymbolicName() + BUNDLE_NAME);
                 } catch (Exception e) {
-                    SQLExplorerPlugin.error("No text.properties found for: " + fragments[1].getSymbolicName() + " [id="
-                            + fragments[i].getBundleId() + "]", e);
+                    SQLExplorerPlugin.error(Messages.getString("Messages.NotFound", fragments[1].getSymbolicName(), //$NON-NLS-1$
+                            fragments[i].getBundleId()), e);
                 }
             }
         }

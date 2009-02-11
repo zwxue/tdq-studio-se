@@ -28,10 +28,10 @@ import net.sourceforge.sqlexplorer.parsers.scp.StructuredCommentParser.CommandTy
 	public EndifCommand(StructuredCommentParser parser, Token comment, Tokenizer tokenizer, CharSequence data) throws ParserException {
 		super(parser, CommandType.ENDIF, comment, tokenizer, data);
 		if (tokens.size() != 0)
-			throw new StructuredCommentException("endif has extra text", comment);
+			throw new StructuredCommentException("endif has extra text", comment); //$NON-NLS-1$
 	}
 	
 	public String toString() {
-		return "endif";
+		return "endif"; //$NON-NLS-1$
 	}
 }

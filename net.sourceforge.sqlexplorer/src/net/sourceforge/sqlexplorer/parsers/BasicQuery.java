@@ -36,9 +36,9 @@ public class BasicQuery extends AbstractQuery {
 		this.lineNo = lineNo;
 		queryType = QueryType.UNKNOWN;
 		String lower = querySql.toLowerCase();
-		int selectPos = lower.indexOf("select");
+		int selectPos = lower.indexOf("select"); //$NON-NLS-1$
 		if (selectPos > -1) {
-			int createPos = lower.indexOf("create");
+			int createPos = lower.indexOf("create"); //$NON-NLS-1$
 			if (createPos < 0 || createPos > selectPos)
 				queryType = QueryType.SELECT;
 		}
@@ -70,6 +70,6 @@ public class BasicQuery extends AbstractQuery {
 	 */
 	@Override
 	public String toString() {
-		return Integer.toString(lineNo) + ": " + querySql.toString();
+		return Integer.toString(lineNo) + ": " + querySql.toString(); //$NON-NLS-1$
 	}
 }

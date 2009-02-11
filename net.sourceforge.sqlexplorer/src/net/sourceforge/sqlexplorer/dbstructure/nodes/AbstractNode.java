@@ -48,7 +48,7 @@ public abstract class AbstractNode implements INode {
 
     protected Image _image;
 
-    protected String _imageKey = "Images.DefaultNodeImage";
+    protected String _imageKey = "Images.DefaultNodeImage"; //$NON-NLS-1$
 
     protected String _expandedImageKey = null;
 
@@ -213,7 +213,7 @@ public abstract class AbstractNode implements INode {
      */
     public String getName() {
         if (_name == null) {
-            return "<null>";
+            return "<null>"; //$NON-NLS-1$
         }
         return _name;
     }
@@ -245,7 +245,7 @@ public abstract class AbstractNode implements INode {
     public String getSchemaOrCatalogName() {
 
         INode node = this;
-        while (!(node.getType().equalsIgnoreCase("schema") || node.getType().equalsIgnoreCase("catalog"))) {
+        while (!(node.getType().equalsIgnoreCase("schema") || node.getType().equalsIgnoreCase("catalog"))) { //$NON-NLS-1$ //$NON-NLS-2$
             node = node.getParent();
             if (node == null) {
                 return null;
@@ -277,7 +277,7 @@ public abstract class AbstractNode implements INode {
      */
     public String getUniqueIdentifier() {
 
-        return getParent().getQualifiedName() + "." + getQualifiedName();
+        return getParent().getQualifiedName() + "." + getQualifiedName(); //$NON-NLS-1$
     }
 
 
@@ -339,11 +339,11 @@ public abstract class AbstractNode implements INode {
 
             } catch (AbstractMethodError e) {
 
-                SQLExplorerPlugin.error("Could not load child nodes for " + _name, e);
+                SQLExplorerPlugin.error("Could not load child nodes for " + _name, e); //$NON-NLS-1$
 
             } catch (Throwable e) {
 
-                SQLExplorerPlugin.error("Could not load child nodes for " + _name, e);
+                SQLExplorerPlugin.error("Could not load child nodes for " + _name, e); //$NON-NLS-1$
 
             }
         }

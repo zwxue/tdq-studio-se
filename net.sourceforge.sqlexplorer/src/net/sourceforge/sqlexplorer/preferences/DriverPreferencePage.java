@@ -124,7 +124,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         noDefaultAndApplyButton();
         _driverModel = SQLExplorerPlugin.getDefault().getDriverModel();
 
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".DriverContainerGroup");
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".DriverContainerGroup"); //$NON-NLS-1$
 
         _prefs = SQLExplorerPlugin.getDefault().getPreferenceStore();
 
@@ -184,7 +184,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         gid = new GridData(GridData.FILL);
         gid.widthHint = 75;
         Button add = new Button(myComposite, SWT.PUSH);
-        add.setText(Messages.getString("Preferences.Drivers.Button.Add"));
+        add.setText(Messages.getString("Preferences.Drivers.Button.Add")); //$NON-NLS-1$
         add.setLayoutData(gid);
         add.addSelectionListener(new SelectionAdapter() {
 
@@ -200,7 +200,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         gid = new GridData(GridData.FILL);
         gid.widthHint = 75;
         Button edit = new Button(myComposite, SWT.PUSH);
-        edit.setText(Messages.getString("Preferences.Drivers.Button.Edit"));
+        edit.setText(Messages.getString("Preferences.Drivers.Button.Edit")); //$NON-NLS-1$
         edit.setLayoutData(gid);
         edit.addSelectionListener(new SelectionAdapter() {
 
@@ -213,7 +213,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         gid = new GridData(GridData.FILL);
         gid.widthHint = 75;
         Button copy = new Button(myComposite, SWT.PUSH);
-        copy.setText(Messages.getString("Preferences.Drivers.Button.Copy"));
+        copy.setText(Messages.getString("Preferences.Drivers.Button.Copy")); //$NON-NLS-1$
         copy.setLayoutData(gid);
         copy.addSelectionListener(new SelectionAdapter() {
 
@@ -231,15 +231,15 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         gid = new GridData(GridData.FILL);
         gid.widthHint = 75;
         Button remove = new Button(myComposite, SWT.PUSH);
-        remove.setText(Messages.getString("Preferences.Drivers.Button.Remove"));
+        remove.setText(Messages.getString("Preferences.Drivers.Button.Remove")); //$NON-NLS-1$
         remove.setLayoutData(gid);
         remove.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
 
-                boolean okToDelete = MessageDialog.openConfirm(getShell(), Messages.getString("Preferences.Drivers.ConfirmDelete.Title"),
-                        Messages.getString("Preferences.Drivers.ConfirmDelete.Prefix") + _tableViewer.getTable().getSelection()[0].getText()
-                                + Messages.getString("Preferences.Drivers.ConfirmDelete.Postfix"));
+                boolean okToDelete = MessageDialog.openConfirm(getShell(), Messages.getString("Preferences.Drivers.ConfirmDelete.Title"), //$NON-NLS-1$
+                        Messages.getString("Preferences.Drivers.ConfirmDelete.Prefix") + _tableViewer.getTable().getSelection()[0].getText() //$NON-NLS-1$
+                                + Messages.getString("Preferences.Drivers.ConfirmDelete.Postfix")); //$NON-NLS-1$
                 if (okToDelete) {
                     StructuredSelection sel = (StructuredSelection) _tableViewer.getSelection();
                     ManagedDriver dv = (ManagedDriver) sel.getFirstElement();
@@ -255,7 +255,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         gid = new GridData(GridData.FILL);
         gid.widthHint = 73;
         Button bdefault = new Button(myComposite, SWT.PUSH);
-        bdefault.setText(Messages.getString("Preferences.Drivers.Button.Default"));
+        bdefault.setText(Messages.getString("Preferences.Drivers.Button.Default")); //$NON-NLS-1$
         bdefault.setLayoutData(gid);
         // Remove bold font on all elements, and make selected element bold
         bdefault.addSelectionListener(new SelectionAdapter() {
@@ -274,7 +274,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
         // add button to restore default drivers
         Button bRestore = new Button(parent, SWT.PUSH);
-        bRestore.setText(Messages.getString("Preferences.Drivers.Button.RestoreDefault"));
+        bRestore.setText(Messages.getString("Preferences.Drivers.Button.RestoreDefault")); //$NON-NLS-1$
         bRestore.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -283,7 +283,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 	                _tableViewer.refresh();
 	                selectFirst();
             	}catch(ExplorerException ex) {
-            		SQLExplorerPlugin.error("Cannot restore default driver configuration", ex);
+            		SQLExplorerPlugin.error(Messages.getString("DriverPreferencePage.NotRestoreDefaultDriver"), ex); //$NON-NLS-1$
             	}
             }
         });
@@ -406,9 +406,9 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
         	// Nothing
         }
         if (dv.isDriverClassLoaded() == true) {
-            return ImageUtil.getImage("Images.OkDriver");
+            return ImageUtil.getImage("Images.OkDriver"); //$NON-NLS-1$
         } else {
-            return ImageUtil.getImage("Images.ErrorDriver");
+            return ImageUtil.getImage("Images.ErrorDriver"); //$NON-NLS-1$
         }
     }
 
@@ -416,8 +416,8 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
     public void dispose() {
         
         super.dispose();
-        ImageUtil.disposeImage("Images.OkDriver");    
-        ImageUtil.disposeImage("Images.ErrorDriver");
+        ImageUtil.disposeImage("Images.OkDriver");     //$NON-NLS-1$
+        ImageUtil.disposeImage("Images.ErrorDriver"); //$NON-NLS-1$
         
     }
 

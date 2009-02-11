@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class RemoveFromHistoryAction extends AbstractHistoryContextAction {
 
-    private ImageDescriptor _imageRemove = ImageUtil.getDescriptor("Images.RemoveIcon");
+    private ImageDescriptor _imageRemove = ImageUtil.getDescriptor("Images.RemoveIcon"); //$NON-NLS-1$
 
 
     public ImageDescriptor getImageDescriptor() {
@@ -21,7 +21,7 @@ public class RemoveFromHistoryAction extends AbstractHistoryContextAction {
 
     public String getText() {
 
-        return Messages.getString("SQLHistoryView.RemoveFromHistory");
+        return Messages.getString("SQLHistoryView.RemoveFromHistory"); //$NON-NLS-1$
     }
 
 
@@ -51,7 +51,7 @@ public class RemoveFromHistoryAction extends AbstractHistoryContextAction {
             setEnabled(false);
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error removing item from clipboard", e);
+            SQLExplorerPlugin.error(Messages.getString("RemoveFromHistoryAction.ErrorRemoveItem"), e); //$NON-NLS-1$
         }
     }
 

@@ -9,7 +9,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 public class ClearHistoryAction extends AbstractHistoryContextAction {
 
-    private ImageDescriptor _imageRemoveAll = ImageUtil.getDescriptor("Images.RemoveAllIcon");
+    private ImageDescriptor _imageRemoveAll = ImageUtil.getDescriptor("Images.RemoveAllIcon"); //$NON-NLS-1$
 
 
     public ImageDescriptor getImageDescriptor() {
@@ -20,7 +20,7 @@ public class ClearHistoryAction extends AbstractHistoryContextAction {
 
     public String getText() {
 
-        return Messages.getString("SQLHistoryView.ClearHistory");
+        return Messages.getString("SQLHistoryView.ClearHistory"); //$NON-NLS-1$
     }
 
 
@@ -29,8 +29,8 @@ public class ClearHistoryAction extends AbstractHistoryContextAction {
         try {
 
             boolean ok = MessageDialog.openConfirm(_table.getShell(),
-                    Messages.getString("SQLHistoryView.ClearHistory"),
-                    Messages.getString("SQLHistoryView.ClearHistory.Confirm"));
+                    Messages.getString("SQLHistoryView.ClearHistory"), //$NON-NLS-1$
+                    Messages.getString("SQLHistoryView.ClearHistory.Confirm")); //$NON-NLS-1$
 
             if (ok) {
                 _history.clear();
@@ -38,7 +38,7 @@ public class ClearHistoryAction extends AbstractHistoryContextAction {
                 setEnabled(false);
             }
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error clearing sql history", e);
+            SQLExplorerPlugin.error(Messages.getString("ClearHistoryAction.ErrorClearSqlHistory"), e); //$NON-NLS-1$
         }
     }
 }

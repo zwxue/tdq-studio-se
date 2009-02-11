@@ -36,9 +36,9 @@ public class IndexNode extends AbstractNode {
 
 
     public IndexNode(INode parent, String name, MetaDataSession session, TableNode parentTable) {
-    	super(parent, name, session, "index");
+    	super(parent, name, session, "index"); //$NON-NLS-1$
         _parentTable = parentTable;
-        setImageKey("Images.IndexIcon");
+        setImageKey("Images.IndexIcon"); //$NON-NLS-1$
     }
 
 
@@ -56,7 +56,7 @@ public class IndexNode extends AbstractNode {
      */
     public String getQualifiedName() {
 
-        return _parent.getParent().getName() + "." + _name;
+        return _parent.getParent().getName() + "." + _name; //$NON-NLS-1$
     }
     
     /*
@@ -66,7 +66,7 @@ public class IndexNode extends AbstractNode {
      */
     public String getUniqueIdentifier() {
 
-        return _parent.getParent().getQualifiedName() + "." + _name;
+        return _parent.getParent().getQualifiedName() + "." + _name; //$NON-NLS-1$
     }
 
 
@@ -87,16 +87,16 @@ public class IndexNode extends AbstractNode {
                 if (indexName != null && indexName.equalsIgnoreCase(_name)) {
                     ColumnNode col = new ColumnNode(this, info.getColumnName(), _session, _parentTable, true);
                     if (sort == null || sort == SortOrder.ASC) {
-                        col.setLabelDecoration("ASC");
+                        col.setLabelDecoration("ASC"); //$NON-NLS-1$
                     } else {
-                        col.setLabelDecoration("DESC");
+                        col.setLabelDecoration("DESC"); //$NON-NLS-1$
                     }
                     addChildNode(col);
                 }
             }
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Could not load column names", e);
+            SQLExplorerPlugin.error("Could not load column names", e); //$NON-NLS-1$
         }
 
     }

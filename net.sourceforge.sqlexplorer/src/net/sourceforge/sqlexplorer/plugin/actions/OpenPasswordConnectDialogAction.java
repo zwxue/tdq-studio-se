@@ -18,6 +18,7 @@
  */
 package net.sourceforge.sqlexplorer.plugin.actions;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
 import net.sourceforge.sqlexplorer.connections.SessionEstablishedAdapter;
 import net.sourceforge.sqlexplorer.connections.SessionEstablishedListener;
@@ -48,9 +49,9 @@ public class OpenPasswordConnectDialogAction extends Action {
     public OpenPasswordConnectDialogAction(Alias alias, User user, boolean alwaysPrompt) {
     	super();
     	if (alias == null)
-    		throw new IllegalArgumentException("Alias cannot be null!");
+    		throw new IllegalArgumentException(Messages.getString("OpenPasswordConnectDialogAction.AliasNotNull")); //$NON-NLS-1$
     	if (user != null && alias != user.getAlias())
-    		throw new IllegalArgumentException("User is attached the wrong alias");
+    		throw new IllegalArgumentException(Messages.getString("OpenPasswordConnectDialogAction.WrongAlias")); //$NON-NLS-1$
     	this.alias = alias;
         this.user = user;
         this.alwaysPrompt = alwaysPrompt;
@@ -69,7 +70,7 @@ public class OpenPasswordConnectDialogAction extends Action {
 			        			try {
 			        				dsView.addUser(user);
 			        			}catch(SQLCannotConnectException e) {
-			        	        	MessageDialog.openError(Display.getDefault().getActiveShell(), "Cannot connect", e.getMessage());
+			        	        	MessageDialog.openError(Display.getDefault().getActiveShell(), "Cannot connect", e.getMessage()); //$NON-NLS-1$
 			        			}
 						}
 					});

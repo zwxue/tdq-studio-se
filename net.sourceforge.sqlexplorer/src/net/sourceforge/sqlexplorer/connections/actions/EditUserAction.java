@@ -12,7 +12,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 public class EditUserAction extends AbstractConnectionTreeAction {
 
 	public EditUserAction() {
-		super("ConnectionsView.Actions.EditUser", null, "Images.ConnectionsView.EditUser");
+		super("ConnectionsView.Actions.EditUser", null, "Images.ConnectionsView.EditUser"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/* (non-Javadoc)

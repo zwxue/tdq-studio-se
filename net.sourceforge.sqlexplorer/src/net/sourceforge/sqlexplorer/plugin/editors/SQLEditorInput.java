@@ -143,14 +143,14 @@ public class SQLEditorInput implements IStorageEditorInput, IPersistableElement
 	
 	public String getFactoryId()
 	{
-		return "net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInputFactory";
+		return "net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInputFactory"; //$NON-NLS-1$
 	}
 
 	public void saveState(IMemento memento)
 	{
 		if (fFile == null)
 			return;
-		memento.putString("path", fFile.getAbsolutePath());
+		memento.putString("path", fFile.getAbsolutePath()); //$NON-NLS-1$
 	}
 	
 	public boolean equals(Object obj)

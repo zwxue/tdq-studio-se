@@ -117,7 +117,7 @@ public final class ExecutionResultImpl implements ExecutionResults {
 					currentResultSet = product.getResultSet(stmt, param, paramColumnIndex);
 				paramColumnIndex++;
 				if (currentResultSet != null)
-					return new DataSet(Messages.getString("DataSet.Cursor") + ' ' + param.getName(), currentResultSet, null, maxRows);
+					return new DataSet(Messages.getString("DataSet.Cursor") + ' ' + param.getName(), currentResultSet, null, maxRows); //$NON-NLS-1$
 			}
 		}
 
@@ -160,9 +160,9 @@ public final class ExecutionResultImpl implements ExecutionResults {
 				valueIndex++;
 			}
 		}
-		return new DataSet(Messages.getString("DataSet.Parameters"), new String[] { 
-				Messages.getString("SQLExecution.ParameterName"),
-				Messages.getString("SQLExecution.ParameterValue")
+		return new DataSet(Messages.getString("DataSet.Parameters"), new String[] {  //$NON-NLS-1$
+				Messages.getString("SQLExecution.ParameterName"), //$NON-NLS-1$
+				Messages.getString("SQLExecution.ParameterValue") //$NON-NLS-1$
 			}, rows);
 	}
 	

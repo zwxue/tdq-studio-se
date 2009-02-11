@@ -54,7 +54,7 @@ public class ImageUtil {
             }
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error disposing images", e);
+            SQLExplorerPlugin.error(Messages.getString("ImageUtil.ErrorDisposeImage"), e); //$NON-NLS-1$
         }
     }
 
@@ -76,7 +76,7 @@ public class ImageUtil {
             String path = Messages.getString(propertyName);
 
             if (path == null || path.trim().length() == 0) {
-                SQLExplorerPlugin.error("Missing image path for " + propertyName, null);
+                SQLExplorerPlugin.error(Messages.getString("ImageUtil.MissImagePath", propertyName), null); //$NON-NLS-1$
                 return null;
             }
 
@@ -85,7 +85,7 @@ public class ImageUtil {
             return ImageDescriptor.createFromURL(url);
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Couldn't create image for " + propertyName, e);
+            SQLExplorerPlugin.error(Messages.getString("ImageUtil.CouldNotCreatImage", propertyName), e); //$NON-NLS-1$
             return null;
         }
 
@@ -104,7 +104,7 @@ public class ImageUtil {
             return ImageDescriptor.createFromURL(url);
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Couldn't create image for " + fragmentId + ": " + path, e);
+            SQLExplorerPlugin.error(Messages.getString("ImageUtil.NotCreatImageFor", fragmentId, path), e); //$NON-NLS-1$
             return null;
         }
 
@@ -150,7 +150,6 @@ public class ImageUtil {
             fragmentId = fragmentId.substring(0, fragmentId.lastIndexOf('.'));
         }
         try {
-
             if (path == null || path.trim().length() == 0) {
                 return null;
             }
@@ -164,7 +163,7 @@ public class ImageUtil {
             return descriptor.createImage();
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Couldn't create image for " + fragmentId + ": " + path, e);
+            SQLExplorerPlugin.error(Messages.getString("ImageUtil.NotCreatImage", fragmentId, path), e); //$NON-NLS-1$
             return null;
         }
     }

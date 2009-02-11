@@ -19,7 +19,7 @@ import org.eclipse.ui.IWorkbenchPage;
 
 public class OpenInEditorAction extends AbstractHistoryContextAction {
 
-    private ImageDescriptor _imageOpenInEditor = ImageUtil.getDescriptor("Images.OpenSQLIcon");
+    private ImageDescriptor _imageOpenInEditor = ImageUtil.getDescriptor("Images.OpenSQLIcon"); //$NON-NLS-1$
 
 
     public ImageDescriptor getImageDescriptor() {
@@ -30,7 +30,7 @@ public class OpenInEditorAction extends AbstractHistoryContextAction {
 
     public String getText() {
 
-        return Messages.getString("SQLHistoryView.OpenInEditor");
+        return Messages.getString("SQLHistoryView.OpenInEditor"); //$NON-NLS-1$
     }
 
 
@@ -63,7 +63,7 @@ public class OpenInEditorAction extends AbstractHistoryContextAction {
 
                 if (ti.length > 0) {
                     copiedText.append(queryDelimiter);
-                    copiedText.append("\n");
+                    copiedText.append("\n"); //$NON-NLS-1$
                 }
             }
 
@@ -85,10 +85,10 @@ public class OpenInEditorAction extends AbstractHistoryContextAction {
 
             if (user != null && !user.hasAuthenticated()) {
                 boolean okToOpen = MessageDialog.openConfirm(_table.getShell(),
-                        Messages.getString("SQLHistoryView.OpenInEditor.Confirm.Title"),
-                        Messages.getString("SQLHistoryView.OpenInEditor.Confirm.Message.Prefix") + " "
+                        Messages.getString("SQLHistoryView.OpenInEditor.Confirm.Title"), //$NON-NLS-1$
+                        Messages.getString("SQLHistoryView.OpenInEditor.Confirm.Message.Prefix") + " " //$NON-NLS-1$ //$NON-NLS-2$
                                 + user.getDescription()
-                                + Messages.getString("SQLHistoryView.OpenInEditor.Confirm.Message.Postfix"));
+                                + Messages.getString("SQLHistoryView.OpenInEditor.Confirm.Message.Postfix")); //$NON-NLS-1$
 
                 if (okToOpen) {
                 	OpenPasswordConnectDialogAction openDlgAction = new OpenPasswordConnectDialogAction(alias, user, false);
@@ -96,7 +96,7 @@ public class OpenInEditorAction extends AbstractHistoryContextAction {
                 }
             }
 
-            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() + ").sql");
+            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
             input.setUser(user);
             IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
             if (page == null)
@@ -105,7 +105,7 @@ public class OpenInEditorAction extends AbstractHistoryContextAction {
             editorPart.setText(copiedText.toString());
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error creating sql editor", e);
+            SQLExplorerPlugin.error(Messages.getString("OpenInEditorAction.ErrorCreatSqlEditor"), e); //$NON-NLS-1$
         }
     }
 }

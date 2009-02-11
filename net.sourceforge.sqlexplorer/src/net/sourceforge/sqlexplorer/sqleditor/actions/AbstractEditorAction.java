@@ -68,7 +68,7 @@ public abstract class AbstractEditorAction extends Action {
         if (session != null && session.isConnectionInUse()) {
             _editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
                 public void run() {
-                    MessageDialog.openError(_editor.getSite().getShell(), Messages.getString("SQLResultsView.Error.InUseTitle"), Messages.getString("SQLResultsView.Error.InUse"));
+                    MessageDialog.openError(_editor.getSite().getShell(), Messages.getString("SQLResultsView.Error.InUseTitle"), Messages.getString("SQLResultsView.Error.InUse")); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             });
             return null;

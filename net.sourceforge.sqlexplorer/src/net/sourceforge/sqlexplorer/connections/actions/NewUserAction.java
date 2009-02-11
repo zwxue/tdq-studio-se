@@ -35,7 +35,7 @@ import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogActio
 public class NewUserAction extends AbstractConnectionTreeAction {
 
     public NewUserAction() {
-    	super("ConnectionsView.Actions.NewUser", "ConnectionsView.Actions.NewUser.ToolTip", "Images.ConnectionsView.NewUser");
+    	super("ConnectionsView.Actions.NewUser", "ConnectionsView.Actions.NewUser.ToolTip", "Images.ConnectionsView.NewUser"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     public void run() {

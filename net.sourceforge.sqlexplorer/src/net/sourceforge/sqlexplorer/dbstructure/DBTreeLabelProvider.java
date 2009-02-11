@@ -31,16 +31,16 @@ import org.eclipse.swt.graphics.Image;
  */
 public class DBTreeLabelProvider extends LabelProvider {
 
-    private Image _defaultNodeImage = ImageUtil.getImage("Images.DefaultNodeIcon");
+    private Image _defaultNodeImage = ImageUtil.getImage("Images.DefaultNodeIcon"); //$NON-NLS-1$
 
-    private Image _defaultParentNodeImage = ImageUtil.getImage("Images.DefaultParentNodeIcon");
+    private Image _defaultParentNodeImage = ImageUtil.getImage("Images.DefaultParentNodeIcon"); //$NON-NLS-1$
 
 
     public void dispose() {
 
         super.dispose();
-        ImageUtil.disposeImage("Images.DefaultNodeIcon");
-        ImageUtil.disposeImage("Images.DefaultParentNodeIcon");
+        ImageUtil.disposeImage("Images.DefaultNodeIcon"); //$NON-NLS-1$
+        ImageUtil.disposeImage("Images.DefaultParentNodeIcon"); //$NON-NLS-1$
 
     }
 
@@ -92,7 +92,7 @@ public class DBTreeLabelProvider extends LabelProvider {
         }
 
         if (node.getLabelDecoration() != null) {
-            text = text + " [" + node.getLabelDecoration() + "]";
+            text = text + " [" + node.getLabelDecoration() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return text;

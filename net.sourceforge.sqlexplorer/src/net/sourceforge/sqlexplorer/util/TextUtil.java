@@ -11,13 +11,13 @@ public class TextUtil {
 
     public static final int DEFAULT_WRAPLENGTH = 150;
     
-    private static final String NEWLINE_SEPARATOR = "\n";
+    private static final String NEWLINE_SEPARATOR = "\n"; //$NON-NLS-1$
     
-    private static final String NEWLINE_EXPR = "\\n";
+    private static final String NEWLINE_EXPR = "\\n"; //$NON-NLS-1$
     
-    private static final String RETURN_EXPR = "\\r";
+    private static final String RETURN_EXPR = "\\r"; //$NON-NLS-1$
     
-    private static final String TAB_EXPR = "\\t";
+    private static final String TAB_EXPR = "\\t"; //$NON-NLS-1$
     
     
     /**
@@ -28,9 +28,9 @@ public class TextUtil {
         if (input == null) {
             return null;
         }
-        String tmp = input.replaceAll(NEWLINE_EXPR, " ");
-        tmp = tmp.replaceAll(TAB_EXPR, " ");
-        return tmp.replaceAll(RETURN_EXPR, "");
+        String tmp = input.replaceAll(NEWLINE_EXPR, " "); //$NON-NLS-1$
+        tmp = tmp.replaceAll(TAB_EXPR, " "); //$NON-NLS-1$
+        return tmp.replaceAll(RETURN_EXPR, ""); //$NON-NLS-1$
     }
     
     
@@ -50,15 +50,15 @@ public class TextUtil {
     public static String getWrappedText(String input, int maxWidth) {
               
         if (input == null) {
-            return "";
+            return ""; //$NON-NLS-1$
         }
         
         String[] text = input.split(NEWLINE_EXPR);
-        String wrappedText = "";
+        String wrappedText = ""; //$NON-NLS-1$
         
         for (int i = 0; i < text.length; i++) {
             
-            text[i] = text[i].replaceAll(RETURN_EXPR, "");
+            text[i] = text[i].replaceAll(RETURN_EXPR, ""); //$NON-NLS-1$
             
             if (text[i].length() == 0) {
                 continue;
@@ -97,7 +97,7 @@ public class TextUtil {
                         
                         if (j == 0) {
                             wrappedText += tmp.substring(0, maxWidth + 1);
-                            tmp = "";
+                            tmp = ""; //$NON-NLS-1$
                             break;
                         }
                     }
@@ -160,7 +160,7 @@ public class TextUtil {
 		if (maxLength > 0 && sb.length() > maxLength) {
 			if (maxLength > 3) {
 				sb.delete(maxLength - 3, sb.length());
-				sb.append("...");
+				sb.append("..."); //$NON-NLS-1$
 			} else
 				sb.delete(maxLength, sb.length());
 		}
@@ -218,9 +218,9 @@ public class TextUtil {
      * @return String with most dangerous characters escaped.
      */
     public static String htmlEscape(String input) {
-    	String ret = input.replaceAll("&", "&amp;");
-    	ret = ret.replaceAll("<", "&lt;");
-    	ret = ret.replaceAll(">", "&gt;");
+    	String ret = input.replaceAll("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
+    	ret = ret.replaceAll("<", "&lt;"); //$NON-NLS-1$ //$NON-NLS-2$
+    	ret = ret.replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$
     	return ret;
     }
     

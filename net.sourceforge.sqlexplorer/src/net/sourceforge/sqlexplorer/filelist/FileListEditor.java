@@ -62,7 +62,7 @@ public class FileListEditor extends EditorPart {
 		toolBar.setLayoutData(data);
 		
 		ToolBarManager mgr = new ToolBarManager(toolBar);
-		mgr.add(new Action(Messages.getString("FileListEditor.Actions.Execute"), ImageUtil.getDescriptor("Images.ExecSQLIcon")) {
+		mgr.add(new Action("", ImageUtil.getDescriptor("Images.ExecSQLIcon")) { //$NON-NLS-1$ //$NON-NLS-2$
 			@Override
 			public void run() {
 				execute();
@@ -70,7 +70,7 @@ public class FileListEditor extends EditorPart {
 
 			@Override
 			public String getToolTipText() {
-				return Messages.getString("FileListEditor.Actions.Execute.ToolTip");
+				return ""; //$NON-NLS-1$
 			}
 		});
 		mgr.update(true);
@@ -162,7 +162,7 @@ public class FileListEditor extends EditorPart {
 		if (getSession() != null && session != this.session)
 			this.session.close();
 		this.session = session;
-		_logger.fatal("Session set to " + session);
+		_logger.fatal("Session set to " + session); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -203,7 +203,7 @@ public class FileListEditor extends EditorPart {
 					continue;
 				File file = new File(line);
 				if (!file.exists() || !file.canRead())
-					SQLExplorerPlugin.error("Cannot locate/read file " + file.getAbsolutePath());
+					SQLExplorerPlugin.error("Cannot locate/read file " + file.getAbsolutePath()); //$NON-NLS-1$
 				else
 					files.add(file);
 			}

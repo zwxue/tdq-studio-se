@@ -121,7 +121,7 @@ public class CreateAliasDlg extends TitleAreaDialog {
             setMessage("Copy the alias"); //$NON-NLS-1$						
         }
 
-        Image image = ImageUtil.getImage("Images.WizardLogo");
+        Image image = ImageUtil.getImage("Images.WizardLogo"); //$NON-NLS-1$
         if (image != null) {
             setTitleImage(image);
         }
@@ -129,7 +129,7 @@ public class CreateAliasDlg extends TitleAreaDialog {
 
             public void widgetDisposed(DisposeEvent e) {
 
-                ImageUtil.disposeImage("Images.WizardLogo");
+                ImageUtil.disposeImage("Images.WizardLogo"); //$NON-NLS-1$
             }
         });
         return contents;
@@ -243,7 +243,7 @@ public class CreateAliasDlg extends TitleAreaDialog {
         new Label(nameGroup, SWT.NONE);
 
         noUsernameRequired = new Button(nameGroup, SWT.CHECK);
-        noUsernameRequired.setText("Username is not required for this database");
+        noUsernameRequired.setText(Messages.getString("CreateAliasDlg.UsernameNotRequired")); //$NON-NLS-1$
         new Label(nameGroup, SWT.NONE);
 
         Label label4 = new Label(nameGroup, SWT.WRAP);
@@ -301,22 +301,22 @@ public class CreateAliasDlg extends TitleAreaDialog {
         new Label(nameGroup, SWT.NONE);
 
         /* final Button */ autoLogonButton = new Button(connectionPropertiesComposite, SWT.CHECK);
-        autoLogonButton.setToolTipText("If set, SQLExplorer will try to logon without prompting");
+        autoLogonButton.setToolTipText(Messages.getString("CreateAliasDlg.SQLExplorerLogon")); //$NON-NLS-1$
         final GridData gd_autoLogonButton = new GridData(158, SWT.DEFAULT);
         autoLogonButton.setLayoutData(gd_autoLogonButton);
-        autoLogonButton.setText("Auto logon");
+        autoLogonButton.setText(Messages.getString("CreateAliasDlg.AutoLogon")); //$NON-NLS-1$
         
         /* final Button */ autoCommitButton = new Button(connectionPropertiesComposite, SWT.CHECK);
-        autoCommitButton.setToolTipText("Sets the default for new SQL Editors");
-        autoCommitButton.setText("Auto Commit");
+        autoCommitButton.setToolTipText(Messages.getString("CreateAliasDlg.DefaultForSQLEditors")); //$NON-NLS-1$
+        autoCommitButton.setText(Messages.getString("CreateAliasDlg.AutoCommit")); //$NON-NLS-1$
 
         /* final Button */ logonAtStartupButton = new Button(connectionPropertiesComposite, SWT.CHECK);
-        logonAtStartupButton.setToolTipText("If set, SQLExplorer will establish a connection during startup");
-        logonAtStartupButton.setText("Logon during startup");
+        logonAtStartupButton.setToolTipText(Messages.getString("CreateAliasDlg.SQLExplorerEstablishConnection")); //$NON-NLS-1$
+        logonAtStartupButton.setText(Messages.getString("CreateAliasDlg.LogonStartup")); //$NON-NLS-1$
 
         /* final Button */ commitOnCloseButton = new Button(connectionPropertiesComposite, SWT.CHECK);
-        commitOnCloseButton.setToolTipText("Sets the default for new SQL editors");
-        commitOnCloseButton.setText("Commit on close");
+        commitOnCloseButton.setToolTipText(Messages.getString("CreateAliasDlg.DefaultForNewSQLEditor")); //$NON-NLS-1$
+        commitOnCloseButton.setText(Messages.getString("CreateAliasDlg.CommitOnClose")); //$NON-NLS-1$
         new Label(nameGroup, SWT.NONE);
         
         autoLogonButton.addSelectionListener(new SelectionAdapter() {
@@ -421,9 +421,9 @@ public class CreateAliasDlg extends TitleAreaDialog {
 	            	alias.setDefaultUser(new User(userField.getText().trim(), passwordField.getText().trim()));
             }
             alias.setName(this.nameField.getText().trim());
-            alias.setSchemaFilterExpression("");
-            alias.setNameFilterExpression("");
-            alias.setFolderFilterExpression("");
+            alias.setSchemaFilterExpression(""); //$NON-NLS-1$
+            alias.setNameFilterExpression(""); //$NON-NLS-1$
+            alias.setFolderFilterExpression(""); //$NON-NLS-1$
             alias.setConnectAtStartup(logonAtStartupButton.getSelection());
             alias.setAutoLogon(autoLogonButton.getSelection());
             

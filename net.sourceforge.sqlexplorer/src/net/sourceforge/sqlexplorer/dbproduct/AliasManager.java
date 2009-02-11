@@ -62,7 +62,7 @@ public class AliasManager implements ConnectionListener {
 			File file = new File(ApplicationFiles.USER_ALIAS_FILE_NAME);
 			if (file.exists()) {
 				Element root = reader.read(file).getRootElement();
-				if (root.getName().equals("Beans"))
+				if (root.getName().equals("Beans")) //$NON-NLS-1$
 					root = convertToV350(root);
 				List<Element> list = root.elements(Alias.ALIAS);
 				if (list != null)
@@ -184,19 +184,19 @@ public class AliasManager implements ConnectionListener {
 	protected Element convertToV350(Element beans) {
 		Element result = new DefaultElement(Alias.ALIASES);
 		
-		for (Element bean : beans.elements("Bean")) {
+		for (Element bean : beans.elements("Bean")) { //$NON-NLS-1$
 			Element alias = result.addElement(Alias.ALIAS);
-			alias.addAttribute(Alias.AUTO_LOGON, Boolean.toString(getBoolean(bean.elementText("autoLogon"), false)));
-			alias.addAttribute(Alias.CONNECT_AT_STARTUP, Boolean.toString(getBoolean(bean.elementText("connectAtStartup"), false)));
-			alias.addAttribute(Alias.DRIVER_ID, bean.element("driverIdentifier").elementText("string"));
-			alias.addElement(Alias.NAME).setText(bean.elementText("name"));
+			alias.addAttribute(Alias.AUTO_LOGON, Boolean.toString(getBoolean(bean.elementText("autoLogon"), false))); //$NON-NLS-1$
+			alias.addAttribute(Alias.CONNECT_AT_STARTUP, Boolean.toString(getBoolean(bean.elementText("connectAtStartup"), false))); //$NON-NLS-1$
+			alias.addAttribute(Alias.DRIVER_ID, bean.element("driverIdentifier").elementText("string")); //$NON-NLS-1$ //$NON-NLS-2$
+			alias.addElement(Alias.NAME).setText(bean.elementText("name")); //$NON-NLS-1$
 			Element userElem = alias.addElement(Alias.USERS).addElement(User.USER);
-			userElem.addElement(User.USER_NAME).setText(bean.elementText("userName"));
-			userElem.addElement(User.PASSWORD).setText(bean.elementText("password"));
-			alias.addElement(Alias.URL).setText(bean.elementText("url"));
-			alias.addElement(Alias.FOLDER_FILTER_EXPRESSION).setText(bean.elementText("folderFilterExpression"));
-			alias.addElement(Alias.NAME_FILTER_EXPRESSION).setText(bean.elementText("nameFilterExpression"));
-			alias.addElement(Alias.SCHEMA_FILTER_EXPRESSION).setText(bean.elementText("schemaFilterExpression"));
+			userElem.addElement(User.USER_NAME).setText(bean.elementText("userName")); //$NON-NLS-1$
+			userElem.addElement(User.PASSWORD).setText(bean.elementText("password")); //$NON-NLS-1$
+			alias.addElement(Alias.URL).setText(bean.elementText("url")); //$NON-NLS-1$
+			alias.addElement(Alias.FOLDER_FILTER_EXPRESSION).setText(bean.elementText("folderFilterExpression")); //$NON-NLS-1$
+			alias.addElement(Alias.NAME_FILTER_EXPRESSION).setText(bean.elementText("nameFilterExpression")); //$NON-NLS-1$
+			alias.addElement(Alias.SCHEMA_FILTER_EXPRESSION).setText(bean.elementText("schemaFilterExpression")); //$NON-NLS-1$
 		}
 		
 		return result;
@@ -211,6 +211,6 @@ public class AliasManager implements ConnectionListener {
 	private boolean getBoolean(String value, boolean defaultValue) {
 		if (value == null || value.trim().length() == 0)
 			return defaultValue;
-		return value.equals("true") || value.equals("yes") || value.equals("on");
+		return value.equals("true") || value.equals("yes") || value.equals("on"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

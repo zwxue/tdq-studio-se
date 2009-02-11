@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import net.sourceforge.sqlexplorer.Messages;
+
 public class ClassPathHacker {
 	 
 	private static final Class[] parameters = new Class[]{URL.class};
@@ -26,12 +28,12 @@ public class ClassPathHacker {
 		Class sysclass = URLClassLoader.class;
 	 
 		try {
-			Method method = sysclass.getDeclaredMethod("addURL",parameters);
+			Method method = sysclass.getDeclaredMethod("addURL",parameters); //$NON-NLS-1$
 			method.setAccessible(true);
 			method.invoke(sysloader,new Object[]{ u });
 		} catch (Throwable t) {
 			t.printStackTrace();
-			throw new IOException("Error, could not add URL to system classloader");
+			throw new IOException(Messages.getString("ClassPathHacker.NotAddURL")); //$NON-NLS-1$
 		}//end try catch
 			
 	}//end method

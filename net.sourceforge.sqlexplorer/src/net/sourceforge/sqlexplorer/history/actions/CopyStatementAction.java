@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class CopyStatementAction extends AbstractHistoryContextAction {
 
-    private ImageDescriptor _imageCopy = ImageUtil.getDescriptor("Images.CopyIcon");
+    private ImageDescriptor _imageCopy = ImageUtil.getDescriptor("Images.CopyIcon"); //$NON-NLS-1$
 
 
     public ImageDescriptor getImageDescriptor() {
@@ -26,7 +26,7 @@ public class CopyStatementAction extends AbstractHistoryContextAction {
 
     public String getText() {
 
-        return Messages.getString("SQLHistoryView.CopyToClipboard");
+        return Messages.getString("SQLHistoryView.CopyToClipboard"); //$NON-NLS-1$
     }
 
 
@@ -59,7 +59,7 @@ public class CopyStatementAction extends AbstractHistoryContextAction {
 
                 if (ti.length > 0) {
                     copiedText.append(queryDelimiter);
-                    copiedText.append("\n");
+                    copiedText.append("\n"); //$NON-NLS-1$
                 }
             }
 
@@ -68,7 +68,7 @@ public class CopyStatementAction extends AbstractHistoryContextAction {
             cb.setContents(new Object[] {copiedText.toString()}, new Transfer[] {textTransfer});
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error copying to clipboard", e);
+            SQLExplorerPlugin.error(Messages.getString("CopyStatementAction.ErrorCopyClipboard"), e); //$NON-NLS-1$
         }
     }
 

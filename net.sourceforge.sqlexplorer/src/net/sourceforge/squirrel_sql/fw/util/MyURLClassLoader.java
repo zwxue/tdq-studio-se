@@ -73,7 +73,7 @@ public class MyURLClassLoader extends URLClassLoader
 				{
 					Object[] args = {file.getAbsolutePath(),};
 					String msg = s_stringMgr.getString(
-									"MyURLClassLoader.errorLoadingFile", args);
+									"MyURLClassLoader.errorLoadingFile", args); //$NON-NLS-1$
 					logger.error(msg, ex);
 				}
 				for (Iterator it = new EnumerationIterator(zipFile.entries());
@@ -93,7 +93,7 @@ public class MyURLClassLoader extends URLClassLoader
 						{
 							Object[] args = {className};
 							String msg = s_stringMgr.getString(
-											"MyURLClassLoader.errorLoadingClass", args);
+											"MyURLClassLoader.errorLoadingClass", args); //$NON-NLS-1$
 							logger.error(msg, th);
 						}
 						if (cls != null)

@@ -29,10 +29,10 @@ import net.sourceforge.sqlexplorer.parsers.scp.StructuredCommentParser.CommandTy
 	public RefCommand(StructuredCommentParser parser, Token comment, Tokenizer tokenizer, CharSequence data) throws ParserException {
 		super(parser, CommandType.REF, comment, tokenizer, data);
 		if (tokens.size() != 1)
-			throw new StructuredCommentException("ref has extra text after the macro name", comment);
+			throw new StructuredCommentException("ref has extra text after the macro name", comment); //$NON-NLS-1$
 	}
 	
 	public String toString() {
-		return "ref " + tokens.get(0);
+		return "ref " + tokens.get(0); //$NON-NLS-1$
 	}
 }

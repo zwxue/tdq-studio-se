@@ -137,7 +137,7 @@ public class SQLTextViewer extends SourceViewer {
 
             public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 
-                return "hover info";
+                return "hover info"; //$NON-NLS-1$
             }
         });
         setHoverControlCreator(new IInformationControlCreator() {
@@ -155,7 +155,7 @@ public class SQLTextViewer extends SourceViewer {
 
                 public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
                     //
-                    return "";
+                    return ""; //$NON-NLS-1$
                 }
 
 
@@ -256,6 +256,6 @@ public class SQLTextViewer extends SourceViewer {
      * 
      */
     public void clearText() {
-        getTextWidget().setText("");
+        getTextWidget().setText(""); //$NON-NLS-1$
     }
 }
