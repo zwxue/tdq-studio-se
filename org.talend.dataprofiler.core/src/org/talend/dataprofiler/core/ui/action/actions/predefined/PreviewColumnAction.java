@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -23,7 +22,10 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.ColumnSetNameHelper;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -41,17 +43,16 @@ public class PreviewColumnAction extends Action {
 
     @Override
     public void run() {
-
-        if (isSelectedSameDataProvider()) {
+        if (ColumnHelper.isFromSameTable(Arrays.asList((Column[]) columns))) {
             TdColumn oneColumn = columns[0];
             TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(oneColumn);
             ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(oneColumn);
             String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
+            DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
 
             String columnClause = "";
             for (TdColumn column : columns) {
-                String columnName = ColumnHelper.getFullName(column);
-                columnClause += columnName + ",";
+                columnClause += language.quote(column.getName()) + ",";
             }
             columnClause = columnClause.substring(0, columnClause.length() - 1);
 
@@ -60,16 +61,5 @@ public class PreviewColumnAction extends Action {
         } else {
             MessageDialogWithToggle.openWarning(null, "Warning", "\r\nYou must preview columns from one table.");
         }
-    }
-
-    private boolean isSelectedSameDataProvider() {
-        assert columns != null;
-
-        Set<ColumnSet> columnSets = new HashSet<ColumnSet>();
-        for (TdColumn column : columns) {
-            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
-            columnSets.add(columnSetOwner);
-        }
-        return columnSets.size() == 1;
     }
 }
