@@ -25,6 +25,7 @@ import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
@@ -38,6 +39,7 @@ import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
 import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
+import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
@@ -45,6 +47,7 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 
 /**
  * @author scorreia
@@ -411,45 +414,130 @@ public final class IndicatorHelper {
     }
 
     public static String getIndicatorValue(Indicator indicator) {
-        String tempObject = null;
-        if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
-            tempObject = ((RowCountIndicator) indicator).getCount().toString();
-        } else if (IndicatorsPackage.eINSTANCE.getNullCountIndicator().equals(indicator.eClass())) {
-            tempObject = ((NullCountIndicator) indicator).getNullCount().toString();
+        // String tempObject = null;
+        // if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
+        // tempObject = ((RowCountIndicator) indicator).getCount().toString();
+        // } else if (IndicatorsPackage.eINSTANCE.getNullCountIndicator().equals(indicator.eClass())) {
+        // tempObject = ((NullCountIndicator) indicator).getNullCount().toString();
+        //
+        // } else if (IndicatorsPackage.eINSTANCE.getDistinctCountIndicator().equals(indicator.eClass())) {
+        // tempObject = ((DistinctCountIndicator) indicator).getDistinctValueCount().toString();
+        // } else if (IndicatorsPackage.eINSTANCE.getUniqueCountIndicator().equals(indicator.eClass())) {
+        // tempObject = (((UniqueCountIndicator) indicator).getUniqueValueCount()).toString();
+        // } else if (IndicatorsPackage.eINSTANCE.getDuplicateCountIndicator().equals(indicator.eClass())) {
+        // tempObject = ((DuplicateCountIndicator) indicator).getDuplicateValueCount().toString();
+        // } else if (IndicatorsPackage.eINSTANCE.getBlankCountIndicator().equals(indicator.eClass())) {
+        // tempObject = ((BlankCountIndicator) indicator).getBlankCount().toString();
+        // } else if (IndicatorsPackage.eINSTANCE.getMinLengthIndicator().equals(indicator.eClass())) {
+        // tempObject = ((MinLengthIndicator) indicator).getLength().toString();
+        // } else if (IndicatorsPackage.eINSTANCE.getMaxLengthIndicator().equals(indicator.eClass())) {
+        // tempObject = ((MaxLengthIndicator) indicator).getLength().toString();
+        // } else if (IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().equals(indicator.eClass())) {
+        // tempObject = createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
+        // } else if (IndicatorsPackage.eINSTANCE.getFrequencyIndicator().equals(indicator.eClass())
+        // || IndicatorsPackage.eINSTANCE.getModeIndicator().equals(indicator.eClass())) {
+        // // TODO tempObject = createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
+        // } else if (IndicatorsPackage.eINSTANCE.getMeanIndicator().equals(indicator.eClass())) {
+        // tempObject = createStandardNumber(((MeanIndicator) indicator).getMean());
+        // } else if (IndicatorsPackage.eINSTANCE.getMedianIndicator().equals(indicator.eClass())) {
+        // tempObject = createStandardNumber(((MedianIndicator) indicator).getMedian());
+        // } else if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicator.eClass())
+        // || IndicatorsPackage.eINSTANCE.getSqlPatternMatchingIndicator().equals(indicator.eClass())) {
+        // Long matchingValueCount = ((PatternMatchingIndicator) indicator).getMatchingValueCount();
+        // Long notMatchingValueCount = ((PatternMatchingIndicator) indicator).getNotMatchingValueCount();
+        // Double total = matchingValueCount.doubleValue() + notMatchingValueCount.doubleValue();
+        // tempObject = Double.valueOf(total > 0 ? matchingValueCount.doubleValue() * 100 / total :
+        // Double.NaN).toString();
+        //
+        // } else {
+        // tempObject = ((ValueIndicator) indicator).getValue();
+        // }
 
-        } else if (IndicatorsPackage.eINSTANCE.getDistinctCountIndicator().equals(indicator.eClass())) {
-            tempObject = ((DistinctCountIndicator) indicator).getDistinctValueCount().toString();
-        } else if (IndicatorsPackage.eINSTANCE.getUniqueCountIndicator().equals(indicator.eClass())) {
-            tempObject = (((UniqueCountIndicator) indicator).getUniqueValueCount()).toString();
-        } else if (IndicatorsPackage.eINSTANCE.getDuplicateCountIndicator().equals(indicator.eClass())) {
-            tempObject = ((DuplicateCountIndicator) indicator).getDuplicateValueCount().toString();
-        } else if (IndicatorsPackage.eINSTANCE.getBlankCountIndicator().equals(indicator.eClass())) {
-            tempObject = ((BlankCountIndicator) indicator).getBlankCount().toString();
-        } else if (IndicatorsPackage.eINSTANCE.getMinLengthIndicator().equals(indicator.eClass())) {
-            tempObject = ((MinLengthIndicator) indicator).getLength().toString();
-        } else if (IndicatorsPackage.eINSTANCE.getMaxLengthIndicator().equals(indicator.eClass())) {
-            tempObject = ((MaxLengthIndicator) indicator).getLength().toString();
-        } else if (IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().equals(indicator.eClass())) {
-            tempObject = createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
-        } else if (IndicatorsPackage.eINSTANCE.getFrequencyIndicator().equals(indicator.eClass())
-                || IndicatorsPackage.eINSTANCE.getModeIndicator().equals(indicator.eClass())) {
-            // TODO tempObject = createStandardNumber(((AverageLengthIndicator) indicator).getAverageLength());
-        } else if (IndicatorsPackage.eINSTANCE.getMeanIndicator().equals(indicator.eClass())) {
-            tempObject = createStandardNumber(((MeanIndicator) indicator).getMean());
-        } else if (IndicatorsPackage.eINSTANCE.getMedianIndicator().equals(indicator.eClass())) {
-            tempObject = createStandardNumber(((MedianIndicator) indicator).getMedian());
-        } else if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicator.eClass())
-                || IndicatorsPackage.eINSTANCE.getSqlPatternMatchingIndicator().equals(indicator.eClass())) {
-            Long matchingValueCount = ((PatternMatchingIndicator) indicator).getMatchingValueCount();
-            Long notMatchingValueCount = ((PatternMatchingIndicator) indicator).getNotMatchingValueCount();
-            Double total = matchingValueCount.doubleValue() + notMatchingValueCount.doubleValue();
-            tempObject = Double.valueOf(total > 0 ? matchingValueCount.doubleValue() * 100 / total : Double.NaN).toString();
+        // return tempObject;
 
-        } else {
-            tempObject = ((ValueIndicator) indicator).getValue();
-        }
+        IndicatorsSwitch<String> mySwitch = new IndicatorsSwitch<String>() {
 
-        return tempObject;
+            @Override
+            public String caseAverageLengthIndicator(AverageLengthIndicator object) {
+                return createStandardNumber(object.getAverageLength());
+            }
+
+            @Override
+            public String caseBlankCountIndicator(BlankCountIndicator object) {
+                return String.valueOf(object.getBlankCount());
+            }
+
+            @Override
+            public String caseDefValueCountIndicator(DefValueCountIndicator object) {
+                return String.valueOf(object.getDefaultValCount());
+            }
+
+            @Override
+            public String caseDistinctCountIndicator(DistinctCountIndicator object) {
+                return String.valueOf(object.getDistinctValueCount());
+            }
+
+            @Override
+            public String caseDuplicateCountIndicator(DuplicateCountIndicator object) {
+                return String.valueOf(object.getDuplicateValueCount());
+            }
+
+            @Override
+            public String caseMaxLengthIndicator(MaxLengthIndicator object) {
+                return String.valueOf(object.getLength());
+            }
+
+            @Override
+            public String caseMeanIndicator(MeanIndicator object) {
+                return createStandardNumber(object.getMean());
+            }
+
+            @Override
+            public String caseMedianIndicator(MedianIndicator object) {
+                return createStandardNumber(object.getMedian());
+            }
+
+            @Override
+            public String caseMinLengthIndicator(MinLengthIndicator object) {
+                return String.valueOf(object.getLength());
+            }
+
+            @Override
+            public String caseModeIndicator(ModeIndicator object) {
+                return String.valueOf(object.getMode());
+            }
+
+            @Override
+            public String caseNullCountIndicator(NullCountIndicator object) {
+                return String.valueOf(object.getNullCount());
+            }
+
+            @Override
+            public String casePatternMatchingIndicator(PatternMatchingIndicator object) {
+                Long matchingValueCount = object.getMatchingValueCount();
+                Long notMatchingValueCount = object.getNotMatchingValueCount();
+                Double total = matchingValueCount.doubleValue() + notMatchingValueCount.doubleValue();
+                return Double.valueOf(total > 0 ? matchingValueCount.doubleValue() * 100 / total : Double.NaN).toString();
+            }
+
+            @Override
+            public String caseRowCountIndicator(RowCountIndicator object) {
+                return String.valueOf(object.getCount());
+            }
+
+            @Override
+            public String caseUniqueCountIndicator(UniqueCountIndicator object) {
+                return String.valueOf(object.getUniqueValueCount());
+            }
+
+            @Override
+            public String caseValueIndicator(ValueIndicator object) {
+                return object.getValue();
+            }
+
+        };
+
+        return mySwitch.doSwitch(indicator);
     }
 
     private static String createStandardNumber(Object input) {
