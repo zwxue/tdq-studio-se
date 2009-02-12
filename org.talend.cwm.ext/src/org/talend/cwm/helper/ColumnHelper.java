@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
@@ -191,5 +192,28 @@ public final class ColumnHelper {
             }
         }
         return null;
+    }
+
+    public static boolean isFromSameConnection(List<Column> columns) {
+        assert columns != null;
+
+        Set<DataProvider> dataProviderSets = new HashSet<DataProvider>();
+        for (Column column : columns) {
+            ColumnSet columnSetOwner = getColumnSetOwner(column);
+            DataProvider dp = DataProviderHelper.getDataProvider(columnSetOwner);
+            dataProviderSets.add(dp);
+        }
+        return dataProviderSets.size() == 1;
+    }
+
+    public static boolean isFromSameTable(List<Column> columns) {
+        assert columns != null;
+
+        Set<ColumnSet> columnSets = new HashSet<ColumnSet>();
+        for (Column column : columns) {
+            ColumnSet columnSetOwner = getColumnSetOwner(column);
+            columnSets.add(columnSetOwner);
+        }
+        return columnSets.size() == 1;
     }
 }
