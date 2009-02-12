@@ -74,8 +74,8 @@ public abstract class MessagesCore {
     }
 
     public static void main(String[] args) {
-        Object[] test = { "DB2" };
-        String s = MessageFormat.format("The pattern''s expression for {0} must be enclosed by single quotes", test);
+        Object[] test = { "DB2" }; //$NON-NLS-1$
+        String s = MessageFormat.format("The pattern''s expression for {0} must be enclosed by single quotes", test); //$NON-NLS-1$
         System.out.println(s);
     }
 }
