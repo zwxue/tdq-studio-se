@@ -34,6 +34,7 @@ import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
@@ -124,6 +125,13 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * @generated
      */
     private EClass minMaxDateIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass weakCorrelationIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -447,6 +455,15 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getWeakCorrelationIndicator() {
+        return weakCorrelationIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EDataType getListObject() {
         return listObjectEDataType;
     }
@@ -504,6 +521,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
 
         minMaxDateIndicatorEClass = createEClass(MIN_MAX_DATE_INDICATOR);
 
+        weakCorrelationIndicatorEClass = createEClass(WEAK_CORRELATION_INDICATOR);
+
         // Create data types
         listObjectEDataType = createEDataType(LIST_OBJECT);
     }
@@ -546,6 +565,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         columnSetMultiValueIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getCompositeIndicator());
         countAvgNullIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         minMaxDateIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
+        weakCorrelationIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(columnsCompareIndicatorEClass, ColumnsCompareIndicator.class, "ColumnsCompareIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -572,6 +592,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         initEClass(countAvgNullIndicatorEClass, CountAvgNullIndicator.class, "CountAvgNullIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(minMaxDateIndicatorEClass, MinMaxDateIndicator.class, "MinMaxDateIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(weakCorrelationIndicatorEClass, WeakCorrelationIndicator.class, "WeakCorrelationIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize data types
         initEDataType(listObjectEDataType, List.class, "ListObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<Object>");

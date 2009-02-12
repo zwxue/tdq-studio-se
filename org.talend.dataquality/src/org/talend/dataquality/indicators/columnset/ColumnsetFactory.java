@@ -71,6 +71,15 @@ public interface ColumnsetFactory extends EFactory {
     MinMaxDateIndicator createMinMaxDateIndicator();
 
     /**
+     * Returns a new object of class '<em>Weak Correlation Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Weak Correlation Indicator</em>'.
+     * @generated
+     */
+    WeakCorrelationIndicator createWeakCorrelationIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

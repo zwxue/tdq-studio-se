@@ -721,6 +721,7 @@
       <eClassifiers xsi:type="ecore:EClass" name="CountAvgNullIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
       <eClassifiers xsi:type="ecore:EDataType" name="ListObject" instanceClassName="java.util.List&lt;Object>"/>
       <eClassifiers xsi:type="ecore:EClass" name="MinMaxDateIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
+      <eClassifiers xsi:type="ecore:EClass" name="WeakCorrelationIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
     </eSubpackages>
   </eSubpackages>
   <eSubpackages name="expressions" nsURI="http://dataquality.expressions" nsPrefix="dataquality.expressions">

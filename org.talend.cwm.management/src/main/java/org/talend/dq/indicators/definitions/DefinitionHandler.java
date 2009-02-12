@@ -59,6 +59,7 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
@@ -445,6 +446,18 @@ public final class DefinitionHandler {
             @Override
             public Boolean caseColumnSetMultiValueIndicator(ColumnSetMultiValueIndicator object) {
                 return setIndicatorDefinition(object, "Multiple Column Frequency Table");
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch#caseWeakCorrelationIndicator(org.talend
+             * .dataquality.indicators.columnset.WeakCorrelationIndicator)
+             */
+            @Override
+            public Boolean caseWeakCorrelationIndicator(WeakCorrelationIndicator object) {
+                return setIndicatorDefinition(object, "Multiple Column Correlation");
             }
 
             /*

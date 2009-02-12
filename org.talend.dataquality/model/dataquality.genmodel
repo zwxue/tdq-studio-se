@@ -444,6 +444,7 @@
         </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/CountAvgNullIndicator"/>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/MinMaxDateIndicator"/>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/WeakCorrelationIndicator"/>
       </nestedGenPackages>
     </nestedGenPackages>
     <nestedGenPackages prefix="Expressions" basePackage="org.talend.dataquality" disposableProviderFactory="true"

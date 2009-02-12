@@ -266,6 +266,11 @@
     <sqlGenericExpression xmi:id="_AjKIF_bBEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c ASC" language="Teradata"/>
     <sqlGenericExpression xmi:id="_AjKIGPbBEd24-N3PsP_o-w" body="SELECT MAX(&lt;%=__COLUMN_NAMES__%>), SOUNDEX(&lt;%=__COLUMN_NAMES__%>), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(&lt;%=__COLUMN_NAMES__%>) ORDER BY c ASC" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_vf0k4PkbEd2z55b7dTkWFw" name="Multiple Column Correlation" label="Multiple Column Correlation">
+    <taggedValue xmi:id="_vf0k4fkbEd2z55b7dTkWFw" tag="Description" value="Computes a frequency table on several nominal columns"/>
+    <taggedValue xmi:id="_vf0k4vkbEd2z55b7dTkWFw" tag="Purpose" value="evaluates frequencies of values on several columns"/>
+    <sqlGenericExpression xmi:id="_vf0k4_kbEd2z55b7dTkWFw" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>" language="SQL"/>
+  </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>

@@ -1989,6 +1989,358 @@ public interface ColumnsetPackage extends EPackage {
     int MIN_MAX_DATE_INDICATOR_FEATURE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.columnset.impl.WeakCorrelationIndicatorImpl <em>Weak Correlation Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.columnset.impl.WeakCorrelationIndicatorImpl
+     * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getWeakCorrelationIndicator()
+     * @generated
+     */
+    int WEAK_CORRELATION_INDICATOR = 6;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__NAME = COLUMN_SET_MULTI_VALUE_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__VISIBILITY = COLUMN_SET_MULTI_VALUE_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__CLIENT_DEPENDENCY = COLUMN_SET_MULTI_VALUE_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__SUPPLIER_DEPENDENCY = COLUMN_SET_MULTI_VALUE_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__CONSTRAINT = COLUMN_SET_MULTI_VALUE_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__NAMESPACE = COLUMN_SET_MULTI_VALUE_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__IMPORTER = COLUMN_SET_MULTI_VALUE_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__STEREOTYPE = COLUMN_SET_MULTI_VALUE_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__TAGGED_VALUE = COLUMN_SET_MULTI_VALUE_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DOCUMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DESCRIPTION = COLUMN_SET_MULTI_VALUE_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__RESPONSIBLE_PARTY = COLUMN_SET_MULTI_VALUE_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__ELEMENT_NODE = COLUMN_SET_MULTI_VALUE_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__SET = COLUMN_SET_MULTI_VALUE_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__RENDERED_OBJECT = COLUMN_SET_MULTI_VALUE_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__VOCABULARY_ELEMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__MEASUREMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__CHANGE_REQUEST = COLUMN_SET_MULTI_VALUE_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DASDL_PROPERTY = COLUMN_SET_MULTI_VALUE_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__NULL_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__PARAMETERS = COLUMN_SET_MULTI_VALUE_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__ANALYZED_ELEMENT = COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DATAMINING_TYPE = COLUMN_SET_MULTI_VALUE_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__INDICATOR_DEFINITION = COLUMN_SET_MULTI_VALUE_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__INSTANTIATED_EXPRESSIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__ANALYZED_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>List Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__LIST_ROWS = COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Numeric Functions</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__NUMERIC_FUNCTIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS;
+
+    /**
+     * The feature id for the '<em><b>Nominal Columns</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__NOMINAL_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>Numeric Columns</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__NUMERIC_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>Column Headers</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__COLUMN_HEADERS = COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS;
+
+    /**
+     * The feature id for the '<em><b>Date Functions</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DATE_FUNCTIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS;
+
+    /**
+     * The feature id for the '<em><b>Date Columns</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DATE_COLUMNS = COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS;
+
+    /**
+     * The feature id for the '<em><b>Unique Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__UNIQUE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Distinct Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DISTINCT_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__DUPLICATE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT;
+
+    /**
+     * The number of structural features of the '<em>Weak Correlation Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR_FEATURE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
      * The meta object id for the '<em>List Object</em>' data type.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1996,7 +2348,7 @@ public interface ColumnsetPackage extends EPackage {
      * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getListObject()
      * @generated
      */
-    int LIST_OBJECT = 6;
+    int LIST_OBJECT = 7;
 
 
     /**
@@ -2203,6 +2555,16 @@ public interface ColumnsetPackage extends EPackage {
     EClass getMinMaxDateIndicator();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator <em>Weak Correlation Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Weak Correlation Indicator</em>'.
+     * @see org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator
+     * @generated
+     */
+    EClass getWeakCorrelationIndicator();
+
+    /**
      * Returns the meta object for data type '{@link java.util.List <em>List Object</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2398,6 +2760,16 @@ public interface ColumnsetPackage extends EPackage {
          * @generated
          */
         EClass MIN_MAX_DATE_INDICATOR = eINSTANCE.getMinMaxDateIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.columnset.impl.WeakCorrelationIndicatorImpl <em>Weak Correlation Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.columnset.impl.WeakCorrelationIndicatorImpl
+         * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getWeakCorrelationIndicator()
+         * @generated
+         */
+        EClass WEAK_CORRELATION_INDICATOR = eINSTANCE.getWeakCorrelationIndicator();
 
         /**
          * The meta object literal for the '<em>List Object</em>' data type.

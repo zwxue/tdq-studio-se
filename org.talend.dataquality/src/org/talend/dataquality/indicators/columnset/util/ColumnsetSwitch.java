@@ -158,6 +158,17 @@ public class ColumnsetSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case ColumnsetPackage.WEAK_CORRELATION_INDICATOR: {
+                WeakCorrelationIndicator weakCorrelationIndicator = (WeakCorrelationIndicator)theEObject;
+                T result = caseWeakCorrelationIndicator(weakCorrelationIndicator);
+                if (result == null) result = caseColumnSetMultiValueIndicator(weakCorrelationIndicator);
+                if (result == null) result = caseCompositeIndicator(weakCorrelationIndicator);
+                if (result == null) result = caseIndicator(weakCorrelationIndicator);
+                if (result == null) result = caseModelElement(weakCorrelationIndicator);
+                if (result == null) result = caseElement(weakCorrelationIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -249,6 +260,21 @@ public class ColumnsetSwitch<T> {
      * @generated
      */
     public T caseMinMaxDateIndicator(MinMaxDateIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Weak Correlation Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Weak Correlation Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseWeakCorrelationIndicator(WeakCorrelationIndicator object) {
         return null;
     }
 

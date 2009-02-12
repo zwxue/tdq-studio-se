@@ -191,6 +191,29 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected WeakCorrelationIndicatorItemProvider weakCorrelationIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createWeakCorrelationIndicatorAdapter() {
+        if (weakCorrelationIndicatorItemProvider == null) {
+            weakCorrelationIndicatorItemProvider = new WeakCorrelationIndicatorItemProvider(this);
+        }
+
+        return weakCorrelationIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -294,6 +317,7 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
         if (columnSetMultiValueIndicatorItemProvider != null) columnSetMultiValueIndicatorItemProvider.dispose();
         if (countAvgNullIndicatorItemProvider != null) countAvgNullIndicatorItemProvider.dispose();
         if (minMaxDateIndicatorItemProvider != null) minMaxDateIndicatorItemProvider.dispose();
+        if (weakCorrelationIndicatorItemProvider != null) weakCorrelationIndicatorItemProvider.dispose();
     }
 
 }
