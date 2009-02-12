@@ -814,13 +814,19 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     @Override
-    protected boolean canRun() {
-        return true;
+    protected ReturnCode canRun() {
+
+        return new ReturnCode(true);
+    }
+
+    @Override
+    protected ReturnCode canSave() {
+
+        return new ReturnCode(true);
     }
 
     @Override
     public void refreshChart() {
-        // TODO Auto-generated method stub
 
     }
 }

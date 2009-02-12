@@ -58,6 +58,7 @@ import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -705,16 +706,39 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     @Override
-    protected boolean canRun() {
+    protected ReturnCode canRun() {
         ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
         if (columnIndicators == null || columnIndicators.length == 0) {
-            return false;
+            return new ReturnCode("No any column assigned to this analysis", false);
         }
         for (ColumnIndicator columnIndicator : columnIndicators) {
             if (columnIndicator.getIndicators().length == 0) {
-                return false;
+                return new ReturnCode("No any indicator assigned to this column", false);
             }
         }
-        return true;
+
+        return new ReturnCode(true);
+    }
+
+    @Override
+    protected ReturnCode canSave() {
+        List<Column> analyzedColumns = new ArrayList<Column>();
+
+        for (ColumnIndicator columnIndicator : treeViewer.getColumnIndicator()) {
+            analyzedColumns.add(columnIndicator.getTdColumn());
+        }
+
+        if (!analyzedColumns.isEmpty()) {
+            if (!ColumnHelper.isFromSameConnection(analyzedColumns)) {
+                return new ReturnCode("The one that is already shown at the execution time", false);
+            }
+
+            if (!ColumnHelper.isFromSameTable(analyzedColumns) && !"".equals(dataFilterComp.getDataFilterString())) {
+                return new ReturnCode(
+                        "Cannot create an analysis with a data filter when columns do not belong to the same table", false);
+            }
+        }
+
+        return new ReturnCode(true);
     }
 }

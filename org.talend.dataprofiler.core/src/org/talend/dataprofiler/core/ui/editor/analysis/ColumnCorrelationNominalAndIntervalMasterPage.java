@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -95,8 +96,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private ColumnSetMultiValueIndicator columnSetMultiIndicator;
 
-    private boolean indicatorIsBlank;
-
     private String stringDataFilter;
 
     private Composite chartComposite;
@@ -136,9 +135,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             currentCountAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
             columnSetMultiIndicator = currentCountAvgNullIndicator;
-            indicatorIsBlank = false;
         } else {
-            indicatorIsBlank = false;
             columnSetMultiIndicator = (ColumnSetMultiValueIndicator) columnCorrelationAnalysisHandler.getIndicator();
         }
         for (ModelElement element : analyzedColumns) {
@@ -440,9 +437,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      */
 
     public void saveAnalysis() throws DataprofilerCoreException {
-        if (columnSetMultiIndicator.getAnalyzedColumns().size() != 0) {
-            indicatorIsBlank = false;
-        }
+
         columnCorrelationAnalysisHandler.clearAnalysis();
         columnSetMultiIndicator.getAnalyzedColumns().clear();
         List<String> comboStringList = new ArrayList<String>();
@@ -458,24 +453,13 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 MessageDialog.openWarning(new Shell(), "Warning", "Numberic column cannot be used in this kind of analysis.");
                 return;
             }
-            // DataminingType type = MetadataHelper.getDataminingType(tdColumn);
-            // if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
             String comboString = MetadataHelper.getDataminingType(tdColumn).getLiteral();
             comboStringList.add(comboString);
-            // } else {
-            // String comboString = tdColumn.getSqlDataType().getName();
-            // comboStringList.add(comboString);
-            // }
         }
         boolean isSave = true;
-        // if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
         correctString.add(DataminingType.NOMINAL.getLiteral());
         correctString.add(DataminingType.INTERVAL.getLiteral());
-        // } else {
-        // correctString.add("varchar"); // DataminingType.NOMINAL.getLiteral());
-        // correctString.add("date"); // DataminingType.INTERVAL.getLiteral());
-        // correctString.add("datetime");
-        // }
+
         for (String combo : comboStringList) {
             if (!correctString.contains(combo)) {
                 isSave = false;
@@ -611,17 +595,26 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         return chartComposite;
     }
 
-    protected boolean canSave() {
-        return true;
+    @Override
+    protected ReturnCode canSave() {
+        List<Column> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+
+        if (!columnSetMultiValueList.isEmpty()) {
+            if (!ColumnHelper.isFromSameTable(columnSetMultiValueList)) {
+                return new ReturnCode("Cannot create an analysis when columns do not belong to the same table", false);
+            }
+        }
+        return new ReturnCode(true);
     }
 
-    public boolean canRun() {
-        // if (canSave()) {
-        // return false;
-        // }
-        if (isDirty() || getTreeViewer().getTree().getItemCount() == 0) {
-            return false;
+    @Override
+    protected ReturnCode canRun() {
+        List<Column> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        if (columnSetMultiValueList.isEmpty()) {
+            return new ReturnCode("No any columns assigned to analysis", false);
         }
-        return true;
+
+        return new ReturnCode(true);
+
     }
 }

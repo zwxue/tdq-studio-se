@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
@@ -23,6 +24,7 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -48,25 +50,25 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        super.doSave(monitor);
-        if (!canSave()) {
-            return;
-        }
-        try {
-            saveAnalysis();
-            currentEditor.setRunActionButtonState(canRun());
-            this.isDirty = false;
-        } catch (DataprofilerCoreException e) {
-            ExceptionHandler.process(e, Level.ERROR);
-            e.printStackTrace();
+        ReturnCode rc = canSave();
+        if (!rc.isOk()) {
+            MessageDialogWithToggle.openError(null, "Save Analysis", rc.getMessage());
+        } else {
+            super.doSave(monitor);
+            try {
+                saveAnalysis();
+                currentEditor.setRunActionButtonState(canRun().isOk());
+                this.isDirty = false;
+            } catch (DataprofilerCoreException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+                e.printStackTrace();
+            }
         }
     }
 
-    protected boolean canSave() {
-        return true;
-    }
+    protected abstract ReturnCode canSave();
 
-    protected abstract boolean canRun();
+    protected abstract ReturnCode canRun();
 
     public abstract void refreshChart();
 

@@ -186,7 +186,7 @@ public class AnalysisEditor extends CommonFormEditor {
         }
 
         if (masterPage != null) {
-            setRunActionButtonState(masterPage.canRun());
+            setRunActionButtonState(masterPage.canRun().isOk());
         }
     }
 

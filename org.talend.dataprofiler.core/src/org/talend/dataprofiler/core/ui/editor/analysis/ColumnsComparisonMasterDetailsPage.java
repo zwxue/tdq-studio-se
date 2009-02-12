@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -485,57 +484,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     }
 
-    protected boolean canSave() {
-        if (columnListA.size() != columnListB.size()) {
-            MessageDialog.openError(null, DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage")); //$NON-NLS-1$
-            return false;
-        }
-        if (columnListA.size() > 0) {
-            // whether the columns on a same table
-            ColumnSet columnSetOwnerA = null;
-            ColumnSet columnSetOwnerB = null;
-            ColumnSet ownerA = null;
-            ColumnSet ownerB = null;
-            for (int i = 0; i < columnListA.size(); i++) {
-                if (!((TdColumn) columnListA.get(i)).getSqlDataType().getName().equals(
-                        ((TdColumn) columnListB.get(i)).getSqlDataType().getName())) {
-                    MessageDialog
-                            .openError(
-                                    null,
-                                    DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType")); //$NON-NLS-1$ //$NON-NLS-2$
-                    return false;
-                }
-                ownerA = ColumnHelper.getColumnSetOwner(columnListA.get(i));
-                ownerB = ColumnHelper.getColumnSetOwner(columnListB.get(i));
-                if (i == 0) {
-                    columnSetOwnerA = ownerA;
-                    columnSetOwnerB = ownerB;
-                } else {
-                    if ((columnSetOwnerA != ownerA) || (columnSetOwnerB != ownerB)) {
-                        MessageDialog
-                                .openError(
-                                        null,
-                                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameElementMessage")); //$NON-NLS-1$ //$NON-NLS-2$
-                        return false;
-                    }
-                }
-            }
-
-            // whether have a same schema/catalog.
-            Package parentCatalogOrSchemaA = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerA);
-            Package parentCatalogOrSchemaB = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerB);
-            if (!parentCatalogOrSchemaA.getName().equals(parentCatalogOrSchemaB.getName())) {
-                MessageDialog
-                        .openError(
-                                null,
-                                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage")); //$NON-NLS-1$ //$NON-NLS-2$
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * DOC rli Comment method "setColumnAB".
      */
@@ -646,8 +594,50 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     }
 
     @Override
-    protected boolean canRun() {
-        return rowMatchingIndicatorA.getColumnSetA().size() != 0;
+    protected ReturnCode canSave() {
+        if (columnListA.size() != columnListB.size()) {
+            return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage"), false); //$NON-NLS-1$
+        }
+        if (columnListA.size() > 0) {
+            // whether the columns on a same table
+            ColumnSet columnSetOwnerA = null;
+            ColumnSet columnSetOwnerB = null;
+            ColumnSet ownerA = null;
+            ColumnSet ownerB = null;
+            for (int i = 0; i < columnListA.size(); i++) {
+                if (!((TdColumn) columnListA.get(i)).getSqlDataType().getName().equals(
+                        ((TdColumn) columnListB.get(i)).getSqlDataType().getName())) {
+                    return new ReturnCode(
+                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
+                }
+                ownerA = ColumnHelper.getColumnSetOwner(columnListA.get(i));
+                ownerB = ColumnHelper.getColumnSetOwner(columnListB.get(i));
+                if (i == 0) {
+                    columnSetOwnerA = ownerA;
+                    columnSetOwnerB = ownerB;
+                } else {
+                    if ((columnSetOwnerA != ownerA) || (columnSetOwnerB != ownerB)) {
+                        return new ReturnCode(DefaultMessagesImpl
+                                .getString("ColumnsComparisonMasterDetailsPage.notSameElementMessage"), false); //$NON-NLS-1$
+                    }
+                }
+            }
+
+            // whether have a same schema/catalog.
+            Package parentCatalogOrSchemaA = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerA);
+            Package parentCatalogOrSchemaB = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerB);
+            if (!parentCatalogOrSchemaA.getName().equals(parentCatalogOrSchemaB.getName())) {
+                return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage"),
+                        false);
+            }
+        }
+
+        return new ReturnCode(true);
+    }
+
+    @Override
+    protected ReturnCode canRun() {
+        return new ReturnCode(rowMatchingIndicatorA.getColumnSetA().size() != 0);
     }
 
     /**
