@@ -31,17 +31,17 @@ import net.sourceforge.squirrel_sql.fw.sql.dbobj.BestRowIdentifier;
 public class RowIdsTab extends AbstractDataSetTab {
 
     private static final String[] COLUMN_LABELS = {
-    	"DatabaseDetailView.Tab.RowIds.Col.Scope", //$NON-NLS-1$
-    	"DatabaseDetailView.Tab.RowIds.Col.ColumnName", //$NON-NLS-1$
-    	"DatabaseDetailView.Tab.RowIds.Col.DataType", //$NON-NLS-1$
-    	"DatabaseDetailView.Tab.RowIds.Col.TypeName", //$NON-NLS-1$
-    	"DatabaseDetailView.Tab.RowIds.Col.ColumnSize", //$NON-NLS-1$
-    	"DatabaseDetailView.Tab.RowIds.Col.DecimalDigits", //$NON-NLS-1$
-    	"DatabaseDetailView.Tab.RowIds.Col.PseudoColumn" //$NON-NLS-1$
+    	"DatabaseDetailView.Tab.RowIds.Col.Scope",
+    	"DatabaseDetailView.Tab.RowIds.Col.ColumnName",
+    	"DatabaseDetailView.Tab.RowIds.Col.DataType",
+    	"DatabaseDetailView.Tab.RowIds.Col.TypeName",
+    	"DatabaseDetailView.Tab.RowIds.Col.ColumnSize",
+    	"DatabaseDetailView.Tab.RowIds.Col.DecimalDigits",
+    	"DatabaseDetailView.Tab.RowIds.Col.PseudoColumn"
     };
     
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.RowIds"); //$NON-NLS-1$
+        return Messages.getString("DatabaseDetailView.Tab.RowIds");
     }
  
     public DataSet getDataSet() throws Exception {                
@@ -71,7 +71,7 @@ public class RowIdsTab extends AbstractDataSetTab {
             	row[i++] = rowId.getScale();
             	row[i++] = rowId.getPseudoColumn();
             	if (i != COLUMN_LABELS.length)
-            		throw new RuntimeException(Messages.getString("RowIdsTab.InternalError")); //$NON-NLS-1$
+            		throw new RuntimeException("Internal Error: RowIdsTab: wrong number of columns");
             }
             DataSet dataSet = new DataSet(COLUMN_LABELS, data);
             return dataSet;
@@ -81,6 +81,6 @@ public class RowIdsTab extends AbstractDataSetTab {
     }
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.RowIds.status") + " " + getNode().getQualifiedName();  //$NON-NLS-1$//$NON-NLS-2$
+        return Messages.getString("DatabaseDetailView.Tab.RowIds.status") + " " + getNode().getQualifiedName();
     }
 }

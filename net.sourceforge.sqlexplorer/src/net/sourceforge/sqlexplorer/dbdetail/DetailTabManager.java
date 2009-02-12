@@ -106,7 +106,7 @@ public class DetailTabManager {
             // no detail found..
 
             Label label = new Label(composite, SWT.FILL);
-            label.setText(Messages.getString("DatabaseDetailView.Tab.Unavailable") + " " + node.getLabelText());  //$NON-NLS-1$//$NON-NLS-2$
+            label.setText(Messages.getString("DatabaseDetailView.Tab.Unavailable") + " " + node.getLabelText());
             label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
             return;
@@ -265,7 +265,7 @@ public class DetailTabManager {
         String nodeType = node.getType().toLowerCase().trim();
 
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", Messages.getString("DetailTabManager.nodeDetailTab"));  //$NON-NLS-1$//$NON-NLS-2$
+        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "nodeDetailTab");
         IExtension[] extensions = point.getExtensions();
 
         for (int i = 0; i < extensions.length; i++) {
@@ -280,8 +280,8 @@ public class DetailTabManager {
                     boolean isValidProduct = false;
                     boolean isValidNodeType = false;
 
-                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");  //$NON-NLS-1$//$NON-NLS-2$
-                    String[] validNodeTypes = ces[j].getAttribute("node-type").split(",");  //$NON-NLS-1$//$NON-NLS-2$
+                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
+                    String[] validNodeTypes = ces[j].getAttribute("node-type").split(",");
 
                     // check if tab is valid for current database product
                     for (int k = 0; k < validProducts.length; k++) {
@@ -292,12 +292,12 @@ public class DetailTabManager {
                             continue;
                         }
 
-                        if (product.equals("*")) { //$NON-NLS-1$
+                        if (product.equals("*")) {
                             isValidProduct = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(product, '*', ".*"); //$NON-NLS-1$
+                        String regex = TextUtil.replaceChar(product, '*', ".*");
                         if (databaseProductName.matches(regex)) {
                             isValidProduct = true;
                             break;
@@ -318,12 +318,12 @@ public class DetailTabManager {
                             continue;
                         }
 
-                        if (type.equals("*")) { //$NON-NLS-1$
+                        if (type.equals("*")) {
                             isValidNodeType = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(type, '*', ".*"); //$NON-NLS-1$
+                        String regex = TextUtil.replaceChar(type, '*', ".*");
                         if (nodeType.matches(regex)) {
                             isValidNodeType = true;
                             break;
@@ -336,13 +336,13 @@ public class DetailTabManager {
                     }
 
                     // add tab to list
-                    IDetailTab tab = (IDetailTab) ces[j].createExecutableExtension("class"); //$NON-NLS-1$
+                    IDetailTab tab = (IDetailTab) ces[j].createExecutableExtension("class");
                     tab.setNode(node);
 
                     tabList.add(tab);
 
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error(Messages.getString("DetailTabManager.CouldNotCreatMenuAction"), ex); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Could not create menu action", ex);
                 }
             }
         }

@@ -33,20 +33,20 @@ import net.sourceforge.squirrel_sql.fw.sql.IndexInfo;
 public class IndexesTab extends AbstractDataSetTab {
 
     private static final String COLUMN_LABELS[] = {
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.IsNonUnique"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.IndexQualifier"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.SimpleName"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.IndexType"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.OrdinalPosition"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.ColumnName"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.SortOrder"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.Cardinality"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.Pages"), //$NON-NLS-1$
-    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.FilterCondition") //$NON-NLS-1$
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.IsNonUnique"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.IndexQualifier"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.SimpleName"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.IndexType"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.OrdinalPosition"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.ColumnName"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.SortOrder"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.Cardinality"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.Pages"),
+    	Messages.getString("DatabaseDetailView.Tab.Indexes.Col.FilterCondition")
     };
     
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.Indexes"); //$NON-NLS-1$
+        return Messages.getString("DatabaseDetailView.Tab.Indexes");
     }
  
     public DataSet getDataSet() throws Exception {                
@@ -79,7 +79,7 @@ public class IndexesTab extends AbstractDataSetTab {
             	row[i++] = col.getPages();
             	row[i++] = col.getFilterCondition();
             	if (i != COLUMN_LABELS.length)
-            		throw new RuntimeException(Messages.getString("IndexesTab.InternalErrorColumnInfoTab")); //$NON-NLS-1$
+            		throw new RuntimeException("Internal error: ColumnInfoTab: wrong number of columns");
             }
             DataSet dataSet = new DataSet(COLUMN_LABELS, dataRows);
             
@@ -90,6 +90,6 @@ public class IndexesTab extends AbstractDataSetTab {
     }
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.Indexes.status") + " " + getNode().getQualifiedName(); //$NON-NLS-1$ //$NON-NLS-2$
+        return Messages.getString("DatabaseDetailView.Tab.Indexes.status") + " " + getNode().getQualifiedName();
     }
 }

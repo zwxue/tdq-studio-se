@@ -45,7 +45,7 @@ import org.eclipse.ui.PartInitException;
  */
 public class CreateTableScriptAction extends AbstractDBTreeContextAction {
 
-    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.TableIcon"); //$NON-NLS-1$
+    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.TableIcon");
 
 
     /**
@@ -64,7 +64,7 @@ public class CreateTableScriptAction extends AbstractDBTreeContextAction {
      * @see org.eclipse.jface.action.IAction#getText()
      */
     public String getText() {
-        return Messages.getString("DatabaseStructureView.Actions.CreateTableScript"); //$NON-NLS-1$
+        return Messages.getString("DatabaseStructureView.Actions.CreateTableScript");
     }
 
 
@@ -79,7 +79,7 @@ public class CreateTableScriptAction extends AbstractDBTreeContextAction {
         ITableInfo info = tableNode.getTableInfo();
 
         StringBuffer buf = new StringBuffer(4 * 1024);
-        String sep = System.getProperty("line.separator"); //$NON-NLS-1$
+        String sep = System.getProperty("line.separator");
 
         try {
             SQLDatabaseMetaData metaData = tableNode.getSession().getMetaData();
@@ -91,9 +91,9 @@ public class CreateTableScriptAction extends AbstractDBTreeContextAction {
 
             TableColumnInfo[] columnsInfo = metaData.getColumnInfo(info);
             String tableName = _selectedNodes[0].getQualifiedName();
-            buf.append("CREATE TABLE "); //$NON-NLS-1$
+            buf.append("CREATE TABLE ");
             buf.append(tableName);
-            buf.append("("); //$NON-NLS-1$
+            buf.append("(");
 
             for (TableColumnInfo col : columnsInfo) {
 //                String columnName = resultSet.getString(4);
@@ -101,69 +101,69 @@ public class CreateTableScriptAction extends AbstractDBTreeContextAction {
 //                String columnSize = resultSet.getString(7);
 //                String decimalDigits = resultSet.getString(9);
 //                String defaultValue = resultSet.getString(13);
-                boolean notNull = "NO".equalsIgnoreCase(col.isNullable());  //$NON-NLS-1$
+                boolean notNull = "NO".equalsIgnoreCase(col.isNullable()); 
                 String sLower = col.getColumnName().toLowerCase();
                 buf.append(sep);
-                buf.append(col.getColumnName() + " "); //$NON-NLS-1$
+                buf.append(col.getColumnName() + " ");
 
                 buf.append(col.getTypeName());
 
                 boolean bNumeric = false;
-                if (sLower.equals("numeric") || sLower.equals("number") || sLower.equals("decimal")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                if (sLower.equals("numeric") || sLower.equals("number") || sLower.equals("decimal"))
                     bNumeric = true;
 
-                if (sLower.indexOf("char") != -1 || sLower.indexOf("int") != -1) { //$NON-NLS-1$ //$NON-NLS-2$
-                    buf.append("("); //$NON-NLS-1$
+                if (sLower.indexOf("char") != -1 || sLower.indexOf("int") != -1) {
+                    buf.append("(");
                     buf.append(col.getColumnSize());
-                    buf.append(")"); //$NON-NLS-1$
+                    buf.append(")");
                     
                 } else if (bNumeric) {
-                    buf.append("("); //$NON-NLS-1$
+                    buf.append("(");
                     buf.append(col.getColumnSize());
                     if (col.getDecimalDigits() > 0)
                         buf.append(col.getDecimalDigits());
-                    buf.append(")"); //$NON-NLS-1$
+                    buf.append(")");
                 }
                 
                 if (pks.size() == 1 && pks.get(0).equals(col.getColumnName())) {
-                    buf.append(" PRIMARY KEY"); //$NON-NLS-1$
+                    buf.append(" PRIMARY KEY");
                 }
 
                 String defaultValue = col.getDefaultValue();
-                if (defaultValue != null && !defaultValue.equals("")) { //$NON-NLS-1$
-                    buf.append(" default "); //$NON-NLS-1$
+                if (defaultValue != null && !defaultValue.equals("")) {
+                    buf.append(" default ");
                     boolean isSystemValue = bNumeric; 
                     
-                    if (defaultValue.equalsIgnoreCase("CURRENT_TIMESTAMP")) { //$NON-NLS-1$
+                    if (defaultValue.equalsIgnoreCase("CURRENT_TIMESTAMP")) {
                         isSystemValue = true;
                     }
                     
                     if (!isSystemValue)
-                        buf.append("'"); //$NON-NLS-1$
+                        buf.append("'");
                     buf.append(defaultValue);
                     if (!isSystemValue)
-                        buf.append("'"); //$NON-NLS-1$
+                        buf.append("'");
 
                 }
 
                 if (notNull) {
-                    buf.append(" not null"); //$NON-NLS-1$
+                    buf.append(" not null");
                 }
-                buf.append(","); //$NON-NLS-1$
+                buf.append(",");
             }
             buf.deleteCharAt(buf.length() - 1);
-            buf.append(")" + sep); //$NON-NLS-1$
+            buf.append(")" + sep);
 
-            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
+            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() + ").sql");
             input.setUser(_selectedNodes[0].getSession().getUser());
             IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
-            SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
+            SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor");
             editorPart.setText(buf.toString());
         } catch (SQLException e) {
-            SQLExplorerPlugin.error(Messages.getString("CreateTableScriptAction.ErrorCreatExportScript"), e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Error creating export script", e);
         } catch (PartInitException e) {
-            SQLExplorerPlugin.error(Messages.getString("CreateTableScriptAction.ErrorCreateExport"), e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Error creating export script", e);
         }
     }
 

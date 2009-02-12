@@ -3,7 +3,6 @@ package net.sourceforge.sqlexplorer.sqleditor.actions;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
@@ -173,11 +172,11 @@ public class SQLEditorToolBar {
             databaseProductName = session.getUser().getMetaDataSession().getDatabaseProductName().toLowerCase().trim();
         } catch (SQLException e) {
             SQLExplorerPlugin.error(e);
-            MessageDialog.openError(_editor.getSite().getShell(), "Cannot connect", e.getMessage()); //$NON-NLS-1$
+            MessageDialog.openError(_editor.getSite().getShell(), "Cannot connect", e.getMessage());
             return;
         }
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "editorAction"); //$NON-NLS-1$ //$NON-NLS-2$
+        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "editorAction");
         IExtension[] extensions = point.getExtensions();
 
         for (int i = 0; i < extensions.length; i++) {
@@ -191,9 +190,9 @@ public class SQLEditorToolBar {
 
                     boolean isValidProduct = false;
 
-                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");  //$NON-NLS-1$//$NON-NLS-2$
-                    String imagePath = ces[j].getAttribute("icon"); //$NON-NLS-1$
-                    String id = ces[j].getAttribute("id"); //$NON-NLS-1$
+                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
+                    String imagePath = ces[j].getAttribute("icon");
+                    String id = ces[j].getAttribute("id");
 
                     // check if action is valid for current database product
                     for (int k = 0; k < validProducts.length; k++) {
@@ -204,12 +203,12 @@ public class SQLEditorToolBar {
                             continue;
                         }
 
-                        if (product.equals("*")) { //$NON-NLS-1$
+                        if (product.equals("*")) {
                             isValidProduct = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(product, '*', ".*"); //$NON-NLS-1$
+                        String regex = TextUtil.replaceChar(product, '*', ".*");
                         if (databaseProductName.matches(regex)) {
                             isValidProduct = true;
                             break;
@@ -221,7 +220,7 @@ public class SQLEditorToolBar {
                         continue;
                     }
 
-                    AbstractEditorAction action = (AbstractEditorAction) ces[j].createExecutableExtension("class"); //$NON-NLS-1$
+                    AbstractEditorAction action = (AbstractEditorAction) ces[j].createExecutableExtension("class");
                     action.setEditor(_editor);
 
                     String fragmentId = id.substring(0, id.indexOf('.', 27));
@@ -232,7 +231,7 @@ public class SQLEditorToolBar {
                     _extensionToolBarMgr.add(action);
 
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error(Messages.getString("SQLEditorToolBar.NotCreatEditorAction"), ex); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Could not create editor action", ex);
                 }
             }
         }

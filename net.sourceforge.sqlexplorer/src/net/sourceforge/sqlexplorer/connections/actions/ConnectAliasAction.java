@@ -31,7 +31,7 @@ import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogActio
 public class ConnectAliasAction extends AbstractConnectionTreeAction {
 
     public ConnectAliasAction() {
-    	super("ConnectionsView.Actions.ConnectAlias", "ConnectionsView.Actions.ConnectAliasToolTip", "Images.ConnectSessionIcon"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    	super("ConnectionsView.Actions.ConnectAlias", "ConnectionsView.Actions.ConnectAliasToolTip", "Images.ConnectSessionIcon");
     }
 
     public void run() {

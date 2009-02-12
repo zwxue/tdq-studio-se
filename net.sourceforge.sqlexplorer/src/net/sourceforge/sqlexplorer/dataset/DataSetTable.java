@@ -88,7 +88,7 @@ public class DataSetTable {
         	columnLabels[i] = columns[i].getCaption();
 
         if (columnLabels == null || columnLabels.length == 0)
-            throw new Exception(Messages.getString("DataSetTable.InvalidColumnLabelOrColumnTypes")); //$NON-NLS-1$
+            throw new Exception("Invalid columnLabel or columnTypes in DataSet ");
         
         // create table structure
         final TableViewer tableViewer = new TableViewer(composite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.VIRTUAL);
@@ -113,7 +113,7 @@ public class DataSetTable {
     			}
     			
     			// sort the data based on column and direction
-    			dataSet.sort(((Integer)currentColumn.getData(Messages.getString("DataSetTable.OrignalColumnIndex"))).intValue(), dir); //$NON-NLS-1$
+    			dataSet.sort(((Integer)currentColumn.getData("orignalColumnIndex")).intValue(), dir);
     			
     			// update data displayed in table
     			table.setSortDirection(dir);
@@ -150,7 +150,7 @@ public class DataSetTable {
             column.setMoveable(true);
             column.setResizable(true);            
             column.addListener(SWT.Selection, sortListener);
-            column.setData(Messages.getString("DataSetTable.orignalColumnIndex"), new Integer(i)); //$NON-NLS-1$
+            column.setData("orignalColumnIndex", new Integer(i));
         }
                      
         tableViewer.setContentProvider(new DataSetTableContentProvider());
@@ -163,7 +163,7 @@ public class DataSetTable {
         infoLabel.setLayoutData(new GridData(SWT.LEFT, SWT.NULL, true, false));
         
         final Label positionLabel = new Label(composite, SWT.NULL);
-        positionLabel.setText(""); //$NON-NLS-1$
+        positionLabel.setText("");
         positionLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.NULL, true, false));
 
         // create a TableCursor to navigate around the table
@@ -181,9 +181,9 @@ public class DataSetTable {
                 cursor.setVisible(true);
                 
                 // update label with row/column position
-                positionLabel.setText(Messages.getString("DatabaseDetailView.Tab.RowPrefix") + " " +  //$NON-NLS-1$ //$NON-NLS-2$
-                        (table.indexOf(cursor.getRow()) + 1) + Messages.getString("DatabaseDetailView.Tab.ColumnPrefix")  //$NON-NLS-1$
-                        + " " + (cursor.getColumn() + 1));                 //$NON-NLS-1$
+                positionLabel.setText(Messages.getString("DatabaseDetailView.Tab.RowPrefix") + " " + 
+                        (table.indexOf(cursor.getRow()) + 1) + Messages.getString("DatabaseDetailView.Tab.ColumnPrefix") 
+                        + " " + (cursor.getColumn() + 1));                
                 positionLabel.getParent().layout();
                 positionLabel.redraw();
                 
@@ -241,7 +241,7 @@ public class DataSetTable {
         
         // add context menu to table & cursor
         final DataSetTableActionGroup actionGroup = new DataSetTableActionGroup(table, cursor);
-        MenuManager menuManager = new MenuManager(Messages.getString("DataSetTable.DataSetTableContextMenu")); //$NON-NLS-1$
+        MenuManager menuManager = new MenuManager("DataSetTableContextMenu");
         menuManager.setRemoveAllWhenShown(true);
         Menu contextMenu = menuManager.createContextMenu(table);        
         

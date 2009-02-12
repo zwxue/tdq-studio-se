@@ -31,7 +31,7 @@ public class SQLEditorCatalogSwitcher extends ControlContribution {
      */
     public SQLEditorCatalogSwitcher(SwitchableSessionEditor editor) {
         
-        super("net.sourceforge.sqlexplorer.catalogswitcher"); //$NON-NLS-1$
+        super("net.sourceforge.sqlexplorer.catalogswitcher");
         
         _editor = editor;
         
@@ -40,7 +40,7 @@ public class SQLEditorCatalogSwitcher extends ControlContribution {
     protected Control createControl(Composite parent) {
 
         _catalogCombo = new Combo(parent, SWT.READ_ONLY);
-        _catalogCombo.setToolTipText(Messages.getString("SQLEditor.Actions.ChooseCatalog.ToolTip")); //$NON-NLS-1$
+        _catalogCombo.setToolTipText(Messages.getString("SQLEditor.Actions.ChooseCatalog.ToolTip"));
         _catalogCombo.setSize(200, _catalogCombo.getSize().y);
         
         _catalogCombo.addSelectionListener(new SelectionAdapter() {
@@ -53,13 +53,13 @@ public class SQLEditorCatalogSwitcher extends ControlContribution {
                     try {
                         _editor.getSession().setCatalog(newCat);
                     } catch (Exception e1) {
-                        SQLExplorerPlugin.error(Messages.getString("SQLEditorCatalogSwitcher.ErrorChangeCatalog"), e1); //$NON-NLS-1$
+                        SQLExplorerPlugin.error("Error changing catalog", e1);
                     }
                 }
             }
         });
         
-        _catalogCombo.add(""); //$NON-NLS-1$
+        _catalogCombo.add("");
         
         if (_editor.getSession() != null) {
                        

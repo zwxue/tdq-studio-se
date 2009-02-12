@@ -28,7 +28,7 @@ public class CursorPositionContrib extends ContributionItem {
 	public void fill(Composite parent) {
 		super.fill(parent);
         
-		String text = "9999, 999"; //$NON-NLS-1$
+		String text = "9999, 999";
 		GC gc = new GC(parent);
 		gc.setFont(parent.getFont());
 		FontMetrics fm = gc.getFontMetrics();
@@ -41,13 +41,13 @@ public class CursorPositionContrib extends ContributionItem {
 		
         _cursorPosLabel = new CLabel(parent, SWT.NONE);
 		_cursorPosLabel.setLayoutData(statusLineLayoutData);
-		_cursorPosLabel.setText(""); //$NON-NLS-1$
+		_cursorPosLabel.setText("");
 	}
 
 	public void setPosition(int lineNo, int charNo) {
 		if (_cursorPosLabel == null || _cursorPosLabel.isDisposed())
 			return;
-		_cursorPosLabel.setText("" + lineNo + ", " + charNo); //$NON-NLS-1$ //$NON-NLS-2$
+		_cursorPosLabel.setText("" + lineNo + ", " + charNo);
 		_cursorPosLabel.pack();
 		_cursorPosLabel.getParent().layout();
 	}

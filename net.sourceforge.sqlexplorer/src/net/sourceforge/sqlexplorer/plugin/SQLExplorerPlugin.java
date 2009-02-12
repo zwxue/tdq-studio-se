@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 
 import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
 import net.sourceforge.sqlexplorer.IConstants.Confirm;
 import net.sourceforge.sqlexplorer.connections.ConnectionsView;
@@ -52,9 +51,9 @@ import org.osgi.framework.BundleContext;
  */
 public class SQLExplorerPlugin extends AbstractUIPlugin {
 
-    private static final String SQL = ").sql"; //$NON-NLS-1$
+    private static final String SQL = ").sql";
 
-    private static final String SQL_EDITOR = "SQL Editor ("; //$NON-NLS-1$
+    private static final String SQL_EDITOR = "SQL Editor (";
 
     private AliasManager aliasManager;
 
@@ -72,7 +71,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     // The shared instance.
     private static SQLExplorerPlugin plugin;
 
-    public final static String PLUGIN_ID = "net.sourceforge.sqlexplorer"; //$NON-NLS-1$
+    public final static String PLUGIN_ID = "net.sourceforge.sqlexplorer";
 
     private boolean _defaultConnectionsStarted = false;
 
@@ -127,7 +126,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             // load SQL History from previous sessions
             _history = new SQLHistory();
         } catch (Exception e) {
-            error(Messages.getString("SQLExplorerPlugin.ExceptionStart"), e); //$NON-NLS-1$
+            error("Exception during start", e);
             throw e;
         }
     }
@@ -174,11 +173,11 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             try {
                 fontData = new FontData(fontDesc);
             } catch (IllegalArgumentException e) {
-                fontData = new FontData("1|Courier New|10|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Courier New"); //$NON-NLS-1$
+                fontData = new FontData("1|Courier New|10|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|49|Courier New");
             }
             PreferenceConverter.setValue(getPreferenceStore(), IConstants.FONT, fontData);
         } catch (IllegalArgumentException e) {
-            error(Messages.getString("SQLExplorerPlugin.ErrorSetFont"), e); //$NON-NLS-1$
+            error("Error setting font", e);
         }
 
         boolean openEditor = SQLExplorerPlugin.getDefault().getPluginPreferences().getBoolean(IConstants.AUTO_OPEN_EDITOR);
@@ -208,7 +207,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
                     try {
                         site.getPage().openEditor(input, SQLEditor.class.getName());
                     } catch (PartInitException e) {
-                        SQLExplorerPlugin.error(Messages.getString("SQLExplorerPlugin.NotOpenSQLEditor"), e); //$NON-NLS-1$
+                        SQLExplorerPlugin.error("Cannot open SQL editor", e);
                     }
                 }
             }

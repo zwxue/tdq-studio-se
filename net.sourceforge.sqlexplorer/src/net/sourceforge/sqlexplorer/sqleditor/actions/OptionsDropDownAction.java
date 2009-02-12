@@ -23,7 +23,7 @@ public class OptionsDropDownAction extends AbstractEditorAction implements IMenu
 	
 	public OptionsDropDownAction(SQLEditor editor, Composite parent) {
 		super(editor);
-        setText(Messages.getString("OptionsDropDownAction.Options")); //$NON-NLS-1$
+        setText("Options");
         setMenuCreator(this);
 	}
 
@@ -42,7 +42,7 @@ public class OptionsDropDownAction extends AbstractEditorAction implements IMenu
 		if (menu != null)
 			menu.dispose();
         menu = new Menu(parent);
-		Action action = new Action(Messages.getString("SQLEditor.Options.AutoCommit"), IAction.AS_CHECK_BOX) { //$NON-NLS-1$
+		Action action = new Action(Messages.getString("SQLEditor.Options.AutoCommit"), IAction.AS_CHECK_BOX) {
 			public void run(){
 				try {
 					_editor.getSession().setAutoCommit(isChecked());
@@ -54,7 +54,7 @@ public class OptionsDropDownAction extends AbstractEditorAction implements IMenu
 		};
 		action.setChecked(_editor.getSession().isAutoCommit());
 		addActionToMenu(menu, action);
-		action = new Action(Messages.getString("SQLEditor.Options.CommitOnClose"), IAction.AS_CHECK_BOX) { //$NON-NLS-1$
+		action = new Action(Messages.getString("SQLEditor.Options.CommitOnClose"), IAction.AS_CHECK_BOX) {
 			public void run(){
 				_editor.getSession().setCommitOnClose(isChecked());
 				_editor.getEditorToolBar().refresh();
@@ -78,17 +78,17 @@ public class OptionsDropDownAction extends AbstractEditorAction implements IMenu
 
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		return ImageUtil.getDescriptor("Images.OptionsDropDown"); //$NON-NLS-1$
+		return ImageUtil.getDescriptor("Images.OptionsDropDown");
 	}
 
 	@Override
 	public String getText() {
-		return Messages.getString("SQLEditor.Actions.OptionsDropDown"); //$NON-NLS-1$
+		return Messages.getString("SQLEditor.Actions.OptionsDropDown");
 	}
 
 	@Override
 	public String getToolTipText() {
-		return Messages.getString("SQLEditor.Actions.OptionsDropDown.Tooltip"); //$NON-NLS-1$
+		return Messages.getString("SQLEditor.Actions.OptionsDropDown.Tooltip");
 	}
 
 	@Override

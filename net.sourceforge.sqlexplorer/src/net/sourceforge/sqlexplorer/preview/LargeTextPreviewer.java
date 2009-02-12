@@ -65,8 +65,8 @@ public class LargeTextPreviewer implements Previewer {
 						parent.getDisplay().asyncExec(new Runnable() {
 							public void run() {
 								MessageDialog.openWarning(parent.getShell(), 
-										Messages.getString("LargeTextPreviewer.TooMuchData.Title"),  //$NON-NLS-1$
-										Messages.getString("LargeTextPreviewer.TooMuchData.Message")); //$NON-NLS-1$
+										Messages.getString("LargeTextPreviewer.TooMuchData.Title"), 
+										Messages.getString("LargeTextPreviewer.TooMuchData.Message"));
 							}
 						});
 						break;
@@ -74,7 +74,7 @@ public class LargeTextPreviewer implements Previewer {
 				}
 				content = result.toString();
 			}catch(Exception e) {
-				SQLExplorerPlugin.error("Cannot read CLOB", e); //$NON-NLS-1$
+				SQLExplorerPlugin.error("Cannot read CLOB", e);
 				return;
 			}
 		} else

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.sqlexplorer.parsers.scp;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.parsers.ParserException;
 import net.sourceforge.sqlexplorer.parsers.Tokenizer;
 import net.sourceforge.sqlexplorer.parsers.Tokenizer.Token;
@@ -29,10 +28,10 @@ import net.sourceforge.sqlexplorer.parsers.scp.StructuredCommentParser.CommandTy
 	public DefineCommand(StructuredCommentParser parser, Token comment, Tokenizer tokenizer, CharSequence data) throws ParserException {
 		super(parser, CommandType.DEFINE, comment, tokenizer, data);
 		if (tokens.size() != 1)
-			throw new StructuredCommentException(Messages.getString("DefineCommand.extraTextAfterMacroName"), comment); //$NON-NLS-1$
+			throw new StructuredCommentException("define has extra text after the macro name", comment);
 	}
 	
 	public String toString() {
-		return "define " + tokens.get(0); //$NON-NLS-1$
+		return "define " + tokens.get(0);
 	}
 }

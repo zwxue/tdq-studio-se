@@ -19,7 +19,6 @@
  
 package net.sourceforge.sqlexplorer.plugin.perspectives;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.jface.action.Action;
@@ -38,7 +37,7 @@ public class OpenPerspectiveAction extends Action {
 		}
 		catch(Throwable e)
 		{
-			SQLExplorerPlugin.error(Messages.getString("OpenPerspectiveAction.ErrorOpensqlExplorerPerspective"), e); //$NON-NLS-1$
+			SQLExplorerPlugin.error("Error opening sql explorer perspective", e);
 		}
 	}
 }

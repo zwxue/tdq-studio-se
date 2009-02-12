@@ -27,7 +27,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 public class SaveFileAsAction extends AbstractEditorAction {
 
-    private ImageDescriptor _image = ImageUtil.getDescriptor("Images.SaveFileAsIcon"); //$NON-NLS-1$
+    private ImageDescriptor _image = ImageUtil.getDescriptor("Images.SaveFileAsIcon");
 
     public SaveFileAsAction(SQLEditor editor) {
 		super(editor);
@@ -38,7 +38,7 @@ public class SaveFileAsAction extends AbstractEditorAction {
     }
 
     public String getText() {
-        return Messages.getString("SQLEditor.Actions.SaveAs"); //$NON-NLS-1$
+        return Messages.getString("SQLEditor.Actions.SaveAs");
     }
 
     public boolean isEnabled() {

@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
 public class CopyAliasAction extends AbstractConnectionTreeAction {
 
     public CopyAliasAction() {
-    	super("ConnectionsView.Actions.CopyAlias", "ConnectionsView.Actions.CopyAliasToolTip", "Images.CopyAlias"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    	super("ConnectionsView.Actions.CopyAlias", "ConnectionsView.Actions.CopyAliasToolTip", "Images.CopyAlias");
     }
 
     public void run() {

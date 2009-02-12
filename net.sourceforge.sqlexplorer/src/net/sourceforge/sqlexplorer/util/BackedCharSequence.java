@@ -20,8 +20,6 @@ package net.sourceforge.sqlexplorer.util;
 
 import java.util.Iterator;
 
-import net.sourceforge.sqlexplorer.Messages;
-
 /**
  * Implements CharSequence over a section of an existing StringBuffer;
  * note that it does not duplicate the buffer, just provides a view
@@ -85,7 +83,7 @@ public class BackedCharSequence implements CharSequence, Iterable<Character> {
 	 */
 	public BackedCharSequence outerSequence(BackedCharSequence end) {
 		if (end.buffer != buffer)
-			throw new IllegalArgumentException(Messages.getString("BackedCharSequence.NotFormOuterSequence")); //$NON-NLS-1$
+			throw new IllegalArgumentException("Cannot form outer sequence from different buffers");
 		return new BackedCharSequence(buffer, this.start, end.end);
 	}
 	
@@ -98,7 +96,7 @@ public class BackedCharSequence implements CharSequence, Iterable<Character> {
 	 */
 	public BackedCharSequence superSequence(int start, int end) {
 		if (start < 0 || end > buffer.length())
-			throw new IllegalArgumentException(Messages.getString("BackedCharSequence.notSuper-size")); //$NON-NLS-1$
+			throw new IllegalArgumentException("Cannot super-size to larger than the buffer");
 		return new BackedCharSequence(buffer, start, end);
 	}
 
@@ -109,7 +107,7 @@ public class BackedCharSequence implements CharSequence, Iterable<Character> {
 	 */
 	public BackedCharSequence superSequence(int start) {
 		if (start < 0)
-			throw new IllegalArgumentException(Messages.getString("BackedCharSequence.CannotSuper-size")); //$NON-NLS-1$
+			throw new IllegalArgumentException("Cannot super-size to larger than the buffer");
 		return new BackedCharSequence(buffer, start, end);
 	}
 
@@ -130,9 +128,9 @@ public class BackedCharSequence implements CharSequence, Iterable<Character> {
 	 */
 	public void applyOffset(int offset) {
 		if (end + offset > buffer.length())
-			throw new IllegalArgumentException(Messages.getString("BackedCharSequence.NotBeyondSizeOfBuffer")); //$NON-NLS-1$
+			throw new IllegalArgumentException("Cannot offset beyond the size of the buffer");
 		if (start + offset < 0)
-			throw new IllegalArgumentException(Messages.getString("BackedCharSequence.NotBeyondStartBuffer")); //$NON-NLS-1$
+			throw new IllegalArgumentException("Cannot offset beyond the start of the buffer");
 		start += offset;
 		end += offset;
 	}

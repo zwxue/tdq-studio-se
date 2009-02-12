@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbstructure.actions.AbstractDBTreeContextAction;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.INode;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -118,7 +117,7 @@ public class DBTreeActionGroup extends ActionGroup {
         List actions = new ArrayList();
 
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "nodeContextAction"); //$NON-NLS-1$ //$NON-NLS-2$
+        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "nodeContextAction");
         IExtension[] extensions = point.getExtensions();
 
         for (int i = 0; i < extensions.length; i++) {
@@ -133,10 +132,10 @@ public class DBTreeActionGroup extends ActionGroup {
                     boolean isValidProduct = false;
                     boolean isValidNodeType = false;
 
-                    String id = ces[j].getAttribute("id"); //$NON-NLS-1$
-                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");  //$NON-NLS-1$//$NON-NLS-2$
-                    String[] validNodeTypes = ces[j].getAttribute("node-type").split(",");  //$NON-NLS-1$//$NON-NLS-2$
-                    String imagePath = ces[j].getAttribute("icon"); //$NON-NLS-1$
+                    String id = ces[j].getAttribute("id");
+                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
+                    String[] validNodeTypes = ces[j].getAttribute("node-type").split(",");
+                    String imagePath = ces[j].getAttribute("icon");
 
                     // check if action is valid for current database product
                     for (int k = 0; k < validProducts.length; k++) {
@@ -147,12 +146,12 @@ public class DBTreeActionGroup extends ActionGroup {
                             continue;
                         }
 
-                        if (product.equals("*")) { //$NON-NLS-1$
+                        if (product.equals("*")) {
                             isValidProduct = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(product, '*', ".*"); //$NON-NLS-1$
+                        String regex = TextUtil.replaceChar(product, '*', ".*");
                         if (databaseProductName.matches(regex)) {
                             isValidProduct = true;
                             break;
@@ -173,12 +172,12 @@ public class DBTreeActionGroup extends ActionGroup {
                             continue;
                         }
 
-                        if (type.equals("*")) { //$NON-NLS-1$
+                        if (type.equals("*")) {
                             isValidNodeType = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(type, '*', ".*"); //$NON-NLS-1$
+                        String regex = TextUtil.replaceChar(type, '*', ".*");
                         if (nodeType.matches(regex)) {
                             isValidNodeType = true;
                             break;
@@ -191,7 +190,7 @@ public class DBTreeActionGroup extends ActionGroup {
                     }
 
                     // check if the action thinks it is suitable..
-                    AbstractDBTreeContextAction action = (AbstractDBTreeContextAction) ces[j].createExecutableExtension("class"); //$NON-NLS-1$
+                    AbstractDBTreeContextAction action = (AbstractDBTreeContextAction) ces[j].createExecutableExtension("class");
                     action.setSelectedNodes(nodes);
                     action.setTreeViewer(_treeViewer);
 
@@ -206,7 +205,7 @@ public class DBTreeActionGroup extends ActionGroup {
                     }
 
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error(Messages.getString("DBTreeActionGroup.NotCreateMenuAction"), ex); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Could not create menu action", ex);
                 }
             }
         }

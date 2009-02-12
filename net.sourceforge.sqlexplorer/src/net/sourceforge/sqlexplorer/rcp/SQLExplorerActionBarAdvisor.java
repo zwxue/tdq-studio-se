@@ -1,7 +1,5 @@
 package net.sourceforge.sqlexplorer.rcp;
 
-import net.sourceforge.sqlexplorer.Messages;
-
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -65,11 +63,11 @@ public class SQLExplorerActionBarAdvisor extends ActionBarAdvisor {
         
 
         // create menus
-        MenuManager fileMenu = new MenuManager(Messages.getString("SQLExplorerActionBarAdvisor.File"), IWorkbenchActionConstants.M_FILE); //$NON-NLS-1$
-        MenuManager editMenu = new MenuManager(Messages.getString("SQLExplorerActionBarAdvisor.Edit"), IWorkbenchActionConstants.M_EDIT); //$NON-NLS-1$
-        MenuManager navigateMenu = new MenuManager(Messages.getString("SQLExplorerActionBarAdvisor.Navigate"), IWorkbenchActionConstants.M_NAVIGATE); //$NON-NLS-1$
-        MenuManager viewMenu = new MenuManager(Messages.getString("SQLExplorerActionBarAdvisor.View"), "sqlexplorer.View");         //$NON-NLS-1$ //$NON-NLS-2$
-        MenuManager helpMenu = new MenuManager(Messages.getString("SQLExplorerActionBarAdvisor.Help"), Messages.getString("SQLExplorerActionBarAdvisor.help")); //$NON-NLS-1$ //$NON-NLS-2$
+        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
+        MenuManager editMenu = new MenuManager("&Edit", IWorkbenchActionConstants.M_EDIT);
+        MenuManager navigateMenu = new MenuManager("&Navigate", IWorkbenchActionConstants.M_NAVIGATE);
+        MenuManager viewMenu = new MenuManager("&View", "sqlexplorer.View");        
+        MenuManager helpMenu = new MenuManager("&Help", "help");
                
         // create file menu
         menuBar.add(fileMenu);

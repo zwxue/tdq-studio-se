@@ -48,7 +48,7 @@ public class URLUtil {
     static private void init() {
         SQLExplorerPlugin defaultPlugin = SQLExplorerPlugin.getDefault();
 
-        baseURL = defaultPlugin.getBundle().getEntry("/"); //$NON-NLS-1$
+        baseURL = defaultPlugin.getBundle().getEntry("/");
         initialized = true;
     }
 
@@ -70,7 +70,7 @@ public class URLUtil {
         URL url = null;
         
         try {
-            URL baseURL = Platform.getBundle(yourPluginId).getEntry("/"); //$NON-NLS-1$
+            URL baseURL = Platform.getBundle(yourPluginId).getEntry("/");
             url = new URL(baseURL, filePath);
         } catch (Exception e) {
             e.printStackTrace();

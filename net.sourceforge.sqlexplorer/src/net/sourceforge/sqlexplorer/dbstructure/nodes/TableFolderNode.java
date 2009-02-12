@@ -49,13 +49,13 @@ public class TableFolderNode extends AbstractFolderNode {
      * @param sessionNode session for this node
      */
     public TableFolderNode(INode parent, String name, MetaDataSession sessionNode, ITableInfo[] tables) {
-    	super(parent, tidiedName(name), sessionNode, name + "_FOLDER"); //$NON-NLS-1$
+    	super(parent, tidiedName(name), sessionNode, name + "_FOLDER");
 
     	// Nasty temporary hack for Oracle - BIN$ tables are recycle bin tables, and not only does the JDBC driver
     	//	cause a SQLException when getting meta data on them, it leaks cursors when it does it!
     	LinkedList<ITableInfo> list = new LinkedList<ITableInfo>();
     	for (ITableInfo info : tables)
-    		if (!info.getSimpleName().startsWith("BIN$")) //$NON-NLS-1$
+    		if (!info.getSimpleName().startsWith("BIN$"))
     			list.add(info);
         _allTables = list.toArray(new ITableInfo[0]);
         _origName = name;
@@ -111,7 +111,7 @@ public class TableFolderNode extends AbstractFolderNode {
                 }
 
                 // get all relevant tables
-                tables = _session.getMetaData().getTables(catalogName, schemaName, "%", new String[] {_origName}, null); //$NON-NLS-1$
+                tables = _session.getMetaData().getTables(catalogName, schemaName, "%", new String[] {_origName}, null);
 
             }
 
@@ -125,24 +125,24 @@ public class TableFolderNode extends AbstractFolderNode {
             }
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Could not load child nodes for " + _name, e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Could not load child nodes for " + _name, e);
         }
     }
 
     private static String tidiedName(String name) {
         // cleanup the names a little
-        String[] words = name.split(" "); //$NON-NLS-1$
-        name = ""; //$NON-NLS-1$
+        String[] words = name.split(" ");
+        name = "";
         for (int i = 0; i < words.length; i++) {
-            name = name + words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase() + " "; //$NON-NLS-1$
+            name = name + words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase() + " ";
         }
         name = name.trim();
 
-        if (name.equals("View")) { //$NON-NLS-1$
-            name = Messages.getString("DatabaseStructureView.view"); //$NON-NLS-1$
+        if (name.equals("View")) {
+            name = Messages.getString("DatabaseStructureView.view");
         }
-        if (name.equals("Table")) { //$NON-NLS-1$
-            name = Messages.getString("DatabaseStructureView.table"); //$NON-NLS-1$
+        if (name.equals("Table")) {
+            name = Messages.getString("DatabaseStructureView.table");
         }
         return name;
     }

@@ -21,7 +21,6 @@ package net.sourceforge.sqlexplorer.dbstructure.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.MetaDataSession;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -60,8 +59,8 @@ public class CatalogNode extends AbstractNode {
      * @param sessionNode session for this node
      */
     public CatalogNode(INode parent, String name, MetaDataSession sessionNode) {
-    	super(parent, name, sessionNode, "catalog"); //$NON-NLS-1$
-        setImageKey("Images.CatalogNodeIcon"); //$NON-NLS-1$
+    	super(parent, name, sessionNode, "catalog");
+        setImageKey("Images.CatalogNodeIcon");
     }
 
 
@@ -70,7 +69,7 @@ public class CatalogNode extends AbstractNode {
         String databaseProductName = getSession().getRoot().getDatabaseProductName().toLowerCase().trim();
 
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "node"); //$NON-NLS-1$ //$NON-NLS-2$
+        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "node");
         IExtension[] extensions = point.getExtensions();
 
         for (int i = 0; i < extensions.length; i++) {
@@ -84,13 +83,13 @@ public class CatalogNode extends AbstractNode {
 
                     // include only nodes that are attachted to the schema
                     // node..
-                    String parent = ces[j].getAttribute("parent-node"); //$NON-NLS-1$
-                    if (parent.indexOf("catalog") == -1) { //$NON-NLS-1$
+                    String parent = ces[j].getAttribute("parent-node");
+                    if (parent.indexOf("catalog") == -1) {
                         continue;
                     }
 
                     boolean isValidProduct = false;
-                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");  //$NON-NLS-1$//$NON-NLS-2$
+                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
 
                     // include only nodes valid for this database
                     for (int k = 0; k < validProducts.length; k++) {
@@ -101,12 +100,12 @@ public class CatalogNode extends AbstractNode {
                             continue;
                         }
 
-                        if (product.equals("*")) { //$NON-NLS-1$
+                        if (product.equals("*")) {
                             isValidProduct = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(product, '*', ".*"); //$NON-NLS-1$
+                        String regex = TextUtil.replaceChar(product, '*', ".*");
                         if (databaseProductName.matches(regex)) {
                             isValidProduct = true;
                             break;
@@ -118,11 +117,11 @@ public class CatalogNode extends AbstractNode {
                         continue;
                     }
 
-                    String imagePath = ces[j].getAttribute("icon"); //$NON-NLS-1$
-                    String id = ces[j].getAttribute("id"); //$NON-NLS-1$
-                    String type = ces[j].getAttribute("table-type").trim(); //$NON-NLS-1$
+                    String imagePath = ces[j].getAttribute("icon");
+                    String id = ces[j].getAttribute("id");
+                    String type = ces[j].getAttribute("table-type").trim();
 
-                    AbstractNode childNode = (AbstractNode) ces[j].createExecutableExtension("class"); //$NON-NLS-1$
+                    AbstractNode childNode = (AbstractNode) ces[j].createExecutableExtension("class");
                     childNode.setParent(this);
                     childNode.setSession(_session);
                     childNode.setType(type);
@@ -138,7 +137,7 @@ public class CatalogNode extends AbstractNode {
                     }
 
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error(Messages.getString("CatalogNode.NotCreateChildNode"), ex); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Could not create child node", ex);
                 }
             }
         }
@@ -157,7 +156,7 @@ public class CatalogNode extends AbstractNode {
         String databaseProductName = getSession().getRoot().getDatabaseProductName().toLowerCase().trim();
 
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "node"); //$NON-NLS-1$ //$NON-NLS-2$
+        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "node");
         IExtension[] extensions = point.getExtensions();
 
         for (int i = 0; i < extensions.length; i++) {
@@ -171,13 +170,13 @@ public class CatalogNode extends AbstractNode {
 
                     // include only nodes that are attachted to the schema
                     // node..
-                    String parent = ces[j].getAttribute("parent-node"); //$NON-NLS-1$
-                    if (parent.indexOf("catalog") == -1) { //$NON-NLS-1$
+                    String parent = ces[j].getAttribute("parent-node");
+                    if (parent.indexOf("catalog") == -1) {
                         continue;
                     }
 
                     boolean isValidProduct = false;
-                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");  //$NON-NLS-1$//$NON-NLS-2$
+                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
 
                     // include only nodes valid for this database
                     for (int k = 0; k < validProducts.length; k++) {
@@ -188,12 +187,12 @@ public class CatalogNode extends AbstractNode {
                             continue;
                         }
 
-                        if (product.equals("*")) { //$NON-NLS-1$
+                        if (product.equals("*")) {
                             isValidProduct = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(product, '*', ".*"); //$NON-NLS-1$
+                        String regex = TextUtil.replaceChar(product, '*', ".*");
                         if (databaseProductName.matches(regex)) {
                             isValidProduct = true;
                             break;
@@ -206,19 +205,19 @@ public class CatalogNode extends AbstractNode {
                     }
 
                     // check if it is the correct type
-                    String type = ces[j].getAttribute("table-type").trim(); //$NON-NLS-1$
+                    String type = ces[j].getAttribute("table-type").trim();
                     if (!type.equalsIgnoreCase(tableType)) {
                         continue;
                     }
 
-                    AbstractNode childNode = (AbstractNode) ces[j].createExecutableExtension("class"); //$NON-NLS-1$
+                    AbstractNode childNode = (AbstractNode) ces[j].createExecutableExtension("class");
                     childNode.setParent(this);
                     childNode.setSession(_session);
 
                     return childNode;
 
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error(Messages.getString("CatalogNode.NotCreateChildNode"), ex); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Could not create child node", ex);
                 }
             }
         }
@@ -258,7 +257,7 @@ public class CatalogNode extends AbstractNode {
         if (_filteredNames == null) {
             String filter = ((Alias) getSession().getUser().getAlias()).getFolderFilterExpression();
             if (filter != null) {
-                _filteredNames = filter.split(","); //$NON-NLS-1$
+                _filteredNames = filter.split(",");
             }
         }
         if (_filteredNames == null || _filteredNames.length == 0) {
@@ -295,7 +294,7 @@ public class CatalogNode extends AbstractNode {
             String[] tableTypes = _session.getMetaData().getTableTypes();
 
             try {
-                tables = _session.getMetaData().getTables(_name, null, "%", tableTypes, null); //$NON-NLS-1$
+                tables = _session.getMetaData().getTables(_name, null, "%", tableTypes, null);
             } catch (Throwable e) {
                 _logger.debug("Loading all tables at once is not supported");
             }
@@ -321,7 +320,7 @@ public class CatalogNode extends AbstractNode {
             addExtensionNodes();
 
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Could not load childnodes for " + _name, e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Could not load childnodes for " + _name, e);
         }
     }
 

@@ -27,14 +27,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 public class ClearTextAction extends AbstractEditorAction {
 
-    private ImageDescriptor img = ImageUtil.getDescriptor("Images.ClearTextIcon"); //$NON-NLS-1$
+    private ImageDescriptor img = ImageUtil.getDescriptor("Images.ClearTextIcon");
 
     public ClearTextAction(SQLEditor _editor) {
 		super(_editor);
 	}
 
 	public String getText() {
-        return Messages.getString("Clear_1"); //$NON-NLS-1$
+        return Messages.getString("Clear_1");
     }
 
 
@@ -47,7 +47,7 @@ public class ClearTextAction extends AbstractEditorAction {
     }
 
     public String getToolTipText() {
-        return "Clear"; //$NON-NLS-1$
+        return Messages.getString("Clear_2");
     }
 
 

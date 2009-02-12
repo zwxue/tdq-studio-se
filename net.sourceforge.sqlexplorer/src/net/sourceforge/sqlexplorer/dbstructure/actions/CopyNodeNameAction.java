@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class CopyNodeNameAction extends AbstractDBTreeContextAction {
 
-    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.CopyAlias"); //$NON-NLS-1$
+    private static final ImageDescriptor _image = ImageUtil.getDescriptor("Images.CopyAlias");
 
 
     /**
@@ -54,7 +54,7 @@ public class CopyNodeNameAction extends AbstractDBTreeContextAction {
      * @see org.eclipse.jface.action.IAction#getText()
      */
     public String getText() {
-        return Messages.getString("DatabaseStructureView.Actions.CopyNodeName"); //$NON-NLS-1$
+        return Messages.getString("DatabaseStructureView.Actions.CopyNodeName");
     }
 
 
@@ -68,13 +68,13 @@ public class CopyNodeNameAction extends AbstractDBTreeContextAction {
         Clipboard clipBoard = new Clipboard(Display.getCurrent());
         TextTransfer textTransfer = TextTransfer.getInstance();
 
-        StringBuffer text = new StringBuffer(""); //$NON-NLS-1$
-        String sep = ""; //$NON-NLS-1$
+        StringBuffer text = new StringBuffer("");
+        String sep = "";
 
         for (int i = 0; i < _selectedNodes.length; i++) {
             text.append(sep);
             text.append(_selectedNodes[i].getQualifiedName());
-            sep = ", "; //$NON-NLS-1$
+            sep = ", ";
         }
 
         clipBoard.setContents(new Object[] {text.toString()}, new Transfer[] {textTransfer});

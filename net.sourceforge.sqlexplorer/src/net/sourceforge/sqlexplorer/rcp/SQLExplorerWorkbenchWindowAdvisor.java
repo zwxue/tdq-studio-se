@@ -34,7 +34,7 @@ public class SQLExplorerWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
         super.postWindowOpen();
         IWorkbenchWindowConfigurer windowConfigurer = getWindowConfigurer();
-        windowConfigurer.setTitle(Messages.getString("Application.SQLExplorer.WindowTitle")); //$NON-NLS-1$
+        windowConfigurer.setTitle(Messages.getString("Application.SQLExplorer.WindowTitle"));
         windowConfigurer.setShowCoolBar(false);
         windowConfigurer.setShowPerspectiveBar(false);
         windowConfigurer.setShowProgressIndicator(true);
@@ -56,12 +56,12 @@ public class SQLExplorerWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         IMenuManager menuBar = windowConfigurer.getActionBarConfigurer().getMenuManager();
         
         // clean file menu
-        hideMenuItem(menuBar, IWorkbenchActionConstants.M_FILE, "converstLineDelimitersTo"); //$NON-NLS-1$
-        hideMenuItem(menuBar, IWorkbenchActionConstants.M_FILE, "org.eclipse.ui.edit.text.openExternalFile"); //$NON-NLS-1$
+        hideMenuItem(menuBar, IWorkbenchActionConstants.M_FILE, "converstLineDelimitersTo");
+        hideMenuItem(menuBar, IWorkbenchActionConstants.M_FILE, "org.eclipse.ui.edit.text.openExternalFile");
                       
         // clean help menu
-        hideMenuItem(menuBar, Messages.getString("SQLExplorerWorkbenchWindowAdvisor.help"), "org.eclipse.ui.actionSet.keyBindings");  //$NON-NLS-1$//$NON-NLS-2$
-        hideMenuItem(menuBar, Messages.getString("SQLExplorerWorkbenchWindowAdvisor.help_"), "org.eclipse.ui.actions.showKeyAssistHandler");  //$NON-NLS-1$//$NON-NLS-2$
+        hideMenuItem(menuBar, "help", "org.eclipse.ui.actionSet.keyBindings");
+        hideMenuItem(menuBar, "help", "org.eclipse.ui.actions.showKeyAssistHandler");
 
         // refresh menubar 
         menuBar.updateAll(true);

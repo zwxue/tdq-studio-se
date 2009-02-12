@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbstructure.nodes.TableNode;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.sessiontree.model.utility.Dictionary;
@@ -131,7 +130,7 @@ public class UnsignedWordRule implements IRule {
                                 try {
                                     ls = (ArrayList) nd.getColumnNames();
                                 } catch (Throwable e) {
-                                    SQLExplorerPlugin.error(Messages.getString("UnsignedWordRule.ErrorGetColumnsNames"), e); //$NON-NLS-1$
+                                    SQLExplorerPlugin.error("Error getting columns names", e);
                                 }
                                 if (ls != null) {
                                     TreeSet colTree = (TreeSet) dictionary.getColumnListByTableName(tokenName);

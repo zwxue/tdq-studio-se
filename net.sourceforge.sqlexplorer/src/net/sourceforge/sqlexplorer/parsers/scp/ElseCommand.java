@@ -28,10 +28,10 @@ import net.sourceforge.sqlexplorer.parsers.scp.StructuredCommentParser.CommandTy
 	public ElseCommand(StructuredCommentParser parser, Token comment, Tokenizer tokenizer, CharSequence data) throws ParserException {
 		super(parser, CommandType.ELSE, comment, tokenizer, data);
 		if (tokens.size() != 0)
-			throw new StructuredCommentException("else has extra text", comment); //$NON-NLS-1$
+			throw new StructuredCommentException("else has extra text", comment);
 	}
 	
 	public String toString() {
-		return "else"; //$NON-NLS-1$
+		return "else";
 	}
 }

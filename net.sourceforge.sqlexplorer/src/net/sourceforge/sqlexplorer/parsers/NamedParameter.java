@@ -28,7 +28,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.parsers.Tokenizer.Token;
 
 /**
@@ -75,7 +74,7 @@ public class NamedParameter implements Comparable<NamedParameter> {
 			public void configureStatement(NamedParameter param, CallableStatement stmt, int columnIndex) throws SQLException {
 				if (param.isOutput())
 					stmt.registerOutParameter(columnIndex, Types.VARCHAR);
-				stmt.setString(columnIndex, param.value == null ? "" : param.value.toString()); //$NON-NLS-1$
+				stmt.setString(columnIndex, param.value == null ? "" : param.value.toString());
 			}
 		},
 		
@@ -93,11 +92,11 @@ public class NamedParameter implements Comparable<NamedParameter> {
 							formatName = param.arguments.get(0).getUnquotedValue().toString().trim();
 						if (formatName == null || formatName.length() == 0)
 							df = DateFormat.getDateInstance();
-						else if (formatName.equalsIgnoreCase("short")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("short"))
 							df = DateFormat.getDateInstance(DateFormat.SHORT);
-						else if (formatName.equalsIgnoreCase("medium")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("medium"))
 							df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-						else if (formatName.equalsIgnoreCase("long")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("long"))
 							df = DateFormat.getDateInstance(DateFormat.LONG);
 						else 
 							df = new SimpleDateFormat(formatName);
@@ -125,11 +124,11 @@ public class NamedParameter implements Comparable<NamedParameter> {
 							formatName = param.arguments.get(0).getUnquotedValue().toString().trim();
 						if (formatName == null || formatName.length() == 0)
 							df = DateFormat.getTimeInstance();
-						else if (formatName.equalsIgnoreCase("short")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("short"))
 							df = DateFormat.getTimeInstance(DateFormat.SHORT);
-						else if (formatName.equalsIgnoreCase("medium")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("medium"))
 							df = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-						else if (formatName.equalsIgnoreCase("long")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("long"))
 							df = DateFormat.getTimeInstance(DateFormat.LONG);
 						else 
 							df = new SimpleDateFormat(formatName);
@@ -155,11 +154,11 @@ public class NamedParameter implements Comparable<NamedParameter> {
 							formatName = param.arguments.get(0).getUnquotedValue().toString().trim();
 						if (formatName == null || formatName.length() == 0)
 							df = DateFormat.getDateTimeInstance();
-						else if (formatName.equalsIgnoreCase("short")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("short"))
 							df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-						else if (formatName.equalsIgnoreCase("medium")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("medium"))
 							df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
-						else if (formatName.equalsIgnoreCase("long")) //$NON-NLS-1$
+						else if (formatName.equalsIgnoreCase("long"))
 							df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
 						else 
 							df = new SimpleDateFormat(formatName);
@@ -174,7 +173,7 @@ public class NamedParameter implements Comparable<NamedParameter> {
 		CURSOR {
 			@Override
 			public void configureStatement(NamedParameter param, CallableStatement stmt, int columnIndex) throws SQLException {
-				throw new IllegalAccessError(Messages.getString("NamedParameter.CursorsNotSupport")); //$NON-NLS-1$
+				throw new IllegalAccessError("Cursors are not supported by this database type");
 			}
 		};
 		
@@ -265,6 +264,6 @@ public class NamedParameter implements Comparable<NamedParameter> {
 	}
 
 	public String toString() {
-		return ":" + name + "[" + direction.toString().toLowerCase() + " " + dataType.toString().toLowerCase() + "] = " + (value == null ? "null" : ("\"" + value.toString() + "\"")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+		return ":" + name + "[" + direction.toString().toLowerCase() + " " + dataType.toString().toLowerCase() + "] = " + (value == null ? "null" : ("\"" + value.toString() + "\""));
 	}
 }

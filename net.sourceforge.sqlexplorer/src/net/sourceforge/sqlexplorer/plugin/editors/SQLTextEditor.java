@@ -15,7 +15,6 @@
 package net.sourceforge.sqlexplorer.plugin.editors;
 
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.sessiontree.model.utility.Dictionary;
@@ -165,8 +164,8 @@ public class SQLTextEditor extends TextEditor {
         ITreeContentProvider cp = new WorkbenchContentProvider();
         FolderSelectionDialog dialog = new FolderSelectionDialog(shell, lp, cp);
         // dialog.setValidator(validator);
-        dialog.setTitle(Messages.getString("SQLTextEditor.SelectFolder")); //$NON-NLS-1$
-        dialog.setMessage(Messages.getString("SQLTextEditor.SelectTheFolder")); //$NON-NLS-1$
+        dialog.setTitle("Select folder");
+        dialog.setMessage("Select the folder in which the item will be created");
         dialog.setInput(root);
         dialog.addFilter(new ViewerFilter() {
 
@@ -179,9 +178,9 @@ public class SQLTextEditor extends TextEditor {
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (IProject.class.isInstance(element)) {
-                    return "Libraries".equals(((IProject) element).getName()); //$NON-NLS-1$
+                    return "Libraries".equals(((IProject) element).getName());
                 } else if (IFolder.class.isInstance(element)) {
-                    IPath path = new Path("Source Files"); //$NON-NLS-1$
+                    IPath path = new Path("Source Files");
                     IPath projectRelativePath = ((IFolder) element).getProjectRelativePath();
                     return path.isPrefixOf(projectRelativePath);
                 }
@@ -221,8 +220,8 @@ public class SQLTextEditor extends TextEditor {
             IFile file = workspace.getRoot().getFile(filePath);
             // PTODO qzhang 4753: Ask for a new name when saving a file with an already existing name
             if (file.exists() && SQLExplorerPlugin.isEditorSerialName(filePath.lastSegment())) {
-                InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name", //$NON-NLS-1$
-                        Messages.getString("SQLTextEditor.InputFileName"), filePath.lastSegment(), null); //$NON-NLS-1$
+                InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name",
+                        "this file exists already, please input new file name: ", filePath.lastSegment(), null);
                 if (inputDialog.open() == InputDialog.CANCEL) {
                     return;
                 } else {
@@ -246,8 +245,8 @@ public class SQLTextEditor extends TextEditor {
             } catch (CoreException x) {
                 final IStatus status = x.getStatus();
                 if (status == null || status.getSeverity() != IStatus.CANCEL) {
-                    String title = Messages.getString("SQLTextEditor.SaveFailure"); //$NON-NLS-1$
-                    String msg = Messages.getString("SQLTextEditor.FileSaveFailure"); //$NON-NLS-1$
+                    String title = "The file save failure.";
+                    String msg = "The file save failure.";
                     MessageDialog.openError(shell, title, msg);
                 }
             } finally {
@@ -274,7 +273,7 @@ public class SQLTextEditor extends TextEditor {
             monitor = new NullProgressMonitor();
         }
         try {
-            monitor.beginTask(Messages.getString("SQLTextEditor.SaveFile"), 2000); //$NON-NLS-1$
+            monitor.beginTask("save file...", 2000);
             ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
             manager.connect(file.getFullPath(), LocationKind.IFILE, monitor);
             ITextFileBuffer buffer = ITextFileBufferManager.DEFAULT.getTextFileBuffer(file.getFullPath(), LocationKind.IFILE);
@@ -302,7 +301,7 @@ public class SQLTextEditor extends TextEditor {
             return;
         }
 
-        Action action = new Action("Auto-Completion") { //$NON-NLS-1$
+        Action action = new Action("Auto-Completion") {
 
             public void run() {
                 sqlTextViewer.showAssistance();
@@ -311,7 +310,7 @@ public class SQLTextEditor extends TextEditor {
 
         // This action definition is associated with the accelerator Ctrl+Space
         action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-        setAction("ContentAssistProposal", action); //$NON-NLS-1$
+        setAction("ContentAssistProposal", action);
 
     }
 
@@ -320,7 +319,7 @@ public class SQLTextEditor extends TextEditor {
         super.createPartControl(parent);
 
         PlatformUI.getWorkbench().getHelpSystem().setHelp(getSourceViewer().getTextWidget(),
-                SQLExplorerPlugin.PLUGIN_ID + ".SQLEditor"); //$NON-NLS-1$
+                SQLExplorerPlugin.PLUGIN_ID + ".SQLEditor");
 
         Object adapter = getAdapter(org.eclipse.swt.widgets.Control.class);
         if (adapter instanceof StyledText) {

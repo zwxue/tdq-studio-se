@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
 public class ChangeAliasAction extends AbstractConnectionTreeAction {
 
     public ChangeAliasAction() {
-		super("ConnectionsView.Actions.ChangeAlias", "ConnectionsView.Actions.ChangeAliasToolTip", "Images.EditAlias"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		super("ConnectionsView.Actions.ChangeAlias", "ConnectionsView.Actions.ChangeAliasToolTip", "Images.EditAlias");
 	}
 
     public void run() {

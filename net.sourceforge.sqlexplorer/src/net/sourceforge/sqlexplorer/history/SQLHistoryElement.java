@@ -17,11 +17,11 @@ import net.sourceforge.sqlexplorer.util.TextUtil;
  */
 public class SQLHistoryElement {
 
-	public static final String ELEMENT = "element"; //$NON-NLS-1$
-    private static final String ALIAS = "alias"; //$NON-NLS-1$
-    private static final String EXECUTION_COUNT = "execution-count"; //$NON-NLS-1$
-    private static final String LAST_EXECUTION_TIME = "last-execution-time"; //$NON-NLS-1$
-    private static final String USER_NAME = "user-name"; //$NON-NLS-1$
+	public static final String ELEMENT = "element";
+    private static final String ALIAS = "alias";
+    private static final String EXECUTION_COUNT = "execution-count";
+    private static final String LAST_EXECUTION_TIME = "last-execution-time";
+    private static final String USER_NAME = "user-name";
     
     private int _executionCount = 1;
 
@@ -199,7 +199,7 @@ public class SQLHistoryElement {
     private void initialize() {
 
         _formattedTime = _dateFormatter.format(new Date(_time));
-        _searchableString = (_rawSQLString + " " + aliasName + "/" + userName + " " + _formattedTime).toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        _searchableString = (_rawSQLString + " " + aliasName + "/" + userName + " " + _formattedTime).toLowerCase();
         _singleLineText = TextUtil.removeLineBreaks(_rawSQLString);
     }
 

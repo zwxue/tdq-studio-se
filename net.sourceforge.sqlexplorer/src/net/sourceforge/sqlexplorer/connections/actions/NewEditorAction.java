@@ -31,8 +31,8 @@ import org.eclipse.ui.IViewActionDelegate;
 public class NewEditorAction extends AbstractConnectionTreeAction implements IViewActionDelegate {
 
     public NewEditorAction() {
-    	super("ConnectionsView.Actions.NewEditor", "ConnectionsView.Actions.NewEditorToolTip", "Images.OpenSQLIcon"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    	setDisabledImageDescriptor(ImageUtil.getDescriptor("Images.AliasIcon")); //$NON-NLS-1$
+    	super("ConnectionsView.Actions.NewEditor", "ConnectionsView.Actions.NewEditorToolTip", "Images.OpenSQLIcon");
+    	setDisabledImageDescriptor(ImageUtil.getDescriptor("Images.AliasIcon"));
     }
     
     public void run() {

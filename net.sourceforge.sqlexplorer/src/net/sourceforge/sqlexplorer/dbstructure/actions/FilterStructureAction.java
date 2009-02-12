@@ -32,7 +32,7 @@ import org.eclipse.jface.window.Window;
 public class FilterStructureAction extends Action {
 
 	public ImageDescriptor getImageDescriptor() {
-		return ImageUtil.getDescriptor("Images.FilterIcon"); //$NON-NLS-1$
+		return ImageUtil.getDescriptor("Images.FilterIcon");
 	}
 
 	public void run() {
@@ -49,11 +49,11 @@ public class FilterStructureAction extends Action {
 
 			if (alias.getSchemaFilterExpression() != null
 					&& alias.getSchemaFilterExpression().length() != 0) {
-				dialog.setSchemaFilter(alias.getSchemaFilterExpression().split(",")); //$NON-NLS-1$
+				dialog.setSchemaFilter(alias.getSchemaFilterExpression().split(","));
 			}
 			if (alias.getFolderFilterExpression() != null
 					&& alias.getFolderFilterExpression().length() != 0) {
-				dialog.setFolderFilter(alias.getFolderFilterExpression().split(",")); //$NON-NLS-1$
+				dialog.setFolderFilter(alias.getFolderFilterExpression().split(","));
 			}
 			if (alias.getNameFilterExpression() != null
 					&& alias.getNameFilterExpression().length() != 0) {
@@ -65,25 +65,25 @@ public class FilterStructureAction extends Action {
 			}
 
 			String[] schemaFilter = dialog.getSchemaFilter();
-			StringBuffer schemaFilterString = new StringBuffer(""); //$NON-NLS-1$
-			String sep = ""; //$NON-NLS-1$
+			StringBuffer schemaFilterString = new StringBuffer("");
+			String sep = "";
 			if (schemaFilter != null) {
 				for (int i = 0; i < schemaFilter.length; i++) {
 					schemaFilterString.append(sep);
 					schemaFilterString.append(schemaFilter[i]);
-					sep = ","; //$NON-NLS-1$
+					sep = ",";
 				}
 			}
 			alias.setSchemaFilterExpression(schemaFilterString.toString());
 
 			String[] folderFilter = dialog.getFolderFilter();
-			StringBuffer folderFilterString = new StringBuffer(""); //$NON-NLS-1$
-			sep = ""; //$NON-NLS-1$
+			StringBuffer folderFilterString = new StringBuffer("");
+			sep = "";
 			if (folderFilter != null) {
 				for (int i = 0; i < folderFilter.length; i++) {
 					folderFilterString.append(sep);
 					folderFilterString.append(folderFilter[i]);
-					sep = ","; //$NON-NLS-1$
+					sep = ",";
 				}
 			}
 			alias.setFolderFilterExpression(folderFilterString.toString());
@@ -93,7 +93,7 @@ public class FilterStructureAction extends Action {
 			view.refreshSessionTrees(view.getSession());
 
 		} catch (Exception e) {
-			SQLExplorerPlugin.error("Error creating dialog", e); //$NON-NLS-1$
+			SQLExplorerPlugin.error("Error creating dialog", e);
 		}
 	}
 

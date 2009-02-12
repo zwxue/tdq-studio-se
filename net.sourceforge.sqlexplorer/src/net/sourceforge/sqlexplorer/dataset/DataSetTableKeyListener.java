@@ -125,7 +125,7 @@ public class DataSetTableKeyListener implements KeyListener {
 
 
                 } catch (Exception ex) {
-                    SQLExplorerPlugin.error(Messages.getString("DataSetTableKeyListener.ErrorExportCellToClipboard"), ex); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Error exporting cell to clipboard ", ex);
                 }
                 break;
 
@@ -212,7 +212,7 @@ public class DataSetTableKeyListener implements KeyListener {
 
         // add 'find:' label
         Label label = new Label(_popup, SWT.NULL);
-        label.setText(Messages.getString("DataSetTable.PopUp.Find")); //$NON-NLS-1$
+        label.setText(Messages.getString("DataSetTable.PopUp.Find"));
         label.setBackground(_parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
         
         // add input field for search text
@@ -315,7 +315,7 @@ public class DataSetTableKeyListener implements KeyListener {
         }
         
         if (text == null) {
-            text = ""; //$NON-NLS-1$
+            text = "";
         }
         
         

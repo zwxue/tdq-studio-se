@@ -36,17 +36,17 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ConnectionTreeLabelProvider extends LabelProvider {
 
-    private Image _inactiveAliasImage = ImageUtil.getImage("Images.AliasIcon"); //$NON-NLS-1$
+    private Image _inactiveAliasImage = ImageUtil.getImage("Images.AliasIcon");
 
-    private Image _activeAliasImage = ImageUtil.getImage("Images.ConnectedAliasIcon"); //$NON-NLS-1$
+    private Image _activeAliasImage = ImageUtil.getImage("Images.ConnectedAliasIcon");
 
-    private Image _sessionImage = ImageUtil.getImage("Images.ConnectionIcon"); //$NON-NLS-1$
+    private Image _sessionImage = ImageUtil.getImage("Images.ConnectionIcon");
 
     public void dispose() {
         super.dispose();
-        ImageUtil.disposeImage("Images.AliasIcon"); //$NON-NLS-1$
-        ImageUtil.disposeImage("Images.ConnectedAliasIcon"); //$NON-NLS-1$
-        ImageUtil.disposeImage("Images.ConnectionIcon"); //$NON-NLS-1$
+        ImageUtil.disposeImage("Images.AliasIcon");
+        ImageUtil.disposeImage("Images.ConnectedAliasIcon");
+        ImageUtil.disposeImage("Images.ConnectionIcon");
     }
 
     /**
@@ -82,10 +82,10 @@ public class ConnectionTreeLabelProvider extends LabelProvider {
         		numSessions += user.getConnections().size();
         	
             if (numSessions == 1)
-                return label + " (" + numSessions + " " + Messages.getString("ConnectionsView.ConnectedAlias.single.Postfix") + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                return label + " (" + numSessions + " " + Messages.getString("ConnectionsView.ConnectedAlias.single.Postfix") + ")";
 
             if (numSessions > 1)
-                return label + " (" + numSessions + " " + Messages.getString("ConnectionsView.ConnectedAlias.multiple.Postfix") + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                return label + " (" + numSessions + " " + Messages.getString("ConnectionsView.ConnectedAlias.multiple.Postfix") + ")";
 
             return label;
 
@@ -98,13 +98,13 @@ public class ConnectionTreeLabelProvider extends LabelProvider {
             String label;
             
             if (connection.getDescription() == null) {
-	            SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
-            	label = Messages.getString("ConnectionsView.ConnectedAlias.ConnectedSince") + ' ' + fmt.format(new Date(connection.getCreatedTime())); //$NON-NLS-1$
+	            SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
+            	label = Messages.getString("ConnectionsView.ConnectedAlias.ConnectedSince") + ' ' + fmt.format(new Date(connection.getCreatedTime()));
             } else
-            	label = Messages.getString("ConnectionsView.ConnectedAlias.Connection") + ' ' + connection.getDescription(); //$NON-NLS-1$
+            	label = Messages.getString("ConnectionsView.ConnectedAlias.Connection") + ' ' + connection.getDescription();
 
             if (connection.isPooled())
-            	label += ' ' + Messages.getString("ConnectionsView.ConnectedAlias.Pooled"); //$NON-NLS-1$
+            	label += ' ' + Messages.getString("ConnectionsView.ConnectedAlias.Pooled");
             return label;
         }
         

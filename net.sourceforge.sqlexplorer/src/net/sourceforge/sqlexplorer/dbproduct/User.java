@@ -26,7 +26,6 @@ import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.connections.SessionEstablishedListener;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
@@ -39,11 +38,11 @@ import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
  */
 public class User implements Comparable<User>, SessionEstablishedListener {
 	
-	/*package*/ static final String USER = "user"; //$NON-NLS-1$
-	/*package*/ static final String USER_NAME = "user-name"; //$NON-NLS-1$
-	/*package*/ static final String PASSWORD = "password"; //$NON-NLS-1$
-	private static final String AUTO_COMMIT = "auto-commit"; //$NON-NLS-1$
-	private static final String COMMIT_ON_CLOSE = "commit-on-close"; //$NON-NLS-1$
+	/*package*/ static final String USER = "user";
+	/*package*/ static final String USER_NAME = "user-name";
+	/*package*/ static final String PASSWORD = "password";
+	private static final String AUTO_COMMIT = "auto-commit";
+	private static final String COMMIT_ON_CLOSE = "commit-on-close";
 	
 	// Maximum number of connections to keep in the pool
 	public static final int MAX_POOL_SIZE = 3;
@@ -141,7 +140,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
 				try {
 					connection.close();
 				}catch(SQLException e) {
-					SQLExplorerPlugin.error(Messages.getString("User.CannotCloseConnection"), e); //$NON-NLS-1$
+					SQLExplorerPlugin.error("Cannot close connection", e);
 				}
 		}
 		for (SQLConnection connection : that.allocated) {
@@ -421,7 +420,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
 	/*package*/ void setAlias(Alias alias) {
 		if (this.alias != null && alias != null) {
 			if (this.alias != alias)
-				throw new IllegalArgumentException(Messages.getString("User.NotChangeUserAlias")); //$NON-NLS-1$
+				throw new IllegalArgumentException("Cannot change a User's Alias");
 			return;
 		}
 		this.alias = alias;

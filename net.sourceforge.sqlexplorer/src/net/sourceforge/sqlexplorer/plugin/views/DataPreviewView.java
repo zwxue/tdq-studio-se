@@ -69,7 +69,7 @@ public class DataPreviewView extends ViewPart {
 			if (object != null)
 				text.setText(object.toString());
 			else
-				text.setText(Messages.getString("DataPreviewView.NothingToDisplay")); //$NON-NLS-1$
+				text.setText(Messages.getString("DataPreviewView.NothingToDisplay"));
 			parent.layout();
 		}
 	}

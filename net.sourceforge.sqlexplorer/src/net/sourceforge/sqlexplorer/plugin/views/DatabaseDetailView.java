@@ -51,7 +51,7 @@ public class DatabaseDetailView extends ViewPart {
      */
     public void createPartControl(Composite parent) {
 
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".DatabaseDetailView"); //$NON-NLS-1$
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".DatabaseDetailView");
         
         // create new composite to display information
         _composite = new Composite(parent, SWT.NULL);
@@ -97,7 +97,7 @@ public class DatabaseDetailView extends ViewPart {
         if (node == null) {
 
             // add default message
-            String message = Messages.getString("DatabaseDetailView.NoSelection"); //$NON-NLS-1$
+            String message = Messages.getString("DatabaseDetailView.NoSelection");
 
             Label label = new Label(_composite, SWT.FILL);
             label.setText(message);

@@ -31,7 +31,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class CommitAction extends AbstractEditorAction {
 
-    private ImageDescriptor _image = ImageUtil.getDescriptor("Images.EditorCommitIcon"); //$NON-NLS-1$
+    private ImageDescriptor _image = ImageUtil.getDescriptor("Images.EditorCommitIcon");
 
 	public CommitAction(SQLEditor editor) {
 		super(editor);
@@ -42,11 +42,11 @@ public class CommitAction extends AbstractEditorAction {
     }
 
     public String getText() {
-        return Messages.getString("SQLEditor.Actions.Commit"); //$NON-NLS-1$
+        return Messages.getString("SQLEditor.Actions.Commit");
     }
 
     public String getToolTipText() {
-        return Messages.getString("SQLEditor.Actions.Commit.ToolTip"); //$NON-NLS-1$
+        return Messages.getString("SQLEditor.Actions.Commit.ToolTip");
     }
 
     /**
@@ -65,7 +65,7 @@ public class CommitAction extends AbstractEditorAction {
         try {
 
             _editor.getSession().commit();
-            _editor.setMessage(Messages.getString("SQLEditor.Actions.Commit.Success")); //$NON-NLS-1$
+            _editor.setMessage(Messages.getString("SQLEditor.Actions.Commit.Success"));
             
         } catch (final Exception e) {
 
@@ -74,7 +74,7 @@ public class CommitAction extends AbstractEditorAction {
                 public void run() {
 
                     MessageDialog.openError(_editor.getSite().getShell(),
-                            Messages.getString("SQLEditor.Actions.Commit.Error.Title"), e.getMessage()); //$NON-NLS-1$
+                            Messages.getString("SQLEditor.Actions.Commit.Error.Title"), e.getMessage());
                 }
             });
         }

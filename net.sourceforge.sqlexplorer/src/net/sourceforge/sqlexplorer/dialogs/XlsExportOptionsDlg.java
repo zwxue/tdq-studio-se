@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class XlsExportOptionsDlg extends AbstractExportOptionsDlg {
 
-	private static final String[] FILTER = { "*.xls" }; //$NON-NLS-1$
+	private static final String[] FILTER = { "*.xls" };
 
 	private static final int FLAGS = FMT_CHARSET | FMT_NULL | OPT_HDR
 			| OPT_QUOTE | OPT_RTRIM;
@@ -30,11 +30,11 @@ public class XlsExportOptionsDlg extends AbstractExportOptionsDlg {
 	}
 
 	public String getMessage() {
-		return Messages.getString("ExportDialog.xls.message"); //$NON-NLS-1$
+		return Messages.getString("ExportDialog.xls.message");
 	}
 
 	public String getTitle() {
-		return Messages.getString("ExportDialog.xls.title"); //$NON-NLS-1$
+		return Messages.getString("ExportDialog.xls.title");
 	}
 
 }

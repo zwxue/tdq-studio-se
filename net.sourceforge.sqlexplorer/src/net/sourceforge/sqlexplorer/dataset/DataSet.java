@@ -32,7 +32,6 @@ import java.util.Arrays;
 
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
@@ -181,13 +180,13 @@ public class DataSet {
             	try {
             		resultSet.close();
             	}catch(SQLException e) {
-            		SQLExplorerPlugin.error(Messages.getString("DataSet.ErrorCloseResultSet"), e); //$NON-NLS-1$
+            		SQLExplorerPlugin.error("Error closing result set", e);
             	}
             if (statement != null)
                 try {
                 	statement.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error(Messages.getString("DataSet.ErrorCloseStatement"), e); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Error closing statement", e);
                 }
             if (connection != null)
             	session.releaseConnection(connection);
@@ -359,7 +358,7 @@ public class DataSet {
      */
     public DataSetRow getRow(int index) {
     	if (index < 0 || index >= _rows.length)
-    		throw new IndexOutOfBoundsException(Messages.getString("DataSet.DataSetRowIndexOutRange") + index); //$NON-NLS-1$
+    		throw new IndexOutOfBoundsException("DataSetRow index out of range: " + index);
     	return _rows[index];
     }
 

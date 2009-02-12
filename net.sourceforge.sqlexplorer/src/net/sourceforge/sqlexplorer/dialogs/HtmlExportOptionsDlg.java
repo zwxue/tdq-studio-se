@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class HtmlExportOptionsDlg extends AbstractExportOptionsDlg {
 
-	private static final String[] FILTER = { "*.html", "*.htm" }; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] FILTER = { "*.html", "*.htm" };
 
 	private static final int FLAGS = FMT_CHARSET | FMT_NULL | OPT_HDR
 			| OPT_QUOTE | OPT_RTRIM;
@@ -30,11 +30,11 @@ public class HtmlExportOptionsDlg extends AbstractExportOptionsDlg {
 	}
 
 	public String getMessage() {
-		return Messages.getString("ExportDialog.html.message"); //$NON-NLS-1$
+		return Messages.getString("ExportDialog.html.message");
 	}
 
 	public String getTitle() {
-		return Messages.getString("ExportDialog.html.title"); //$NON-NLS-1$
+		return Messages.getString("ExportDialog.html.title");
 	}
 
 }

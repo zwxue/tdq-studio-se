@@ -108,7 +108,7 @@ public class SQLLimitRowsControl extends ControlContribution {
 		c2Grid.grabExcessVerticalSpace = false;
 
 		limitResults = new Button(statusBar, SWT.CHECK);
-		limitResults.setText(Messages.getString("SQLEditor.LimitRows")); //$NON-NLS-1$
+		limitResults.setText(Messages.getString("SQLEditor.LimitRows"));
 		limitResults.setSelection(true);
 		limitResults.setLayoutData(c2Grid);
 

@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -226,11 +225,11 @@ public abstract class AbstractPreferencePage extends FieldEditorPreferencePage i
 					// Get it
 					String id = (String)field.get(null);
 					String value = store.getString(id);
-					System.out.println(id + ": " + value); //$NON-NLS-1$
+					System.out.println(id + ": " + value);
 				}
 			}
 		}catch(Exception e) {
-			SQLExplorerPlugin.error(Messages.getString("AbstractPreferencePage.notDumpStore"), e); //$NON-NLS-1$
+			SQLExplorerPlugin.error("Cannot dump store", e);
 		}
 	}
 }

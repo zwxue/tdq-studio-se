@@ -59,7 +59,7 @@ public class DataSetRow {
         Object tmp = _values[column];
         if (tmp != null)
             return tmp;
-        return "<null>"; //$NON-NLS-1$
+        return "<null>";
     }
 
     /**

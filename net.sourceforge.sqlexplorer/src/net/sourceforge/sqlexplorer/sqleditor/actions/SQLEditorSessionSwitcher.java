@@ -51,7 +51,7 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
      * @param editor SQLEditor to which this session switcher belongs
      */
     public SQLEditorSessionSwitcher(SwitchableSessionEditor editor) {
-        super("net.sourceforge.sqlexplorer.sessionswitcher"); //$NON-NLS-1$
+        super("net.sourceforge.sqlexplorer.sessionswitcher");
         _editor = editor;
     }
 
@@ -59,7 +59,7 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
         SQLExplorerPlugin.getDefault().getAliasManager().addListener(this);
 
         _sessionCombo = new Combo(parent, SWT.READ_ONLY);
-        _sessionCombo.setToolTipText(Messages.getString("SQLEditor.Actions.ChooseSession.ToolTip")); //$NON-NLS-1$
+        _sessionCombo.setToolTipText(Messages.getString("SQLEditor.Actions.ChooseSession.ToolTip"));
 
         _sessionCombo.addSelectionListener(new SelectionAdapter() {
 
@@ -90,8 +90,8 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
         setSessionOptions();
         if (_sessionCombo.getItemCount() == 1)
             MessageDialog.openInformation(parent.getShell(), Messages
-                    .getString("SQLEditor.Actions.ChooseSession.NoConnections.Title"), Messages //$NON-NLS-1$
-                    .getString("SQLEditor.Actions.ChooseSession.NoConnections.Message")); //$NON-NLS-1$
+                    .getString("SQLEditor.Actions.ChooseSession.NoConnections.Title"), Messages
+                    .getString("SQLEditor.Actions.ChooseSession.NoConnections.Message"));
 
         return _sessionCombo;
     }
@@ -106,7 +106,7 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
         if (_sessionCombo.isDisposed())
             return;
         _sessionCombo.removeAll();
-        _sessionCombo.add(""); //$NON-NLS-1$
+        _sessionCombo.add("");
 
         int index = 0;
         User currentUser = null;

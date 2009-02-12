@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
 import net.sourceforge.sqlexplorer.connections.actions.AbstractConnectionTreeAction;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
@@ -81,7 +80,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      */
     public void createPartControl(Composite parent) {
 
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".AliasView"); //$NON-NLS-1$
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".AliasView");
 
         SQLExplorerPlugin.getDefault().getAliasManager().addListener(this);
 
@@ -139,7 +138,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
 
         // add context menu
         final ConnectionTreeActionGroup actionGroup = new ConnectionTreeActionGroup();
-        MenuManager menuManager = new MenuManager(Messages.getString("ConnectionsView.ConnectionTreeContextMenu")); //$NON-NLS-1$
+        MenuManager menuManager = new MenuManager("ConnectionTreeContextMenu");
         menuManager.setRemoveAllWhenShown(true);
         Menu contextMenu = menuManager.createContextMenu(_treeViewer.getTree());
         _treeViewer.getTree().setMenu(contextMenu);
@@ -164,16 +163,15 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
                 DatabaseStructureView dsView = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
                 dsView.addUser(user);
             }
-            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() //$NON-NLS-1$
-                    + ").sql"); //$NON-NLS-1$
+            SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo()
+                    + ").sql");
             input.setUser(user);
             IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
             page.openEditor(input, SQLEditor.class.getName());
         } catch (SQLCannotConnectException e) {
-            MessageDialog.openError(Display.getDefault().getActiveShell(),
-                    Messages.getString("ConnectionsView.CannotConnect"), e.getMessage()); //$NON-NLS-1$
+            MessageDialog.openError(Display.getDefault().getActiveShell(), "Cannot connect", e.getMessage());
         } catch (Throwable e) {
-            SQLExplorerPlugin.error(Messages.getString("ConnectionsView.ErrorCreatSqlEditor"), e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Error creating sql editor", e);
         }
     }
 

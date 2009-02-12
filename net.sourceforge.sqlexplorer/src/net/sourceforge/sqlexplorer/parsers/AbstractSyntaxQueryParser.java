@@ -25,7 +25,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.parsers.Tokenizer.Token;
 import net.sourceforge.sqlexplorer.parsers.scp.StructuredCommentParser;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -70,7 +69,7 @@ public abstract class AbstractSyntaxQueryParser extends AbstractQueryParser {
 		}
 		
 		public String toString() {
-			return "lineNo=" + lineNo + ", offset=" + offset; //$NON-NLS-1$ //$NON-NLS-2$
+			return "lineNo=" + lineNo + ", offset=" + offset;
 		}
 	}
 
@@ -298,12 +297,12 @@ public abstract class AbstractSyntaxQueryParser extends AbstractQueryParser {
 	protected void ungetToken() {
 		// Check we can unget (there must be a previous value)
 		if (tokenNumber > 0 && previousTokens.isEmpty())
-			throw new IllegalStateException(Messages.getString("AbstractSyntaxQueryParser.CannotUnget")); //$NON-NLS-1$
+			throw new IllegalStateException("Cannot unget because there are not enough previous tokens");
 		tokenNumber--;
 		
 		// We must have something to unget
 		if (currentToken == null)
-			throw new IllegalStateException(Messages.getString("AbstractSyntaxQueryParser.NoTokenToUnget")); //$NON-NLS-1$
+			throw new IllegalStateException("No token to unget");
 		
 		// Store it for the future and switch to the previous
 		futureTokens.add(currentToken);

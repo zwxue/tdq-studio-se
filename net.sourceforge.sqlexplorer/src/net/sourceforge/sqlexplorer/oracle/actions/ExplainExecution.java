@@ -75,16 +75,16 @@ public class ExplainExecution extends AbstractSQLExecution {
                 if (cost != -1)
                     return (new StringBuilder()).append(cost).toString();
                 else
-                    return ""; //$NON-NLS-1$
+                    return "";
             }
             if (columnIndex == 2) {
                 int card = en.getCardinality();
                 if (card != -1)
                     return (new StringBuilder()).append(card).toString();
                 else
-                    return ""; //$NON-NLS-1$
+                    return "";
             } else {
-                return ""; //$NON-NLS-1$
+                return "";
             }
         }
 
@@ -94,7 +94,7 @@ public class ExplainExecution extends AbstractSQLExecution {
 
     public ExplainExecution(SQLEditor editor, QueryParser queryParser) {
         super(editor, queryParser);
-        setProgressMessage(Messages.getString("SQLResultsView.ConnectionWait")); //$NON-NLS-1$
+        setProgressMessage(Messages.getString("SQLResultsView.ConnectionWait"));
     }
 
     private void displayResults(final ExplainNode node, final Query query) {
@@ -112,7 +112,7 @@ public class ExplainExecution extends AbstractSQLExecution {
                     gLayout.marginWidth = 0;
                     gLayout.marginHeight = 0;
                     composite.setLayout(gLayout);
-                    composite.setData("parenttab", resultsTab.getTabItem()); //$NON-NLS-1$
+                    composite.setData("parenttab", resultsTab.getTabItem());
                     Composite pp = new Composite(composite, 0);
                     pp.setLayout(new FillLayout());
                     pp.setLayoutData(new GridData(1808));
@@ -121,11 +121,11 @@ public class ExplainExecution extends AbstractSQLExecution {
                     table.setLinesVisible(true);
                     table.setHeaderVisible(true);
                     TableColumn tc = new TableColumn(table, 0);
-                    tc.setText(""); //$NON-NLS-1$
+                    tc.setText("");
                     tc = new TableColumn(table, 0);
-                    tc.setText("Cost"); //$NON-NLS-1$
+                    tc.setText("Cost");
                     tc = new TableColumn(table, 0);
-                    tc.setText("Cardinality"); //$NON-NLS-1$
+                    tc.setText("Cardinality");
                     TableLayout tableLayout = new TableLayout();
                     tableLayout.addColumnData(new ColumnWeightData(6, 150, true));
                     tableLayout.addColumnData(new ColumnWeightData(1, 50, true));
@@ -167,7 +167,7 @@ public class ExplainExecution extends AbstractSQLExecution {
                         table.getColumn(i).pack();
 
                     final ExplainPlanActionGroup actionGroup = new ExplainPlanActionGroup(tv, node.getChildren()[0]);
-                    MenuManager menuManager = new MenuManager("ExplainPlanContextMenu"); //$NON-NLS-1$
+                    MenuManager menuManager = new MenuManager("ExplainPlanContextMenu");
                     menuManager.setRemoveAllWhenShown(true);
                     org.eclipse.swt.widgets.Menu contextMenu = menuManager.createContextMenu(table);
                     tv.getControl().setMenu(contextMenu);
@@ -187,7 +187,7 @@ public class ExplainExecution extends AbstractSQLExecution {
                         errorLabel.setText(message);
                         errorLabel.setLayoutData(new GridData(4, 128, true, false));
                     }
-                    SQLExplorerPlugin.error("Error creating explain tab", e); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Error creating explain tab", e);
                 }
             }
         });
@@ -208,7 +208,7 @@ public class ExplainExecution extends AbstractSQLExecution {
         }
         _stmt = _connection.createStatement();
         id_ = Integer.toHexString((new Random()).nextInt()).toUpperCase();
-        _stmt.execute((new StringBuilder("delete plan_table where statement_id='")).append(id_).append("'").toString());  //$NON-NLS-1$//$NON-NLS-2$
+        _stmt.execute((new StringBuilder("delete plan_table where statement_id='")).append(id_).append("'").toString());
         _stmt.close();
         _stmt = null;
         if (monitor.isCanceled())
@@ -217,7 +217,7 @@ public class ExplainExecution extends AbstractSQLExecution {
         ExplainNode nd_parent;
         try {
             _stmt = _connection.createStatement();
-            _stmt.execute((new StringBuilder("EXPLAIN PLAN SET statement_id = '")).append(id_).append("' FOR ").append( //$NON-NLS-1$ //$NON-NLS-2$
+            _stmt.execute((new StringBuilder("EXPLAIN PLAN SET statement_id = '")).append(id_).append("' FOR ").append(
                     query.getQuerySql()).toString());
             _stmt.close();
             _stmt = null;
@@ -225,7 +225,7 @@ public class ExplainExecution extends AbstractSQLExecution {
                 return;
         } catch (SQLException e) {
             debugLogQuery(query, e);
-            boolean stopOnError = SQLExplorerPlugin.getDefault().getPreferenceStore().getBoolean("SQLEditor.StopOnError"); //$NON-NLS-1$
+            boolean stopOnError = SQLExplorerPlugin.getDefault().getPreferenceStore().getBoolean("SQLEditor.StopOnError");
             logException(e, query, stopOnError);
             closeStatements();
             if (stopOnError)
@@ -237,7 +237,7 @@ public class ExplainExecution extends AbstractSQLExecution {
             throw e;
         }
         _prepStmt = _connection
-                .prepareStatement("select level, object_type,operation,options,object_owner,object_name,optimizer,cardinality ,cost,id,parent_id,level  from  plan_table  start with id = 0 and statement_id=?  connect by prior id=parent_id and statement_id=?"); //$NON-NLS-1$
+                .prepareStatement("select level, object_type,operation,options,object_owner,object_name,optimizer,cardinality ,cost,id,parent_id,level  from  plan_table  start with id = 0 and statement_id=?  connect by prior id=parent_id and statement_id=?");
         _prepStmt.setString(1, id_);
         _prepStmt.setString(2, id_);
         rs = _prepStmt.executeQuery();
@@ -247,21 +247,21 @@ public class ExplainExecution extends AbstractSQLExecution {
         int level;
         ExplainNode nd;
         for (; rs.next(); nd.setLevel(level)) {
-            String object_type = rs.getString("object_type"); //$NON-NLS-1$
-            String operation = rs.getString("operation"); //$NON-NLS-1$
-            String options = rs.getString("options"); //$NON-NLS-1$
-            String object_owner = rs.getString("object_owner"); //$NON-NLS-1$
-            String object_name = rs.getString("object_name"); //$NON-NLS-1$
-            String optimizer = rs.getString("optimizer"); //$NON-NLS-1$
-            int cardinality = rs.getInt("cardinality"); //$NON-NLS-1$
+            String object_type = rs.getString("object_type");
+            String operation = rs.getString("operation");
+            String options = rs.getString("options");
+            String object_owner = rs.getString("object_owner");
+            String object_name = rs.getString("object_name");
+            String optimizer = rs.getString("optimizer");
+            int cardinality = rs.getInt("cardinality");
             if (rs.wasNull())
                 cardinality = -1;
-            int cost = rs.getInt("cost"); //$NON-NLS-1$
+            int cost = rs.getInt("cost");
             if (rs.wasNull())
                 cost = -1;
-            int parentID = rs.getInt("parent_id"); //$NON-NLS-1$
-            int id = rs.getInt("id"); //$NON-NLS-1$
-            level = rs.getInt("level"); //$NON-NLS-1$
+            int parentID = rs.getInt("parent_id");
+            int id = rs.getInt("id");
+            level = rs.getInt("level");
             nd = null;
             if (id == 0) {
                 ExplainNode dummy = new ExplainNode(null);
@@ -300,8 +300,8 @@ public class ExplainExecution extends AbstractSQLExecution {
         if (numErrors == 1)
             throw lastSQLException;
         if (numErrors > 1)
-            MessageDialog.openError(getEditor().getSite().getShell(), "SQL Error", //$NON-NLS-1$
-                    Messages.getString("ExplainExecution.SQLStatementsFailed")); //$NON-NLS-1$
+            MessageDialog.openError(getEditor().getSite().getShell(), "SQL Error",
+                    "One or more of your SQL statements failed - check the Messages log for details");
         return;
     }
 
@@ -311,14 +311,14 @@ public class ExplainExecution extends AbstractSQLExecution {
                 _stmt.close();
                 _stmt = null;
             } catch (Exception e) {
-                SQLExplorerPlugin.error(Messages.getString("ExplainExecution.ErrorCloseStatement"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error closing statement.", e);
             }
         if (_prepStmt != null)
             try {
                 _prepStmt.close();
                 _prepStmt = null;
             } catch (Exception e) {
-                SQLExplorerPlugin.error(Messages.getString("ExplainExecution.ErrorClosingState"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error closing statement.", e);
             }
     }
 
@@ -329,13 +329,13 @@ public class ExplainExecution extends AbstractSQLExecution {
                 _stmt.cancel();
             } catch (Exception e) {
                 t = e;
-                SQLExplorerPlugin.error(Messages.getString("ExplainExecution.ErrorCancellStatement"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error cancelling statement.", e);
             }
             try {
                 _stmt.close();
                 _stmt = null;
             } catch (Exception e) {
-                SQLExplorerPlugin.error(Messages.getString("ExplainExecution.ErrorClosingStatement"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error closing statement.", e);
             }
         }
         if (_prepStmt != null) {
@@ -343,13 +343,13 @@ public class ExplainExecution extends AbstractSQLExecution {
                 _prepStmt.cancel();
             } catch (Exception e) {
                 t = e;
-                SQLExplorerPlugin.error(Messages.getString("ExplainExecution.ErrorCancellStatement"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error cancelling statement.", e);
             }
             try {
                 _prepStmt.close();
                 _prepStmt = null;
             } catch (Exception e) {
-                SQLExplorerPlugin.error(Messages.getString("ExplainExecution.ErrorClosingStatement"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error closing statement.", e);
             }
         }
         if (t != null)

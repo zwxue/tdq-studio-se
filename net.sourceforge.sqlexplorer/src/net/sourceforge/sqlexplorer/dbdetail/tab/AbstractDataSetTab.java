@@ -31,13 +31,13 @@ public abstract class AbstractDataSetTab extends AbstractTab {
             DataSet dataSet = getCachedDataSet();
             if (dataSet == null) {
                 Label label = new Label(composite, SWT.FILL);
-                label.setText(Messages.getString("DatabaseDetailView.NoInformation")); //$NON-NLS-1$
+                label.setText(Messages.getString("DatabaseDetailView.NoInformation"));
                 label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));    
                 return;
             }
             
             // store for later use in dataset table
-            composite.setData("IDetailTab", this); //$NON-NLS-1$
+            composite.setData("IDetailTab", this);
             
             new DataSetTable(composite, dataSet, getStatusMessage());
                          
@@ -52,10 +52,10 @@ public abstract class AbstractDataSetTab extends AbstractTab {
             
             // and show error message
             Label label = new Label(composite, SWT.FILL);
-            label.setText(Messages.getString("DatabaseDetailView.Tab.Unavailable") + " " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+            label.setText(Messages.getString("DatabaseDetailView.Tab.Unavailable") + " " + e.getMessage());
             label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));    
             
-            SQLExplorerPlugin.error(Messages.getString("AbstractDataSetTab.ErrorCreatResultSetTab"), e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Error creating ResultSetTab:", e);
             
         }
         

@@ -67,26 +67,26 @@ public class EditUserDlg extends TitleAreaDialog {
 		container.setLayoutData(gd_container);
 
 		final Label connectionProfileLabel = new Label(container, SWT.NONE);
-		connectionProfileLabel.setText(Messages.getString("EditUserDlg.ConnectionProfile")); //$NON-NLS-1$
+		connectionProfileLabel.setText("Connection Profile");
 
 		final Label profileName = new Label(container, SWT.NONE);
-		profileName.setText(Messages.getString("EditUserDlg.Label")); //$NON-NLS-1$
+		profileName.setText("Label");
 
 		final Label label_3 = new Label(container, SWT.NONE);
-		label_3.setText(Messages.getString("EditUserDlg.Driver")); //$NON-NLS-1$
+		label_3.setText("Driver");
 
 		final Label driverName = new Label(container, SWT.NONE);
-		driverName.setText(Messages.getString("EditUserDlg.Labels")); //$NON-NLS-1$
+		driverName.setText("Label");
 
 		final Label label_4 = new Label(container, SWT.NONE);
-		label_4.setText(Messages.getString("EditUserDlg.URL")); //$NON-NLS-1$
+		label_4.setText("URL");
 
 		final Label url = new Label(container, SWT.NONE);
-		url.setText(Messages.getString("EditUserDlg.Lab")); //$NON-NLS-1$
+		url.setText("Label");
 
 		final Label usernameLabel = new Label(container, SWT.NONE);
 		usernameLabel.setLayoutData(new GridData(99, SWT.DEFAULT));
-		usernameLabel.setText(Messages.getString("EditUserDlg.Username")); //$NON-NLS-1$
+		usernameLabel.setText("Username");
 
 		userName = new Text(container, SWT.BORDER);
 		final GridData gd_userName = new GridData(SWT.LEFT, SWT.CENTER, true, false);
@@ -94,7 +94,7 @@ public class EditUserDlg extends TitleAreaDialog {
 		userName.setLayoutData(gd_userName);
 
 		final Label passwordLabel = new Label(container, SWT.NONE);
-		passwordLabel.setText(Messages.getString("EditUserDlg.Password")); //$NON-NLS-1$
+		passwordLabel.setText("Password");
 
 		password = new Text(container, SWT.BORDER);
 		final GridData gd_password = new GridData(SWT.LEFT, SWT.CENTER, true, false);
@@ -104,15 +104,15 @@ public class EditUserDlg extends TitleAreaDialog {
 		new Label(container, SWT.NONE);
 
 		autoCommit = new Button(container, SWT.CHECK);
-		autoCommit.setToolTipText(Messages.getString("EditUserDlg.defaultForSQLEditors")); //$NON-NLS-1$
-		autoCommit.setText(Messages.getString("EditUserDlg.AutoCommit")); //$NON-NLS-1$
+		autoCommit.setToolTipText("Sets the default for new SQL Editors");
+		autoCommit.setText("Auto Commit (for new connections)");
 		new Label(container, SWT.NONE);
         
         commitOnClose = new Button(container, SWT.CHECK);
         final GridData gd_commitOnClose = new GridData();
         commitOnClose.setLayoutData(gd_commitOnClose);
-        commitOnClose.setToolTipText(Messages.getString("EditUserDlg.defaultFornewSQLEditors")); //$NON-NLS-1$
-        commitOnClose.setText(Messages.getString("EditUserDlg.CommitOnClose")); //$NON-NLS-1$
+        commitOnClose.setToolTipText("Sets the default for new SQL editors");
+        commitOnClose.setText("Commit On Close (for new connections)");
         
         autoCommit.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -130,14 +130,14 @@ public class EditUserDlg extends TitleAreaDialog {
 	        commitOnClose.setEnabled(!user.isAutoCommit());
 	        commitOnClose.setSelection(user.isCommitOnClose());
         }
-		setTitle(Messages.getString("EditUserDlg.Create/EditUser")); //$NON-NLS-1$
-		setTitleImage(ImageUtil.getImage("Images.WizardLogo")); //$NON-NLS-1$
+		setTitle("Create / Edit User Details");
+		setTitleImage(ImageUtil.getImage("Images.WizardLogo"));
         
 		profileName.setText(alias.getName());
 		if (alias.getDriver() != null)
 			driverName.setText(alias.getDriver().getName());
 		else
-			driverName.setText(""); //$NON-NLS-1$
+			driverName.setText("");
 		url.setText(alias.getUrl());
 		
 		return area;
@@ -151,7 +151,7 @@ public class EditUserDlg extends TitleAreaDialog {
 		String userName = this.userName.getText().trim();
 		String password = this.password.getText().trim();
 		if (userName.length() < 1) {
-			MessageDialog.openError(getShell(), Messages.getString(Messages.getString("EditUserDlg.15")), Messages.getString("EditUserDlg.MustGiveUsername.Message")); //$NON-NLS-1$ //$NON-NLS-2$
+			MessageDialog.openError(getShell(), Messages.getString("EditUserDlg.MustGiveUsername.Title"), Messages.getString("EditUserDlg.MustGiveUsername.Message"));
 			return;
 		}
 		

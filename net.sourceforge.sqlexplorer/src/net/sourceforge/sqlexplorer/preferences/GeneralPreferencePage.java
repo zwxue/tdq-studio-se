@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Button;
 public class GeneralPreferencePage extends AbstractPreferencePage {
 	
 	public GeneralPreferencePage() {
-        super(Messages.getString("General_Preferences_1"), GRID);  //$NON-NLS-1$
+        super(Messages.getString("General_Preferences_1"), GRID); 
 	}
 
 	protected void createFieldEditors() {
@@ -55,22 +55,22 @@ public class GeneralPreferencePage extends AbstractPreferencePage {
 		StringFieldEditor sEdit;
 		
 		iEdit = new IntegerFieldEditor(IConstants.PRE_ROW_COUNT,
-				Messages.getString("Preview_Max_Rows_3"), getFieldEditorParent(), 5); //$NON-NLS-1$
+				Messages.getString("Preview_Max_Rows_3"), getFieldEditorParent(), 5);
 		iEdit.setValidRange(1, 100);
-		iEdit.setErrorMessage(Messages.getString("Accepted_Range_is__1_-_100_1")); //$NON-NLS-1$
+		iEdit.setErrorMessage(Messages.getString("Accepted_Range_is__1_-_100_1"));
 		iEdit.setEmptyStringAllowed(false);
 		addField(iEdit);
 
 		
-		iEdit = new IntegerFieldEditor(IConstants.MAX_SQL_ROWS, Messages.getString("SQL_Limit_Rows_2"), getFieldEditorParent()); //$NON-NLS-1$
+		iEdit = new IntegerFieldEditor(IConstants.MAX_SQL_ROWS, Messages.getString("SQL_Limit_Rows_2"), getFieldEditorParent());
 		iEdit.setValidRange(100, 5000);
-		iEdit.setErrorMessage(Messages.getString("Accepted_Range_is__100_-_5000_3")); //$NON-NLS-1$
+		iEdit.setErrorMessage(Messages.getString("Accepted_Range_is__100_-_5000_3"));
 		addField(iEdit);
 
 		BooleanFieldEditor bfe;
-		addField(bfe = new BooleanFieldEditor(IConstants.AUTO_COMMIT, Messages.getString("GeneralPreferencePage.AutoCommit_1"), getFieldEditorParent())); //$NON-NLS-1$
+		addField(bfe = new BooleanFieldEditor(IConstants.AUTO_COMMIT, Messages.getString("GeneralPreferencePage.AutoCommit_1"), getFieldEditorParent()));
 		final Button autoCommitBox = bfe.getCheckbox();
-		addField(bfe = new BooleanFieldEditor(IConstants.COMMIT_ON_CLOSE, Messages.getString("GeneralPreferencePage.Commit_On_Close_2"), getFieldEditorParent())); //$NON-NLS-1$
+		addField(bfe = new BooleanFieldEditor(IConstants.COMMIT_ON_CLOSE, Messages.getString("GeneralPreferencePage.Commit_On_Close_2"), getFieldEditorParent()));
 		final Button commitOnCloseBox = bfe.getCheckbox();
 
 		/*
@@ -103,51 +103,51 @@ public class GeneralPreferencePage extends AbstractPreferencePage {
 		commitOnCloseBox.setEnabled(!autoCommitBox.getSelection());
 
 		addField(new BooleanFieldEditor(IConstants.SQL_ASSIST, Messages
-				.getString("GeneralPreferencePage.Tables_and_columns_auto-completing_assistance._Use_only_with_fast_database_connections_1"), getFieldEditorParent())); //$NON-NLS-1$
+				.getString("GeneralPreferencePage.Tables_and_columns_auto-completing_assistance._Use_only_with_fast_database_connections_1"), getFieldEditorParent()));
 
 		
 		sEdit = new StringFieldEditor(IConstants.SQL_QRY_DELIMITER, Messages
-				.getString("Preferences.SQLExplorer.QueryDelimiter"), getFieldEditorParent()); //$NON-NLS-1$
+				.getString("Preferences.SQLExplorer.QueryDelimiter"), getFieldEditorParent());
 		sEdit.setEmptyStringAllowed(false);
 		sEdit.setTextLimit(1);
-		sEdit.setErrorMessage(Messages.getString("Preferences.SQLExplorer.QueryDelimiter.Error")); //$NON-NLS-1$
+		sEdit.setErrorMessage(Messages.getString("Preferences.SQLExplorer.QueryDelimiter.Error"));
 		addField(sEdit);
 		if (sEdit.getStringValue() == null || sEdit.getStringValue().length() == 0)
 			sEdit.loadDefault();
 
 		
 		sEdit = new StringFieldEditor(IConstants.SQL_ALT_QRY_DELIMITER, Messages
-				.getString("Preferences.SQLExplorer.AltQueryDelimiter"), getFieldEditorParent()); //$NON-NLS-1$
+				.getString("Preferences.SQLExplorer.AltQueryDelimiter"), getFieldEditorParent());
 		sEdit.setEmptyStringAllowed(true);
 		sEdit.setTextLimit(4);
 		addField(sEdit);
 
 		
 		sEdit = new StringFieldEditor(IConstants.SQL_COMMENT_DELIMITER, Messages
-				.getString("Preferences.SQLExplorer.CommentDelimiter"), getFieldEditorParent()); //$NON-NLS-1$
+				.getString("Preferences.SQLExplorer.CommentDelimiter"), getFieldEditorParent());
 		sEdit.setEmptyStringAllowed(false);
 		sEdit.setTextLimit(4);
-		sEdit.setErrorMessage(Messages.getString("Preferences.SQLExplorer.CommentDelimiter.Error")); //$NON-NLS-1$
+		sEdit.setErrorMessage(Messages.getString("Preferences.SQLExplorer.CommentDelimiter.Error"));
 		addField(sEdit);
 		if (sEdit.getStringValue() == null || sEdit.getStringValue().length() == 0)
 			sEdit.loadDefault();
 
 		
-		addField(new BooleanFieldEditor(IConstants.WORD_WRAP, Messages.getString("Preferences.SQLExplorer.WordWrap"), getFieldEditorParent())); //$NON-NLS-1$
-		addField(new BooleanFieldEditor(IConstants.AUTO_OPEN_EDITOR, Messages.getString("Preferences.SQLExplorer.OpenEditorOnConnection"), getFieldEditorParent())); //$NON-NLS-1$
-		addField(new BooleanFieldEditor(IConstants.CLEAR_RESULTS_ON_EXECUTE, Messages.getString("Preferences.SQLExplorer.ClearResultsOnExecute"), getFieldEditorParent())); //$NON-NLS-1$
-		addField(new BooleanFieldEditor(IConstants.USE_LONG_CAPTIONS_ON_RESULTS, Messages.getString("Preferences.SQLExplorer.UseLongCaptionsOnResults"), getFieldEditorParent())); //$NON-NLS-1$
-		addField(new BooleanFieldEditor(IConstants.STOP_ON_ERROR, Messages.getString("Preferences.SQLExplorer.StopOnError"), getFieldEditorParent())); //$NON-NLS-1$
-		addField(new BooleanFieldEditor(IConstants.LOG_SUCCESS_MESSAGES, Messages.getString("Preferences.SQLExplorer.LogSuccessMessages"), getFieldEditorParent())); //$NON-NLS-1$
-		addField(new BooleanFieldEditor(IConstants.REQUIRE_SAVE_ON_CLOSE_EDITOR, Messages.getString("Preferences.SQLExplorer.RequireSaveOnClose"), getFieldEditorParent())); //$NON-NLS-1$
-		addField(new BooleanFieldEditor(IConstants.ENABLE_STRUCTURED_COMMENTS, Messages.getString("Preferences.SQLExplorer.EnableStructuredComments"), getFieldEditorParent())); //$NON-NLS-1$
+		addField(new BooleanFieldEditor(IConstants.WORD_WRAP, Messages.getString("Preferences.SQLExplorer.WordWrap"), getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IConstants.AUTO_OPEN_EDITOR, Messages.getString("Preferences.SQLExplorer.OpenEditorOnConnection"), getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IConstants.CLEAR_RESULTS_ON_EXECUTE, Messages.getString("Preferences.SQLExplorer.ClearResultsOnExecute"), getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IConstants.USE_LONG_CAPTIONS_ON_RESULTS, Messages.getString("Preferences.SQLExplorer.UseLongCaptionsOnResults"), getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IConstants.STOP_ON_ERROR, Messages.getString("Preferences.SQLExplorer.StopOnError"), getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IConstants.LOG_SUCCESS_MESSAGES, Messages.getString("Preferences.SQLExplorer.LogSuccessMessages"), getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IConstants.REQUIRE_SAVE_ON_CLOSE_EDITOR, Messages.getString("Preferences.SQLExplorer.RequireSaveOnClose"), getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IConstants.ENABLE_STRUCTURED_COMMENTS, Messages.getString("Preferences.SQLExplorer.EnableStructuredComments"), getFieldEditorParent()));
 		
 		final String[][] DEBUG_LEVEL_VALUES = new String[][] {
-				{ Messages.getString("Preferences.SQLExplorer.DebugLevelOff"), IConstants.QUERY_DEBUG_OFF }, //$NON-NLS-1$
-				{ Messages.getString("Preferences.SQLExplorer.DebugLevelFailed"), IConstants.QUERY_DEBUG_FAILED }, //$NON-NLS-1$
-				{ Messages.getString("Preferences.SQLExplorer.DebugLevelAll"), IConstants.QUERY_DEBUG_ALL } //$NON-NLS-1$
+				{ Messages.getString("Preferences.SQLExplorer.DebugLevelOff"), IConstants.QUERY_DEBUG_OFF },
+				{ Messages.getString("Preferences.SQLExplorer.DebugLevelFailed"), IConstants.QUERY_DEBUG_FAILED },
+				{ Messages.getString("Preferences.SQLExplorer.DebugLevelAll"), IConstants.QUERY_DEBUG_ALL }
 		};
-		ComboFieldEditor combo = new ComboFieldEditor(IConstants.QUERY_DEBUG_LOG_LEVEL, Messages.getString("Preferences.SQLExplorer.QueryDebugLog"), DEBUG_LEVEL_VALUES, getFieldEditorParent()); //$NON-NLS-1$
+		ComboFieldEditor combo = new ComboFieldEditor(IConstants.QUERY_DEBUG_LOG_LEVEL, Messages.getString("Preferences.SQLExplorer.QueryDebugLog"), DEBUG_LEVEL_VALUES, getFieldEditorParent());
 		addField(combo);
 	}
 

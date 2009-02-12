@@ -31,7 +31,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class RollbackAction extends AbstractEditorAction {
 
-    private ImageDescriptor _image = ImageUtil.getDescriptor("Images.EditorRollbackIcon"); //$NON-NLS-1$
+    private ImageDescriptor _image = ImageUtil.getDescriptor("Images.EditorRollbackIcon");
 
 	public RollbackAction(SQLEditor editor) {
 		super(editor);
@@ -43,13 +43,13 @@ public class RollbackAction extends AbstractEditorAction {
 
     public String getText() {
 
-        return Messages.getString("SQLEditor.Actions.RollBack"); //$NON-NLS-1$
+        return Messages.getString("SQLEditor.Actions.RollBack");
     }
 
 
     public String getToolTipText() {
 
-        return Messages.getString("SQLEditor.Actions.RollBack.ToolTip"); //$NON-NLS-1$
+        return Messages.getString("SQLEditor.Actions.RollBack.ToolTip");
     }
 
 
@@ -72,7 +72,7 @@ public class RollbackAction extends AbstractEditorAction {
         try {
 
             _editor.getSession().rollback();
-            _editor.setMessage(Messages.getString("SQLEditor.Actions.RollBack.Success")); //$NON-NLS-1$
+            _editor.setMessage(Messages.getString("SQLEditor.Actions.RollBack.Success"));
             
         } catch (final Exception e) {
 
@@ -81,7 +81,7 @@ public class RollbackAction extends AbstractEditorAction {
                 public void run() {
 
                     MessageDialog.openError(_editor.getSite().getShell(),
-                            Messages.getString("SQLEditor.Actions.RollBack.Error.Title"), e.getMessage()); //$NON-NLS-1$
+                            Messages.getString("SQLEditor.Actions.RollBack.Error.Title"), e.getMessage());
                 }
             });
         }

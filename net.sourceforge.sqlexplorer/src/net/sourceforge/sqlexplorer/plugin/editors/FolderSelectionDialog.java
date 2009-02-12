@@ -56,8 +56,8 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
                     if (selection[0] instanceof IFolder) {
                         IFolder folder = (IFolder) selection[0];
                         IPath projectRelativePath = folder.getProjectRelativePath();
-                        if ("Libraries".equals(folder.getProject().getName())) { //$NON-NLS-1$
-                            IPath path = new Path("Source Files"); //$NON-NLS-1$
+                        if ("Libraries".equals(folder.getProject().getName())) {
+                            IPath path = new Path("Source Files");
                             if (path.isPrefixOf(projectRelativePath)) {
                                 return Status.OK_STATUS;
                             }
@@ -65,7 +65,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
                     }
                 }
                 return new Status(IStatus.ERROR, SQLExplorerPlugin.PLUGIN_ID,
-                        "select the 'Source Files' folder or a folder below this."); //$NON-NLS-1$
+                        "select the 'Source Files' folder or a folder below this.");
             }
 
         });

@@ -34,7 +34,7 @@ public class ColumnPriviligesTab extends AbstractDataSetTab {
     
     
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.ColumnPriviliges"); //$NON-NLS-1$
+        return Messages.getString("DatabaseDetailView.Tab.ColumnPriviliges");
     }
  
     public DataSet getDataSet() throws Exception {                
@@ -59,6 +59,6 @@ public class ColumnPriviligesTab extends AbstractDataSetTab {
     }
  
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.ColumnPriviliges.status") + " " + getNode().getQualifiedName(); //$NON-NLS-1$ //$NON-NLS-2$
+        return Messages.getString("DatabaseDetailView.Tab.ColumnPriviliges.status") + " " + getNode().getQualifiedName();
     }
 }

@@ -20,7 +20,6 @@ package net.sourceforge.sqlexplorer.preview;
 
 import java.util.HashSet;
 
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 /**
@@ -119,7 +118,7 @@ public final class PreviewerFactory {
 			exception = e;
 		}
 		
-		SQLExplorerPlugin.error(Messages.getString("PreviewerFactory.NotCreatePreviewer"), exception); //$NON-NLS-1$
+		SQLExplorerPlugin.error("Cannot create Previewer", exception);
 		return null;
 	}
 	

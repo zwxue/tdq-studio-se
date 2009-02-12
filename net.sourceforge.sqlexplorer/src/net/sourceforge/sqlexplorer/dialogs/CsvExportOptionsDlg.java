@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class CsvExportOptionsDlg extends AbstractExportOptionsDlg {
 
-	private static final String[] FILTER = { "*.csv", "*.txt" }; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] FILTER = { "*.csv", "*.txt" };
 
 	private static final int FLAGS = FMT_CHARSET | FMT_DELIM | FMT_NULL
 			| OPT_HDR | OPT_QUOTE | OPT_RTRIM;
@@ -31,11 +31,11 @@ public class CsvExportOptionsDlg extends AbstractExportOptionsDlg {
 	}
 
 	public String getMessage() {
-		return Messages.getString("ExportDialog.csv.message"); //$NON-NLS-1$
+		return Messages.getString("ExportDialog.csv.message");
 	}
 
 	public String getTitle() {
-		return Messages.getString("ExportDialog.csv.title"); //$NON-NLS-1$
+		return Messages.getString("ExportDialog.csv.title");
 	}
 
 }

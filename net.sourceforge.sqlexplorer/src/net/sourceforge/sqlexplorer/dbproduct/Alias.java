@@ -26,7 +26,6 @@ import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
 import net.sourceforge.sqlexplorer.ExplorerException;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 /**
@@ -46,19 +45,19 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
  */
 public class Alias {
 	
-	/*package*/ static final String ALIASES = "aliases"; //$NON-NLS-1$
-	/*package*/ static final String ALIAS = "alias"; //$NON-NLS-1$
-	/*package*/ static final String AUTO_LOGON = "auto-logon"; //$NON-NLS-1$
-	/*package*/ static final String CONNECT_AT_STARTUP = "connect-at-startup"; //$NON-NLS-1$
-	/*package*/ static final String DEFAULT_USER = "default-user"; //$NON-NLS-1$
-	/*package*/ static final String DRIVER_ID = "driver-id"; //$NON-NLS-1$
-	/*package*/ static final String FOLDER_FILTER_EXPRESSION = "folder-filter-expression"; //$NON-NLS-1$
-	/*package*/ static final String HAS_NO_USER_NAME = "has-no-user-name"; //$NON-NLS-1$
-	/*package*/ static final String NAME = "name"; //$NON-NLS-1$
-	/*package*/ static final String NAME_FILTER_EXPRESSION = "name-filter-expression"; //$NON-NLS-1$
-	/*package*/ static final String SCHEMA_FILTER_EXPRESSION = "schema-filter-expression"; //$NON-NLS-1$
-	/*package*/ static final String URL = "url"; //$NON-NLS-1$
-	/*package*/ static final String USERS = "users"; //$NON-NLS-1$
+	/*package*/ static final String ALIASES = "aliases";
+	/*package*/ static final String ALIAS = "alias";
+	/*package*/ static final String AUTO_LOGON = "auto-logon";
+	/*package*/ static final String CONNECT_AT_STARTUP = "connect-at-startup";
+	/*package*/ static final String DEFAULT_USER = "default-user";
+	/*package*/ static final String DRIVER_ID = "driver-id";
+	/*package*/ static final String FOLDER_FILTER_EXPRESSION = "folder-filter-expression";
+	/*package*/ static final String HAS_NO_USER_NAME = "has-no-user-name";
+	/*package*/ static final String NAME = "name";
+	/*package*/ static final String NAME_FILTER_EXPRESSION = "name-filter-expression";
+	/*package*/ static final String SCHEMA_FILTER_EXPRESSION = "schema-filter-expression";
+	/*package*/ static final String URL = "url";
+	/*package*/ static final String USERS = "users";
 
 
 	private static int s_serialNo = 0;
@@ -79,9 +78,9 @@ public class Alias {
     private boolean connectAtStartup;
 
     // Filters
-    private String folderFilterExpression = ""; //$NON-NLS-1$
-    private String nameFilterExpression = ""; //$NON-NLS-1$
-    private String schemaFilterExpression = ""; //$NON-NLS-1$
+    private String folderFilterExpression = "";
+    private String nameFilterExpression = "";
+    private String schemaFilterExpression = "";
     
     // Whether username/password are required
     private boolean hasNoUserName;
@@ -105,7 +104,7 @@ public class Alias {
 	 *
 	 */
 	public Alias() {
-		this("new-alias-" + (++s_serialNo)); //$NON-NLS-1$
+		this("new-alias-" + (++s_serialNo));
 	}
 	
 	/**
@@ -126,7 +125,7 @@ public class Alias {
 		schemaFilterExpression = root.elementText(SCHEMA_FILTER_EXPRESSION);
 
 		if (hasNoUserName) {
-			User user = new User("anonymous", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			User user = new User("anonymous", "");
 			addUser(user);
 			setDefaultUser(user);
 		} else {
@@ -178,7 +177,7 @@ public class Alias {
 	 * @param copyFrom
 	 */
 	public Alias(Alias copyFrom) {
-		this("Copy of " + copyFrom.getName()); //$NON-NLS-1$
+		this("Copy of " + copyFrom.getName());
 		if (copyFrom.defaultUser != null) {
 			defaultUser = copyFrom.defaultUser.createCopy();
 			addUser(defaultUser);
@@ -223,13 +222,13 @@ public class Alias {
 	public User addUser(User user) {
 		if (user.getAlias() != null) {
 			if (user.getAlias() != this)
-				throw new IllegalArgumentException(Messages.getString("Alias.UserBelongsToDifferentAlias")); //$NON-NLS-1$
+				throw new IllegalArgumentException("User already belongs to a different Alias");
 			return user;
 		}
 		if (user.getUserName() == null || user.getUserName().length() == 0)
-			throw new IllegalArgumentException(Messages.getString("Alias.IllegalUserName")); //$NON-NLS-1$
+			throw new IllegalArgumentException("Illegal user name");
 		if (!users.isEmpty() && hasNoUserName)
-			throw new IllegalArgumentException(Messages.getString("Alias.CannotAddUsers")); //$NON-NLS-1$
+			throw new IllegalArgumentException("Cannot add users when usernames are not required by the alias");
 			
 		User existingUser = users.get(user.getUserName());
 		if (existingUser != null) {
@@ -252,7 +251,7 @@ public class Alias {
 	public void removeUser(User user) {
 		boolean isDefault = user == defaultUser;
 		if (user.getAlias() != this)
-			throw new IllegalArgumentException(Messages.getString("Alias.UserbelongsdifferentAlias")); //$NON-NLS-1$
+			throw new IllegalArgumentException("User belongs to a different Alias");
 		user.closeAllSessions();
 		user.setAlias(null);
 		users.remove(user.getUserName());
@@ -407,7 +406,7 @@ public class Alias {
 			for (User user : users.values())
 				user.setAlias(null);
 			users.clear();
-			User user = new User("anonymous", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			User user = new User("anonymous", "");
 			addUser(user);
 			setDefaultUser(user);
 		} else {

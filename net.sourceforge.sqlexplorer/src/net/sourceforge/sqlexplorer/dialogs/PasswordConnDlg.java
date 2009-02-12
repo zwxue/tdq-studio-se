@@ -90,7 +90,7 @@ public class PasswordConnDlg extends TitleAreaDialog {
         setTitle(Messages.getString("Connection_4")); //$NON-NLS-1$
         setMessage(Messages.getString("Insert_Password_1")); //$NON-NLS-1$
 
-        Image image = ImageUtil.getImage("Images.WizardLogo"); //$NON-NLS-1$
+        Image image = ImageUtil.getImage("Images.WizardLogo");
         if (image != null) {
             setTitleImage(image);
         }
@@ -98,7 +98,7 @@ public class PasswordConnDlg extends TitleAreaDialog {
         contents.addDisposeListener(new DisposeListener() {
 
             public void widgetDisposed(DisposeEvent e) {
-                ImageUtil.disposeImage("Images.WizardLogo");                 //$NON-NLS-1$
+                ImageUtil.disposeImage("Images.WizardLogo");                
             }            
         });
         

@@ -39,7 +39,7 @@ public class PreviewTab extends AbstractDataSetTab {
     
     
     public String getLabelText() {
-        return Messages.getString("DatabaseDetailView.Tab.Preview"); //$NON-NLS-1$
+        return Messages.getString("DatabaseDetailView.Tab.Preview");
     }
  
     public DataSet getDataSet() throws Exception {                
@@ -66,7 +66,7 @@ public class PreviewTab extends AbstractDataSetTab {
             	connection = tableNode.getSession().grabConnection();
                 statement = connection.createStatement();
                 statement.setMaxRows(maxResults);
-                statement.execute("select * from " + tableNode.getQualifiedName()); //$NON-NLS-1$
+                statement.execute("select * from " + tableNode.getQualifiedName());
                 resultSet = statement.getResultSet();
                 
                 dataSet = new DataSet(resultSet, null);
@@ -75,13 +75,13 @@ public class PreviewTab extends AbstractDataSetTab {
                 	try {
                 		resultSet.close();
                 	}catch(SQLException e) {
-                		SQLExplorerPlugin.error(Messages.getString("PreviewTab.ErrorCloseResultSet"), e); //$NON-NLS-1$
+                		SQLExplorerPlugin.error("Error closing result set", e);
                 	}
                 if (statement != null)
                     try {
                         statement.close();
                     } catch (SQLException e) {
-                        SQLExplorerPlugin.error(Messages.getString("PreviewTab.ErrorCloseStatement"), e); //$NON-NLS-1$
+                        SQLExplorerPlugin.error("Error closing statement", e);
                     }
                 if (connection != null)
                 	getNode().getSession().releaseConnection(connection);
@@ -94,6 +94,6 @@ public class PreviewTab extends AbstractDataSetTab {
     
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.Preview.status") + " " + getNode().getQualifiedName();  //$NON-NLS-1$//$NON-NLS-2$
+        return Messages.getString("DatabaseDetailView.Tab.Preview.status") + " " + getNode().getQualifiedName();
     }
 }

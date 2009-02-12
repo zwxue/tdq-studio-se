@@ -27,7 +27,7 @@ public class ObjectNode extends AbstractNode {
 
 
     public String getQualifiedName() {
-        return "\"" + getSchemaOrCatalogName() + "\".\"" + getName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return "\"" + getSchemaOrCatalogName() + "\".\"" + getName() + "\"";
     }
 
 }

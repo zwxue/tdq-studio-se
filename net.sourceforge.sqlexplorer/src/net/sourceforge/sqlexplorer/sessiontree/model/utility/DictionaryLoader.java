@@ -30,7 +30,7 @@ public class DictionaryLoader extends Job {
 
     private MetaDataSession session;
     
-    private static final String ID = "net.sourceforge.sqlexplorer"; //$NON-NLS-1$
+    private static final String ID = "net.sourceforge.sqlexplorer";
     
     /**
      * Hidden constructor.
@@ -44,7 +44,7 @@ public class DictionaryLoader extends Job {
      * Default constructor,
      */
     public DictionaryLoader(MetaDataSession session) {
-        super(Messages.getString("Progress.Dictionary.Title")); //$NON-NLS-1$
+        super(Messages.getString("Progress.Dictionary.Title"));
         this.session = session;
     }
     
@@ -58,7 +58,7 @@ public class DictionaryLoader extends Job {
         
         
         // check if we can persisted dictionary 
-        monitor.setTaskName(Messages.getString("Progress.Dictionary.Scanning")); //$NON-NLS-1$
+        monitor.setTaskName(Messages.getString("Progress.Dictionary.Scanning"));
 
         
         try {
@@ -73,17 +73,17 @@ public class DictionaryLoader extends Job {
             }
             
         } catch (InterruptedException ie) {
-            return new Status(IStatus.CANCEL, ID, IStatus.CANCEL, Messages.getString("Progress.Dictionary.Cancelled"), null); //$NON-NLS-1$
+            return new Status(IStatus.CANCEL, ID, IStatus.CANCEL, Messages.getString("Progress.Dictionary.Cancelled"), null);
             
         } catch (Exception e) {            
-            return new Status(IStatus.ERROR, ID, IStatus.CANCEL, Messages.getString("Progress.Dictionary.Error"), e); //$NON-NLS-1$
+            return new Status(IStatus.ERROR, ID, IStatus.CANCEL, Messages.getString("Progress.Dictionary.Error"), e);
             
         } finally {
             monitor.done();
         }
         
         // everything ended ok..
-        return new Status(IStatus.OK, ID, IStatus.OK, "tested ok ", null); //$NON-NLS-1$
+        return new Status(IStatus.OK, ID, IStatus.OK, "tested ok ", null);
     }
 
 }

@@ -92,7 +92,7 @@ public class SQLExecution extends AbstractSQLExecution {
 
                 try {
                     // set initial message
-                    setProgressMessage(Messages.getString("SQLResultsView.ConnectionWait")); //$NON-NLS-1$
+                    setProgressMessage(Messages.getString("SQLResultsView.ConnectionWait"));
                     
                 	Composite composite = resultsTab.getParent();
 
@@ -106,13 +106,13 @@ public class SQLExecution extends AbstractSQLExecution {
                     composite.setLayout(gLayout);
 
                     int resultCount = sqlResult.getDataSet().getRows().length;
-                    String statusMessage = Messages.getString("SQLResultsView.Time.Prefix") + " " //$NON-NLS-1$ //$NON-NLS-2$
-                            + sqlResult.getExecutionTimeMillis() + " " //$NON-NLS-1$
-                            + Messages.getString("SQLResultsView.Time.Postfix"); //$NON-NLS-1$
+                    String statusMessage = Messages.getString("SQLResultsView.Time.Prefix") + " "
+                            + sqlResult.getExecutionTimeMillis() + " "
+                            + Messages.getString("SQLResultsView.Time.Postfix");
                     getEditor().setMessage(statusMessage);
                     
                     if (resultCount > 0)
-                        statusMessage = statusMessage + "  " + Messages.getString("SQLResultsView.Count.Prefix") + " " + resultCount; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        statusMessage = statusMessage + "  " + Messages.getString("SQLResultsView.Count.Prefix") + " " + resultCount;
 
                     Query sql = sqlResult.getQuery();
                     int lineNo = sql.getLineNo();
@@ -120,13 +120,13 @@ public class SQLExecution extends AbstractSQLExecution {
                     getEditor().addMessage(new Message(Message.Status.SUCCESS, lineNo, 0, sql.getQuerySql(), statusMessage));
                     new DataSetTable(composite, sqlResult.getDataSet(), statusMessage);
 
-                    composite.setData("parenttab", resultsTab.getTabItem()); //$NON-NLS-1$
+                    composite.setData("parenttab", resultsTab.getTabItem());
 
                     composite.layout();
                     composite.redraw();
 
                     // reset to start message in case F5 will be used
-                    setProgressMessage(Messages.getString("SQLResultsView.ConnectionWait")); //$NON-NLS-1$
+                    setProgressMessage(Messages.getString("SQLResultsView.ConnectionWait"));
 
                 } catch (Exception e) {
 
@@ -137,7 +137,7 @@ public class SQLExecution extends AbstractSQLExecution {
 	                    errorLabel.setText(message);
 	                    errorLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
                 	}
-                    SQLExplorerPlugin.error(Messages.getString("SQLExecution.ErrorCreatResultTab"), e); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Error creating result tab", e);
                 }
             };
         });
@@ -153,7 +153,7 @@ public class SQLExecution extends AbstractSQLExecution {
             try {
                 _stmt.close();
             } catch (Exception e) {
-                SQLExplorerPlugin.error(Messages.getString("SQLExecution.ErrorCloseStatement"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error closing statement.", e);
             }
         }
         _stmt = null;
@@ -181,7 +181,7 @@ public class SQLExecution extends AbstractSQLExecution {
             		continue;
             	
             	// Initialise
-	            setProgressMessage(Messages.getString("SQLResultsView.Executing")); //$NON-NLS-1$
+	            setProgressMessage(Messages.getString("SQLResultsView.Executing"));
                 final long startTime = System.currentTimeMillis();
                 
                 // Run it
@@ -229,7 +229,7 @@ public class SQLExecution extends AbstractSQLExecution {
 	                closeStatement();
 	                hasMessages = true;
 	            	if (stopOnError) {
-	        			errorDialog(Messages.getString("SQLResultsView.Error.Title"), e.getMessage()); //$NON-NLS-1$
+	        			errorDialog(Messages.getString("SQLResultsView.Error.Title"), e.getMessage());
 	        			return;
 	            	}
 	            	numErrors++;
@@ -248,10 +248,10 @@ public class SQLExecution extends AbstractSQLExecution {
             }
             if (!hasMessages || SQLExplorerPlugin.getDefault().getPreferenceStore().getBoolean(IConstants.LOG_SUCCESS_MESSAGES)) {
                 long overallTime = System.currentTimeMillis() - overallStartTime;
-                String message = Long.toString(overallUpdateCount) + " " + Messages.getString("SQLEditor.Update.Prefix") + " " +  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    				Long.toString(overallTime) + " " + Messages.getString("SQLEditor.Update.Postfix"); //$NON-NLS-1$ //$NON-NLS-2$
+                String message = Long.toString(overallUpdateCount) + " " + Messages.getString("SQLEditor.Update.Prefix") + " " + 
+    				Long.toString(overallTime) + " " + Messages.getString("SQLEditor.Update.Postfix");
             
-            	addMessage(new Message(Message.Status.STATUS, getQueryParser().adjustLineNo(1), 0, "", message)); //$NON-NLS-1$
+            	addMessage(new Message(Message.Status.STATUS, getQueryParser().adjustLineNo(1), 0, "", message));
             }
         } catch (Exception e) {
             closeStatement();
@@ -263,9 +263,9 @@ public class SQLExecution extends AbstractSQLExecution {
             getEditor().getSite().getShell().getDisplay().asyncExec(new Runnable() {
                 public void run() {
         	    	MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(getEditor().getSite().getShell(), 
-        	    			Messages.getString("SQLExecution.Error.Title"),  //$NON-NLS-1$
-        	    			Messages.getString("SQLExecution.Error.Message"),  //$NON-NLS-1$
-        	    			Messages.getString("SQLExecution.Error.Toggle"),  //$NON-NLS-1$
+        	    			Messages.getString("SQLExecution.Error.Title"), 
+        	    			Messages.getString("SQLExecution.Error.Message"), 
+        	    			Messages.getString("SQLExecution.Error.Toggle"), 
         	    			false, null, null);
         	    	
         	    	if (dialog.getToggleState() && dialog.getReturnCode() == IDialogConstants.OK_ID)
@@ -283,12 +283,12 @@ public class SQLExecution extends AbstractSQLExecution {
             try {
                 _stmt.cancel();
             } catch (Exception e) {
-                SQLExplorerPlugin.error(Messages.getString("SQLExecution.ErrorCancelStatement"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error cancelling statement.", e);
             }
             try {
                 closeStatement();
             } catch (Exception e) {
-                SQLExplorerPlugin.error(Messages.getString("SQLExecution.ErrorCloseStatement"), e); //$NON-NLS-1$
+                SQLExplorerPlugin.error("Error closing statement.", e);
             }
         }
 

@@ -24,7 +24,7 @@ import org.eclipse.swt.dnd.TransferData;
 
 public class TableNodeTransfer extends ByteArrayTransfer  {
 	public String toString(){
-		return "TableNodeTransfer"; //$NON-NLS-1$
+		return "TableNodeTransfer";
 	}
 	private static final String TYPE_NAME= "TableNodeTransfer-format" + (new Long(System.currentTimeMillis())).toString(); //$NON-NLS-1$;
 	private static final int TYPEID= registerType(TYPE_NAME);

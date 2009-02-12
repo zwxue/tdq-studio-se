@@ -30,7 +30,6 @@ import java.util.List;
 
 import net.sourceforge.sqlexplorer.ApplicationFiles;
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -49,7 +48,7 @@ import org.eclipse.core.runtime.ListenerList;
  */
 public class SQLHistory {
 
-    private static final String HISTORY = "history"; //$NON-NLS-1$
+    private static final String HISTORY = "history";
     
     private List<SQLHistoryElement> _filteredHistory = new ArrayList<SQLHistoryElement>();
 
@@ -61,17 +60,17 @@ public class SQLHistory {
 
     private SQLHistorySorter _sorter = new SQLHistorySorter();
 
-    private static final String EXECUTION_HINT_MARKER = "#EH#"; //$NON-NLS-1$
+    private static final String EXECUTION_HINT_MARKER = "#EH#";
 
-    private static final String NEWLINE_REPLACEMENT = "#LF#"; //$NON-NLS-1$
+    private static final String NEWLINE_REPLACEMENT = "#LF#";
 
-    private static final String NEWLINE_SEPARATOR = System.getProperty("line.separator"); //$NON-NLS-1$
+    private static final String NEWLINE_SEPARATOR = System.getProperty("line.separator");
 
-    private static final String TAB_REPLACEMENT = "#T#"; //$NON-NLS-1$
+    private static final String TAB_REPLACEMENT = "#T#";
 
-    private static final String SESSION_HINT_MARKER = "#SH#"; //$NON-NLS-1$
+    private static final String SESSION_HINT_MARKER = "#SH#";
 
-    private static final String TIME_HINT_MARKER = "#TH#"; //$NON-NLS-1$
+    private static final String TIME_HINT_MARKER = "#TH#";
 
     private int _autoSaveAfterCount = SQLExplorerPlugin.getDefault().getPluginPreferences().getInt(IConstants.HISTORY_AUTOSAVE_AFTER);
     
@@ -110,7 +109,7 @@ public class SQLHistory {
     public void addSQL(String rawSqlString, Session session) {
 
         if (rawSqlString == null
-            || rawSqlString.equalsIgnoreCase("commit") //$NON-NLS-1$
+            || rawSqlString.equalsIgnoreCase("commit")
             || rawSqlString.trim().length() == 0) {
             return;
         }
@@ -190,7 +189,7 @@ public class SQLHistory {
 	        	_history.add(new SQLHistoryElement(elem));
 	        	
     	}catch(DocumentException e) {
-    		SQLExplorerPlugin.error("Cannot load history (v3.5.0 format)", e); //$NON-NLS-1$
+    		SQLExplorerPlugin.error("Cannot load history (v3.5.0 format)", e);
     	}
     }
 
@@ -243,7 +242,7 @@ public class SQLHistory {
 
                         // clean up query
                         query = query.replaceAll(NEWLINE_REPLACEMENT, NEWLINE_SEPARATOR);
-                        query = query.replaceAll(TAB_REPLACEMENT, " "); //$NON-NLS-1$
+                        query = query.replaceAll(TAB_REPLACEMENT, " ");
                     }
 
                     if (query != null && query.trim().length() != 0) {
@@ -258,7 +257,7 @@ public class SQLHistory {
             reader.close();
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error(Messages.getString("SQLHistory.NotLoadSqlHistory"), e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Couldn't load sql history.", e);
         }
 
     }
@@ -325,7 +324,7 @@ public class SQLHistory {
         	new File(ApplicationFiles.SQLHISTORY_FILE_NAME_V300).delete();
 
         } catch (IOException e) {
-            SQLExplorerPlugin.error(Messages.getString("SQLHistory.NotSavesqlHistory"), e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Couldn't save sql history.", e);
         }
 
     }
@@ -364,7 +363,7 @@ public class SQLHistory {
         }
         
         _filteredHistory = new ArrayList();
-        String[] keyword = _qry.split(" "); //$NON-NLS-1$
+        String[] keyword = _qry.split(" ");
 
         Iterator it = _history.iterator();
 

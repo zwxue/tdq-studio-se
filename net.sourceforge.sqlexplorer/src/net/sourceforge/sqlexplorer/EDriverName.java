@@ -34,54 +34,54 @@ public enum EDriverName {
                    "-1"), //$NON-NLS-1$ 
     MYSQLDEFAULTURL("Mysql", //$NON-NLS-1$
                     "org.gjt.mm.mysql.Driver", //$NON-NLS-1$
-                    "-6", //$NON-NLS-1$
-                    "lib/mysql-connector-java-5.1.0-bin.jar"), //$NON-NLS-1$
+                    "-6",
+                    "lib/mysql-connector-java-5.1.0-bin.jar"),
     HSQLDEFAULTURL("HSql", //$NON-NLS-1$
                    "org.hsqldb.jdbcDriver", //$NON-NLS-1$
-                   "-18", //$NON-NLS-1$
-                   "lib/hsqldb.jar"), //$NON-NLS-1$
+                   "-18",
+                   "lib/hsqldb.jar"),
     ORACLEDEFAULTURL("Oracle", //$NON-NLS-1$
                      // MOD scorreia 2008-08-22: oracle.jdbc.driver package is not supported anymore: replaced
                      "oracle.jdbc.OracleDriver", //$NON-NLS-1$
-                     "-4", //$NON-NLS-1$
-                     "lib/ojdbc14.jar"), //$NON-NLS-1$
+                     "-4",
+                     "lib/ojdbc14.jar"),
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
                     "net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
-                    "-11", "lib/jtds-1.2.jar"), //$NON-NLS-1$ //$NON-NLS-2$
+                    "-11", "lib/jtds-1.2.jar"), //$NON-NLS-1$
     DB2DEFAULTURL("DB2", //$NON-NLS-1$
                   "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
-                  "-24", //$NON-NLS-1$
-                  "lib/db2jcc_license_cu.jar", //$NON-NLS-1$
-                  "lib/db2jcc_license_cisuz.jar", //$NON-NLS-1$
-                  "lib/db2jcc.jar"), //$NON-NLS-1$
+                  "-24",
+                  "lib/db2jcc_license_cu.jar",
+                  "lib/db2jcc_license_cisuz.jar",
+                  "lib/db2jcc.jar"),
     POSTGRESQLEFAULTURL("PostgreSQL", //$NON-NLS-1$
                         "org.postgresql.Driver", //$NON-NLS-1$
-                        "-7", //$NON-NLS-1$
-                        "lib/postgresql-8.1-405.jdbc3.jar"), //$NON-NLS-1$
+                        "-7",
+                        "lib/postgresql-8.1-405.jdbc3.jar"),
     INTERBASEDEFAULTURL("Interbase", //$NON-NLS-1$
                         "interbase.interclient.Driver", //$NON-NLS-1$
-                        "-3", //$NON-NLS-1$
-                        "lib/interclient.jar"), //$NON-NLS-1$
+                        "-3",
+                        "lib/interclient.jar"),
     SYBASEDEFAULTURL("Sybase", //$NON-NLS-1$
                      "com.sybase.jdbc3.jdbc.SybDriver", //$NON-NLS-1$
-                     "-9", //$NON-NLS-1$
-                     "lib/jconn3.jar"), //$NON-NLS-1$
+                     "-9",
+                     "lib/jconn3.jar"),
     INFORMIXDEFAULTURL("Informix", //$NON-NLS-1$
                        "com.informix.jdbc.IfxDriver", //$NON-NLS-1$
                        null,
                        "lib/ifxjdbc.jar"), //$NON-NLS-1$ 
     FIREBIRDDEFAULTURL("FireBird", //$NON-NLS-1$
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$
-                       "-25", //$NON-NLS-1$
-                       "lib/jaybird-2.1.1.jar"), //$NON-NLS-1$
+                       "-25",
+                       "lib/jaybird-2.1.1.jar"),
     TERADATADEFAULTURL(
-                       "Teradata", //$NON-NLS-1$
-                       "com.ncr.teradata.TeraDriver", //$NON-NLS-1$
-                       "-50", //$NON-NLS-1$
-                       "lib/terajdbc4.jar", //$NON-NLS-1$
-                       "lib/tdgssconfig.jar", //$NON-NLS-1$
-                       "lib/tdgssjava.jar"), //$NON-NLS-1$
-    SQLITE3DEFAULTURL("SQLite3", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                       "Teradata",
+                       "com.ncr.teradata.TeraDriver",
+                       "-50",
+                       "lib/terajdbc4.jar",
+                       "lib/tdgssconfig.jar",
+                       "lib/tdgssjava.jar"),
+    SQLITE3DEFAULTURL("SQLite3", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar");
 
     private final String dbKey;
 
@@ -127,37 +127,37 @@ public enum EDriverName {
      */
     public LinkedList<String> getJars() {
         LinkedList<String> linkedList = new LinkedList<String>();
-        String plugins = "org.talend.libraries"; //$NON-NLS-1$
+        String plugins = "org.talend.libraries";
         switch (this) {
         case DB2DEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.db2"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.db2";
             break;
         case MSSQLDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.jtds"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.jtds";
             break;
         case MYSQLDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.mysql"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.mysql";
             break;
         case ORACLEDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.oracle"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.oracle";
             break;
         case POSTGRESQLEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.postgresql"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.postgresql";
             break;
         case SYBASEDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.sybase"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.sybase";
             break;
         case HSQLDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.hsql"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.hsql";
             break;
         case TERADATADEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.teradata"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.teradata";
             break;
         case INFORMIXDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.informix"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.informix";
             break;
         case SQLITE3DEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.sqlite3"; //$NON-NLS-1$
+            plugins = "org.talend.libraries.jdbc.sqlite3";
             break;
         default:
             return linkedList;

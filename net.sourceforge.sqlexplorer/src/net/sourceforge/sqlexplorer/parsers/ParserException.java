@@ -56,8 +56,8 @@ public class ParserException extends Exception {
 	
 	private static String describePosition(int lineNo, int charNo) {
 		if (lineNo < 1 && charNo < 1)
-			return ""; //$NON-NLS-1$
-		return " at line " + lineNo + ", position " + charNo; //$NON-NLS-1$ //$NON-NLS-2$
+			return "";
+		return " at line " + lineNo + ", position " + charNo;
 	}
 
 }

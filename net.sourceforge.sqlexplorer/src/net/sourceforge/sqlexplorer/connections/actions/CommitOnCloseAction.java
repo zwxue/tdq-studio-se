@@ -8,7 +8,7 @@ import net.sourceforge.sqlexplorer.dbproduct.User;
 public class CommitOnCloseAction extends AbstractConnectionTreeAction {
 
     public CommitOnCloseAction() {
-		super("SQLEditor.Options.CommitOnClose", "SQLEditor.Options.CommitOnClose.Tooltip", "Images.CommitIcon", AS_CHECK_BOX); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		super("SQLEditor.Options.CommitOnClose", "SQLEditor.Options.CommitOnClose.Tooltip", "Images.CommitIcon", AS_CHECK_BOX);
 	}
 
     public void run() {

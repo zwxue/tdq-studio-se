@@ -38,8 +38,8 @@ import org.eclipse.ui.IViewActionDelegate;
 public class CloseConnectionAction extends AbstractConnectionTreeAction implements IViewActionDelegate {
 
     public CloseConnectionAction() {
-    	super("ConnectionsView.Actions.CloseConnection", "ConnectionsView.Actions.CloseConnectionToolTip", "Images.CloseConnIcon"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    	setDisabledImageDescriptor(ImageUtil.getDescriptor("Images.DisabledCloseConnIcon")); //$NON-NLS-1$
+    	super("ConnectionsView.Actions.CloseConnection", "ConnectionsView.Actions.CloseConnectionToolTip", "Images.CloseConnIcon");
+    	setDisabledImageDescriptor(ImageUtil.getDescriptor("Images.DisabledCloseConnIcon"));
     }
 
     public void run() {
@@ -49,9 +49,9 @@ public class CloseConnectionAction extends AbstractConnectionTreeAction implemen
 			if (session != null && !session.isConnectionInUse()) {
 		    	if (confirm) {
 			    	MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(getView().getSite().getShell(), 
-			    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Title"),  //$NON-NLS-1$
-			    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Message"),  //$NON-NLS-1$
-			    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Toggle"),  //$NON-NLS-1$
+			    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Title"), 
+			    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Message"), 
+			    			Messages.getString("ConnectionsView.Actions.CloseAll.Confirm.Toggle"), 
 			    			false, null, null);
 
 			    	if (dialog.getToggleState() && dialog.getReturnCode() == IDialogConstants.YES_ID)

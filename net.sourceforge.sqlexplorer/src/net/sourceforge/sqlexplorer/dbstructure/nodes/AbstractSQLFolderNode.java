@@ -6,17 +6,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.Messages;
-import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 
 public abstract class AbstractSQLFolderNode extends AbstractFolderNode {
 
     public AbstractSQLFolderNode(String name) {
-        super(name);
-    }
+		super(name);
+	}
 
-    public abstract String getChildType();
+	public abstract String getChildType();
 
     public abstract String getSQL();
 
@@ -24,15 +23,15 @@ public abstract class AbstractSQLFolderNode extends AbstractFolderNode {
 
     public final void loadChildren() {
 
-        SQLConnection connection = null;
+        SQLConnection connection  = null;
         ResultSet rs = null;
         Statement stmt = null;
         PreparedStatement pStmt = null;
         int timeOut = SQLExplorerPlugin.getDefault().getPluginPreferences().getInt(IConstants.INTERACTIVE_QUERY_TIMEOUT);
-
+        
         try {
-            connection = getSession().grabConnection();
-
+        	connection = getSession().grabConnection();
+        	
             Object[] params = getSQLParameters();
             if (params == null || params.length == 0) {
 
@@ -46,7 +45,7 @@ public abstract class AbstractSQLFolderNode extends AbstractFolderNode {
                 // use prepared statement
                 pStmt = connection.prepareStatement(getSQL());
                 pStmt.setQueryTimeout(timeOut);
-
+                
                 for (int i = 0; i < params.length; i++) {
 
                     if (params[i] instanceof String) {
@@ -74,29 +73,29 @@ public abstract class AbstractSQLFolderNode extends AbstractFolderNode {
 
         } catch (Exception e) {
 
-            SQLExplorerPlugin.error(Messages.getString("AbstractSQLFolderNode.NotLoadChildren", getName()), e); //$NON-NLS-1$
+            SQLExplorerPlugin.error("Couldn't load children for: " + getName(), e);
 
         } finally {
             if (rs != null)
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Error closing result set", e); //$NON-NLS-1$
-                }
+            	try {
+            		rs.close();
+            	}catch(SQLException e) {
+            		SQLExplorerPlugin.error("Error closing result set", e);
+            	}
             if (stmt != null)
                 try {
                     stmt.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Error closing statement", e); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Error closing statement", e);
                 }
             if (pStmt != null)
                 try {
                     pStmt.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Error closing statement", e); //$NON-NLS-1$
+                    SQLExplorerPlugin.error("Error closing statement", e);
                 }
             if (connection != null)
-                getSession().releaseConnection(connection);
+            	getSession().releaseConnection(connection);
         }
 
     }

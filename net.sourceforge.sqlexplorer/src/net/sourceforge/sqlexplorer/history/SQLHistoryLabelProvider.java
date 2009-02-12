@@ -86,9 +86,9 @@ public class SQLHistoryLabelProvider implements ITableLabelProvider {
             case 2:
                 return el.getSessionDescription();
             case 3:
-                return "" + el.getExecutionCount(); //$NON-NLS-1$
+                return "" + el.getExecutionCount();
             default:
-                return "error"; //$NON-NLS-1$
+                return "error";
         }
 
     }

@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.sql.SQLException;
 
 import net.sourceforge.sqlexplorer.ExplorerException;
-import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 
@@ -89,7 +88,7 @@ public class Session {
      */
     protected void internalSetConnection(SQLConnection newConnection) throws SQLException {
     	if (newConnection != null && connection != newConnection && connection != null)
-    		throw new IllegalStateException(Messages.getString("Session.0")); //$NON-NLS-1$
+    		throw new IllegalStateException("Cannot change connection on the fly!");
     	if (connection != null)
     		connection.setSession(null);
     	connection = newConnection;
@@ -119,9 +118,9 @@ public class Session {
      */
     public synchronized SQLConnection grabConnection() throws SQLException {
     	if (user == null)
-    		throw new IllegalStateException(Messages.getString("Session.1")); //$NON-NLS-1$
+    		throw new IllegalStateException("Session invalid (closed)");
     	if (connectionInUse)
-    		throw new IllegalStateException(Messages.getString("Session.2")); //$NON-NLS-1$
+    		throw new IllegalStateException("Cannot grab a new connection - already in use");
     	
 		if (connection != null) {
 			if (connection.getConnection() == null || connection.getConnection().isClosed())
@@ -146,12 +145,12 @@ public class Session {
      */
     public synchronized void releaseConnection(SQLConnection toRelease) {
     	if (!connectionInUse)
-    		throw new IllegalStateException(Messages.getString("Session.CannotReleaseConnection")); //$NON-NLS-1$
+    		throw new IllegalStateException("Cannot release connection - not inuse");
     	if (connection != toRelease) {
     		// User will be null if we've closed
     		if (user == null)
     			return;
-    		throw new IllegalArgumentException(Messages.getString("Session.AttemptReleaseWrongConn")); //$NON-NLS-1$
+    		throw new IllegalArgumentException("Attempt to release the wrong connection");
     	}
     	
     	// Run any queued tasks
@@ -161,7 +160,7 @@ public class Session {
 	    		task.run();
 	    	}
     	}catch(SQLException e) {
-    		SQLExplorerPlugin.error(Messages.getString("Session.FailedRunQueueTask"), e); //$NON-NLS-1$
+    		SQLExplorerPlugin.error("Failed running queued task", e);
     	}
 
     	connectionInUse = false;
@@ -175,7 +174,7 @@ public class Session {
         	if (!autoCommit || keepConnection)
         		return;
     	}catch(SQLException e) {
-    		SQLExplorerPlugin.error(Messages.getString("Session.CannotCommit"), e); //$NON-NLS-1$
+    		SQLExplorerPlugin.error("Cannot commit", e);
     	}
     	
     	// Give it back into the pool
@@ -183,7 +182,7 @@ public class Session {
 	    	user.releaseConnection(connection);
     		internalSetConnection(null);
     	}catch(SQLException e) {
-    		SQLExplorerPlugin.error(Messages.getString("Session.CannotReleaseConn"), e); //$NON-NLS-1$
+    		SQLExplorerPlugin.error("Cannot release connection", e);
     	}
 		SQLExplorerPlugin.getDefault().getConnectionsView().refresh();
     }
@@ -217,7 +216,7 @@ public class Session {
 		    		internalSetConnection(null);
 					SQLExplorerPlugin.getDefault().getConnectionsView().refresh();
 		    	}catch(SQLException e) {
-		    		SQLExplorerPlugin.error(Messages.getString("Session.CannotReleaseConnect"), e); //$NON-NLS-1$
+		    		SQLExplorerPlugin.error("Cannot release connection", e);
 		    	}
 		}
 	}
@@ -300,7 +299,7 @@ public class Session {
      */
     public synchronized void disposeConnection() {
     	if (connectionInUse)
-    		throw new IllegalAccessError(Messages.getString("Session.CannotCloseSession")); //$NON-NLS-1$
+    		throw new IllegalAccessError("Cannot close session while connection is still in use!");
         if (connection != null) {
         	SQLConnection connection = this.connection;
         	try {
@@ -372,7 +371,7 @@ public class Session {
 	}
     
     public String toString() {
-    	return user != null ? user.toString() : "(disconnected)"; //$NON-NLS-1$
+    	return user != null ? user.toString() : "(disconnected)";
     }
     
     public DatabaseProduct getDatabaseProduct() {

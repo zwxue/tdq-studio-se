@@ -29,10 +29,10 @@ import net.sourceforge.sqlexplorer.parsers.scp.StructuredCommentParser.CommandTy
 	public EndrefCommand(StructuredCommentParser parser, Token comment, Tokenizer tokenizer, CharSequence data) throws ParserException {
 		super(parser, CommandType.ENDREF, comment, tokenizer, data);
 		if (tokens.size() != 0)
-			throw new StructuredCommentException("endref has extra text", comment); //$NON-NLS-1$
+			throw new StructuredCommentException("endref has extra text", comment);
 	}
 	
 	public String toString() {
-		return "endref"; //$NON-NLS-1$
+		return "endref";
 	}
 }
