@@ -23,6 +23,9 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
 import org.apache.log4j.Level;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -186,6 +189,37 @@ public class CorePlugin extends AbstractUIPlugin {
         if (!getDefault().isUsed()) {
             DQStructureManager manager = DQStructureManager.getInstance();
             getDefault().setUsed(manager.createDQStructure());
+        }
+        // MOD xqliu 2009-02-13 bug 5597
+        checkProjectPersistentProperty();
+    }
+
+    /**
+     * DOC xqliu Comment method "checkProjectPersistentProperty".
+     */
+    private void checkProjectPersistentProperty() {
+        String[] projects = { DQStructureManager.DATA_PROFILING, DQStructureManager.LIBRARIES, DQStructureManager.METADATA };
+        try {
+            checkProjectPersistentProperty(projects);
+        } catch (CoreException e) {
+            ExceptionHandler.process(e);
+        }
+    }
+
+    /**
+     * 
+     * DOC xqliu Comment method "checkProjectPersistentProperty".
+     * 
+     * @param projects
+     * @throws CoreException
+     */
+    private void checkProjectPersistentProperty(String[] projects) throws CoreException {
+        IProject prjct;
+        for (String project : projects) {
+            prjct = ResourcesPlugin.getWorkspace().getRoot().getProject(project);
+            if (prjct != null && prjct.getPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY) == null) {
+                prjct.setPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY, DQStructureManager.PATTERNS_FOLDER_PROPERTY);
+            }
         }
     }
 
