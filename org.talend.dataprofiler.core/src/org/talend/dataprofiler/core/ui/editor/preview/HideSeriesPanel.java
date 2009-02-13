@@ -14,10 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.MenuItem;
 import java.awt.Paint;
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -66,6 +63,8 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class HideSeriesPanel extends JPanel implements ActionListener {
 
+    private static final long serialVersionUID = 1L;
+
     private Map<String, RowColumPair> hightlightSeriesMap = new HashMap<String, RowColumPair>();
 
     private int columnCount;
@@ -98,8 +97,9 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
      * 
      * DOC zhaoxinyi HideSeriesPanel class global comment. Detailled comment
      */
-    @SuppressWarnings("serial")
     class HideChartPanel extends ChartPanel {
+
+        private static final long serialVersionUID = 1L;
 
         public HideChartPanel(JFreeChart chart) {
             super(chart, false, false, false, false, true);
@@ -119,7 +119,6 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
 
     private CategoryItemRenderer ganttRenderer;
 
-    @SuppressWarnings("unchecked")
     public void actionPerformed(ActionEvent actionevent) {
         Iterator<String> iterator = null;
         if (countIndicator instanceof CountAvgNullIndicator) {
@@ -198,7 +197,6 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             ganttRenderer = plot.getRenderer();
             CategoryToolTipGenerator toolTipGenerator = new CategoryToolTipGenerator() {
 
-                @SuppressWarnings("unchecked")
                 public String generateToolTip(CategoryDataset dataset, int row, int column) {
                     TaskSeriesCollection taskSeriesColl = (TaskSeriesCollection) dataset;
                     List<Task> taskList = new ArrayList<Task>();
@@ -219,44 +217,23 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             ganttRenderer.setToolTipGenerator(toolTipGenerator);
         }
         final HideChartPanel chartpanel = new HideChartPanel(chart);
-        chartpanel.setPreferredSize(new Dimension(2000, 500));
         chartpanel.addChartMouseListener(new ChartMouseListener() {
 
             public void chartMouseClicked(ChartMouseEvent event) {
 
-                if (event.getTrigger().getButton() != 3) {
+                if (event.getTrigger().getClickCount() != 2) {
                     return;
                 }
 
-                if (chartpanel.getPopupMenu() != null) {
-                    chartpanel.remove(chartpanel.getPopupMenu());
-                }
+                Display.getDefault().asyncExec(new Runnable() {
 
-                PopupMenu menu = new PopupMenu("");
-                MenuItem item = new MenuItem("Show in full screen");
-
-                item.addActionListener(new ActionListener() {
-
-                    public void actionPerformed(ActionEvent e) {
-                        Display.getDefault().asyncExec(new Runnable() {
-
-                            public void run() {
-                                ChartUtils.showChartInFillScreen(chartpanel.getChart());
-                            }
-                        });
-
+                    public void run() {
+                        ChartUtils.showChartInFillScreen(chartpanel.getChart());
                     }
                 });
-
-                menu.add(item);
-
-                chartpanel.add(menu);
-                menu.show(chartpanel, event.getTrigger().getX(), event.getTrigger().getY());
             }
 
             public void chartMouseMoved(ChartMouseEvent event) {
-                // TODO Auto-generated method stub
-
             }
 
         });

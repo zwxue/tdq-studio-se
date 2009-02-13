@@ -125,7 +125,8 @@ public final class ChartUtils {
     }
 
     public static void showChartInFillScreen(JFreeChart chart) {
-        new FullScreenChartDialog(null, chart).open();
+        FullScreenChartDialog dialog = new FullScreenChartDialog(null, chart);
+        dialog.open();
     }
 
     /**
@@ -145,6 +146,7 @@ public final class ChartUtils {
         protected void configureShell(Shell newShell) {
             super.configureShell(newShell);
 
+            newShell.setSize(800, 500);
             newShell.setMaximized(true);
             // newShell.setFullScreen(true);
         }
