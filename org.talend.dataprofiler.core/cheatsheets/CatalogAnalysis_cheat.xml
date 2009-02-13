@@ -3,14 +3,14 @@
       title="Create a new catalog analysis">
    <intro>
       <description>
-         This tutorial guides you through the creation of a catalog analysis.
+         This type of analysis analyzes one specific catalog in a database. The result of the analysis gives information about the content of the catalog.
       </description>
    </intro>
    <item
          skip="false" dialog="true"
-         title="select catalog to analyse">
+         title="select a catalog to analyze">
       <description>
-         
+       Note that catalog analysis is possible only with databases that include catalog entities in their physical structure. This step opens the <b> Create New Analysis </b> wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a catalog</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens the corresponding editor in which you can define the settings of the analysis.
       </description>
     <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core"  param1="7" confirm="false"/>
    </item>
@@ -18,13 +18,13 @@
          skip="true"
          title="Review your settings">
       <description>
-         <b>Body</b>
+         This step allows you to review and change your analysis settings, if necessary, in the open catalog editor.
       </description>
    </item>
    <item
-         title="Analyse">
+         title="Analyze">
       <description>
-         To execute the analysis, click on the &quot;Run&quot; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &quot;Analysis&quot; objects in the &quot;DQ Repository&quot; view
+         To execute the analysis, click on the &quot;Run&quot; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &quot;Analysis&quot; object in the &quot;DQ Repository&quot; view.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
       

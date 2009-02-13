@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a numerical column correlation analysiss">
+      title="Create a numerical column correlation analysis">
    <intro>
       <description>
-         <b>Body</b>
+         This type of analysis analyzes correlation between nominal and interval columns and gives the result in a kind of a bubble chart.
       </description>
    </intro>
    <item dialog="true"
          title="Set the analysis metadata">
       <description>
-         <b>Body</b>
+         This step opens the <b> Create New Analysis </b> wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a nomnal or an interval column</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens the corresponding editor in which you can define the settings of the analysis.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8" param2="0"/>
    </item>
    <item
-         title="Select columns to analysis">
+         title="Select the columns to analysis">
       <description>
-         <b>Body</b>
+         Click the <b> &quot;Analyzed Columns&quot;</b> hyperlink (or <b> click the link below</b>). Then click <b> &quot;Select columns to analyze&quot;</b> to open a dialog box where you can select the nominal and interval columns to analyze.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.OpenColumnSelectorAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
       </action>
@@ -29,16 +29,16 @@
       </description>
    </item>
    <item
-         title="Analyse">
+         title="Analyze">
       <description>
-         <b>Body</b>
+         To execute the analysis, click on the &quot;Run&quot; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &quot;Analysis&quot; object in the &quot;DQ Repository&quot; view.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
       <item title="Refresh the graphics" dialog="true" skip="false">
       <description>
-        
+         To generate the graphics of the analysis, click on the <b>&quot;Refresh the graphics&quot;</b>  hyperlink (<b>or click the link below</b>). &quot;Refresh the graphics&quot; means that graphics are displayed with the last computed data.  
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
       </action>

@@ -3,13 +3,13 @@
       title="Create a new schema analysis">
    <intro>
       <description>
-         This tutorial guides you through the creation of a schema analysis.
+         This type of analysis analyzes one specific shema in a database. The result of the analysis gives information about the content of the schema.
       </description>
    </intro>
    <item skip="false" dialog="true"
          title="Select schema to analyse">
       <description>
-         <b>Body</b>
+         Note that schema analysis is possible only with databases that include schema entities in their physical structure. This step opens the <b> Create New Analysis </b> wizard. You can <b> right click on the &quot;Analysis&quot; folder or on a schema</b> (or <b>click the link below</b>). This wizard helps you to fill the analysis metadata (name, purpose, description....). At the end it opens the corresponding editor in which you can define the settings of the analysis.
       </description>
        <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core"  param1="5" confirm="false"/>
    </item>
@@ -17,13 +17,13 @@
          skip="true"
          title="Review your settings">
       <description>
-         <b>Body</b>
+         This step allows you to review and change your analysis settings, if necessary, in the open schema editor.
       </description>
    </item>
    <item
-         title="Analyse">
+         title="Analyze">
       <description>
-         <b>Body</b>
+         To execute the analysis, click on the &quot;Run&quot; button at the bottom of the editor (or click the link below). You can run the analysis with a context menu on the &quot;Analysis&quot; object in the &quot;DQ Repository&quot; view.
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false"/>
    </item>
