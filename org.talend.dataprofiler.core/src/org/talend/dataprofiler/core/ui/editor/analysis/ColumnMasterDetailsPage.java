@@ -730,7 +730,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         if (!analyzedColumns.isEmpty()) {
             if (!ColumnHelper.isFromSameConnection(analyzedColumns)) {
-                return new ReturnCode("The one that is already shown at the execution time", false);
+                return new ReturnCode("Cannot create a column analysis on different connections", false);
             }
 
             if (!ColumnHelper.isFromSameTable(analyzedColumns) && !"".equals(dataFilterComp.getDataFilterString())) {
