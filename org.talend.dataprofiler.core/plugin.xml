@@ -787,6 +787,12 @@
            name="org.talend.dataprofiler.core.migration.impl.CopyDefineFileTask"
            version="1.2.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
+           name="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
+           version="1.2.0">
+     </workspacetask>
   </extension>
 
 </plugin>
