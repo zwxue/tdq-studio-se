@@ -20,15 +20,15 @@ import java.util.List;
  * DOC zqin class global comment. Detailled comment
  */
 public enum BookMarkEnum {
-    MySQLRegular("http://dev.mysql.com/doc/refman/5.0/en/regexp.html", "MySQL Regular Expressions"),
-    OracleRegular("http://www.oracle.com/technology/obe/obe10gdb/develop/regexp/regexp.htm", "Oracle Regular Expressions"),
-    SQLServer2005Regular("http://msdn.microsoft.com/en-us/magazine/cc163473.aspx", "SQL Server 2005 Regular Expressions"),
-    PostgreSQLRegular("http://www.postgresql.org/docs/current/static/functions-matching.html", "PostgreSQL Regular Expressions"),
-    BoxPlot("http://en.wikipedia.org/wiki/Box_plot", "Box Plot Graphic"),
-    EclipseSQLExplorer("http://eclipsesql.sourceforge.net/index.php", "Eclipse SQL Explorer"),
-    TOSDownloadPage("http://www.talend.com/download.php", "Talend.com Download Page"),
-    TOSForum("http://www.talendforge.org/forum/index.php", "Talend.com Forum"),
-    TOSBugtracker("http://www.talendforge.org/bugs/my_view_page.php", "Talend.com Bugtracker");
+    MySQLRegular("http://dev.mysql.com/doc/refman/5.0/en/regexp.html", "MySQL Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
+    OracleRegular("http://www.oracle.com/technology/obe/obe10gdb/develop/regexp/regexp.htm", "Oracle Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
+    SQLServer2005Regular("http://msdn.microsoft.com/en-us/magazine/cc163473.aspx", "SQL Server 2005 Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
+    PostgreSQLRegular("http://www.postgresql.org/docs/current/static/functions-matching.html", "PostgreSQL Regular Expressions"), //$NON-NLS-1$ //$NON-NLS-2$
+    BoxPlot("http://en.wikipedia.org/wiki/Box_plot", "Box Plot Graphic"), //$NON-NLS-1$ //$NON-NLS-2$
+    EclipseSQLExplorer("http://eclipsesql.sourceforge.net/index.php", "Eclipse SQL Explorer"), //$NON-NLS-1$ //$NON-NLS-2$
+    TOSDownloadPage("http://www.talend.com/download.php", "Talend.com Download Page"), //$NON-NLS-1$ //$NON-NLS-2$
+    TOSForum("http://www.talendforge.org/forum/index.php", "Talend.com Forum"), //$NON-NLS-1$ //$NON-NLS-2$
+    TOSBugtracker("http://www.talendforge.org/bugs/my_view_page.php", "Talend.com Bugtracker"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private String href;
 

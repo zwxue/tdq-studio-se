@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 public class HelpPlugin extends AbstractUIPlugin {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.talend.dataprofiler.help";
+    public static final String PLUGIN_ID = "org.talend.dataprofiler.help"; //$NON-NLS-1$
 
     // The shared instance
     private static HelpPlugin plugin;
@@ -50,14 +50,14 @@ public class HelpPlugin extends AbstractUIPlugin {
     }
 
     public String getIndicatorHelpContextID() {
-        return PLUGIN_ID + ".mycontexthelpid";
+        return PLUGIN_ID + ".mycontexthelpid"; //$NON-NLS-1$
     }
 
     public String getIndicatorSelectorHelpContextID() {
-        return PLUGIN_ID + ".indicatorhelpcontext";
+        return PLUGIN_ID + ".indicatorhelpcontext"; //$NON-NLS-1$
     }
 
     public String getPatternHelpContextID() {
-        return PLUGIN_ID + ".helpPatternContext";
+        return PLUGIN_ID + ".helpPatternContext"; //$NON-NLS-1$
     }
 }
