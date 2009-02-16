@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.ExecutionInformations;
@@ -44,9 +45,9 @@ public final class ReportHelper {
      * The report types.
      */
     public static enum ReportType {
-        BASIC("Basic", "/reports/column/report_01.jrxml"),  //$NON-NLS-1$//$NON-NLS-2$
-        EVOLUTION("Evolution", "/reports/column/report_02.jrxml"),  //$NON-NLS-1$//$NON-NLS-2$
-        USER_MADE("User specified", null); // for the user to set his own file path //$NON-NLS-1$
+        BASIC("Basic", "/reports/column/report_01.jrxml"), //$NON-NLS-1$//$NON-NLS-2$
+        EVOLUTION("Evolution", "/reports/column/report_02.jrxml"), //$NON-NLS-1$//$NON-NLS-2$
+        USER_MADE("User specified", null); // for the user to set his own file path//$NON-NLS-1$
 
         private String label;
 
@@ -200,7 +201,7 @@ public final class ReportHelper {
     }
 
     /**
-     * Method "setReportType".
+     * Method "setReportType".MOD mzhao 2009-02-16
      * 
      * @param report the report object to update
      * @param reportType the report type to set
@@ -208,17 +209,17 @@ public final class ReportHelper {
      * USER_DEFINED)
      * @return true if everything is set correctly, false otherwise.
      */
-    public static boolean setReportType(TdReport report, ReportType reportType, String jrxmlFullPath) {
+    public static boolean setReportType(TdReport report, Analysis analysis, ReportType reportType, String jrxmlFullPath) {
         boolean ok = true;
         switch (reportType) {
         case BASIC:
+            report.setReportType(reportType.getLabel(), null, analysis);
+            break;
         case EVOLUTION:
-            report.setInputJrxml(reportType.getJrxmlFilename());
-            report.setReportType(reportType.getLabel());
+            report.setReportType(reportType.getLabel(), null, analysis);
             break;
         case USER_MADE:
-            report.setReportType(reportType.getLabel());
-            report.setInputJrxml(jrxmlFullPath);
+            report.setReportType(reportType.getLabel(), jrxmlFullPath, analysis);
             if (StringUtils.isBlank(jrxmlFullPath)) {
                 // do not log an error here
                 ok = false;
@@ -242,7 +243,7 @@ public final class ReportHelper {
     public static boolean setAnalysisFilterDate(TdReport report, String dateText, int datePos) {
         boolean ok = true;
         Date date = null;
-        String pattern = "MM/dd/yyyy"; //$NON-NLS-1$
+        String pattern = "MM/dd/yyyy";//$NON-NLS-1$
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         try {
             date = sdf.parse(dateText);
@@ -256,5 +257,37 @@ public final class ReportHelper {
         }
         sdf = null;
         return ok;
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "getReportType".
+     * 
+     * @param report
+     * @param analysis
+     * @return
+     */
+    public static String getReportType(TdReport report, Analysis analysis) {
+        String reportType = null;
+        EList<AnalysisMap> anMaps = report.getAnalysisMap();
+        for (AnalysisMap anMap : anMaps) {
+            if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
+                reportType = anMap.getReportType();
+                break;
+            }
+        }
+        return reportType;
+    }
+
+    public static String getReportJrxml(TdReport report, Analysis analysis) {
+        String jrxmlSource = null;
+        EList<AnalysisMap> anMaps = report.getAnalysisMap();
+        for (AnalysisMap anMap : anMaps) {
+            if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
+                jrxmlSource = anMap.getJrxmlSource();
+                break;
+            }
+        }
+        return jrxmlSource;
     }
 }

@@ -24,6 +24,8 @@ import org.talend.dataquality.analysis.Analysis;
  * <ul>
  *   <li>{@link org.talend.dataquality.reports.AnalysisMap#getAnalysis <em>Analysis</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.AnalysisMap#isMustRefresh <em>Must Refresh</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.AnalysisMap#getReportType <em>Report Type</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.AnalysisMap#getJrxmlSource <em>Jrxml Source</em>}</li>
  * </ul>
  * </p>
  *
@@ -82,5 +84,57 @@ public interface AnalysisMap extends EObject {
      * @generated
      */
     void setMustRefresh(boolean value);
+
+    /**
+     * Returns the value of the '<em><b>Report Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Report Type</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Report Type</em>' attribute.
+     * @see #setReportType(String)
+     * @see org.talend.dataquality.reports.ReportsPackage#getAnalysisMap_ReportType()
+     * @model
+     * @generated
+     */
+    String getReportType();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.reports.AnalysisMap#getReportType <em>Report Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Report Type</em>' attribute.
+     * @see #getReportType()
+     * @generated
+     */
+    void setReportType(String value);
+
+    /**
+     * Returns the value of the '<em><b>Jrxml Source</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Jrxml Source</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Jrxml Source</em>' attribute.
+     * @see #setJrxmlSource(String)
+     * @see org.talend.dataquality.reports.ReportsPackage#getAnalysisMap_JrxmlSource()
+     * @model
+     * @generated
+     */
+    String getJrxmlSource();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.reports.AnalysisMap#getJrxmlSource <em>Jrxml Source</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Jrxml Source</em>' attribute.
+     * @see #getJrxmlSource()
+     * @generated
+     */
+    void setJrxmlSource(String value);
 
 } // AnalysisMap

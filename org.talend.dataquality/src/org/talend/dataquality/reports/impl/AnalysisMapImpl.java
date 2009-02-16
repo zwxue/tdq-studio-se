@@ -28,6 +28,8 @@ import org.talend.dataquality.reports.ReportsPackage;
  * <ul>
  *   <li>{@link org.talend.dataquality.reports.impl.AnalysisMapImpl#getAnalysis <em>Analysis</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.AnalysisMapImpl#isMustRefresh <em>Must Refresh</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.AnalysisMapImpl#getReportType <em>Report Type</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.AnalysisMapImpl#getJrxmlSource <em>Jrxml Source</em>}</li>
  * </ul>
  * </p>
  *
@@ -63,6 +65,46 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
      * @ordered
      */
     protected boolean mustRefresh = MUST_REFRESH_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getReportType()
+     * @generated
+     * @ordered
+     */
+    protected static final String REPORT_TYPE_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getReportType()
+     * @generated
+     * @ordered
+     */
+    protected String reportType = REPORT_TYPE_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getJrxmlSource() <em>Jrxml Source</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getJrxmlSource()
+     * @generated
+     * @ordered
+     */
+    protected static final String JRXML_SOURCE_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getJrxmlSource() <em>Jrxml Source</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getJrxmlSource()
+     * @generated
+     * @ordered
+     */
+    protected String jrxmlSource = JRXML_SOURCE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -147,6 +189,48 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getReportType() {
+        return reportType;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setReportType(String newReportType) {
+        String oldReportType = reportType;
+        reportType = newReportType;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__REPORT_TYPE, oldReportType, reportType));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getJrxmlSource() {
+        return jrxmlSource;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setJrxmlSource(String newJrxmlSource) {
+        String oldJrxmlSource = jrxmlSource;
+        jrxmlSource = newJrxmlSource;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE, oldJrxmlSource, jrxmlSource));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -155,6 +239,10 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
                 return basicGetAnalysis();
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
                 return isMustRefresh() ? Boolean.TRUE : Boolean.FALSE;
+            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+                return getReportType();
+            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
+                return getJrxmlSource();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -172,6 +260,12 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
                 return;
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
                 setMustRefresh(((Boolean)newValue).booleanValue());
+                return;
+            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+                setReportType((String)newValue);
+                return;
+            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
+                setJrxmlSource((String)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -191,6 +285,12 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
                 setMustRefresh(MUST_REFRESH_EDEFAULT);
                 return;
+            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+                setReportType(REPORT_TYPE_EDEFAULT);
+                return;
+            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
+                setJrxmlSource(JRXML_SOURCE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -207,6 +307,10 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
                 return analysis != null;
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
                 return mustRefresh != MUST_REFRESH_EDEFAULT;
+            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+                return REPORT_TYPE_EDEFAULT == null ? reportType != null : !REPORT_TYPE_EDEFAULT.equals(reportType);
+            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
+                return JRXML_SOURCE_EDEFAULT == null ? jrxmlSource != null : !JRXML_SOURCE_EDEFAULT.equals(jrxmlSource);
         }
         return super.eIsSet(featureID);
     }
@@ -223,6 +327,10 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (mustRefresh: ");
         result.append(mustRefresh);
+        result.append(", reportType: ");
+        result.append(reportType);
+        result.append(", jrxmlSource: ");
+        result.append(jrxmlSource);
         result.append(')');
         return result.toString();
     }

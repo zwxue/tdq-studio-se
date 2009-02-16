@@ -514,31 +514,13 @@ public interface ReportsPackage extends EPackage {
     int TD_REPORT__ANALYSIS_MAP = InformationreportingPackage.REPORT_FEATURE_COUNT + 2;
 
     /**
-     * The feature id for the '<em><b>Input Jrxml</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TD_REPORT__INPUT_JRXML = InformationreportingPackage.REPORT_FEATURE_COUNT + 3;
-
-    /**
      * The feature id for the '<em><b>Output Report Folder</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_REPORT__OUTPUT_REPORT_FOLDER = InformationreportingPackage.REPORT_FEATURE_COUNT + 4;
-
-    /**
-     * The feature id for the '<em><b>Report Type</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int TD_REPORT__REPORT_TYPE = InformationreportingPackage.REPORT_FEATURE_COUNT + 5;
+    int TD_REPORT__OUTPUT_REPORT_FOLDER = InformationreportingPackage.REPORT_FEATURE_COUNT + 3;
 
     /**
      * The feature id for the '<em><b>Exec Informations</b></em>' containment reference.
@@ -547,7 +529,7 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TD_REPORT__EXEC_INFORMATIONS = InformationreportingPackage.REPORT_FEATURE_COUNT + 6;
+    int TD_REPORT__EXEC_INFORMATIONS = InformationreportingPackage.REPORT_FEATURE_COUNT + 4;
 
     /**
      * The feature id for the '<em><b>Date From</b></em>' attribute.
@@ -556,7 +538,7 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-	int TD_REPORT__DATE_FROM = InformationreportingPackage.REPORT_FEATURE_COUNT + 7;
+	int TD_REPORT__DATE_FROM = InformationreportingPackage.REPORT_FEATURE_COUNT + 5;
 
 				/**
      * The feature id for the '<em><b>Date To</b></em>' attribute.
@@ -565,7 +547,7 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-	int TD_REPORT__DATE_TO = InformationreportingPackage.REPORT_FEATURE_COUNT + 8;
+	int TD_REPORT__DATE_TO = InformationreportingPackage.REPORT_FEATURE_COUNT + 6;
 
 				/**
      * The number of structural features of the '<em>Td Report</em>' class.
@@ -574,7 +556,7 @@ public interface ReportsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 9;
+    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 7;
 
 
     /**
@@ -923,13 +905,31 @@ public interface ReportsPackage extends EPackage {
     int ANALYSIS_MAP__MUST_REFRESH = 1;
 
     /**
+     * The feature id for the '<em><b>Report Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_MAP__REPORT_TYPE = 2;
+
+    /**
+     * The feature id for the '<em><b>Jrxml Source</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ANALYSIS_MAP__JRXML_SOURCE = 3;
+
+    /**
      * The number of structural features of the '<em>Analysis Map</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_MAP_FEATURE_COUNT = 2;
+    int ANALYSIS_MAP_FEATURE_COUNT = 4;
 
 
     /**
@@ -976,17 +976,6 @@ public interface ReportsPackage extends EPackage {
     EReference getTdReport_AnalysisMap();
 
     /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getInputJrxml <em>Input Jrxml</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Input Jrxml</em>'.
-     * @see org.talend.dataquality.reports.TdReport#getInputJrxml()
-     * @see #getTdReport()
-     * @generated
-     */
-    EAttribute getTdReport_InputJrxml();
-
-    /**
      * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getOutputReportFolder <em>Output Report Folder</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -996,17 +985,6 @@ public interface ReportsPackage extends EPackage {
      * @generated
      */
     EAttribute getTdReport_OutputReportFolder();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getReportType <em>Report Type</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Report Type</em>'.
-     * @see org.talend.dataquality.reports.TdReport#getReportType()
-     * @see #getTdReport()
-     * @generated
-     */
-    EAttribute getTdReport_ReportType();
 
     /**
      * Returns the meta object for the containment reference '{@link org.talend.dataquality.reports.TdReport#getExecInformations <em>Exec Informations</em>}'.
@@ -1106,6 +1084,28 @@ public interface ReportsPackage extends EPackage {
     EAttribute getAnalysisMap_MustRefresh();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.AnalysisMap#getReportType <em>Report Type</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Report Type</em>'.
+     * @see org.talend.dataquality.reports.AnalysisMap#getReportType()
+     * @see #getAnalysisMap()
+     * @generated
+     */
+    EAttribute getAnalysisMap_ReportType();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.AnalysisMap#getJrxmlSource <em>Jrxml Source</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Jrxml Source</em>'.
+     * @see org.talend.dataquality.reports.AnalysisMap#getJrxmlSource()
+     * @see #getAnalysisMap()
+     * @generated
+     */
+    EAttribute getAnalysisMap_JrxmlSource();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1158,26 +1158,12 @@ public interface ReportsPackage extends EPackage {
          */
         EReference TD_REPORT__ANALYSIS_MAP = eINSTANCE.getTdReport_AnalysisMap();
         /**
-         * The meta object literal for the '<em><b>Input Jrxml</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute TD_REPORT__INPUT_JRXML = eINSTANCE.getTdReport_InputJrxml();
-        /**
          * The meta object literal for the '<em><b>Output Report Folder</b></em>' attribute feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
          */
         EAttribute TD_REPORT__OUTPUT_REPORT_FOLDER = eINSTANCE.getTdReport_OutputReportFolder();
-        /**
-         * The meta object literal for the '<em><b>Report Type</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute TD_REPORT__REPORT_TYPE = eINSTANCE.getTdReport_ReportType();
         /**
          * The meta object literal for the '<em><b>Exec Informations</b></em>' containment reference feature.
          * <!-- begin-user-doc -->
@@ -1245,6 +1231,20 @@ public interface ReportsPackage extends EPackage {
          * @generated
          */
         EAttribute ANALYSIS_MAP__MUST_REFRESH = eINSTANCE.getAnalysisMap_MustRefresh();
+        /**
+         * The meta object literal for the '<em><b>Report Type</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYSIS_MAP__REPORT_TYPE = eINSTANCE.getAnalysisMap_ReportType();
+        /**
+         * The meta object literal for the '<em><b>Jrxml Source</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute ANALYSIS_MAP__JRXML_SOURCE = eINSTANCE.getAnalysisMap_JrxmlSource();
 
     }
 

@@ -20,6 +20,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.PresentationParameter;
 import org.talend.dataquality.reports.ReportsFactory;
@@ -32,25 +33,24 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getPresentationParams <em>Presentation Params</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getCreationDate <em>Creation Date</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getAnalysisMap <em>Analysis Map</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getInputJrxml <em>Input Jrxml</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getOutputReportFolder <em>Output Report Folder</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getReportType <em>Report Type</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getExecInformations <em>Exec Informations</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getDateFrom <em>Date From</em>}</li>
- *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getDateTo <em>Date To</em>}</li>
+ * <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getPresentationParams <em>Presentation Params</em>}</li>
+ * <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getCreationDate <em>Creation Date</em>}</li>
+ * <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getAnalysisMap <em>Analysis Map</em>}</li>
+ * <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getOutputReportFolder <em>Output Report Folder</em>}</li>
+ * <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getExecInformations <em>Exec Informations</em>}</li>
+ * <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getDateFrom <em>Date From</em>}</li>
+ * <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getDateTo <em>Date To</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TdReportImpl extends ReportImpl implements TdReport {
 
     /**
-     * The cached value of the '{@link #getPresentationParams() <em>Presentation Params</em>}' containment reference list.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * The cached value of the '{@link #getPresentationParams() <em>Presentation Params</em>}' containment reference
+     * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getPresentationParams()
      * @generated
      * @ordered
@@ -58,9 +58,9 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     protected EList<PresentationParameter> presentationParams;
 
     /**
-     * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The default value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getCreationDate()
      * @generated
      * @ordered
@@ -68,9 +68,9 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     protected static final Date CREATION_DATE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute.
-     * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getCreationDate() <em>Creation Date</em>}' attribute. <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * 
      * @see #getCreationDate()
      * @generated
      * @ordered
@@ -86,26 +86,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @ordered
      */
     protected EList<AnalysisMap> analysisMap;
-
-    /**
-     * The default value of the '{@link #getInputJrxml() <em>Input Jrxml</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
-     * end-user-doc -->
-     * @see #getInputJrxml()
-     * @generated
-     * @ordered
-     */
-    protected static final String INPUT_JRXML_EDEFAULT = null;
-
-    /**
-     * The cached value of the '{@link #getInputJrxml() <em>Input Jrxml</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
-     * end-user-doc -->
-     * @see #getInputJrxml()
-     * @generated
-     * @ordered
-     */
-    protected String inputJrxml = INPUT_JRXML_EDEFAULT;
 
     /**
      * The default value of the '{@link #getOutputReportFolder() <em>Output Report Folder</em>}' attribute. <!--
@@ -128,26 +108,6 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     protected String outputReportFolder = OUTPUT_REPORT_FOLDER_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
-     * end-user-doc -->
-     * @see #getReportType()
-     * @generated
-     * @ordered
-     */
-    protected static final String REPORT_TYPE_EDEFAULT = null;
-
-    /**
-     * The cached value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
-     * <!-- begin-user-doc --> <!--
-     * end-user-doc -->
-     * @see #getReportType()
-     * @generated
-     * @ordered
-     */
-    protected String reportType = REPORT_TYPE_EDEFAULT;
-
-    /**
      * The cached value of the '{@link #getExecInformations() <em>Exec Informations</em>}' containment reference. <!--
      * begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -158,47 +118,48 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     protected ExecutionInformations execInformations;
 
     /**
-     * The default value of the '{@link #getDateFrom() <em>Date From</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * The default value of the '{@link #getDateFrom() <em>Date From</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getDateFrom()
      * @generated
      * @ordered
      */
-	protected static final Date DATE_FROM_EDEFAULT = null;
+    protected static final Date DATE_FROM_EDEFAULT = null;
 
-				/**
-     * The cached value of the '{@link #getDateFrom() <em>Date From</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+    /**
+     * The cached value of the '{@link #getDateFrom() <em>Date From</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getDateFrom()
      * @generated
      * @ordered
      */
-	protected Date dateFrom = DATE_FROM_EDEFAULT;
+    protected Date dateFrom = DATE_FROM_EDEFAULT;
 
-				/**
-     * The default value of the '{@link #getDateTo() <em>Date To</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+    /**
+     * The default value of the '{@link #getDateTo() <em>Date To</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getDateTo()
      * @generated
      * @ordered
      */
-	protected static final Date DATE_TO_EDEFAULT = null;
+    protected static final Date DATE_TO_EDEFAULT = null;
 
-				/**
-     * The cached value of the '{@link #getDateTo() <em>Date To</em>}' attribute.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+    /**
+     * The cached value of the '{@link #getDateTo() <em>Date To</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getDateTo()
      * @generated
      * @ordered
      */
-	protected Date dateTo = DATE_TO_EDEFAULT;
+    protected Date dateTo = DATE_TO_EDEFAULT;
 
-				/**
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected TdReportImpl() {
@@ -207,6 +168,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -216,17 +178,20 @@ public class TdReportImpl extends ReportImpl implements TdReport {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList<PresentationParameter> getPresentationParams() {
         if (presentationParams == null) {
-            presentationParams = new EObjectContainmentEList<PresentationParameter>(PresentationParameter.class, this, ReportsPackage.TD_REPORT__PRESENTATION_PARAMS);
+            presentationParams = new EObjectContainmentEList<PresentationParameter>(PresentationParameter.class, this,
+                    ReportsPackage.TD_REPORT__PRESENTATION_PARAMS);
         }
         return presentationParams;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Date getCreationDate() {
@@ -235,47 +200,33 @@ public class TdReportImpl extends ReportImpl implements TdReport {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setCreationDate(Date newCreationDate) {
         Date oldCreationDate = creationDate;
         creationDate = newCreationDate;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__CREATION_DATE, oldCreationDate, creationDate));
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__CREATION_DATE, oldCreationDate,
+                    creationDate));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList<AnalysisMap> getAnalysisMap() {
         if (analysisMap == null) {
-            analysisMap = new EObjectContainmentEList<AnalysisMap>(AnalysisMap.class, this, ReportsPackage.TD_REPORT__ANALYSIS_MAP);
+            analysisMap = new EObjectContainmentEList<AnalysisMap>(AnalysisMap.class, this,
+                    ReportsPackage.TD_REPORT__ANALYSIS_MAP);
         }
         return analysisMap;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
-    public String getInputJrxml() {
-        return inputJrxml;
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
-    public void setInputJrxml(String newInputJrxml) {
-        String oldInputJrxml = inputJrxml;
-        inputJrxml = newInputJrxml;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__INPUT_JRXML, oldInputJrxml, inputJrxml));
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getOutputReportFolder() {
@@ -284,36 +235,20 @@ public class TdReportImpl extends ReportImpl implements TdReport {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setOutputReportFolder(String newOutputReportFolder) {
         String oldOutputReportFolder = outputReportFolder;
         outputReportFolder = newOutputReportFolder;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER, oldOutputReportFolder, outputReportFolder));
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER,
+                    oldOutputReportFolder, outputReportFolder));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
-    public String getReportType() {
-        return reportType;
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * @generated
-     */
-    public void setReportType(String newReportType) {
-        String oldReportType = reportType;
-        reportType = newReportType;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__REPORT_TYPE, oldReportType, reportType));
-    }
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public ExecutionInformations getExecInformations() {
@@ -322,79 +257,88 @@ public class TdReportImpl extends ReportImpl implements TdReport {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public NotificationChain basicSetExecInformations(ExecutionInformations newExecInformations, NotificationChain msgs) {
         ExecutionInformations oldExecInformations = execInformations;
         execInformations = newExecInformations;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, oldExecInformations, newExecInformations);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+                    ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, oldExecInformations, newExecInformations);
+            if (msgs == null)
+                msgs = notification;
+            else
+                msgs.add(notification);
         }
         return msgs;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setExecInformations(ExecutionInformations newExecInformations) {
         if (newExecInformations != execInformations) {
             NotificationChain msgs = null;
             if (execInformations != null)
-                msgs = ((InternalEObject)execInformations).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, null, msgs);
+                msgs = ((InternalEObject) execInformations).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+                        - ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, null, msgs);
             if (newExecInformations != null)
-                msgs = ((InternalEObject)newExecInformations).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, null, msgs);
+                msgs = ((InternalEObject) newExecInformations).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+                        - ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, null, msgs);
             msgs = basicSetExecInformations(newExecInformations, msgs);
-            if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__EXEC_INFORMATIONS, newExecInformations, newExecInformations));
+            if (msgs != null)
+                msgs.dispatch();
+        } else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__EXEC_INFORMATIONS,
+                    newExecInformations, newExecInformations));
     }
 
     /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Date getDateFrom() {
+    public Date getDateFrom() {
         return dateFrom;
     }
 
-				/**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDateFrom(Date newDateFrom) {
+    public void setDateFrom(Date newDateFrom) {
         Date oldDateFrom = dateFrom;
         dateFrom = newDateFrom;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__DATE_FROM, oldDateFrom, dateFrom));
     }
 
-				/**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public Date getDateTo() {
+    public Date getDateTo() {
         return dateTo;
     }
 
-				/**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
-	public void setDateTo(Date newDateTo) {
+    public void setDateTo(Date newDateTo) {
         Date oldDateTo = dateTo;
         dateTo = newDateTo;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__DATE_TO, oldDateTo, dateTo));
     }
 
-				/**
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated NOT addAnalysis(Analysis analysis)
@@ -405,6 +349,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             AnalysisMap createAnalysisMap = ReportsFactory.eINSTANCE.createAnalysisMap();
             createAnalysisMap.setAnalysis(analysis);
             createAnalysisMap.setMustRefresh(true); // refresh by default
+            createAnalysisMap.setReportType(ReportType.BASIC.getLabel());// MOD mzhao 2009-02-16 Basic type by default.
             this.getAnalysisMap().add(createAnalysisMap);
         }
         return added;
@@ -503,175 +448,175 @@ public class TdReportImpl extends ReportImpl implements TdReport {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT Set report type and jrxml file path to analysis map.
+     */
+    public void setReportType(String reportType, String jrxmlSource, Analysis analysis) {
+        EList<AnalysisMap> anMaps = this.getAnalysisMap();
+        for (AnalysisMap anMap : anMaps) {
+            if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
+                anMap.setReportType(reportType);
+                anMap.setJrxmlSource(jrxmlSource);
+                break;
+            }
+        }
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
-                return ((InternalEList<?>)getPresentationParams()).basicRemove(otherEnd, msgs);
-            case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
-                return ((InternalEList<?>)getAnalysisMap()).basicRemove(otherEnd, msgs);
-            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
-                return basicSetExecInformations(null, msgs);
+        case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
+            return ((InternalEList<?>) getPresentationParams()).basicRemove(otherEnd, msgs);
+        case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
+            return ((InternalEList<?>) getAnalysisMap()).basicRemove(otherEnd, msgs);
+        case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+            return basicSetExecInformations(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
-                return getPresentationParams();
-            case ReportsPackage.TD_REPORT__CREATION_DATE:
-                return getCreationDate();
-            case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
-                return getAnalysisMap();
-            case ReportsPackage.TD_REPORT__INPUT_JRXML:
-                return getInputJrxml();
-            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
-                return getOutputReportFolder();
-            case ReportsPackage.TD_REPORT__REPORT_TYPE:
-                return getReportType();
-            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
-                return getExecInformations();
-            case ReportsPackage.TD_REPORT__DATE_FROM:
-                return getDateFrom();
-            case ReportsPackage.TD_REPORT__DATE_TO:
-                return getDateTo();
+        case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
+            return getPresentationParams();
+        case ReportsPackage.TD_REPORT__CREATION_DATE:
+            return getCreationDate();
+        case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
+            return getAnalysisMap();
+        case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+            return getOutputReportFolder();
+        case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+            return getExecInformations();
+        case ReportsPackage.TD_REPORT__DATE_FROM:
+            return getDateFrom();
+        case ReportsPackage.TD_REPORT__DATE_TO:
+            return getDateTo();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
-                getPresentationParams().clear();
-                getPresentationParams().addAll((Collection<? extends PresentationParameter>)newValue);
-                return;
-            case ReportsPackage.TD_REPORT__CREATION_DATE:
-                setCreationDate((Date)newValue);
-                return;
-            case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
-                getAnalysisMap().clear();
-                getAnalysisMap().addAll((Collection<? extends AnalysisMap>)newValue);
-                return;
-            case ReportsPackage.TD_REPORT__INPUT_JRXML:
-                setInputJrxml((String)newValue);
-                return;
-            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
-                setOutputReportFolder((String)newValue);
-                return;
-            case ReportsPackage.TD_REPORT__REPORT_TYPE:
-                setReportType((String)newValue);
-                return;
-            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
-                setExecInformations((ExecutionInformations)newValue);
-                return;
-            case ReportsPackage.TD_REPORT__DATE_FROM:
-                setDateFrom((Date)newValue);
-                return;
-            case ReportsPackage.TD_REPORT__DATE_TO:
-                setDateTo((Date)newValue);
-                return;
+        case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
+            getPresentationParams().clear();
+            getPresentationParams().addAll((Collection<? extends PresentationParameter>) newValue);
+            return;
+        case ReportsPackage.TD_REPORT__CREATION_DATE:
+            setCreationDate((Date) newValue);
+            return;
+        case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
+            getAnalysisMap().clear();
+            getAnalysisMap().addAll((Collection<? extends AnalysisMap>) newValue);
+            return;
+        case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+            setOutputReportFolder((String) newValue);
+            return;
+        case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+            setExecInformations((ExecutionInformations) newValue);
+            return;
+        case ReportsPackage.TD_REPORT__DATE_FROM:
+            setDateFrom((Date) newValue);
+            return;
+        case ReportsPackage.TD_REPORT__DATE_TO:
+            setDateTo((Date) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
-                getPresentationParams().clear();
-                return;
-            case ReportsPackage.TD_REPORT__CREATION_DATE:
-                setCreationDate(CREATION_DATE_EDEFAULT);
-                return;
-            case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
-                getAnalysisMap().clear();
-                return;
-            case ReportsPackage.TD_REPORT__INPUT_JRXML:
-                setInputJrxml(INPUT_JRXML_EDEFAULT);
-                return;
-            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
-                setOutputReportFolder(OUTPUT_REPORT_FOLDER_EDEFAULT);
-                return;
-            case ReportsPackage.TD_REPORT__REPORT_TYPE:
-                setReportType(REPORT_TYPE_EDEFAULT);
-                return;
-            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
-                setExecInformations((ExecutionInformations)null);
-                return;
-            case ReportsPackage.TD_REPORT__DATE_FROM:
-                setDateFrom(DATE_FROM_EDEFAULT);
-                return;
-            case ReportsPackage.TD_REPORT__DATE_TO:
-                setDateTo(DATE_TO_EDEFAULT);
-                return;
+        case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
+            getPresentationParams().clear();
+            return;
+        case ReportsPackage.TD_REPORT__CREATION_DATE:
+            setCreationDate(CREATION_DATE_EDEFAULT);
+            return;
+        case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
+            getAnalysisMap().clear();
+            return;
+        case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+            setOutputReportFolder(OUTPUT_REPORT_FOLDER_EDEFAULT);
+            return;
+        case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+            setExecInformations((ExecutionInformations) null);
+            return;
+        case ReportsPackage.TD_REPORT__DATE_FROM:
+            setDateFrom(DATE_FROM_EDEFAULT);
+            return;
+        case ReportsPackage.TD_REPORT__DATE_TO:
+            setDateTo(DATE_TO_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
-                return presentationParams != null && !presentationParams.isEmpty();
-            case ReportsPackage.TD_REPORT__CREATION_DATE:
-                return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
-            case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
-                return analysisMap != null && !analysisMap.isEmpty();
-            case ReportsPackage.TD_REPORT__INPUT_JRXML:
-                return INPUT_JRXML_EDEFAULT == null ? inputJrxml != null : !INPUT_JRXML_EDEFAULT.equals(inputJrxml);
-            case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
-                return OUTPUT_REPORT_FOLDER_EDEFAULT == null ? outputReportFolder != null : !OUTPUT_REPORT_FOLDER_EDEFAULT.equals(outputReportFolder);
-            case ReportsPackage.TD_REPORT__REPORT_TYPE:
-                return REPORT_TYPE_EDEFAULT == null ? reportType != null : !REPORT_TYPE_EDEFAULT.equals(reportType);
-            case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
-                return execInformations != null;
-            case ReportsPackage.TD_REPORT__DATE_FROM:
-                return DATE_FROM_EDEFAULT == null ? dateFrom != null : !DATE_FROM_EDEFAULT.equals(dateFrom);
-            case ReportsPackage.TD_REPORT__DATE_TO:
-                return DATE_TO_EDEFAULT == null ? dateTo != null : !DATE_TO_EDEFAULT.equals(dateTo);
+        case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
+            return presentationParams != null && !presentationParams.isEmpty();
+        case ReportsPackage.TD_REPORT__CREATION_DATE:
+            return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
+        case ReportsPackage.TD_REPORT__ANALYSIS_MAP:
+            return analysisMap != null && !analysisMap.isEmpty();
+        case ReportsPackage.TD_REPORT__OUTPUT_REPORT_FOLDER:
+            return OUTPUT_REPORT_FOLDER_EDEFAULT == null ? outputReportFolder != null : !OUTPUT_REPORT_FOLDER_EDEFAULT
+                    .equals(outputReportFolder);
+        case ReportsPackage.TD_REPORT__EXEC_INFORMATIONS:
+            return execInformations != null;
+        case ReportsPackage.TD_REPORT__DATE_FROM:
+            return DATE_FROM_EDEFAULT == null ? dateFrom != null : !DATE_FROM_EDEFAULT.equals(dateFrom);
+        case ReportsPackage.TD_REPORT__DATE_TO:
+            return DATE_TO_EDEFAULT == null ? dateTo != null : !DATE_TO_EDEFAULT.equals(dateTo);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy())
+            return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (creationDate: ");
         result.append(creationDate);
-        result.append(", inputJrxml: ");
-        result.append(inputJrxml);
         result.append(", outputReportFolder: ");
         result.append(outputReportFolder);
-        result.append(", reportType: ");
-        result.append(reportType);
         result.append(", dateFrom: ");
         result.append(dateFrom);
         result.append(", dateTo: ");

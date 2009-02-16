@@ -322,7 +322,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getTdReport_InputJrxml() {
+    public EAttribute getTdReport_OutputReportFolder() {
         return (EAttribute)tdReportEClass.getEStructuralFeatures().get(3);
     }
 
@@ -331,26 +331,8 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getTdReport_OutputReportFolder() {
-        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(4);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EAttribute getTdReport_ReportType() {
-        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(5);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     public EReference getTdReport_ExecInformations() {
-        return (EReference)tdReportEClass.getEStructuralFeatures().get(6);
+        return (EReference)tdReportEClass.getEStructuralFeatures().get(4);
     }
 
     /**
@@ -359,7 +341,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
      * @generated
      */
 	public EAttribute getTdReport_DateFrom() {
-        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(7);
+        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(5);
     }
 
 				/**
@@ -368,7 +350,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
      * @generated
      */
 	public EAttribute getTdReport_DateTo() {
-        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(8);
+        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(6);
     }
 
 				/**
@@ -430,6 +412,24 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getAnalysisMap_ReportType() {
+        return (EAttribute)analysisMapEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getAnalysisMap_JrxmlSource() {
+        return (EAttribute)analysisMapEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public ReportsFactory getReportsFactory() {
         return (ReportsFactory)getEFactoryInstance();
     }
@@ -457,9 +457,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         createEReference(tdReportEClass, TD_REPORT__PRESENTATION_PARAMS);
         createEAttribute(tdReportEClass, TD_REPORT__CREATION_DATE);
         createEReference(tdReportEClass, TD_REPORT__ANALYSIS_MAP);
-        createEAttribute(tdReportEClass, TD_REPORT__INPUT_JRXML);
         createEAttribute(tdReportEClass, TD_REPORT__OUTPUT_REPORT_FOLDER);
-        createEAttribute(tdReportEClass, TD_REPORT__REPORT_TYPE);
         createEReference(tdReportEClass, TD_REPORT__EXEC_INFORMATIONS);
         createEAttribute(tdReportEClass, TD_REPORT__DATE_FROM);
         createEAttribute(tdReportEClass, TD_REPORT__DATE_TO);
@@ -471,6 +469,8 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         analysisMapEClass = createEClass(ANALYSIS_MAP);
         createEReference(analysisMapEClass, ANALYSIS_MAP__ANALYSIS);
         createEAttribute(analysisMapEClass, ANALYSIS_MAP__MUST_REFRESH);
+        createEAttribute(analysisMapEClass, ANALYSIS_MAP__REPORT_TYPE);
+        createEAttribute(analysisMapEClass, ANALYSIS_MAP__JRXML_SOURCE);
     }
 
     /**
@@ -516,9 +516,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         initEReference(getTdReport_PresentationParams(), this.getPresentationParameter(), null, "presentationParams", null, 0, -1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_CreationDate(), ecorePackage.getEDate(), "creationDate", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getTdReport_AnalysisMap(), this.getAnalysisMap(), null, "analysisMap", null, 0, -1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getTdReport_InputJrxml(), ecorePackage.getEString(), "inputJrxml", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_OutputReportFolder(), ecorePackage.getEString(), "outputReportFolder", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getTdReport_ReportType(), ecorePackage.getEString(), "reportType", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getTdReport_ExecInformations(), theAnalysisPackage.getExecutionInformations(), null, "ExecInformations", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_DateFrom(), ecorePackage.getEDate(), "dateFrom", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_DateTo(), ecorePackage.getEDate(), "dateTo", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -544,6 +542,11 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         addEParameter(op, ecorePackage.getEString(), "type", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEString(), "formula", 0, 1, IS_UNIQUE, IS_ORDERED);
 
+        op = addEOperation(tdReportEClass, null, "setReportType", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, ecorePackage.getEString(), "reportType", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, ecorePackage.getEString(), "jrxmlSource", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);
+
         initEClass(presentationParameterEClass, PresentationParameter.class, "PresentationParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getPresentationParameter_PlotType(), ecorePackage.getEString(), "plotType", null, 0, 1, PresentationParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getPresentationParameter_Indicator(), theIndicatorsPackage.getIndicator(), null, "indicator", null, 0, 1, PresentationParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -551,6 +554,8 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         initEClass(analysisMapEClass, AnalysisMap.class, "AnalysisMap", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getAnalysisMap_Analysis(), theAnalysisPackage.getAnalysis(), null, "analysis", null, 0, 1, AnalysisMap.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getAnalysisMap_MustRefresh(), ecorePackage.getEBoolean(), "mustRefresh", null, 0, 1, AnalysisMap.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAnalysisMap_ReportType(), ecorePackage.getEString(), "reportType", null, 0, 1, AnalysisMap.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAnalysisMap_JrxmlSource(), ecorePackage.getEString(), "jrxmlSource", null, 0, 1, AnalysisMap.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Create resource
         createResource(eNS_URI);

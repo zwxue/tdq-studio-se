@@ -83,17 +83,9 @@
           <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/creationDate"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_H4guEfMpEd2jdoQhohyVDw"/>
         </children>
-        <children xmi:type="notation:Node" xmi:id="_H4guEvMpEd2jdoQhohyVDw" type="2001">
-          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/inputJrxml"/>
-          <layoutConstraint xmi:type="notation:Location" xmi:id="_H4guE_MpEd2jdoQhohyVDw"/>
-        </children>
         <children xmi:type="notation:Node" xmi:id="_H4guFPMpEd2jdoQhohyVDw" type="2001">
           <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/outputReportFolder"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_H4guFfMpEd2jdoQhohyVDw"/>
-        </children>
-        <children xmi:type="notation:Node" xmi:id="_H4guFvMpEd2jdoQhohyVDw" type="2001">
-          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/reportType"/>
-          <layoutConstraint xmi:type="notation:Location" xmi:id="_H4guF_MpEd2jdoQhohyVDw"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_cBeAYPMpEd2jdoQhohyVDw" type="2001">
           <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/dateFrom"/>
@@ -108,13 +100,72 @@
         <styles xmi:type="notation:FilteringStyle" xmi:id="_H3n9RPMpEd2jdoQhohyVDw"/>
       </children>
       <children xmi:type="notation:Node" xmi:id="_H3n9RfMpEd2jdoQhohyVDw" type="5002">
+        <children xmi:type="notation:Node" xmi:id="_O55H0fvJEd2tObxFtujskQ" type="2002">
+          <element xmi:type="ecore:EOperation" href="dataquality.ecore#//reports/TdReport/addAnalysis"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_O55H0vvJEd2tObxFtujskQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_O55H0_vJEd2tObxFtujskQ" type="2002">
+          <element xmi:type="ecore:EOperation" href="dataquality.ecore#//reports/TdReport/removeAnalysis"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_O55H1PvJEd2tObxFtujskQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_O55H1fvJEd2tObxFtujskQ" type="2002">
+          <element xmi:type="ecore:EOperation" href="dataquality.ecore#//reports/TdReport/setMustRefresh"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_O55H1vvJEd2tObxFtujskQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_O55H1_vJEd2tObxFtujskQ" type="2002">
+          <element xmi:type="ecore:EOperation" href="dataquality.ecore#//reports/TdReport/addAnalysis.1"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_O55H2PvJEd2tObxFtujskQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_O55H2fvJEd2tObxFtujskQ" type="2002">
+          <element xmi:type="ecore:EOperation" href="dataquality.ecore#//reports/TdReport/mustRefresh"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_O55H2vvJEd2tObxFtujskQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_O55H2_vJEd2tObxFtujskQ" type="2002">
+          <element xmi:type="ecore:EOperation" href="dataquality.ecore#//reports/TdReport/setReportPresentationParam"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_O55H3PvJEd2tObxFtujskQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_WVhAgPv4Ed2tObxFtujskQ" type="2002">
+          <element xmi:type="ecore:EOperation" href="dataquality.ecore#//reports/TdReport/setReportType"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_WVhAgfv4Ed2tObxFtujskQ"/>
+        </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_H3n9RvMpEd2jdoQhohyVDw"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_H3n9R_MpEd2jdoQhohyVDw"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_H3n9SPMpEd2jdoQhohyVDw"/>
       </children>
       <styles xmi:type="notation:ShapeStyle" xmi:id="_H3eMQvMpEd2jdoQhohyVDw" fontName="宋体" fontHeight="10" fillColor="13761016" lineColor="0"/>
       <element xmi:type="ecore:EClass" href="dataquality.ecore#//reports/TdReport"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_H3eMQ_MpEd2jdoQhohyVDw" x="330" y="225"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_H3eMQ_MpEd2jdoQhohyVDw" x="270" y="155"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_epVRoPvIEd201M5EaYb0dw" type="1001">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_epebkvvIEd201M5EaYb0dw" source="Shortcut">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_epebk_vIEd201M5EaYb0dw" key="modelID" value="EcoreTools"/>
+      </eAnnotations>
+      <children xmi:type="notation:Node" xmi:id="_epVRo_vIEd201M5EaYb0dw" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_epVRpPvIEd201M5EaYb0dw" type="5001">
+        <children xmi:type="notation:Node" xmi:id="_epebkPvIEd201M5EaYb0dw" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/AnalysisMap/mustRefresh"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_epebkfvIEd201M5EaYb0dw"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_rKH4sPvIEd201M5EaYb0dw" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/AnalysisMap/reportType"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_rKH4sfvIEd201M5EaYb0dw"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_QF5A4PvJEd2tObxFtujskQ" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/AnalysisMap/jrxmlSource"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_QF5A4fvJEd2tObxFtujskQ"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_epVRpfvIEd201M5EaYb0dw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_epVRpvvIEd201M5EaYb0dw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_epVRp_vIEd201M5EaYb0dw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_epVRqPvIEd201M5EaYb0dw" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_epVRqfvIEd201M5EaYb0dw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_epVRqvvIEd201M5EaYb0dw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_epVRq_vIEd201M5EaYb0dw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_epVRofvIEd201M5EaYb0dw" fontName="宋体" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="dataquality.ecore#//reports/AnalysisMap"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_epVRovvIEd201M5EaYb0dw" x="230" y="440" width="201" height="126"/>
     </children>
     <styles xmi:type="notation:DiagramStyle" xmi:id="_AMeg4ZoQEd2nYJ2ArnrjqA"/>
     <element xmi:type="ecore:EPackage" href="dataquality.ecore#/"/>
@@ -392,7 +443,6 @@
           <layoutConstraint xmi:type="notation:Location" xmi:id="_KThCWZoQEd2nYJ2ArnrjqA"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_KThpYJoQEd2nYJ2ArnrjqA" type="2001">
-          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/inputJrxml"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_KThpYZoQEd2nYJ2ArnrjqA"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_KThpYpoQEd2nYJ2ArnrjqA" type="2001">
@@ -400,7 +450,6 @@
           <layoutConstraint xmi:type="notation:Location" xmi:id="_KThpY5oQEd2nYJ2ArnrjqA"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_KThpZJoQEd2nYJ2ArnrjqA" type="2001">
-          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/reportType"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_KThpZZoQEd2nYJ2ArnrjqA"/>
         </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_KThCUZoQEd2nYJ2ArnrjqA"/>
