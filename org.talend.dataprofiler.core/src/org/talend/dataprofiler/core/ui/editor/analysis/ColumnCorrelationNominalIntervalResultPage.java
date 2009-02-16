@@ -160,8 +160,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     }
 
     private Section createGraphicsSectionPart(Composite parentComp, ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
-        Section section = createSection(form, parentComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"),
-                true, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
+        Section section = createSection(form, parentComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), //$NON-NLS-1$
+                true, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ 
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -205,7 +205,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                 IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview")
+                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview") //$NON-NLS-1$
                                 + tdColumn.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         Display.getDefault().asyncExec(new Runnable() {
 
@@ -264,7 +264,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     private Section createSimpleStatisticsPart(Composite parentComp, String title,
             ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         Section section = createSection(form, parentComp, title, true, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
+                .getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -286,7 +286,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     private void createSimpleTable(final ScrolledForm form, final Composite composite,
             final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         // final TableViewer tbViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION);
-        NumberFormat doubleFormat = new DecimalFormat("0.00");
+        NumberFormat doubleFormat = new DecimalFormat("0.00"); //$NON-NLS-1$
         final Table table = new Table(composite, SWT.FULL_SELECTION | SWT.BORDER);
         GridData gd = new GridData(GridData.FILL_BOTH);
         gd.heightHint = 200;
@@ -294,13 +294,15 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         table.setVisible(true);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        String[] titles = { "Label", "Count", "%" };
+        String[] titles = {
+                DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.Label"), DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.Count"), "%" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         for (String title : titles) {
             TableColumn column = new TableColumn(table, SWT.NONE);
             column.setText(title);
             column.setWidth(100);
         }
-        String[] label = { "Row Count", "Distinct Count", "Unique Count", "Duplicate Count" };
+        String[] label = {
+                DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.RowCount"), DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.DistinctCount"), DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.UniqueCount"), DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.DuplicateCount") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         long[] count = { columnSetMultiValueIndicator.getCount(), columnSetMultiValueIndicator.getDistinctCount(),
                 columnSetMultiValueIndicator.getUniqueCount(), columnSetMultiValueIndicator.getDuplicateCount() };
         double[] percent = new double[4];
@@ -310,7 +312,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         for (int itemCount = 0; itemCount < 4; itemCount++) {
             TableItem item = new TableItem(table, SWT.NONE);
             item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]),
-                    doubleFormat.format(percent[itemCount] * 100) + "%" });
+                    doubleFormat.format(percent[itemCount] * 100) + "%" }); //$NON-NLS-1$
         }
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumn(i).pack();
@@ -320,14 +322,19 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     private void createSimpleStatistics(final ScrolledForm form, final Composite composite,
             final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(columnSetMultiValueIndicator.getCount(), "Row Count", "");
-        dataset.addValue(columnSetMultiValueIndicator.getDistinctCount(), "Distinct Count", "");
-        dataset.addValue(columnSetMultiValueIndicator.getUniqueCount(), "Unique Count", "");
-        dataset.addValue(columnSetMultiValueIndicator.getDuplicateCount(), "Duplicate Count", "");
+        dataset.addValue(columnSetMultiValueIndicator.getCount(), DefaultMessagesImpl
+                .getString("ColumnCorrelationNominalIntervalResultPage.Row_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        dataset.addValue(columnSetMultiValueIndicator.getDistinctCount(), DefaultMessagesImpl
+                .getString("ColumnCorrelationNominalIntervalResultPage.Distinct_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        dataset.addValue(columnSetMultiValueIndicator.getUniqueCount(), DefaultMessagesImpl
+                .getString("ColumnCorrelationNominalIntervalResultPage.Unique_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        dataset.addValue(columnSetMultiValueIndicator.getDuplicateCount(), DefaultMessagesImpl
+                .getString("ColumnCorrelationNominalIntervalResultPage.Duplicate_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
 
-        JFreeChart chart = ChartFactory.createBarChart3D("simple satistical chart", // chart title
-                "simple satistics", // domain axis label
-                "Value", // range axis label
+        JFreeChart chart = ChartFactory.createBarChart3D(DefaultMessagesImpl
+                .getString("ColumnCorrelationNominalIntervalResultPage.SimpleSatisticalChart"), // chart title //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.SimpleSatistics"), // domain axis label //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.Value"), // range axis label //$NON-NLS-1$
                 dataset, // data
                 PlotOrientation.VERTICAL, // orientation
                 true, // include legend

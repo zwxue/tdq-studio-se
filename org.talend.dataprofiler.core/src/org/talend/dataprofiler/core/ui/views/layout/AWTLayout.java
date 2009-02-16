@@ -30,7 +30,7 @@ public abstract class AWTLayout extends Layout {
      * Key under which an eventual preferred size (set with setPreferredSize) is stored as a user data in the SWT
      * control.
      */
-    public final static String KEY_PREFERRED_SIZE = "preferredSize";
+    public final static String KEY_PREFERRED_SIZE = "preferredSize"; //$NON-NLS-1$
 
     /**
      * Gets the preferred size of a component. If a preferred size has been set with setPreferredSize, returns it,

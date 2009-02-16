@@ -35,11 +35,11 @@ import orgomg.cwm.objectmodel.core.Package;
  */
 public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
-    private static String newAnaStr = DefaultMessagesImpl.getString("CatologAnalysisPageStep0.newAnalysis");
+    private static String newAnaStr = DefaultMessagesImpl.getString("CatologAnalysisPageStep0.newAnalysis"); //$NON-NLS-1$
 
-    private static String chooseConnStr = DefaultMessagesImpl.getString("CatologAnalysisPageStep0.chooseCatalog");
+    private static String chooseConnStr = DefaultMessagesImpl.getString("CatologAnalysisPageStep0.chooseCatalog"); //$NON-NLS-1$
 
-    private static String connsStr = DefaultMessagesImpl.getString("CatologAnalysisPageStep0.catalogs");
+    private static String connsStr = DefaultMessagesImpl.getString("CatologAnalysisPageStep0.catalogs"); //$NON-NLS-1$
 
     /**
      * @param pageName

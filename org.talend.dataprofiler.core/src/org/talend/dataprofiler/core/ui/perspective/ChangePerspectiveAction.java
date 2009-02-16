@@ -170,8 +170,8 @@ public class ChangePerspectiveAction extends Action {
                     // MOD scorreia 2009-01-09 password decryption
                     String password = DataProviderHelper.getClearTextPassword(providerConnection);
 
-                    if ("".equals(user)) {
-                        user = "root";
+                    if ("".equals(user)) { //$NON-NLS-1$
+                        user = "root"; //$NON-NLS-1$
                     }
 
                     User previousUser = new User(user, password);

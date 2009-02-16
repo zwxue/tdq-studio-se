@@ -130,8 +130,8 @@ public final class PatternUtilities {
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && dbmsLanguage.getRegexp(pattern) == null) {
             // this is when we must tell the user that no regular expression exists for the selected database
-            MessageDialogWithToggle.openInformation(null, "Pattern", DefaultMessagesImpl
-                    .getString("PatternUtilities.noRegexForDB"));
+            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
+                    .getString("PatternUtilities.noRegexForDB")); //$NON-NLS-1$
 
             return null;
         }
@@ -153,8 +153,8 @@ public final class PatternUtilities {
         }
 
         if (!(dbmsLanguage.supportRegexp() || isDBDefinedUDF(dbmsLanguage))) {
-            MessageDialogWithToggle.openInformation(null, "Pattern", DefaultMessagesImpl
-                    .getString("PatternUtilities.couldnotSetIndicator"));
+            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
+                    .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$
             return null;
         }
 
@@ -181,7 +181,7 @@ public final class PatternUtilities {
         Preferences prefers = ResourcesPlugin.getPlugin().getPluginPreferences();
         if (prefers != null) {
             String udfValue = prefers.getString(dbmsLanguage.getDbmsName());
-            if (udfValue != null && !"".equals(udfValue)) {
+            if (udfValue != null && !"".equals(udfValue)) { //$NON-NLS-1$
                 return true;
             }
         }

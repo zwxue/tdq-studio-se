@@ -32,6 +32,7 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZQuery;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Classifier;
@@ -79,7 +80,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             }
             // --- get the schema owner
             if (!belongToSameSchemata(tdColumn)) {
-                this.errorMessage = "Given column (" + tdColumn.getName() + ") belongs to a different shema or catalog!";
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenColumn", tdColumn.getName()); //$NON-NLS-1$
                 return false;
             }
             String columnName = ColumnHelper.getFullName(tdColumn);
@@ -125,13 +126,14 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         // get table or view
         ColumnSet owner = ColumnHelper.getColumnSetOwner(tdColumn);
         if (owner == null) {
-            this.errorMessage = "No owner found for this column: " + tdColumn.getName();
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NotFoundColumn", tdColumn.getName()); //$NON-NLS-1$
             return false;
         }
         // get catalog or schema
         Package schema = ColumnSetHelper.getParentCatalogOrSchema(owner);
         if (schema == null) {
-            this.errorMessage = "No schema or catalog found for this column: " + owner.getName() + "." + tdColumn.getName();
+            this.errorMessage = Messages.getString(
+                    "ColumnAnalysisExecutor.NoSchemaOrCatalogFound", owner.getName(), tdColumn.getName()); //$NON-NLS-1$
             return false;
         }
 
@@ -149,8 +151,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         CwmZQuery query = new CwmZQuery();
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
-            this.errorMessage = "Nothing to analyze for given analysis: " + analysis.getName()
-                    + ". Cannot create the SQL statement!";
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
+                    analysis.getName());
             return null;
         }
         Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
@@ -158,22 +160,22 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             // --- preconditions
             TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
             if (col == null) {
-                this.errorMessage = "Given element is not a column: " + modelElement;
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenElementIsNotColumn", modelElement); //$NON-NLS-1$
                 return null;
             }
             Classifier owner = col.getOwner();
             if (owner == null) {
-                this.errorMessage = "No owner found for given column: " + col.getName();
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", col.getName()); //$NON-NLS-1$
             }
             ColumnSet colSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
             if (colSet == null) {
-                this.errorMessage = "No container found for given column: " + col.getName() + ". Container= " + colSet;
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName(), colSet); //$NON-NLS-1$
                 return null;
             }
             // else add into select
 
             if (!query.addSelect(col)) {
-                this.errorMessage = "Problem adding the SELECT part of the SQL statement.";
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.Problem"); //$NON-NLS-1$
                 return null;
             }
             // add from
@@ -184,7 +186,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         }
 
         if (!query.addFrom(fromPart)) {
-            this.errorMessage = "Problem adding the from part of the SQL statement.";
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.ProblemAddFromPart"); //$NON-NLS-1$
             return null;
         }
         return query.generateStatement();
@@ -193,7 +195,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected boolean check(final Analysis analysis) {
         if (analysis == null) {
-            this.errorMessage = "Analysis is null!!??";
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull"); //$NON-NLS-1$
             return false;
         }
         if (!super.check(analysis)) {
@@ -204,19 +206,19 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         // --- check existence of context
         AnalysisContext context = analysis.getContext();
         if (context == null) {
-            this.errorMessage = "No context has been set for this analysis " + analysis.getName();
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContextSet", analysis.getName()); //$NON-NLS-1$
             return false;
         }
 
         // --- check that there exists at least on element to analyze
         if (context.getAnalysedElements().size() == 0) {
-            this.errorMessage = "An analysis must have at least one column, please select some column(s) to analyze!";
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn"); //$NON-NLS-1$
             return false;
         }
 
         // --- check that the connection has been set
         if (context.getConnection() == null) {
-            this.errorMessage = "No connection has been set for this analysis, please select some column(s) to analyze!";
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoConnectionSet"); //$NON-NLS-1$
             return false;
         }
 
@@ -238,16 +240,15 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
             // --- Check that each analyzed element has at least one indicator
             if (analysisHandler.getIndicators(column).size() == 0) {
-                this.errorMessage = "Each column must have at least one indicator, "
-                        + "please select some indicator(s) to compute on each column!";
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.EachColumnHaveOneIndicator"); //$NON-NLS-1$
                 return false;
             }
 
             // --- get the data provider
             TdDataProvider dp = DataProviderHelper.getTdDataProvider(column);
             if (!isAccessWith(dp)) {
-                this.errorMessage = "All columns must belong to the same connection! Remove column " + column.getName()
-                        + " from this analysis! It does not belong to \"" + dataprovider.getName() + "\"";
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
+                        column.getName(), dataprovider.getName());
                 return false;
             }
         }

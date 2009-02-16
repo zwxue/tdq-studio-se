@@ -18,6 +18,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -42,7 +43,7 @@ public final class AnalysisExecutorSelector {
         assert analysis != null;
         AnalysisType analysisType = AnalysisHelper.getAnalysisType(analysis);
         if (analysisType == null) {
-            log.error("Analysis type is not set for analysis " + analysis.getName());
+            log.error(Messages.getString("AnalysisExecutorSelector.0") + analysis.getName()); //$NON-NLS-1$
             return null;
         }
         ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(analysis);
@@ -100,6 +101,6 @@ public final class AnalysisExecutorSelector {
             return analysisExecutor.execute(analysis);
         }
         // else
-        return new ReturnCode("Could not find how to execute given analysis " + analysis.getName(), false);
+        return new ReturnCode(Messages.getString("AnalysisExecutorSelector.NotFindHowExecute") + analysis.getName(), false); //$NON-NLS-1$
     }
 }

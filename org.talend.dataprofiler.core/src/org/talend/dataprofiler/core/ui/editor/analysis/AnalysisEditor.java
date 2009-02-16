@@ -98,7 +98,7 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case CATALOG:
             masterPage = new CatalogMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName("Catalog Analysis Editor");
+            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.CatalogAnalysisEditor")); //$NON-NLS-1$
             try {
                 addPage(masterPage);
             } catch (PartInitException e) {
@@ -107,7 +107,7 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case SCHEMA:
             masterPage = new SchemaAnalysisMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName("Schema Analysis Editor");
+            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.SchemaAnalysisEditor")); //$NON-NLS-1$
             try {
                 addPage(masterPage);
             } catch (PartInitException e) {

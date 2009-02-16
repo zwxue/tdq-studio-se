@@ -25,7 +25,7 @@ public class CatalogAnalysisFilterPage extends AnalysisFilterPage {
      */
     public CatalogAnalysisFilterPage() {
         setTitle(DefaultMessagesImpl.getString("CatologAnalysisPageStep1.newAnalysis")); //$NON-NLS-1$
-        setMessage(DefaultMessagesImpl.getString("CatologAnalysisPageStep1.addFiltersCatalogAnalysis"));
+        setMessage(DefaultMessagesImpl.getString("CatologAnalysisPageStep1.addFiltersCatalogAnalysis")); //$NON-NLS-1$
 
     }
 }

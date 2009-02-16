@@ -47,7 +47,7 @@ public class WizardFactory {
                 parameter = new AnalysisParameter();
             }
             parameter.setAnalysisTypeName(type.getLiteral());
-            if (((AnalysisLabelParameter) parameter).getCategoryLabel().trim().equals("Numerical Correlation Analysis")) {
+            if (((AnalysisLabelParameter) parameter).getCategoryLabel().trim().equals("Numerical Correlation Analysis")) { //$NON-NLS-1$
                 return new ColumnWizard(parameter);
             } else {
                 return new ColumnTimeWizard(parameter);

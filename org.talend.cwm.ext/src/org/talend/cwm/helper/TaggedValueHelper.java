@@ -32,40 +32,40 @@ public final class TaggedValueHelper {
     /**
      * The tag used for setting a technical name.
      */
-    public static final String TECH_NAME_TAGGED_VAL = "Technical Name";
+    public static final String TECH_NAME_TAGGED_VAL = "Technical Name"; //$NON-NLS-1$
 
     /**
      * The tag used when setting a column content type.
      */
-    public static final String DATA_CONTENT_TYPE_TAGGED_VAL = "Content Type";
+    public static final String DATA_CONTENT_TYPE_TAGGED_VAL = "Content Type"; //$NON-NLS-1$
 
     /**
      * The tag used when setting the development status of an object such as analysis, connection...
      */
-    public static final String DEV_STATUS = "Status";
+    public static final String DEV_STATUS = "Status"; //$NON-NLS-1$
 
-    public static final String AUTHOR = "Author";
+    public static final String AUTHOR = "Author"; //$NON-NLS-1$
 
-    private static final String EMPTY_STRING = "";
+    private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
-    private static final String DEFAULT_FORMAT = "pdf";
+    private static final String DEFAULT_FORMAT = "pdf"; //$NON-NLS-1$
 
-    public static final String DESCRIPTION = "Description";
+    public static final String DESCRIPTION = "Description"; //$NON-NLS-1$
 
-    public static final String PURPOSE = "Purpose";
+    public static final String PURPOSE = "Purpose"; //$NON-NLS-1$
 
-    public static final String COMMENT = "Comment";
+    public static final String COMMENT = "Comment"; //$NON-NLS-1$
 
-    public static final String VERSION = "Version";
+    public static final String VERSION = "Version"; //$NON-NLS-1$
 
-    public static final String GEN_SINGLE_REPORT = "Single output";
+    public static final String GEN_SINGLE_REPORT = "Single output"; //$NON-NLS-1$
 
-    public static final String DB_IDENTIFIER_QUOTE_STRING = "DB IdentifierQuoteString";
+    public static final String DB_IDENTIFIER_QUOTE_STRING = "DB IdentifierQuoteString"; //$NON-NLS-1$
 
     /**
      * A status to tell that the object is valid or invalid.
      */
-    public static final String VALID_STATUS = "Validation_Status";
+    public static final String VALID_STATUS = "Validation_Status"; //$NON-NLS-1$
 
     /**
      * Method "setVersion" sets the version of the given element.

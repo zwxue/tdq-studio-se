@@ -23,6 +23,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -77,7 +78,7 @@ public final class JavaSqlFactory {
         TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>(false);
         String url = providerConnection.getConnectionString();
         if (url == null) {
-            rc.setMessage("Database connection string is null");
+            rc.setMessage(Messages.getString("JavaSqlFactory.DatabaseConnectionNull")); //$NON-NLS-1$
             rc.setOk(false);
         }
         String driverClassName = providerConnection.getDriverClassName();
@@ -89,7 +90,7 @@ public final class JavaSqlFactory {
             String clearTextPassword = DataProviderHelper.getClearTextPassword(providerConnection);
             if (clearTextPassword == null) {
                 rc
-                        .setMessage("Unable to decrypt given password correctly. It's probably due to a change in the passphrase used in encryption.");
+                        .setMessage(Messages.getString("JavaSqlFactory.UnableDecryptPassword")); //$NON-NLS-1$
                 rc.setOk(false);
             } else {
                 props.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, clearTextPassword);

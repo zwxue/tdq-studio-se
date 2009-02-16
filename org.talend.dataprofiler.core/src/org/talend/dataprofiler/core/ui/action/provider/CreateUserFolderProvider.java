@@ -32,7 +32,7 @@ import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
  */
 public class CreateUserFolderProvider extends CommonActionProvider {
 
-    public static final String ACTION_ID = "Create_User_Folder_Action";
+    public static final String ACTION_ID = "Create_User_Folder_Action"; //$NON-NLS-1$
 
     /**
      * DOC rli CreateSubFolderProvider constructor comment.

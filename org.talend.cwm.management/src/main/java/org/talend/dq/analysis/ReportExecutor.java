@@ -21,6 +21,7 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -49,7 +50,8 @@ public class ReportExecutor implements IReportExecutor {
             Analysis analysis = analysisMap.getAnalysis();
             if (analysisMap.isMustRefresh()) {
                 if (analysis == null) {
-                    return new ReturnCode("Cannot evaluate a null analysis in report " + report.getName(), false);
+                    return new ReturnCode(
+                            Messages.getString("ReportExecutor.CannotEvaluateNullAnalysis", report.getName()), false); //$NON-NLS-1$
                 }
                 ReturnCode executeRc = AnalysisExecutorSelector.executeAnalysis(analysis);
                 if (!executeRc.isOk()) {
@@ -85,8 +87,7 @@ public class ReportExecutor implements IReportExecutor {
 
         if (atLeastOneFailure) {
             execInformations.setLastRunOk(false);
-            String err = "At least one analysis execution failed for report " + report.getName()
-                    + ". Check the error logs for more details!";
+            String err = Messages.getString("ReportExecutor.AnalysisExecutionFailed", report.getName()); //$NON-NLS-1$
             execInformations.setMessage(err);
             return new ReturnCode(err, false);
         }

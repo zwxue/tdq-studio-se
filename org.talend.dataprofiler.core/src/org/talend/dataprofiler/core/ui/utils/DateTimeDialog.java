@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -54,14 +55,14 @@ public class DateTimeDialog extends TrayDialog {
         top.setLayout(new GridLayout(2, false));
 
         Label dl = new Label(top, SWT.NONE);
-        dl.setText("Set the date:");
+        dl.setText(DefaultMessagesImpl.getString("DateTimeDialog.SetDate")); //$NON-NLS-1$
         dl.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
         timed = new DateTime(top, SWT.CALENDAR);
         timed.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         if (isDatetime) {
             Label dt = new Label(top, SWT.NONE);
-            dt.setText("Set the time:");
+            dt.setText(DefaultMessagesImpl.getString("DateTimeDialog.SetTime")); //$NON-NLS-1$
             timet = new DateTime(top, SWT.TIME);
             timet.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         }
@@ -79,7 +80,7 @@ public class DateTimeDialog extends TrayDialog {
         int day = timed.getDay();
 
         if (timet != null) {
-            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
 
             int hour = timet.getHours();
             int mnts = timet.getMinutes();
@@ -87,7 +88,7 @@ public class DateTimeDialog extends TrayDialog {
 
             cenlendar.set(year, month, day, hour, mnts, secds);
         } else {
-            format = new SimpleDateFormat("yyyy-MM-dd");
+            format = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
             cenlendar.set(year, month, day);
         }
 

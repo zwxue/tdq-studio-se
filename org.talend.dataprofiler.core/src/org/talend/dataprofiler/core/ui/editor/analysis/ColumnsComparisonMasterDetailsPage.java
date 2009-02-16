@@ -191,7 +191,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 .createSection(
                         form,
                         parentComp,
-                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), false, "Select tables or columns to compare. \nFor tables comparison, select one table from A elements and one table from B elements. \nFor columns comparison, select one or several columns from A and the same number of columns from B."); //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), false, DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare")); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(columnsComparisonSection);
         sectionClient.setLayout(new GridLayout());
         // sectionClient.setLayout(new GridLayout(2, true));
@@ -627,7 +627,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             Package parentCatalogOrSchemaA = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerA);
             Package parentCatalogOrSchemaB = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerB);
             if (!parentCatalogOrSchemaA.getName().equals(parentCatalogOrSchemaB.getName())) {
-                return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage"),
+                return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage"), //$NON-NLS-1$
                         false);
             }
         }

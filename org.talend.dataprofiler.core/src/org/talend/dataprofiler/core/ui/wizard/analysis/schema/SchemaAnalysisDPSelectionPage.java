@@ -33,11 +33,11 @@ import orgomg.cwm.objectmodel.core.Package;
  */
 public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
-    private static String newAnaStr = DefaultMessagesImpl.getString("SchemaAnalysisPageStep0.newAnalysis");
+    private static String newAnaStr = DefaultMessagesImpl.getString("SchemaAnalysisPageStep0.newAnalysis"); //$NON-NLS-1$
 
-    private static String chooseConnStr = DefaultMessagesImpl.getString("SchemaAnalysisPageStep0.chooseSchema");
+    private static String chooseConnStr = DefaultMessagesImpl.getString("SchemaAnalysisPageStep0.chooseSchema"); //$NON-NLS-1$
 
-    private static String connsStr = DefaultMessagesImpl.getString("SchemaAnalysisPageStep0.schemas");
+    private static String connsStr = DefaultMessagesImpl.getString("SchemaAnalysisPageStep0.schemas"); //$NON-NLS-1$
 
     public SchemaAnalysisDPSelectionPage() {
         super(newAnaStr, chooseConnStr, connsStr, new SchemaContentProvider());

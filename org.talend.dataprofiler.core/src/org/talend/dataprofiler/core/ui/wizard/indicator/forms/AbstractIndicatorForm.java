@@ -37,7 +37,7 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
 
     public static final String MSG_OK = UIMessages.MSG_VALID_FIELD;
 
-    protected final String limitResultsGrp = DefaultMessagesImpl.getString("AbstractIndicatorForm.limitResult");
+    protected final String limitResultsGrp = DefaultMessagesImpl.getString("AbstractIndicatorForm.limitResult"); //$NON-NLS-1$
 
     protected IndicatorParameters parameters;
 

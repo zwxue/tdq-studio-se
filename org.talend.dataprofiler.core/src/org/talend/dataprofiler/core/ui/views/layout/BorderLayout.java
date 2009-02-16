@@ -26,15 +26,15 @@ import org.eclipse.swt.widgets.Control;
  */
 public class BorderLayout extends AWTLayout {
 
-    public final static String CENTER = "Center";
+    public final static String CENTER = "Center"; //$NON-NLS-1$
 
-    public final static String EAST = "East";
+    public final static String EAST = "East"; //$NON-NLS-1$
 
-    public final static String NORTH = "North";
+    public final static String NORTH = "North"; //$NON-NLS-1$
 
-    public final static String SOUTH = "South";
+    public final static String SOUTH = "South"; //$NON-NLS-1$
 
-    public final static String WEST = "West";
+    public final static String WEST = "West"; //$NON-NLS-1$
 
     // -----------------------
 

@@ -39,6 +39,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.i18n.Messages;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -226,7 +227,7 @@ public final class TalendCwmFactory {
         if (!connector.isConnected()) {
             boolean connected = connector.connect();
             if (!connected) {
-                throw new SQLException("Connection failed for " + connector.getDatabaseUrl());
+                throw new SQLException(Messages.getString("TalendCwmFactory.ConnectionFailed", connector.getDatabaseUrl())); //$NON-NLS-1$
             }
         }
     }
@@ -239,31 +240,31 @@ public final class TalendCwmFactory {
      */
     private static void printInformations(Collection<TdCatalog> catalogs, Collection<TdSchema> schemata) {
         for (TdCatalog tdCatalog : catalogs) {
-            System.out.println("Catalog = " + tdCatalog);
+            System.out.println("Catalog = " + tdCatalog); //$NON-NLS-1$
         }
         for (TdSchema tdSchema : schemata) {
-            System.out.println("Schema = " + tdSchema + " in catalog " + tdSchema.getNamespace());
+            System.out.println("Schema = " + tdSchema + " in catalog " + tdSchema.getNamespace()); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
     public static void main(String[] args) {
 
         // --- load connection parameters from properties file
-        TypedProperties connectionParams = PropertiesLoader.getProperties(THAT, "db.properties");
+        TypedProperties connectionParams = PropertiesLoader.getProperties(THAT, "db.properties"); //$NON-NLS-1$
 
-        String driverClassName = connectionParams.getProperty("driver");
-        String dbUrl = connectionParams.getProperty("url");
+        String driverClassName = connectionParams.getProperty("driver"); //$NON-NLS-1$
+        String dbUrl = connectionParams.getProperty("url"); //$NON-NLS-1$
 
         DBConnect connector = new DBConnect(dbUrl, driverClassName, connectionParams);
         try {
-            TimeTracer tt = new TimeTracer("DB CONNECT", log);
+            TimeTracer tt = new TimeTracer("DB CONNECT", log); //$NON-NLS-1$
             tt.start();
 
             // --- set where to save the files
             FolderProvider folderProvider = new FolderProvider();
-            folderProvider.setFolder(new File("out"));
+            folderProvider.setFolder(new File("out")); //$NON-NLS-1$
             initializeConnection(connector, folderProvider);
-            tt.end("Everything saved.");
+            tt.end(Messages.getString("TalendCwmFactory.EverythingSaved")); //$NON-NLS-1$
 
             // --- now create the lower structure (tables, columns)
             // recreate a connection from the TdProviderConnection

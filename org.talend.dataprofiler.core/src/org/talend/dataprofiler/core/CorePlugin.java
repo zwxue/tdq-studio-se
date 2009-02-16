@@ -55,11 +55,11 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class CorePlugin extends AbstractUIPlugin {
 
-    private static final String DRIVERPATHS = "DRIVERPATHS";
+    private static final String DRIVERPATHS = "DRIVERPATHS"; //$NON-NLS-1$
 
-    private static final String DRIVERNAME = "DRIVERNAME";
+    private static final String DRIVERNAME = "DRIVERNAME"; //$NON-NLS-1$
 
-    private static final String DRIVERURL = "DRIVERURL";
+    private static final String DRIVERURL = "DRIVERURL"; //$NON-NLS-1$
 
     private DQRespositoryView respositoryView;
 
@@ -246,7 +246,7 @@ public class CorePlugin extends AbstractUIPlugin {
         SQLEditor editorPart = null;
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
-                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$
+                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
                 input.setUser(alias.getDefaultUser());
                 try {
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()

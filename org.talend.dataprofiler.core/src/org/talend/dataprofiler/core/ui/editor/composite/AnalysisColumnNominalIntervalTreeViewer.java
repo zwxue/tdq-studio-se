@@ -321,7 +321,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             treeItem.setData(COLUMN_INDICATOR_KEY, column);
 
             TreeEditor comboEditor = new TreeEditor(tree);
-            tree.setData("TreeEditor", comboEditor);
+            tree.setData(DefaultMessagesImpl.getString("AnalysisColumnNominalIntervalTreeViewer.TreeEditor"), comboEditor); //$NON-NLS-1$
 
             final CCombo combo = new CCombo(tree, SWT.BORDER);
             for (DataminingType type : DataminingType.values()) {

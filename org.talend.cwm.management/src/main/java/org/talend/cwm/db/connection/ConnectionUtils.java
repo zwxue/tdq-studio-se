@@ -32,6 +32,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -94,7 +95,7 @@ public final class ConnectionUtils {
                 }
             }
             Connection connection = null;
-            if (driverClassName.equals("org.hsqldb.jdbcDriver")) {
+            if (driverClassName.equals("org.hsqldb.jdbcDriver")) { //$NON-NLS-1$
                 // MOD xqliu 2009-02-02 bug 5261
                 if (isTimeout()) {
                     DriverManager.setLoginTimeout(LOGIN_TIMEOUT_SECOND);
@@ -141,7 +142,7 @@ public final class ConnectionUtils {
             }
             cc = null;
             if (ret == null) {
-                throw new SQLException("Connection Timeout!");
+                throw new SQLException(Messages.getString("ConnectionUtils.ConnectionTimeout")); //$NON-NLS-1$
             }
         } else {
             ret = driver.connect(url, props);

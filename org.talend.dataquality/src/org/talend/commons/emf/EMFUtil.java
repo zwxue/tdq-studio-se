@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.talend.i18n.Messages;
 
 /**
  * @author scorreia This class creates the EMF resources and save them. All resources are stored in a ResourceSet (which
@@ -40,7 +41,7 @@ public final class EMFUtil {
     private static Logger log = Logger.getLogger(EMFUtil.class);
 
     /** the encoding for xml files. */
-    private static final String ENCODING = "UTF-8";
+    private static final String ENCODING = "UTF-8"; //$NON-NLS-1$
 
     /** the options needed for saving the resources. */
     private final Map<String, Object> options;
@@ -134,7 +135,7 @@ public final class EMFUtil {
     public boolean addPoolToResourceSet(URI uri, EObject eObject) {
         Resource res = resourceSet.createResource(uri);
         if (res == null) {
-            lastErrorMessage = "No factory has been found for URI: " + uri;
+            lastErrorMessage = Messages.getString("EMFUtil.NoFactoryFound") + uri; //$NON-NLS-1$
             return false;
         }
         return res.getContents().add(eObject);

@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
@@ -42,9 +43,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public final class DataProviderHelper {
 
-    public static final String PASSWORD = "password";
+    public static final String PASSWORD = "password"; //$NON-NLS-1$
 
-    public static final String PASSPHRASE = "99ZwBDt1L9yMX2ApJx fnv94o99OeHbCGuIHTy22 V9O6cZ2i374fVjdV76VX9g49DG1r3n90hT5c1";
+    public static final String PASSPHRASE = "99ZwBDt1L9yMX2ApJx fnv94o99OeHbCGuIHTy22 V9O6cZ2i374fVjdV76VX9g49DG1r3n90hT5c1"; //$NON-NLS-1$
 
     private DataProviderHelper() {
     }
@@ -304,12 +305,12 @@ public final class DataProviderHelper {
         List<TdProviderConnection> resourceConnections = getTdProviderConnections(dataProvider);
         int nbConnections = resourceConnections.size();
         if (nbConnections == 0) {
-            rc.setReturnCode("No connection found in Data provider " + dataProvider.getName(), false);
+            rc.setReturnCode(Messages.getString("DataProviderHelper.NoConnectionFound", dataProvider.getName()), false); //$NON-NLS-1$
         } else {
             TdProviderConnection tdProvConn = resourceConnections.get(0);
             if (nbConnections > 1) {
-                rc.setReturnCode("Warning: several connection found for this data provider " + dataProvider.getName()
-                        + ". Returning the first one only.", false, tdProvConn);
+                rc.setReturnCode(Messages.getString("DataProviderHelper.Warning", //$NON-NLS-1$
+                        dataProvider.getName()), false, tdProvConn);
             }
             // else got only one provider connection
             rc.setObject(tdProvConn);
@@ -375,7 +376,7 @@ public final class DataProviderHelper {
         TypedReturnCode<TdProviderConnection> rc = getTdProviderConnection(dataProvider);
         return rc.isOk() ? encryptAndSetPassword(rc.getObject(), clearTextPassword) : false;
     }
-    
+
     /**
      * Method "encryptAndSetPassword" encrypts and store the encrypted into the provider connection.
      * 

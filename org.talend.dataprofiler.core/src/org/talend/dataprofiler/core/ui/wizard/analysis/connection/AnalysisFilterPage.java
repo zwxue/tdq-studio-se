@@ -29,7 +29,7 @@ import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
  */
 public class AnalysisFilterPage extends AbstractAnalysisWizardPage {
 
-    private String defaultInfor = DefaultMessagesImpl.getString("ConnAnalysisPageStep1.defaultInfor");
+    private String defaultInfor = DefaultMessagesImpl.getString("ConnAnalysisPageStep1.defaultInfor"); //$NON-NLS-1$
 
     private Text tableFilter;
 

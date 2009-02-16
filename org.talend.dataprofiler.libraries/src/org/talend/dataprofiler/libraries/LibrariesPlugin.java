@@ -23,7 +23,7 @@ public class LibrariesPlugin extends AbstractUIPlugin {
 
     // private static Logger log = Logger.getLogger(LibrariesPlugin.class);
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.talend.dataprofiler.libraries";
+    public static final String PLUGIN_ID = "org.talend.dataprofiler.libraries"; //$NON-NLS-1$
 
     // The shared instance
     private static LibrariesPlugin plugin;

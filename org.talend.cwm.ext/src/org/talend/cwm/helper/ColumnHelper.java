@@ -120,7 +120,7 @@ public final class ColumnHelper {
     public static String getFullName(Column column) {
         String tableName = getColumnSetFullName(column);
         if (tableName != null) {
-            return tableName + "." + column.getName();
+            return tableName + "." + column.getName(); //$NON-NLS-1$
         }
         return column.getName();
     }

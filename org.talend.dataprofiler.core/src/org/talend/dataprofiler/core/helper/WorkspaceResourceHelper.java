@@ -37,7 +37,7 @@ public class WorkspaceResourceHelper {
         URI uri = me.eResource().getURI();
         uri = me.eResource().getResourceSet().getURIConverter().normalize(uri);
         String scheme = uri.scheme();
-        if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) {
+        if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) { //$NON-NLS-1$ //$NON-NLS-2$
             StringBuffer platformResourcePath = new StringBuffer();
             for (int j = 1, size = uri.segmentCount(); j < size; ++j) {
                 platformResourcePath.append('/');

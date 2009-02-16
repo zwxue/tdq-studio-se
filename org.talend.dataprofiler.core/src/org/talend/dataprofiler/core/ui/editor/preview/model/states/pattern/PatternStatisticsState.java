@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
@@ -42,7 +43,7 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
 
     public JFreeChart getChart() {
         // TODO Auto-generated method stub
-        return TopChartFactory.createStacked3DBarChart("Pattern Statistics", getDataset(), PlotOrientation.VERTICAL);
+        return TopChartFactory.createStacked3DBarChart(DefaultMessagesImpl.getString("PatternStatisticsState.PatternStatistics"), getDataset(), PlotOrientation.VERTICAL); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -81,7 +82,7 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { "Label", "%Match", "%No Match", "#Match", "#No Match" });
+        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("PatternStatisticsState.Label"), DefaultMessagesImpl.getString("PatternStatisticsState.Match"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch"), DefaultMessagesImpl.getString("PatternStatisticsState.Match_"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch_") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         entity.setFieldWidths(new Integer[] { 200, 75, 75, 75, 75 });
         return entity;
     }

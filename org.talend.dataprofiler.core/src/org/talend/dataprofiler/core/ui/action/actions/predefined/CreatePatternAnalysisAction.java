@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.wizard.WizardDialog;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -26,7 +27,7 @@ public class CreatePatternAnalysisAction extends AbstractPredefinedAnalysisActio
      * DOC Zqin CreatePatternAnalysisAction constructor comment.
      */
     public CreatePatternAnalysisAction() {
-        super("Pattern Analysis", null);
+        super(DefaultMessagesImpl.getString("CreatePatternAnalysisAction.PatternAnalysis"), null); //$NON-NLS-1$
     }
 
     /*

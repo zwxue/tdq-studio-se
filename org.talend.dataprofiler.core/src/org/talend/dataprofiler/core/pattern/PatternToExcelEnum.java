@@ -29,10 +29,10 @@ public enum PatternToExcelEnum {
     PostgreSQLRegexp(9, "PostgreSQL Regexp"), //$NON-NLS-1$
     SQLServerRegexp(10, "SQL Server Regexp"), //$NON-NLS-1$
     SybaseRegexp(11, "Sybase Regexp"), //$NON-NLS-1$
-    IngresRegexp(12, "Ingres Regexp"),
-    InformixRegexp(13, "Informix Regexp"),
-    SQLite3Regexp(14, "SQLite3 Regexp"),
-    Teradata(15, "Teradata Regexp");
+    IngresRegexp(12, "Ingres Regexp"), //$NON-NLS-1$
+    InformixRegexp(13, "Informix Regexp"), //$NON-NLS-1$
+    SQLite3Regexp(14, "SQLite3 Regexp"), //$NON-NLS-1$
+    Teradata(15, "Teradata Regexp"); //$NON-NLS-1$
 
     private String literal;
 

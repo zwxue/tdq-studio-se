@@ -108,7 +108,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         scomp.setContent(composite);
 
         gContainer = new Group(composite, SWT.NONE);
-        gContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.General"));
+        gContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.General")); //$NON-NLS-1$
         GridLayout layout = new GridLayout(2, false);
         GridData data = new GridData(GridData.FILL_BOTH);
         gContainer.setLayout(layout);
@@ -117,7 +117,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         // create extend group
         if (switchFlag) {
             tContainer = new Group(composite, SWT.NONE);
-            tContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.Technical"));
+            tContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.Technical")); //$NON-NLS-1$
             tContainer.setLayout(new GridLayout(2, false));
             tContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -151,7 +151,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createExtDefault() {
-        newText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable"));
+        newText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
     }
 
     @Override
@@ -228,9 +228,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private void createTableDetail(Table table) {
         createNameCommentDetail(table);
         List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
-        newLabelAndText(gContainer, "Primary keys: ", primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.size()));
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.size())); //$NON-NLS-1$
         List<ForeignKey> foreignKeys = TableHelper.getForeignKeys(table);
-        newLabelAndText(gContainer, "Foreign keys: ", foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.size()));        
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.size()));         //$NON-NLS-1$
     }
 
     private boolean createFileDetail(boolean is, IFile fe2) {
@@ -366,8 +366,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.nullable"), purpose); //$NON-NLS-1$
         final Expression initialValue = column.getInitialValue();
         String defValueText = (initialValue != null) ? initialValue.getBody() : null;
-        newLabelAndText(gContainer, "Default value:", defValueText);
-        newLabelAndText(gContainer, "Size:", String.valueOf(column.getLength()));
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.DefaultValue"), defValueText); //$NON-NLS-1$
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Size"), String.valueOf(column.getLength())); //$NON-NLS-1$
     }
 
     private void createNameCommentDetail(ModelElement element) {
@@ -400,9 +400,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (softwareSystem == null) {
             softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
         }
-        String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype();
+        String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype(); //$NON-NLS-1$
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
-        String version = (softwareSystem == null) ? "" : softwareSystem.getVersion();
+        String version = (softwareSystem == null) ? "" : softwareSystem.getVersion(); //$NON-NLS-1$
         newLabelAndText(gContainer, "Version: ", version); //$NON-NLS-1$
 
     }

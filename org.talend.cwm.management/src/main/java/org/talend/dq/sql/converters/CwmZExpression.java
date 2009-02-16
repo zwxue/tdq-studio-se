@@ -119,7 +119,7 @@ public class CwmZExpression<T> {
         BooleanExpressionNode expr = ExpressionsFactory.eINSTANCE.createBooleanExpressionNode();
         Expression expression = CoreFactory.eINSTANCE.createExpression();
         expression.setBody(this.generateZExpression().toString());
-        expression.setLanguage("SQL");
+        expression.setLanguage("SQL"); //$NON-NLS-1$
         expr.setExpression(expression);
         return expr;
     }

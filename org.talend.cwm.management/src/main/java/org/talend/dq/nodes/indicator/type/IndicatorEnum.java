@@ -23,130 +23,130 @@ public enum IndicatorEnum {
     SqlPatternMatchingIndicatorEnum(
                                     IndicatorsPackage.SQL_PATTERN_MATCHING_INDICATOR,
                                     IndicatorsPackage.Literals.SQL_PATTERN_MATCHING_INDICATOR,
-                                    "sql like matching",
+                                    "sql like matching", //$NON-NLS-1$
                                     null),
     RegexpMatchingIndicatorEnum(
                                 IndicatorsPackage.REGEXP_MATCHING_INDICATOR,
                                 IndicatorsPackage.Literals.REGEXP_MATCHING_INDICATOR,
-                                "regexp matching",
+                                "regexp matching", //$NON-NLS-1$
                                 null),
     RowCountIndicatorEnum(
                           IndicatorsPackage.ROW_COUNT_INDICATOR,
                           IndicatorsPackage.Literals.ROW_COUNT_INDICATOR,
-                          "row count",
+                          "row count", //$NON-NLS-1$
                           null),
     NullCountIndicatorEnum(
                            IndicatorsPackage.NULL_COUNT_INDICATOR,
                            IndicatorsPackage.Literals.NULL_COUNT_INDICATOR,
-                           "null count",
+                           "null count", //$NON-NLS-1$
                            null),
     DistinctCountIndicatorEnum(
                                IndicatorsPackage.DISTINCT_COUNT_INDICATOR,
                                IndicatorsPackage.Literals.DISTINCT_COUNT_INDICATOR,
-                               "distinct count",
+                               "distinct count", //$NON-NLS-1$
                                null),
     UniqueIndicatorEnum(
                         IndicatorsPackage.UNIQUE_COUNT_INDICATOR,
                         IndicatorsPackage.Literals.UNIQUE_COUNT_INDICATOR,
-                        "unique count",
+                        "unique count", //$NON-NLS-1$
                         null),
     DuplicateCountIndicatorEnum(
                                 IndicatorsPackage.DUPLICATE_COUNT_INDICATOR,
                                 IndicatorsPackage.Literals.DUPLICATE_COUNT_INDICATOR,
-                                "duplicate count",
+                                "duplicate count", //$NON-NLS-1$
                                 null),
     BlankCountIndicatorEnum(
                             IndicatorsPackage.BLANK_COUNT_INDICATOR,
                             IndicatorsPackage.Literals.BLANK_COUNT_INDICATOR,
-                            "blank count",
+                            "blank count", //$NON-NLS-1$
                             null),
 
     MinLengthIndicatorEnum(
                            IndicatorsPackage.MIN_LENGTH_INDICATOR,
                            IndicatorsPackage.Literals.MIN_LENGTH_INDICATOR,
-                           "min length",
+                           "min length", //$NON-NLS-1$
                            null),
     MaxLengthIndicatorEnum(
                            IndicatorsPackage.MAX_LENGTH_INDICATOR,
                            IndicatorsPackage.Literals.MAX_LENGTH_INDICATOR,
-                           "max length",
+                           "max length", //$NON-NLS-1$
                            null),
 
     AverageLengthIndicatorEnum(
                                IndicatorsPackage.AVERAGE_LENGTH_INDICATOR,
                                IndicatorsPackage.Literals.AVERAGE_LENGTH_INDICATOR,
-                               "average length",
+                               "average length", //$NON-NLS-1$
                                null),
 
-    ModeIndicatorEnum(IndicatorsPackage.MODE_INDICATOR, IndicatorsPackage.Literals.MODE_INDICATOR, "mode", null),
+    ModeIndicatorEnum(IndicatorsPackage.MODE_INDICATOR, IndicatorsPackage.Literals.MODE_INDICATOR, "mode", null), //$NON-NLS-1$
     FrequencyIndicatorEnum(
                            IndicatorsPackage.FREQUENCY_INDICATOR,
                            IndicatorsPackage.Literals.FREQUENCY_INDICATOR,
-                           "frequency table",
+                           "frequency table", //$NON-NLS-1$
                            null),
     LowFrequencyIndicatorEnum(
                               IndicatorsPackage.LOW_FREQUENCY_INDICATOR,
                               IndicatorsPackage.Literals.LOW_FREQUENCY_INDICATOR,
-                              "low frequency table",
+                              "low frequency table", //$NON-NLS-1$
                               null),
     PatternFreqIndicatorEnum(
                              IndicatorsPackage.PATTERN_FREQ_INDICATOR,
                              IndicatorsPackage.Literals.PATTERN_FREQ_INDICATOR,
-                             "pattern frequency table",
+                             "pattern frequency table", //$NON-NLS-1$
                              null),
     PatternLowFreqIndicatorEnum(
                                 IndicatorsPackage.PATTERN_LOW_FREQ_INDICATOR,
                                 IndicatorsPackage.Literals.PATTERN_LOW_FREQ_INDICATOR,
-                                "pattern low frequency table",
+                                "pattern low frequency table", //$NON-NLS-1$
                                 null),
 
-    MeanIndicatorEnum(IndicatorsPackage.MEAN_INDICATOR, IndicatorsPackage.Literals.MEAN_INDICATOR, "mean", null),
-    MedianIndicatorEnum(IndicatorsPackage.MEDIAN_INDICATOR, IndicatorsPackage.Literals.MEDIAN_INDICATOR, "median", null),
+    MeanIndicatorEnum(IndicatorsPackage.MEAN_INDICATOR, IndicatorsPackage.Literals.MEAN_INDICATOR, "mean", null), //$NON-NLS-1$
+    MedianIndicatorEnum(IndicatorsPackage.MEDIAN_INDICATOR, IndicatorsPackage.Literals.MEDIAN_INDICATOR, "median", null), //$NON-NLS-1$
     MinValueIndicatorEnum(
                           IndicatorsPackage.MIN_VALUE_INDICATOR,
                           IndicatorsPackage.Literals.MIN_VALUE_INDICATOR,
-                          "min.value",
+                          "min.value", //$NON-NLS-1$
                           null),
     MaxValueIndicatorEnum(
                           IndicatorsPackage.MAX_VALUE_INDICATOR,
                           IndicatorsPackage.Literals.MAX_VALUE_INDICATOR,
-                          "max.value",
+                          "max.value", //$NON-NLS-1$
                           null),
     LowerQuartileIndicatorEnum(
                                IndicatorsPackage.LOWER_QUARTILE_INDICATOR,
                                IndicatorsPackage.Literals.LOWER_QUARTILE_INDICATOR,
-                               "lower quartile",
+                               "lower quartile", //$NON-NLS-1$
                                null),
     UpperQuartileIndicatorEnum(
                                IndicatorsPackage.UPPER_QUARTILE_INDICATOR,
                                IndicatorsPackage.Literals.UPPER_QUARTILE_INDICATOR,
-                               "upper quartile",
+                               "upper quartile", //$NON-NLS-1$
                                null),
     CountsIndicatorEnum(
                         IndicatorsPackage.COUNTS_INDICATOR,
                         IndicatorsPackage.Literals.COUNTS_INDICATOR,
-                        "Simple Statistics",
+                        "Simple Statistics", //$NON-NLS-1$
                         new IndicatorEnum[] { RowCountIndicatorEnum, NullCountIndicatorEnum, DistinctCountIndicatorEnum,
                                 UniqueIndicatorEnum, DuplicateCountIndicatorEnum, BlankCountIndicatorEnum }),
     TextIndicatorEnum(
                       IndicatorsPackage.TEXT_INDICATOR,
                       IndicatorsPackage.Literals.TEXT_INDICATOR,
-                      "Text Statistics",
+                      "Text Statistics", //$NON-NLS-1$
                       new IndicatorEnum[] { MinLengthIndicatorEnum, MaxLengthIndicatorEnum, AverageLengthIndicatorEnum }),
     IQRIndicatorEnum(
                      IndicatorsPackage.IQR_INDICATOR,
                      IndicatorsPackage.Literals.IQR_INDICATOR,
-                     "Inter Quartile Range",
+                     "Inter Quartile Range", //$NON-NLS-1$
                      new IndicatorEnum[] { LowerQuartileIndicatorEnum, UpperQuartileIndicatorEnum }),
     RangeIndicatorEnum(
                        IndicatorsPackage.RANGE_INDICATOR,
                        IndicatorsPackage.Literals.RANGE_INDICATOR,
-                       "Range",
+                       "Range", //$NON-NLS-1$
                        new IndicatorEnum[] { MinValueIndicatorEnum, MaxValueIndicatorEnum }),
     BoxIIndicatorEnum(
                       IndicatorsPackage.BOX_INDICATOR,
                       IndicatorsPackage.Literals.BOX_INDICATOR,
-                      "Summary Statistics",
+                      "Summary Statistics", //$NON-NLS-1$
                       new IndicatorEnum[] { MeanIndicatorEnum, MedianIndicatorEnum, IQRIndicatorEnum, RangeIndicatorEnum });
 
     private EClass indicatorType;

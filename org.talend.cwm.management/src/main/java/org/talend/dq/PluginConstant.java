@@ -23,23 +23,23 @@ public final class PluginConstant {
     private PluginConstant() {
     }
 
-    public static final String EMPTY_STRING = "";
+    public static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
-    public static final String PASSWORD_PROPERTY = "password";
+    public static final String PASSWORD_PROPERTY = "password"; //$NON-NLS-1$
 
-    public static final String HOSTNAME_PROPERTY = "hostname";
+    public static final String HOSTNAME_PROPERTY = "hostname"; //$NON-NLS-1$
 
-    public static final String PORT_PROPERTY = "port";
+    public static final String PORT_PROPERTY = "port"; //$NON-NLS-1$
 
-    public static final String DBTYPE_PROPERTY = "dbtype";
+    public static final String DBTYPE_PROPERTY = "dbtype"; //$NON-NLS-1$
 
-    public static final String DEFAULT_PARAMETERS = "zeroDateTimeBehavior=convertToNull&noDatetimeStringSync=true";
+    public static final String DEFAULT_PARAMETERS = "zeroDateTimeBehavior=convertToNull&noDatetimeStringSync=true"; //$NON-NLS-1$
 
-    public static final String PRV_SUFFIX = "." + FactoriesUtil.PROV;
+    public static final String PRV_SUFFIX = "." + FactoriesUtil.PROV; //$NON-NLS-1$
 
-    public static final String ANA_SUFFIX = "." + FactoriesUtil.ANA;
+    public static final String ANA_SUFFIX = "." + FactoriesUtil.ANA; //$NON-NLS-1$
 
-    public static final String REP_SUFFIX = "." + FactoriesUtil.REP;
+    public static final String REP_SUFFIX = "." + FactoriesUtil.REP; //$NON-NLS-1$
 
-    public static final String PATTERN_SUFFIX = "*.pattern";
+    public static final String PATTERN_SUFFIX = "*.pattern"; //$NON-NLS-1$
 }

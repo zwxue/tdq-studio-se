@@ -34,11 +34,11 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
-    private static String newAnaStr = DefaultMessagesImpl.getString("ConnAnalysisPageStep0.newAnalysis");
+    private static String newAnaStr = DefaultMessagesImpl.getString("ConnAnalysisPageStep0.newAnalysis"); //$NON-NLS-1$
 
-    private static String chooseConnStr = DefaultMessagesImpl.getString("ConnAnalysisPageStep0.chooseConnection");
+    private static String chooseConnStr = DefaultMessagesImpl.getString("ConnAnalysisPageStep0.chooseConnection"); //$NON-NLS-1$
 
-    private static String connsStr = DefaultMessagesImpl.getString("ConnAnalysisPageStep0.connections");
+    private static String connsStr = DefaultMessagesImpl.getString("ConnAnalysisPageStep0.connections"); //$NON-NLS-1$
 
     /**
      * 

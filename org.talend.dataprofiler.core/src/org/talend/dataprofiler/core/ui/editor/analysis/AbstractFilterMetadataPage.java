@@ -89,9 +89,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private static Logger log = Logger.getLogger(ConnectionMasterDetailsPage.class);
 
-    private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema");
+    private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema"); //$NON-NLS-1$
 
-    private static final String CATALOG = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog");
+    private static final String CATALOG = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog"); //$NON-NLS-1$
 
     private SchemaTableSorter[][] tableSorters = {
             { new SchemaTableSorter(SchemaTableSorter.TABLE), new SchemaTableSorter(-SchemaTableSorter.TABLE) },
@@ -299,7 +299,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         String tablePattern = DomainHelper.getTablePattern(dataFilters);
         latestTableFilterValue = tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern;
         tableFilterText.setText(latestTableFilterValue);
-        tableFilterText.setToolTipText("Filter several tables with table names separated by a comma");
+        tableFilterText.setToolTipText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.FilterTables")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(tableFilterText);
         tableFilterText.addModifyListener(new ModifyListener() {
 
@@ -315,7 +315,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         String viewPattern = DomainHelper.getViewPattern(dataFilters);
         latestViewFilterValue = viewPattern == null ? PluginConstant.EMPTY_STRING : viewPattern;
         viewFilterText.setText(latestViewFilterValue);
-        viewFilterText.setToolTipText("Filter several views with view names separated by a comma");
+        viewFilterText.setToolTipText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.FilterViews")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(viewFilterText);
         viewFilterText.addModifyListener(new ModifyListener() {
 
@@ -667,7 +667,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
             layoutData.heightHint = 150;
             catalogOrSchemaTable.setLayoutData(layoutData);
-            String[] columnTexts = new String[] { "Table", "#rows", "#keys", "#indexes" };
+            String[] columnTexts = new String[] { DefaultMessagesImpl.getString("AbstractFilterMetadataPage.Table"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.rows"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.keys"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.indexes") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             createSorterColumns(tableOfCatalogOrSchemaViewer, columnTexts, tableSorters, COLUMN_TABLE_WIDTH);
             TableOfCatalogOrSchemaProvider providerTable = new TableOfCatalogOrSchemaProvider();
             tableOfCatalogOrSchemaViewer.setLabelProvider(providerTable);
@@ -680,12 +680,12 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             // cursor.setVisible(true);
             final Menu menu = new Menu(catalogOrSchemaTable);
             MenuItem keyitem = new MenuItem(menu, SWT.PUSH);
-            keyitem.setText("View keys");
+            keyitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewKeys")); //$NON-NLS-1$
             keyitem.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
 
             final Menu menu1 = new Menu(catalogOrSchemaTable);
             MenuItem indexitem = new MenuItem(menu1, SWT.PUSH);
-            indexitem.setText("View indexes");
+            indexitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewIndexes")); //$NON-NLS-1$
             indexitem.setImage(ImageLib.getImage(ImageLib.INDEX_VIEW));
 
             // catalogOrSchemaTable.setMenu(menu);
@@ -697,7 +697,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     TdProviderConnection providerConnection = tdPc.getObject();
                     TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
                             providerConnection, (Package) currentSelectionSchemaIndicator.getAnalyzedElement(), tableItem
-                                    .getText(0), Messages.getString("DatabaseDetailView.Tab.PrimaryKeys"));
+                                    .getText(0), Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
 
                     if (!findSqlExplorerTableNode.isOk()) {
                         log.error(findSqlExplorerTableNode.getMessage());
@@ -726,7 +726,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     TdProviderConnection providerConnection = tdPc.getObject();
                     TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
                             providerConnection, (Package) schemaIndicator.getAnalyzedElement(), tableItem.getText(0), Messages
-                                    .getString("DatabaseDetailView.Tab.Indexes"));
+                                    .getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
 
                     if (!findSqlExplorerTableNode.isOk()) {
                         log.error(findSqlExplorerTableNode.getMessage());
@@ -755,7 +755,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
             layoutData.heightHint = 150;
             tableCatalogOrSchemaView.setLayoutData(layoutData);
-            columnTexts = new String[] { "View", "#rows" };
+            columnTexts = new String[] { DefaultMessagesImpl.getString("AbstractFilterMetadataPage.view"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.rows") }; //$NON-NLS-1$ //$NON-NLS-2$
             createSorterColumns(viewOfCatalogOrSchemaViewer, columnTexts, viewSorters, COLUMN_VIEW_WIDTH);
             ViewOfCatalogOrSchemaProvider viewProvider = new ViewOfCatalogOrSchemaProvider();
             viewOfCatalogOrSchemaViewer.setLabelProvider(viewProvider);

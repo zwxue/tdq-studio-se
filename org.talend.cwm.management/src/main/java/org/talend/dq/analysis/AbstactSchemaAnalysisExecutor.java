@@ -38,7 +38,7 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
      */
     @Override
     protected String createSqlStatement(Analysis analysis) {
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**

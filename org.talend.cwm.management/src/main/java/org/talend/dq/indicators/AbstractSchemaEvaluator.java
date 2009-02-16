@@ -55,7 +55,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     private DbmsLanguage dbmsLanguage;
 
-    private static final String SELECT_COUNT_FROM = "select count(*) from ";
+    private static final String SELECT_COUNT_FROM = "select count(*) from "; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(AbstractSchemaEvaluator.class);
 
@@ -80,7 +80,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (this.dbmsLanguage == null) {
             DataManager dm = this.getDataManager();
             if (dm == null) {
-                throw new RuntimeException("No data manager found."); // FIXME use TalendException ?
+                throw new RuntimeException("No data manager found."); // FIXME use TalendException ? //$NON-NLS-1$
             }
             this.dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
             // this.dbmsLanguage.setDbQuoteString(this.dbmsLanguage.getQuoteIdentifier());

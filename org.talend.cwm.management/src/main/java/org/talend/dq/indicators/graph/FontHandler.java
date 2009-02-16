@@ -23,9 +23,9 @@ public final class FontHandler implements VertexFontFunction, EdgeFontFunction {
 
     protected boolean bold = false;
 
-    Font f = new Font("Helvetica", Font.PLAIN, 12);
+    Font f = new Font("Helvetica", Font.PLAIN, 12); //$NON-NLS-1$
 
-    Font b = new Font("Helvetica", Font.BOLD, 12);
+    Font b = new Font("Helvetica", Font.BOLD, 12); //$NON-NLS-1$
 
     public void setBold(boolean bold) {
         this.bold = bold;

@@ -21,6 +21,7 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.i18n.Messages;
 
 /**
  * @author scorreia
@@ -46,12 +47,12 @@ abstract class CwmBuilder {
     }
 
     protected void print(String tag, String str) { // for tests only
-        System.out.println(tag + " " + str);
+        System.out.println(tag + " " + str); //$NON-NLS-1$
     }
 
     protected DatabaseMetaData getConnectionMetadata(Connection conn) throws SQLException {
-        assert conn != null : "Connection should not be null in " + getClass().getName() + " for connection "
-                + getConnectionInformations(conn);
+        assert conn != null : Messages.getString("CwmBuilder.ConnectionNotNull", getClass().getName(), //$NON-NLS-1$
+                getConnectionInformations(conn));
         return conn.getMetaData();
     }
 

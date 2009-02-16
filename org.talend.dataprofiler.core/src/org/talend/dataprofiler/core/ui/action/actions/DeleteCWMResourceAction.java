@@ -86,10 +86,10 @@ public class DeleteCWMResourceAction extends Action {
         }
         List<Map<String, String>> driverList = driverPreferCustInfo();
         for (Map<String, String> driverInfoMap : driverList) {
-            String connectionURI = driverInfoMap.get("CONNECTIONFILEURI");
+            String connectionURI = driverInfoMap.get("CONNECTIONFILEURI"); //$NON-NLS-1$
             for (ModelElement tdDataProvider : modelElementList) {
                 if (tdDataProvider.eResource().getURI().toString().trim().equals(connectionURI.trim())) {
-                    String customDriverId = driverInfoMap.get("CUSTOMDRIVERID");
+                    String customDriverId = driverInfoMap.get("CUSTOMDRIVERID"); //$NON-NLS-1$
                     if (driverManager.getDriver(customDriverId) != null) {
                         driverManager.removeDriver(driverManager.getDriver(customDriverId));
                     }
@@ -227,23 +227,23 @@ public class DeleteCWMResourceAction extends Action {
 
     private List<Map<String, String>> driverPreferCustInfo() {
         List<Map<String, String>> driverPreferList = new ArrayList<Map<String, String>>();
-        String driverPrefer = CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER");
-        if (driverPrefer != null && !driverPrefer.trim().equals("")) {
-            String[] driverCustPrefers = driverPrefer.split("};");
+        String driverPrefer = CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER"); //$NON-NLS-1$
+        if (driverPrefer != null && !driverPrefer.trim().equals("")) { //$NON-NLS-1$
+            String[] driverCustPrefers = driverPrefer.split("};"); //$NON-NLS-1$
             for (String driverCustPrefer : driverCustPrefers) {
-                String[] driverCells = driverCustPrefer.substring(1).split(",");
+                String[] driverCells = driverCustPrefer.substring(1).split(","); //$NON-NLS-1$
                 Map<String, String> driverCellMap = new HashMap<String, String>();
                 for (int i = 0; i < driverCells.length; i++) {
                     if (i == 0) {
-                        driverCellMap.put("DRIVERPATH", driverCells[i]);
+                        driverCellMap.put("DRIVERPATH", driverCells[i]); //$NON-NLS-1$
                     } else if (i == 1) {
-                        driverCellMap.put("DRIVERNAME", driverCells[i]);
+                        driverCellMap.put("DRIVERNAME", driverCells[i]); //$NON-NLS-1$
                     } else if (i == 2) {
-                        driverCellMap.put("DRIVERURL", driverCells[i]);
+                        driverCellMap.put("DRIVERURL", driverCells[i]); //$NON-NLS-1$
                     } else if (i == 3) {
-                        driverCellMap.put("CONNECTIONFILEURI", driverCells[i]);
+                        driverCellMap.put("CONNECTIONFILEURI", driverCells[i]); //$NON-NLS-1$
                     } else if (i == 4) {
-                        driverCellMap.put("CUSTOMDRIVERID", driverCells[i]);
+                        driverCellMap.put("CUSTOMDRIVERID", driverCells[i]); //$NON-NLS-1$
                     }
                     driverPreferList.add(driverCellMap);
                 }

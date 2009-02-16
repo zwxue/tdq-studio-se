@@ -21,6 +21,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
@@ -38,7 +39,7 @@ public class OverviewAnalysisAction extends Action implements ICheatSheetAction 
     private Package[] packageObjs;
 
     public OverviewAnalysisAction() {
-        super("Overview analysis");
+        super(DefaultMessagesImpl.getString("OverviewAnalysisAction.OverviewAnalysis")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
 

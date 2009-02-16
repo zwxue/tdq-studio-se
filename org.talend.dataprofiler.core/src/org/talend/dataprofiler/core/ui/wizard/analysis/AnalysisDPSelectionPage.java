@@ -53,7 +53,7 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
     private String nameLabTxt = null;
 
     public AnalysisDPSelectionPage(String labText, AdapterFactoryContentProvider contentProvider) {
-        init("", "", contentProvider, labText);
+        init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public AnalysisDPSelectionPage(String title, String message, String labText, AdapterFactoryContentProvider contentProvider) {

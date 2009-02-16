@@ -31,6 +31,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -65,8 +66,9 @@ public final class SqlExplorerBridge {
         }
 
         if (currentUser == null) {
-            return new TypedReturnCode<TableNode>("Can't find the corresponding table object '" + tableName
-                    + " on data explorer.", false);
+            return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
+                    "SqlExplorerBridge.NotFindCorrespondTable", tableName), //$NON-NLS-1$
+                    false);
         }
         DatabaseNode root = currentUser.getMetaDataSession().getRoot();
         root.load();
@@ -93,7 +95,7 @@ public final class SqlExplorerBridge {
         INode[] childNodes = catalogOrSchemaNode.getChildNodes();
         TableFolderNode tableFolderNode = null;
         for (INode node : childNodes) {
-            if ("TABLE".equals(node.getQualifiedName())) {
+            if ("TABLE".equals(node.getQualifiedName())) { //$NON-NLS-1$
                 tableFolderNode = (TableFolderNode) node;
                 break;
             }
@@ -109,7 +111,7 @@ public final class SqlExplorerBridge {
                 return typedReturnCode;
             }
         }
-        return new TypedReturnCode<TableNode>("Can't find the corresponding table object '" + tableName + " on data explorer.",
+        return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTableObject") + tableName, //$NON-NLS-1$
                 false);
     }
 

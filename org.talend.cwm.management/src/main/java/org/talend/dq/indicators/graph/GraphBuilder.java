@@ -41,27 +41,27 @@ public class GraphBuilder {
     /**
      * The key to set the index of a column used to identify instances of a same column.
      */
-    public static final String COLUMN_IDX_KEY = "COLUMNID";
+    public static final String COLUMN_IDX_KEY = "COLUMNID"; //$NON-NLS-1$
 
     /**
      * The key to set the label of a vertex (instance of a column).
      */
-    public static final String V_LABEL_KEY = "V_LABEL";
+    public static final String V_LABEL_KEY = "V_LABEL"; //$NON-NLS-1$
 
     /**
      * The key to set the index of the row in the edge.
      */
-    public static final String E_ROWNUM_KEY = "ROWID";
+    public static final String E_ROWNUM_KEY = "ROWID"; //$NON-NLS-1$
 
     /**
      * The key to set the weight of the edge (function of the row count).
      */
-    public static final String E_WEIGHT_KEY = "WEIGHT";
+    public static final String E_WEIGHT_KEY = "WEIGHT"; //$NON-NLS-1$
 
     /**
      * The key to set the label of the edge.
      */
-    public static final String E_LABEL_KEY = "E_LABEL";
+    public static final String E_LABEL_KEY = "E_LABEL"; //$NON-NLS-1$
 
     /**
      * the graph.
@@ -126,8 +126,8 @@ public class GraphBuilder {
     private void initAttributes() {
         graph = new UndirectedSparseGraph();
         graph.getEdgeConstraints().remove(Graph.NOT_PARALLEL_EDGE); // allow multigraph
-        edgeWeight = new UserDatumNumberEdgeValue("edge_weight");
-        vertexWeight = new UserDatumNumberVertexValue("vertex_weight");
+        edgeWeight = new UserDatumNumberEdgeValue("edge_weight"); //$NON-NLS-1$
+        vertexWeight = new UserDatumNumberVertexValue("vertex_weight"); //$NON-NLS-1$
     }
 
     /**
@@ -224,7 +224,7 @@ public class GraphBuilder {
      */
     private Edge newEdge(Object[] row, int rowIdx, final int countColumnIndex, Vertex vertexFrom, Vertex vertexTo) {
         final Edge edge = graph.addEdge(new UndirectedSparseEdge(vertexFrom, vertexTo));
-        String fullRow = StringUtils.join(row, " , ");
+        String fullRow = StringUtils.join(row, " , "); //$NON-NLS-1$
         edge.addUserDatum(GraphBuilder.E_ROWNUM_KEY, rowIdx, UserData.CLONE);
         // TODO remove this line ?
         edge.addUserDatum(GraphBuilder.E_WEIGHT_KEY, getIntegerValue(row[countColumnIndex]), UserData.CLONE);

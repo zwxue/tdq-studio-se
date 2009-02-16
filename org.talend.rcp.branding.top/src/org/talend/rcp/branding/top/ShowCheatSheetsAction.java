@@ -38,7 +38,7 @@ public class ShowCheatSheetsAction extends Action implements IIntroAction {
      * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
      */
     public void run(IIntroSite site, Properties params) {
-        String property = params.getProperty("id");
+        String property = params.getProperty("id"); //$NON-NLS-1$
         OpenCheatSheetAction action = new OpenCheatSheetAction(property);
         action.run();
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

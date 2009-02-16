@@ -37,11 +37,11 @@ public class UIMessages {
 
     public static final String MSG_LOWER_LESS_HIGHER = DefaultMessagesImpl.getString("UIMessages.lowerValuelessThanHigherValue"); //$NON-NLS-1$
 
-    public static final String MSG_INDICATOR_WIZARD = "In this wizard, parameters for the given indicator can be set";
+    public static final String MSG_INDICATOR_WIZARD = DefaultMessagesImpl.getString("UIMessages.ParametersInIndicator"); //$NON-NLS-1$
 
-    public static final String MSG_INDICATOR_VALUE_OUT_OF_RANGE = "These percent value must between 0-100.";
+    public static final String MSG_INDICATOR_VALUE_OUT_OF_RANGE = DefaultMessagesImpl.getString("UIMessages.PercentValue"); //$NON-NLS-1$
 
-    public static final String MSG_SELECT_GENERIC_JDBC = "Generic connection is provided mainly for trying to connect to untested databases. Use it only if your database does not appear in the list of supported databases. \n"
-            + "When using a custom driver, generic SQL queries will be generated to compute indicators. These queries may not work on some databases. Help us to know these issues by reporting a bug at http://talendforge.org/bugs/my_view_page.php";
+    public static final String MSG_SELECT_GENERIC_JDBC = DefaultMessagesImpl.getString("UIMessages.GenericConnection") //$NON-NLS-1$
+            + DefaultMessagesImpl.getString("UIMessages.CustomDriver"); //$NON-NLS-1$
 
 }

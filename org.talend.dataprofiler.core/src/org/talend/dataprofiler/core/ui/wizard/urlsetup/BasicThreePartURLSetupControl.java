@@ -60,12 +60,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
     }
 
     protected void createPart(Composite parent, String dbLiteral, final DBConnectionParameter connectionParam) {
-        if (dbLiteral.trim().equals("Generic JDBC")) {
+        if (dbLiteral.trim().equals("Generic JDBC")) { //$NON-NLS-1$
             GridLayout layout = new GridLayout();
             layout.numColumns = 3;
             parent.setLayout(layout);
             Label labelJar = new Label(parent, SWT.NONE);
-            labelJar.setText("Driver jar");
+            labelJar.setText("Driver jar"); //$NON-NLS-1$
             final Text jarText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             jarText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             jarText.setEditable(false);
@@ -78,23 +78,23 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             });
             final Button selectJar = new Button(parent, SWT.PUSH);
             final StringBuilder filenameAll = new StringBuilder();
-            selectJar.setText("...");
+            selectJar.setText("..."); //$NON-NLS-1$
             selectJar.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent event) {
                     FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
                     String filename = dialog.open();
                     if (filename != null) {
-                        filenameAll.append(filename + ";");
+                        filenameAll.append(filename + ";"); //$NON-NLS-1$
                         // filenameAll.deleteCharAt(0);
                         jarText.setText(filenameAll.toString());
                     } else {
-                        jarText.setText("");
+                        jarText.setText(""); //$NON-NLS-1$
                     }
                 }
             });
             Label labelDriver = new Label(parent, SWT.NONE);
-            labelDriver.setText("Driver Class Name");
+            labelDriver.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.DriverClassName")); //$NON-NLS-1$
             // int comboUrlCount = 0;
             // String[] dbDriverName = new String[SupportDBUrlType.values().length - 1];
             // for (SupportDBUrlType dbType : SupportDBUrlType.values()) {
@@ -115,12 +115,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             });
 
             Button listDriverBtn = new Button(parent, SWT.PUSH);
-            listDriverBtn.setText("List Drivers");
+            listDriverBtn.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.ListDrivers")); //$NON-NLS-1$
             listDriverBtn.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
                     comboDriver.removeAll();
-                    for (String stringToFile : jarText.getText().trim().split(";")) {
+                    for (String stringToFile : jarText.getText().trim().split(";")) { //$NON-NLS-1$
                         File file = new File(stringToFile);
                         if (file != null) {
                             try {
@@ -145,7 +145,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             });
 
             Label labelUrl = new Label(parent, SWT.NONE);
-            labelUrl.setText("Url");
+            labelUrl.setText("Url"); //$NON-NLS-1$
             final Text urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             urlText.addModifyListener(new ModifyListener() {
@@ -167,7 +167,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             Label labelUrl = new Label(parent, SWT.NONE);
             final Text urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
 
-            labelfile.setText("File");
+            labelfile.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.File")); //$NON-NLS-1$
             fileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             fileText.setEditable(true);
             fileText.addModifyListener(new ModifyListener() {
@@ -178,12 +178,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             });
 
-            selectFile.setText("Browser...");
+            selectFile.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Browser")); //$NON-NLS-1$
 
-            labelUrl.setText("Url");
+            labelUrl.setText("Url"); //$NON-NLS-1$
             urlText.setEditable(false);
             urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", ""));
+            setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             urlText.setText(getConnectionURL());
             urlText.setEditable(false);
 
@@ -214,9 +214,9 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                     if (filename != null) {
                         fileText.setText(filename);
                     } else {
-                        fileText.setText("");
+                        fileText.setText(""); //$NON-NLS-1$
                     }
-                    String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", "");
+                    String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
                     if (log.isInfoEnabled()) {
                         log.info("the formated url is :" + url);
@@ -234,7 +234,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             boolean compositeEnable = !(dbType.getHostName() == null);
             Label label = new Label(parent, SWT.NONE);
-            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Hostname")); //$NON-NLS-1$
+            label.setText("");  //$NON-NLS-1$
             final Text hostNameText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             hostNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             if (compositeEnable) {
@@ -245,7 +245,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             compositeEnable = !(dbType.getPort() == null);
             label = new Label(parent, SWT.NONE);
-            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Port")); //$NON-NLS-1$
+            label.setText("");  //$NON-NLS-1$
             final Text portText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             portText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             if (compositeEnable) {
@@ -257,9 +257,9 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             compositeEnable = !(dbType.getDBName() == null);
             label = new Label(parent, SWT.NONE);
             if (dbType == SupportDBUrlType.ORACLEWITHSIDDEFAULTURL) {
-                label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.SID")); //$NON-NLS-1$
+                label.setText("");  //$NON-NLS-1$
             } else if (dbType == SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL) {
-                label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.serviceName")); //$NON-NLS-1$
+                label.setText("");  //$NON-NLS-1$
             } else {
                 label.setText("DBname"); //$NON-NLS-1$
             }
@@ -287,7 +287,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             compositeEnable = !(dbType.getDataSource() == null);
             label = new Label(parent, SWT.NONE);
-            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.dataSource")); //$NON-NLS-1$
+            label.setText("");  //$NON-NLS-1$
             final Text dataSourceText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             dataSourceText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             if (compositeEnable) {
@@ -297,7 +297,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             dataSourceText.setEnabled(compositeEnable);
 
             label = new Label(parent, SWT.NONE);
-            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.url")); //$NON-NLS-1$
+            label.setText("");  //$NON-NLS-1$
             urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             urlText.setEditable(false);
             urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

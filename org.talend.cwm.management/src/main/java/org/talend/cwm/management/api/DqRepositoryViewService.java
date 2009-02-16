@@ -61,6 +61,7 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.i18n.Messages;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -108,9 +109,9 @@ public final class DqRepositoryViewService {
         }
     };
 
-    private static final String CHARS_TO_REMOVE = "/";
+    private static final String CHARS_TO_REMOVE = "/"; //$NON-NLS-1$
 
-    private static final String REPLACEMENT_CHARS = "_";
+    private static final String REPLACEMENT_CHARS = "_"; //$NON-NLS-1$
 
     /**
      * Method "createTechnicalName" creates a technical name used for file system storage.
@@ -119,7 +120,7 @@ public final class DqRepositoryViewService {
      * @return the technical name created from the user given name.
      */
     static String createTechnicalName(final String functionalName) {
-        String techname = "no_name";
+        String techname = "no_name"; //$NON-NLS-1$
         if (functionalName == null) {
             log.warn("A functional name should not be null");
             return techname;
@@ -128,7 +129,7 @@ public final class DqRepositoryViewService {
         // for file names are removed
         try {
             // encode
-            String b64 = new String(Base64.encodeBase64(functionalName.getBytes()), "UTF-8");
+            String b64 = new String(Base64.encodeBase64(functionalName.getBytes()), "UTF-8"); //$NON-NLS-1$
             // replace special characters
             String date = SMPL_DATE_FMT.format(new Date(System.currentTimeMillis()));
             techname = AsciiUtils.replaceCharacters(b64, CHARS_TO_REMOVE, REPLACEMENT_CHARS) + date;
@@ -141,7 +142,7 @@ public final class DqRepositoryViewService {
         return techname;
     }
 
-    private static final SimpleDateFormat SMPL_DATE_FMT = new SimpleDateFormat("yyyyMMddhhmm");
+    private static final SimpleDateFormat SMPL_DATE_FMT = new SimpleDateFormat("yyyyMMddhhmm"); //$NON-NLS-1$
 
     /**
      * Method "listTdDataProviders" list all the connections in the given folder.
@@ -421,8 +422,8 @@ public final class DqRepositoryViewService {
 
         ReturnCode rc = new ReturnCode();
         if (resource == null) {
-            rc.setReturnCode("No resource in given Data provider " + dataProvider.getName()
-                    + ". Data provider must be saved first.", false);
+            rc.setReturnCode(Messages.getString("DqRepositoryViewService.DataProviderSaveFirst") //$NON-NLS-1$
+                    + dataProvider.getName(), false);
         } else {
             // add by hcheng
             // MOD scorreia 2009-01-09 password decryption is handled elsewhere
@@ -530,7 +531,7 @@ public final class DqRepositoryViewService {
 
     private static List<TdView> loadViews(TdDataProvider dataProvider, Catalog catalog, Schema schema, String viewPattern)
             throws TalendException {
-        assert schema != null : "could not load views. No schema given.";
+        assert schema != null : Messages.getString("DqRepositoryViewService.NoSchemaGiven"); //$NON-NLS-1$
         List<TdView> views = new ArrayList<TdView>();
         // PTODO scorreia check return code
         loadColumnSets(dataProvider, catalog, schema, viewPattern, RelationalPackage.TD_VIEW, views);
@@ -548,7 +549,7 @@ public final class DqRepositoryViewService {
      */
     private static List<TdView> loadViews(TdDataProvider dataProvider, Catalog catalog, String viewPattern)
             throws TalendException {
-        assert catalog != null : "could not load views. No catalog given.";
+        assert catalog != null : Messages.getString("DqRepositoryViewService.NoCatalogGiven"); //$NON-NLS-1$
         List<TdView> views = new ArrayList<TdView>();
         // PTODO scorreia check return code
         loadColumnSets(dataProvider, catalog, null, viewPattern, RelationalPackage.TD_VIEW, views);
@@ -675,11 +676,12 @@ public final class DqRepositoryViewService {
                 URI.createPlatformResourceURI(file.getFullPath().toString(), false), true);
         Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(r.getContents());
         if (tdDataProviders.isEmpty()) {
-            rc.setReturnCode("No Data Provider found in " + file.getFullPath().toString(), false);
+            rc.setReturnCode(
+                    Messages.getString("DqRepositoryViewService.NoDataProviderFound", file.getFullPath().toString()), false); //$NON-NLS-1$
         }
         if (tdDataProviders.size() > 1) {
-            rc.setReturnCode("Found too many DataProvider (" + tdDataProviders.size() + ") in file "
-                    + file.getFullPath().toString(), false);
+            rc.setReturnCode(Messages.getString("DqRepositoryViewService.FoundTooManyDataProvider", tdDataProviders.size(), //$NON-NLS-1$
+                    file.getFullPath().toString()), false);
         }
         TdDataProvider prov = tdDataProviders.iterator().next();
         rc.setObject(prov);

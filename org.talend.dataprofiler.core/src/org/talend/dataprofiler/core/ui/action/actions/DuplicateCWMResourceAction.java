@@ -21,6 +21,7 @@ import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
@@ -37,7 +38,7 @@ public class DuplicateCWMResourceAction extends Action {
     private IFile[] files;
 
     public DuplicateCWMResourceAction(IFile[] files) {
-        super("Duplicate ...");
+        super(DefaultMessagesImpl.getString("DuplicateCWMResourceAction.Duplicate")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EDIT_COPY));
         this.files = files;
     }
@@ -53,7 +54,7 @@ public class DuplicateCWMResourceAction extends Action {
                     ModelElement newObject = (ModelElement) EMFSharedResources.getInstance().copyEObject(oldObject);
 
                     IFile newFile = getNewFile(file);
-                    newObject.setName("copy of " + newObject.getName());
+                    newObject.setName("copy of " + newObject.getName()); //$NON-NLS-1$
                     // MOD 2009-01-06 mzhao copy analysis reference.
                     if (oldObject instanceof TdReport) {
                         List<Analysis> anaLs = ReportHelper.getAnalyses((TdReport) oldObject);
@@ -80,7 +81,7 @@ public class DuplicateCWMResourceAction extends Action {
         IFile newFile = null;
         int idx = 1;
         while (true) {
-            final String newFilename = "copy" + idx + file.getName();
+            final String newFilename = "copy" + idx + file.getName(); //$NON-NLS-1$
             newFile = ((IFolder) file.getParent()).getFile(newFilename);
             if (!newFile.exists()) {
                 break;

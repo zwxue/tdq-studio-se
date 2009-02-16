@@ -228,7 +228,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         actionBarComp.setLayout(gdLayout);
 
         ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns"));
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns")); //$NON-NLS-1$
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -240,7 +240,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         });
 
         ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns"));
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns")); //$NON-NLS-1$
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -302,8 +302,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             columnList.add(columnIndicator.getTdColumn());
         }
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(null, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.columnSelections"));
+                .getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl //$NON-NLS-1$
+                .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
@@ -313,8 +313,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
-        previewSection = createSection(form, parent, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space"));
+        previewSection = createSection(form, parent, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), true, //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
         previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
         Composite sectionClient = toolkit.createComposite(previewSection);
         sectionClient.setLayout(new GridLayout());
@@ -326,7 +326,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         actionBarComp.setLayout(gdLayout);
 
         ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns"));
+        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns")); //$NON-NLS-1$
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -344,7 +344,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         });
 
         ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns"));
+        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns")); //$NON-NLS-1$
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -440,7 +440,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview")
+                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview") //$NON-NLS-1$
                                 + column.getName(), IProgressMonitor.UNKNOWN);
 
                         Display.getDefault().syncExec(new Runnable() {
@@ -652,7 +652,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     chartComp.setMenu(menu);
 
                     MenuItem item = new MenuItem(menu, SWT.PUSH);
-                    item.setText("what's it?");
+                    item.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.what")); //$NON-NLS-1$
                     item.addSelectionListener(new SelectionAdapter() {
 
                         @Override
@@ -709,11 +709,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     protected ReturnCode canRun() {
         ColumnIndicator[] columnIndicators = treeViewer.getColumnIndicator();
         if (columnIndicators == null || columnIndicators.length == 0) {
-            return new ReturnCode("No any column assigned to this analysis", false);
+            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoColumnAssigned"), false); //$NON-NLS-1$
         }
         for (ColumnIndicator columnIndicator : columnIndicators) {
             if (columnIndicator.getIndicators().length == 0) {
-                return new ReturnCode("No any indicator assigned to this column", false);
+                return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.NoIndicatorAssigned"), false); //$NON-NLS-1$
             }
         }
 
@@ -730,12 +730,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         if (!analyzedColumns.isEmpty()) {
             if (!ColumnHelper.isFromSameConnection(analyzedColumns)) {
-                return new ReturnCode("Cannot create a column analysis on different connections", false);
+                return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AlreadyShown"), false); //$NON-NLS-1$
             }
 
-            if (!ColumnHelper.isFromSameTable(analyzedColumns) && !"".equals(dataFilterComp.getDataFilterString())) {
-                return new ReturnCode(
-                        "Cannot create an analysis with a data filter when columns do not belong to the same table", false);
+            if (!ColumnHelper.isFromSameTable(analyzedColumns) && !"".equals(dataFilterComp.getDataFilterString())) { //$NON-NLS-1$
+                return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.CannotCreatAnalysis"), false); //$NON-NLS-1$
             }
         }
 

@@ -19,22 +19,23 @@ import org.talend.dq.analysis.explore.PatternExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
 import org.talend.dq.analysis.explore.SummaryStastictisExplorer;
 import org.talend.dq.analysis.explore.TextStatisticsExplorer;
+import org.talend.i18n.Messages;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public enum EIndicatorChartType {
 
-    SIMPLE_STATISTICS("Simple Statistics", new SimpleStatisticsExplorer()),
-    TEXT_STATISTICS("Text Statistics", new TextStatisticsExplorer()),
-    FREQUENCE_STATISTICS("Frequency Statistics", new FrequencyStatisticsExplorer()),
-    LOW_FREQUENCE_STATISTICS("Low Frequency Statistics", new FrequencyStatisticsExplorer()),
-    PATTERN_FREQUENCE_STATISTICS("Pattern Frequency Statistics", new FunctionFrequencyStatExplorer()),
-    PATTERN_LOW_FREQUENCE_STATISTICS("Pattern Low Frequency Statistics", new FunctionFrequencyStatExplorer()),
-    SUMMARY_STATISTICS("Summary Statistics", new SummaryStastictisExplorer()),
-    PATTERN_MATCHING("Pattern Matching", new PatternExplorer()),
-    SQL_PATTERN_MATCHING("SQL Pattern Matching", new PatternExplorer()),
-    MODE_INDICATOR("Mode Indicator", null);
+    SIMPLE_STATISTICS(Messages.getString("EIndicatorChartType.SimpleStatistics"), new SimpleStatisticsExplorer()), //$NON-NLS-1$
+    TEXT_STATISTICS(Messages.getString("EIndicatorChartType.TextStatistics"), new TextStatisticsExplorer()), //$NON-NLS-1$
+    FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.FrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    LOW_FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.LowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    PATTERN_FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.PatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
+    PATTERN_LOW_FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.PatternLowFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
+    SUMMARY_STATISTICS(Messages.getString("EIndicatorChartType.SummaryStatistics"), new SummaryStastictisExplorer()), //$NON-NLS-1$
+    PATTERN_MATCHING(Messages.getString("EIndicatorChartType.PatternMatching"), new PatternExplorer()), //$NON-NLS-1$
+    SQL_PATTERN_MATCHING(Messages.getString("EIndicatorChartType.SQLPatternMatching"), new PatternExplorer()), //$NON-NLS-1$
+    MODE_INDICATOR(Messages.getString("EIndicatorChartType.ModeIndicator"), null); //$NON-NLS-1$
 
     private String literal;
 

@@ -69,7 +69,7 @@ public class FolderProvider {
             return this.folderResource.getFullPath().toString();
         }
 
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     public boolean isNull() {

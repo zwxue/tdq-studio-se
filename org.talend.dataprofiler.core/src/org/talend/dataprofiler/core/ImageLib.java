@@ -18,6 +18,7 @@ import java.net.URL;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * Store and lazy load Imaged. <br/>
@@ -102,11 +103,11 @@ public class ImageLib {
 
     public static final String DESC_SORT = "desc.gif"; //$NON-NLS-1$
 
-    public static final String SCHEMA = "schema.gif";
+    public static final String SCHEMA = "schema.gif"; //$NON-NLS-1$
 
-    public static final String TABLE = "TdTable.gif";
+    public static final String TABLE = "TdTable.gif"; //$NON-NLS-1$
 
-    public static final String VIEW = "view.gif";
+    public static final String VIEW = "view.gif"; //$NON-NLS-1$
 
     /** PK icon from SQL Explorer. */
     public static final String PK_DECORATE = "pk_decorate.gif"; //$NON-NLS-1$
@@ -123,7 +124,7 @@ public class ImageLib {
     public static final String EXPAND_ALL = "expandall.gif"; //$NON-NLS-1$
 
     /** Icon for primary key. */
-    public static final String PK_COLUMN = "pkColumn.gif";
+    public static final String PK_COLUMN = "pkColumn.gif"; //$NON-NLS-1$
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.
@@ -208,12 +209,12 @@ public class ImageLib {
      * DOC bzhou ImageLib class global comment. Detailled comment
      */
     public enum CWMImageEnum {
-        Connection("Connection", getImage(CONNECTION)),
-        Catalog("Catalog", getImage(CATALOG)),
-        Schema("Schema", getImage(SCHEMA)),
-        Table("Table", getImage(TABLE)),
-        View("View", getImage(VIEW)),
-        Column("Column", getImage(TD_COLUMN));
+        Connection(DefaultMessagesImpl.getString("ImageLib.connection"), getImage(CONNECTION)), //$NON-NLS-1$
+        Catalog(DefaultMessagesImpl.getString("ImageLib.catalog"), getImage(CATALOG)), //$NON-NLS-1$
+        Schema(DefaultMessagesImpl.getString("ImageLib.schema"), getImage(SCHEMA)), //$NON-NLS-1$
+        Table(DefaultMessagesImpl.getString("ImageLib.table"), getImage(TABLE)), //$NON-NLS-1$
+        View(DefaultMessagesImpl.getString("ImageLib.view"), getImage(VIEW)), //$NON-NLS-1$
+        Column(DefaultMessagesImpl.getString("ImageLib.column"), getImage(TD_COLUMN)); //$NON-NLS-1$
 
         private String label;
 

@@ -21,7 +21,7 @@ import orgomg.cwm.resource.relational.Column;
  */
 public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
-    public static final String COLUMNVIEWER_KEY = "COLUMNVIEWER_KEY";
+    public static final String COLUMNVIEWER_KEY = "COLUMNVIEWER_KEY"; //$NON-NLS-1$
 
     public abstract void dropColumns(List<Column> columns, int index);
 

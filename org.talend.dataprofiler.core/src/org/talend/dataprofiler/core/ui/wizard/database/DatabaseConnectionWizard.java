@@ -97,7 +97,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             // connectionParam.getDriverClassName());
             // CorePlugin.getDefault().getPreferenceStore().putValue("DRIVERURL", connectionParam.getJdbcUrl());
             LinkedList<String> driverFile = new LinkedList<String>();
-            for (String driverpath : connectionParam.getDriverPath().split(";")) {
+            for (String driverpath : connectionParam.getDriverPath().split(";")) { //$NON-NLS-1$
                 driverFile.add(driverpath);
             }
             String newDriverName = connectionParam.getJdbcUrl().substring(0, 10);
@@ -141,19 +141,19 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         }
         if (connectionParam.getDriverPath() != null) {
             StringBuilder driverPara = new StringBuilder();
-            if (CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") != null
-                    && !CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER").equals("")) {
-                driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{"
-                        + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + ","
-                        + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + ","
-                        + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};");
+            if (CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") != null //$NON-NLS-1$
+                    && !CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+                driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{" //$NON-NLS-1$ //$NON-NLS-2$
+                        + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
+                        + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
+                        + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
             } else {
-                driverPara.append("{"
-                        + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + ","
-                        + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + ","
-                        + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};");
+                driverPara.append("{" //$NON-NLS-1$
+                        + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
+                        + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
+                        + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString());
+            CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString()); //$NON-NLS-1$
         }
 
         return true;

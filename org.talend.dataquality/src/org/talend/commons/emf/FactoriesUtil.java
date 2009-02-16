@@ -49,32 +49,32 @@ public final class FactoriesUtil {
     /**
      * Extension used for the files in which the data provider objects are serialized.
      */
-    public static final String PROV = "prv";
+    public static final String PROV = "prv"; //$NON-NLS-1$
 
     /**
      * Extension used for the files in which the analysis objects are serialized.
      */
-    public static final String ANA = "ana";
+    public static final String ANA = "ana"; //$NON-NLS-1$
 
     /**
      * Extension used for the files in which the catalog or schema objects are serialized.
      */
-    public static final String CAT = "cat";
+    public static final String CAT = "cat"; //$NON-NLS-1$
 
     /**
      * Extension used for the files in which the reports are serialized.
      */
-    public static final String REP = "rep";
+    public static final String REP = "rep"; //$NON-NLS-1$
 
     /**
      * Extension used for the files in which the sql are serialized.
      */
-    public static final String SQL = "sql";
+    public static final String SQL = "sql"; //$NON-NLS-1$
 
     /**
      * Extension used for the files in which the pattern are serialized.
      */
-    public static final String PATTERN = "pattern";
+    public static final String PATTERN = "pattern"; //$NON-NLS-1$
 
     private FactoriesUtil() {
     }

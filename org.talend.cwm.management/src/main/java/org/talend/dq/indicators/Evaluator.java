@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.i18n.Messages;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -87,7 +88,7 @@ public abstract class Evaluator<T> {
         }
         try {
             if (!prepareIndicators()) {
-                rc.setReturnCode("Problem when preparing all indicators", false);
+                rc.setReturnCode(Messages.getString("Evaluator.Problem"), false); //$NON-NLS-1$
                 return rc;
             }
             rc = executeSqlQuery(sqlStatement);
@@ -95,7 +96,7 @@ public abstract class Evaluator<T> {
                 return rc;
             }
             if (!finalizeIndicators()) {
-                rc.setReturnCode("Problem when finalizing all indicators", false);
+                rc.setReturnCode(Messages.getString("Evaluator.ProblemFinalizeIndicators"), false); //$NON-NLS-1$
             }
             return rc;
         } catch (SQLException e) {
@@ -154,7 +155,7 @@ public abstract class Evaluator<T> {
                 if (!connRc.isOk()) {
                     // add the message to returned code
                     String message = rc.getMessage();
-                    message += " Connection problem:" + connRc.getMessage();
+                    message = Messages.getString("Evaluator.ConnectionProblem", message, connRc.getMessage()); //$NON-NLS-1$
                     rc.setMessage(message);
 
                 }
@@ -184,12 +185,12 @@ public abstract class Evaluator<T> {
         if (connection != null) {
             return ConnectionUtils.closeConnection(connection);
         }
-        return new ReturnCode("Attempting to close a null connection. ", false);
+        return new ReturnCode(Messages.getString("Evaluator.closeNullConnection"), false); //$NON-NLS-1$
     }
 
     protected ReturnCode checkConnection() {
         if (connection == null) {
-            return new ReturnCode("Attempting to open a null connection. Set the connection parameters first.", false);
+            return new ReturnCode(Messages.getString("Evaluator.openNullConnection"), false); //$NON-NLS-1$
         }
         return ConnectionUtils.isValid(connection);
     }

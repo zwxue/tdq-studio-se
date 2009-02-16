@@ -230,7 +230,7 @@ public final class TopChartFactory {
             final String next = iterator.next();
             createXYZDatasets.get(next).addSeriesToXYZDataset(dataset, next);
         }
-        String chartName = "Average of '" + numericColumn.getName() + "' versus count";
+        String chartName = DefaultMessagesImpl.getString("TopChartFactory.ChartName", numericColumn.getName()); //$NON-NLS-1$
         JFreeChart chart = TopChartFactory.createBubbleChart(chartName,
                 "average", "count", dataset, PlotOrientation.HORIZONTAL, true, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 true, true);
@@ -281,9 +281,9 @@ public final class TopChartFactory {
             final String next = iterator.next();
             createGannttDatasets.get(next).addSeriesToGanttDataset(ganttDataset, next);
         }
-        String chartAxies = "'" + dateColumn.getName() + "' Range per nominal values";
-        JFreeChart chart = ChartFactory.createGanttChart("", // chart title
-                "Categories", // domain axis label
+        String chartAxies = DefaultMessagesImpl.getString("TopChartFactory.chartAxies") + dateColumn.getName(); //$NON-NLS-1$
+        JFreeChart chart = ChartFactory.createGanttChart("", // chart title //$NON-NLS-1$
+                DefaultMessagesImpl.getString("TopChartFactory.Categories"), // domain axis label //$NON-NLS-1$
                 chartAxies, // range axis label
                 ganttDataset, // data
                 true, // include legend
@@ -345,14 +345,15 @@ public final class TopChartFactory {
      */
     public static JFreeChart createBoxAndWhiskerChart(String title, BoxAndWhiskerCategoryDataset dataset) {
 
-        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, title, "Value", dataset, false);
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, title, DefaultMessagesImpl
+                .getString("TopChartFactory.Value"), dataset, false); //$NON-NLS-1$
         CategoryPlot plot = chart.getCategoryPlot();
 
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setAutoRange(false);
 
-        double min = dataset.getMinRegularValue("0", "").doubleValue();
-        double max = dataset.getMaxRegularValue("0", "").doubleValue();
+        double min = dataset.getMinRegularValue("0", "").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
+        double max = dataset.getMaxRegularValue("0", "").doubleValue(); //$NON-NLS-1$ //$NON-NLS-2$
 
         double unit = (max - min) / 10;
         rangeAxis.setRange(min - unit, max + unit);

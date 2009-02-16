@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
@@ -42,7 +43,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
     public JFreeChart getChart() {
         // TODO Auto-generated method stub
-        return TopChartFactory.createBarChart("Freqyebct Statistics", getDataset());
+        return TopChartFactory.createBarChart(DefaultMessagesImpl.getString("FrequencyTypeStates.FreqyebctStatistics"), getDataset()); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -65,7 +66,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
                     String keyLabel = String.valueOf(freqExt.getKey());
-                    customerdataset.addValue(freqExt.getValue(), "", keyLabel);
+                    customerdataset.addValue(freqExt.getValue(), "", keyLabel); //$NON-NLS-1$
 
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setIndicator(unit.getIndicator());
@@ -100,7 +101,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { "value", "count", "%" });
+        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         entity.setFieldWidths(new Integer[] { 200, 150, 150 });
         return entity;
     }

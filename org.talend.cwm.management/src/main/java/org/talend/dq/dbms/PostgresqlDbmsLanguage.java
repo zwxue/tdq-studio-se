@@ -23,11 +23,11 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     private static final Class<PostgresqlDbmsLanguage> THAT = PostgresqlDbmsLanguage.class;
 
-    private static final String NUM = getProperties("POSTGRES_NUM", "1234567890");
+    private static final String NUM = getProperties("POSTGRES_NUM", "1234567890"); //$NON-NLS-1$ //$NON-NLS-2$
 
-    private static final String LOWER = getProperties("POSTGRES_LOWER", "abcdefghijklmnopqrstuvwxyz");
+    private static final String LOWER = getProperties("POSTGRES_LOWER", "abcdefghijklmnopqrstuvwxyz"); //$NON-NLS-1$ //$NON-NLS-2$
 
-    private static final String UPPER = getProperties("POSTGRES_UPPER", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    private static final String UPPER = getProperties("POSTGRES_UPPER", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private static String getProperties(String key, String defaultString) {
         return PropertiesLoader.getProperties(THAT, "characters.properties").getProperty(key, defaultString); //$NON-NLS-1$
@@ -70,8 +70,8 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getPatternFinderDefaultFunction(String expression) {
-        return "TRANSLATE(" + expression + " ,'" + NUM + UPPER + LOWER + "' " + ",RPAD('9'," + NUM.length()
-                + ",'9') || RPAD('A'," + UPPER.length() + ",'A')||RPAD('a'," + LOWER.length() + ",'a'))";
+        return "TRANSLATE(" + expression + " ,'" + NUM + UPPER + LOWER + "' " + ",RPAD('9'," + NUM.length() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                + ",'9') || RPAD('A'," + UPPER.length() + ",'A')||RPAD('a'," + LOWER.length() + ",'a'))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -81,7 +81,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getTopNQuery(String query, int n) {
-        return query + " LIMIT " + n;
+        return query + " LIMIT " + n; //$NON-NLS-1$
     }
 
     /*
@@ -92,7 +92,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     protected String extract(DateGrain dateGrain, String colName) {
-        return " CAST( EXTRACT(" + dateGrain + from() + colName + ") AS INTEGER )";
+        return " CAST( EXTRACT(" + dateGrain + from() + colName + ") AS INTEGER )"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -102,7 +102,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     protected String getSelectRegexp(String regexLikeExpression) {
-        return "SELECT " + regexLikeExpression + " AS OK" + EOS;
+        return "SELECT " + regexLikeExpression + " AS OK" + EOS; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -112,7 +112,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexLike(String element, String regex) {
-        return surroundWithSpaces(element + " ~ " + regex);
+        return surroundWithSpaces(element + " ~ " + regex); //$NON-NLS-1$
     }
 
     /*
@@ -122,7 +122,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(element + " !~ " + regex);
+        return surroundWithSpaces(element + " !~ " + regex); //$NON-NLS-1$
     }
 
     /*
@@ -132,7 +132,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getHardCodedQuoteIdentifier() {
-        return "\"";
+        return "\""; //$NON-NLS-1$
     }
 
     /*

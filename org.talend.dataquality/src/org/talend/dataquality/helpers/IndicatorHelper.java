@@ -60,8 +60,8 @@ public final class IndicatorHelper {
      * The available threshold types.
      */
     private static enum ThresholdType {
-        VALUE_THRESHOLD("Value Threshold"),
-        PERCENTAGE_THRESHOLD("Percentage Threshold");
+        VALUE_THRESHOLD("Value Threshold"), //$NON-NLS-1$
+        PERCENTAGE_THRESHOLD("Percentage Threshold"); //$NON-NLS-1$
 
         private String label;
 
@@ -95,7 +95,7 @@ public final class IndicatorHelper {
         assert parameters != null;
         Domain validDomain = parameters.getDataValidDomain();
         if (validDomain == null) {
-            validDomain = DomainHelper.createDomain("Data threshold");
+            validDomain = DomainHelper.createDomain("Data threshold"); //$NON-NLS-1$
             parameters.setDataValidDomain(validDomain);
         }
         // remove previous ranges
@@ -146,7 +146,7 @@ public final class IndicatorHelper {
         assert parameters != null;
         Domain validDomain = parameters.getIndicatorValidDomain();
         if (validDomain == null) {
-            validDomain = DomainHelper.createDomain("Indicator threshold");
+            validDomain = DomainHelper.createDomain("Indicator threshold"); //$NON-NLS-1$
             parameters.setIndicatorValidDomain(validDomain);
         }
         EList<RangeRestriction> ranges = validDomain.getRanges();
@@ -542,12 +542,12 @@ public final class IndicatorHelper {
 
     private static String createStandardNumber(Object input) {
         DecimalFormat format = (DecimalFormat) DecimalFormat.getNumberInstance();
-        format.applyPattern("0.00");
+        format.applyPattern("0.00"); //$NON-NLS-1$
 
         try {
             return format.format(new Double(input.toString()));
         } catch (Exception ne) {
-            return "";
+            return ""; //$NON-NLS-1$
         }
     }
 }

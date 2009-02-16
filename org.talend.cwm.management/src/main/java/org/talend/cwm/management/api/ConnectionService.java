@@ -24,6 +24,7 @@ import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -61,7 +62,7 @@ public final class ConnectionService {
         } catch (IllegalAccessException e) {
             rc.setReturnCode(e.getMessage(), false);
         } catch (ClassNotFoundException e) {
-            rc.setReturnCode("Driver not found: " + e.getMessage(), false);
+            rc.setReturnCode(Messages.getString("ConnectionService.DriverNotFound", e.getMessage()), false); //$NON-NLS-1$
         } finally {
             if (connection != null) {
                 ReturnCode closed = ConnectionUtils.closeConnection(connection);

@@ -20,7 +20,7 @@ import org.osgi.framework.Bundle;
  */
 public class PluginChecker {
 
-    private static final String TDQ_ID = "org.talend.dataprofiler.core.tdq";
+    private static final String TDQ_ID = "org.talend.dataprofiler.core.tdq"; //$NON-NLS-1$
 
     /**
      * Check if specific plug-in is loaded.

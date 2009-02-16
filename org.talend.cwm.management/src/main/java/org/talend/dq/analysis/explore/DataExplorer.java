@@ -24,6 +24,8 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.i18n.Messages;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
@@ -38,17 +40,17 @@ public abstract class DataExplorer implements IDataExplorer {
 
     private static Logger log = Logger.getLogger(PatternExplorer.class);
 
-    protected static final String MENU_VIEW_VALUES = "View values";
+    protected static final String MENU_VIEW_VALUES = Messages.getString("DataExplorer.ViewValues"); //$NON-NLS-1$
 
-    protected static final String MENU_VIEW_ROWS = "View rows";
+    protected static final String MENU_VIEW_ROWS = Messages.getString("DataExplorer.ViewRows"); //$NON-NLS-1$
 
-    protected static final String MENU_VIEW_INVALID_ROWS = "View invalid rows";
+    protected static final String MENU_VIEW_INVALID_ROWS = Messages.getString("DataExplorer.ViewInvalidRows"); //$NON-NLS-1$
 
-    private static final String SELECT_ALL = "SELECT * ";
+    private static final String SELECT_ALL = "SELECT * "; //$NON-NLS-1$
 
-    private static final String SELECT = "SELECT ";
+    private static final String SELECT = Messages.getString("DataExplorer.4"); //$NON-NLS-1$
 
-    private static final String SELECT_DISTINCT = "SELECT DISTINCT ";
+    private static final String SELECT_DISTINCT = "SELECT DISTINCT "; //$NON-NLS-1$
 
     protected Analysis analysis;
 
@@ -154,8 +156,8 @@ public abstract class DataExplorer implements IDataExplorer {
         String fromClause = getFromClause();
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         String table = getFullyQualifiedTableName(column);
-        return " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in()
-                + inBrackets("SELECT " + columnName + fromClause);
+        return " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in() //$NON-NLS-1$
+                + inBrackets("SELECT " + columnName + fromClause); //$NON-NLS-1$
     }
 
     protected String getDistinctValuesStatement(String columnName) {
@@ -171,7 +173,7 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     protected String getDataFilterClause() {
         String where = AnalysisHelper.getStringDataFilter(analysis);
-        return where != null ? where : "";
+        return where != null ? where : ""; //$NON-NLS-1$
     }
 
     /**
@@ -183,7 +185,7 @@ public abstract class DataExplorer implements IDataExplorer {
     protected String andDataFilterClause() {
         String dataFilter = getDataFilterClause();
         if (dataFilter.length() == 0) {
-            return "";
+            return ""; //$NON-NLS-1$
         }
         return dbmsLanguage.and() + inBrackets(dataFilter);
     }
@@ -195,7 +197,7 @@ public abstract class DataExplorer implements IDataExplorer {
      * @return the given clause surrounded by parenthesis.
      */
     public String inBrackets(String clause) {
-        return " (" + clause + ") ";
+        return " (" + clause + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 }

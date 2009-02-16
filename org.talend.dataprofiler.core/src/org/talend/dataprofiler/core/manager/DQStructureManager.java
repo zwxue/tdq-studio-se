@@ -56,7 +56,7 @@ public final class DQStructureManager {
 
     private static final String PATTERN_PATH = "/patterns"; //$NON-NLS-1$
 
-    private static final String SQL_LIKE_PATH = "/sql_like";
+    private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
     public static final String REPORTS = DefaultMessagesImpl.getString("DQStructureManager.reports"); //$NON-NLS-1$
 

@@ -32,6 +32,7 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.i18n.Messages;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -40,6 +41,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  * Helper class for Domain object.
  */
 public class DomainHelper {
+
     public static final String SQL_PATTERN_FOLDER = "SQL Patterns"; //$NON-NLS-1$
 
     public static final String PATTERN_FOLDER = "Patterns"; //$NON-NLS-1$
@@ -48,9 +50,9 @@ public class DomainHelper {
      * The available pattern types.
      */
     static enum PatternType {
-        TABLE_PATTERN("Table Pattern"),
-        VIEW_PATTERN("View Pattern"),
-        EXPECTED_VALUE("Expected value");
+        TABLE_PATTERN("Table Pattern"), //$NON-NLS-1$
+        VIEW_PATTERN("View Pattern"), //$NON-NLS-1$
+        EXPECTED_VALUE("Expected value"); //$NON-NLS-1$
 
         final String label;
 
@@ -63,8 +65,8 @@ public class DomainHelper {
      * The available domain types.
      */
     static enum DomainType {
-        ANALYSIS_DATA_FILTER("Analysis Data Filter"),
-        INDICATOR_EXPECTED_VALUE("Indicator expected value");
+        ANALYSIS_DATA_FILTER("Analysis Data Filter"), //$NON-NLS-1$
+        INDICATOR_EXPECTED_VALUE("Indicator expected value"); //$NON-NLS-1$
 
         String label;
 
@@ -97,7 +99,7 @@ public class DomainHelper {
         EList<PatternComponent> components = pattern.getComponents();
         for (PatternComponent patternComponent : components) {
             if (patternComponent != null) {
-                Expression expression = getExpression(patternComponent, "SQL");
+                Expression expression = getExpression(patternComponent, "SQL"); //$NON-NLS-1$
                 if (expression != null) {
                     return expression.getBody();
                 }
@@ -242,11 +244,11 @@ public class DomainHelper {
     public static double getMinBinValue(Domain domain) {
         EList<RangeRestriction> ranges = domain.getRanges();
         if (ranges.isEmpty()) {
-            throw new IllegalArgumentException("No range contained in given domain (name= " + domain.getName() + ")");
+            throw new IllegalArgumentException(Messages.getString("DomainHelper.NoRangeMin", domain.getName())); //$NON-NLS-1$
         }
         RangeRestriction r1 = ranges.get(0);
         if (r1 == null) {
-            throw new IllegalArgumentException("First range is null in given domain (name= " + domain.getName() + ")");
+            throw new IllegalArgumentException(Messages.getString("DomainHelper.FirstRangeMin", domain.getName())); //$NON-NLS-1$
         }
         return getRealValue(r1.getLowerValue());
     }
@@ -261,12 +263,12 @@ public class DomainHelper {
     public static double getMaxBinValue(Domain domain) {
         EList<RangeRestriction> ranges = domain.getRanges();
         if (ranges.isEmpty()) {
-            throw new IllegalArgumentException("No range contained in given domain (name= " + domain.getName() + ")");
+            throw new IllegalArgumentException(Messages.getString("DomainHelper.NoRangeMax", domain.getName())); //$NON-NLS-1$
         }
         int lastIdx = ranges.size() - 1;
         RangeRestriction r1 = ranges.get(lastIdx);
         if (r1 == null) {
-            throw new IllegalArgumentException("Last range is null in given domain (name= " + domain.getName() + ")");
+            throw new IllegalArgumentException(Messages.getString("DomainHelper.LastRangeMax", domain.getName())); //$NON-NLS-1$
         }
         return getRealValue(r1.getUpperValue());
     }
@@ -282,7 +284,7 @@ public class DomainHelper {
     public static double getRealValue(LiteralValue object) {
         RealNumberValue upperValue = DataqualitySwitchHelper.REAL_NB_VALUE_SWITCH.doSwitch(object);
         if (upperValue == null) {
-            throw new IllegalArgumentException(object + " does not contain real value.");
+            throw new IllegalArgumentException(Messages.getString("DomainHelper.NotContainRealValue", object)); //$NON-NLS-1$
         }
         return upperValue.getValue();
     }

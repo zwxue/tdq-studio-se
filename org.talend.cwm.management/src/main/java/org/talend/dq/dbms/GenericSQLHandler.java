@@ -17,27 +17,27 @@ package org.talend.dq.dbms;
  */
 public class GenericSQLHandler {
 
-    private static final String AND_WHERE_CLAUSE = "<%=__AND_WHERE_CLAUSE__%>";
+    private static final String AND_WHERE_CLAUSE = "<%=__AND_WHERE_CLAUSE__%>"; //$NON-NLS-1$
 
-    private static final String WHERE_CLAUSE = "<%=__WHERE_CLAUSE__%>";
+    private static final String WHERE_CLAUSE = "<%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
 
-    private static final String TABLE_NAME = "<%=__TABLE_NAME__%>";
+    private static final String TABLE_NAME = "<%=__TABLE_NAME__%>"; //$NON-NLS-1$
 
-    private static final String TABLE_NAME2 = "<%=__TABLE_NAME_2__%>";
+    private static final String TABLE_NAME2 = "<%=__TABLE_NAME_2__%>"; //$NON-NLS-1$
 
-    private static final String COLUMN_NAMES = "<%=__COLUMN_NAMES__%>";
+    private static final String COLUMN_NAMES = "<%=__COLUMN_NAMES__%>"; //$NON-NLS-1$
 
-    private static final String GROUP_BY_ALIAS = "<%=__GROUP_BY_ALIAS__%>";
+    private static final String GROUP_BY_ALIAS = "<%=__GROUP_BY_ALIAS__%>"; //$NON-NLS-1$
 
-    private static final String LIMIT_ROW = "<%=__LIMIT_ROW__%>";
+    private static final String LIMIT_ROW = "<%=__LIMIT_ROW__%>"; //$NON-NLS-1$
 
-    private static final String PATTERN_EXPRESSION = "<%=__PATTERN_EXPR__%>";
+    private static final String PATTERN_EXPRESSION = "<%=__PATTERN_EXPR__%>"; //$NON-NLS-1$
 
-    private static final String JOIN_CLAUSE = "<%=__JOIN_CLAUSE__%>";
+    private static final String JOIN_CLAUSE = "<%=__JOIN_CLAUSE__%>"; //$NON-NLS-1$
 
-    private static final String LIMIT_OFFSET = "<%=__LIMIT_OFFSET__%>";
+    private static final String LIMIT_OFFSET = "<%=__LIMIT_OFFSET__%>"; //$NON-NLS-1$
 
-    private static final String LIMIT_ROW_PLUS_OFFSET = "<%=__LIMIT_ROW_PLUS_OFFSET__%>";
+    private static final String LIMIT_ROW_PLUS_OFFSET = "<%=__LIMIT_ROW_PLUS_OFFSET__%>"; //$NON-NLS-1$
     
     private final String originalSQL;
 
@@ -143,7 +143,7 @@ public class GenericSQLHandler {
      * @return the full generic statement
      */
     public String createGenericSqlWithRegexFunction(String function) {
-        return "SELECT COUNT(CASE WHEN " + function + "(" + COLUMN_NAMES + "," + PATTERN_EXPRESSION
-                + ") THEN 1 END), COUNT(*) FROM " + TABLE_NAME + " " + WHERE_CLAUSE;
+        return "SELECT COUNT(CASE WHEN " + function + "(" + COLUMN_NAMES + "," + PATTERN_EXPRESSION //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                + ") THEN 1 END), COUNT(*) FROM " + TABLE_NAME + " " + WHERE_CLAUSE; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

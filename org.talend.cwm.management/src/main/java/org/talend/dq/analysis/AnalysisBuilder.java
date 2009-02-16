@@ -44,7 +44,7 @@ public class AnalysisBuilder {
     /**
      * 
      */
-    private static final String ANALYSIS_NOT_INITIALIZED = "Analysis has not been initialized. Call initializeAnalysis() method before.";
+    private static final String ANALYSIS_NOT_INITIALIZED = "Analysis has not been initialized. Call initializeAnalysis() method before."; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(AnalysisBuilder.class);
 

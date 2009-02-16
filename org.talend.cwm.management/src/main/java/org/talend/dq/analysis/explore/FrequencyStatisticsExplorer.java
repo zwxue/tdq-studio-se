@@ -32,12 +32,12 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class FrequencyStatisticsExplorer extends DataExplorer {
 
-    private static final String REGEX = "SELECT (.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM";
+    private static final String REGEX = "SELECT (.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
     @SuppressWarnings("fallthrough")
     protected String getFreqRowsStatement() {
 
-        String clause = "";
+        String clause = ""; //$NON-NLS-1$
 
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         int javaType = column.getJavaType();
@@ -74,7 +74,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 break;
             case NONE:
             default:
-                clause = getDefaultQuotedStatement("'");
+                clause = getDefaultQuotedStatement("'"); //$NON-NLS-1$
                 break;
             }
 
@@ -96,10 +96,10 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 }
             }
         } else {
-            clause = getDefaultQuotedStatement(""); // no quote here
+            clause = getDefaultQuotedStatement(""); // no quote here //$NON-NLS-1$
         }
 
-        return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause)
+        return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$
                 + andDataFilterClause();
     }
 
@@ -194,7 +194,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      * @return
      */
     private String concatWhereClause(String clause, String whereclause) {
-        String and = (clause.length() == 0) ? "" : dbmsLanguage.and();
+        String and = (clause.length() == 0) ? "" : dbmsLanguage.and(); //$NON-NLS-1$
         clause = clause + and + whereclause;
         return clause;
     }
@@ -223,7 +223,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         String function = getFunction();
 
         String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : function
-                + dbmsLanguage.equal() + "'" + entity.getLabel() + "'";
+                + dbmsLanguage.equal() + "'" + entity.getLabel() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
         return clause;
     }
     

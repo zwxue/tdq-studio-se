@@ -103,7 +103,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     protected void fillMenuBar(IMenuManager menuBar) {
         this.beforefillMenuBar();
-        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
+        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE); //$NON-NLS-1$
         MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW); //$NON-NLS-1$
         MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP); //$NON-NLS-1$
 

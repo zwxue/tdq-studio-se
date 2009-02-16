@@ -178,7 +178,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             protected String getItemTooltipText(TreeItem item) {
                 String expCont = isExpressionNull(item);
                 if (expCont == null) {
-                    return DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.queryNotGen");
+                    return DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.queryNotGen"); //$NON-NLS-1$
                 }
                 return expCont;
             }
@@ -680,7 +680,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 createIndicatorParameters(indicatorItem, indicatorUnit);
             }
         } else {
-            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"),
+            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
@@ -1140,7 +1140,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
                 Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
                 if (expression == null) {
-                    MessageDialogWithToggle.openWarning(null, "Warning", "No query defined on this indicator.");
+                    MessageDialogWithToggle.openWarning(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.Warn"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.NoQueryDefined")); //$NON-NLS-1$ //$NON-NLS-2$
                     return;
                 }
                 // Open perspective of Data Explorer.

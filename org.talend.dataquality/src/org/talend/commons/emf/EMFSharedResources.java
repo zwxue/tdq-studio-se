@@ -60,7 +60,7 @@ public final class EMFSharedResources {
      * @return
      */
     private Resource initSoftwareDeploymentResource() {
-        URI sUri = URI.createPlatformResourceURI("/Libraries/.softwaresystem." + SoftwaredeploymentPackage.eNAME, false);
+        URI sUri = URI.createPlatformResourceURI("/Libraries/.softwaresystem." + SoftwaredeploymentPackage.eNAME, false); //$NON-NLS-1$
         Resource resource = resourceSet.getResource(sUri, false);
         if (resource != null) {
             return resource;

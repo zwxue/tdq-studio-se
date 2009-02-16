@@ -80,7 +80,7 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Label nameLab = new Label(composite, SWT.NONE);
-        nameLab.setText(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.field.name"));
+        nameLab.setText(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.field.name")); //$NON-NLS-1$
 
         functionName = new Text(composite, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(functionName);
@@ -100,7 +100,7 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
         });
 
         Label typeLab = new Label(composite, SWT.NONE);
-        typeLab.setText(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.field.language"));
+        typeLab.setText(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.field.language")); //$NON-NLS-1$
 
         languageType = new CCombo(composite, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(languageType);
@@ -124,8 +124,8 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
 
         });
 
-        setTitle(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.title"));
-        setMessage(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.message"));
+        setTitle(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.title")); //$NON-NLS-1$
+        setMessage(DefaultMessagesImpl.getString("UDFPreferencePage.NewDialog.message")); //$NON-NLS-1$
 
         return composite;
     }
@@ -165,14 +165,14 @@ public class NewUDFFunctionDialog extends TitleAreaDialog {
         String function = functionName.getText();
         String language = languageType.getText();
 
-        if ("".equals(function.trim())) {
-            setErrorMessage("Funtion can't be empty!");
+        if ("".equals(function.trim())) { //$NON-NLS-1$
+            setErrorMessage(DefaultMessagesImpl.getString("NewUDFFunctionDialog.FuntionNotEmpty")); //$NON-NLS-1$
             setCanFinished(false);
             return;
         }
 
-        if ("".equals(language)) {
-            setErrorMessage("Language can't be empty!");
+        if ("".equals(language)) { //$NON-NLS-1$
+            setErrorMessage(DefaultMessagesImpl.getString("NewUDFFunctionDialog.LanguageNotEmpty")); //$NON-NLS-1$
             setCanFinished(false);
             return;
         }

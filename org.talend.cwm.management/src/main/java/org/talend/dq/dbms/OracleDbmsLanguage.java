@@ -24,11 +24,11 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     private static final Class<OracleDbmsLanguage> THAT = OracleDbmsLanguage.class;
 
-    private static final String NUM = getProperties("ORACLE_NUM", "1234567890");
+    private static final String NUM = getProperties("ORACLE_NUM", "1234567890"); //$NON-NLS-1$ //$NON-NLS-2$
 
-    private static final String LOWER = getProperties("ORACLE_LOWER", "abcdefghijklmnopqrstuvwxyz");
+    private static final String LOWER = getProperties("ORACLE_LOWER", "abcdefghijklmnopqrstuvwxyz"); //$NON-NLS-1$ //$NON-NLS-2$
 
-    private static final String UPPER = getProperties("ORACLE_UPPER", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    private static final String UPPER = getProperties("ORACLE_UPPER", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private static String getProperties(String key, String defaultString) {
         return PropertiesLoader.getProperties(THAT, "characters.properties").getProperty(key, defaultString); //$NON-NLS-1$
@@ -72,8 +72,8 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getPatternFinderDefaultFunction(String expression) {
-        return "TRANSLATE(" + expression + " ,'" + NUM + UPPER + LOWER + "' " + ",RPAD('9'," + NUM.length()
-                + ",'9') || RPAD('A'," + UPPER.length() + ",'A')||RPAD('a'," + LOWER.length() + ",'a'))";
+        return "TRANSLATE(" + expression + " ,'" + NUM + UPPER + LOWER + "' " + ",RPAD('9'," + NUM.length() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                + ",'9') || RPAD('A'," + UPPER.length() + ",'A')||RPAD('a'," + LOWER.length() + ",'a'))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -83,10 +83,10 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String replaceNullsWithString(String colName, String replacement) {
-        if ("''".equals(replacement)) {
+        if ("''".equals(replacement)) { //$NON-NLS-1$
             return colName;
         }
-        return " NVL(" + colName + "," + replacement + ")";
+        return " NVL(" + colName + "," + replacement + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -107,7 +107,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getTopNQuery(String query, int n) {
-        return "SELECT * FROM (" + query + ") WHERE ROWNUM <= " + n;
+        return "SELECT * FROM (" + query + ") WHERE ROWNUM <= " + n; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -118,7 +118,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     @Override
     public String countRowInSubquery(String subquery, String alias) {
         // does not support "AS"
-        return " SELECT COUNT(*) FROM (" + subquery + ") " + alias;
+        return " SELECT COUNT(*) FROM (" + subquery + ") " + alias; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -130,7 +130,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     @Override
     public String sumRowInSubquery(String colToSum, String subquery, String alias) {
         // does not support "AS"
-        return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") " + alias;
+        return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") " + alias; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -141,18 +141,18 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     protected String extract(DateGrain dateGrain, String colName) {
-        String toNumberToChar = "TO_NUMBER(TO_CHAR(";
+        String toNumberToChar = "TO_NUMBER(TO_CHAR("; //$NON-NLS-1$
         switch (dateGrain.getValue()) {
         case DateGrain.DAY_VALUE:
-            return toNumberToChar + colName + ", 'DD'))";
+            return toNumberToChar + colName + ", 'DD'))"; //$NON-NLS-1$
         case DateGrain.WEEK_VALUE:
-            return toNumberToChar + colName + ", 'IW'))";
+            return toNumberToChar + colName + ", 'IW'))"; //$NON-NLS-1$
         case DateGrain.MONTH_VALUE:
-            return toNumberToChar + colName + ",'MM'))";
+            return toNumberToChar + colName + ",'MM'))"; //$NON-NLS-1$
         case DateGrain.QUARTER_VALUE:
-            return toNumberToChar + colName + ",'Q'))";
+            return toNumberToChar + colName + ",'Q'))"; //$NON-NLS-1$
         case DateGrain.YEAR_VALUE:
-            return toNumberToChar + colName + ", 'YYYY'))";
+            return toNumberToChar + colName + ", 'YYYY'))"; //$NON-NLS-1$
         default:
             return super.extract(dateGrain, colName);
         }
@@ -165,7 +165,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexLike(String element, String regex) {
-        return surroundWithSpaces("REGEXP_LIKE(" + element + " , " + regex + " )");
+        return surroundWithSpaces("REGEXP_LIKE(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -175,7 +175,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces("NOT REGEXP_LIKE(" + element + " , " + regex + " )");
+        return surroundWithSpaces("NOT REGEXP_LIKE(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -185,7 +185,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getHardCodedQuoteIdentifier() {
-        return "\"";
+        return "\""; //$NON-NLS-1$
     }
 
     /*
@@ -195,7 +195,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getSelectRemarkOnTable(String tableName) {
-        return "SELECT COMMENTS FROM USER_TAB_COMMENTS WHERE TABLE_NAME='" + tableName + "'";
+        return "SELECT COMMENTS FROM USER_TAB_COMMENTS WHERE TABLE_NAME='" + tableName + "'"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -205,7 +205,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getSelectRemarkOnColumn(String columnName) {
-        return "SELECT COMMENTS FROM USER_COL_COMMENTS WHERE COLUMN_NAME='" + columnName + "'";
+        return "SELECT COMMENTS FROM USER_COL_COMMENTS WHERE COLUMN_NAME='" + columnName + "'"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -215,7 +215,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String charLength(String columnName) {
-        return " LENGTH(" + columnName + ") ";
+        return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override

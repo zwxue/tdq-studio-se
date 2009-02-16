@@ -93,7 +93,7 @@ public enum SupportDBUrlType {
                        "localhost", //$NON-NLS-1$
                        "1533", //$NON-NLS-1$
                        "dbname", //$NON-NLS-1$
-                       ";",
+                       ";", //$NON-NLS-1$
                        "com.informix.jdbc.IfxDriver", //$NON-NLS-1$
                        "myserver", "Informix"), //$NON-NLS-1$ //$NON-NLS-2$
     FIREBIRDDEFAULTURL("FireBird", //$NON-NLS-1$
@@ -104,10 +104,10 @@ public enum SupportDBUrlType {
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$
                        null,
                        "FireBird"), //$NON-NLS-1$
-    INGRESDEFAULTURL("Ingres", "localhost", "II7", "dbname", null, "com.ingres.jdbc.IngresDriver", null, "Ingres"),
-    SQLITE3DEFAULTURL("SQLite3", "localhost", "", "dbname", null, "org.sqlite.JDBC", null, "SQLite"),
-    GENERICJDBCDEFAULTURL("Generic JDBC", "", "", "", null, "", null, "Generic JDBC"),
-    TERADATADEFAULTURL("Teradata", "localhost", null, "dbname", null, "com.ncr.teradata.TeraDriver", null, "Teradata");
+    INGRESDEFAULTURL("Ingres", "localhost", "II7", "dbname", null, "com.ingres.jdbc.IngresDriver", null, "Ingres"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+    SQLITE3DEFAULTURL("SQLite3", "localhost", "", "dbname", null, "org.sqlite.JDBC", null, "SQLite"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+    GENERICJDBCDEFAULTURL("Generic JDBC", "", "", "", null, "", null, "Generic JDBC"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+    TERADATADEFAULTURL("Teradata", "localhost", null, "dbname", null, "com.ncr.teradata.TeraDriver", null, "Teradata"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     private final String dbKey;
 

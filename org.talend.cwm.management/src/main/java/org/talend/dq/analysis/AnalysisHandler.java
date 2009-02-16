@@ -128,12 +128,12 @@ public class AnalysisHandler {
 
             return format.format(resultMetadata.getExecutionDate());
         } else {
-            return "";
+            return ""; //$NON-NLS-1$
         }
     }
 
     public String getExecuteDuration() {
-        return resultMetadata.getExecutionDuration() / 1000.0d + " s";
+        return resultMetadata.getExecutionDuration() / 1000.0d + " s"; //$NON-NLS-1$
     }
 
     public String getExecuteNumber() {
@@ -144,7 +144,7 @@ public class AnalysisHandler {
         if (resultMetadata != null) {
             return String.valueOf(resultMetadata.getLastExecutionNumberOk());
         } else {
-            return "0";
+            return "0"; //$NON-NLS-1$
         }
     }
 
@@ -153,13 +153,13 @@ public class AnalysisHandler {
     }
 
     public String getConnectionName() {
-        return analysis.getContext().getConnection() == null ? "" : analysis.getContext().getConnection().getName();
+        return analysis.getContext().getConnection() == null ? "" : analysis.getContext().getConnection().getName(); //$NON-NLS-1$
     }
 
     public String getTableNames() {
-        String str = "";
+        String str = ""; //$NON-NLS-1$
         for (String aStr : getColumnSetOwnerNames()) {
-            str = str + aStr + " ";
+            str = str + aStr + " "; //$NON-NLS-1$
         }
 
         return str;
@@ -171,11 +171,11 @@ public class AnalysisHandler {
      * @return the schema names concatenated or the empty string (never null)
      */
     public String getSchemaNames() {
-        String str = "";
+        String str = ""; //$NON-NLS-1$
         for (ColumnSet columnSet : getColumnSets()) {
             Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
             if (schema != null && RelationalPackage.eINSTANCE.getTdSchema().equals(schema.eClass())) {
-                str = str + schema.getName() + " ";
+                str = str + schema.getName() + " "; //$NON-NLS-1$
             }
         }
         return str;
@@ -187,18 +187,18 @@ public class AnalysisHandler {
      * @return the catalog names concatenated or the empty string (never null)
      */
     public String getCatalogNames() {
-        String str = "";
+        String str = ""; //$NON-NLS-1$
         for (ColumnSet columnSet : getColumnSets()) {
             Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
             if (schema == null) {
                 continue;
             }
             if (RelationalPackage.eINSTANCE.getTdCatalog().equals(schema.eClass())) {
-                str = str + schema.getName() + " ";
+                str = str + schema.getName() + " "; //$NON-NLS-1$
             } else {
                 Package catalog = ColumnSetHelper.getParentCatalogOrSchema(schema);
                 if (catalog != null) {
-                    str = str + catalog.getName() + " ";
+                    str = str + catalog.getName() + " "; //$NON-NLS-1$
                 }
             }
         }

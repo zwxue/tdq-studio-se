@@ -87,7 +87,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
      */
     public void setCompletePaint(Paint paint) {
         if (paint == null) {
-            throw new IllegalArgumentException("Null 'paint' argument.");
+            throw new IllegalArgumentException("Null 'paint' argument."); //$NON-NLS-1$
         }
         this.completePaint = paint;
         notifyListeners(new RendererChangeEvent(this));
@@ -110,7 +110,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
      */
     public void setIncompletePaint(Paint paint) {
         if (paint == null) {
-            throw new IllegalArgumentException("Null 'paint' argument.");
+            throw new IllegalArgumentException("Null 'paint' argument."); //$NON-NLS-1$
         }
         this.incompletePaint = paint;
         notifyListeners(new RendererChangeEvent(this));

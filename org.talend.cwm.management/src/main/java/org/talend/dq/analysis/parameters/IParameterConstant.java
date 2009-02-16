@@ -23,16 +23,16 @@ package org.talend.dq.analysis.parameters;
 public interface IParameterConstant {
 
     //metadata parameter
-    public static final String ANALYSIS_NAME = "AnalysisName";
+    public static final String ANALYSIS_NAME = "AnalysisName"; //$NON-NLS-1$
     
-    public static final String ANALYSIS_PURPOSE = "AnalysisPurpose";
+    public static final String ANALYSIS_PURPOSE = "AnalysisPurpose"; //$NON-NLS-1$
     
-    public static final String ANALYSIS_DESCRIPTION = "AnalysisDescription";
+    public static final String ANALYSIS_DESCRIPTION = "AnalysisDescription"; //$NON-NLS-1$
     
-    public static final String ANALYSIS_AUTHOR = "ZQIN";
+    public static final String ANALYSIS_AUTHOR = "ZQIN"; //$NON-NLS-1$
     
-    public static final String ANALYSIS_VERSION = "0.1";
+    public static final String ANALYSIS_VERSION = "0.1"; //$NON-NLS-1$
     
-    public static final String ANALYSIS_STATUS = "Status";
+    public static final String ANALYSIS_STATUS = "Status"; //$NON-NLS-1$
     
 }

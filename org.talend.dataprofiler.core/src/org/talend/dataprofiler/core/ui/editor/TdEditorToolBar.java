@@ -102,7 +102,7 @@ public class TdEditorToolBar {
     private class CollapseSectionAction extends Action {
 
         public CollapseSectionAction(TdEditorBarWrapper editorBarWrap) {
-            super(DefaultMessagesImpl.getString("ExpandAll"));
+            super(DefaultMessagesImpl.getString("ExpandAll")); //$NON-NLS-1$
             this.setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPAND_ALL));
         }
 
@@ -129,7 +129,7 @@ public class TdEditorToolBar {
     private class ExpandSectionAction extends Action {
 
         public ExpandSectionAction(TdEditorBarWrapper editorBarWrap) {
-            super(DefaultMessagesImpl.getString("CollapseAll"));
+            super(DefaultMessagesImpl.getString("CollapseAll")); //$NON-NLS-1$
             this.setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.COLLAPSE_ALL));
         }
 

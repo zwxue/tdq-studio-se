@@ -331,7 +331,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                             if ((currentIndicator instanceof PatternFreqIndicator || currentIndicator instanceof PatternLowFreqIndicator)
                                     && createPatternFlag == 0) {
                                 MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                itemCreatePatt.setText("Generate Regular Pattern");
+                                itemCreatePatt.setText(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.GenerateRegularPattern")); //$NON-NLS-1$
                                 final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
                                         .createDbmsLanguage(analysis));
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {

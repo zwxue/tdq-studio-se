@@ -23,6 +23,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -88,7 +89,6 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         rc = new TypedReturnCode<TdDataProvider>();
         Resource resource = getFileResource(file);
 
-        // add by hcheng
         // MOD scorreia 2009-01-09 password decryption is handled elsewhere
         // PasswordHelper.decryptResource(resource);
 
@@ -117,11 +117,12 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     private void retireTdProvider(IFile file, TypedReturnCode<TdDataProvider> rc, Resource resource) {
         Collection<TdDataProvider> tdDataProviders = DataProviderHelper.getTdDataProviders(resource.getContents());
         if (tdDataProviders.isEmpty()) {
-            rc.setReturnCode("No Data Provider found in " + file.getLocation().toFile().getAbsolutePath(), false);
+            rc.setReturnCode(Messages.getString(
+                    "PrvResourceFileHelper.NoDataProviderFound", file.getLocation().toFile().getAbsolutePath()), false); //$NON-NLS-1$
         }
         if (tdDataProviders.size() > 1) {
-            rc.setReturnCode("Found too many DataProvider (" + tdDataProviders.size() + ") in file "
-                    + file.getLocation().toFile().getAbsolutePath(), false);
+            rc.setReturnCode(Messages.getString("PrvResourceFileHelper.FoundTooManyDataProvider", tdDataProviders.size(), //$NON-NLS-1$
+                    file.getLocation().toFile().getAbsolutePath()), false);
         }
         TdDataProvider prov = tdDataProviders.iterator().next();
         rc.setObject(prov);

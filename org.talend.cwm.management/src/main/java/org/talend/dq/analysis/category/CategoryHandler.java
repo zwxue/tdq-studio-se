@@ -40,7 +40,7 @@ public final class CategoryHandler {
 
     private static AnalysisCategories loadFromFile() {
         EMFUtil util = new EMFUtil();
-        String pathName = "/org.talend.cwm.management/My.category";
+        String pathName = "/org.talend.cwm.management/My.category"; //$NON-NLS-1$
         URI uri = URI.createPlatformPluginURI(pathName, false);
         Resource catFile = null;
         try {
@@ -50,7 +50,7 @@ public final class CategoryHandler {
         }
         if (catFile == null) {
             // try to load from a local file
-            catFile = util.getResourceSet().getResource(URI.createFileURI(".." + File.separator + pathName), true);
+            catFile = util.getResourceSet().getResource(URI.createFileURI(".." + File.separator + pathName), true); //$NON-NLS-1$
         }
         if (catFile == null) {
             log.error("No resource found at " + pathName + " URI= " + uri);

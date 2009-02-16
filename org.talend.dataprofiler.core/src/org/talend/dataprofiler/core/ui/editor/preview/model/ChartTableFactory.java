@@ -36,6 +36,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.CreatePatternAction;
 import org.talend.dataquality.analysis.Analysis;
@@ -99,7 +100,7 @@ public class ChartTableFactory {
                                 MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
                                 final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
                                         .createDbmsLanguage(analysis));
-                                itemCreatePatt.setText("Generate Regular Pattern");
+                                itemCreatePatt.setText(DefaultMessagesImpl.getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {
 
                                     public void widgetSelected(SelectionEvent e) {
@@ -120,7 +121,7 @@ public class ChartTableFactory {
     }
 
     private static void addTooltipOnTableItem(final Table table) {
-        table.setToolTipText("");
+        table.setToolTipText(""); //$NON-NLS-1$
 
         final Shell shell = new Shell(PlatformUI.getWorkbench().getDisplay());
         shell.setLayout(new FillLayout());
@@ -134,7 +135,7 @@ public class ChartTableFactory {
                 switch (event.type) {
                 case SWT.MouseDown:
                     Event e = new Event();
-                    e.item = (TableItem) label.getData("_TABLEITEM");
+                    e.item = (TableItem) label.getData("_TABLEITEM"); //$NON-NLS-1$
                     table.setSelection(new TableItem[] { (TableItem) e.item });
                     table.notifyListeners(SWT.Selection, e);
                 case SWT.MouseExit:
@@ -191,7 +192,7 @@ public class ChartTableFactory {
                 label = new Label(tip, SWT.NONE);
 
                 label.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-                label.setData("_TABLEITEM", item);
+                label.setData("_TABLEITEM", item); //$NON-NLS-1$
                 label.setText(msg);
                 label.addListener(SWT.MouseExit, labelListener);
                 label.addListener(SWT.MouseDown, labelListener);
@@ -214,7 +215,7 @@ public class ChartTableFactory {
         String query = itemEntity.getQuery();
         String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
         new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.PATTERNS), ExpressionType.REGEXP, "'" + regex + "'", language).run();
+                DQStructureManager.PATTERNS), ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 }

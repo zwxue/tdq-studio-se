@@ -68,7 +68,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         }
 
         // no query to return, here we only instantiate several SQL queries
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
@@ -286,7 +286,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             // give result to indicator so that it handles the results
             boolean ok = indicator.storeSqlResults(myResultSet);
             // get row count and store it in indicator
-            Long count = getCount(cachedAnalysis, "*", tableName, catalogOrSchema, whereClauses);
+            Long count = getCount(cachedAnalysis, "*", tableName, catalogOrSchema, whereClauses); //$NON-NLS-1$
             ok = ok && count != null;
             indicator.setCount(count);
             

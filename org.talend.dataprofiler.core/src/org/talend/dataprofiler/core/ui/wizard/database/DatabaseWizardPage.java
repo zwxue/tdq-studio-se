@@ -147,10 +147,10 @@ class DatabaseWizardPage extends AbstractWizardPage {
         dbTypeCombo.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                if (dbTypeCombo.getText().trim().equals("Generic JDBC")) {
+                if (dbTypeCombo.getText().trim().equals("Generic JDBC")) { //$NON-NLS-1$
                     updateStatus(IStatus.WARNING, UIMessages.MSG_SELECT_GENERIC_JDBC);
                 }
-                if (dbTypeCombo.getText().trim().equals("SQLite3")) {
+                if (dbTypeCombo.getText().trim().equals("SQLite3")) { //$NON-NLS-1$
                     username.setEnabled(false);
                     passwordText.setEnabled(false);
                 } else {
@@ -277,7 +277,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
 
     private Driver createGenericJDBC(String driverJars, String driverName) {
         Driver driver = null;
-        String[] driverJarPath = driverJars.split(";");
+        String[] driverJarPath = driverJars.split(";"); //$NON-NLS-1$
         try {
             int driverCount = 0;
             URL[] driverUrl = new URL[driverJarPath.length];
@@ -332,7 +332,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
         this.container.layout();
         this.container.setVisible(true);
         this.container.redraw();
-        if (dbType.getLanguage().trim().equals("Generic JDBC")) {
+        if (dbType.getLanguage().trim().equals("Generic JDBC")) { //$NON-NLS-1$
             // updateEditableState();
         } else {
             updateButtonState();
@@ -378,12 +378,12 @@ class DatabaseWizardPage extends AbstractWizardPage {
     private void updateEditableState() {
         String user = connectionParam.getParameters().getProperty(PluginConstant.USER_PROPERTY);
         String password = connectionParam.getParameters().getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
-        boolean isPasswordBlank = password != null && !password.trim().equals("");
-        boolean isUserBlank = user != null && !user.trim().equals("");
-        boolean isUrlBlank = connectionParam.getJdbcUrl() != null && !connectionParam.getJdbcUrl().trim().equals("");
+        boolean isPasswordBlank = password != null && !password.trim().equals(""); //$NON-NLS-1$
+        boolean isUserBlank = user != null && !user.trim().equals(""); //$NON-NLS-1$
+        boolean isUrlBlank = connectionParam.getJdbcUrl() != null && !connectionParam.getJdbcUrl().trim().equals(""); //$NON-NLS-1$
         boolean isDriverNameBlank = connectionParam.getDriverClassName() != null
-                && !connectionParam.getDriverClassName().trim().equals("");
-        boolean isDriverFileBlank = connectionParam.getDriverPath() != null && !connectionParam.getDriverPath().equals("");
+                && !connectionParam.getDriverClassName().trim().equals(""); //$NON-NLS-1$
+        boolean isDriverFileBlank = connectionParam.getDriverPath() != null && !connectionParam.getDriverPath().equals(""); //$NON-NLS-1$
         boolean isComplete = isPasswordBlank && isUserBlank && isDriverNameBlank && isUrlBlank && isDriverFileBlank;
         if (isComplete) {
             checkButton.setEnabled(!isComplete);
@@ -397,7 +397,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
      */
     private void updateButtonState() {
         boolean complete = true;
-        if (connectionURL.trim().equals("")) {
+        if (connectionURL.trim().equals("")) { //$NON-NLS-1$
             if (checkButton != null) {
                 checkButton.setEnabled(complete);
             }
@@ -408,11 +408,11 @@ class DatabaseWizardPage extends AbstractWizardPage {
 
             if (!SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(dbTypeName)) {
                 if (!SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbTypeName)) {
-                    complete &= this.userid != null && !this.userid.trim().equals("");
+                    complete &= this.userid != null && !this.userid.trim().equals(""); //$NON-NLS-1$
                 } else {
                     // deal with sqlite;
                     String filename = this.connectionParam.getFilePath();
-                    complete &= filename != null && !filename.trim().equals("");
+                    complete &= filename != null && !filename.trim().equals(""); //$NON-NLS-1$
                 }
             }
 

@@ -89,19 +89,19 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
             CategoryAxis domainAxis = plot.getDomainAxis();
             ValueAxis valueAxis = plot.getRangeAxis();
 
-            font = new Font("Arail", Font.BOLD, 12);
+            font = new Font("Arail", Font.BOLD, 12); //$NON-NLS-1$
 
             render.setBaseItemLabelFont(font); //$NON-NLS-1$
 
-            font = new Font("Verdana", Font.BOLD, 12);
+            font = new Font("Verdana", Font.BOLD, 12); //$NON-NLS-1$
             domainAxis.setLabelFont(font);
             valueAxis.setLabelFont(font);
 
-            font = new Font("Verdana", Font.PLAIN, 10);
+            font = new Font("Verdana", Font.PLAIN, 10); //$NON-NLS-1$
             domainAxis.setTickLabelFont(font);
             valueAxis.setTickLabelFont(font);
 
-            font = new Font("Verdana", Font.BOLD, 10);
+            font = new Font("Verdana", Font.BOLD, 10); //$NON-NLS-1$
             LegendTitle legend = chart.getLegend();
             if (legend != null) {
                 legend.setItemFont(font);

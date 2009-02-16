@@ -173,23 +173,23 @@ public class ChartDataEntity {
         String[] definedRange = getDefinedRange(inString);
         if (definedRange != null && definedRange.length >= 2) {
 
-            range = "[" + definedRange[0] + "," + definedRange[1] + "]";
+            range = "[" + definedRange[0] + "," + definedRange[1] + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             int sqltype = ((TdColumn) indicator.getAnalyzedElement()).getJavaType();
 
             if (Java2SqlType.isDateInSQL(sqltype) && indicator.eContainer() instanceof RangeIndicator) {
 
                 try {
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
                     Date dValue = format.parse(value);
 
-                    if ("".equals(definedRange[0])) {
+                    if ("".equals(definedRange[0])) { //$NON-NLS-1$
                         Date max = format.parse(definedRange[1]);
-                        range = "[*, " + definedRange[1] + "]";
+                        range = "[*, " + definedRange[1] + "]"; //$NON-NLS-1$ //$NON-NLS-2$
                         return dValue.after(max);
-                    } else if ("".equals(definedRange[1])) {
+                    } else if ("".equals(definedRange[1])) { //$NON-NLS-1$
                         Date min = format.parse(definedRange[0]);
-                        range = "[" + definedRange[0] + ", *]";
+                        range = "[" + definedRange[0] + ", *]"; //$NON-NLS-1$ //$NON-NLS-2$
                         return dValue.before(min);
                     } else {
                         Date min = format.parse(definedRange[0]);
@@ -235,18 +235,18 @@ public class ChartDataEntity {
             IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
 
             if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
-                msg.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\"");
+                msg.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             } else if (indicatorEnum == IndicatorEnum.BoxIIndicatorEnum) {
                 if (isOutOfRange(getValue())) {
-                    msg.append("This value is outside the expected data's thresholds: " + range);
+                    msg.append("This value is outside the expected data's thresholds: " + range); //$NON-NLS-1$
                 }
             } else {
                 if (isOutOfRange(getValue())) {
-                    msg.append("This value is outside the expected indicator's thresholds: " + range);
-                    msg.append("\n");
+                    msg.append("This value is outside the expected indicator's thresholds: " + range); //$NON-NLS-1$
+                    msg.append("\n"); //$NON-NLS-1$
                 }
                 if (isOutOfRange(getPersent())) {
-                    msg.append("This value is outside the expected indicator's thresholds in percent: " + range);
+                    msg.append("This value is outside the expected indicator's thresholds in percent: " + range); //$NON-NLS-1$
                 }
             }
         }

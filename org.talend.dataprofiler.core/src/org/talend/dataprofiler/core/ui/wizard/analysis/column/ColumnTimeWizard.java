@@ -140,7 +140,7 @@ public class ColumnTimeWizard extends ColumnWizard {
             AnaResourceFileHelper.getInstance().register(file, anaResource);
             AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
         } else {
-            throw new DataprofilerCoreException(DefaultMessagesImpl.getString("AbstractAnalysisWizard.saving", folderResource
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString("AbstractAnalysisWizard.saving", folderResource //$NON-NLS-1$
                     .getFullPath().toString(), saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
         }
         CorePlugin.getDefault().refreshWorkSpace();

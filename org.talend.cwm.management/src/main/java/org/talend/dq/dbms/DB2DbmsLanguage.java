@@ -46,8 +46,8 @@ public class DB2DbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getPatternFinderDefaultFunction(String expression) {
-        return "TRANSLATE(CHAR(" + expression + ") ,VARCHAR(REPEAT('9',10) || REPEAT('A',25)||REPEAT('a',25)), "
-                + " '1234567890BCDEFGHIJKLMNOPQRSTUVWXYZbcdefghijklmnopqrstuvwxyz')"; // cannot put accents
+        return "TRANSLATE(CHAR(" + expression + ") ,VARCHAR(REPEAT('9',10) || REPEAT('A',25)||REPEAT('a',25)), " //$NON-NLS-1$ //$NON-NLS-2$
+                + " '1234567890BCDEFGHIJKLMNOPQRSTUVWXYZbcdefghijklmnopqrstuvwxyz')"; // cannot put accents //$NON-NLS-1$
     }
 
     /*
@@ -57,7 +57,7 @@ public class DB2DbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getTopNQuery(String query, int n) {
-        return query + " FETCH FIRST " + n + " ROWS ONLY ";
+        return query + " FETCH FIRST " + n + " ROWS ONLY "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -78,7 +78,7 @@ public class DB2DbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String charLength(String columnName) {
-        return " LENGTH(" + columnName + ") ";
+        return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 }

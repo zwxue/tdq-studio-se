@@ -35,7 +35,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         double value = Double.valueOf(entity.getValue());
         String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + value;
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-        return "select * from " + getFullyQualifiedTableName(column) + whereClause;
+        return "select * from " + getFullyQualifiedTableName(column) + whereClause; //$NON-NLS-1$
     }
 
     /**
@@ -74,7 +74,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         }
 
         // add the data filter where clause
-        return whereClause != null ? "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where()
+        return whereClause != null ? "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() //$NON-NLS-1$
                 + inBrackets(whereClause) + andDataFilterClause() : null;
     }
 

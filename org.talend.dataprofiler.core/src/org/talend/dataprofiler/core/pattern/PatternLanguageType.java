@@ -22,7 +22,7 @@ import org.talend.cwm.dburl.SupportDBUrlType;
  */
 public enum PatternLanguageType {
 
-    ALL_DATABASE_TYPE(0, "ALL_DATABASE_TYPE", "SQL", PatternToExcelEnum.AllDBRegularexpression),
+    ALL_DATABASE_TYPE(0, "ALL_DATABASE_TYPE", "SQL", PatternToExcelEnum.AllDBRegularexpression), //$NON-NLS-1$ //$NON-NLS-2$
     MYSQL(
           1,
           SupportDBUrlType.MYSQLDEFAULTURL.getLanguage(),

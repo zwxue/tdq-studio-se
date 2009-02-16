@@ -34,7 +34,7 @@ import org.talend.utils.ProductVersion;
  */
 public class WorkspaceVersionHelper {
 
-    public final static String VERSION = "version";
+    public final static String VERSION = "version"; //$NON-NLS-1$
 
     public static IFile getVersionFile() {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -63,7 +63,7 @@ public class WorkspaceVersionHelper {
             try {
                 pros.load(versionFile.getContents());
                 String version = pros.getProperty(VERSION);
-                if (version != null && !"".equals(version)) {
+                if (version != null && !"".equals(version)) { //$NON-NLS-1$
                     return ProductVersion.fromString(version);
                 }
             } catch (Exception e) {

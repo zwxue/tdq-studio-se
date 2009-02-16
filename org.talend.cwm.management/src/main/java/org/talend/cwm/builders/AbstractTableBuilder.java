@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.i18n.Messages;
 import org.talend.utils.sql.metadata.constants.GetTable;
 import org.talend.utils.sql.metadata.constants.TableType;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -46,7 +47,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
     public AbstractTableBuilder(Connection conn, TableType type) {
         super(conn);
         if (type == null) {
-            throw new IllegalArgumentException("No type given. Type must be set to either tables, views, system tables...");
+            throw new IllegalArgumentException(Messages.getString("AbstractTableBuilder.NoTypeGiven")); //$NON-NLS-1$
         }
         this.tableType = new String[] { type.toString() };
     }

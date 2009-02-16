@@ -66,9 +66,9 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private static final double MAX = 100;
 
-    private static final String VALUE_THRESHOLD = "Value Threshold";
+    private static final String VALUE_THRESHOLD = "Value Threshold"; //$NON-NLS-1$
 
-    private static final String PERCENTAGE_THRESHOLD = "Percentage Threshold";
+    private static final String PERCENTAGE_THRESHOLD = "Percentage Threshold"; //$NON-NLS-1$
 
     private boolean isContainRowCount;
 
@@ -116,7 +116,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         lowerText.setLayoutData(gdText);
         if (isRangeForDate) {
             lowerBTN = new Button(group, SWT.PUSH);
-            lowerBTN.setText("...");
+            lowerBTN.setText("..."); //$NON-NLS-1$
             lowerDelBTN = new Button(group, SWT.PUSH);
             lowerDelBTN.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
 
@@ -130,7 +130,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         higherText.setLayoutData(gdText);
         if (isRangeForDate) {
             higherBTN = new Button(group, SWT.PUSH);
-            higherBTN.setText("...");
+            higherBTN.setText("..."); //$NON-NLS-1$
             higherDelBTN = new Button(group, SWT.PUSH);
             higherDelBTN.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
 
@@ -142,15 +142,15 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
             Group pGroup = new Group(this, SWT.NONE);
             pGroup.setLayout(new GridLayout(2, false));
             pGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            pGroup.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.setPersentThresholds"));
+            pGroup.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.setPersentThresholds")); //$NON-NLS-1$
 
             Label pLower = new Label(pGroup, SWT.NONE);
-            pLower.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.lowerThreshold"));
+            pLower.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.lowerThreshold")); //$NON-NLS-1$
             pLowerText = new Text(pGroup, SWT.BORDER);
             pLowerText.setLayoutData(gdText);
 
             Label pHigher = new Label(pGroup, SWT.NONE);
-            pHigher.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.higherThreshold"));
+            pHigher.setText(DefaultMessagesImpl.getString("IndicatorThresholdsForm.higherThreshold")); //$NON-NLS-1$
             pHigherText = new Text(pGroup, SWT.BORDER);
             pHigherText.setLayoutData(gdText);
 
@@ -369,7 +369,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    lowerText.setText("");
+                    lowerText.setText(""); //$NON-NLS-1$
                 }
             });
 
@@ -377,7 +377,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    higherText.setText("");
+                    higherText.setText(""); //$NON-NLS-1$
                 }
             });
         }

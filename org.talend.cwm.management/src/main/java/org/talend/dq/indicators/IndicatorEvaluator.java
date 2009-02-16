@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -36,7 +37,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // check analyzed columns
         Set<String> columns = getAnalyzedElements();
         if (columns.isEmpty()) {
-            ok.setReturnCode("No column to analyze found? Define the analyzed columns properly, please.", false);
+            ok.setReturnCode(Messages.getString("IndicatorEvaluator.DefineAnalyzedColumns"), false); //$NON-NLS-1$
             return ok;
         }
 

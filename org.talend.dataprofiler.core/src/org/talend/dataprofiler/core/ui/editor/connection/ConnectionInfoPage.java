@@ -158,7 +158,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         String urlValue = (trc.isOk()) ? trc.getObject().getConnectionString() : PluginConstant.EMPTY_STRING;
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
         urlText.setEnabled(false);
-        if (trc.getObject().getDriverClassName().startsWith("org.sqlite")) {
+        if (trc.getObject().getDriverClassName().startsWith("org.sqlite")) { //$NON-NLS-1$
             loginText.setEnabled(false);
             passwordText.setEnabled(false);
         }

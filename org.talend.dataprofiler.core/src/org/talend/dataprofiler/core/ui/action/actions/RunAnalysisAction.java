@@ -127,7 +127,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         break;
                     }
                     if (monitor.isCanceled()) {
-                        executed = new ReturnCode("Task was canceled by user!", false);
+                        executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
                         break;
                     }
                 }

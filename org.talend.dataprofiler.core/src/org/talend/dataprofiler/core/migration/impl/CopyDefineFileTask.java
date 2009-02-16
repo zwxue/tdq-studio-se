@@ -27,9 +27,9 @@ import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
  */
 public class CopyDefineFileTask extends AbstractMigrationTask {
 
-    private static final String TALEND_DEFINITION_FILENAME = ".Talend.definition";
+    private static final String TALEND_DEFINITION_FILENAME = ".Talend.definition"; //$NON-NLS-1$
 
-    private static final String TALEND_DEFINITION_BAK_FILENAME = ".Talend.definition.bak";
+    private static final String TALEND_DEFINITION_BAK_FILENAME = ".Talend.definition.bak"; //$NON-NLS-1$
 
     public boolean execute() {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();

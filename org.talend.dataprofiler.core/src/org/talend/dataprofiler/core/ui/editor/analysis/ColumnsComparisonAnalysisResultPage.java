@@ -54,9 +54,9 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultPage {
 
-    private static final String NOT_MATCHING = "not matching";
+    private static final String NOT_MATCHING = "not matching"; //$NON-NLS-1$
 
-    private static final String MATCHING = "matching";
+    private static final String MATCHING = "matching"; //$NON-NLS-1$
 
     private ColumnsComparisonMasterDetailsPage masterPage;
 
@@ -165,7 +165,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     @Override
     protected void createResultSection(Composite parent) {
         resultSection = createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), true, ""); //$NON-NLS-1$
+                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), true, ""); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -194,13 +194,13 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         creatChart(sectionClient);
         StringBuilder description = new StringBuilder();
         description.append(setAMatchPercent);
-        description.append(" of the data from set A are found in data from set B");
+        description.append(" of the data from set A are found in data from set B"); //$NON-NLS-1$
         if (!isHasDeactivatedIndicator) {
-            description.append("\n");
+            description.append("\n"); //$NON-NLS-1$
             description.append(setBMatchPercent);
-            description.append(" of the data from set B are found in data from set A ");
+            description.append(" of the data from set B are found in data from set A "); //$NON-NLS-1$
         } else {
-            description.append(".");
+            description.append("."); //$NON-NLS-1$
         }
         resultSection.setDescription(description.toString());
         resultSection.layout();
@@ -248,13 +248,13 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     private void creatChart(Composite parent) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, "SetA");
-        dataset.addValue(rowMatchingIndicatorA.getNotMatchingValueCount(), NOT_MATCHING, "SetA");
+        dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, "SetA"); //$NON-NLS-1$
+        dataset.addValue(rowMatchingIndicatorA.getNotMatchingValueCount(), NOT_MATCHING, "SetA"); //$NON-NLS-1$
         if (!isHasDeactivatedIndicator) {
-            dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB");
-            dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB");
+            dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB"); //$NON-NLS-1$
+            dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB"); //$NON-NLS-1$
         }
-        JFreeChart createStacked3DBarChart = TopChartFactory.createStacked3DBarChart("Columns Comparison", dataset,
+        JFreeChart createStacked3DBarChart = TopChartFactory.createStacked3DBarChart(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
                 PlotOrientation.HORIZONTAL);
         GridData gd = new GridData();
         gd.heightHint = 180;

@@ -129,7 +129,7 @@ public class CheckValueUtils {
         for (String str : strs) {
             if (str == null) {
                 return true;
-            } else if ("".equals(str.trim())) {
+            } else if ("".equals(str.trim())) { //$NON-NLS-1$
                 return true;
             }
         }
@@ -169,7 +169,7 @@ public class CheckValueUtils {
 
         if (!isEmpty(inputString)) {
             try {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
                 df.setLenient(false);
                 df.parse(inputString);
                 return true;

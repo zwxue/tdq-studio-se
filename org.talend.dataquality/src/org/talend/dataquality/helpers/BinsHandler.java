@@ -62,17 +62,17 @@ public class BinsHandler {
         double max = 100;
         int n = 6;
         double[] bins = BinsHandler.generateOpenBins(min, max, n);
-        System.out.print("" + n + " open bins: ");
+        System.out.print("" + n + " open bins: "); //$NON-NLS-1$ //$NON-NLS-2$
         for (double l : bins) {
-            System.out.print("| " + l);
+            System.out.print("| " + l); //$NON-NLS-1$
         }
 
         n = 2;
         System.out.println();
         bins = BinsHandler.generateClosedBins(min, max, n);
-        System.out.print("" + n + " closed bins: ");
+        System.out.print("" + n + " closed bins: "); //$NON-NLS-1$ //$NON-NLS-2$
         for (double l : bins) {
-            System.out.print("| " + l);
+            System.out.print("| " + l); //$NON-NLS-1$
         }
 
     }

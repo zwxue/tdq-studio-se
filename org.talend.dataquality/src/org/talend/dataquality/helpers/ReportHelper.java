@@ -44,9 +44,9 @@ public final class ReportHelper {
      * The report types.
      */
     public static enum ReportType {
-        BASIC("Basic", "/reports/column/report_01.jrxml"),
-        EVOLUTION("Evolution", "/reports/column/report_02.jrxml"),
-        USER_MADE("User specified", null); // for the user to set his own file path
+        BASIC("Basic", "/reports/column/report_01.jrxml"),  //$NON-NLS-1$//$NON-NLS-2$
+        EVOLUTION("Evolution", "/reports/column/report_02.jrxml"),  //$NON-NLS-1$//$NON-NLS-2$
+        USER_MADE("User specified", null); // for the user to set his own file path //$NON-NLS-1$
 
         private String label;
 
@@ -242,7 +242,7 @@ public final class ReportHelper {
     public static boolean setAnalysisFilterDate(TdReport report, String dateText, int datePos) {
         boolean ok = true;
         Date date = null;
-        String pattern = "MM/dd/yyyy";
+        String pattern = "MM/dd/yyyy"; //$NON-NLS-1$
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         try {
             date = sdf.parse(dateText);

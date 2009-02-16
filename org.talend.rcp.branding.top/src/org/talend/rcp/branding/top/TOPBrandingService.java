@@ -27,7 +27,7 @@ import org.talend.dataprofiler.core.service.IBrandingService;
 public class TOPBrandingService implements IBrandingService {
 
     public String getFullProductName() {
-        return "Talend Open Profiler";
+        return "Talend Open Profiler"; //$NON-NLS-1$
     }
 
     public URL getLicenseFile() throws IOException {
@@ -42,7 +42,7 @@ public class TOPBrandingService implements IBrandingService {
      * @see org.talend.dataprofiler.core.service.IBrandingService#getCorporationName()
      */
     public String getCorporationName() {
-        return "Talend";
+        return "Talend"; //$NON-NLS-1$
     }
 
     /*
@@ -51,7 +51,7 @@ public class TOPBrandingService implements IBrandingService {
      * @see org.talend.dataprofiler.core.service.IBrandingService#getShortProductName()
      */
     public String getShortProductName() {
-        return "T.O.P";
+        return "T.O.P"; //$NON-NLS-1$
     }
 
 }

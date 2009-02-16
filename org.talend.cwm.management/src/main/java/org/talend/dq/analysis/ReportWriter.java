@@ -23,6 +23,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -49,7 +50,8 @@ public class ReportWriter {
 
         ReturnCode rc = new ReturnCode();
         if (!checkFileExtension(file)) {
-            rc.setReturnCode("Bad file extension for " + file.getFullPath().toString() + ". Should be " + VALID_EXTENSION, false);
+            rc.setReturnCode(Messages.getString("ReportWriter.BadFileExtension", file.getFullPath().toString(), VALID_EXTENSION), //$NON-NLS-1$
+                    false);
             return rc;
         }
         EMFSharedResources util = EMFSharedResources.getInstance();
@@ -59,7 +61,8 @@ public class ReportWriter {
         boolean added = util.addEObjectToResourceSet(file.getFullPath().toString(), report);
 
         if (!added) {
-            rc.setReturnCode("Report  " + report.getName() + " won't be saved. " + util.getLastErrorMessage(), added);
+            rc.setReturnCode(
+                    Messages.getString("ReportWriter.ReportNotSave", report.getName(), util.getLastErrorMessage()), added); //$NON-NLS-1$
             return rc;
         }
 
@@ -70,7 +73,8 @@ public class ReportWriter {
         addAnaResourceOfReport(report);
         boolean saved = EMFUtil.saveSingleResource(report.eResource());
         if (!saved) {
-            rc.setReturnCode("Problem while saving report " + report.getName() + ". " + util.getLastErrorMessage(), saved);
+            rc.setReturnCode(
+                    Messages.getString("ReportWriter.ProblemSavingReport", report.getName(), util.getLastErrorMessage()), saved); //$NON-NLS-1$
         }
         return rc;
     }
@@ -95,8 +99,7 @@ public class ReportWriter {
         ReturnCode rc = new ReturnCode();
         Resource resource = report.eResource();
         if (resource == null) {
-            rc.setReturnCode("Error: No resource found! A file must be defined in which the report " + report.getName()
-                    + " will be saved.", false);
+            rc.setReturnCode(Messages.getString("ReportWriter.Error", report.getName()), false); //$NON-NLS-1$
             return rc;
         }
 
@@ -106,7 +109,7 @@ public class ReportWriter {
         addAnaResourceOfReport(report);
         boolean saved = EMFUtil.saveResource(resource);
         if (!saved) {
-            rc.setReturnCode("Problem while saving report " + report.getName() + ". ", saved);
+            rc.setReturnCode(Messages.getString("ReportWriter.ProblemWhileSaving", report.getName()), saved); //$NON-NLS-1$
         }
         return rc;
 

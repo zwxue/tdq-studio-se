@@ -72,6 +72,8 @@ import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.i18n.Messages;
+
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -84,7 +86,7 @@ public final class DefinitionHandler {
     /**
      * The label of the Regular Expression Matching indicator definition.
      */
-    private static final String REGULAR_EXPRESSION_MATCHING = "Regular Expression Matching";
+    private static final String REGULAR_EXPRESSION_MATCHING = "Regular Expression Matching"; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(DefinitionHandler.class);
 
@@ -100,11 +102,11 @@ public final class DefinitionHandler {
     /**
      * plugin relative path to the default file.
      */
-    private static final String FILENAME = ".Talend.definition";
+    private static final String FILENAME = ".Talend.definition"; //$NON-NLS-1$
 
-    private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME;
+    private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME; //$NON-NLS-1$
 
-    private static final String WORKSPACE_PATH = "Libraries/";
+    private static final String WORKSPACE_PATH = "Libraries/"; //$NON-NLS-1$
 
     private DefinitionHandler() {
         this.indicatorDefinitions = loadFromFile();
@@ -207,7 +209,7 @@ public final class DefinitionHandler {
             indicatorDefinitions = loadFromFile();
         }
         if (indicatorDefinitions == null) {
-            throw new RuntimeException("Indicators' definition not loaded!");
+            throw new RuntimeException(Messages.getString("DefinitionHandler.IndicatorsDefinition")); //$NON-NLS-1$
         }
         return indicatorDefinitions;
     }
@@ -325,7 +327,7 @@ public final class DefinitionHandler {
      * @return
      */
     private String getGenericSQL(String dbmsName, String regexpFunction) {
-        return new GenericSQLHandler("").createGenericSqlWithRegexFunction(regexpFunction);
+        return new GenericSQLHandler("").createGenericSqlWithRegexFunction(regexpFunction); //$NON-NLS-1$
     }
 
     /**
@@ -371,7 +373,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseConnectionIndicator(ConnectionIndicator object) {
-                return setIndicatorDefinition(object, "Connection Overview");
+                return setIndicatorDefinition(object, "Connection Overview"); //$NON-NLS-1$
             }
 
             /*
@@ -383,7 +385,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseSchemaIndicator(SchemaIndicator object) {
-                return setIndicatorDefinition(object, "Schema Overview");
+                return setIndicatorDefinition(object, "Schema Overview"); //$NON-NLS-1$
             }
 
             /*
@@ -395,7 +397,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseTableIndicator(TableIndicator object) {
-                return setIndicatorDefinition(object, "Table Overview");
+                return setIndicatorDefinition(object, "Table Overview"); //$NON-NLS-1$
             }
 
             /*
@@ -406,7 +408,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseViewIndicator(ViewIndicator object) {
-                return setIndicatorDefinition(object, "View Overview");
+                return setIndicatorDefinition(object, "View Overview"); //$NON-NLS-1$
             }
 
             /*
@@ -433,7 +435,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseRowMatchingIndicator(RowMatchingIndicator object) {
-                return setIndicatorDefinition(object, "Row Comparison");
+                return setIndicatorDefinition(object, "Row Comparison"); //$NON-NLS-1$
             }
 
             /*
@@ -445,7 +447,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseColumnSetMultiValueIndicator(ColumnSetMultiValueIndicator object) {
-                return setIndicatorDefinition(object, "Multiple Column Frequency Table");
+                return setIndicatorDefinition(object, "Multiple Column Frequency Table"); //$NON-NLS-1$
             }
 
             /*
@@ -457,7 +459,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseWeakCorrelationIndicator(WeakCorrelationIndicator object) {
-                return setIndicatorDefinition(object, "Multiple Column Correlation");
+                return setIndicatorDefinition(object, "Multiple Column Correlation"); //$NON-NLS-1$
             }
 
             /*
@@ -469,7 +471,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseCountAvgNullIndicator(CountAvgNullIndicator object) {
-                return setIndicatorDefinition(object, "Averaged Multiple Column Frequency Table");
+                return setIndicatorDefinition(object, "Averaged Multiple Column Frequency Table"); //$NON-NLS-1$
             }
 
             /*
@@ -480,7 +482,7 @@ public final class DefinitionHandler {
              */
             @Override
             public Boolean caseMinMaxDateIndicator(MinMaxDateIndicator object) {
-                return setIndicatorDefinition(object, "Min Max Date Multiple Column Frequency Table");
+                return setIndicatorDefinition(object, "Min Max Date Multiple Column Frequency Table"); //$NON-NLS-1$
             }
 
             /*
@@ -513,7 +515,7 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean caseDefValueCountIndicator(DefValueCountIndicator object) {
-            return setIndicatorDefinition(object, "Default Value Count");
+            return setIndicatorDefinition(object, "Default Value Count"); //$NON-NLS-1$
         }
 
         /*
@@ -525,7 +527,7 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean caseLowFrequencyIndicator(LowFrequencyIndicator object) {
-            return setIndicatorDefinition(object, "Low Frequency Table");
+            return setIndicatorDefinition(object, "Low Frequency Table"); //$NON-NLS-1$
         }
 
         /*
@@ -536,7 +538,7 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean casePatternFreqIndicator(PatternFreqIndicator object) {
-            return setIndicatorDefinition(object, "Pattern Frequency Table");
+            return setIndicatorDefinition(object, "Pattern Frequency Table"); //$NON-NLS-1$
         }
 
         /*
@@ -548,7 +550,7 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean casePatternLowFreqIndicator(PatternLowFreqIndicator object) {
-            return setIndicatorDefinition(object, "Pattern Low Frequency Table");
+            return setIndicatorDefinition(object, "Pattern Low Frequency Table"); //$NON-NLS-1$
         }
 
         /*
@@ -572,7 +574,7 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean caseSqlPatternMatchingIndicator(SqlPatternMatchingIndicator object) {
-            return setIndicatorDefinition(object, "SQL Pattern Matching");
+            return setIndicatorDefinition(object, "SQL Pattern Matching"); //$NON-NLS-1$
         }
 
         /*
@@ -584,92 +586,92 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean casePatternMatchingIndicator(PatternMatchingIndicator object) {
-            return setIndicatorDefinition(object, "Pattern Matching Indicator");
+            return setIndicatorDefinition(object, "Pattern Matching Indicator"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseCountsIndicator(CountsIndicator object) {
-            return setIndicatorDefinition(object, "Simple Statistics");
+            return setIndicatorDefinition(object, "Simple Statistics"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseTextIndicator(TextIndicator object) {
-            return setIndicatorDefinition(object, "Text Statistics");
+            return setIndicatorDefinition(object, "Text Statistics"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseUniqueCountIndicator(UniqueCountIndicator object) {
-            return setIndicatorDefinition(object, "Unique Count");
+            return setIndicatorDefinition(object, "Unique Count"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseSumIndicator(SumIndicator object) {
-            return setIndicatorDefinition(object, "Sum");
+            return setIndicatorDefinition(object, "Sum"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseRowCountIndicator(RowCountIndicator object) {
-            return setIndicatorDefinition(object, "Row Count");
+            return setIndicatorDefinition(object, "Row Count"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseRangeIndicator(RangeIndicator object) {
-            return setIndicatorDefinition(object, "Range");
+            return setIndicatorDefinition(object, "Range"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseNullCountIndicator(NullCountIndicator object) {
-            return setIndicatorDefinition(object, "Null Count");
+            return setIndicatorDefinition(object, "Null Count"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseModeIndicator(ModeIndicator object) {
-            return setIndicatorDefinition(object, "Mode");
+            return setIndicatorDefinition(object, "Mode"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseMinValueIndicator(MinValueIndicator object) {
-            return setIndicatorDefinition(object, "Minimum");
+            return setIndicatorDefinition(object, "Minimum"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseMinLengthIndicator(MinLengthIndicator object) {
-            return setIndicatorDefinition(object, "Minimal Length");
+            return setIndicatorDefinition(object, "Minimal Length"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseMedianIndicator(MedianIndicator object) {
-            return setIndicatorDefinition(object, "Median");
+            return setIndicatorDefinition(object, "Median"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseMeanIndicator(MeanIndicator object) {
-            return setIndicatorDefinition(object, "Mean");
+            return setIndicatorDefinition(object, "Mean"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseMaxValueIndicator(MaxValueIndicator object) {
-            return setIndicatorDefinition(object, "Maximum");
+            return setIndicatorDefinition(object, "Maximum"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseMaxLengthIndicator(MaxLengthIndicator object) {
-            return setIndicatorDefinition(object, "Maximal Length");
+            return setIndicatorDefinition(object, "Maximal Length"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseLengthIndicator(LengthIndicator object) {
-            return setIndicatorDefinition(object, "Length");
+            return setIndicatorDefinition(object, "Length"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseIQRIndicator(IQRIndicator object) {
-            return setIndicatorDefinition(object, "IQR");
+            return setIndicatorDefinition(object, "IQR"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseFrequencyIndicator(FrequencyIndicator object) {
-            return setIndicatorDefinition(object, "Frequency Table");
+            return setIndicatorDefinition(object, "Frequency Table"); //$NON-NLS-1$
         }
 
         /*
@@ -680,7 +682,7 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean caseSoundexFreqIndicator(SoundexFreqIndicator object) {
-            return setIndicatorDefinition(object, "Soundex Frequency Table");
+            return setIndicatorDefinition(object, "Soundex Frequency Table"); //$NON-NLS-1$
         }
 
         /*
@@ -692,42 +694,42 @@ public final class DefinitionHandler {
          */
         @Override
         public Boolean caseSoundexLowFreqIndicator(SoundexLowFreqIndicator object) {
-            return setIndicatorDefinition(object, "Soundex Low Frequency Table");
+            return setIndicatorDefinition(object, "Soundex Low Frequency Table"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseDuplicateCountIndicator(DuplicateCountIndicator object) {
-            return setIndicatorDefinition(object, "Duplicate Count");
+            return setIndicatorDefinition(object, "Duplicate Count"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseDistinctCountIndicator(DistinctCountIndicator object) {
-            return setIndicatorDefinition(object, "Distinct Count");
+            return setIndicatorDefinition(object, "Distinct Count"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseBoxIndicator(BoxIndicator object) {
-            return setIndicatorDefinition(object, "Summary Statistics");
+            return setIndicatorDefinition(object, "Summary Statistics"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseBlankCountIndicator(BlankCountIndicator object) {
-            return setIndicatorDefinition(object, "Blank Count");
+            return setIndicatorDefinition(object, "Blank Count"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseAverageLengthIndicator(AverageLengthIndicator object) {
-            return setIndicatorDefinition(object, "Average Length");
+            return setIndicatorDefinition(object, "Average Length"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseLowerQuartileIndicator(LowerQuartileIndicator object) {
-            return setIndicatorDefinition(object, "Lower Quartile");
+            return setIndicatorDefinition(object, "Lower Quartile"); //$NON-NLS-1$
         }
 
         @Override
         public Boolean caseUpperQuartileIndicator(UpperQuartileIndicator object) {
-            return setIndicatorDefinition(object, "Upper Quartile");
+            return setIndicatorDefinition(object, "Upper Quartile"); //$NON-NLS-1$
         }
 
     }; // EOC IndicatorsSwitch

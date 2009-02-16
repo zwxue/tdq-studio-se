@@ -254,7 +254,7 @@ public class DBConnect {
 
     @Override
     public String toString() {
-        return "Connection " + databaseUrl;
+        return "Connection " + databaseUrl; //$NON-NLS-1$
     }
 
     /**

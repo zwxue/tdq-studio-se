@@ -20,6 +20,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
@@ -52,7 +53,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public void doSave(IProgressMonitor monitor) {
         ReturnCode rc = canSave();
         if (!rc.isOk()) {
-            MessageDialogWithToggle.openError(null, "Save Analysis", rc.getMessage());
+            MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
         } else {
             super.doSave(monitor);
             try {

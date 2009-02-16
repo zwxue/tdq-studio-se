@@ -43,7 +43,7 @@ public final class DependenciesHandler {
      * As specified in CWM document at p. 67, the dependency kind can be of two types "Usage" or "Abstraction", but can
      * also be of other types.
      */
-    public static final String USAGE = "Usage";
+    public static final String USAGE = "Usage"; //$NON-NLS-1$
 
     private static DependenciesHandler instance;
 

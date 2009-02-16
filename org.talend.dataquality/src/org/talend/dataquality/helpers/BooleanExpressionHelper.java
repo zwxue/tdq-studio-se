@@ -31,7 +31,7 @@ public class BooleanExpressionHelper {
     /**
      * Default language used in expressions.
      */
-    public static final String DEFAULT_LANGUAGE = "SQL";
+    public static final String DEFAULT_LANGUAGE = "SQL"; //$NON-NLS-1$
 
     /**
      * Method "createBooleanExpressionNode".

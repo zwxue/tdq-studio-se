@@ -84,7 +84,7 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
         for (String language : SupportDBUrlStore.getInstance().getDBLanguages()) {
             String function = ResourcesPlugin.getPlugin().getPluginPreferences().getString(language);
-            if (function != null && !"".equals(function)) {
+            if (function != null && !"".equals(function)) { //$NON-NLS-1$
                 FunctionEntity entity = new FunctionEntity();
                 entity.setFunction(function);
                 entity.setLanguage(language);
@@ -111,7 +111,7 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
     protected void performDefaults() {
 
         for (FunctionEntity entity : entityList) {
-            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), "");
+            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), ""); //$NON-NLS-1$
         }
 
         entityList.clear();
@@ -130,7 +130,7 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
         mainComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Label header = new Label(mainComposite, SWT.WRAP);
-        header.setText(DefaultMessagesImpl.getString("UDFPreferencePage.headerText"));
+        header.setText(DefaultMessagesImpl.getString("UDFPreferencePage.headerText")); //$NON-NLS-1$
         GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         gd.widthHint = 500;
         header.setLayoutData(gd);
@@ -146,10 +146,10 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
         GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
 
         TableColumn column1 = new TableColumn(table, SWT.NONE);
-        column1.setText("Function");
+        column1.setText(DefaultMessagesImpl.getString("UDFPreferencePage.Function")); //$NON-NLS-1$
         column1.setWidth(450);
         TableColumn column2 = new TableColumn(table, SWT.NONE);
-        column2.setText("Language");
+        column2.setText(DefaultMessagesImpl.getString("UDFPreferencePage.Language")); //$NON-NLS-1$
         column2.setWidth(150);
 
         tableViewer.setLabelProvider(new MyLabelProvider());
@@ -160,9 +160,9 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
         btnBox.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(btnBox);
 
-        addBTN = createPushButton(btnBox, "Add..");
-        editBTN = createPushButton(btnBox, "Edit");
-        removeBTN = createPushButton(btnBox, "Remove");
+        addBTN = createPushButton(btnBox, DefaultMessagesImpl.getString("UDFPreferencePage.Add")); //$NON-NLS-1$
+        editBTN = createPushButton(btnBox, DefaultMessagesImpl.getString("UDFPreferencePage.Edit")); //$NON-NLS-1$
+        removeBTN = createPushButton(btnBox, DefaultMessagesImpl.getString("UDFPreferencePage.Remove")); //$NON-NLS-1$
 
         return mainComposite;
     }
@@ -238,7 +238,7 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
         entityList.remove(entity);
         tableViewer.refresh();
 
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), "");
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), ""); //$NON-NLS-1$
     }
 
     /**

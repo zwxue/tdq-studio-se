@@ -43,11 +43,11 @@ public final class IndicatorTreeModelBuilder {
         // build pattern finder categoryNode
         IndicatorEnum[] patternFinderEnums = new IndicatorEnum[] { IndicatorEnum.PatternFreqIndicatorEnum,
                 IndicatorEnum.PatternLowFreqIndicatorEnum };
-        IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode("Pattern finder", patternFinderEnums);
+        IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode("Pattern finder", patternFinderEnums); //$NON-NLS-1$
         // build Nominal Statistic categoryNode
         IndicatorEnum[] advanceIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.ModeIndicatorEnum,
                 IndicatorEnum.FrequencyIndicatorEnum, IndicatorEnum.LowFrequencyIndicatorEnum };
-        IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode("Advanced statistics", advanceIndicatorEnums);
+        IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode("Advanced statistics", advanceIndicatorEnums); //$NON-NLS-1$
 
         indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
                 patternFinderCategoryNode, advanceCategoryNode };

@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
@@ -60,9 +61,9 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
         } else {
             if (isIntact()) {
                 BoxAndWhiskerCategoryDataset dataset = (BoxAndWhiskerCategoryDataset) getDataset();
-                return TopChartFactory.createBoxAndWhiskerChart("Summary Statistics", dataset);
+                return TopChartFactory.createBoxAndWhiskerChart(DefaultMessagesImpl.getString("SummaryStatisticsState.SummaryStatistics"), dataset); //$NON-NLS-1$
             } else {
-                return TopChartFactory.create3DBarChart("Summary Statistics", getDataset(), false);
+                return TopChartFactory.create3DBarChart(DefaultMessagesImpl.getString("SummaryStatisticsState.Summary_Statistics"), getDataset(), false); //$NON-NLS-1$
             }
         }
     }
@@ -110,12 +111,12 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
             dataset.add(item, "0", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
             List zerolist = new ArrayList();
-            dataset.add(zerolist, "1", "");
-            dataset.add(zerolist, "2", "");
-            dataset.add(zerolist, "3", "");
-            dataset.add(zerolist, "4", "");
-            dataset.add(zerolist, "5", "");
-            dataset.add(zerolist, "6", "");
+            dataset.add(zerolist, "1", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            dataset.add(zerolist, "2", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            dataset.add(zerolist, "3", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            dataset.add(zerolist, "4", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            dataset.add(zerolist, "5", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            dataset.add(zerolist, "6", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
             dataset.addDataEntity(customerdataset.getDataEntities());
             return dataset;
@@ -142,7 +143,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { "Label", "Count" });
+        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("SummaryStatisticsState.Label"), DefaultMessagesImpl.getString("SummaryStatisticsState.Count") }); //$NON-NLS-1$ //$NON-NLS-2$
         entity.setFieldWidths(new Integer[] { 200, 300 });
         return entity;
     }
@@ -167,9 +168,9 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
         String url = null;
 
         if (getDataset() instanceof BoxAndWhiskerCategoryDataset) {
-            url = "http://en.wikipedia.org/wiki/Box_plot";
+            url = "http://en.wikipedia.org/wiki/Box_plot"; //$NON-NLS-1$
         } else {
-            url = "http://en.wikipedia.org/wiki/Histogram";
+            url = "http://en.wikipedia.org/wiki/Histogram"; //$NON-NLS-1$
         }
         return url;
     }

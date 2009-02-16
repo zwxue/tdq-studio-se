@@ -21,9 +21,9 @@ import org.talend.dq.dbms.DbmsLanguage;
  */
 public class PatternTransformer {
 
-    private static final String BEGIN = "^";
+    private static final String BEGIN = "^"; //$NON-NLS-1$
 
-    private static final String END = "$";
+    private static final String END = "$"; //$NON-NLS-1$
 
     private char lowerCase = 'a';
 
@@ -31,7 +31,7 @@ public class PatternTransformer {
 
     private char numeric = '9';
     
-    private String specialChar = ".*?^${}()\\+|[]";
+    private String specialChar = ".*?^${}()\\+|[]"; //$NON-NLS-1$
 
     private DbmsLanguage dbmsLanguage;
     
@@ -53,16 +53,16 @@ public class PatternTransformer {
     private String getRegexpPattern(char inputCharacter) {
         if (lowerCase == inputCharacter) {
             // TODO could depend on DBMS here
-            return "[[:lower:]]";
+            return "[[:lower:]]"; //$NON-NLS-1$
         }
         if (upperCase == inputCharacter) {
-            return "[[:upper:]]";
+            return "[[:upper:]]"; //$NON-NLS-1$
         }
         if (numeric == inputCharacter) {
-            return "[[:digit:]]";
+            return "[[:digit:]]"; //$NON-NLS-1$
         }
         if (specialChar.contains(String.valueOf(inputCharacter))) {
-            return "\\" + inputCharacter; // TODO for Mysql, should double the number of \
+            return "\\" + inputCharacter; // TODO for Mysql, should double the number of \ //$NON-NLS-1$
         }
         // TODO add other classes here
         return String.valueOf(inputCharacter);        

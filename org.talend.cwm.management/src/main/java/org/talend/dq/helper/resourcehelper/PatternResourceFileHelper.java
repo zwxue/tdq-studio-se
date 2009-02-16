@@ -159,10 +159,10 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
     public Pattern createPattern(String name, String author, String description, String purpose, String status) {
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         pattern.setName(name);
-        TaggedValueHelper.setAuthor(pattern, author == null ? "" : author);
-        TaggedValueHelper.setDescription(description == null ? "" : description, pattern);
-        TaggedValueHelper.setPurpose(purpose == null ? "" : purpose, pattern);
-        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(status == null ? "" : status));
+        TaggedValueHelper.setAuthor(pattern, author == null ? "" : author); //$NON-NLS-1$
+        TaggedValueHelper.setDescription(description == null ? "" : description, pattern); //$NON-NLS-1$
+        TaggedValueHelper.setPurpose(purpose == null ? "" : purpose, pattern); //$NON-NLS-1$
+        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(status == null ? "" : status)); //$NON-NLS-1$
 
         return pattern;
     }

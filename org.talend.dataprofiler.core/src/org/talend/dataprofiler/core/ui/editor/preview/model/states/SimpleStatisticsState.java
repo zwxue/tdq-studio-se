@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
@@ -38,7 +39,7 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
     }
 
     public JFreeChart getChart() {
-        return TopChartFactory.create3DBarChart("Simple Statistics", getDataset(), true);
+        return TopChartFactory.create3DBarChart(DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), getDataset(), true); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -47,7 +48,7 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
             double value = Double.parseDouble(unit.getValue().toString());
             String label = unit.getIndicatorName();
 
-            customerdataset.addValue(value, label, "");
+            customerdataset.addValue(value, label, ""); //$NON-NLS-1$
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
@@ -74,7 +75,7 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
     protected TableStructureEntity getTableStructure() {
 
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { "Label", "Count", "%" });
+        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("SimpleStatisticsState.Label"), DefaultMessagesImpl.getString("SimpleStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         entity.setFieldWidths(new Integer[] { 200, 150, 150 });
         return entity;
     }

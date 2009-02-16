@@ -28,6 +28,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
+import org.talend.i18n.Messages;
 import org.talend.utils.sql.metadata.constants.MetaDataConstants;
 
 /**
@@ -94,43 +95,43 @@ public class CatalogBuilder extends CwmBuilder {
         int databaseMajorVersion = databaseMetadata.getDatabaseMajorVersion();
         String databaseProductName = databaseMetadata.getDatabaseProductName();
         String databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
-        print("Database=", databaseProductName + " " + databaseProductVersion + " " + databaseMajorVersion + "."
+        print("Database=", databaseProductName + " " + databaseProductVersion + " " + databaseMajorVersion + "." //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 + databaseMinorVersion);
 
         String driverName = databaseMetadata.getDriverName();
         String driverVersion = databaseMetadata.getDriverVersion();
         int driverMajorVersion = databaseMetadata.getDriverMajorVersion();
         int driverMinorVersion = databaseMetadata.getDriverMinorVersion();
-        print("Driver=", driverName + " " + driverVersion + " " + driverMajorVersion + "." + driverMinorVersion);
+        print("Driver=", driverName + " " + driverVersion + " " + driverMajorVersion + "." + driverMinorVersion); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         int majorVersion = databaseMetadata.getJDBCMajorVersion();
         int minorVersion = databaseMetadata.getJDBCMinorVersion();
-        print("JDBC=", "" + majorVersion + "." + minorVersion);
+        print("JDBC=", "" + majorVersion + "." + minorVersion); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         String identifierQuoteString = databaseMetadata.getIdentifierQuoteString();
-        print("quote=", identifierQuoteString);
+        print("quote=", identifierQuoteString); //$NON-NLS-1$
 
         String extraNameCharacters = databaseMetadata.getExtraNameCharacters();
-        print("extra=", extraNameCharacters);
+        print("extra=", extraNameCharacters); //$NON-NLS-1$
 
         String procedureTerm = databaseMetadata.getProcedureTerm();
-        print("proc=", procedureTerm);
+        print("proc=", procedureTerm); //$NON-NLS-1$
 
         String url = databaseMetadata.getURL();
-        print("DB url=", url);
+        print("DB url=", url); //$NON-NLS-1$
         String userName = databaseMetadata.getUserName();
-        print("user=", userName);
+        print("user=", userName); //$NON-NLS-1$
 
         String catalogTerm = databaseMetadata.getCatalogTerm();
-        print("Catalog term=", catalogTerm);
+        print("Catalog term=", catalogTerm); //$NON-NLS-1$
 
         String catalogSeparator = databaseMetadata.getCatalogSeparator();
-        print("Catalog sep=", catalogSeparator);
+        print("Catalog sep=", catalogSeparator); //$NON-NLS-1$
         String keywords = databaseMetadata.getSQLKeywords();
-        print("keywords=", keywords);
+        print("keywords=", keywords); //$NON-NLS-1$
 
         String schemaTerm = databaseMetadata.getSchemaTerm();
-        print("Schema term=", schemaTerm);
+        print("Schema term=", schemaTerm); //$NON-NLS-1$
 
     }
 
@@ -191,8 +192,8 @@ public class CatalogBuilder extends CwmBuilder {
             // else DB support getCatalogs() method
             while (catalogNames.next()) {
                 String catalogName = catalogNames.getString(MetaDataConstants.TABLE_CAT.name());
-                assert catalogName != null : "This should not happen: Catalog name is null with connection "
-                        + getConnectionInformations(connection);
+                assert catalogName != null : Messages.getString("CatalogBuilder.CatalogNameNull",//$NON-NLS-1$
+                        getConnectionInformations(connection));
                 TdCatalog catalog = createOrUpdateCatalog(catalogName);
                 name2catalog.put(catalogName, catalog);
             }

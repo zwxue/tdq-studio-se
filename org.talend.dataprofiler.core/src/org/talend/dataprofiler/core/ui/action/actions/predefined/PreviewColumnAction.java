@@ -22,6 +22,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.ColumnSetNameHelper;
@@ -36,7 +37,7 @@ public class PreviewColumnAction extends Action {
     private TdColumn[] columns;
 
     public PreviewColumnAction(TdColumn[] columns) {
-        super("Preview");
+        super(DefaultMessagesImpl.getString("PreviewColumnAction.Preview")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE));
         this.columns = columns;
     }
@@ -50,16 +51,16 @@ public class PreviewColumnAction extends Action {
             String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
             DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
 
-            String columnClause = "";
+            String columnClause = ""; //$NON-NLS-1$
             for (TdColumn column : columns) {
-                columnClause += language.quote(column.getName()) + ",";
+                columnClause += language.quote(column.getName()) + ","; //$NON-NLS-1$
             }
             columnClause = columnClause.substring(0, columnClause.length() - 1);
 
-            String query = "select " + columnClause + " from " + tableName;
+            String query = "select " + columnClause + " from " + tableName; //$NON-NLS-1$ //$NON-NLS-2$
             CorePlugin.getDefault().runInDQViewer(dataprovider, query, tableName);
         } else {
-            MessageDialogWithToggle.openWarning(null, "Warning", "\r\nYou must preview columns from one table.");
+            MessageDialogWithToggle.openWarning(null, DefaultMessagesImpl.getString("PreviewColumnAction.Warning"), DefaultMessagesImpl.getString("PreviewColumnAction.previewColumns")); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 }

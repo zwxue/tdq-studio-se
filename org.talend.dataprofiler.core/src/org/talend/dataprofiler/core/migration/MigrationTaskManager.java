@@ -29,13 +29,13 @@ import org.talend.utils.ProductVersion;
  */
 public class MigrationTaskManager {
 
-    public static final String EXTENSION_ID = "org.talend.dataprofiler.core.migrationtask";
+    public static final String EXTENSION_ID = "org.talend.dataprofiler.core.migrationtask"; //$NON-NLS-1$
 
-    public static final String ATTR_CLASS = "class";
+    public static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
-    public static final String ATTR_VERSION = "version";
+    public static final String ATTR_VERSION = "version"; //$NON-NLS-1$
 
-    public static final String ATTR_PID = "pluginId";
+    public static final String ATTR_PID = "pluginId"; //$NON-NLS-1$
 
     public static List<IWorkspaceMigrationTask> findValidMigrationTasks() {
         List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();

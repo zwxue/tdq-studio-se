@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * @author scorreia
@@ -51,7 +52,7 @@ public class DataProfilerPreferencePage extends PreferencePage implements IWorkb
         // gridData.horizontalSpan = 4;
         composite.setLayoutData(gridData);
         Label label = new Label(composite, SWT.NONE);
-        label.setText("Unfold this \"Data Profiler\" folder to set here the preferences of the Data Profiler perspective.");
+        label.setText(DefaultMessagesImpl.getString("DataProfilerPreferencePage.UnfoldFolder")); //$NON-NLS-1$
         return composite;
     }
 

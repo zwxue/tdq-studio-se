@@ -70,14 +70,14 @@ public class DbmsLanguage {
     /**
      * Ansi SQL.
      */
-    static final String SQL = "SQL";
+    static final String SQL = "SQL"; //$NON-NLS-1$
 
-    private static final String DOT = ".";
+    private static final String DOT = "."; //$NON-NLS-1$
 
     /**
      * End of Statement: ";".
      */
-    protected static final String EOS = ";";
+    protected static final String EOS = ";"; //$NON-NLS-1$
 
     /**
      * in upper case.
@@ -92,7 +92,7 @@ public class DbmsLanguage {
     /**
      * the quoting string or an empty string if quoting is not supported.
      */
-    private String dbQuoteString = "";
+    private String dbQuoteString = ""; //$NON-NLS-1$
 
     /**
      * DbmsLanguage constructor for generic ANSI SQL (independent of any DBMS).
@@ -107,7 +107,7 @@ public class DbmsLanguage {
      * @param dbmsType the name of the DBMS (MySQL, Oracle,...)
      */
     DbmsLanguage(String dbmsType) {
-        assert dbmsType != null : "DBMS type must not be null!!";
+        assert dbmsType != null : "DBMS type must not be null!!"; //$NON-NLS-1$
         this.dbmsName = dbmsType;
         this.dbVersion = null;
     }
@@ -221,7 +221,7 @@ public class DbmsLanguage {
     }
 
     public String from() {
-        return surroundWithSpaces("FROM");
+        return surroundWithSpaces("FROM"); //$NON-NLS-1$
     }
 
     /**
@@ -265,7 +265,7 @@ public class DbmsLanguage {
 
         qualName.append(this.quote(table));
         if (log.isDebugEnabled()) {
-            log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName));
+            log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName)); //$NON-NLS-1$
         }
         return qualName.toString();
     }
@@ -281,7 +281,7 @@ public class DbmsLanguage {
     }
 
     public String replaceNullsWithString(String colName, String replacement) {
-        return " CASE WHEN " + colName + isNull() + " THEN " + replacement + " ELSE " + colName + " END ";
+        return " CASE WHEN " + colName + isNull() + " THEN " + replacement + " ELSE " + colName + " END "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
     /**
@@ -292,22 +292,22 @@ public class DbmsLanguage {
      */
     public String isNotBlank(String colName) {
         // default is OK for MySQL
-        return trim(colName) + notEqual() + " '' ";
+        return trim(colName) + notEqual() + " '' "; //$NON-NLS-1$
     }
 
     public String trim(String colName) {
         // default is OK for MySQL
-        return " TRIM(" + colName + ") ";
+        return " TRIM(" + colName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public String toUpperCase(String colName) {
         // default is OK for MySQL, Oracle
-        return " UPPER(" + colName + ")";
+        return " UPPER(" + colName + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public String toLowerCase(String colName) {
         // default is OK for MySQL, Oracle
-        return " LOWER(" + colName + ")";
+        return " LOWER(" + colName + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public String extractYear(String colName) {
@@ -351,21 +351,21 @@ public class DbmsLanguage {
      */
     public String countRowInSubquery(String subquery, String alias) {
         // ANSI SQL, MySQL
-        return " SELECT COUNT(*) FROM (" + subquery + ") AS " + alias;
+        return " SELECT COUNT(*) FROM (" + subquery + ") AS " + alias; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public String sumRowInSubquery(String colToSum, String subquery, String alias) {
         // ANSI SQL, MySQL
-        return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") AS " + alias;
+        return " SELECT SUM(" + colToSum + ") FROM (" + subquery + ") AS " + alias; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     public String selectAllRowsWhereColumnIn(String column, String table, String subquery) {
-        return " SELECT * FROM " + table + where() + column + in() + "( SELECT " + column + from() + "(" + subquery
-                + ") AS mysubquery )";
+        return " SELECT * FROM " + table + where() + column + in() + "( SELECT " + column + from() + "(" + subquery //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                + ") AS mysubquery )"; //$NON-NLS-1$
     }
 
     public String in() {
-        return " IN ";
+        return " IN "; //$NON-NLS-1$
     }
 
     /**
@@ -386,7 +386,7 @@ public class DbmsLanguage {
 
     protected String extract(DateGrain dateGrain, String colName) {
         // ANSI SQL, MySQL, Oracle
-        return " EXTRACT(" + dateGrain + from() + colName + ") ";
+        return " EXTRACT(" + dateGrain + from() + colName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -438,7 +438,7 @@ public class DbmsLanguage {
     }
 
     public String where() {
-        return " WHERE ";
+        return " WHERE "; //$NON-NLS-1$
     }
 
     /**
@@ -460,15 +460,15 @@ public class DbmsLanguage {
     }
 
     public String desc() {
-        return " DESC ";
+        return " DESC "; //$NON-NLS-1$
     }
 
     public String orderBy() {
-        return " ORDER BY ";
+        return " ORDER BY "; //$NON-NLS-1$
     }
 
     public String groupBy() {
-        return " GROUP BY ";
+        return " GROUP BY "; //$NON-NLS-1$
     }
 
     /**
@@ -522,7 +522,7 @@ public class DbmsLanguage {
         Expression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName, functions);
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();
-            final String[] fonc = body.split(";");
+            final String[] fonc = body.split(";"); //$NON-NLS-1$
             return Arrays.asList(fonc); // language found
         }
 
@@ -530,7 +530,7 @@ public class DbmsLanguage {
         sqlGenExpr = getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions);
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();
-            final String[] fonc = body.split(";");
+            final String[] fonc = body.split(";"); //$NON-NLS-1$
             return Arrays.asList(fonc); // language found
         }
         return Collections.emptyList();
@@ -595,7 +595,7 @@ public class DbmsLanguage {
     }
 
     public String getBackSlashForRegex() {
-        return "\\";
+        return "\\"; //$NON-NLS-1$
     }
 
     /**
@@ -666,7 +666,7 @@ public class DbmsLanguage {
      * @return the appropriate SQL SELECT statement that can be used to check a string against a regular expression.
      */
     public String getSelectRegexpTestString(String stringToCheck, String regex) {
-        String surroundedTestString = (stringToCheck.startsWith("'") && stringToCheck.endsWith("'")) ? stringToCheck
+        String surroundedTestString = (stringToCheck.startsWith("'") && stringToCheck.endsWith("'")) ? stringToCheck //$NON-NLS-1$ //$NON-NLS-2$
                 : surroundWith('\'', stringToCheck, '\'');
         String regexLikeExpression = regexLike(surroundedTestString, regex);
         // else
@@ -677,7 +677,7 @@ public class DbmsLanguage {
     }
 
     protected String getSelectRegexp(String regexLikeExpression) {
-        return "SELECT " + regexLikeExpression + EOS;
+        return "SELECT " + regexLikeExpression + EOS; //$NON-NLS-1$
     }
 
     /**
@@ -702,7 +702,7 @@ public class DbmsLanguage {
      * @return hard coded quote identifier string
      */
     public String getHardCodedQuoteIdentifier() {
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
@@ -811,7 +811,7 @@ public class DbmsLanguage {
      * @return CHAR_LENGTH(columnName)
      */
     public String charLength(String columnName) {
-        return " CHAR_LENGTH(" + columnName + ") ";
+        return " CHAR_LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

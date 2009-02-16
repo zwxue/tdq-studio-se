@@ -33,7 +33,7 @@ public class ImageLib {
 
     public static final String UPDATE_IMAGE = "update.gif"; //$NON-NLS-1$
 
-    public static final String COMPARE_IMAGE = "compare_view.gif";
+    public static final String COMPARE_IMAGE = "compare_view.gif"; //$NON-NLS-1$
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.

@@ -63,7 +63,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         }
 
         // no query to return, here we only instantiate several SQL queries
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
@@ -114,7 +114,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             // handle data filter
             String stringDataFilter = AnalysisHelper.getStringDataFilter(cachedAnalysis);
             if (stringDataFilter == null) {
-                stringDataFilter = "";
+                stringDataFilter = ""; //$NON-NLS-1$
             }
             sqlExpr = dbms().addWhereToStatement(sqlExpr, stringDataFilter);
 

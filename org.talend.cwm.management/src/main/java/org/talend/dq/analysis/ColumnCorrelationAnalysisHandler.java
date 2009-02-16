@@ -134,7 +134,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
     public String getDatamingType(TdColumn column) {
         DataminingType dmType = MetadataHelper.getDataminingType(column);
         if (dmType == null) {
-            return "";
+            return ""; //$NON-NLS-1$
         }
         // else
         return dmType.getLiteral();

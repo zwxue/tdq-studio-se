@@ -34,7 +34,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
 
         String clause = super.getInstantiatedClause();
-        return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause)
+        return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$
                 + andDataFilterClause();
     }
 

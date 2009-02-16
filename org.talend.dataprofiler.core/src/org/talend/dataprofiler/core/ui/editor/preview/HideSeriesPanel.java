@@ -210,7 +210,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
                     String taskDescription = task.getDescription();
                     Date startDate = task.getDuration().getStart();
                     Date endDate = task.getDuration().getEnd();
-                    return taskDescription + ",     " + startDate + "---->" + endDate;
+                    return taskDescription + ",     " + startDate + "---->" + endDate; //$NON-NLS-1$ //$NON-NLS-2$
                     // return "this is a tooltip";
                 }
             };
@@ -248,7 +248,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             jpanel.add(jcheckbox);
         }
         add(chartpanel);
-        add(jpanel, "South");
+        add(jpanel, "South"); //$NON-NLS-1$
     }
 
     /**
@@ -298,7 +298,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
                     .getItemCount(); itemCount++, columnCount++) {
                 Task task = ((TaskSeriesCollection) xyplot.getDataset()).getSeries(seriesCount).get(itemCount);
                 String taskDescription = task.getDescription();
-                String[] taskArray = taskDescription.split("\\|");
+                String[] taskArray = taskDescription.split("\\|"); //$NON-NLS-1$
                 boolean isSameTime = task.getDuration().getStart().getTime() == task.getDuration().getEnd().getTime();
                 if (!isSameTime && (rowList.get(indexOfRow))[multiDateColumn - 3] != null
                         && (rowList.get(indexOfRow))[multiDateColumn - 2] != null
@@ -307,7 +307,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
                     pair.setRow(seriesCount);
                     pair.setColumn(columnCount);
                     hightlightSeriesMap.put(String.valueOf(seriesCount) + String.valueOf(columnCount), pair);
-                    an = new CategoryTextAnnotation("#nulls = " + (rowList.get(indexOfRow))[multiDateColumn],
+                    an = new CategoryTextAnnotation("#nulls = " + (rowList.get(indexOfRow))[multiDateColumn], //$NON-NLS-1$
                             (Comparable<String>) taskDescription, task.getDuration().getStart().getTime());
                     an.setTextAnchor(TextAnchor.CENTER_LEFT);
                     an.setCategoryAnchor(CategoryAnchor.MIDDLE);
@@ -353,6 +353,6 @@ class RowColumPair {
     }
 
     public String toString() {
-        return "row = " + row + ", column = " + column;
+        return "row = " + row + ", column = " + column; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

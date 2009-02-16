@@ -178,7 +178,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
                 } else if (!CheckValueUtils.isRealNumberValue(mintxt)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
-                } else if (!maxtxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) {
+                } else if (!maxtxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
@@ -197,7 +197,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     updateStatus(IStatus.ERROR, MSG_EMPTY);
                 } else if (!CheckValueUtils.isRealNumberValue(maxtxt)) {
                     updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
-                } else if (!mintxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) {
+                } else if (!mintxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                 } else {
                     updateStatus(IStatus.OK, MSG_OK);
@@ -242,7 +242,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                     int numb = Integer.parseInt(numbOfBins.getText());
                     double min = Double.parseDouble(minValue.getText());
                     double max = Double.parseDouble(maxValue.getText());
-                    Domain customerDomin = DomainHelper.createContiguousClosedBinsIntoDomain("", numb, min, max);
+                    Domain customerDomin = DomainHelper.createContiguousClosedBinsIntoDomain("", numb, min, max); //$NON-NLS-1$
                     tableViewer.setInput(customerDomin.getRanges());
 
                 } else {
@@ -334,7 +334,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     @Override
     public boolean performFinish() {
 
-        if (minValue.getText().equals("") || maxValue.getText().equals("") || numbOfBins.getText().equals("0")) {
+        if (minValue.getText().equals("") || maxValue.getText().equals("") || numbOfBins.getText().equals("0")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             parameters.setBins(null);
         } else {
             double min = Double.parseDouble(minValue.getText());
@@ -342,14 +342,14 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             int numb = Integer.parseInt(numbOfBins.getText());
 
             Object inputList = tableViewer.getInput();
-            Domain domain = DomainHelper.createDomain("test");
+            Domain domain = DomainHelper.createDomain("test"); //$NON-NLS-1$
 
             if (inputList != null && (inputList instanceof List)) {
                 List<RangeRestriction> eInputList = (List<RangeRestriction>) inputList;
                 domain.getRanges().addAll(eInputList);
                 parameters.setBins(domain);
             } else {
-                domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numb, min, max);
+                domain = DomainHelper.createContiguousClosedBinsIntoDomain("test", numb, min, max); //$NON-NLS-1$
                 parameters.setBins(domain);
             }
         }
@@ -462,10 +462,10 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         public Object getValue(Object element, String property) {
             RangeRestriction range = (RangeRestriction) element;
 
-            if (property.equals("low")) {
+            if (property.equals("low")) { //$NON-NLS-1$
                 double lowerValue = DomainHelper.getRealValue(range.getLowerValue());
                 return String.valueOf(lowerValue);
-            } else if (property.equals("high")) {
+            } else if (property.equals("high")) { //$NON-NLS-1$
                 double upperValue = DomainHelper.getRealValue(range.getUpperValue());
                 return String.valueOf(upperValue);
             }
@@ -481,9 +481,9 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 RangeRestriction range = (RangeRestriction) item.getData();
 
                 RealNumberValue realNumberValue = DomainHelper.createRealNumberValue(null, Double.valueOf(value.toString()));
-                if (property.equals("low")) {
+                if (property.equals("low")) { //$NON-NLS-1$
                     range.setLowerValue(realNumberValue);
-                } else if (property.equals("high")) {
+                } else if (property.equals("high")) { //$NON-NLS-1$
                     range.setUpperValue(realNumberValue);
                 }
             } else {

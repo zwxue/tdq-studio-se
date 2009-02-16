@@ -62,6 +62,7 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.i18n.Messages;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -81,7 +82,7 @@ import Zql.ParseException;
  */
 public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
-    private static final String ALIAS = "(\\w*)\\.";
+    private static final String ALIAS = "(\\w*)\\."; //$NON-NLS-1$
 
     /**
      * TODO scorreia this constant must be replaced by a default preference and the possibility to the user to change it
@@ -129,7 +130,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return null;
         }
 
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
@@ -158,7 +159,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (!belongToSameSchemata(tdColumn)) {
             StringBuffer buf = new StringBuffer();
             for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
-                buf.append(schema.getName() + " ");
+                buf.append(schema.getName() + " "); //$NON-NLS-1$
             }
             log.error("Column " + colName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
             return false;
@@ -319,7 +320,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 // need to generate different SQL where clause for each type.
                 int javaType = tdColumn.getJavaType();
                 if (!Java2SqlType.isNumbericInSQL(javaType)) {
-                    defValue = "'" + defValue + "'";
+                    defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 whereExpression.add(colName + dbmsLanguage.equal() + defValue);
             }
@@ -369,8 +370,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             for (TdColumn col : columns) {
                 String colNameToReplace = where.contains(quotedColName) ? quotedColName : col.getName();
                 if (where.contains(colNameToReplace)) {
-                    whereA = whereA.replace(colNameToReplace, tableAliases[0] + "." + colNameToReplace);
-                    whereB = whereB.replace(colNameToReplace, tableAliases[1] + "." + colNameToReplace);
+                    whereA = whereA.replace(colNameToReplace, tableAliases[0] + "." + colNameToReplace); //$NON-NLS-1$
+                    whereB = whereB.replace(colNameToReplace, tableAliases[1] + "." + colNameToReplace); //$NON-NLS-1$
                 }
             }
             duplicatedWhereExpressions.add(whereA);
@@ -490,13 +491,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             boolean isNumeric = Java2SqlType.isNumbericInSQL(javaType);
             if (isNumeric) {
                 // TODO scorreia user should tell the expected format
-                return "CAST (" + colName + " AS DECIMAL)";
+                return "CAST (" + colName + " AS DECIMAL)"; //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         return colName;
     }
 
-    private static final String COMMA = " , ";
+    private static final String COMMA = " , "; //$NON-NLS-1$
 
     /**
      * DOC scorreia Comment method "getDateAggregatedCompletedString".
@@ -513,8 +514,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private String getDateAggregatedCompletedString(Expression sqlExpression, String colName, String table,
             DateGrain dateAggregationType) {
         int nbExtractedColumns = 0;
-        String result = "";
-        String aliases = ""; // used in group by clause in MySQL
+        String result = ""; //$NON-NLS-1$
+        String aliases = ""; // used in group by clause in MySQL //$NON-NLS-1$
         String alias;
         switch (dateAggregationType) {
         case DAY:
@@ -561,9 +562,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     private String getAlias(String colName, DateGrain dateAggregationType) {
         if (dbms().supportAliasesInGroupBy()) {
-            return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
+            return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " "; //$NON-NLS-1$ //$NON-NLS-2$
         } else {
-            return "";
+            return ""; //$NON-NLS-1$
         }
     }
 
@@ -575,7 +576,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private String unquote(String colName) {
         String dbQuoteString = dbms().getDbQuoteString();
-        return colName.replace(dbQuoteString, "");
+        return colName.replace(dbQuoteString, ""); //$NON-NLS-1$
     }
 
     /**
@@ -623,7 +624,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // MOD scorreia 2008-09-03 Bug #4976 Order by clause cannot be in each single select statement (Oracle
         // constraint, but MySQL allows it)
         // hence we extract the ORDER BY clause and add it at the end.
-        int idxOfOrderBY = sqlGenericExpression.indexOf(" ORDER BY");
+        int idxOfOrderBY = sqlGenericExpression.indexOf(" ORDER BY"); //$NON-NLS-1$
         // MOD scorreia 2008-12-16 handle teradata case where "order by" clause needs a number to identify the column
         // by removing the unnecessary "order by" clause
         // String orderBy = (idxOfOrderBY != -1) ? sqlGenericExpression.substring(idxOfOrderBY) : "";
@@ -662,7 +663,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             List<String> whereExpression, String range) throws ParseException {
         String completedRange = this.unquote(range); // replaceVariablesLow(range, this.unquote(colName),
         // this.unquote(table));
-        String rangeColumn = "'" + completedRange + "'";
+        String rangeColumn = "'" + completedRange + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 
         String singleQuery = removeGroupBy(sqlGenericExpression);
         String completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(singleQuery, rangeColumn, table);
@@ -699,7 +700,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return the new SQL statement
      */
     private String replaceCountByZeroCount(String completedSqlString, String completedRange) {
-        return completedSqlString.replace("COUNT(*)", "COUNT( CASE WHEN " + completedRange + " THEN 1 END )");
+        return completedSqlString.replace("COUNT(*)", "COUNT( CASE WHEN " + completedRange + " THEN 1 END )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**
@@ -737,13 +738,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String catalogOrSchema = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         long count = getCount(cachedAnalysis, colName, table, catalogOrSchema, whereExpression);
         if (count == -1) {
-            throw new AnalysisExecutionException("Got an invalid result set when evaluating row count for column "
-                    + dbms().toQualifiedName(catalogOrSchema, null, colName));
+            throw new AnalysisExecutionException(Messages.getString("ColumnAnalysisSqlExecutor.GotInvalidResultSet", //$NON-NLS-1$
+                    dbms().toQualifiedName(catalogOrSchema, null, colName)));
         }
 
         if (count == 0) {
-            this.errorMessage = "Cannot compute a quantile because there is no row for column "
-                    + dbms().toQualifiedName(catalogOrSchema, null, colName);
+            this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.CannotComputeQuantile",//$NON-NLS-1$
+                    dbms().toQualifiedName(catalogOrSchema, null, colName));
             throw new AnalysisExecutionException(errorMessage);
         }
 
@@ -815,8 +816,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         try {
             return getCountLow(analysis, colName, table, catalog, whereExpression);
         } catch (SQLException e) {
-            throw new AnalysisExecutionException("Cannot get count for analysis \"" + analysis.getName() + "\" on column "
-                    + colName + " in " + dbms().toQualifiedName(catalog, null, table), e);
+            throw new AnalysisExecutionException(Messages.getString("ColumnAnalysisSqlExecutor.CannotGetCount",//$NON-NLS-1$
+                    analysis.getName(), colName, dbms().toQualifiedName(catalog, null, table)), e);
         }
     }
 
@@ -836,12 +837,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             throws SQLException, AnalysisExecutionException {
         TypedReturnCode<Connection> trc = this.getConnection(analysis);
         if (!trc.isOk()) {
-            throw new AnalysisExecutionException("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+            throw new AnalysisExecutionException(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.CannotExecuteAnalysis", analysis.getName() //$NON-NLS-1$
+                    , trc.getMessage()));
         }
         Connection connection = trc.getObject();
-        String whereExp = (whereExpression == null || whereExpression.isEmpty()) ? "" : " WHERE "
+        String whereExp = (whereExpression == null || whereExpression.isEmpty()) ? "" : " WHERE " //$NON-NLS-1$ //$NON-NLS-2$
                 + dbms().buildWhereExpression(whereExpression);
-        String queryStmt = "SELECT COUNT(" + colName + ") FROM " + table + whereExp; // + dbms().eos();
+        String queryStmt = "SELECT COUNT(" + colName + ") FROM " + table + whereExp; // + dbms().eos(); //$NON-NLS-1$ //$NON-NLS-2$
 
         List<Object[]> myResultSet = executeQuery(catalogName, connection, queryStmt);
 
@@ -892,7 +895,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return
      */
     private String surroundSingleQuotes(String sqlGenericString) {
-        return sqlGenericString.replaceAll("'", "''");
+        return sqlGenericString.replaceAll("'", "''"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

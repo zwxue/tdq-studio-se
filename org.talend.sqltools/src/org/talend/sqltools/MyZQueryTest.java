@@ -29,9 +29,9 @@ public class MyZQueryTest {
      * @param args
      */
     public static void main(String[] args) {
-        String db = "weka";
-        String table = db + ".arff";
-        String[] columns = new String[] { table + ".outlook", table + ".temperature" };
+        String db = "weka"; //$NON-NLS-1$
+        String table = db + ".arff"; //$NON-NLS-1$
+        String[] columns = new String[] { table + ".outlook", table + ".temperature" }; //$NON-NLS-1$ //$NON-NLS-2$
 
         ZQuery query = new ZQuery();
 
@@ -47,24 +47,24 @@ public class MyZQueryTest {
         // simple select
         System.out.println(query);
 
-        System.out.println("## From part");
+        System.out.println("## From part"); //$NON-NLS-1$
         Vector<ZFromItem> froms = query.getFrom();
         for (ZFromItem from : froms) {
-            System.out.println("\talias " + from.getAlias());
-            System.out.println("\tSchema " + from.getSchema());
-            System.out.println("\ttable " + from.getTable());
-            System.out.println("\tcolumn " + from.getColumn());
+            System.out.println("\talias " + from.getAlias()); //$NON-NLS-1$
+            System.out.println("\tSchema " + from.getSchema()); //$NON-NLS-1$
+            System.out.println("\ttable " + from.getTable()); //$NON-NLS-1$
+            System.out.println("\tcolumn " + from.getColumn()); //$NON-NLS-1$
         }
 
-        System.out.println("## Select part");
+        System.out.println("## Select part"); //$NON-NLS-1$
         Vector<ZSelectItem> sel = query.getSelect();
         for (ZSelectItem from : sel) {
-            System.out.println("\talias " + from.getAggregate());
-            System.out.println("\talias " + from.getExpression());
-            System.out.println("\talias " + from.getAlias());
-            System.out.println("\tSchema " + from.getSchema());
-            System.out.println("\ttable " + from.getTable());
-            System.out.println("\tcolumn " + from.getColumn());
+            System.out.println("\talias " + from.getAggregate()); //$NON-NLS-1$
+            System.out.println("\talias " + from.getExpression()); //$NON-NLS-1$
+            System.out.println("\talias " + from.getAlias()); //$NON-NLS-1$
+            System.out.println("\tSchema " + from.getSchema()); //$NON-NLS-1$
+            System.out.println("\ttable " + from.getTable()); //$NON-NLS-1$
+            System.out.println("\tcolumn " + from.getColumn()); //$NON-NLS-1$
             System.out.println();
         }
     }

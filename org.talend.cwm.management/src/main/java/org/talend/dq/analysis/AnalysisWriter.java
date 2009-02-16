@@ -30,6 +30,7 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -55,8 +56,8 @@ public class AnalysisWriter {
         ReturnCode rc = new ReturnCode();
         Resource resource = analysis.eResource();
         if (resource == null) {
-            rc.setReturnCode("Error: No resource found! A file must be defined in which the analysis " + analysis.getName()
-                    + " will be saved.", false);
+            rc.setReturnCode(Messages.getString("AnalysisWriter.Error",//$NON-NLS-1$
+                    analysis.getName()), false);
             return rc;
         }
         // --- store descriptions (description and purpose) in the same resource
@@ -94,7 +95,7 @@ public class AnalysisWriter {
         boolean saved = EMFUtil.saveResource(resource);
 
         if (!saved) {
-            rc.setReturnCode("Problem while saving analysis " + analysis.getName() + ". ", saved);
+            rc.setReturnCode(Messages.getString("AnalysisWriter.ProblemSavingAnalysis", analysis.getName()), saved); //$NON-NLS-1$
         }
         return rc;
 
@@ -114,7 +115,7 @@ public class AnalysisWriter {
 
         ReturnCode rc = new ReturnCode();
         if (!checkFileExtension(file)) {
-            rc.setReturnCode("Bad file extension for " + file.getFullPath() + ". Should be " + VALID_EXTENSION, false);
+            rc.setReturnCode(Messages.getString("AnalysisWriter.BadFileExtension", file.getFullPath(), VALID_EXTENSION), false); //$NON-NLS-1$
             return rc;
         }
         EMFSharedResources util = EMFSharedResources.getInstance();
@@ -122,7 +123,7 @@ public class AnalysisWriter {
         boolean added = util.addEObjectToResourceSet(file.getFullPath().toString(), analysis);
 
         if (!added) {
-            rc.setReturnCode("Analysis won't be saved. " + util.getLastErrorMessage(), added);
+            rc.setReturnCode(Messages.getString("AnalysisWriter.AnalysisNotSave", util.getLastErrorMessage()), added); //$NON-NLS-1$
             return rc;
         }
 
@@ -145,7 +146,7 @@ public class AnalysisWriter {
         IFile file = folder.getFile(filename);
         // File file = new File(filename);
         if (file.exists()) {
-            rc.setReturnCode("Cannot save analysis " + analysis.getName() + ", file " + filename + " already exists!", false);
+            rc.setReturnCode(Messages.getString("AnalysisWriter.CannotSaveAnalysis", analysis.getName(), filename), false); //$NON-NLS-1$
             return rc;
         }
         ReturnCode saved = save(analysis, file);
@@ -156,7 +157,7 @@ public class AnalysisWriter {
             rc.setObject(file);
             analysis.setFileName(file.getFullPath().toString());
         } else {
-            rc.setReturnCode("Failed to save analysis " + analysis.getName() + " into " + filename, false);
+            rc.setReturnCode(Messages.getString("AnalysisWriter.FailedToSaveAnalysis", analysis.getName(), filename), false); //$NON-NLS-1$
         }
         return rc;
     }

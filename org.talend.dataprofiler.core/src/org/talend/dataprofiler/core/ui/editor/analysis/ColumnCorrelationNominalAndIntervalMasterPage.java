@@ -171,9 +171,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
         if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
-            form.setText("Correlation Analysis between nominal and interval columns");
+            form.setText(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisInterval")); //$NON-NLS-1$
         } else {
-            form.setText("Correlation Analysis between nominal and date columns");
+            form.setText(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisDate")); //$NON-NLS-1$
         }
         metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
@@ -332,7 +332,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview")
+                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview") //$NON-NLS-1$
                                 + tdColumn.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         Display.getDefault().asyncExec(new Runnable() {
 
@@ -446,11 +446,11 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         for (int i = 0; i < columnSetMultiValueList.size(); i++) {
             TdColumn tdColumn = (TdColumn) columnSetMultiValueList.get(i);
             if (columnSetMultiIndicator instanceof CountAvgNullIndicator && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
-                MessageDialog.openWarning(new Shell(), "Warning", "Date column cannot be used in this kind of analysis.");
+                MessageDialog.openWarning(new Shell(), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warning"), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.ColumnNotUsed")); //$NON-NLS-1$ //$NON-NLS-2$
                 return;
             } else if (columnSetMultiIndicator instanceof MinMaxDateIndicator
                     && Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
-                MessageDialog.openWarning(new Shell(), "Warning", "Numberic column cannot be used in this kind of analysis.");
+                MessageDialog.openWarning(new Shell(), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warn"), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NumbericColumn")); //$NON-NLS-1$ //$NON-NLS-2$
                 return;
             }
             String comboString = MetadataHelper.getDataminingType(tdColumn).getLiteral();
@@ -470,8 +470,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             MessageDialog
                     .openWarning(
                             new Shell(),
-                            "Warning",
-                            "This kind of analysis handles only  nominal columns and numeric columns. If you have selected other type of data, either remove them or change their type to \"nominal\" when appropriate");
+                            DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warning_"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.analysisHandlesColumns")); //$NON-NLS-1$
 
         } else {
             TdDataProvider tdProvider = null;
@@ -601,7 +601,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         if (!columnSetMultiValueList.isEmpty()) {
             if (!ColumnHelper.isFromSameTable(columnSetMultiValueList)) {
-                return new ReturnCode("Cannot create an analysis when columns do not belong to the same table", false);
+                return new ReturnCode(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CannotCreateAnalysis"), false); //$NON-NLS-1$
             }
         }
         return new ReturnCode(true);
@@ -611,7 +611,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     protected ReturnCode canRun() {
         List<Column> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
-            return new ReturnCode("No any columns assigned to analysis", false);
+            return new ReturnCode(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
         }
 
         return new ReturnCode(true);

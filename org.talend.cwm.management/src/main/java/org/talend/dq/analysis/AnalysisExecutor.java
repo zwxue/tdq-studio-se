@@ -24,6 +24,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -151,13 +152,13 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
         DataManager datamanager = analysis.getContext().getConnection();
         if (datamanager == null) {
-            rc.setReturnCode("Data manager is null for analysis " + analysis.getName(), false);
+            rc.setReturnCode(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName()), false); //$NON-NLS-1$
             return rc;
         }
         TdDataProvider dataprovider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(datamanager);
         if (dataprovider == null) {
-            rc.setReturnCode("Data provider is null for data manager " + datamanager.getName() + " in analysis "
-                    + analysis.getName(), false);
+            rc.setReturnCode(Messages.getString("AnalysisExecutor.DataProviderNull", datamanager.getName(), //$NON-NLS-1$
+                    analysis.getName()), false);
             return rc;
         }
 
