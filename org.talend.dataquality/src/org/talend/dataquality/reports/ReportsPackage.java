@@ -550,13 +550,22 @@ public interface ReportsPackage extends EPackage {
 	int TD_REPORT__DATE_TO = InformationreportingPackage.REPORT_FEATURE_COUNT + 6;
 
 				/**
+     * The feature id for the '<em><b>Logo</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TD_REPORT__LOGO = InformationreportingPackage.REPORT_FEATURE_COUNT + 7;
+
+                /**
      * The number of structural features of the '<em>Td Report</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 7;
+    int TD_REPORT_FEATURE_COUNT = InformationreportingPackage.REPORT_FEATURE_COUNT + 8;
 
 
     /**
@@ -1020,6 +1029,17 @@ public interface ReportsPackage extends EPackage {
 	EAttribute getTdReport_DateTo();
 
 				/**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.reports.TdReport#getLogo <em>Logo</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Logo</em>'.
+     * @see org.talend.dataquality.reports.TdReport#getLogo()
+     * @see #getTdReport()
+     * @generated
+     */
+    EAttribute getTdReport_Logo();
+
+                /**
      * Returns the meta object for class '{@link org.talend.dataquality.reports.PresentationParameter <em>Presentation Parameter</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1186,6 +1206,13 @@ public interface ReportsPackage extends EPackage {
          */
 		EAttribute TD_REPORT__DATE_TO = eINSTANCE.getTdReport_DateTo();
 								/**
+         * The meta object literal for the '<em><b>Logo</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TD_REPORT__LOGO = eINSTANCE.getTdReport_Logo();
+                                /**
          * The meta object literal for the '{@link org.talend.dataquality.reports.impl.PresentationParameterImpl <em>Presentation Parameter</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->

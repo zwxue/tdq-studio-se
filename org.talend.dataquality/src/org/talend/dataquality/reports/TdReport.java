@@ -27,6 +27,7 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  *   <li>{@link org.talend.dataquality.reports.TdReport#getExecInformations <em>Exec Informations</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getDateFrom <em>Date From</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getDateTo <em>Date To</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.TdReport#getLogo <em>Logo</em>}</li>
  * </ul>
  * </p>
  *
@@ -198,6 +199,33 @@ public interface TdReport extends Report {
 	void setDateTo(Date value);
 
 				/**
+     * Returns the value of the '<em><b>Logo</b></em>' attribute.
+     * The default value is <code>""</code>.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Logo</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Logo</em>' attribute.
+     * @see #setLogo(String)
+     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_Logo()
+     * @model default=""
+     * @generated
+     */
+    String getLogo();
+
+                /**
+     * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getLogo <em>Logo</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Logo</em>' attribute.
+     * @see #getLogo()
+     * @generated
+     */
+    void setLogo(String value);
+
+                /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @model
