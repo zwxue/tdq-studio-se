@@ -23,13 +23,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
 import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.sql.RenameFolderAction;
 import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
+import org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -60,6 +60,17 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
                         menu.add(new RenameFolderAction((IFolder) obj));
                     }
                 }
+                // TODO xqliu move the code to DQRulesActionProvider.java 2009-02-14
+                path = new Path(DQStructureManager.LIBRARIES);
+                path = path.append(DQStructureManager.DQ_RULES);
+                fullPath = ((IFolder) obj).getFullPath();
+                if (path.isPrefixOf(fullPath)) {
+                    menu.add(new CreateDQRulesAction((IFolder) obj));
+                    if (fullPath.segmentCount() > path.segmentCount()) {
+                        menu.add(new RenameFolderAction((IFolder) obj));
+                    }
+                }
+                // ~~
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;
                 if (file.getFileExtension().equalsIgnoreCase("sql")) { //$NON-NLS-1$

@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.schema.SchemaAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizard;
+import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -97,6 +98,17 @@ public class WizardFactory {
 
     public static CreateNewAnalysisWizard createNewAnalysisWizard() {
         return new CreateNewAnalysisWizard();
+    }
+
+    /**
+     * 
+     * DOC xqliu Comment method "createNewDQRuleWizard".
+     * 
+     * @param parameter
+     * @return
+     */
+    public static NewDQRulesWizard createNewDQRuleWizard(ConnectionParameter parameter) {
+        return new NewDQRulesWizard(parameter);
     }
 
     public static Wizard createSqlFileWizard(IFolder folder) {

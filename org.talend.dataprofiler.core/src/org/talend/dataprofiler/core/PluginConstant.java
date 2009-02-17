@@ -66,6 +66,8 @@ public final class PluginConstant {
 
     public static final String PATTERN_EDITOR = "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"; //$NON-NLS-1$
 
+    public static final String DQRULE_EDITOR = "org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"; //$NON-NLS-1$
+
     public static final String MAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*(\\.[_A-Za-z0-9-]+)"; //$NON-NLS-1$
 
     public static final String FOLDER_PATTERN = "^[a-zA-Z]+[a-zA-Z0-9\\_]*$"; //$NON-NLS-1$

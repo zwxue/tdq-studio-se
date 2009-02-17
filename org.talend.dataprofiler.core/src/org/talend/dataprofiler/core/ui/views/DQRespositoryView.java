@@ -265,7 +265,7 @@ public class DQRespositoryView extends CommonNavigator {
             break;
         default:
             filter = new ReportingFilter();
-            filterMap.put(String.valueOf(EMFObjFilter.FILTER_ID), filter);
+            filterMap.put(String.valueOf(ReportingFilter.FILTER_ID), filter);
         }
         this.getCommonViewer().addFilter(filter);
     }

@@ -54,6 +54,9 @@ public final class DQStructureManager {
 
     private static final String DEMO_PATH = "/demo"; //$NON-NLS-1$
 
+    // MOD xqliu 2009-02-14 bug 6015
+    public static final String DQ_RULES_PATH = "/dqrules"; //$NON-NLS-1$
+
     private static final String PATTERN_PATH = "/patterns"; //$NON-NLS-1$
 
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
@@ -65,6 +68,9 @@ public final class DQStructureManager {
     public static final String PATTERNS = DefaultMessagesImpl.getString("DQStructureManager.patterns"); //$NON-NLS-1$
 
     public static final String SQL_PATTERNS = DefaultMessagesImpl.getString("DQStructureManager.sqlPatterns"); //$NON-NLS-1$
+
+    // MOD xqliu 2009-02-14 bug 6015
+    public static final String DQ_RULES = DefaultMessagesImpl.getString("DQStructureManager.dqRules"); //$NON-NLS-1$
 
     public static final String LIBRARIES = DefaultMessagesImpl.getString("DQStructureManager.libraries"); //$NON-NLS-1$
 
@@ -90,6 +96,9 @@ public final class DQStructureManager {
     public static final String SQLPATTERNS_FOLDER_PROPERTY = "SQLPATTERNS_FOLDER_PROPERTY"; //$NON-NLS-1$
 
     public static final String SOURCEFILES_FOLDER_PROPERTY = "SOURCEFILES_FOLDER_PROPERTY"; //$NON-NLS-1$
+
+    // MOD xqliu 2009-02-14 bug 6015
+    public static final String DQRULES_FOLDER_PROPERTY = "DQRULES_FOLDER_PROPERTY"; //$NON-NLS-1$
 
     public static final String DBCONNECTION_FOLDER_PROPERTY = "DBCONNECTION_FOLDER_PROPERTY"; //$NON-NLS-1$
 
@@ -155,6 +164,12 @@ public final class DQStructureManager {
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SOURCEFILES_FOLDER_PROPERTY);
             // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to folder "Libraries/Source Files".
             this.copyFilesToFolder(DEMO_PATH, true, createNewFoler);
+            // MOD xqliu 2009-02-14 bug 6015
+            createNewFoler = this.createNewFoler(project, DQ_RULES);
+            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DQRULES_FOLDER_PROPERTY);
+            // Copy the .sql files from 'org.talend.dataprofiler.core/dqrules' to folder "Libraries/DQ Rules".
+            this.copyFilesToFolder(DQ_RULES_PATH, true, createNewFoler);
+            // ~
 
             // create "Metadata" project
             project = this.createNewProject(METADATA, shell);
@@ -212,7 +227,7 @@ public final class DQStructureManager {
         return newProjectHandle;
     }
 
-    private IFolder createNewFoler(IProject project, String folderName) throws CoreException {
+    public IFolder createNewFoler(IProject project, String folderName) throws CoreException {
         IFolder desFolder = project.getFolder(folderName);
         if (!desFolder.exists()) {
             desFolder.create(false, true, null);
@@ -234,7 +249,7 @@ public final class DQStructureManager {
      * @throws CoreException
      */
     @SuppressWarnings("unchecked")
-    private void copyFilesToFolder(String srcPath, boolean recurse, IFolder desFolder) throws IOException, CoreException {
+    public void copyFilesToFolder(String srcPath, boolean recurse, IFolder desFolder) throws IOException, CoreException {
         Enumeration paths = null;
         paths = CorePlugin.getDefault().getBundle().getEntryPaths(srcPath);
         if (paths == null) {

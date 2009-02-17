@@ -34,7 +34,6 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.ReportsPackage;
-
 import orgomg.cwm.foundation.typemapping.TypemappingPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
 
@@ -75,6 +74,11 @@ public final class FactoriesUtil {
      * Extension used for the files in which the pattern are serialized.
      */
     public static final String PATTERN = "pattern"; //$NON-NLS-1$
+
+    /**
+     * Extension used for the files in which the DQRule are serialized.
+     */
+    public static final String DQRULE = "rule";
 
     private FactoriesUtil() {
     }

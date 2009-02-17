@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.rules:WhereRule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.rules="http://dataquality.rules" name="DEMO_DQRULE" criticalityLevel="1" whereExpression="WHERE address != null and postcode = null">
+  <taggedValue tag="Author" value="xqliu"/>
+  <taggedValue tag="Description" value="Demo DQ Rule"/>
+  <taggedValue tag="Purpose" value="Demo DQ Rule"/>
+  <taggedValue tag="Status" value="Draft"/>
+  <taggedValue tag="Validation_Status" value="true"/>
+</dataquality.rules:WhereRule>

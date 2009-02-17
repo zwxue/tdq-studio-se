@@ -538,7 +538,7 @@
                   value="org.talend.cwm.relational.TdColumn">
             </instanceof>
          </enablement>
-      </actionProvider>        
+      </actionProvider>
   </extension>
     
       
@@ -634,6 +634,13 @@
             icon="icons/pattern.png"
             id="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
             name="PatternEditor">
+      </editor>
+      <editor
+            class="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
+            extensions="rule"
+            icon="icons/pattern.png"
+            id="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
+            name="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor">
       </editor>
    </extension>
   <extension
@@ -791,6 +798,12 @@
            class="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
            name="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
+           version="1.2.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
+           id="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
+           name="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
            version="1.2.0">
      </workspacetask>
   </extension>
