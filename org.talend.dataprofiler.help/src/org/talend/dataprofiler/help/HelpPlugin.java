@@ -60,4 +60,8 @@ public class HelpPlugin extends AbstractUIPlugin {
     public String getPatternHelpContextID() {
         return PLUGIN_ID + ".helpPatternContext"; //$NON-NLS-1$
     }
+
+    public String getDQRulesHelpContextID() {
+        return PLUGIN_ID + ".helpDQRulesContext";
+    }
 }
