@@ -93,6 +93,7 @@ public class DQRespositoryView extends CommonNavigator {
         super();
         CorePlugin.getDefault().checkDQStructure();
         CorePlugin.getDefault().setRespositoryView(this);
+        CorePlugin.getDefault().doMigrationTask();
     }
 
     public void init(IViewSite aSite, IMemento aMemento) throws PartInitException {

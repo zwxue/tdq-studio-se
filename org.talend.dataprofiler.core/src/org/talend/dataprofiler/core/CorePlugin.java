@@ -108,8 +108,6 @@ public class CorePlugin extends AbstractUIPlugin {
             for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
                 BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
             }
-
-            doMigrationTask();
         } catch (Exception e) {
             e.printStackTrace();
         }
