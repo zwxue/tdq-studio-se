@@ -18,9 +18,13 @@ import org.osgi.framework.Bundle;
 /**
  * DOC Administrator class global comment. Detailled comment
  */
-public class PluginChecker {
+public final class PluginChecker {
 
     private static final String TDQ_ID = "org.talend.dataprofiler.core.tdq"; //$NON-NLS-1$
+
+    private PluginChecker() {
+
+    }
 
     /**
      * Check if specific plug-in is loaded.

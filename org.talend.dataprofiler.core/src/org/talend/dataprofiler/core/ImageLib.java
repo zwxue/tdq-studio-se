@@ -26,7 +26,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  * $Id: ImageLib.java,v 1.5 2007/04/05 05:33:07 pub Exp $
  * 
  */
-public class ImageLib {
+public final class ImageLib {
 
     private static ImageRegistry imageRegistry;
 
@@ -125,6 +125,13 @@ public class ImageLib {
 
     /** Icon for primary key. */
     public static final String PK_COLUMN = "pkColumn.gif"; //$NON-NLS-1$
+
+    /**
+     * DOC bzhou ImageLib constructor comment.
+     */
+    private ImageLib() {
+
+    }
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.

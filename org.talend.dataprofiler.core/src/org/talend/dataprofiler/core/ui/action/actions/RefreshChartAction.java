@@ -47,7 +47,7 @@ public class RefreshChartAction extends Action implements ICheatSheetAction {
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editor != null && editor instanceof AnalysisEditor) {
             AnalysisEditor anaEditor = (AnalysisEditor) editor;
-            anaEditor.getMasterPage().refreshChart();
+            anaEditor.getMasterPage().refresh();
         }
     }
 

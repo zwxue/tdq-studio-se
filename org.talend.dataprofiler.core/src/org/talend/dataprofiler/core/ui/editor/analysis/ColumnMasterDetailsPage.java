@@ -515,7 +515,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     @Override
-    public void refreshChart() {
+    public void refresh() {
         if (chartComposite != null) {
             try {
                 for (Control control : chartComposite.getChildren()) {

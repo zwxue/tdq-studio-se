@@ -397,7 +397,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     @Override
-    public void refreshChart() {
+    public void refresh() {
         if (chartComposite != null) {
             try {
                 for (Control control : chartComposite.getChildren()) {

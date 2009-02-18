@@ -172,7 +172,7 @@ public class HideSeriesPanel extends JPanel implements ActionListener {
             XYPlot plot = chart.getXYPlot();
             xyRenderer = plot.getRenderer();
             NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-            int minYValue = (int) getMinYValue(plot, true);
+            double minYValue = getMinYValue(plot, true);
             rangeAxis.setAutoRange(false);
             rangeAxis.setRange(0, minYValue * 100);
             rangeAxis.setTickUnit(new NumberTickUnit(minYValue * 5));

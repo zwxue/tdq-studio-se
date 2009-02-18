@@ -53,7 +53,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public void doSave(IProgressMonitor monitor) {
         ReturnCode rc = canSave();
         if (!rc.isOk()) {
-            MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
         } else {
             super.doSave(monitor);
             try {
@@ -71,7 +72,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected abstract ReturnCode canRun();
 
-    public abstract void refreshChart();
+    public abstract void refresh();
 
     protected abstract void saveAnalysis() throws DataprofilerCoreException;
 
@@ -87,7 +88,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         currentEditor.setRefreshResultPage(status);
 
         if (status) {
-            refreshChart();
+            refresh();
         }
     }
 }

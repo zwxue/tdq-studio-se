@@ -588,7 +588,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     }
 
     @Override
-    public void refreshChart() {
+    public void refresh() {
         // TODO Auto-generated method stub
 
     }
