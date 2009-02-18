@@ -29,7 +29,10 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -77,6 +80,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOpera
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
@@ -96,6 +100,8 @@ import orgomg.cwm.resource.relational.Column;
 public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
+
+    private String execLang;
 
     AnalysisColumnTreeViewer treeViewer;
 
@@ -120,6 +126,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     private Section dataFilterSection = null;
 
     private Section analysisColumnSection = null;
+
+    private Section analysisParamSection = null;
 
     private Section previewSection = null;
 
@@ -181,6 +189,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         createAnalysisColumnsSection(form, topComp);
 
         createDataFilterSection(form, topComp);
+
+        createAnalysisParamSection(form, topComp);
 
         Composite previewComp = toolkit.createComposite(sForm);
         previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -539,6 +549,37 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
+     * DOC hcheng Comment method "createAnalysisParamSection".
+     * 
+     * @param form
+     * @param anasisDataComp
+     */
+    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
+        analysisParamSection = createSection(form, anasisDataComp, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.AnalysisParameter"), false, null); //$NON-NLS-1$
+        Composite sectionClient = toolkit.createComposite(analysisParamSection);
+        sectionClient.setLayout(new GridLayout(2, false));
+        toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
+        final CCombo execCombo = new CCombo(sectionClient, SWT.BORDER);
+        execCombo.setEditable(false);
+        for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
+            String temp = language.getLiteral();
+            execCombo.add(temp);
+        }
+        // ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        execCombo.setText(ExecutionLanguage.SQL.getLiteral());
+        execCombo.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                setDirty(true);
+                execLang = execCombo.getText();
+            }
+
+        });
+        analysisParamSection.setClient(sectionClient);
+    }
+
+    /**
      * @param outputFolder
      * @throws DataprofilerCoreException
      */
@@ -548,6 +589,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
         TdDataProvider tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
+        analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         if (columnIndicators != null) {
             if (columnIndicators.length != 0) {
                 tdProvider = EObjectHelper.getTdDataProvider(columnIndicators[0].getTdColumn());
