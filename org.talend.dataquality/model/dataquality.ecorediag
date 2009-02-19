@@ -99,6 +99,14 @@
           <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/logo"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_I5CNMvy8Ed219bnSKs_AFg"/>
         </children>
+        <children xmi:type="notation:Node" xmi:id="_uBl9cP4rEd2Y7Y9vi3-DSA" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/inputJrxml"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_uBl9cf4rEd2Y7Y9vi3-DSA"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_x7MFMP4rEd2Y7Y9vi3-DSA" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//reports/TdReport/reportType"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_x7MFMf4rEd2Y7Y9vi3-DSA"/>
+        </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_H3n9QvMpEd2jdoQhohyVDw"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_H3n9Q_MpEd2jdoQhohyVDw"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_H3n9RPMpEd2jdoQhohyVDw"/>

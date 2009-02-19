@@ -41,6 +41,8 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportImpl;
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getDateFrom <em>Date From</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getDateTo <em>Date To</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getLogo <em>Logo</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getInputJrxml <em>Input Jrxml</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.impl.TdReportImpl#getReportType <em>Report Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -176,6 +178,46 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @ordered
      */
     protected String logo = LOGO_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getInputJrxml() <em>Input Jrxml</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getInputJrxml()
+     * @generated
+     * @ordered
+     */
+    protected static final String INPUT_JRXML_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getInputJrxml() <em>Input Jrxml</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getInputJrxml()
+     * @generated
+     * @ordered
+     */
+    protected String inputJrxml = INPUT_JRXML_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getReportType()
+     * @generated
+     * @ordered
+     */
+    protected static final String REPORT_TYPE_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getReportType() <em>Report Type</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getReportType()
+     * @generated
+     * @ordered
+     */
+    protected String reportType = REPORT_TYPE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -354,6 +396,48 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getInputJrxml() {
+        return inputJrxml;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setInputJrxml(String newInputJrxml) {
+        String oldInputJrxml = inputJrxml;
+        inputJrxml = newInputJrxml;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__INPUT_JRXML, oldInputJrxml, inputJrxml));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getReportType() {
+        return reportType;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setReportType(String newReportType) {
+        String oldReportType = reportType;
+        reportType = newReportType;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__REPORT_TYPE, oldReportType, reportType));
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated NOT addAnalysis(Analysis analysis)
@@ -517,6 +601,10 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return getDateTo();
             case ReportsPackage.TD_REPORT__LOGO:
                 return getLogo();
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+                return getInputJrxml();
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
+                return getReportType();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -555,6 +643,12 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             case ReportsPackage.TD_REPORT__LOGO:
                 setLogo((String)newValue);
                 return;
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+                setInputJrxml((String)newValue);
+                return;
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
+                setReportType((String)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -590,6 +684,12 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             case ReportsPackage.TD_REPORT__LOGO:
                 setLogo(LOGO_EDEFAULT);
                 return;
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+                setInputJrxml(INPUT_JRXML_EDEFAULT);
+                return;
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
+                setReportType(REPORT_TYPE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -617,6 +717,10 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 return DATE_TO_EDEFAULT == null ? dateTo != null : !DATE_TO_EDEFAULT.equals(dateTo);
             case ReportsPackage.TD_REPORT__LOGO:
                 return LOGO_EDEFAULT == null ? logo != null : !LOGO_EDEFAULT.equals(logo);
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+                return INPUT_JRXML_EDEFAULT == null ? inputJrxml != null : !INPUT_JRXML_EDEFAULT.equals(inputJrxml);
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
+                return REPORT_TYPE_EDEFAULT == null ? reportType != null : !REPORT_TYPE_EDEFAULT.equals(reportType);
         }
         return super.eIsSet(featureID);
     }
@@ -640,6 +744,10 @@ public class TdReportImpl extends ReportImpl implements TdReport {
         result.append(dateTo);
         result.append(", logo: ");
         result.append(logo);
+        result.append(", inputJrxml: ");
+        result.append(inputJrxml);
+        result.append(", reportType: ");
+        result.append(reportType);
         result.append(')');
         return result.toString();
     }

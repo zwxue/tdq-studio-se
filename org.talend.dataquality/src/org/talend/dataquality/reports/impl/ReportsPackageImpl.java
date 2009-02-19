@@ -367,6 +367,24 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getTdReport_InputJrxml() {
+        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(8);
+    }
+
+                /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTdReport_ReportType() {
+        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(9);
+    }
+
+                /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getPresentationParameter() {
         return presentationParameterEClass;
     }
@@ -471,6 +489,8 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         createEAttribute(tdReportEClass, TD_REPORT__DATE_FROM);
         createEAttribute(tdReportEClass, TD_REPORT__DATE_TO);
         createEAttribute(tdReportEClass, TD_REPORT__LOGO);
+        createEAttribute(tdReportEClass, TD_REPORT__INPUT_JRXML);
+        createEAttribute(tdReportEClass, TD_REPORT__REPORT_TYPE);
 
         presentationParameterEClass = createEClass(PRESENTATION_PARAMETER);
         createEAttribute(presentationParameterEClass, PRESENTATION_PARAMETER__PLOT_TYPE);
@@ -531,6 +551,8 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         initEAttribute(getTdReport_DateFrom(), ecorePackage.getEDate(), "dateFrom", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_DateTo(), ecorePackage.getEDate(), "dateTo", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_Logo(), ecorePackage.getEString(), "logo", "", 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTdReport_InputJrxml(), ecorePackage.getEString(), "inputJrxml", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTdReport_ReportType(), ecorePackage.getEString(), "reportType", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(tdReportEClass, ecorePackage.getEBoolean(), "addAnalysis", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);
