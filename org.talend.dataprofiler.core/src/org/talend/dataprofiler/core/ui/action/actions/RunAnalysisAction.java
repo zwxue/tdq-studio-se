@@ -120,6 +120,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 // MOD xqliu 2009-02-09 bug 6237
                 ReturnCode executed = null;
                 AnalysisExecutorThread aet = new AnalysisExecutorThread(analysis, monitor);
+                // aet.run();
+                // executed = aet.getExecuted();
                 new Thread(aet).start();
                 while (true) {
                     if (aet.getExecuted() != null) {
@@ -154,6 +156,15 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
         view.getCommonViewer().refresh();
+
+        if (selectionFile != null) {
+            IEditorPart ep = CorePlugin.getDefault().openEditor(selectionFile,
+                    "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"); //$NON-NLS-1$
+            if (ep instanceof AnalysisEditor) {
+                this.listener = ((AnalysisEditor) ep).getMasterPage();
+            }
+        }
+
     }
 
     /*
