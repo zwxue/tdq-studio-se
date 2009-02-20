@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +27,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
@@ -66,7 +64,7 @@ import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
-import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesPanel;
+import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -350,27 +348,13 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                             public void run() {
 
                                 // carete chart
-                                HideSeriesPanel hideSeriesPanel = new HideSeriesPanel(columnSetMultiIndicator, tdColumn);
-                                if (hideSeriesPanel != null) {
-                                    Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
-                                    frameComp.setLayout(new GridLayout());
-                                    GridData gd = new GridData();
-                                    gd.heightHint = 230;
-                                    gd.widthHint = 460;
-                                    // if (chartData.getChartType() == EIndicatorChartType.SUMMARY_STATISTICS
-                                    // && chartData.getEnity().length == 6) {
-                                    // gd = new GridData();
-                                    // gd.heightHint = 400;
-                                    // gd.widthHint = 150;
-                                    // }
-                                    frameComp.setLayoutData(gd);
+                                HideSeriesChartComposite hcc = new HideSeriesChartComposite(comp, columnSetMultiIndicator,
+                                        tdColumn, false);
 
-                                    Frame frame = SWT_AWT.new_Frame(frameComp);
-                                    frame.setLayout(new java.awt.BorderLayout());
-
-                                    frame.add(hideSeriesPanel);
-                                    frame.validate();
-                                }
+                                GridData gd = new GridData();
+                                gd.heightHint = 230;
+                                gd.widthHint = 460;
+                                hcc.setLayoutData(gd);
                             }
 
                         });

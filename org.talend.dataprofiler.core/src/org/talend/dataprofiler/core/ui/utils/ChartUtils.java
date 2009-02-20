@@ -24,9 +24,13 @@ import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -36,7 +40,15 @@ import org.eclipse.ui.internal.browser.WebBrowserEditorInput;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -124,8 +136,8 @@ public final class ChartUtils {
         }
     }
 
-    public static void showChartInFillScreen(JFreeChart chart) {
-        FullScreenChartDialog dialog = new FullScreenChartDialog(null, chart);
+    public static void showChartInFillScreen(JFreeChart chart, Indicator indicator) {
+        FullScreenChartDialog dialog = new FullScreenChartDialog(null, chart, indicator);
         dialog.open();
     }
 
@@ -136,9 +148,14 @@ public final class ChartUtils {
 
         private JFreeChart chart;
 
-        protected FullScreenChartDialog(Shell shell, JFreeChart chart) {
+        private Indicator indicator;
+
+        private static final String SERIES_KEY_ID = "SERIES_KEY";
+
+        protected FullScreenChartDialog(Shell shell, JFreeChart chart, Indicator indicator) {
             super(shell);
             this.chart = chart;
+            this.indicator = indicator;
             setShellStyle(SWT.RESIZE | SWT.CLOSE | SWT.MIN | SWT.MAX);
         }
 
@@ -152,7 +169,7 @@ public final class ChartUtils {
         }
 
         @Override
-        protected Control createContents(Composite parent) {
+        protected Control createDialogArea(Composite parent) {
             Composite comp = new Composite(parent, SWT.NONE);
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -161,5 +178,70 @@ public final class ChartUtils {
 
             return comp;
         }
+
+        @Override
+        protected Control createButtonBar(Composite parent) {
+
+            return createUtilityControl(parent);
+        }
+
+        private Composite createUtilityControl(Composite parent) {
+            Composite comp = new Composite(parent, SWT.BORDER);
+            comp.setLayout(new RowLayout());
+            comp.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_GRAY));
+
+            if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator().equals(indicator.eClass())) {
+                XYDataset dataset = chart.getXYPlot().getDataset();
+                int count = dataset.getSeriesCount();
+
+                for (int i = 0; i < count; i++) {
+
+                    Button checkBtn = new Button(comp, SWT.CHECK);
+                    checkBtn.setText(dataset.getSeriesKey(i).toString());
+                    checkBtn.setSelection(true);
+                    checkBtn.addSelectionListener(listener);
+                    checkBtn.setData(SERIES_KEY_ID, i);
+                }
+            }
+
+            if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator().equals(indicator.eClass())) {
+                CategoryPlot plot = (CategoryPlot) chart.getPlot();
+                CategoryDataset dataset = plot.getDataset();
+                int count = dataset.getRowCount();
+
+                for (int i = 0; i < count; i++) {
+
+                    Button checkBtn = new Button(comp, SWT.CHECK);
+                    checkBtn.setText(dataset.getRowKey(i).toString());
+                    checkBtn.setSelection(true);
+                    checkBtn.addSelectionListener(listener);
+                    checkBtn.setData(SERIES_KEY_ID, i);
+                }
+            }
+
+            return comp;
+        }
+
+        SelectionAdapter listener = new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+
+                Button checkBtn = (Button) e.getSource();
+                int seriesid = (Integer) checkBtn.getData(SERIES_KEY_ID);
+
+                if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator().equals(indicator.eClass())) {
+                    XYPlot plot = chart.getXYPlot();
+                    XYItemRenderer xyRenderer = plot.getRenderer();
+                    xyRenderer.setSeriesVisible(seriesid, checkBtn.getSelection());
+                }
+
+                if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator().equals(indicator.eClass())) {
+                    CategoryPlot plot = (CategoryPlot) chart.getPlot();
+                    CategoryItemRenderer render = plot.getRenderer();
+                    render.setSeriesVisible(seriesid, checkBtn.getSelection());
+                }
+            }
+        };
     }
 }

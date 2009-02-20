@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.Font;
-import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +31,6 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -63,7 +61,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesPanel;
+import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
@@ -210,23 +208,12 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                         Display.getDefault().asyncExec(new Runnable() {
 
                             public void run() {
-
-                                // carete chart
-                                HideSeriesPanel hideSeriesPanel = new HideSeriesPanel(columnSetMultiValueIndicator, tdColumn);
-                                if (hideSeriesPanel != null) {
-                                    Composite frameComp = toolkit.createComposite(comp, SWT.EMBEDDED);
-                                    frameComp.setLayout(new GridLayout());
-                                    GridData gd = new GridData();
-                                    gd.heightHint = 300;
-                                    gd.widthHint = 600;
-                                    frameComp.setLayoutData(gd);
-
-                                    Frame frame = SWT_AWT.new_Frame(frameComp);
-                                    frame.setLayout(new java.awt.BorderLayout());
-
-                                    frame.add(hideSeriesPanel);
-                                    frame.validate();
-                                }
+                                HideSeriesChartComposite hcc = new HideSeriesChartComposite(comp, columnSetMultiValueIndicator,
+                                        tdColumn, true);
+                                GridData gd = new GridData();
+                                gd.widthHint = 900;
+                                gd.heightHint = 450;
+                                hcc.setLayoutData(gd);
                             }
 
                         });

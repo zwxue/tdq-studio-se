@@ -500,16 +500,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     }
 
-    private void refreshStatisticSection() {
-        if (catalogTableViewer != null) {
-            Object obj = catalogTableViewer.getTable().getItem(0).getData();
-            if (obj instanceof SchemaIndicator) {
-                SchemaIndicator theFirstSchema = (SchemaIndicator) obj;
-                displayTableAndViewComp(theFirstSchema);
-            }
-        }
-    }
-
     /**
      * DOC rli Comment method "getCatalogs".
      * 
@@ -842,6 +832,5 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     public void refresh() {
         doSetInput();
         refreshSumSection();
-        refreshStatisticSection();
     }
 }
