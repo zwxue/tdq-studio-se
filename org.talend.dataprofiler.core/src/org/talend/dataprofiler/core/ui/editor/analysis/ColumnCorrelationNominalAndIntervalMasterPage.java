@@ -29,7 +29,10 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -65,6 +68,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalInt
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesPanel;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
@@ -96,6 +100,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private ColumnSetMultiValueIndicator columnSetMultiIndicator;
 
+    private String execLang;
+
     private String stringDataFilter;
 
     private Composite chartComposite;
@@ -113,6 +119,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     private Section dataFilterSection;
 
     private Section previewSection;
+
+    private Section analysisParamSection;
 
     public ColumnCorrelationNominalAndIntervalMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -171,7 +179,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
         if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
-            form.setText(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisInterval")); //$NON-NLS-1$
+            form.setText(DefaultMessagesImpl
+                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisInterval")); //$NON-NLS-1$
         } else {
             form.setText(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisDate")); //$NON-NLS-1$
         }
@@ -181,6 +190,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         createAnalysisColumnsSection(form, topComp);
 
         createDataFilterSection(form, topComp);
+
+        createAnalysisParamSection(form, topComp);
 
         Composite previewComp = toolkit.createComposite(sForm);
         previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -432,6 +443,37 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     /**
+     * DOC hcheng Comment method "createAnalysisParamSection".
+     * 
+     * @param form
+     * @param anasisDataComp
+     */
+    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
+        analysisParamSection = createSection(form, anasisDataComp, DefaultMessagesImpl
+                .getString("ColumnMasterDetailsPage.AnalysisParameter"), false, null); //$NON-NLS-1$
+        Composite sectionClient = toolkit.createComposite(analysisParamSection);
+        sectionClient.setLayout(new GridLayout(2, false));
+        toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
+        final CCombo execCombo = new CCombo(sectionClient, SWT.BORDER);
+        execCombo.setEditable(false);
+        for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
+            String temp = language.getLiteral();
+            execCombo.add(temp);
+        }
+        // ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        execCombo.setText(ExecutionLanguage.SQL.getLiteral());
+        execCombo.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                setDirty(true);
+                execLang = execCombo.getText();
+            }
+
+        });
+        analysisParamSection.setClient(sectionClient);
+    }
+
+    /**
      * @param outputFolder
      * @throws DataprofilerCoreException
      */
@@ -440,17 +482,26 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         columnCorrelationAnalysisHandler.clearAnalysis();
         columnSetMultiIndicator.getAnalyzedColumns().clear();
+        // MOD  2009-2-20 hcheng fixed in feature 6203
+        Analysis analysis = columnCorrelationAnalysisHandler.getAnalysis();
+        analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         List<String> comboStringList = new ArrayList<String>();
         List<String> correctString = new ArrayList<String>();
         List<Column> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
         for (int i = 0; i < columnSetMultiValueList.size(); i++) {
             TdColumn tdColumn = (TdColumn) columnSetMultiValueList.get(i);
             if (columnSetMultiIndicator instanceof CountAvgNullIndicator && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
-                MessageDialog.openWarning(new Shell(), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warning"), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.ColumnNotUsed")); //$NON-NLS-1$ //$NON-NLS-2$
+                MessageDialog
+                        .openWarning(
+                                new Shell(),
+                                DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warning"), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.ColumnNotUsed")); //$NON-NLS-1$ //$NON-NLS-2$
                 return;
             } else if (columnSetMultiIndicator instanceof MinMaxDateIndicator
                     && Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
-                MessageDialog.openWarning(new Shell(), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warn"), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NumbericColumn")); //$NON-NLS-1$ //$NON-NLS-2$
+                MessageDialog
+                        .openWarning(
+                                new Shell(),
+                                DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warn"), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NumbericColumn")); //$NON-NLS-1$ //$NON-NLS-2$
                 return;
             }
             String comboString = MetadataHelper.getDataminingType(tdColumn).getLiteral();
@@ -467,11 +518,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             }
         }
         if (!isSave) {
-            MessageDialog
-                    .openWarning(
-                            new Shell(),
-                            DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warning_"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.analysisHandlesColumns")); //$NON-NLS-1$
+            MessageDialog.openWarning(new Shell(), DefaultMessagesImpl
+                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.Warning_"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.analysisHandlesColumns")); //$NON-NLS-1$
 
         } else {
             TdDataProvider tdProvider = null;
@@ -601,7 +650,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         if (!columnSetMultiValueList.isEmpty()) {
             if (!ColumnHelper.isFromSameTable(columnSetMultiValueList)) {
-                return new ReturnCode(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CannotCreateAnalysis"), false); //$NON-NLS-1$
+                return new ReturnCode(DefaultMessagesImpl
+                        .getString("ColumnCorrelationNominalAndIntervalMasterPage.CannotCreateAnalysis"), false); //$NON-NLS-1$
             }
         }
         return new ReturnCode(true);
@@ -611,7 +661,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     protected ReturnCode canRun() {
         List<Column> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
-            return new ReturnCode(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
+            return new ReturnCode(DefaultMessagesImpl
+                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
         }
 
         return new ReturnCode(true);
