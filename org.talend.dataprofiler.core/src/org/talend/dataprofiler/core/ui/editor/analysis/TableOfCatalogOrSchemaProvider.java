@@ -15,9 +15,11 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
@@ -26,7 +28,8 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 /**
  * The provider for table viewer display.
  */
-public class TableOfCatalogOrSchemaProvider extends LabelProvider implements ITableLabelProvider, IStructuredContentProvider {
+public class TableOfCatalogOrSchemaProvider extends LabelProvider implements ITableLabelProvider, IStructuredContentProvider,
+        ITableColorProvider {
 
     @SuppressWarnings("unchecked")
     public Object[] getElements(Object inputElement) {
@@ -72,4 +75,22 @@ public class TableOfCatalogOrSchemaProvider extends LabelProvider implements ITa
         }
         return null;
     }
+
+    // added by hcheng 2009-2-20, for 006270: Highlight elements when #rows = 0
+    private Color bg = new Color(null, 249, 139, 121);
+
+    public Color getForeground(Object element, int columnIndex) {
+        return null;
+    }
+
+    public Color getBackground(Object element, int columnIndex) {
+        if (element instanceof TableIndicator) {
+            TableIndicator indicator = (TableIndicator) element;
+            if (indicator.getRowCount() == 0) {
+                return bg;
+            }
+        }
+        return null;
+    }
+
 }
