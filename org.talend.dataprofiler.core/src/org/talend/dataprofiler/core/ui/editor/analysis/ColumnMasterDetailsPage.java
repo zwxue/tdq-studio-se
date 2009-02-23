@@ -199,8 +199,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         createPreviewSection(form, previewComp);
 
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
-        currentEditor
-                .registerSections(new Section[] { analysisColumnSection, metadataSection, dataFilterSection, previewSection });
+        currentEditor.registerSections(new Section[] { analysisColumnSection, metadataSection, dataFilterSection,
+                analysisParamSection, previewSection });
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {

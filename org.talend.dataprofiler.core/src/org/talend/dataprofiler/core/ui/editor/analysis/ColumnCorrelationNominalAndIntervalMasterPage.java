@@ -189,7 +189,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         createDataFilterSection(form, topComp);
 
-        createAnalysisParamSection(form, topComp);
+        // createAnalysisParamSection(form, topComp);
 
         Composite previewComp = toolkit.createComposite(sForm);
         previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -198,7 +198,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         createPreviewSection(form, previewComp);
 
         // MOD 2009-01-12 mzhao, for register sections that would be collapse or expand later.
-        currentEditor.registerSections(new Section[] { analysisColSection, metadataSection, dataFilterSection, previewSection });
+        currentEditor.registerSections(new Section[] { analysisColSection, metadataSection, dataFilterSection,
+                analysisParamSection, previewSection });
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
@@ -466,7 +467,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         columnCorrelationAnalysisHandler.clearAnalysis();
         columnSetMultiIndicator.getAnalyzedColumns().clear();
-        // MOD  2009-2-20 hcheng fixed in feature 6203
+        // MOD 2009-2-20 hcheng fixed in feature 6203
         Analysis analysis = columnCorrelationAnalysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         List<String> comboStringList = new ArrayList<String>();
