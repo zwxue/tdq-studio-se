@@ -22,18 +22,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
+
 public class DateTimeDialog extends TrayDialog {
 
-    private DateTime timed;
-
-    private DateTime timet;
+    private DateTime dateTime;
 
     private boolean isDatetime;
 
@@ -50,21 +47,27 @@ public class DateTimeDialog extends TrayDialog {
     }
 
     @Override
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText("Date Selector");
+    }
+
+    @Override
     protected Control createDialogArea(Composite parent) {
         Composite top = new Composite(parent, SWT.NONE);
-        top.setLayout(new GridLayout(2, false));
+        top.setLayout(new GridLayout());
 
-        Label dl = new Label(top, SWT.NONE);
-        dl.setText(DefaultMessagesImpl.getString("DateTimeDialog.SetDate")); //$NON-NLS-1$
-        dl.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
-        timed = new DateTime(top, SWT.CALENDAR);
-        timed.setLayoutData(new GridData(GridData.FILL_BOTH));
+        // Label dl = new Label(top, SWT.NONE);
+        // dl.setText(DefaultMessagesImpl.getString("DateTimeDialog.SetDate")); //$NON-NLS-1$
+        // dl.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+        dateTime = new DateTime(top, SWT.CALENDAR);
+        dateTime.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         if (isDatetime) {
-            Label dt = new Label(top, SWT.NONE);
-            dt.setText(DefaultMessagesImpl.getString("DateTimeDialog.SetTime")); //$NON-NLS-1$
-            timet = new DateTime(top, SWT.TIME);
-            timet.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            // Label dt = new Label(top, SWT.NONE);
+            // dt.setText(DefaultMessagesImpl.getString("DateTimeDialog.SetTime")); //$NON-NLS-1$
+            dateTime = new DateTime(top, SWT.TIME | SWT.BORDER);
+            dateTime.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         }
 
         return top;
@@ -75,21 +78,19 @@ public class DateTimeDialog extends TrayDialog {
         Calendar cenlendar = Calendar.getInstance();
         SimpleDateFormat format = null;
 
-        int year = timed.getYear();
-        int month = timed.getMonth();
-        int day = timed.getDay();
+        int year = dateTime.getYear();
+        int month = dateTime.getMonth();
+        int day = dateTime.getDay();
+        int hour = dateTime.getHours();
+        int mnts = dateTime.getMinutes();
+        int secds = dateTime.getSeconds();
 
-        if (timet != null) {
-            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
+        cenlendar.set(year, month, day, hour, mnts, secds);
 
-            int hour = timet.getHours();
-            int mnts = timet.getMinutes();
-            int secds = timet.getSeconds();
-
-            cenlendar.set(year, month, day, hour, mnts, secds);
+        if (isDatetime) {
+            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1
         } else {
             format = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
-            cenlendar.set(year, month, day);
         }
 
         selectDate = format.format(cenlendar.getTime());

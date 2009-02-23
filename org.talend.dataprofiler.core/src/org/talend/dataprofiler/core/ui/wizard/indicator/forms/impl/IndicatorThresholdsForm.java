@@ -117,8 +117,10 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         if (isRangeForDate) {
             lowerBTN = new Button(group, SWT.PUSH);
             lowerBTN.setText("..."); //$NON-NLS-1$
+            lowerBTN.setToolTipText("Select lower threshold.");
             lowerDelBTN = new Button(group, SWT.PUSH);
             lowerDelBTN.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+            lowerDelBTN.setToolTipText("Remove lower threshold.");
 
             lowerText.setEditable(false);
             lowerText.setEnabled(false);
@@ -131,8 +133,10 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         if (isRangeForDate) {
             higherBTN = new Button(group, SWT.PUSH);
             higherBTN.setText("..."); //$NON-NLS-1$
+            higherBTN.setToolTipText("Select higher threshold.");
             higherDelBTN = new Button(group, SWT.PUSH);
             higherDelBTN.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+            higherDelBTN.setToolTipText("Remove higher threshold.");
 
             higherText.setEditable(false);
             higherText.setEnabled(false);
@@ -247,15 +251,19 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                     if (isRangeForDate) {
                         if (!CheckValueUtils.isDateValue(min)) {
                             updateStatus(IStatus.ERROR, MSG_ONLY_DATE);
+                        } else if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
+                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                         } else {
                             updateStatus(IStatus.OK, MSG_OK);
                         }
-                    } else if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
-                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                    } else if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
-                        updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                     } else {
-                        updateStatus(IStatus.OK, MSG_OK);
+                        if (!CheckValueUtils.isNumberWithNegativeValue(min)) {
+                            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                        } else if (!CheckValueUtils.isEmpty(max) && CheckValueUtils.isAoverB(min, max)) {
+                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                        } else {
+                            updateStatus(IStatus.OK, MSG_OK);
+                        }
                     }
                 } else {
                     updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
@@ -274,15 +282,19 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                     if (isRangeForDate) {
                         if (!CheckValueUtils.isDateValue(max)) {
                             updateStatus(IStatus.ERROR, MSG_ONLY_DATE);
+                        } else if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
+                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                         } else {
                             updateStatus(IStatus.OK, MSG_OK);
                         }
-                    } else if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
-                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
-                    } else if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
-                        updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
                     } else {
-                        updateStatus(IStatus.OK, MSG_OK);
+                        if (!CheckValueUtils.isNumberWithNegativeValue(max)) {
+                            updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                        } else if (!CheckValueUtils.isEmpty(min) && CheckValueUtils.isAoverB(min, max)) {
+                            updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                        } else {
+                            updateStatus(IStatus.OK, MSG_OK);
+                        }
                     }
                 } else {
                     updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);

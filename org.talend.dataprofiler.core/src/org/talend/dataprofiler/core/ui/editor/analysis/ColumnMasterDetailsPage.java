@@ -436,7 +436,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     | ExpandableComposite.CLIENT_INDENT);
             exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + column.getName()); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
-            exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             exComp.setData(columnIndicator);
             previewChartList.add(exComp);
 
@@ -497,15 +496,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
-                    getChartComposite().layout();
-                    form.reflow(true);
+                    composite.layout();
                     composite.pack();
+                    form.reflow(true);
                 }
 
             });
 
             exComp.setExpanded(true);
-
             exComp.setClient(comp);
         }
 
