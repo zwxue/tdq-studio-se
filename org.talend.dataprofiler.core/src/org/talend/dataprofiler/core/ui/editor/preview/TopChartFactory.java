@@ -281,7 +281,7 @@ public final class TopChartFactory {
             final String next = iterator.next();
             createGannttDatasets.get(next).addSeriesToGanttDataset(ganttDataset, next);
         }
-        String chartAxies = DefaultMessagesImpl.getString("TopChartFactory.chartAxies") + dateColumn.getName(); //$NON-NLS-1$
+        String chartAxies = DefaultMessagesImpl.getString("TopChartFactory.chartAxies", dateColumn.getName()); //$NON-NLS-1$
         JFreeChart chart = ChartFactory.createGanttChart("", // chart title //$NON-NLS-1$
                 DefaultMessagesImpl.getString("TopChartFactory.Categories"), // domain axis label //$NON-NLS-1$
                 chartAxies, // range axis label

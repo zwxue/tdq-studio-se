@@ -22,8 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -31,8 +34,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.jfree.chart.ChartMouseEvent;
-import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.CategoryTextAnnotation;
 import org.jfree.chart.axis.CategoryAnchor;
@@ -75,48 +76,52 @@ public class HideSeriesChartComposite extends ChartComposite {
         this.indicator = indicator;
         this.column = column;
         this.isNeedUtility = isNeedUtility;
+        this.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
+        this.setToolTipText("sdfsdf");
 
         createHideSeriesArea();
 
         addSpecifiedListeners();
-
     }
 
     private void addSpecifiedListeners() {
-        this.addChartMouseListener(new ChartMouseListener() {
 
-            public void chartMouseClicked(ChartMouseEvent event) {
+        this.addSWTListener(new MouseAdapter() {
 
-                if (event.getTrigger().getButton() != 3) {
-                    return;
-                }
-
-                setRangeZoomable(false);
-                Menu menu = new Menu(getShell(), SWT.POP_UP);
-                setMenu(menu);
-                MenuItem item = new MenuItem(menu, SWT.PUSH);
-                item.setText("Show in full screen");
-
-                item.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        Display.getDefault().asyncExec(new Runnable() {
-
-                            public void run() {
-                                ChartUtils.showChartInFillScreen(chart, indicator);
-                            }
-                        });
-                    }
-                });
-
-                menu.setVisible(true);
+            @Override
+            public void mouseDoubleClick(MouseEvent e) {
+                ChartUtils.showChartInFillScreen(chart, indicator);
             }
 
-            public void chartMouseMoved(ChartMouseEvent event) {
+            @Override
+            public void mouseDown(MouseEvent e) {
+
+                setRangeZoomable(e.button == 1);
+                setDomainZoomable(e.button == 1);
+
+                if (e.button == 3) {
+                    Menu menu = new Menu(getShell(), SWT.POP_UP);
+                    setMenu(menu);
+                    MenuItem item = new MenuItem(menu, SWT.PUSH);
+                    item.setText("Show in full screen");
+
+                    item.addSelectionListener(new SelectionAdapter() {
+
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            Display.getDefault().asyncExec(new Runnable() {
+
+                                public void run() {
+                                    ChartUtils.showChartInFillScreen(chart, indicator);
+                                }
+                            });
+                        }
+                    });
+
+                    menu.setVisible(true);
+                }
             }
         });
-
     }
 
     private void createHideSeriesArea() {
