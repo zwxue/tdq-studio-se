@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.RangeIndicator;
+import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
@@ -177,7 +177,8 @@ public class ChartDataEntity {
 
             int sqltype = ((TdColumn) indicator.getAnalyzedElement()).getJavaType();
 
-            if (Java2SqlType.isDateInSQL(sqltype) && indicator.eContainer() instanceof RangeIndicator) {
+            boolean isChildOfRange = IndicatorsPackage.eINSTANCE.getValueIndicator().isSuperTypeOf(indicator.eClass());
+            if (Java2SqlType.isDateInSQL(sqltype) && isChildOfRange) {
 
                 try {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
