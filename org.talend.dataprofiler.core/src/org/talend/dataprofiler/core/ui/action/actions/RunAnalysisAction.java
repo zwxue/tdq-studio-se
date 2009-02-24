@@ -25,6 +25,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
@@ -98,6 +100,20 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             }
         } else {
             analysis = AnaResourceFileHelper.getInstance().findAnalysis(getSelectionFile());
+            IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getEditorReferences();
+
+            for (IEditorReference reference : editorReferences) {
+                FileEditorInput finput;
+                try {
+                    finput = (FileEditorInput) reference.getEditorInput();
+                    if (finput.getFile().equals(selectionFile)) {
+                        this.listener = ((AnalysisEditor) reference.getEditor(true)).getMasterPage();
+                    }
+                } catch (PartInitException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
@@ -156,14 +172,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
         view.getCommonViewer().refresh();
-
-        if (selectionFile != null) {
-            IEditorPart ep = CorePlugin.getDefault().openEditor(selectionFile,
-                    "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"); //$NON-NLS-1$
-            if (ep instanceof AnalysisEditor) {
-                this.listener = ((AnalysisEditor) ep).getMasterPage();
-            }
-        }
 
     }
 
