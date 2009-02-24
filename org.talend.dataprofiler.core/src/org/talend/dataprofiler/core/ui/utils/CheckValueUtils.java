@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.time.DateUtils;
+
 /**
  * DOC zqin class global comment. Detailled comment
  */
@@ -101,8 +103,13 @@ public class CheckValueUtils {
 
         if (!isEmpty(a, b) && isDateValue(a) && isDateValue(b)) {
             try {
-                Date ad = DateFormat.getDateInstance().parse(a);
-                Date bd = DateFormat.getDateInstance().parse(b);
+
+                String[] patterns = new String[2];
+                patterns[0] = "yyyy-MM-dd";
+                patterns[1] = "yyyy-MM-dd HH:mm:ss";
+
+                Date ad = DateUtils.parseDate(a, patterns);
+                Date bd = DateUtils.parseDate(b, patterns);
 
                 return ad.after(bd);
             } catch (Exception e) {
