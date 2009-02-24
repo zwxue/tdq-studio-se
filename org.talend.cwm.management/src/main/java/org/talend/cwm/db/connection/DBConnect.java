@@ -357,13 +357,13 @@ public class DBConnect {
 
             this.providerConnection = DatabaseContentRetriever.getProviderConnection(dbUrl, driverClassName, props, connection);
         } catch (InstantiationException e) {
-            log.error(e);
+            log.error(e, e);
             ok = false;
         } catch (IllegalAccessException e) {
-            log.error(e);
+            log.error(e, e);
             ok = false;
         } catch (ClassNotFoundException e) {
-            log.error(e);
+            log.error(e, e);
             ok = false;
         }
         return ok;

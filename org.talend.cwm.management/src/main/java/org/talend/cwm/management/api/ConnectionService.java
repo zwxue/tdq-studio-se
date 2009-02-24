@@ -97,7 +97,7 @@ public final class ConnectionService {
             return rc;
         } catch (SQLException e) {
             String mess = "Failed to create a data provider for the given connection parameters: " + e.getMessage();
-            log.warn(mess);
+            log.warn(mess, e);
             rc.setReturnCode(e.getMessage(), false);
         } finally {
             connector.closeConnection();
