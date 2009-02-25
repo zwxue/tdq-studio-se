@@ -91,7 +91,9 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
             Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
-            Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnSetA, columnSetB);
+            boolean useNulls = true; // // TODO scorreia allow the user to set it at false
+            Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnSetA, columnSetB,
+                    useNulls);
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
@@ -104,18 +106,19 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param sqlGenericExpression
      * @param columnSetA
      * @param columnSetB
+     * @param useNulls
      * @return
      */
     private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, EList<Column> columnSetA,
-            EList<Column> columnSetB) {
+            EList<Column> columnSetB, boolean useNulls) {
         String tableNameA = getTableName(columnSetA);
         String tableNameB = getTableName(columnSetB);
 
         // Generic SQL expression is something like:
         // SELECT COUNT(*) FROM <%=__COLUMN_NAMES__%> LEFT JOIN <%=__TABLE_NAME__%> ON (<%=__JOIN_CLAUSE__%>) WHERE
         // (<%=__WHERE_CLAUSE__%>)
-        String genericSQL = sqlGenericExpression.getBody();
-        String joinClause = createJoinClause(tableNameA, columnSetA, tableNameB, columnSetB);
+        String genericSQL = sqlGenericExpression.getBody();        
+        String joinClause = createJoinClause(tableNameA, columnSetA, tableNameB, columnSetB, useNulls);
         String whereClause = createWhereClause(tableNameB, columnSetB);
 
         String instantiatedSQL = dbms().fillGenericQueryWithJoin(genericSQL, tableNameA, tableNameB, joinClause, whereClause);
@@ -137,7 +140,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         StringBuilder builder = new StringBuilder();
         int size = columnSetB.size();
         for (int i = 0; i < size; i++) {
-            builder.append(tableNameB).append('.').append(columnSetB.get(i).getName()).append(dbms().isNull());
+            builder.append(tableNameB).append('.').append(getQuotedColumnName(columnSetB.get(i))).append(dbms().isNull());
             if (i != size - 1) {
                 builder.append(dbms().and());
             }
@@ -146,24 +149,26 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "createJoinClause".
+     * Method "createJoinClause".
      * 
-     * @param tableNameA
-     * 
+     * @param tableNameA already quoted table name
      * @param columnSetA
-     * @param tableNameB
+     * @param tableNameB already quoted table name
      * @param columnSetB
      * @return
      */
-    private String createJoinClause(String tableNameA, EList<Column> columnSetA, String tableNameB, EList<Column> columnSetB) {
+    private String createJoinClause(String tableNameA, EList<Column> columnSetA, String tableNameB, EList<Column> columnSetB,
+            final boolean useNulls) {
         StringBuilder builder = new StringBuilder();
-
         int size = columnSetA.size();
         for (int i = 0; i < size; i++) {
-            String colA = tableNameA + '.' + columnSetA.get(i).getName();
-            String colB = tableNameB + '.' + columnSetB.get(i).getName();
-            builder.append(" (").append(colA).append(dbms().equal()).append(colB).append(dbms().or())
-                    .append(bothNull(colA, colB)).append(") ");
+            String colA = tableNameA + '.' + getQuotedColumnName(columnSetA.get(i));
+            String colB = tableNameB + '.' + getQuotedColumnName(columnSetB.get(i));
+            builder.append(" (").append(colA).append(dbms().equal()).append(colB);
+            if (useNulls) { // allow to identify rows like ('a', null) = ('a', null)
+                builder.append(dbms().or()).append(bothNull(colA, colB));
+            }
+            builder.append(") ");
             if (i != size - 1) {
                 builder.append(dbms().and());
             }
@@ -173,11 +178,11 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "bothNull".
+     * Method "bothNull".
      * 
-     * @param colA
-     * @param colB
-     * @return
+     * @param colA a column name from table A
+     * @param colB a column name from table B
+     * @return colA IS NULL AND colB IS NULL
      */
     private String bothNull(String colA, String colB) {
         StringBuilder builder = new StringBuilder();
@@ -210,7 +215,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 break; // all columns should belong to the same table
             }
         }
-        return tableName;
+        return quote(tableName);
     }
 
     /*
@@ -309,13 +314,13 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "getAnalyzedTable".
+     * Method "getAnalyzedTable".
      * 
      * @param indicator
-     * @return
+     * @return the table name (within quotes)
      */
     private String getAnalyzedTable(Indicator indicator) {
-        return indicator.getAnalyzedElement().getName();
+        return quote(indicator.getAnalyzedElement().getName());
     }
 
     protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {

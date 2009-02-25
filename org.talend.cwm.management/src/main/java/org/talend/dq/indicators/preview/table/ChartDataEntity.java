@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -29,6 +30,8 @@ import org.talend.utils.sql.Java2SqlType;
  */
 public class ChartDataEntity {
 
+    private static Logger log = Logger.getLogger(ChartDataEntity.class);
+    
     private String label;
 
     private String value;
@@ -198,7 +201,7 @@ public class ChartDataEntity {
                         return dValue.after(max) || dValue.before(min);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                     return false;
                 }
 

@@ -70,6 +70,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 import Zql.ParseException;
@@ -154,8 +155,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (tdColumn == null) {
             return traceError("Analyzed element is not a column for indicator " + indicator.getName());
         }
-        // --- get the schema owner
-        String colName = quote(tdColumn.getName());
+        String colName = getQuotedColumnName(tdColumn);
         if (!belongToSameSchemata(tdColumn)) {
             StringBuffer buf = new StringBuffer();
             for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
@@ -234,7 +234,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(tdColumn);
         String schemaName = getQuotedSchemaName(columnSetOwner);
 
-        String table = quote(ColumnHelper.getColumnSetFullName(tdColumn));
+        String table = getQuotedTableName(tdColumn);
 
         // --- normalize table name
         String catalogName = getQuotedCatalogName(columnSetOwner);
@@ -339,6 +339,16 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
+     * Method "getQuotedTableName".
+     * @param tdColumn
+     * @return the quoted table name
+     */
+    protected String getQuotedTableName(TdColumn tdColumn) {
+        String table = quote(ColumnHelper.getColumnSetFullName(tdColumn));
+        return table;
+    }
+
+    /**
      * Method "duplicateForCrossJoin". For some SQL queries, auto-joins are used in subqueries. This means that the
      * table has two differents aliases and the columns must be prefixed with the alias of the table. Each where clause
      * must be duplicated. For example, the clause "AGE > 10" must be duplicated to give "a.AGE > 10" and "b.AGE" when
@@ -354,7 +364,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (whereExpression.isEmpty()) {
             return whereExpression;
         }
-        String quotedColName = quote(tdColumn.getName());
+        String quotedColName = getQuotedColumnName(tdColumn);
         String[] tableAliases = getTableTableAliasA(completedSqlString, quotedColName);
         if (tableAliases == null) {
             return whereExpression;
@@ -379,6 +389,18 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         return duplicatedWhereExpressions;
+    }
+
+    /**
+     * Method "getQuotedColumnName".
+     * 
+     * @param column a column
+     * @return the quoted column name
+     */
+    protected String getQuotedColumnName(Column column) {
+        assert column != null;
+        String quotedColName = quote(column.getName());
+        return quotedColName;
     }
 
     /**
@@ -811,6 +833,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return null;
     }
 
+    /**
+     * Method "getCount".
+     * 
+     * @param analysis
+     * @param colName the column name should be surrounded by the SQL quotes
+     * @param table the table name should be surrounded by the SQL quotes
+     * @param catalog the catalog (or schema) name
+     * @param whereExpression
+     * @return
+     * @throws AnalysisExecutionException
+     */
     protected Long getCount(Analysis analysis, String colName, String table, String catalog, List<String> whereExpression)
             throws AnalysisExecutionException {
         try {
@@ -910,9 +943,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * Method "quote".
      * 
      * @param input
-     * @return the given string between quotes
+     * @return the given string between quotes (for SQL)
      */
-    private String quote(String input) {
+    protected String quote(String input) {
         return dbms().quote(input);
     }
 

@@ -69,6 +69,11 @@ public final class EObjectHelper {
         }
     }
 
+    /**
+     * TODO scorreia see if we can replace this method by {@link DataProviderHelper#getTdDataProvider(TdColumn)}.
+     * 
+     * @deprecated it's probably better to use {@link DataProviderHelper#getTdDataProvider(TdColumn)}
+     */
     public static TdDataProvider getTdDataProvider(Column column) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);

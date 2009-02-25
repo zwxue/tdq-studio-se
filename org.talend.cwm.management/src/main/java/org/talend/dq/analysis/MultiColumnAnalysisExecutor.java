@@ -81,19 +81,19 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
             for (Column column : colSetMultValIndicator.getNominalColumns()) {
-                nominalColumns.add(column.getName());
+                nominalColumns.add(getQuotedColumnName(column));
             }
             List<String> computedColumns = new ArrayList<String>();
             for (Column column : colSetMultValIndicator.getNumericColumns()) {
                 // call functions for each column
                 for (String f : numericFunctions) {
-                    computedColumns.add(replaceVariablesLow(f, column.getName()));
+                    computedColumns.add(replaceVariablesLow(f, getQuotedColumnName(column)));
                 }
             }
             for (Column column : colSetMultValIndicator.getDateColumns()) {
                 // call functions for each column
                 for (String f : dateFunctions) {
-                    computedColumns.add(replaceVariablesLow(f, column.getName()));
+                    computedColumns.add(replaceVariablesLow(f, getQuotedColumnName(column)));
                 }
             }
             // add count(*)
@@ -161,7 +161,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * DOC scorreia Comment method "getTableName".
      * 
      * @param analyzedColumns
-     * @return
+     * @return the quoted table name
      */
     private String getTableName(final EList<Column> analyzedColumns) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(analyzedColumns.get(0));
@@ -173,7 +173,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         } else {
             this.catalogOrSchema = pack.getName();
         }
-        return tableName;
+        return quote(tableName);
     }
 
     /*

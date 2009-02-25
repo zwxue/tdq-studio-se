@@ -22,7 +22,10 @@ import org.apache.commons.lang.time.DateUtils;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class CheckValueUtils {
+public final class CheckValueUtils {
+
+    private CheckValueUtils() {
+    }
 
     public static boolean getCheckValue(String regex, String inputString) {
 
