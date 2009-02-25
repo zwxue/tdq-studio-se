@@ -43,14 +43,14 @@ public final class AnalysisExecutorSelector {
         assert analysis != null;
         AnalysisType analysisType = AnalysisHelper.getAnalysisType(analysis);
         if (analysisType == null) {
-            log.error(Messages.getString("AnalysisExecutorSelector.0") + analysis.getName()); //$NON-NLS-1$
+            log.error("Analysis type is not set for analysis" + analysis.getName()); //$NON-NLS-1$
             return null;
         }
         ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(analysis);
         AnalysisExecutor exec = null;
         switch (analysisType) {
         case MULTIPLE_COLUMN:
-            exec = ExecutionLanguage.SQL.equals(executionEngine) ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
+            exec = executionEngine != null ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
             break;
         case CONNECTION:
             exec = new ConnectionAnalysisExecutor();
