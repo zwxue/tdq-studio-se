@@ -62,6 +62,6 @@ public class HelpPlugin extends AbstractUIPlugin {
     }
 
     public String getDQRulesHelpContextID() {
-        return PLUGIN_ID + ".helpDQRulesContext";
+        return PLUGIN_ID + ".helpDQRulesContext"; //$NON-NLS-1$
     }
 }
