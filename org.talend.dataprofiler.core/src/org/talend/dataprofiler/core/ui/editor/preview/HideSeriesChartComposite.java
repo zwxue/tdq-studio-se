@@ -90,7 +90,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
-                ChartUtils.showChartInFillScreen(chart, indicator);
+                ChartUtils.showChartInFillScreen(createChart(), indicator);
             }
 
             @Override
@@ -112,7 +112,7 @@ public class HideSeriesChartComposite extends ChartComposite {
                             Display.getDefault().asyncExec(new Runnable() {
 
                                 public void run() {
-                                    ChartUtils.showChartInFillScreen(chart, indicator);
+                                    ChartUtils.showChartInFillScreen(createChart(), indicator);
                                 }
                             });
                         }
@@ -125,27 +125,7 @@ public class HideSeriesChartComposite extends ChartComposite {
     }
 
     private void createHideSeriesArea() {
-        if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator().equals(indicator.eClass())) {
-            chart = TopChartFactory.createBubbleChart(indicator, column);
-        }
-
-        if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator().equals(indicator.eClass())) {
-            final int nbNominalColumns = indicator.getNominalColumns().size();
-            final int nbDateFunctions = indicator.getDateFunctions().size();
-            final int indexOfDateCol = indicator.getDateColumns().indexOf(column);
-            assert indexOfDateCol != -1;
-
-            chart = TopChartFactory.createGanttChart(indicator, column);
-
-            createAnnotOnGantt(chart, indicator.getListRows(), nbNominalColumns + nbDateFunctions * indexOfDateCol + 3,
-                    nbNominalColumns);
-
-            CategoryPlot plot = (CategoryPlot) chart.getPlot();
-            CustomHideSeriesGanttRender renderer = new CustomHideSeriesGanttRender();
-            renderer.setBaseToolTipGenerator(toolTipGenerator);
-            plot.setRenderer(renderer);
-            plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
-        }
+        this.chart = createChart();
 
         if (chart != null) {
             setChart(chart);
@@ -155,6 +135,39 @@ public class HideSeriesChartComposite extends ChartComposite {
                 createUtilityControl(this);
             }
         }
+    }
+
+    /**
+     * DOC bzhou Comment method "createChart".
+     * 
+     * @return
+     */
+    private JFreeChart createChart() {
+        JFreeChart jchart = null;
+
+        if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator().equals(indicator.eClass())) {
+            jchart = TopChartFactory.createBubbleChart(indicator, column);
+        }
+
+        if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator().equals(indicator.eClass())) {
+            final int nbNominalColumns = indicator.getNominalColumns().size();
+            final int nbDateFunctions = indicator.getDateFunctions().size();
+            final int indexOfDateCol = indicator.getDateColumns().indexOf(column);
+            assert indexOfDateCol != -1;
+
+            jchart = TopChartFactory.createGanttChart(indicator, column);
+
+            createAnnotOnGantt(jchart, indicator.getListRows(), nbNominalColumns + nbDateFunctions * indexOfDateCol + 3,
+                    nbNominalColumns);
+
+            CategoryPlot plot = (CategoryPlot) jchart.getPlot();
+            CustomHideSeriesGanttRender renderer = new CustomHideSeriesGanttRender();
+            renderer.setBaseToolTipGenerator(toolTipGenerator);
+            plot.setRenderer(renderer);
+            plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
+        }
+
+        return jchart;
     }
 
     private void createUtilityControl(Composite parent) {

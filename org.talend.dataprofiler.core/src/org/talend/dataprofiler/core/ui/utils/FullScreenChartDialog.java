@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.jfree.chart.JFreeChart;
+import org.jfree.experimental.chart.swt.ChartComposite;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -44,14 +45,19 @@ public class FullScreenChartDialog extends TrayDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        // ChartComposite chartComp = new ChartComposite(parent, SWT.NONE);
-        // chartComp.setChart(chart);
-        // chartComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        GridData gd = new GridData(GridData.FILL_BOTH);
+        ChartComposite chartComp = new ChartComposite(parent, SWT.NONE, chart, true);
+        chartComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        ChartUtils.createAWTSWTComp(parent, gd, chart);
+        // GridData gd = new GridData(GridData.FILL_BOTH);
+        // ChartUtils.createAWTSWTComp(parent, gd, chart);
 
-        return parent;
+        return chartComp;
+    }
+
+    @Override
+    public boolean close() {
+        chart = null;
+        return super.close();
     }
 }
