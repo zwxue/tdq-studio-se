@@ -440,7 +440,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             if (columnSet.size() != 0) {
                 String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnSet.get(0)).getName();
                 columnsElementViewer.getTable().getColumn(0).setText(
-                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements") + tableName); //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
             }
         }
     }

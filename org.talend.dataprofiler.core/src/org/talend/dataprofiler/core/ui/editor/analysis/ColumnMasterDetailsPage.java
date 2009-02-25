@@ -400,8 +400,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                 if (!analysisStatue) {
                     boolean returnCode = MessageDialog.openConfirm(null, DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.string0"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.string1")); //$NON-NLS-1$
+                            .getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.RunOrSeeSampleData")); //$NON-NLS-1$
 
                     if (returnCode) {
                         new RunAnalysisAction(ColumnMasterDetailsPage.this).run();
@@ -434,7 +434,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
-            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + column.getName()); //$NON-NLS-1$
+            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column", column.getName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setData(columnIndicator);
             previewChartList.add(exComp);
