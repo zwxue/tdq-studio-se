@@ -40,12 +40,15 @@ import orgomg.cwm.objectmodel.core.Expression;
  * 
  * Helper class for Domain object.
  */
-public class DomainHelper {
+public final class DomainHelper {
 
     public static final String SQL_PATTERN_FOLDER = "SQL Patterns"; //$NON-NLS-1$
 
     public static final String PATTERN_FOLDER = "Patterns"; //$NON-NLS-1$
 
+    private DomainHelper() {
+    }
+    
     /**
      * The available pattern types.
      */
@@ -488,9 +491,9 @@ public class DomainHelper {
                         final Resource resource = regexp.eResource();
                         if (resource != null) {
                             // do not replace these strings. They are the folder names in version 1.1
-                            if (resource.getURI().toFileString().contains(SQL_PATTERN_FOLDER)) {
+                            if (resource.getURI().toString().contains(SQL_PATTERN_FOLDER)) {
                                 expressionType = ExpressionType.SQL_LIKE.getLiteral();
-                            } else if (resource.getURI().toFileString().contains(PATTERN_FOLDER)) {
+                            } else if (resource.getURI().toString().contains(PATTERN_FOLDER)) {
                                 expressionType = ExpressionType.REGEXP.getLiteral();
                             }
                         }

@@ -36,9 +36,9 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 public final class ReportHelper {
 
     // ~ADD mzhao 2009-02-05
-    public final static int DATE_FROM = 0;
+    public static final int DATE_FROM = 0;
 
-    public final static int DATE_TO = 1;
+    public static final int DATE_TO = 1;
 
     // ~
     /**
@@ -201,7 +201,9 @@ public final class ReportHelper {
     }
 
     /**
-     * Method "setReportType".MOD mzhao 2009-02-16
+     * Method "setReportType".
+     * 
+     * MOD mzhao 2009-02-16
      * 
      * @param report the report object to update
      * @param reportType the report type to set
@@ -243,7 +245,7 @@ public final class ReportHelper {
     public static boolean setAnalysisFilterDate(TdReport report, String dateText, int datePos) {
         boolean ok = true;
         Date date = null;
-        String pattern = "MM/dd/yyyy";//$NON-NLS-1$
+        String pattern = "MM/dd/yyyy"; //$NON-NLS-1$
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         try {
             date = sdf.parse(dateText);
