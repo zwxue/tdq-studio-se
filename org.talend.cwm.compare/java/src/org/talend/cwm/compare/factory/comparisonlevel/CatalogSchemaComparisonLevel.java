@@ -15,6 +15,7 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -49,7 +50,8 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC rli class global comment. Detailled comment
  */
 public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
-
+    private static Logger log = Logger.getLogger(CatalogSchemaComparisonLevel.class);
+    
 	private boolean isCompareTabel;
 
 	private boolean isCompareView;
@@ -86,7 +88,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 			match = MatchService.doContentMatch((Package) selectedObj,
 					getSavedReloadObject(), options);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.error(e, e);
 			return false;
 		}
 		final DiffModel diff = DiffService.doDiff(match, false);
