@@ -214,7 +214,8 @@ public final class DQStructureComparer {
                 file.delete(true, new NullProgressMonitor());
                 retValue = true;
             } catch (CoreException e) {
-                log.warn(DefaultMessagesImpl.getString("DQStructureComparer.problemDelete", file.getFullPath().toOSString()), e); //$NON-NLS-1$
+
+                log.warn("Problem while trying to delete temp file:" + file.getFullPath().toOSString(), e);
                 retValue = false;
             }
         } else {
@@ -322,9 +323,8 @@ public final class DQStructureComparer {
             }
         }
         if (toReloadcolumnSet == null) {
-            throw new ReloadCompareException(
-                    DefaultMessagesImpl.getString("DQStructureComparer.NotFindCorrespondNode") //$NON-NLS-1$
-                            + selectedColumnSet.getName());
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("DQStructureComparer.NotFindCorrespondNode",//$NON-NLS-1$
+                    selectedColumnSet.getName()));
         }
         return toReloadcolumnSet;
     }
@@ -354,8 +354,8 @@ public final class DQStructureComparer {
         }
 
         if (toMatchedColumn == null) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString("DQStructureComparer.NotFoundCorrespondColumnNode") //$NON-NLS-1$
-                    + column.getName());
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("DQStructureComparer.NotFoundCorrespondColumnNode",//$NON-NLS-1$
+                    column.getName()));
         }
         return toMatchedColumn;
 
@@ -374,8 +374,8 @@ public final class DQStructureComparer {
                 return schema;
             }
         }
-        throw new ReloadCompareException(DefaultMessagesImpl.getString("DQStructureComparer.NotFoundCorrespondSchemaNode") //$NON-NLS-1$
-                + schemaCase.getName());
+        throw new ReloadCompareException(DefaultMessagesImpl.getString("DQStructureComparer.NotFoundCorrespondSchemaNode", //$NON-NLS-1$
+                schemaCase.getName()));
     }
 
     /**
@@ -392,8 +392,8 @@ public final class DQStructureComparer {
                 return matchCatalog;
             }
         }
-        throw new ReloadCompareException(DefaultMessagesImpl.getString("DQStructureComparer.NotFoundCorrespondCatalogNode") //$NON-NLS-1$
-                + catalog.getName());
+        throw new ReloadCompareException(DefaultMessagesImpl.getString("DQStructureComparer.NotFoundCorrespondCatalogNode" //$NON-NLS-1$
+                , catalog.getName()));
     }
 
     public static void clearSubNode(ModelElement needReloadElement) {

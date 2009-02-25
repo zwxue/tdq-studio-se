@@ -76,7 +76,7 @@ public class PopComparisonUIAction extends Action {
             MessageDialog
                     .openInformation(
                             shell,
-                            Messages.getString("PopComparisonUIAction.connectionFailure"), Messages.getString("PopComparisonUIAction.checkConnectionFailure") + e.getCause().getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                            Messages.getString("PopComparisonUIAction.connectionFailure"), Messages.getString("PopComparisonUIAction.checkConnectionFailure", e.getCause().getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
             log.error(e, e);
         } catch (InterruptedException e) {
             log.error(e, e);

@@ -101,6 +101,6 @@ public final class AnalysisExecutorSelector {
             return analysisExecutor.execute(analysis);
         }
         // else
-        return new ReturnCode(Messages.getString("AnalysisExecutorSelector.NotFindHowExecute") + analysis.getName(), false); //$NON-NLS-1$
+        return new ReturnCode(Messages.getString("AnalysisExecutorSelector.NotFindHowExecute", analysis.getName()), false); //$NON-NLS-1$
     }
 }

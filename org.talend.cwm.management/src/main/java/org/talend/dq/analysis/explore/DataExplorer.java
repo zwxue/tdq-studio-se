@@ -25,7 +25,6 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.i18n.Messages;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
@@ -48,7 +47,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     private static final String SELECT_ALL = "SELECT * "; //$NON-NLS-1$
 
-    private static final String SELECT = Messages.getString("DataExplorer.4"); //$NON-NLS-1$
+    private static final String SELECT = "SELECT"; //$NON-NLS-1$
 
     private static final String SELECT_DISTINCT = "SELECT DISTINCT "; //$NON-NLS-1$
 

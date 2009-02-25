@@ -113,17 +113,17 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     protected boolean check(Analysis analysis) {
         AnalysisContext context = analysis.getContext();
         if (context == null) {
-            this.errorMessage = "Context is null in " + analysis.getName();
+            this.errorMessage = Messages.getString("AnalysisExecutor.ContextNull", analysis.getName()); //$NON-NLS-1$
             return false;
         }
         DataManager connection = context.getConnection();
         if (connection == null) {
-            this.errorMessage = "No connection found in context of " + analysis.getName();
+            this.errorMessage = Messages.getString("AnalysisExecutor.NoConnectionFound", analysis.getName()); //$NON-NLS-1$
             return false;
         }
         AnalysisResult results = analysis.getResults();
         if (results == null) {
-            this.errorMessage = "Analysis " + analysis.getName() + " is not prepared correctly. No Result container.";
+            this.errorMessage = Messages.getString("AnalysisExecutor.AnalysisnotNotPrepareCorrect", analysis.getName()); //$NON-NLS-1$
             return false;
         }
         return true;

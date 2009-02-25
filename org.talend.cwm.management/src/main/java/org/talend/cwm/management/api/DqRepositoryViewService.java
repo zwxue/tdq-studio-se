@@ -422,8 +422,8 @@ public final class DqRepositoryViewService {
 
         ReturnCode rc = new ReturnCode();
         if (resource == null) {
-            rc.setReturnCode(Messages.getString("DqRepositoryViewService.DataProviderSaveFirst") //$NON-NLS-1$
-                    + dataProvider.getName(), false);
+            rc.setReturnCode(Messages.getString("DqRepositoryViewService.DataProviderSaveFirst",//$NON-NLS-1$
+                    dataProvider.getName()), false);
         } else {
             // add by hcheng
             // MOD scorreia 2009-01-09 password decryption is handled elsewhere
