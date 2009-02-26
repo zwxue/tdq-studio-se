@@ -14,19 +14,15 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -425,12 +421,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
-
         previewChartList = new ArrayList<ExpandableComposite>();
 
-        for (final ColumnIndicator columnIndicator : this.treeViewer.getColumnIndicator()) {
-
-            final TdColumn column = columnIndicator.getTdColumn();
+        for (final ColumnIndicator columnIndicator : treeViewer.getColumnIndicator()) {
+            TdColumn column = columnIndicator.getTdColumn();
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
@@ -439,56 +433,28 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             exComp.setData(columnIndicator);
             previewChartList.add(exComp);
 
-            final Composite comp = toolkit.createComposite(exComp);
+            Composite comp = toolkit.createComposite(exComp);
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-            if (columnIndicator.getIndicators().length != 0) {
+            Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
+                    .getIndicatorComposite(columnIndicator);
+            for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
+                List<IndicatorUnit> units = indicatorComposite.get(chartType);
+                if (!units.isEmpty()) {
+                    final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+                    JFreeChart chart = chartTypeState.getFeatChart();
 
-                IRunnableWithProgress rwp = new IRunnableWithProgress() {
+                    if (chart != null) {
+                        final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
 
-                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                        GridData gd = new GridData();
+                        gd.widthHint = 550;
+                        gd.heightHint = 250;
+                        chartComp.setLayoutData(gd);
 
-                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview", //$NON-NLS-1$
-                                column.getName()), IProgressMonitor.UNKNOWN);
-
-                        Display.getDefault().syncExec(new Runnable() {
-
-                            public void run() {
-
-                                Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator
-                                        .getInstance().getIndicatorComposite(columnIndicator);
-                                for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
-                                    List<IndicatorUnit> units = indicatorComposite.get(chartType);
-                                    if (!units.isEmpty()) {
-                                        final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType,
-                                                units);
-                                        JFreeChart chart = chartTypeState.getFeatChart();
-
-                                        if (chart != null) {
-                                            final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
-
-                                            GridData gd = new GridData();
-                                            gd.widthHint = 550;
-                                            gd.heightHint = 250;
-                                            chartComp.setLayoutData(gd);
-
-                                            addListenerToChartComp(chartComp, chartTypeState);
-                                        }
-                                    }
-                                }
-                            }
-                        });
-
-                        monitor.done();
+                        addListenerToChartComp(chartComp, chartTypeState);
                     }
-
-                };
-
-                try {
-                    new ProgressMonitorDialog(getSite().getShell()).run(true, false, rwp);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
                 }
             }
 
@@ -496,8 +462,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
-                    composite.layout();
-                    composite.pack();
                     form.reflow(true);
                 }
 
@@ -510,6 +474,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (!previewChartList.isEmpty()) {
             this.previewChartCompsites = previewChartList.toArray(new Composite[previewChartList.size()]);
         }
+
+        composite.layout();
+        composite.pack();
+        form.reflow(true);
     }
 
     @Override
