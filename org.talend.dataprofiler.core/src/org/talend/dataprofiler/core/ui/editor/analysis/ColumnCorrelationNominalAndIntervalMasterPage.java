@@ -291,8 +291,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
                 if (!analysisStatue) {
                     boolean returnCode = MessageDialog.openConfirm(null, DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.string0"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.string1")); //$NON-NLS-1$
+                            .getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.RunOrSeeSampleData")); //$NON-NLS-1$
 
                     if (returnCode) {
                         new RunAnalysisAction(ColumnCorrelationNominalAndIntervalMasterPage.this).run();
