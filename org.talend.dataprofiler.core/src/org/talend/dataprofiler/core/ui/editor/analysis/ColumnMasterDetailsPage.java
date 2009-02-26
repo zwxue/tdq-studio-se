@@ -449,8 +449,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview") //$NON-NLS-1$
-                                + column.getName(), IProgressMonitor.UNKNOWN);
+                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview", //$NON-NLS-1$
+                                column.getName()), IProgressMonitor.UNKNOWN);
 
                         Display.getDefault().syncExec(new Runnable() {
 

@@ -204,9 +204,7 @@ public class DeleteCWMResourceAction extends Action {
                 try {
                     folder.delete(true, null);
                 } catch (CoreException e) {
-                    Log
-                            .warn(
-                                    DefaultMessagesImpl.getString("DeleteCWMResourceAction.deleteFolderFail") + folder.getLocationURI().toString(), e); //$NON-NLS-1$
+                    Log.warn("Failure to delete the folder:" + folder.getLocationURI().toString(), e); //$NON-NLS-1$
                 }
             }
         }

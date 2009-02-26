@@ -88,8 +88,8 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
         try {
             boolean ok = false;
             assert provider != null : DefaultMessagesImpl.getString("TableFolderNode.noProvider"); //$NON-NLS-1$
-            assert catalog != null ^ schema != null : DefaultMessagesImpl.getString("TableFolderNode.catalogOrSchema") //$NON-NLS-1$
-                    + provider.getName();
+            assert catalog != null ^ schema != null : DefaultMessagesImpl.getString("TableFolderNode.catalogOrSchema", //$NON-NLS-1$
+                    provider.getName());
 
             if (catalog != null) {
                 ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, catalog, null, true));

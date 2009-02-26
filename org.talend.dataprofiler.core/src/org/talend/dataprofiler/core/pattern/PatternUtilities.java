@@ -130,8 +130,9 @@ public final class PatternUtilities {
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && dbmsLanguage.getRegexp(pattern) == null) {
             // this is when we must tell the user that no regular expression exists for the selected database
-            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
-                    .getString("PatternUtilities.noRegexForDB")); //$NON-NLS-1$
+            MessageDialogWithToggle.openInformation(null,
+                    DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
+                            .getString("PatternUtilities.noRegexForDB")); //$NON-NLS-1$
 
             return null;
         }
@@ -153,14 +154,15 @@ public final class PatternUtilities {
         }
 
         if (!(dbmsLanguage.supportRegexp() || isDBDefinedUDF(dbmsLanguage))) {
-            MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
-                    .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$
+            MessageDialogWithToggle.openInformation(null,
+                    DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
+                            .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$
             return null;
         }
 
         // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
         if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(patternMatchingIndicator)) {
-            log.error(DefaultMessagesImpl.getString("PatternUtilities.couldnotSetDef") + patternMatchingIndicator.getName()); //$NON-NLS-1$
+            log.error("Could not set the definition of the given indicator :" + patternMatchingIndicator.getName()); //$NON-NLS-1$
         }
 
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(patternMatchingIndicator.eClass());

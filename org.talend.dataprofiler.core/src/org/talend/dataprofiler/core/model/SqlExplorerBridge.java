@@ -111,7 +111,8 @@ public final class SqlExplorerBridge {
                 return typedReturnCode;
             }
         }
-        return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTableObject") + tableName, //$NON-NLS-1$
+        return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
+                "SqlExplorerBridge.NotFindCorrespondTableObject", tableName), //$NON-NLS-1$
                 false);
     }
 

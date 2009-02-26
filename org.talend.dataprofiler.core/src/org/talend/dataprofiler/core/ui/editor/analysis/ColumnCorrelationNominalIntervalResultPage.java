@@ -123,7 +123,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     protected void createResultSection(Composite parent) {
         executeData = getColumnAnalysisHandler().getExecuteData();
-        graphicsAndTableSection = this.createSection(form, parent, "Analysis Result", false, null); //$NON-NLS-1$
+        graphicsAndTableSection = this.createSection(form, parent, DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.AnalysisResult"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -133,7 +133,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createGraphicsSectionPart(sectionClient, columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+            this.createGraphicsSectionPart(sectionClient, columnSetMultiIndicator);
         }
 
         Composite simpleSatisticsComp = toolkit.createComposite(sectionClient);
@@ -142,7 +142,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createSimpleStatisticsPart(sectionClient, "Simple Statistics", columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+            this.createSimpleStatisticsPart(sectionClient, DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.SimpleStatistics"), columnSetMultiIndicator); //$NON-NLS-1$
         }
 
         Composite tableComp = toolkit.createComposite(sectionClient);
@@ -151,7 +151,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createTableSectionPart(sectionClient, "Data", columnSetMultiIndicator); //$NON-NLS-1$ //$NON-NLS-2$
+            this.createTableSectionPart(sectionClient, DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.Data"), columnSetMultiIndicator); //$NON-NLS-1$
         }
         graphicsAndTableSection.setExpanded(true);
         graphicsAndTableSection.setClient(sectionClient);
@@ -190,7 +190,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
             final ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
-            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + tdColumn.getName()); //$NON-NLS-1$
+            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column", tdColumn.getName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setData(columnSetMultiValueIndicator);
             previewChartList.add(exComp);
@@ -203,8 +203,10 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                 IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview") //$NON-NLS-1$
-                                + tdColumn.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                        monitor
+                                .beginTask(
+                                        DefaultMessagesImpl.getString(
+                                                "ColumnCorrelationNominalIntervalResultPage.CreatePreview", tdColumn.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         Display.getDefault().asyncExec(new Runnable() {
 
                             public void run() {

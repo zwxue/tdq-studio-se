@@ -148,12 +148,12 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
             String columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnSetOwner(
                     rowMatchingIndicatorA.getColumnSetA().get(0)).getName() : PluginConstant.EMPTY_STRING;
-            columnHeader1.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl
-                    .getString("ColumnsComparisonAnalysisResultPage.elementsFrom") + columnName); //$NON-NLS-1$
+            columnHeader1.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl.getString(
+                    "ColumnsComparisonAnalysisResultPage.elementsFrom", columnName)); //$NON-NLS-1$
             columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnSetOwner(
                     rowMatchingIndicatorA.getColumnSetB().get(0)).getName() : PluginConstant.EMPTY_STRING;
-            columnHeader2.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl
-                    .getString("ColumnsComparisonAnalysisResultPage.elementsFrom") + columnName); //$NON-NLS-1$
+            columnHeader2.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl.getString(
+                    "ColumnsComparisonAnalysisResultPage.elementsFrom", columnName)); //$NON-NLS-1$
         }
         ColumnPairsViewerProvider provider = new ColumnPairsViewerProvider();
         elementsTableViewer.setContentProvider(provider);
@@ -254,7 +254,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB"); //$NON-NLS-1$
             dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB"); //$NON-NLS-1$
         }
-        JFreeChart createStacked3DBarChart = TopChartFactory.createStacked3DBarChart(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
+        JFreeChart createStacked3DBarChart = TopChartFactory.createStacked3DBarChart(DefaultMessagesImpl
+                .getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
                 PlotOrientation.HORIZONTAL);
         GridData gd = new GridData();
         gd.heightHint = 180;

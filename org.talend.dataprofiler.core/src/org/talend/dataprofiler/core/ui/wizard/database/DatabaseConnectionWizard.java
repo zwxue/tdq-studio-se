@@ -122,7 +122,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             MessageDialog
                     .openInformation(
                             getShell(),
-                            DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnections"), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnectionFailure") + rc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                            DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnections"), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnectionFailure", rc.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
         // MOD scorreia 2009-01-09 password decryption is handled elsewhere

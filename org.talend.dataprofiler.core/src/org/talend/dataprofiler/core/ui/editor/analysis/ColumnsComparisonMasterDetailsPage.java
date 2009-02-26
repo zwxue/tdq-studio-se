@@ -165,8 +165,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private void setDefaultIndDef(Indicator[] indicators) {
         for (int i = 0; i < indicators.length; i++) {
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicators[i])) {
-                log
-                        .error(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.cannotSetIndicatorDef") + indicators[i].getName()); //$NON-NLS-1$
+                log.error("Could not set the definition of the given indicator :" + indicators[i].getName());
             }
         }
     }
@@ -202,8 +201,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         GridData layoutData = new GridData(GridData.FILL_BOTH);
         layoutData.horizontalAlignment = SWT.CENTER;
         checkComputeButton.setLayoutData(layoutData);
-        checkComputeButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.0")); //$NON-NLS-1$
-        checkComputeButton.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.1")); //$NON-NLS-1$
+        checkComputeButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.Compute")); //$NON-NLS-1$
+        checkComputeButton.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.WhenUnchecked")); //$NON-NLS-1$
         checkComputeButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -265,7 +264,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         columnHeader.setAlignment(SWT.CENTER);
         if (columnList.size() > 0) {
             String tableName = ColumnHelper.getColumnSetOwner((TdColumn) columnList.get(0)).getName();
-            columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element") + tableName); //$NON-NLS-1$
+            columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
         }
 
         ColumnsElementViewerProvider provider = new ColumnsElementViewerProvider();

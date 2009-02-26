@@ -57,7 +57,10 @@ public class DeleteSqlFileAction extends Action {
         IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
                 DQStructureManager.SOURCE_FILES);
         for (IFile file : folder) {
-            if (MessageDialog.openConfirm(new Shell(), DefaultMessagesImpl.getString("DeleteSqlFileAction.deleteSqlFile"), DefaultMessagesImpl.getString("DeleteSqlFileAction.areYouDeleteSqlFile") + file.getName())) { //$NON-NLS-1$ //$NON-NLS-2$
+            if (MessageDialog
+                    .openConfirm(
+                            new Shell(),
+                            DefaultMessagesImpl.getString("DeleteSqlFileAction.deleteSqlFile"), DefaultMessagesImpl.getString("DeleteSqlFileAction.areYouDeleteSqlFile", file.getName()))) { //$NON-NLS-1$ //$NON-NLS-2$
                 try {
                     if (file.exists()) {
                         file.delete(true, null);

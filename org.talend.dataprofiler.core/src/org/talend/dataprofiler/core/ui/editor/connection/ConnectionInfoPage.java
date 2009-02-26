@@ -110,7 +110,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                     MessageDialog
                             .openInformation(
                                     null,
-                                    DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionFailure") + code.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                                    DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
 

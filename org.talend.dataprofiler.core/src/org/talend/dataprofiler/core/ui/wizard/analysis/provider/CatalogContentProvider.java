@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.cwm.relational.TdCatalog;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
 import org.talend.dq.PluginConstant;
@@ -48,8 +47,7 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
             try {
                 return ((IContainer) parentElement).members();
             } catch (CoreException e) {
-                log
-                        .error(DefaultMessagesImpl.getString("CatologContentProvider.cannotGetChildren") + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
             }
         } else if (parentElement instanceof IFile) {
             IFile prvFile = (IFile) parentElement;

@@ -261,7 +261,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             } else if (dbType == SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL) {
                 label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.serviceName")); //$NON-NLS-1$
             } else {
-                label.setText("DBname"); //$NON-NLS-1$
+                label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.DBname")); //$NON-NLS-1$
             }
             final Text databaseNameText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             databaseNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

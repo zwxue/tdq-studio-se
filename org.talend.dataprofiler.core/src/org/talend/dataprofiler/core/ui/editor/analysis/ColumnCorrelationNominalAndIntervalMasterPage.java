@@ -329,7 +329,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
-            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column") + tdColumn.getName()); //$NON-NLS-1$
+            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column", tdColumn.getName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setData(columnSetMultiIndicator);
             previewChartList.add(exComp);
@@ -342,8 +342,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview") //$NON-NLS-1$
-                                + tdColumn.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview", //$NON-NLS-1$
+                                tdColumn.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         Display.getDefault().asyncExec(new Runnable() {
 
                             public void run() {

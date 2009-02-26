@@ -60,7 +60,8 @@ public class GlobalServiceRegister {
         if (service == null) {
             service = findService(klass);
             if (service == null) {
-                throw new RuntimeException(DefaultMessagesImpl.getString("GlobalServiceRegister.cannotFindService") + klass.getName()); //$NON-NLS-1$
+                throw new RuntimeException(DefaultMessagesImpl.getString(
+                        "GlobalServiceRegister.cannotFindService", klass.getName())); //$NON-NLS-1$
             }
             services.put(klass, service);
         }
@@ -78,7 +79,7 @@ public class GlobalServiceRegister {
         if (serviceGroup == null) {
             serviceGroup = findServiceGroup(klass);
             if (serviceGroup == null) {
-                return new ArrayList<IService>(); 
+                return new ArrayList<IService>();
             }
             serviceGroups.put(klass, serviceGroup);
         }

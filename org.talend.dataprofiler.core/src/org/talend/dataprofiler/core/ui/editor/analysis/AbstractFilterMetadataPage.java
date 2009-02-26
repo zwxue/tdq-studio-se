@@ -382,21 +382,21 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         List<TdCatalog> tdCatalogs = getCatalogs();
         List<TdSchema> tdSchema = DataProviderHelper.getTdSchema(tdDataProvider);
         leftLabel = new Label(leftComp, SWT.NONE);
-        leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs") + tdCatalogs.size()); //$NON-NLS-1$
+        leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs", tdCatalogs.size())); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata") + tdSchema.size()); //$NON-NLS-1$
+        leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", tdSchema.size())); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
 
         ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
 
         Label rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel
-                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.createionDate") + getFormatDateStr(analysis.getCreationDate())); //$NON-NLS-1$
+        rightLabel.setText(DefaultMessagesImpl.getString(
+                "ConnectionMasterDetailsPage.createionDate", getFormatDateStr(analysis.getCreationDate()))); //$NON-NLS-1$
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel
-                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.executionDate") + getFormatDateStr(resultMetadata.getExecutionDate())); //$NON-NLS-1$
+        rightLabel.setText(DefaultMessagesImpl.getString(
+                "ConnectionMasterDetailsPage.executionDate", getFormatDateStr(resultMetadata.getExecutionDate()))); //$NON-NLS-1$
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
         rightLabel.setText(DefaultMessagesImpl.getString(
@@ -405,7 +405,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         rightLabel = new Label(rightComp, SWT.NONE);
         String executeStatus = (resultMetadata.isLastRunOk() ? DefaultMessagesImpl
-                .getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure") + resultMetadata.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                .getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure", resultMetadata.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
         rightLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.executionStatus") //$NON-NLS-1$
                 + (resultMetadata.getExecutionNumber() == 0 ? PluginConstant.EMPTY_STRING : executeStatus));
         if (!resultMetadata.isLastRunOk()) {
@@ -413,12 +413,12 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         }
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel
-                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.number") + resultMetadata.getExecutionNumber()); //$NON-NLS-1$
+        rightLabel.setText(DefaultMessagesImpl.getString(
+                "ConnectionMasterDetailsPage.number", resultMetadata.getExecutionNumber())); //$NON-NLS-1$
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel
-                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.successExecution") + getFormatDateStr(resultMetadata.getExecutionDate())); //$NON-NLS-1$
+        rightLabel.setText(DefaultMessagesImpl.getString(
+                "ConnectionMasterDetailsPage.successExecution", getFormatDateStr(resultMetadata.getExecutionDate()))); //$NON-NLS-1$
         rightLabel.setLayoutData(new GridData());
         sumSectionClient.layout();
     }
@@ -578,7 +578,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         TableColumn tableColumn;
         tableColumn = new TableColumn(table, SWT.LEFT);
         tableColumn.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.rows")); //$NON-NLS-1$
-        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberOfRows") + container); //$NON-NLS-1$
+        tableColumn.setToolTipText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.numberOfRows", container)); //$NON-NLS-1$
         tableColumn.setWidth(COL_WIDTH);
     }
 

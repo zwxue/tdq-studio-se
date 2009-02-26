@@ -1037,7 +1037,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             // add common menu to the tree
             MenuItem addTaskItem = new MenuItem(menu, SWT.CASCADE);
-            addTaskItem.setText("Add task..."); //$NON-NLS-1$
+            addTaskItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.AddTask")); //$NON-NLS-1$
             addTaskItem.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
             addTaskItem.addSelectionListener(new SelectionAdapter() {
 
@@ -1140,7 +1140,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
                 Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
                 if (expression == null) {
-                    MessageDialogWithToggle.openWarning(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.Warn"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.NoQueryDefined")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialogWithToggle
+                            .openWarning(
+                                    null,
+                                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.Warn"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.NoQueryDefined")); //$NON-NLS-1$ //$NON-NLS-2$
                     return;
                 }
                 // Open perspective of Data Explorer.

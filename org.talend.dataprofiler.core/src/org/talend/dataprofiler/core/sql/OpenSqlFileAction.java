@@ -51,7 +51,7 @@ public class OpenSqlFileAction extends Action {
      * @param selectedFiles
      */
     public OpenSqlFileAction(List<IFile> selectedFiles) {
-        setText(DefaultMessagesImpl.getString("OpenSqlFileAction.openIn") + PluginConstant.DATAEXPLORER_PERSPECTIVE); //$NON-NLS-1$
+        setText(DefaultMessagesImpl.getString("OpenSqlFileAction.openIn", PluginConstant.DATAEXPLORER_PERSPECTIVE)); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.folder = selectedFiles;
     }

@@ -80,13 +80,13 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
 
     private boolean checkAnalysisEditorParam() {
         if (analysisType == null) {
-            log.error(DefaultMessagesImpl.getString("AbstractAnalysisWizard.analysisType")); //$NON-NLS-1$
+            log.error("The field 'analysisType' haven't assigned a value."); //$NON-NLS-1$
             return false;
         } else if (analysisName == null) {
-            log.error(DefaultMessagesImpl.getString("AbstractAnalysisWizard.analysisName")); //$NON-NLS-1$
+            log.error("The field 'analysisName' haven't assigned a value."); //$NON-NLS-1$
             return false;
         } else if (folderResource == null) {
-            log.error(DefaultMessagesImpl.getString("AbstractAnalysisWizard.fileURI")); //$NON-NLS-1$
+            log.error("The field 'fileURI' haven't assigned a value."); //$NON-NLS-1$
             return false;
         }
         return true;
@@ -96,8 +96,8 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
         AnalysisBuilder analysisBuilder = new AnalysisBuilder();
         boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, analysisType);
         if (!analysisInitialized) {
-            throw new DataprofilerCoreException(analysisName
-                    + DefaultMessagesImpl.getString("AbstractAnalysisWizard.failedToInitialize")); //$NON-NLS-1$
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
+                    "AbstractAnalysisWizard.FaileInitialize", analysisName)); //$NON-NLS-1$
         }
         Analysis analysis = analysisBuilder.getAnalysis();
         fillAnalysisBuilder(analysisBuilder);

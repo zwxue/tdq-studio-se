@@ -56,8 +56,9 @@ public class DeletePatternAction extends Action {
         IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
                 DQStructureManager.PATTERNS);
         for (IFile file : selectedFiles) {
-            if (MessageDialog.openConfirm(new Shell(), DefaultMessagesImpl.getString("DeletePatternAction.deleteRegularPatternFile"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("DeletePatternAction.areYouDeleteRegularPatternFile") + file.getName())) { //$NON-NLS-1$
+            if (MessageDialog.openConfirm(new Shell(), DefaultMessagesImpl
+                    .getString("DeletePatternAction.deleteRegularPatternFile"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("DeletePatternAction.areYouDeleteRegularPatternFile", file.getName()))) { //$NON-NLS-1$
                 try {
                     if (file.exists()) {
                         file.delete(true, null);

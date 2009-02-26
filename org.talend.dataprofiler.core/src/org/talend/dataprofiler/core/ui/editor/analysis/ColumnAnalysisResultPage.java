@@ -126,8 +126,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(sectionClient, ExpandableComposite.TWISTIE
                     | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-            exComp
-                    .setText(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.column") + columnIndicator.getTdColumn().getName()); //$NON-NLS-1$
+            exComp.setText(DefaultMessagesImpl.getString(
+                    "ColumnAnalysisResultPage.Column", columnIndicator.getTdColumn().getName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -161,7 +161,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
                     monitor
                             .beginTask(
-                                    DefaultMessagesImpl.getString("ColumnAnalysisResultPage.createPreview") + column.getName(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                                    DefaultMessagesImpl.getString("ColumnAnalysisResultPage.createPreview", column.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
                     Display.getDefault().asyncExec(new Runnable() {
 
@@ -331,7 +331,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                             if ((currentIndicator instanceof PatternFreqIndicator || currentIndicator instanceof PatternLowFreqIndicator)
                                     && createPatternFlag == 0) {
                                 MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                itemCreatePatt.setText(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.GenerateRegularPattern")); //$NON-NLS-1$
+                                itemCreatePatt.setText(DefaultMessagesImpl
+                                        .getString("ColumnAnalysisResultPage.GenerateRegularPattern")); //$NON-NLS-1$
                                 final PatternTransformer pattTransformer = new PatternTransformer(DbmsLanguageFactory
                                         .createDbmsLanguage(analysis));
                                 itemCreatePatt.addSelectionListener(new SelectionAdapter() {

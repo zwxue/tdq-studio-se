@@ -59,7 +59,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
@@ -542,7 +541,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 try {
                     members = container.members();
                 } catch (CoreException e) {
-                    log.error(DefaultMessagesImpl.getString("ColumnsSelectionDialog.cannotGetChildren") + container.getLocation()); //$NON-NLS-1$
+                    log.error("Can't get the children of container:" + container.getLocation());
                 }
 
                 if (container.equals(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(

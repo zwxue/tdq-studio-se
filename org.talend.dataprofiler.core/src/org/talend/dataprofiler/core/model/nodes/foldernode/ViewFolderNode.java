@@ -92,8 +92,8 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
         try {
             boolean ok = false;
             assert provider != null : DefaultMessagesImpl.getString("ViewFolderNode.noProviderForViews"); //$NON-NLS-1$
-            assert catalog != null ^ schema != null : DefaultMessagesImpl.getString("ViewFolderNode.catalogOrSchemaExist") //$NON-NLS-1$
-                    + provider.getName();
+            assert catalog != null ^ schema != null : DefaultMessagesImpl.getString("ViewFolderNode.catalogOrSchemaExist",//$NON-NLS-1$
+                    provider.getName());
 
             if (catalog != null) {
                 ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, catalog, null, true));
