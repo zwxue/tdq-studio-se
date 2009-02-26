@@ -35,6 +35,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
@@ -161,4 +162,20 @@ public class IndicatorCommonUtil {
         }
     }
 
+    public static void getIndicatorValue(TableIndicatorUnit indicatorUnit) {
+        Object tempObject = null;
+        IndicatorEnum type = indicatorUnit.getType();
+        Indicator indicator = indicatorUnit.getIndicator();
+        if (indicatorUnit.isExcuted()) {
+            switch (type) {
+            case RowCountIndicatorEnum:
+                tempObject = ((RowCountIndicator) indicator).getCount();
+                break;
+            case WhereRuleIndicatorEnum:
+                tempObject = ((WhereRuleIndicator) indicator).getCount();
+            default:
+            }
+            indicatorUnit.setValue(tempObject);
+        }
+    }
 }

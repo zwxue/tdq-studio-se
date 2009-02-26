@@ -23,9 +23,12 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
+import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -38,9 +41,30 @@ public class NewDQRulesWizard extends AbstractWizard {
 
     private NewDQRulesWizardPage2 mPage2;
 
+    @Override
+    public boolean canFinish() {
+        if (mPage2 != null) {
+            if (mPage2.getWhereText() != null) {
+                if (mPage2.getWhereText().getText() != null && !"".equals(mPage2.getWhereText().getText())) {
+                    return mPage2.isPageComplete();
+                }
+            }
+        }
+        return false;
+    }
+
     private ConnectionParameter parameter;
 
     private IPath location;
+
+    private Expression expression;
+
+    private final static String EXPRESSION_BODY = "SELECT COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>";
+
+    private final static String EXPRESSION_LANG = ExecutionLanguage.SQL.getLiteral();
+
+    // default value of Criticality Level
+    private static final int CRITICALITY_LEVEL_DEFAULT = 1;
 
     public NewDQRulesWizard(ConnectionParameter parameter) {
         this.parameter = parameter;
@@ -63,21 +87,11 @@ public class NewDQRulesWizard extends AbstractWizard {
         addPage(mPage2);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#getConnectionParameter()
-     */
     @Override
     protected ConnectionParameter getConnectionParameter() {
         return this.parameter;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
     @Override
     public boolean performFinish() {
 
@@ -86,7 +100,8 @@ public class NewDQRulesWizard extends AbstractWizard {
         whereRule.setName(name);
         String whereClause = mPage2.getWhereText().getText();
         whereRule.setWhereExpression(whereClause);
-        whereRule.setCriticalityLevel(1);// set default value
+        whereRule.setCriticalityLevel(CRITICALITY_LEVEL_DEFAULT);
+        whereRule.getSqlGenericExpression().add(getExpression());
 
         TaggedValueHelper.setAuthor(whereRule, parameter.getAuthor());
         TaggedValueHelper.setDescription(parameter.getDescription(), whereRule);
@@ -106,6 +121,13 @@ public class NewDQRulesWizard extends AbstractWizard {
         EMFSharedResources.getInstance().addEObjectToResourceSet(file.getFullPath().toString(), whereRule);
         EMFSharedResources.getInstance().saveLastResource();
         return true;
+    }
+
+    public Expression getExpression() {
+        if (expression == null) {
+            expression = BooleanExpressionHelper.createExpression(EXPRESSION_LANG, EXPRESSION_BODY);
+        }
+        return expression;
     }
 
     /**

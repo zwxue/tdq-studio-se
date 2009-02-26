@@ -96,6 +96,20 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     private Object[] fExpandedElements;
 
+    protected int dialogType;
+
+    public int getDialogType() {
+        return dialogType;
+    }
+
+    public void setDialogType(int dialogType) {
+        this.dialogType = dialogType;
+    }
+
+    public static final int DIALOG_TYPE_COLUMN = 1;
+
+    public static final int DIALOG_TYPE_TABLE = 2;
+
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
      * 
@@ -362,7 +376,11 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      */
     protected CheckboxTreeViewer createFirstPart(Composite parent) {
         if (fContainerMode) {
-            fViewer = new ColumnSelectionViewer(parent, SWT.BORDER);
+            if (DIALOG_TYPE_TABLE == this.getDialogType()) {
+                fViewer = new TableSelectionViewer(parent, SWT.BORDER);
+            } else {
+                fViewer = new ColumnSelectionViewer(parent, SWT.BORDER);
+            }
             // {
             //
             // protected void handleTreeExpand(TreeEvent event) {

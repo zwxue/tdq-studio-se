@@ -32,8 +32,10 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorCommonUtil;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
@@ -59,6 +61,10 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
         if (units != null) {
             this.units.addAll(units);
         }
+    }
+
+    public List<JFreeChart> getChartList() {
+        return null;
     }
 
     public ChartDataEntity[] getDataEntity() {
@@ -151,4 +157,15 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
         }
     }
 
+    public XYDataset getXYDataset() {
+        if (getCustomerXYDataset() != null) {
+            return (XYDataset) getCustomerXYDataset();
+        }
+
+        return null;
+    }
+
+    public ICustomerDataset getCustomerXYDataset() {
+        return null;
+    }
 }

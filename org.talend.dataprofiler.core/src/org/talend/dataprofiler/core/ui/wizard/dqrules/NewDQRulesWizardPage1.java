@@ -40,11 +40,6 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
         setPageComplete(false);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     public void createControl(Composite parent) {
 
         super.createControl(parent);
@@ -52,11 +47,6 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
 
         button.addSelectionListener(new SelectionAdapter() {
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
             @Override
             public void widgetSelected(SelectionEvent e) {
                 openFolderSelectionDialog(DQStructureManager.LIBRARIES, DQStructureManager.DQ_RULES);
@@ -72,24 +62,12 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite
-     * )
-     */
     @Override
     protected void createExtendedControl(Composite container) {
         // TODO Auto-generated method stub
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#getStoredFolder()
-     */
     @Override
     protected IFolder getStoredFolder() {
         return ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(

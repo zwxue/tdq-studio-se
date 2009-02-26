@@ -15,9 +15,9 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.forms;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -67,7 +67,20 @@ public enum FormEnum {
         return tempList.toArray(new String[tempList.size()]);
     }
 
+    public static String[] getHelpHref(TableIndicatorUnit indicatorUnit) {
+        List<String> tempList = new ArrayList<String>();
+        for (FormEnum oneForm : getForms(indicatorUnit)) {
+            tempList.add(oneForm.getHelpHref());
+        }
+
+        return tempList.toArray(new String[tempList.size()]);
+    }
+
     public static String getFirstFormHelpHref(IndicatorUnit indicatorUnit) {
+        return getHelpHref(indicatorUnit)[0];
+    }
+
+    public static String getFirstFormHelpHref(TableIndicatorUnit indicatorUnit) {
         return getHelpHref(indicatorUnit)[0];
     }
 
@@ -176,7 +189,36 @@ public enum FormEnum {
         return forms;
     }
 
+    /**
+     * 
+     * DOC xqliu Comment method "getForms".
+     * 
+     * @param indicatorUnit
+     * @return
+     */
+    public static FormEnum[] getForms(TableIndicatorUnit indicatorUnit) {
+        FormEnum[] forms = null;
+        switch (indicatorUnit.getType()) {
+        case RowCountIndicatorEnum:
+            forms = new FormEnum[] { IndicatorThresholdsForm };
+            break;
+        case WhereRuleIndicatorEnum:
+            forms = new FormEnum[] { IndicatorThresholdsForm };
+            break;
+        default:
+        }
+        return forms;
+    }
+
     public static boolean isExsitingForm(IndicatorUnit indicatorUnit) {
+        if (getForms(indicatorUnit) != null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isExsitingForm(TableIndicatorUnit indicatorUnit) {
         if (getForms(indicatorUnit) != null) {
             return true;
         }

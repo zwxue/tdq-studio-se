@@ -241,7 +241,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             ret = false;
             msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsEmpty") + "\n";
         } else {
-            if (!wh.startsWith(WHERE)) {
+            if (wh.startsWith(WHERE)) {
                 ret = false;
                 msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.whereClauseIsInvalid") + "\n";
             }
@@ -260,17 +260,13 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                // fireTextChange();
             }
-
         });
         criticalityLevelText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                // fireTextChange();
             }
-
         });
     }
 }

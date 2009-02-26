@@ -30,16 +30,20 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.utils.DateTimeDialog;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -82,12 +86,18 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
         super(parent, style, parameters);
 
         Indicator currentIndicator = (Indicator) parameters.eContainer();
-        int sqltype = ((TdColumn) currentIndicator.getAnalyzedElement()).getJavaType();
         IndicatorEnum currentIndicatorType = IndicatorEnum.findIndicatorEnum(currentIndicator.eClass());
-        isRangeForDate = Java2SqlType.isDateInSQL(sqltype) && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
+        if (currentIndicator.getAnalyzedElement() instanceof TdTable) {
+            isRangeForDate = false;
+            isDatetime = false;
+        } else {
+            int sqltype = ((TdColumn) currentIndicator.getAnalyzedElement()).getJavaType();
+            isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
+                    && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
 
-        if (isRangeForDate) {
-            isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
+            if (isRangeForDate) {
+                isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
+            }
         }
 
         isOptionForRowCount = currentIndicatorType == IndicatorEnum.RowCountIndicatorEnum;
@@ -164,17 +174,30 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     private void setPercentUIEnable() {
         IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
-        ColumnMasterDetailsPage masterPage = null;
+        AbstractMetadataFormPage masterPage = null;
+        boolean tableMasterPage = false;
         AnalysisEditor anaEditor = null;
         if (editor != null) {
             anaEditor = (AnalysisEditor) editor;
-            if (anaEditor.getMasterPage() != null) {
-                masterPage = (ColumnMasterDetailsPage) anaEditor.getMasterPage();
+            Object temp = anaEditor.getMasterPage();
+            if (temp != null) {
+                tableMasterPage = temp instanceof TableMasterDetailsPage;
+                if (tableMasterPage) {
+                    masterPage = (TableMasterDetailsPage) temp;
+                } else {
+                    masterPage = (ColumnMasterDetailsPage) temp;
+                }
             }
         }
 
         if (masterPage != null) {
-            isContainRowCount = AnalysisHelper.containsRowCount(masterPage.getAnalysisHandler().getAnalysis());
+            Analysis ana;
+            if (tableMasterPage) {
+                ana = ((TableMasterDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
+            } else {
+                ana = ((ColumnMasterDetailsPage) masterPage).getAnalysisHandler().getAnalysis();
+            }
+            isContainRowCount = AnalysisHelper.containsRowCount(ana);
         }
 
         pLowerText.setEnabled(isContainRowCount);

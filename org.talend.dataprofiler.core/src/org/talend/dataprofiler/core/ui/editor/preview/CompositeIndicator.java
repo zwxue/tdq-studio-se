@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
@@ -30,10 +31,16 @@ public final class CompositeIndicator {
 
     private IndicatorUnit[] indicatorUnits;
 
+    private TableIndicatorUnit[] tableIndicatorUnits;
+
     private Map<EIndicatorChartType, List<IndicatorUnit>> separatedMap;
+
+    private Map<EIndicatorChartType, List<TableIndicatorUnit>> tableSeparatedMap;
 
     private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, patternFrequencylist,
             patternLowFrequencyList, summaryList, patternList, sqlPatternList, modelIndicatorList;
+
+    private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
     private static CompositeIndicator instance;
 
@@ -63,6 +70,10 @@ public final class CompositeIndicator {
         sqlPatternList = new ArrayList<IndicatorUnit>();
         modelIndicatorList = new ArrayList<IndicatorUnit>();
         separatedMap = new HashMap<EIndicatorChartType, List<IndicatorUnit>>();
+        // MOD xqliu 2009-02-25 feature 6015
+        tableSimpleList = new ArrayList<TableIndicatorUnit>();
+        tableWhereRuleList = new ArrayList<TableIndicatorUnit>();
+        tableSeparatedMap = new HashMap<EIndicatorChartType, List<TableIndicatorUnit>>();
     }
 
     private void clear() {
@@ -77,6 +88,10 @@ public final class CompositeIndicator {
         sqlPatternList.clear();
         modelIndicatorList.clear();
         separatedMap.clear();
+        // MOD xqliu 2009-02-25 feature 6015
+        tableSimpleList.clear();
+        tableWhereRuleList.clear();
+        tableSeparatedMap.clear();
     }
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
@@ -159,6 +174,40 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.MODE_INDICATOR, modelIndicatorList);
 
         return separatedMap;
+    }
+
+    public Map<EIndicatorChartType, List<TableIndicatorUnit>> getTableIndicatorComposite(TableIndicator tableIndicator) {
+        this.clear();
+        List<TableIndicatorUnit> tempList = new ArrayList<TableIndicatorUnit>();
+        this.tableIndicatorUnits = initChildTableIndicatorUnits(tempList, tableIndicator.getIndicatorUnits());
+        for (TableIndicatorUnit one : tableIndicatorUnits) {
+            switch (one.getType()) {
+            case RowCountIndicatorEnum:
+                tableSimpleList.add(one);
+                break;
+            case WhereRuleIndicatorEnum:
+                tableWhereRuleList.add(one);
+                break;
+            default:
+            }
+        }
+
+        tableSeparatedMap.put(EIndicatorChartType.SIMPLE_STATISTICS, tableSimpleList);
+        tableSeparatedMap.put(EIndicatorChartType.WHERERULE_INDICATOR, tableWhereRuleList);
+
+        return tableSeparatedMap;
+    }
+
+    private TableIndicatorUnit[] initChildTableIndicatorUnits(List<TableIndicatorUnit> tempList,
+            TableIndicatorUnit[] indicatorUnits) {
+        for (TableIndicatorUnit unit : indicatorUnits) {
+            if (unit.getChildren() != null) {
+                initChildTableIndicatorUnits(tempList, unit.getChildren());
+            } else {
+                tempList.add(unit);
+            }
+        }
+        return tempList.toArray(new TableIndicatorUnit[tempList.size()]);
     }
 
 }

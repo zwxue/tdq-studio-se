@@ -22,6 +22,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnTimeWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.schema.SchemaAnalysisWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizard;
 import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -31,6 +32,7 @@ import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 
 /**
@@ -87,6 +89,12 @@ public class WizardFactory {
             }
             parameter.setAnalysisTypeName(type.getLiteral());
             return new SchemaAnalysisWizard((PackagesAnalyisParameter) parameter);
+        case TABLE:
+            if (parameter == null) {
+                parameter = new NamedColumnSetAnalysisParameter();
+            }
+            parameter.setAnalysisTypeName(type.getLiteral());
+            return new TableAnalysisWizard((NamedColumnSetAnalysisParameter) parameter);
         default:
             return null;
         }

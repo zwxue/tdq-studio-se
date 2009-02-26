@@ -127,6 +127,15 @@ public class AnalysisEditor extends CommonFormEditor {
                 ExceptionHandler.process(e, Level.ERROR);
             }
             break;
+        case TABLE:
+            masterPage = new TableMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.TableAnalysisEditor")); //$NON-NLS-1$
+            try {
+                addPage(masterPage);
+            } catch (PartInitException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
+            break;
         default:
 
         }

@@ -35,7 +35,8 @@ public enum EIndicatorChartType {
     SUMMARY_STATISTICS(Messages.getString("EIndicatorChartType.SummaryStatistics"), new SummaryStastictisExplorer()), //$NON-NLS-1$
     PATTERN_MATCHING(Messages.getString("EIndicatorChartType.PatternMatching"), new PatternExplorer()), //$NON-NLS-1$
     SQL_PATTERN_MATCHING(Messages.getString("EIndicatorChartType.SQLPatternMatching"), new PatternExplorer()), //$NON-NLS-1$
-    MODE_INDICATOR(Messages.getString("EIndicatorChartType.ModeIndicator"), null); //$NON-NLS-1$
+    MODE_INDICATOR(Messages.getString("EIndicatorChartType.ModeIndicator"), null), //$NON-NLS-1$
+    WHERERULE_INDICATOR(Messages.getString("EIndicatorChartType.WhereRuleIndicator"), null); //$NON-NLS-1$
 
     private String literal;
 

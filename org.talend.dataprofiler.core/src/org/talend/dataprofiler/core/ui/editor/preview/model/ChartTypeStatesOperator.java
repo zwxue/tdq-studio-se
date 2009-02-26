@@ -14,12 +14,16 @@ package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import java.util.List;
 
+import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ModeStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleStatisticsStateTable;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.TextStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.LowFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.PatternFrequencyStatisticsState;
@@ -68,6 +72,20 @@ public final class ChartTypeStatesOperator {
 
         case SUMMARY_STATISTICS:
             return new SummaryStatisticsState(units);
+
+        default:
+            return null;
+        }
+    }
+
+    public static IChartTypeStates getChartStateTable(EIndicatorChartType type, List<TableIndicatorUnit> units,
+            TableIndicator tableIndicator) {
+        switch (type) {
+        case SIMPLE_STATISTICS:
+            return new SimpleStatisticsStateTable(units);
+
+        case WHERERULE_INDICATOR:
+            return new WhereRuleStatisticsStateTable(units, tableIndicator);
 
         default:
             return null;

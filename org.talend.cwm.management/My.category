@@ -32,4 +32,7 @@
     <subCategories analysisType="Column Correlation Analysis" label="Numerical Correlation Analysis"/>
     <subCategories analysisType="Column Correlation Analysis" label="Time Correlation Analysis"/>
   </categories>
+  <categories analysisType="Table Analysis" label="Table Analysis">
+    <subCategories label="Table Analysis"/>
+  </categories>
 </dataquality.category:AnalysisCategories>

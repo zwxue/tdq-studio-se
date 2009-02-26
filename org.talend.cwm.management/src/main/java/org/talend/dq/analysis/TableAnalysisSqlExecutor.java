@@ -1,0 +1,368 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2009 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dq.analysis;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EClass;
+import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.exception.AnalysisExecutionException;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.RelationalPackage;
+import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdSchema;
+import org.talend.cwm.relational.TdTable;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.i18n.Messages;
+import org.talend.utils.collections.MultiMapHelper;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.ColumnSet;
+
+import Zql.ParseException;
+
+/**
+ * DOC xqliu class global comment. Detailled comment
+ */
+public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
+
+    private static Logger log = Logger.getLogger(TableAnalysisSqlExecutor.class);
+
+    private DbmsLanguage dbmsLanguage;
+
+    protected Analysis cachedAnalysis;
+
+    protected Map<ModelElement, Package> schemata = new HashMap<ModelElement, Package>();
+
+    @Override
+    protected String createSqlStatement(Analysis analysis) {
+        this.cachedAnalysis = analysis;
+        AnalysisResult results = analysis.getResults();
+        assert results != null;
+        try {
+            // --- get data filter
+            TableAnalysisHandler handler = new TableAnalysisHandler();
+            handler.setAnalysis(analysis);
+            String stringDataFilter = handler.getStringDataFilter();
+            // --- get all the leaf indicators used for the sql computation
+            Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
+            // --- create one sql statement for each leaf indicator
+            for (Indicator indicator : leafIndicators) {
+                if (!createSqlQuery(stringDataFilter, indicator)) {
+                    log.error("Error when creating query with indicator " + indicator.getName());
+                    return null;
+                }
+            }
+        } catch (ParseException e) {
+            log.error(e, e);
+            return null;
+        } catch (AnalysisExecutionException e) {
+            log.error(e, e);
+            return null;
+        }
+        return ""; //$NON-NLS-1$
+    }
+
+    private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
+            AnalysisExecutionException {
+        ModelElement analyzedElement = indicator.getAnalyzedElement();
+        if (analyzedElement == null) {
+            return traceError("Analyzed element is null for indicator " + indicator.getName());
+        }
+        TdTable tdTable = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        if (tdTable == null) {
+            return traceError("Analyzed element is not a table for indicator " + indicator.getName());
+        }
+        // --- get the schema owner
+        String tableName = quote(tdTable.getName());
+        if (!belongToSameSchemata(tdTable)) {
+            StringBuffer buf = new StringBuffer();
+            for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
+                buf.append(schema.getName() + " "); //$NON-NLS-1$
+            }
+            log.error("Table " + tableName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
+            return false;
+        }
+
+        // get correct language for current database
+        String language = dbms().getDbmsName();
+        Expression sqlGenericExpression = null;
+
+        // --- create select statement
+        // get indicator's sql tableS (generate the real SQL statement from its definition)
+
+        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+        if (indicatorDefinition == null) {
+            return traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
+                    + ". Please, report a bug at http://talendforge.org/bugs/");
+        }
+        sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
+
+        final EClass indicatorEclass = indicator.eClass();
+        if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
+            return traceError("Unsupported Indicator. No SQL expression found for indicator "
+                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (UUID: "
+                    + ResourceHelper.getUUID(indicatorDefinition) + ")");
+        }
+
+        // --- get indicator parameters and convert them into sql expression
+        List<String> whereExpression = new ArrayList<String>();
+        if (StringUtils.isNotBlank(dataFilterAsString)) {
+            whereExpression.add(dataFilterAsString);
+        }
+        if (indicatorDefinition instanceof WhereRule) {
+            WhereRule wr = (WhereRule) indicatorDefinition;
+            whereExpression.add(wr.getWhereExpression());
+        }
+        IndicatorParameters parameters = indicator.getParameters();
+        if (parameters != null) {
+            // TODO handle parameters here
+        }
+
+        String schemaName = getQuotedSchemaName(tdTable);
+        String table = quote(tdTable.getName());
+
+        // --- normalize table name
+        String catalogName = getQuotedCatalogName(tdTable);
+        if (catalogName == null && schemaName != null) {
+            // try to get catalog above schema
+            final TdSchema parentSchema = SchemaHelper.getParentSchema(tdTable);
+            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+            catalogName = parentCatalog != null ? parentCatalog.getName() : null;
+        }
+
+        table = dbms().toQualifiedName(catalogName, schemaName, table);
+
+        // ### evaluate SQL Statement depending on indicators ###
+        String completedSqlString = null;
+
+        // --- default case
+        // TODO for table not for column
+        completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(sqlGenericExpression.getBody(), tableName, table);
+        // ~
+        completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+
+        // completedSqlString is the final query
+        String finalQuery = completedSqlString;
+
+        Expression instantiateSqlExpression = BooleanExpressionHelper.createExpression(language, finalQuery);
+        indicator.setInstantiatedExpression(instantiateSqlExpression);
+        return true;
+    }
+
+    protected boolean traceError(String error) {
+        this.errorMessage = error;
+        log.error(this.errorMessage);
+        return false;
+    }
+
+    private String quote(String input) {
+        return dbms().quote(input);
+    }
+
+    protected boolean belongToSameSchemata(final TdTable tdTable) {
+        assert tdTable != null;
+        if (schemata.get(tdTable) != null) {
+            return true;
+        }
+        // get catalog or schema
+        Package schema = ColumnSetHelper.getParentCatalogOrSchema(tdTable);
+        if (schema == null) {
+            this.errorMessage = Messages.getString("TableAnalysisSqlExecutor.NoSchemaOrCatalogFound", tdTable.getName()); //$NON-NLS-1$
+            return false;
+        }
+        schemata.put(tdTable, schema);
+        return true;
+    }
+
+    protected DbmsLanguage dbms() {
+        if (this.dbmsLanguage == null) {
+            this.dbmsLanguage = createDbmsLanguage();
+        }
+        return this.dbmsLanguage;
+    }
+
+    private DbmsLanguage createDbmsLanguage() {
+        DataManager connection = this.cachedAnalysis.getContext().getConnection();
+        return DbmsLanguageFactory.createDbmsLanguage(connection);
+    }
+
+    private String getQuotedSchemaName(ColumnSet columnSetOwner) {
+        final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+        return (parentSchema == null) ? null : quote(parentSchema.getName());
+    }
+
+    private String getQuotedCatalogName(ModelElement analyzedElement) {
+        final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
+        return parentCatalog == null ? null : quote(parentCatalog.getName());
+    }
+
+    private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString) throws ParseException {
+        return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions);
+    }
+
+    @Override
+    protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+        boolean ok = true;
+        TypedReturnCode<Connection> trc = this.getConnection(analysis);
+        if (!trc.isOk()) {
+            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+        }
+
+        Connection connection = trc.getObject();
+        try {
+            // store map of element to each indicator used for computation (leaf indicator)
+            Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
+
+            // execute the sql statement for each indicator
+            Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
+            for (Indicator indicator : indicators) {
+                // skip composite indicators that do not require a sql execution
+                if (indicator instanceof CompositeIndicator) {
+                    // options of composite indicators are handled elsewhere
+                    continue;
+                }
+                // set the connection's catalog
+                String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+                if (catalogName != null) { // check whether null argument can be given
+                    changeCatalog(catalogName, connection);
+                }
+
+                Expression query = dbms().getInstantiatedExpression(indicator);
+                if (query == null || !executeQuery(indicator, connection, query.getBody())) {
+                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
+                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                }
+
+                // add mapping of analyzed elements to their indicators
+                MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
+
+            }
+
+            connection.close();
+        } catch (SQLException e) {
+            log.error(e, e);
+            this.errorMessage = e.getMessage();
+            ok = false;
+        } finally {
+            ConnectionUtils.closeConnection(connection);
+        }
+        return ok;
+    }
+
+    private String getCatalogOrSchemaName(ModelElement analyzedElement) {
+        Package schema = super.schemata.get(analyzedElement);
+        if (schema == null) {
+            log.error("No schema found for table " + analyzedElement.getName());
+            return null;
+        }
+        // else
+        if (RelationalPackage.eINSTANCE.getTdSchema().equals(schema.eClass())) {
+            final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(schema);
+            if (parentCatalog != null) {
+                return parentCatalog.getName();
+            }
+        }
+        return schema.getName();
+    }
+
+    protected boolean changeCatalog(String catalogName, Connection connection) {
+        try {
+            connection.setCatalog(catalogName);
+            return true;
+        } catch (RuntimeException e) {
+            return traceError("Problem when changing trying to set catalog \"" + catalogName
+                    + "\" on connection. RuntimeException message: " + e.getMessage());
+        } catch (SQLException e) {
+            return traceError("Problem when changing trying to set catalog \"" + catalogName
+                    + "\" on connection. SQLException message: " + e.getMessage());
+        }
+    }
+
+    private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
+        String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+        if (log.isInfoEnabled()) {
+            log.info("Computing indicator: " + indicator.getName());
+        }
+        List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
+
+        // give result to indicator so that it handles the results
+        return indicator.storeSqlResults(myResultSet);
+    }
+
+    protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
+        if (catalogName != null) { // check whether null argument can be given
+            changeCatalog(catalogName, connection);
+        }
+        // create query statement
+        Statement statement = connection.createStatement();
+        // statement.setFetchSize(fetchSize);
+        if (log.isInfoEnabled()) {
+            log.info("Executing query: " + queryStmt);
+        }
+        if (continueRun()) {
+            statement.execute(queryStmt);
+        }
+
+        // get the results
+        ResultSet resultSet = statement.getResultSet();
+        if (resultSet == null) {
+            String mess = "No result set for this statement: " + queryStmt;
+            log.warn(mess);
+            return null;
+        }
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        List<Object[]> myResultSet = new ArrayList<Object[]>();
+        while (resultSet.next()) {
+            Object[] result = new Object[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                result[i] = resultSet.getObject(i + 1);
+            }
+            myResultSet.add(result);
+        }
+        // -- release resources
+        resultSet.close();
+        statement.close();
+
+        return myResultSet;
+    }
+}

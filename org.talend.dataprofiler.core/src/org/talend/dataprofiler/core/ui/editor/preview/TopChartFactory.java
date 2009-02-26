@@ -41,6 +41,7 @@ import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.urls.StandardXYZURLGenerator;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.gantt.TaskSeriesCollection;
@@ -390,6 +391,49 @@ public final class TopChartFactory {
         axis.setNumberFormatOverride(NumberFormat.getPercentInstance());
         axis.setUpperMargin(0.05f);
         axis.setLowerMargin(0.01f);
+
+        return chart;
+    }
+
+    /**
+     * DOC xqliu Comment method "createBarChart".
+     * 
+     * @param title
+     * @param dataset
+     * @param showLegend
+     * @return
+     */
+    public static JFreeChart createStackedBarChart(String title, CategoryDataset dataset, boolean showLegend) {
+        final JFreeChart chart = ChartFactory.createStackedBarChart(null, title, "Value", dataset, PlotOrientation.VERTICAL,
+                showLegend, false, false);
+        final CategoryPlot plot = chart.getCategoryPlot();
+        final ValueAxis rangeAxis = plot.getRangeAxis();
+        rangeAxis.setLowerMargin(0.15);
+        rangeAxis.setUpperMargin(0.15);
+        return chart;
+    }
+
+    /**
+     * DOC xqliu Comment method "createLineChart".
+     * 
+     * @param title
+     * @param dataset
+     * @param showLegend
+     * @return
+     */
+    public static JFreeChart createLineChart(String title, XYDataset dataset, boolean showLegend) {
+        final JFreeChart chart = ChartFactory.createXYLineChart(null, title, "Percent", dataset, PlotOrientation.VERTICAL,
+                showLegend, false, false);
+
+        final XYPlot plot = chart.getXYPlot();
+
+        final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(0, true);
+        renderer.setSeriesShapesVisible(0, true);
+        plot.setRenderer(renderer);
+
+        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
         return chart;
     }

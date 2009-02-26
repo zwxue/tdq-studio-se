@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Namespace;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
@@ -181,5 +183,19 @@ public final class TableHelper {
             }
         }
         return foreignkeys;
+    }
+
+    /**
+     * Method "getParentCatalogOrSchema" returns the owner of the element (Catalog or Schema).
+     * 
+     * @param element (can be null)
+     * @return the Catalog or of Schema or null
+     */
+    public static Package getParentCatalogOrSchema(ModelElement element) {
+        if (element == null) {
+            return null;
+        }
+        Namespace namespace = element.getNamespace();
+        return PackageHelper.getCatalogOrSchema(namespace);
     }
 }

@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.wizard.dqrules;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -36,11 +38,6 @@ public class NewDQRulesWizardPage2 extends AbstractWizardPage {
         setPageComplete(true);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
     public void createControl(Composite parent) {
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(2, false);
@@ -51,19 +48,21 @@ public class NewDQRulesWizardPage2 extends AbstractWizardPage {
         label.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
         whereText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        whereText.setText(DefaultMessagesImpl.getString("NewDQRulesWizard.where"));
         GridData data = new GridData(GridData.FILL_BOTH);
         whereText.setLayoutData(data);
+        whereText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                if (whereText.getText() != null && !"".equals(whereText.getText())) {
+                    setPageComplete(checkFieldsValue());
+                }
+            }
+        });
 
         setControl(container);
     }
 
     public boolean checkFieldsValue() {
         return true;
-    }
-
-    @Override
-    public String getTitle() {
-        return super.getTitle();
     }
 }

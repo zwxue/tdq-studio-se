@@ -43,6 +43,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Table;
 
 /**
  * @author rli
@@ -77,6 +78,12 @@ public final class EObjectHelper {
     public static TdDataProvider getTdDataProvider(Column column) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
+        return DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+
+    }
+
+    public static TdDataProvider getTdDataProvider(Table table) {
+        Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(table);
         return DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
 
     }

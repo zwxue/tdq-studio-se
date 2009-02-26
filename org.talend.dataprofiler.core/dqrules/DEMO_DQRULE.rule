@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataquality.rules:WhereRule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.rules="http://dataquality.rules" name="DEMO_DQRULE" criticalityLevel="1" whereExpression="WHERE address != null and postcode = null">
+<dataquality.rules:WhereRule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.rules="http://dataquality.rules" name="Demo DQ Rule" criticalityLevel="1" whereExpression="example != ''">
   <taggedValue tag="Author" value="xqliu"/>
-  <taggedValue tag="Description" value="Demo DQ Rule"/>
-  <taggedValue tag="Purpose" value="Demo DQ Rule"/>
+  <taggedValue tag="Description" value="demo"/>
+  <taggedValue tag="Purpose" value="demo"/>
   <taggedValue tag="Status" value="Draft"/>
   <taggedValue tag="Validation_Status" value="true"/>
+  <sqlGenericExpression body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
 </dataquality.rules:WhereRule>

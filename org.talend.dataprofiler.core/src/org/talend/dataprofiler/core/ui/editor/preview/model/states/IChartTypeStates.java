@@ -12,10 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -88,4 +91,25 @@ public interface IChartTypeStates {
      * @return
      */
     public String getReferenceLink();
+
+    /**
+     * DOC xqliu Comment method "getXYDataset".
+     * 
+     * @return
+     */
+    public XYDataset getXYDataset();
+
+    /**
+     * DOC xqliu Comment method "getCustomerXYDataset".
+     * 
+     * @return
+     */
+    public ICustomerDataset getCustomerXYDataset();
+
+    /**
+     * DOC xqliu Comment method "getChartList".
+     * 
+     * @return
+     */
+    public List<JFreeChart> getChartList();
 }

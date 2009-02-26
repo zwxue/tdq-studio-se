@@ -1,0 +1,168 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2009 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dq.analysis;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+
+import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.relational.TdTable;
+import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.Dependency;
+import orgomg.cwm.objectmodel.core.ModelElement;
+
+/**
+ * DOC xqliu class global comment. Detailled comment
+ */
+public class TableAnalysisHandler extends AnalysisHandler {
+
+    private static Logger log = Logger.getLogger(TableAnalysisHandler.class);
+
+    /**
+     * The resources that are connected to this analysis and that are potentially modified.
+     */
+    private Collection<Resource> modifiedResources = new HashSet<Resource>();
+
+    /**
+     * Method "addTableToAnalyze".
+     * 
+     * @param table
+     * @return
+     */
+    public boolean addTableToAnalyze(TdTable table) {
+        assert analysis != null;
+        assert analysis.getContext() != null;
+        return analysis.getContext().getAnalysedElements().add(table);
+    }
+
+    /**
+     * DOC xqliu Comment method "addTableToAnalyze".
+     * 
+     * @param table
+     * @return
+     */
+    public boolean addTableToAnalyze(Collection<TdTable> table) {
+        assert analysis != null;
+        assert analysis.getContext() != null;
+        return analysis.getContext().getAnalysedElements().addAll(table);
+    }
+
+    public boolean addIndicator(TdTable table, Indicator... indicators) {
+        if (!analysis.getContext().getAnalysedElements().contains(table)) {
+            analysis.getContext().getAnalysedElements().add(table);
+        }
+
+        for (Indicator indicator : indicators) {
+            // store first level of indicators in result.
+            analysis.getResults().getIndicators().add(indicator);
+            initializeIndicator(indicator, table);
+        }
+        DataManager connection = analysis.getContext().getConnection();
+        if (connection == null) {
+            // try to get one
+            log.error("Connection has not been set in analysis Context");
+            connection = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+            analysis.getContext().setConnection(connection);
+            // FIXME connection should be set elsewhere
+        }
+        TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+        if (rc.isOk()) {
+            // DependenciesHandler.getInstance().addDependency(rc.getObject());
+            Resource resource = connection.eResource();
+            if (resource != null) {
+                this.modifiedResources.add(resource);
+            }
+        }
+        return true;
+    }
+
+    private void initializeIndicator(Indicator indicator, TdTable table) {
+        indicator.setAnalyzedElement(table);
+        // Make sure that indicator definition is set
+        if (indicator.getIndicatorDefinition() == null) {
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
+        }
+        // FIXME xqliu case of composite indicators, add children to result.
+        if (indicator instanceof CompositeIndicator) {
+            for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
+                initializeIndicator(child, table); // recurse
+            }
+        }
+    }
+
+    /**
+     * Method "getIndicators".
+     * 
+     * @param table
+     * @return the indicators attached to this table
+     */
+    public Collection<Indicator> getIndicators(TdTable table) {
+        Collection<Indicator> indics = new ArrayList<Indicator>();
+        EList<Indicator> allIndics = analysis.getResults().getIndicators();
+        for (Indicator indicator : allIndics) {
+            if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(table)) {
+                indics.add(indicator);
+            }
+        }
+        return indics;
+    }
+
+    /**
+     * Method "getIndicatorLeaves" returns the indicators for the given table at the leaf level.
+     * 
+     * @param table
+     * @return the indicators attached to this table
+     */
+    public Collection<Indicator> getIndicatorLeaves(TdTable table) {
+        // get the leaf indicators
+        Collection<Indicator> leafIndics = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
+        // filter only indicators for this table
+        Collection<Indicator> indics = new ArrayList<Indicator>();
+        for (Indicator indicator : leafIndics) {
+            if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(table)) {
+                indics.add(indicator);
+            }
+        }
+        return indics;
+    }
+
+    /**
+     * Method "setStringDataFilter".
+     * 
+     * @param datafilterString
+     * @return true when a new data filter is created, false if it is only updated
+     */
+    public boolean setStringDataFilter(String datafilterString) {
+        return AnalysisHelper.setStringDataFilter(analysis, datafilterString);
+    }
+
+    public String getStringDataFilter() {
+        return AnalysisHelper.getStringDataFilter(analysis);
+    }
+
+    public EList<ModelElement> getAnalyzedTables() {
+        return analysis.getContext().getAnalysedElements();
+    }
+}

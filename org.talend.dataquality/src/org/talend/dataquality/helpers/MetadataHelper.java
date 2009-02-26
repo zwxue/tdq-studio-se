@@ -42,25 +42,25 @@ public class MetadataHelper {
     public static DataminingType getDataminingType(TdColumn column) {
         return DataminingType.get(column.getContentType());
     }
-    
+
     public static DataminingType getDefaultDataminingType(int javaSqlType) {
-        
+
         if (Java2SqlType.isTextInSQL(javaSqlType)) {
             return DataminingType.NOMINAL;
         }
-        
+
         if (Java2SqlType.isNumbericInSQL(javaSqlType)) {
             return DataminingType.INTERVAL;
         }
-        
+
         if (Java2SqlType.isDateInSQL(javaSqlType)) {
             return DataminingType.INTERVAL;
         }
-        
+
         if (Java2SqlType.isOtheTypeInSQL(javaSqlType)) {
             return DataminingType.OTHER;
         }
-        
+
         return null;
     }
 }
