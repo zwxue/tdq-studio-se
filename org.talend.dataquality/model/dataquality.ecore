@@ -163,8 +163,16 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateTo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="logo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
           defaultValueLiteral=""/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputJrxml" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="reportType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputJrxml" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="@deprecated This field has been removed to in ananysisMap."/>
+        </eAnnotations>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="reportType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="@deprecated This field has been replaced by reportType in ananysisMap."/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="PresentationParameter" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/analysis/informationvisualization/Rendering">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="plotType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">

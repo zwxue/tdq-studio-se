@@ -235,6 +235,9 @@ public interface TdReport extends Report {
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * @deprecated This field has been removed to in ananysisMap.
+     * <!-- end-model-doc -->
      * @return the value of the '<em>Input Jrxml</em>' attribute.
      * @see #setInputJrxml(String)
      * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_InputJrxml()
@@ -261,6 +264,9 @@ public interface TdReport extends Report {
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * @deprecated This field has been replaced by reportType in ananysisMap.
+     * <!-- end-model-doc -->
      * @return the value of the '<em>Report Type</em>' attribute.
      * @see #setReportType(String)
      * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_ReportType()

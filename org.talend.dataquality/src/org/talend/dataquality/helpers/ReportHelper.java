@@ -20,14 +20,17 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.utils.dates.DateUtils;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
 /**
@@ -35,19 +38,35 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  */
 public final class ReportHelper {
 
-    // ~ADD mzhao 2009-02-05
-    public static final int DATE_FROM = 0;
+    private static Logger log = Logger.getLogger(ReportHelper.class);
 
-    public static final int DATE_TO = 1;
+    // ~ADD mzhao 2009-02-05
 
     // ~
+
     /**
-     * The report types.
+     * The report types. MOD mzhao 2009-02-19
      */
     public static enum ReportType {
-        BASIC("Basic", "/reports/column/report_01.jrxml"), //$NON-NLS-1$//$NON-NLS-2$
-        EVOLUTION("Evolution", "/reports/column/report_02.jrxml"), //$NON-NLS-1$//$NON-NLS-2$
+
+        // Analysis: multi column
+        BASIC_MUTICOLUMN("Basic", "/reports/column/report_01.jrxml"),
+        EVOLUTION_MUTICOLUMN("Evolution", "/reports/column/report_02.jrxml"),
+        // Analysis: connection
+        BASIC_CONNECTION("Basic", "/reports/column/report_03.jrxml"),
+        EVOLUTION_CONNECTION("Evolution", "/reports/column/report_03.jrxml"),
+        // EVOLUTION_CONNECTION("Basic", "/reports/column/report_04.jrxml"),
+        // Analysis: schema
+        BASIC_SCHEMA("Basic", "/reports/column/report_03.jrxml"),
+        EVOLUTION_SCHEMA("Basic", "/reports/column/report_03.jrxml"),
+        // TODO assign type to specific jrxml
+        // Analysis: catalog
+        BASIC_CATALOG("Basic", "/reports/column/report_03.jrxml"),
+        EVOLUTION_CATALOG("Basic", "/reports/column/report_03.jrxml"),
+
         USER_MADE("User specified", null); // for the user to set his own file path//$NON-NLS-1$
+
+        public final static String BASIC = "Basic";
 
         private String label;
 
@@ -88,24 +107,56 @@ public final class ReportHelper {
         public static List<String> getLabels() {
             List<String> list = new ArrayList<String>();
             for (ReportType t : ReportType.values()) {
-                list.add(t.getLabel());
+                if (!list.contains(t.getLabel())) {
+                    list.add(t.getLabel());
+                }
             }
             return list;
         }
 
         /**
-         * DOC qzhang Comment method "getReportType".
+         * DOC qzhang Comment method "getReportType". MOD mzhao 2009-02-19
          * 
          * @param text
          * @return
          */
-        public static ReportType getReportType(String text) {
-            for (ReportType reptype : values()) {
-                if (reptype.label.equals(text)) {
-                    return reptype;
+        public static ReportType getReportType(AnalysisType anaType, String text) {
+            if (USER_MADE.getLabel().equals(text)) {
+                return USER_MADE;
+            }
+            // Multi column
+            if (anaType.getName().equals(AnalysisType.MULTIPLE_COLUMN.getName())) {
+                if (BASIC_MUTICOLUMN.getLabel().equals(text)) {
+                    return BASIC_MUTICOLUMN;
+                } else if (EVOLUTION_MUTICOLUMN.getLabel().equals(text)) {
+                    return EVOLUTION_MUTICOLUMN;
+                }
+            } else if (anaType.getName().equals(AnalysisType.CONNECTION.getName())) {
+                if (BASIC_CONNECTION.getLabel().equals(text)) {
+                    return BASIC_CONNECTION;
+                } else if (EVOLUTION_CONNECTION.getLabel().equals(text)) {
+                    return EVOLUTION_CONNECTION;
+                }
+            } else if (anaType.getName().equals(AnalysisType.SCHEMA.getName())) {
+                if (BASIC_SCHEMA.getLabel().equals(text)) {
+                    return BASIC_SCHEMA;
+                } else if (EVOLUTION_SCHEMA.getLabel().equals(text)) {
+                    return EVOLUTION_SCHEMA;
+                }
+            } else if (anaType.getName().equals(AnalysisType.CATALOG.getName())) {
+                if (BASIC_CATALOG.getLabel().equals(text)) {
+                    return BASIC_CATALOG;
+                } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
+                    return EVOLUTION_CATALOG;
                 }
             }
-            return BASIC;
+
+            return null;
+        }
+
+        public static ReportType getReportType(Analysis ana, String text) {
+            AnalysisType at = AnalysisHelper.getAnalysisType(ana);
+            return getReportType(at, text);
         }
 
     }
@@ -201,9 +252,7 @@ public final class ReportHelper {
     }
 
     /**
-     * Method "setReportType".
-     * 
-     * MOD mzhao 2009-02-16
+     * Method "setReportType".MOD mzhao 2009-02-16
      * 
      * @param report the report object to update
      * @param reportType the report type to set
@@ -214,12 +263,6 @@ public final class ReportHelper {
     public static boolean setReportType(TdReport report, Analysis analysis, ReportType reportType, String jrxmlFullPath) {
         boolean ok = true;
         switch (reportType) {
-        case BASIC:
-            report.setReportType(reportType.getLabel(), null, analysis);
-            break;
-        case EVOLUTION:
-            report.setReportType(reportType.getLabel(), null, analysis);
-            break;
         case USER_MADE:
             report.setReportType(reportType.getLabel(), jrxmlFullPath, analysis);
             if (StringUtils.isBlank(jrxmlFullPath)) {
@@ -228,7 +271,7 @@ public final class ReportHelper {
             }
             break;
         default:
-            ok = false;
+            report.setReportType(reportType.getLabel(), null, analysis);
             break;
         }
         return ok;
@@ -241,24 +284,40 @@ public final class ReportHelper {
      * @param report
      * @param dateText
      * @return
+     * @throws ParseException
      */
-    public static boolean setAnalysisFilterDate(TdReport report, String dateText, int datePos) {
-        boolean ok = true;
-        Date date = null;
-        String pattern = "MM/dd/yyyy"; //$NON-NLS-1$
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+    public static void setAnalysisFilterDateFrom(TdReport report, String dateText) {
+        if (dateText == null || dateText.trim().equals("")) {
+            return;
+        }
         try {
-            date = sdf.parse(dateText);
+            report.setDateFrom(DateUtils.parse(DateUtils.PATTERN_1, dateText));
         } catch (ParseException e) {
-            ok = false;
+            log.error(e);
+            e.printStackTrace();
         }
-        if (datePos == DATE_FROM) {
-            report.setDateFrom(date);
-        } else {
-            report.setDateTo(date);
+    }
+
+    /**
+     * 
+     * DOC mzhao Comment method "setAnalysisFilterDateFrom".
+     * 
+     * @param report
+     * @param dateText
+     * @return
+     * @return
+     * @throws ParseException
+     */
+    public static void setAnalysisFilterDateTo(TdReport report, String dateText) {
+        if (dateText == null || dateText.trim().equals("")) {
+            return;
         }
-        sdf = null;
-        return ok;
+        try {
+            report.setDateTo(DateUtils.parse(DateUtils.PATTERN_1, dateText));
+        } catch (ParseException e) {
+            log.error(e);
+            e.printStackTrace();
+        }
     }
 
     /**
