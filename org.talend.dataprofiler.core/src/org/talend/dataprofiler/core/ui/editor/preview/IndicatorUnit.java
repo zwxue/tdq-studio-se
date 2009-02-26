@@ -124,6 +124,7 @@ public class IndicatorUnit {
     }
 
     public boolean isExcuted() {
-        return !indicator.getInstantiatedExpressions().isEmpty();
+        // return !indicator.getInstantiatedExpressions().isEmpty();
+        return indicator.isComputed();
     }
 }

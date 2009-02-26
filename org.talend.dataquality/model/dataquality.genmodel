@@ -82,12 +82,13 @@
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//reports/TdReport/presentationParams"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/creationDate"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//reports/TdReport/analysisMap"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/inputJrxml"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/outputReportFolder"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/reportType"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//reports/TdReport/ExecInformations"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/dateFrom"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/dateTo"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/logo"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/inputJrxml"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/TdReport/reportType"/>
         <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/addAnalysis">
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/addAnalysis/analysis"/>
         </genOperations>
@@ -109,6 +110,11 @@
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/setReportPresentationParam/type"/>
           <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/setReportPresentationParam/formula"/>
         </genOperations>
+        <genOperations ecoreOperation="dataquality.ecore#//reports/TdReport/setReportType">
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/setReportType/reportType"/>
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/setReportType/jrxmlSource"/>
+          <genParameters ecoreParameter="dataquality.ecore#//reports/TdReport/setReportType/analysis"/>
+        </genOperations>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//reports/PresentationParameter">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/PresentationParameter/plotType"/>
@@ -119,6 +125,8 @@
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
             ecoreFeature="ecore:EReference dataquality.ecore#//reports/AnalysisMap/analysis"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/AnalysisMap/mustRefresh"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/AnalysisMap/reportType"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//reports/AnalysisMap/jrxmlSource"/>
       </genClasses>
     </nestedGenPackages>
     <nestedGenPackages prefix="Indicators" basePackage="org.talend.dataquality" disposableProviderFactory="true"
@@ -187,6 +195,7 @@
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
             ecoreFeature="ecore:EReference dataquality.ecore#//indicators/Indicator/indicatorDefinition"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/Indicator/instantiatedExpressions"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/computed"/>
         <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/handle">
           <genParameters ecoreParameter="dataquality.ecore#//indicators/Indicator/handle/data"/>
         </genOperations>

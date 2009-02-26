@@ -306,6 +306,15 @@ public interface IndicatorSqlPackage extends EPackage {
     int USER_DEF_INDICATOR__INSTANTIATED_EXPRESSIONS = IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__COMPUTED = IndicatorsPackage.INDICATOR__COMPUTED;
+
+    /**
      * The number of structural features of the '<em>User Def Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -557,6 +566,15 @@ public interface IndicatorSqlPackage extends EPackage {
      * @ordered
      */
     int WHERE_RULE_INDICATOR__INSTANTIATED_EXPRESSIONS = USER_DEF_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__COMPUTED = USER_DEF_INDICATOR__COMPUTED;
 
     /**
      * The number of structural features of the '<em>Where Rule Indicator</em>' class.

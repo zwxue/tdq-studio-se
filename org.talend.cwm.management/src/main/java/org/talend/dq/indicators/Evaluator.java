@@ -113,6 +113,8 @@ public abstract class Evaluator<T> {
         for (Indicator indic : allIndicators) {
             if (!indic.finalizeComputation()) {
                 ok = false;
+            } else {
+                indic.setComputed(true);
             }
         }
         return ok;

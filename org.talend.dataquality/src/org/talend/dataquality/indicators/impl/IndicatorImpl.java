@@ -45,6 +45,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getDataminingType <em>Datamining Type</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getIndicatorDefinition <em>Indicator Definition</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isComputed <em>Computed</em>}</li>
  * </ul>
  * </p>
  *
@@ -152,6 +153,26 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @ordered
      */
     protected EList<Expression> instantiatedExpressions;
+
+    /**
+     * The default value of the '{@link #isComputed() <em>Computed</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isComputed()
+     * @generated
+     * @ordered
+     */
+    protected static final boolean COMPUTED_EDEFAULT = false;
+
+    /**
+     * The cached value of the '{@link #isComputed() <em>Computed</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isComputed()
+     * @generated
+     * @ordered
+     */
+    protected boolean computed = COMPUTED_EDEFAULT;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -368,6 +389,27 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             instantiatedExpressions = new EObjectContainmentEList<Expression>(Expression.class, this, IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS);
         }
         return instantiatedExpressions;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public boolean isComputed() {
+        return computed;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setComputed(boolean newComputed) {
+        boolean oldComputed = computed;
+        computed = newComputed;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__COMPUTED, oldComputed, computed));
     }
 
     /**
@@ -618,6 +660,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return basicGetIndicatorDefinition();
             case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
                 return getInstantiatedExpressions();
+            case IndicatorsPackage.INDICATOR__COMPUTED:
+                return isComputed() ? Boolean.TRUE : Boolean.FALSE;
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -652,6 +696,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 getInstantiatedExpressions().clear();
                 getInstantiatedExpressions().addAll((Collection<? extends Expression>)newValue);
                 return;
+            case IndicatorsPackage.INDICATOR__COMPUTED:
+                setComputed(((Boolean)newValue).booleanValue());
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -684,6 +731,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
                 getInstantiatedExpressions().clear();
                 return;
+            case IndicatorsPackage.INDICATOR__COMPUTED:
+                setComputed(COMPUTED_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -709,6 +759,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return indicatorDefinition != null;
             case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
                 return instantiatedExpressions != null && !instantiatedExpressions.isEmpty();
+            case IndicatorsPackage.INDICATOR__COMPUTED:
+                return computed != COMPUTED_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -746,6 +798,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         result.append(nullCount);
         result.append(", dataminingType: ");
         result.append(dataminingType);
+        result.append(", computed: ");
+        result.append(computed);
         result.append(')');
         return result.toString();
     }

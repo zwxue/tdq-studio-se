@@ -68,6 +68,8 @@ public class AnalysisMapItemProvider
 
             addAnalysisPropertyDescriptor(object);
             addMustRefreshPropertyDescriptor(object);
+            addReportTypePropertyDescriptor(object);
+            addJrxmlSourcePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -117,6 +119,50 @@ public class AnalysisMapItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Report Type feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addReportTypePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AnalysisMap_reportType_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AnalysisMap_reportType_feature", "_UI_AnalysisMap_type"),
+                 ReportsPackage.Literals.ANALYSIS_MAP__REPORT_TYPE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Jrxml Source feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addJrxmlSourcePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_AnalysisMap_jrxmlSource_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AnalysisMap_jrxmlSource_feature", "_UI_AnalysisMap_type"),
+                 ReportsPackage.Literals.ANALYSIS_MAP__JRXML_SOURCE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns AnalysisMap.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -152,6 +198,8 @@ public class AnalysisMapItemProvider
 
         switch (notification.getFeatureID(AnalysisMap.class)) {
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
+            case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
+            case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

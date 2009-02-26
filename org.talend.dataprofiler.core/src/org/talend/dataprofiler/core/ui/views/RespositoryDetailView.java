@@ -290,7 +290,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 description.append("  ").append(expression.getExpression().getLanguage()); //$NON-NLS-1$
             }
         }
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type"), description.toString()); //$NON-NLS-1$
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type"), description.toString().trim()); //$NON-NLS-1$
     }
 
     private void createAnaysisDetail(Analysis ana) {

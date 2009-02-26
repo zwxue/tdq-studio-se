@@ -50,7 +50,7 @@ public final class AnalysisExecutorSelector {
         AnalysisExecutor exec = null;
         switch (analysisType) {
         case MULTIPLE_COLUMN:
-            exec = executionEngine != null ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
+            exec = ExecutionLanguage.SQL.equals(executionEngine) ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
             break;
         case CONNECTION:
             exec = new ConnectionAnalysisExecutor();

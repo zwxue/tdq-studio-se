@@ -270,6 +270,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 if (query == null || !executeQuery(indicator, connection, query.getBody())) {
                     ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
                             + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                } else {
+                    indicator.setComputed(true);
                 }
 
                 // add mapping of analyzed elements to their indicators

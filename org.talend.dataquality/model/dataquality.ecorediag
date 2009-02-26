@@ -588,6 +588,10 @@
           <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//indicators/Indicator/dataminingType"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_OsktQZoQEd2nYJ2ArnrjqA"/>
         </children>
+        <children xmi:type="notation:Node" xmi:id="_ngprAAP0Ed6SR55OS6YMXg" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//indicators/Indicator/computed"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_ngprAQP0Ed6SR55OS6YMXg"/>
+        </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_OsiRApoQEd2nYJ2ArnrjqA"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_OsiRA5oQEd2nYJ2ArnrjqA"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_OsiRBJoQEd2nYJ2ArnrjqA"/>

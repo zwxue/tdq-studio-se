@@ -73,7 +73,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         for (ModelElement modelElement : analysedElements) {
             Table table = SwitchHelpers.TABLE_SWITCH.doSwitch(modelElement);
             if (table == null) {
-                this.errorMessage = Messages.getString("TableAnalysisExecutor.NoContainerFound", table.getName()); //$NON-NLS-1$
+                this.errorMessage = Messages.getString("TableAnalysisExecutor.NoContainerFound", modelElement.getName()); //$NON-NLS-1$
                 return null;
             }
             // else add into select

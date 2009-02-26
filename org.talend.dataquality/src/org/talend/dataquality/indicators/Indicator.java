@@ -27,6 +27,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getDataminingType <em>Datamining Type</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getIndicatorDefinition <em>Indicator Definition</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}</li>
  * </ul>
  * </p>
  *
@@ -208,6 +209,31 @@ public interface Indicator extends ModelElement {
      * @generated
      */
     EList<Expression> getInstantiatedExpressions();
+
+    /**
+     * Returns the value of the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * a flag that tells whether this indicator is computed or not.
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Computed</em>' attribute.
+     * @see #setComputed(boolean)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_Computed()
+     * @model
+     * @generated
+     */
+    boolean isComputed();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Computed</em>' attribute.
+     * @see #isComputed()
+     * @generated
+     */
+    void setComputed(boolean value);
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

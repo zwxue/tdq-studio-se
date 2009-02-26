@@ -251,7 +251,10 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 if (query == null || !executeQuery(indicator, connection, query)) {
                     ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
                             + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                } else {
+                    indicator.setComputed(true);
                 }
+               
             }
 
             connection.close();
