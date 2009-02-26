@@ -88,6 +88,8 @@ public class TdReportItemProvider
             addDateFromPropertyDescriptor(object);
             addDateToPropertyDescriptor(object);
             addLogoPropertyDescriptor(object);
+            addInputJrxmlPropertyDescriptor(object);
+            addReportTypePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -203,6 +205,50 @@ public class TdReportItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Input Jrxml feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addInputJrxmlPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_TdReport_inputJrxml_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_TdReport_inputJrxml_feature", "_UI_TdReport_type"),
+                 ReportsPackage.Literals.TD_REPORT__INPUT_JRXML,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Report Type feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addReportTypePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_TdReport_reportType_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_TdReport_reportType_feature", "_UI_TdReport_type"),
+                 ReportsPackage.Literals.TD_REPORT__REPORT_TYPE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -276,6 +322,8 @@ public class TdReportItemProvider
             case ReportsPackage.TD_REPORT__DATE_FROM:
             case ReportsPackage.TD_REPORT__DATE_TO:
             case ReportsPackage.TD_REPORT__LOGO:
+            case ReportsPackage.TD_REPORT__INPUT_JRXML:
+            case ReportsPackage.TD_REPORT__REPORT_TYPE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case ReportsPackage.TD_REPORT__PRESENTATION_PARAMS:
