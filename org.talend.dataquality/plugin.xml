@@ -97,6 +97,10 @@
             class="org.talend.commons.emf.CwmResourceFactory"
             type="pattern">
       </parser>
+      <parser
+            class="org.talend.commons.emf.CwmResourceFactory"
+            type="rules">
+      </parser>
    </extension>
 
 </plugin>

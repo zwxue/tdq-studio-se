@@ -637,10 +637,10 @@
       </editor>
       <editor
             class="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
-            extensions="rule"
+            extensions="rules"
             icon="icons/pattern.png"
             id="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
-            name="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor">
+            name="DQRuleEditor">
       </editor>
    </extension>
   <extension

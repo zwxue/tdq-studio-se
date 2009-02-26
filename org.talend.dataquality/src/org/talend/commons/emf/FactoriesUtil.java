@@ -34,6 +34,8 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.ReportsPackage;
+import org.talend.dataquality.rules.RulesFactory;
+import org.talend.dataquality.rules.RulesPackage;
 import orgomg.cwm.foundation.typemapping.TypemappingPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
 
@@ -73,12 +75,12 @@ public final class FactoriesUtil {
     /**
      * Extension used for the files in which the pattern are serialized.
      */
-    public static final String PATTERN = "pattern"; //$NON-NLS-1$
+    public static final String PATTERN = PatternPackage.eNAME;
 
     /**
      * Extension used for the files in which the DQRule are serialized.
      */
-    public static final String DQRULE = "rule";
+    public static final String DQRULE = RulesPackage.eNAME;
 
     private FactoriesUtil() {
     }
@@ -106,6 +108,7 @@ public final class FactoriesUtil {
         CategoryFactory.eINSTANCE.getEPackage();
         org.talend.dataquality.expressions.ExpressionsFactory.eINSTANCE.getEPackage();
         org.talend.dataquality.reports.ReportsFactory.eINSTANCE.getEPackage();
+        RulesFactory.eINSTANCE.getEPackage();
 
         // CWM generated packages
         // TODO scorreia add other factories
@@ -138,13 +141,15 @@ public final class FactoriesUtil {
         extensions.add(ReportsPackage.eNAME);
         extensions.add(DefinitionPackage.eNAME);
         extensions.add(IndicatorSqlPackage.eNAME);
-        extensions.add(PatternPackage.eNAME);
 
         // --- add specific extensions
         extensions.add(PROV);
         extensions.add(ANA);
         extensions.add(CAT);
         extensions.add(REP);
+        extensions.add(PATTERN);
+        extensions.add(DQRULE);
+        
 
         // --- CWM generated packages
         extensions.add(CorePackage.eNAME);
