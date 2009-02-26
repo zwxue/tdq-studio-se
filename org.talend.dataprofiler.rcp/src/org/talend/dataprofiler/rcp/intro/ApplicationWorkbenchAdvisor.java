@@ -25,7 +25,6 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.talend.dataprofiler.rcp.register.RegisterManagement;
 import org.talend.dataprofiler.rcp.register.RegisterWizard;
 import org.talend.dataprofiler.rcp.register.RegisterWizardDialog;
@@ -101,7 +100,7 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
                 }
             }
         } catch (Exception e) {
-            log.error(Messages.getString("ApplicationWorkbenchAdvisor.problem") + e.getLocalizedMessage(), e); //$NON-NLS-1$
+            log.error("Problem during the registration wizard:" + e.getLocalizedMessage(), e); //$NON-NLS-1$
         }
     }
 }
