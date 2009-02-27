@@ -180,6 +180,7 @@
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//indicators/IndicatorValueType/INTEGER_VALUE"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//indicators/IndicatorValueType/REAL_VALUE"/>
         <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//indicators/IndicatorValueType/INSTANCE_VALUE"/>
+        <genEnumLiterals ecoreEnumLiteral="dataquality.ecore#//indicators/IndicatorValueType/DATE_VALUE"/>
       </genEnums>
       <genDataTypes ecoreDataType="dataquality.ecore#//indicators/JavaSet"/>
       <genDataTypes ecoreDataType="dataquality.ecore#//indicators/JavaHashMap"/>

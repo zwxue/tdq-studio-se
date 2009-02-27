@@ -51,7 +51,15 @@ public enum IndicatorValueType implements Enumerator {
      * @generated
      * @ordered
      */
-    INSTANCE_VALUE(2, "INSTANCE_VALUE", "V");
+    INSTANCE_VALUE(2, "INSTANCE_VALUE", "V"), /**
+     * The '<em><b>DATE VALUE</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #DATE_VALUE_VALUE
+     * @generated
+     * @ordered
+     */
+    DATE_VALUE(3, "DATE_VALUE", "D");
 
     /**
      * The '<em><b>INTEGER VALUE</b></em>' literal value.
@@ -96,6 +104,21 @@ public enum IndicatorValueType implements Enumerator {
     public static final int INSTANCE_VALUE_VALUE = 2;
 
     /**
+     * The '<em><b>DATE VALUE</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>DATE VALUE</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #DATE_VALUE
+     * @model literal="D"
+     * @generated
+     * @ordered
+     */
+    public static final int DATE_VALUE_VALUE = 3;
+
+    /**
      * An array of all the '<em><b>Indicator Value Type</b></em>' enumerators.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -106,6 +129,7 @@ public enum IndicatorValueType implements Enumerator {
             INTEGER_VALUE,
             REAL_VALUE,
             INSTANCE_VALUE,
+            DATE_VALUE,
         };
 
     /**
@@ -159,6 +183,7 @@ public enum IndicatorValueType implements Enumerator {
             case INTEGER_VALUE_VALUE: return INTEGER_VALUE;
             case REAL_VALUE_VALUE: return REAL_VALUE;
             case INSTANCE_VALUE_VALUE: return INSTANCE_VALUE;
+            case DATE_VALUE_VALUE: return DATE_VALUE;
         }
         return null;
     }

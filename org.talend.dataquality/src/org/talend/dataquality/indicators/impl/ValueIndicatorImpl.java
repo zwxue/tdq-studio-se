@@ -16,6 +16,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -263,6 +264,23 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
     @Override
     public IndicatorValueType getValueType() {
         return IndicatorValueType.INSTANCE_VALUE;
+    }
+    
+    /**
+     * Method "isDateValue".
+     * 
+     * @return true if the analyzed column is of date type.
+     */
+    protected boolean isDateValue() {
+        // MOD scorreia handle date: bug 5938
+        final ModelElement elt = getAnalyzedElement();
+        if (elt != null) {
+            final TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
+            if (col != null && (Java2SqlType.isDateInSQL(col.getJavaType()) || Java2SqlType.isDateTimeSQL(col.getJavaType()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 } // ValueIndicatorImpl

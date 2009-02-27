@@ -41,9 +41,16 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
      * (non-Javadoc)
      * 
      * @see org.talend.dataquality.indicators.impl.ValueIndicatorImpl#getValueType()
+     * 
+     * @generated NOT
      */
     @Override
     public IndicatorValueType getValueType() {
+        // MOD scorreia handle date: bug 5938
+        if (isDateValue()) {
+            return IndicatorValueType.DATE_VALUE;
+        }
+
         return IndicatorValueType.REAL_VALUE;
     }
 } // MinValueIndicatorImpl

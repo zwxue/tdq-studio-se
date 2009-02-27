@@ -529,6 +529,7 @@
           <details key="documentation" value="This type of value is for indicators when the content of the indicator is an instance of the data (For example for the ModeIndicator). "/>
         </eAnnotations>
       </eLiterals>
+      <eLiterals name="DATE_VALUE" value="3" literal="D"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="CountsIndicator" eSuperTypes="#//indicators/CompositeIndicator">
       <eStructuralFeatures xsi:type="ecore:EReference" name="blankCountIndicator"

@@ -1480,6 +1480,10 @@
           <element xmi:type="ecore:EEnumLiteral" href="dataquality.ecore#//indicators/IndicatorValueType/INSTANCE_VALUE"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_OuFJKZoQEd2nYJ2ArnrjqA"/>
         </children>
+        <children xmi:type="notation:Node" xmi:id="_jQzvIAT0Ed6_fatfCltATg" type="2006">
+          <element xmi:type="ecore:EEnumLiteral" href="dataquality.ecore#//indicators/IndicatorValueType/DATE_VALUE"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_jQzvIQT0Ed6_fatfCltATg"/>
+        </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_OuFJIZoQEd2nYJ2ArnrjqA"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_OuFJIpoQEd2nYJ2ArnrjqA"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_OuFJI5oQEd2nYJ2ArnrjqA"/>

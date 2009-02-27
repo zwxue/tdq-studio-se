@@ -1967,6 +1967,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         addEEnumLiteral(indicatorValueTypeEEnum, IndicatorValueType.INTEGER_VALUE);
         addEEnumLiteral(indicatorValueTypeEEnum, IndicatorValueType.REAL_VALUE);
         addEEnumLiteral(indicatorValueTypeEEnum, IndicatorValueType.INSTANCE_VALUE);
+        addEEnumLiteral(indicatorValueTypeEEnum, IndicatorValueType.DATE_VALUE);
 
         // Initialize data types
         initEDataType(javaSetEDataType, Set.class, "JavaSet", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.Set<Object>");

@@ -44,6 +44,11 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
      */
     @Override
     public IndicatorValueType getValueType() {
+        // MOD scorreia handle date: bug 5938
+        if (isDateValue()) {
+            return IndicatorValueType.DATE_VALUE;
+        }
+
         return IndicatorValueType.REAL_VALUE;
     }
 
