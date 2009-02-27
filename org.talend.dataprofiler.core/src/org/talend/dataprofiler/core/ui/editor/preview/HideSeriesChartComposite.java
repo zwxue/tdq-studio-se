@@ -49,6 +49,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.ui.TextAnchor;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -147,6 +148,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
         if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator().equals(indicator.eClass())) {
             jchart = TopChartFactory.createBubbleChart(indicator, column);
+            ChartDecorator.decorateXYPlot(jchart);
         }
 
         if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator().equals(indicator.eClass())) {
@@ -165,6 +167,8 @@ public class HideSeriesChartComposite extends ChartComposite {
             renderer.setBaseToolTipGenerator(toolTipGenerator);
             plot.setRenderer(renderer);
             plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
+
+            ChartDecorator.decorateCategoryPlot(jchart);
         }
 
         return jchart;

@@ -74,6 +74,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -443,7 +444,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 List<IndicatorUnit> units = indicatorComposite.get(chartType);
                 if (!units.isEmpty()) {
                     final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
-                    JFreeChart chart = chartTypeState.getFeatChart();
+                    JFreeChart chart = ChartDecorator.decorateCategoryPlot(chartTypeState.getChart());
 
                     if (chart != null) {
                         final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);

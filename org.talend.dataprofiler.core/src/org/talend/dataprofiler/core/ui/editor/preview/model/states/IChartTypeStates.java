@@ -57,13 +57,6 @@ public interface IChartTypeStates {
     public JFreeChart getChart();
 
     /**
-     * DOC bzhou Comment method "getFeatChart".
-     * 
-     * @return the specified chart with self defined look.
-     */
-    public JFreeChart getFeatChart();
-
-    /**
      * DOC Zqin Comment method "getExampleChart".
      * 
      * @return the specified chart with example data.

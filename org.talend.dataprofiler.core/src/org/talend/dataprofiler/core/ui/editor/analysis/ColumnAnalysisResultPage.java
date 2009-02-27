@@ -60,6 +60,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
@@ -196,13 +197,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                     ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
                                     // create chart
-                                    JFreeChart chart = chartTypeState.getFeatChart();
+                                    JFreeChart chart = ChartDecorator.decorateCategoryPlot(chartTypeState.getChart());
                                     if (chart != null) {
-                                        // GridData gd = new GridData();
-                                        // gd.widthHint = 450;
-                                        // gd.heightHint = 240;
-                                        // ChartPanel chartPanel = ChartUtils.createAWTSWTComp(composite, gd, chart);
-                                        // addMouseListenerForChart(chartPanel, dataExplorer, analysis);
                                         ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
                                         GridData gd = new GridData();
