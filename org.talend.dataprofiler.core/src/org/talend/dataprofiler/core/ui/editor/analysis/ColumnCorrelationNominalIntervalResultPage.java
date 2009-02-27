@@ -305,6 +305,11 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
         for (int itemCount = 0; itemCount < 4; itemCount++) {
             TableItem item = new TableItem(table, SWT.NONE);
+            if (count[0] == 0) {
+                item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]), "N/A" }); //$NON-NLS-1$
+                continue;
+            }
+
             item.setText(new String[] { label[itemCount], String.valueOf(count[itemCount]),
                     doubleFormat.format(percent[itemCount] * 100) + "%" }); //$NON-NLS-1$
         }
