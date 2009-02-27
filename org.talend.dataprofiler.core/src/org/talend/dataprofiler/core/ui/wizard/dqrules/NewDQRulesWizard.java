@@ -75,12 +75,12 @@ public class NewDQRulesWizard extends AbstractWizard {
         String s = DefaultMessagesImpl.getString("NewDQRulesWizard.dqRule"); //$NON-NLS-1$
 
         mPage = new NewDQRulesWizardPage1();
-        mPage.setTitle(DefaultMessagesImpl.getString("NewDQRulesWizard.createPage1_2", s)); //$NON-NLS-1$
+        mPage.setTitle(s + DefaultMessagesImpl.getString("NewDQRulesWizard.createPage1_2")); //$NON-NLS-1$
         mPage.setDescription(DefaultMessagesImpl.getString("NewDQRulesWizard.defineProp")); //$NON-NLS-1$
         mPage.setPageComplete(false);
 
         mPage2 = new NewDQRulesWizardPage2();
-        mPage2.setTitle(DefaultMessagesImpl.getString("NewDQRulesWizard.createPage2_2", s)); //$NON-NLS-1$
+        mPage2.setTitle(s + DefaultMessagesImpl.getString("NewDQRulesWizard.createPage2_2")); //$NON-NLS-1$
         mPage2.setDescription(DefaultMessagesImpl.getString("NewDQRulesWizard.defineWhere")); //$NON-NLS-1$
 
         addPage(mPage);
