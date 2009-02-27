@@ -43,7 +43,9 @@ public final class ChartDecorator {
     }
 
     public static JFreeChart decorateCategoryPlot(JFreeChart chart) {
-        assert chart != null;
+        if (chart == null) {
+            return null;
+        }
 
         Font font = null;
         CategoryPlot plot = chart.getCategoryPlot();
@@ -81,7 +83,9 @@ public final class ChartDecorator {
     }
 
     public static JFreeChart decorateXYPlot(JFreeChart chart) {
-        assert chart != null;
+        if (chart == null) {
+            return null;
+        }
 
         Font font = null;
         XYPlot plot = chart.getXYPlot();
