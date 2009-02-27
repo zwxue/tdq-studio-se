@@ -436,6 +436,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         return format;
     }
 
+    private AbstractStatisticalViewerProvider provider;
+
     private void createStatisticalSection(Composite topComp) {
         statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
                 .getString("ConnectionMasterDetailsPage.statisticalinformations"), false, null); //$NON-NLS-1$
@@ -457,7 +459,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 break;
             }
         }
-        AbstractStatisticalViewerProvider provider;
+
         if (catalogs.size() > 0 && containSubSchema) {
             createCatalogSchemaColumns(table);
             provider = new CatalogSchemaViewerProvier();
@@ -832,5 +834,13 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     public void refresh() {
         doSetInput();
         refreshSumSection();
+    }
+
+    @Override
+    public void dispose() {
+        if (provider != null) {
+            provider.getZeroRowColor().dispose();
+        }
+        super.dispose();
     }
 }

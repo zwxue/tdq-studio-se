@@ -69,11 +69,8 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
 
     public Image getColumnImage(Object element, int columnIndex) {
         if (element instanceof SchemaIndicator && !(element instanceof CatalogIndicator) && columnIndex == 0) {
-
             return CWMImageEnum.Schema.getImg();
-        }
-
-        else if (element instanceof CatalogIndicator && columnIndex == 0) {
+        } else if (element instanceof CatalogIndicator && columnIndex == 0) {
             return CWMImageEnum.Catalog.getImg();
         } else {
             return null;
@@ -81,7 +78,7 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
     }
 
     // added by hcheng 2009-2-20, for 006270: Highlight elements when #rows = 0
-    private Color bg = new Color(null, 249, 139, 121);
+    private final Color zeroRowColor = new Color(null, 249, 139, 121);
 
     public Color getForeground(Object element, int columnIndex) {
         return null;
@@ -91,9 +88,13 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
         if (element instanceof SchemaIndicator) {
             SchemaIndicator indicator = (SchemaIndicator) element;
             if (indicator.getTableRowCount() == 0) {
-                return bg;
+                return zeroRowColor;
             }
         }
         return null;
+    }
+
+    public Color getZeroRowColor() {
+        return zeroRowColor;
     }
 }

@@ -27,10 +27,12 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -123,7 +125,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     protected void createResultSection(Composite parent) {
         executeData = getColumnAnalysisHandler().getExecuteData();
-        graphicsAndTableSection = this.createSection(form, parent, DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.AnalysisResult"), false, null); //$NON-NLS-1$
+        graphicsAndTableSection = this.createSection(form, parent, DefaultMessagesImpl
+                .getString("ColumnCorrelationNominalIntervalResultPage.AnalysisResult"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -142,7 +145,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createSimpleStatisticsPart(sectionClient, DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.SimpleStatistics"), columnSetMultiIndicator); //$NON-NLS-1$
+            this.createSimpleStatisticsPart(sectionClient, DefaultMessagesImpl
+                    .getString("ColumnCorrelationNominalIntervalResultPage.SimpleStatistics"), columnSetMultiIndicator); //$NON-NLS-1$
         }
 
         Composite tableComp = toolkit.createComposite(sectionClient);
@@ -151,7 +155,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createTableSectionPart(sectionClient, DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.Data"), columnSetMultiIndicator); //$NON-NLS-1$
+            this.createTableSectionPart(sectionClient, DefaultMessagesImpl
+                    .getString("ColumnCorrelationNominalIntervalResultPage.Data"), columnSetMultiIndicator); //$NON-NLS-1$
         }
         graphicsAndTableSection.setExpanded(true);
         graphicsAndTableSection.setClient(sectionClient);
@@ -354,7 +359,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         sectionTableComp.setLayout(new GridLayout());
 
-        final TableViewer columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
+        TableViewer columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
         Table table = columnsElementViewer.getTable();
         table.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -378,11 +383,13 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     }
 
+    private Color bg = new Color(null, 249, 139, 121);
+
     /**
      * 
      * DOC zhaoxinyi ColumnCorrelationNominalIntervalResultPage class global comment. Detailled comment
      */
-    class TableSectionViewerProvider implements IStructuredContentProvider, ITableLabelProvider {
+    class TableSectionViewerProvider implements IStructuredContentProvider, ITableLabelProvider, ITableColorProvider {
 
         @SuppressWarnings("unchecked")
         public Object[] getElements(Object inputElement) {
@@ -433,6 +440,22 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             // TODO Auto-generated method stub
 
         }
+
+        public Color getBackground(Object element, int columnIndex) {
+            Object[] elements = (Object[]) element;
+
+            for (Object elem : elements) {
+                if (elem == null || "".equals(elem)) {
+                    return bg;
+                }
+            }
+            return null;
+        }
+
+        public Color getForeground(Object element, int columnIndex) {
+            // TODO Auto-generated method stub
+            return null;
+        }
     }
 
     /*
@@ -468,5 +491,13 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
 
     public Composite[] getPreviewChartCompsites() {
         return previewChartCompsites;
+    }
+
+    @Override
+    public void dispose() {
+        if (bg != null) {
+            bg.dispose();
+        }
+        super.dispose();
     }
 }
