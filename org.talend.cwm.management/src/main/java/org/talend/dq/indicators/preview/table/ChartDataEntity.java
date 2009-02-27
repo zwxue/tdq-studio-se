@@ -31,7 +31,7 @@ import org.talend.utils.sql.Java2SqlType;
 public class ChartDataEntity {
 
     private static Logger log = Logger.getLogger(ChartDataEntity.class);
-    
+
     private String label;
 
     private String value;
@@ -102,7 +102,11 @@ public class ChartDataEntity {
 
     public String getPersent() {
         if (percent != null) {
-            return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
+            if (percent.matches("-?\\d+(\\.\\d+)?")) {
+                return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
+            } else {
+                return "N/A";
+            }
         } else {
             return null;
         }
