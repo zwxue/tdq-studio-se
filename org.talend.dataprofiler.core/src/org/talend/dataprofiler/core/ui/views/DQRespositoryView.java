@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -54,6 +55,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
@@ -92,8 +94,8 @@ public class DQRespositoryView extends CommonNavigator {
     public DQRespositoryView() {
         super();
         CorePlugin.getDefault().checkDQStructure();
-        CorePlugin.getDefault().setRespositoryView(this);
         CorePlugin.getDefault().doMigrationTask();
+        CorePlugin.getDefault().setRespositoryView(this);
     }
 
     public void init(IViewSite aSite, IMemento aMemento) throws PartInitException {
@@ -101,6 +103,8 @@ public class DQRespositoryView extends CommonNavigator {
         if (aMemento == null) {
             setLinkingEnabled(false);
         }
+
+        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
     }
 
     /*
@@ -380,4 +384,20 @@ public class DQRespositoryView extends CommonNavigator {
 
     }
 
+    /**
+     * DOC hcheng DQRespositoryView class global comment. Detailled comment
+     * 
+     * add for 6148:Add a button in the DQ repository view toolbar to refresh the view
+     */
+    class RefreshDQReponsitoryViewAction extends Action {
+
+        public RefreshDQReponsitoryViewAction() {
+            super("Refresh", ImageLib.getImageDescriptor(ImageLib.SECTION_PREVIEW));
+        }
+
+        @Override
+        public void run() {
+            getCommonViewer().refresh();
+        }
+    }
 }
