@@ -56,18 +56,21 @@ public final class ReportHelper {
         // EVOLUTION_CONNECTION("Basic", "/reports/column/report_04.jrxml"),
         // Analysis: schema
         BASIC_SCHEMA("Basic", "/reports/column/report_03.jrxml"),
-        EVOLUTION_SCHEMA("Basic", "/reports/column/report_03.jrxml"),
+        EVOLUTION_SCHEMA("Evolution", "/reports/column/report_03.jrxml"),
         // TODO assign type to specific jrxml
         // Analysis: catalog
         BASIC_CATALOG("Basic", "/reports/column/report_03.jrxml"),
-        EVOLUTION_CATALOG("Basic", "/reports/column/report_03.jrxml"),
+        EVOLUTION_CATALOG("Evolution", "/reports/column/report_03.jrxml"),
+        // Analysis: table
+        BASIC_TABLE("Basic", "/reports/column/report_01.jrxml"),
+        EVOLUTION_TABLE("Evolution", "/reports/column/report_04.jrxml"),
         // Analysis: column comparison
         BASIC_COLUMNS_COMPARISON("Basic", "/reports/column/report_03.jrxml"),
         EVOLUTION_COLUMNS_COMPARISON("Evolution", "/reports/column/report_03.jrxml"),
 
         USER_MADE("User specified", null); // for the user to set his own file path//$NON-NLS-1$
 
-        public static final String BASIC = "Basic";
+        public final static String BASIC = "Basic";
 
         private String label;
 
@@ -149,6 +152,12 @@ public final class ReportHelper {
                     return BASIC_CATALOG;
                 } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
                     return EVOLUTION_CATALOG;
+                }
+            } else if (anaType.getName().equals(AnalysisType.TABLE.getName())) {
+                if (BASIC_TABLE.getLabel().equals(text)) {
+                    return BASIC_TABLE;
+                } else if (EVOLUTION_TABLE.getLabel().equals(text)) {
+                    return EVOLUTION_TABLE;
                 }
             } else if (anaType.getName().equals(AnalysisType.COLUMNS_COMPARISON.getName())) {
                 if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
