@@ -71,7 +71,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     public RunAnalysisAction() {
-        super("run"); //$NON-NLS-1$
+        super("Run"); 
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
     }
 

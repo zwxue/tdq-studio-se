@@ -54,9 +54,9 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultPage {
 
-    private static final String NOT_MATCHING = "not matching"; //$NON-NLS-1$
+    private static final String NOT_MATCHING = "not matching"; 
 
-    private static final String MATCHING = "matching"; //$NON-NLS-1$
+    private static final String MATCHING = "matching"; 
 
     private ColumnsComparisonMasterDetailsPage masterPage;
 
@@ -182,23 +182,23 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         final TableColumn columnHeader1 = new TableColumn(resultTable, SWT.CENTER);
         columnHeader1.setWidth(120);
         columnHeader1.setAlignment(SWT.CENTER);
-        columnHeader1.setText("SetA"); //$NON-NLS-1$
+        columnHeader1.setText("Set A"); // TODO scorreia put here table name instead
         if (!isHasDeactivatedIndicator) {
             final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
             columnHeader2.setWidth(120);
             columnHeader2.setAlignment(SWT.CENTER);
-            columnHeader2.setText("SetB"); //$NON-NLS-1$
+            columnHeader2.setText("Set B"); // TODO scorreia put here table name instead
         }
         createTableItems(resultTable);
 
         creatChart(sectionClient);
         StringBuilder description = new StringBuilder();
         description.append(setAMatchPercent);
-        description.append(" of the data from set A are found in data from set B"); //$NON-NLS-1$
+        description.append(" of the data from the A set are found in data from the B set"); 
         if (!isHasDeactivatedIndicator) {
             description.append("\n"); //$NON-NLS-1$
             description.append(setBMatchPercent);
-            description.append(" of the data from set B are found in data from set A "); //$NON-NLS-1$
+            description.append(" of the data from the B set are found in data from the A set "); 
         } else {
             description.append("."); //$NON-NLS-1$
         }

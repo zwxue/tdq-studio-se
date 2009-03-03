@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataquality.category:AnalysisCategories xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.category="http://org.talend.dataquality.category">
   <categories analysisType="Connection Analysis" label="Connection Analysis">
-    <subCategories label="Overview Analysis"/>
+    <subCategories label="Database Structure Overview"/>
   </categories>
   <categories analysisType="Catalog Analysis" label="Catalog Analysis">
-    <subCategories analysisType="Catalog Analysis" label="Overview Analysis"/>
+    <subCategories analysisType="Catalog Analysis" label="Catalog Structure Overview"/>
   </categories>
   <categories analysisType="Schema Analysis" label="Schema Analysis">
-    <subCategories analysisType="Schema Analysis" label="Overview Analysis"/>
+    <subCategories analysisType="Schema Analysis" label="Schema Structure Overview"/>
   </categories>
-  <!-- categories analysisType="Table Analysis" label="Table Analysis">
-    <subCategories analysisType="Table Analysis" label="Default Analysis"/>
-    <subCategories analysisType="Table Analysis" label="Duplicate Analysis"/>
-  </categories -->
+  <categories analysisType="Table Analysis" label="Table Analysis">
+    <subCategories analysisType="Table Analysis" label="DQ Rule Analysis"/>
+    <!-- subCategories analysisType="Table Analysis" label="Duplicate Analysis"/ -->
+  </categories>
   <categories analysisType="Multiple Column Analysis" label="Multiple Column Analysis">
     <!--subCategories label="Default Analysis"/-->
     <subCategories analysisType="Multiple Column Analysis" label="Column Analysis"/>
@@ -31,8 +31,5 @@
   <categories analysisType="Column Correlation Analysis" label="Column Correlation Analysis">
     <subCategories analysisType="Column Correlation Analysis" label="Numerical Correlation Analysis"/>
     <subCategories analysisType="Column Correlation Analysis" label="Time Correlation Analysis"/>
-  </categories>
-  <categories analysisType="Table Analysis" label="Table Analysis">
-    <subCategories label="Table Analysis"/>
   </categories>
 </dataquality.category:AnalysisCategories>
