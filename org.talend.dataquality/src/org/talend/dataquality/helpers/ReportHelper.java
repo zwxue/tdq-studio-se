@@ -13,10 +13,8 @@
 package org.talend.dataquality.helpers;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -63,10 +61,13 @@ public final class ReportHelper {
         // Analysis: catalog
         BASIC_CATALOG("Basic", "/reports/column/report_03.jrxml"),
         EVOLUTION_CATALOG("Basic", "/reports/column/report_03.jrxml"),
+        // Analysis: column comparison
+        BASIC_COLUMNS_COMPARISON("Basic", "/reports/column/report_03.jrxml"),
+        EVOLUTION_COLUMNS_COMPARISON("Evolution", "/reports/column/report_03.jrxml"),
 
         USER_MADE("User specified", null); // for the user to set his own file path//$NON-NLS-1$
 
-        public final static String BASIC = "Basic";
+        public static final String BASIC = "Basic";
 
         private String label;
 
@@ -148,6 +149,12 @@ public final class ReportHelper {
                     return BASIC_CATALOG;
                 } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
                     return EVOLUTION_CATALOG;
+                }
+            } else if (anaType.getName().equals(AnalysisType.COLUMNS_COMPARISON.getName())) {
+                if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
+                    return BASIC_COLUMNS_COMPARISON;
+                } else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
+                    return EVOLUTION_COLUMNS_COMPARISON;
                 }
             }
 
