@@ -70,7 +70,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     protected Analysis cachedAnalysis;
 
-    protected Map<ModelElement, Package> schemata = new HashMap<ModelElement, Package>();
 
     @Override
     protected String createSqlStatement(Analysis analysis) {
