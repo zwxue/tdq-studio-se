@@ -29,6 +29,7 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -38,221 +39,192 @@ import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * 
- * DOC mzhao class global comment. Compare two selected element in local
- * structure.
+ * DOC mzhao class global comment. Compare two selected element in local structure.
  */
 public class SelectedLocalComparison implements IComparisonLevel {
-	private static final int LEFT_RESOURCE = 0;
-	private static final int RIGHT_RESOURCE = 1;
-	private Object firstSelectedObj = null, secondSelectedObj = null;
-	private TdDataProvider firstSelectedDataProvider;
 
-	private TdDataProvider secondSelectedDataProvider;
+    private static final int LEFT_RESOURCE = 0;
 
-	private TdDataProvider tempFirstSelectedDataProvider;
+    private static final int RIGHT_RESOURCE = 1;
 
-	private TdDataProvider tempSecondSelectedDataProvider;
-	private Map<String, Object> options;
+    private Object firstSelectedObj = null, secondSelectedObj = null;
 
-	public SelectedLocalComparison(Object firstSelectedObj,
-			Object secondSelectedObj) {
-		this.firstSelectedObj = firstSelectedObj;
-		this.secondSelectedObj = secondSelectedObj;
-		options = new HashMap<String, Object>();
-		options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-	}
+    private TdDataProvider firstSelectedDataProvider;
 
-	public void popComparisonUI(IUIHandler uiHandler)
-			throws ReloadCompareException {
+    private TdDataProvider secondSelectedDataProvider;
 
-		// Judge selected elements types.
-		ModelElementAdapter meAdapter = new ModelElementAdapter();
-		firstSelectedDataProvider = meAdapter
-				.getAdaptableProvider(firstSelectedObj);
-		secondSelectedDataProvider = meAdapter
-				.getAdaptableProvider(secondSelectedObj);
+    private TdDataProvider tempFirstSelectedDataProvider;
 
-		if (firstSelectedDataProvider == null
-				|| secondSelectedDataProvider == null) {
-			return;
-		}
+    private TdDataProvider tempSecondSelectedDataProvider;
 
-		DQStructureComparer.deleteFirstResourceFile();
-		DQStructureComparer.deleteSecondResourceFile();
+    private Map<String, Object> options;
 
-		createTempConnectionFile();
-		// createCopyedProvider();
-		DQStructureComparer.openDiffCompareEditor(getResource(LEFT_RESOURCE),
-				getResource(RIGHT_RESOURCE), options, uiHandler,
-				DQStructureComparer.getLocalDiffResourceFile());
+    public SelectedLocalComparison(Object firstSelectedObj, Object secondSelectedObj) {
+        this.firstSelectedObj = firstSelectedObj;
+        this.secondSelectedObj = secondSelectedObj;
+        options = new HashMap<String, Object>();
+        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+    }
 
-	}
+    public void popComparisonUI(IUIHandler uiHandler) throws ReloadCompareException {
 
-	protected void createTempConnectionFile() throws ReloadCompareException {
-		// First resource.
-		IFile selectedFile1 = PrvResourceFileHelper.getInstance()
-				.findCorrespondingFile(firstSelectedDataProvider);
-		IFile firstConnectionFile = DQStructureComparer
-				.getFirstComparisonLocalFile();
-		IFile copyedFile1 = DQStructureComparer.copyedToDestinationFile(
-				selectedFile1, firstConnectionFile);
-		TypedReturnCode<TdDataProvider> returnProvider = DqRepositoryViewService
-				.readFromFile(copyedFile1);
-		if (!returnProvider.isOk()) {
-			throw new ReloadCompareException(returnProvider.getMessage());
-		}
-		tempFirstSelectedDataProvider = returnProvider.getObject();
-		tempFirstSelectedDataProvider.setComponent(firstSelectedDataProvider
-				.getComponent());
-		DqRepositoryViewService.saveDataProviderResource(
-				tempFirstSelectedDataProvider, (IFolder) firstConnectionFile
-						.getParent(), firstConnectionFile);
-		tempFirstSelectedDataProvider.setComponent(null);
+        // Judge selected elements types.
+        ModelElementAdapter meAdapter = new ModelElementAdapter();
+        firstSelectedDataProvider = meAdapter.getAdaptableProvider(firstSelectedObj);
+        secondSelectedDataProvider = meAdapter.getAdaptableProvider(secondSelectedObj);
 
-		// Second resource.
-		IFile selectedFile2 = PrvResourceFileHelper.getInstance()
-				.findCorrespondingFile(secondSelectedDataProvider);
-		IFile secondConnectionFile = DQStructureComparer
-				.getSecondComparisonLocalFile();
-		IFile copyedFile2 = DQStructureComparer.copyedToDestinationFile(
-				selectedFile2, secondConnectionFile);
-		TypedReturnCode<TdDataProvider> returnProvider2 = DqRepositoryViewService
-				.readFromFile(copyedFile2);
-		if (!returnProvider2.isOk()) {
-			throw new ReloadCompareException(returnProvider2.getMessage());
-		}
-		tempSecondSelectedDataProvider = returnProvider2.getObject();
-		tempSecondSelectedDataProvider.setComponent(secondSelectedDataProvider
-				.getComponent());
-		DqRepositoryViewService.saveDataProviderResource(
-				tempSecondSelectedDataProvider, (IFolder) secondConnectionFile
-						.getParent(), secondConnectionFile);
-		tempSecondSelectedDataProvider.setComponent(null);
-	}
+        if (firstSelectedDataProvider == null || secondSelectedDataProvider == null) {
+            return;
+        }
 
-	private Resource getResource(int pos) throws ReloadCompareException {
-		TdDataProvider tdProvider = null;
-		Object selectedObj = null;
-		switch (pos) {
-		case LEFT_RESOURCE:
-			selectedObj = firstSelectedObj;
-			tdProvider = tempFirstSelectedDataProvider;
-			break;
-		case RIGHT_RESOURCE:
-			selectedObj = secondSelectedObj;
-			tdProvider = tempSecondSelectedDataProvider;
-			break;
-		default:
-			break;
-		}
+        DQStructureComparer.deleteFirstResourceFile();
+        DQStructureComparer.deleteSecondResourceFile();
 
-		ModelElementAdapter meAdapter = new ModelElementAdapter();
+        createTempConnectionFile();
+        // createCopyedProvider();
+        DQStructureComparer.openDiffCompareEditor(getResource(LEFT_RESOURCE), getResource(RIGHT_RESOURCE), options, uiHandler,
+                DQStructureComparer.getLocalDiffResourceFile());
 
-		Object rootElement = meAdapter.getListModelElements(selectedObj,
-				tdProvider);
-		Resource leftResource = null;
-		if (rootElement instanceof Resource) {
-			leftResource = (Resource) rootElement;
-		} else {
-			// leftResource = tdProvider.eResource();
-			// leftResource.getContents().clear();
-			leftResource = ((ModelElement) rootElement).eResource();
-			leftResource.getContents().clear();
-			leftResource.getContents().add((ModelElement) rootElement);
-		}
-		EMFSharedResources.getInstance().saveResource(leftResource);
-		return leftResource;
-	}
+    }
 
-	public void reloadCurrentLevelElement() throws ReloadCompareException {
-	}
+    protected void createTempConnectionFile() throws ReloadCompareException {
+        // First resource.
+        IFile selectedFile1 = PrvResourceFileHelper.getInstance().findCorrespondingFile(firstSelectedDataProvider);
+        IFile firstConnectionFile = DQStructureComparer.getFirstComparisonLocalFile();
+        IFile copyedFile1 = DQStructureComparer.copyedToDestinationFile(selectedFile1, firstConnectionFile);
+        TypedReturnCode<TdDataProvider> returnProvider = DqRepositoryViewService.readFromFile(copyedFile1);
+        if (!returnProvider.isOk()) {
+            throw new ReloadCompareException(returnProvider.getMessage());
+        }
+        tempFirstSelectedDataProvider = returnProvider.getObject();
+        tempFirstSelectedDataProvider.setComponent(firstSelectedDataProvider.getComponent());
+        DataProviderWriter.getInstance().saveDataProviderResource(tempFirstSelectedDataProvider,
+                (IFolder) firstConnectionFile.getParent(), firstConnectionFile);
+        tempFirstSelectedDataProvider.setComponent(null);
 
-	/**
-	 * 
-	 * DOC mzhao Interface that do instanceof converter to provider common
-	 * object to client.
-	 */
-	private class ModelElementAdapter {
-		public TdDataProvider getAdaptableProvider(Object element) {
-			TdDataProvider adaptedDataProvider = null;
+        // Second resource.
+        IFile selectedFile2 = PrvResourceFileHelper.getInstance().findCorrespondingFile(secondSelectedDataProvider);
+        IFile secondConnectionFile = DQStructureComparer.getSecondComparisonLocalFile();
+        IFile copyedFile2 = DQStructureComparer.copyedToDestinationFile(selectedFile2, secondConnectionFile);
+        TypedReturnCode<TdDataProvider> returnProvider2 = DqRepositoryViewService.readFromFile(copyedFile2);
+        if (!returnProvider2.isOk()) {
+            throw new ReloadCompareException(returnProvider2.getMessage());
+        }
+        tempSecondSelectedDataProvider = returnProvider2.getObject();
+        tempSecondSelectedDataProvider.setComponent(secondSelectedDataProvider.getComponent());
+        DataProviderWriter.getInstance().saveDataProviderResource(tempSecondSelectedDataProvider,
+                (IFolder) secondConnectionFile.getParent(), secondConnectionFile);
+        tempSecondSelectedDataProvider.setComponent(null);
+    }
 
-			if (element instanceof IFile) {
-				// IFile
-				TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper
-						.getInstance().findProvider((IFile) element);
-				adaptedDataProvider = returnVlaue.getObject();
-			} else {
+    private Resource getResource(int pos) throws ReloadCompareException {
+        TdDataProvider tdProvider = null;
+        Object selectedObj = null;
+        switch (pos) {
+        case LEFT_RESOURCE:
+            selectedObj = firstSelectedObj;
+            tdProvider = tempFirstSelectedDataProvider;
+            break;
+        case RIGHT_RESOURCE:
+            selectedObj = secondSelectedObj;
+            tdProvider = tempSecondSelectedDataProvider;
+            break;
+        default:
+            break;
+        }
 
-				Package package1 = SwitchHelpers.PACKAGE_SWITCH
-						.doSwitch((ModelElement) element);
+        ModelElementAdapter meAdapter = new ModelElementAdapter();
 
-				if (package1 != null) {
-					adaptedDataProvider = DataProviderHelper
-							.getTdDataProvider(package1);
-				} else {
-					ColumnSet columnSet1 = SwitchHelpers.COLUMN_SET_SWITCH
-							.doSwitch((ModelElement) element);
-					if (columnSet1 != null) {
-						adaptedDataProvider = DataProviderHelper
-								.getDataProvider(columnSet1);
-					} else {
-						Column column1 = SwitchHelpers.COLUMN_SWITCH
-								.doSwitch((Column) element);
-						if (column1 != null) {
-							adaptedDataProvider = DataProviderHelper
-									.getTdDataProvider(column1);
-						}
-					}
+        Object rootElement = meAdapter.getListModelElements(selectedObj, tdProvider);
+        Resource leftResource = null;
+        if (rootElement instanceof Resource) {
+            leftResource = (Resource) rootElement;
+        } else {
+            // leftResource = tdProvider.eResource();
+            // leftResource.getContents().clear();
+            leftResource = ((ModelElement) rootElement).eResource();
+            leftResource.getContents().clear();
+            leftResource.getContents().add((ModelElement) rootElement);
+        }
+        EMFSharedResources.getInstance().saveResource(leftResource);
+        return leftResource;
+    }
 
-				}
-			}
-			return adaptedDataProvider;
-		}
+    public void reloadCurrentLevelElement() throws ReloadCompareException {
+    }
 
-		public Object getListModelElements(Object element,
-				TdDataProvider tdProvider) throws ReloadCompareException {
+    /**
+     * 
+     * DOC mzhao Interface that do instanceof converter to provider common object to client.
+     */
+    private class ModelElementAdapter {
 
-			Object rootElement = null;
-			// List<ModelElement> meList = new ArrayList<ModelElement>();
+        public TdDataProvider getAdaptableProvider(Object element) {
+            TdDataProvider adaptedDataProvider = null;
 
-			if (element instanceof IFile) {
-				rootElement = tdProvider.eResource();
-			} else {
-				Package package1 = SwitchHelpers.PACKAGE_SWITCH
-						.doSwitch((ModelElement) element);
+            if (element instanceof IFile) {
+                // IFile
+                TypedReturnCode<TdDataProvider> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) element);
+                adaptedDataProvider = returnVlaue.getObject();
+            } else {
 
-				if (package1 != null) {
-					Package findMatchPackage = DQStructureComparer
-							.findMatchedPackage((Package) element, tdProvider);
-					findMatchPackage.getDataManager().clear();
-					rootElement = findMatchPackage;
-					// meList.addAll(PackageHelper.getTables(findMatchPackage));
-					// meList.addAll(PackageHelper.getViews(findMatchPackage));
-				} else {
-					ColumnSet columnSet1 = SwitchHelpers.COLUMN_SET_SWITCH
-							.doSwitch((ModelElement) element);
-					if (columnSet1 != null) {
-						ColumnSet findMatchedColumnSet = DQStructureComparer
-								.findMatchedColumnSet(columnSet1, tdProvider);
-						rootElement = findMatchedColumnSet;
-						// meList.addAll(ColumnSetHelper
-						// .getColumns(findMatchedColumnSet));
-					} else {
-						Column column1 = SwitchHelpers.COLUMN_SWITCH
-								.doSwitch((Column) element);
-						if (column1 != null) {
-							Column findMathedColumn = DQStructureComparer
-									.findMatchedColumn(column1, tdProvider);
-							rootElement = findMathedColumn;
-							// meList.add(findMathedColumn);
-						}
-					}
+                Package package1 = SwitchHelpers.PACKAGE_SWITCH.doSwitch((ModelElement) element);
 
-				}
-			}
+                if (package1 != null) {
+                    adaptedDataProvider = DataProviderHelper.getTdDataProvider(package1);
+                } else {
+                    ColumnSet columnSet1 = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch((ModelElement) element);
+                    if (columnSet1 != null) {
+                        adaptedDataProvider = DataProviderHelper.getDataProvider(columnSet1);
+                    } else {
+                        Column column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((Column) element);
+                        if (column1 != null) {
+                            adaptedDataProvider = DataProviderHelper.getTdDataProvider(column1);
+                        }
+                    }
 
-			return rootElement;
+                }
+            }
+            return adaptedDataProvider;
+        }
 
-		}
-	}
+        public Object getListModelElements(Object element, TdDataProvider tdProvider) throws ReloadCompareException {
+
+            Object rootElement = null;
+            // List<ModelElement> meList = new ArrayList<ModelElement>();
+
+            if (element instanceof IFile) {
+                rootElement = tdProvider.eResource();
+            } else {
+                Package package1 = SwitchHelpers.PACKAGE_SWITCH.doSwitch((ModelElement) element);
+
+                if (package1 != null) {
+                    Package findMatchPackage = DQStructureComparer.findMatchedPackage((Package) element, tdProvider);
+                    findMatchPackage.getDataManager().clear();
+                    rootElement = findMatchPackage;
+                    // meList.addAll(PackageHelper.getTables(findMatchPackage));
+                    // meList.addAll(PackageHelper.getViews(findMatchPackage));
+                } else {
+                    ColumnSet columnSet1 = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch((ModelElement) element);
+                    if (columnSet1 != null) {
+                        ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(columnSet1, tdProvider);
+                        rootElement = findMatchedColumnSet;
+                        // meList.addAll(ColumnSetHelper
+                        // .getColumns(findMatchedColumnSet));
+                    } else {
+                        Column column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((Column) element);
+                        if (column1 != null) {
+                            Column findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
+                            rootElement = findMathedColumn;
+                            // meList.add(findMathedColumn);
+                        }
+                    }
+
+                }
+            }
+
+            return rootElement;
+
+        }
+    }
 }

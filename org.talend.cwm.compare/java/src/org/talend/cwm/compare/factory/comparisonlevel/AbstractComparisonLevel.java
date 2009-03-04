@@ -36,6 +36,7 @@ import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -160,7 +161,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         }
         tempReloadProvider = returnProvider.getObject();
         tempReloadProvider.setComponent(oldDataProvider.getComponent());
-        DqRepositoryViewService.saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
+        DataProviderWriter.getInstance().saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
                 tempConnectionFile);
         tempReloadProvider.setComponent(null);
     }
