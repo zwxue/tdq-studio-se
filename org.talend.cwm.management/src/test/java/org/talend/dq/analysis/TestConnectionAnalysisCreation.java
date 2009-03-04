@@ -38,6 +38,7 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZExpression;
 import org.talend.utils.properties.PropertiesLoader;
@@ -95,7 +96,7 @@ public class TestConnectionAnalysisCreation {
         Assert.assertTrue("Problem executing analysis: '" + analysisName + "': " + executed.getMessage(), executed.isOk());
 
         // save data provider
-        DqRepositoryViewService.saveDataProviderAndStructure(dataManager, folderProvider);
+        DataProviderWriter.getInstance().saveDataProviderAndStructure(dataManager, folderProvider);
 
         // save analysis, need workspace context
         // AnalysisWriter writer = new AnalysisWriter();

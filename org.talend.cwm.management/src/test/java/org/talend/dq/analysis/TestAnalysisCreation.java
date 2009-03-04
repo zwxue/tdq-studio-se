@@ -44,6 +44,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.sql.converters.CwmZExpression;
@@ -145,7 +146,7 @@ public class TestAnalysisCreation {
         Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk());
 
         // save data provider
-        DqRepositoryViewService.saveDataProviderAndStructure(dataManager, folderProvider);
+        DataProviderWriter.getInstance().saveDataProviderAndStructure(dataManager, folderProvider);
 
         // Need workspace context
         // AnalysisWriter writer = new AnalysisWriter();

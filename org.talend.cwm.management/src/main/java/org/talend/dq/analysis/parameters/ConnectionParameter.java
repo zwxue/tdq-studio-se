@@ -37,6 +37,16 @@ public class ConnectionParameter {
 
     private FolderProvider folderProvider;
 
+    private EParameterType paramType;
+
+    public ConnectionParameter(EParameterType paramType) {
+        this.paramType = paramType;
+    }
+
+    public EParameterType getParamType() {
+        return paramType;
+    }
+
     public String getName() {
         return name;
     }
@@ -101,6 +111,14 @@ public class ConnectionParameter {
      */
     public void setFolderProvider(FolderProvider folderProvider) {
         this.folderProvider = folderProvider;
+    }
+
+    public enum EParameterType {
+        ANALYSIS,
+        REPORT,
+        PATTERN,
+        DBCONNECTON,
+        DQRULE;
     }
 
 }

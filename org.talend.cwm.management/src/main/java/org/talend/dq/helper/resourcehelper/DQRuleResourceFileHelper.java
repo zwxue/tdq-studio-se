@@ -12,11 +12,14 @@
 // ============================================================================
 package org.talend.dq.helper.resourcehelper;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -92,5 +95,9 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
             whereRule = mySwitch.doSwitch(contents.get(0));
         }
         return whereRule;
+    }
+
+    public Collection<WhereRule> getAllDQRules(IFolder patternFodler) {
+        return Collections.EMPTY_LIST;
     }
 }

@@ -29,12 +29,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
@@ -65,7 +63,6 @@ import org.talend.i18n.Messages;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -93,7 +90,6 @@ public final class DqRepositoryViewService {
      * before (DQ Repository view must not show catalog's files and Catalogs must still be children of the Data
      * provider). Check also that old files (.prv) are still readable by the application.
      */
-    private static final boolean CAT_WITH_PRV = true;
 
     private DqRepositoryViewService() {
     }
@@ -298,98 +294,6 @@ public final class DqRepositoryViewService {
         } else {
             return ColumnSetHelper.getColumns(columnSet);
         }
-    }
-
-    /**
-     * Method "saveDataProviderAndStructure" will save the data provider in the given folder.
-     * 
-     * @param dataProvider the data provider to save
-     * @param folderProvider provides the path where to save the data provider and related elements.
-     * @return
-     */
-    public static IFile saveDataProviderAndStructure(TdDataProvider dataProvider, FolderProvider folderProvider) {
-        assert dataProvider != null;
-        assert folderProvider != null;
-
-        IPath folderPath = ((folderProvider != null) && folderProvider.getFolderResource() != null) ? folderProvider
-                .getFolderResource().getFullPath() : null;
-        if (folderPath == null) { // do not serialize data
-            log.info("Data provider not serialized: no folder given.");
-            return null;
-        }
-        String fileName = createFilename(dataProvider.getName(), FactoriesUtil.PROV);
-
-        IFile file = folderProvider.getFolderResource().getFile(fileName);
-        // File file = new File(dataproviderFilename);
-        if (file.exists()) {
-            log
-                    .error("Cannot save data provider " + dataProvider.getName() + " into file " + fileName
-                            + ". File already exists!");
-            return file;
-        }
-
-        saveDataProviderResource(dataProvider, folderProvider.getFolderResource(), file);
-        return file;
-    }
-
-    /**
-     * Save the contents of dataProvider, make the dataProvider corresponding a resource value.
-     * 
-     * @param dataProvider
-     * @param folderProvider
-     * @param file
-     */
-    public static boolean saveDataProviderResource(TdDataProvider dataProvider, IFolder folderProvider, IFile file) {
-        // --- add resources in resource set
-        EMFSharedResources util = EMFSharedResources.getInstance();
-        boolean ok = util.addEObjectToResourceSet(file.getFullPath().toString(), dataProvider);
-        if (!ok) {
-            return false;
-        }
-
-        // The provider connection is stored in the dataprovider because of the containment relation.
-        // addInSoftwareSystemResourceSet(folder, connector, providerConnection);
-
-        final Resource resource = dataProvider.eResource();
-
-        // save dependency values
-        EList<Dependency> supplierDependency = dataProvider.getSupplierDependency();
-        if (supplierDependency.size() != 0) {
-            resource.getContents().addAll(supplierDependency);
-        }
-
-        // save software system
-        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
-        if (softwareSystem != null) {
-            saveSoftwareSystem(softwareSystem);
-        }
-
-        // save each catalog is its own file
-        Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
-        if (CAT_WITH_PRV) {
-            resource.getContents().addAll(catalogs);
-        } else {
-            ok = addElementsToOwnResources(catalogs, folderProvider, util);
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Catalogs added " + ok);
-        }
-
-        // save each schema is its own file
-        Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(dataProvider);
-        if (CAT_WITH_PRV) {
-            resource.getContents().addAll(schemata);
-            EMFUtil.saveSingleResource(resource);
-        } else {
-            ok = addElementsToOwnResources(schemata, folderProvider, util);
-            util.saveAll();
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Schema added " + ok);
-        }
-        return ok;
     }
 
     /**
@@ -686,30 +590,5 @@ public final class DqRepositoryViewService {
         TdDataProvider prov = tdDataProviders.iterator().next();
         rc.setObject(prov);
         return rc;
-    }
-
-    /**
-     * Method "addElementsToOwnResources" saves each element in its own file.
-     * 
-     * @param elements the elements to save
-     * @param folder where to save the elements.
-     * @param instance used for linking elements to each other and to their container
-     * @return true if added.
-     */
-    private static boolean addElementsToOwnResources(Collection<? extends ModelElement> elements, IFolder folder,
-            EMFSharedResources instance) {
-        boolean ok = true;
-        for (ModelElement modelElement : elements) {
-            String uuid = EcoreUtil.generateUUID();
-            if (log.isDebugEnabled()) {
-                log.debug("Element uuid " + uuid);
-            }
-            String fileName = createFilename(modelElement.getName() + uuid, FactoriesUtil.CAT);
-            IFile file = folder.getFile(fileName);
-            if (!instance.addEObjectToResourceSet(file.getFullPath().toString(), modelElement)) {
-                ok = false;
-            }
-        }
-        return ok;
     }
 }

@@ -24,6 +24,10 @@ public class AnalysisParameter extends ConnectionParameter {
 
     private String analysisTypeName;
 
+    public AnalysisParameter() {
+        super(EParameterType.ANALYSIS);
+    }
+
     /**
      * Getter for analysisTypeName.
      * 
@@ -42,43 +46,12 @@ public class AnalysisParameter extends ConnectionParameter {
         analysisTypeName = typeName;
     }
 
+    /**
+     * DOC bzhou Comment method "getAnalysisType".
+     * 
+     * @return
+     */
     public AnalysisType getAnalysisType() {
-        if (getAnalysisTypeName() != null) {
-
-            return AnalysisType.get(getAnalysisTypeName());
-        } else {
-
-            return null;
-        }
-    }
-
-    public String getAnalysisName() {
-
-        return super.getName();
-    }
-
-    public String getAnalysisPurpose() {
-
-        return super.getPurpose();
-    }
-
-    public String getAnalysisDescription() {
-
-        return super.getDescription();
-    }
-
-    public String getAnalysisAuthor() {
-
-        return super.getAuthor();
-    }
-
-    public String getAnalysisStatus() {
-
-        return super.getStatus();
-    }
-
-    public String getAnalysisVersion() {
-
-        return super.getVersion();
+        return analysisTypeName != null ? AnalysisType.get(analysisTypeName) : null;
     }
 }

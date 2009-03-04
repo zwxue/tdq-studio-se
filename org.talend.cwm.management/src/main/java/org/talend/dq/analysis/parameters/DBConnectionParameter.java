@@ -28,6 +28,10 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     private String filePath;
 
+    public DBConnectionParameter() {
+        super(EParameterType.DBCONNECTON);
+    }
+
     public void setSqlTypeName(String sqlTypeName) {
         this.sqlTypeName = sqlTypeName;
     }

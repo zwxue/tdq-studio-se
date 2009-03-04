@@ -27,7 +27,6 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
@@ -39,6 +38,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.connection.DataProviderWriter;
 import org.talend.i18n.Messages;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
@@ -75,7 +75,7 @@ public final class TalendCwmFactory {
         connector.closeConnection();
 
         // --- save on disk
-        DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, folderProvider);
+        DataProviderWriter.getInstance().saveDataProviderAndStructure(dataProvider, folderProvider);
     }
 
     /**

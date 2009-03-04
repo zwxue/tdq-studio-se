@@ -39,6 +39,7 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.sql.converters.CwmZExpression;
@@ -126,7 +127,7 @@ public class TestMultiColAnalysisCreation {
         Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk());
 
         // save data provider
-        DqRepositoryViewService.saveDataProviderAndStructure(dataManager, folderProvider);
+        DataProviderWriter.getInstance().saveDataProviderAndStructure(dataManager, folderProvider);
 
         return indicator;
         // Need workspace context

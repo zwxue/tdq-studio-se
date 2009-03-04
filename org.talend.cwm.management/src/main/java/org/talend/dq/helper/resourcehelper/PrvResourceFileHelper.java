@@ -13,11 +13,13 @@
 package org.talend.dq.helper.resourcehelper;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
@@ -26,6 +28,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * This class help the '.prv' file to store the corresponding DataProvider value.
@@ -137,5 +140,9 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     public ReturnCode save(TdDataProvider dataProvider) {
         ReturnCode returnCode = DqRepositoryViewService.saveOpenDataProvider(dataProvider, false);
         return returnCode;
+    }
+
+    public Collection<DataProvider> getAllDataProviders(IFolder patternFodler) {
+        return Collections.EMPTY_LIST;
     }
 }

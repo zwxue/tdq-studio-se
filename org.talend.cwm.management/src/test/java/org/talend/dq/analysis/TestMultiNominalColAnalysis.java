@@ -40,6 +40,7 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
@@ -64,7 +65,6 @@ public class TestMultiNominalColAnalysis {
     private static Logger log = Logger.getLogger(TestMultiNominalColAnalysis.class);
 
     private AnalysisBuilder analysisBuilder;
-
 
     private static final String[] COLUMNS = new String[] { "city", "houseowner", "occupation", "country", "marital_status",
             "member_card" };
@@ -133,7 +133,7 @@ public class TestMultiNominalColAnalysis {
         Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk());
 
         // save data provider
-        DqRepositoryViewService.saveDataProviderAndStructure(dataManager, folderProvider);
+        DataProviderWriter.getInstance().saveDataProviderAndStructure(dataManager, folderProvider);
 
         return indicator;
         // Need workspace context

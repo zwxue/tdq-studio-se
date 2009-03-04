@@ -58,6 +58,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
     public Collection<Analysis> getAllAnalysis(IFolder analysesFolder) {
         if (resourcesNumberChanged) {
             try {
+                allAnalysisMap.clear();
                 searchAllAnalysis(analysesFolder);
             } catch (CoreException e) {
                 e.printStackTrace();
@@ -68,6 +69,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
     }
 
     private void searchAllAnalysis(IFolder folder) throws CoreException {
+
         for (IResource resource : folder.members()) {
             if (resource.getType() == IResource.FOLDER) {
                 searchAllAnalysis(folder.getFolder(resource.getName()));
