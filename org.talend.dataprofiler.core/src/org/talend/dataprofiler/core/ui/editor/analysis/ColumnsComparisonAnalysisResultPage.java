@@ -54,9 +54,9 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultPage {
 
-    private static final String NOT_MATCHING = "not matching"; 
+    private static final String NOT_MATCHING = DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Not_matching");  //$NON-NLS-1$
 
-    private static final String MATCHING = "matching"; 
+    private static final String MATCHING = DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Matching");  //$NON-NLS-1$
 
     private ColumnsComparisonMasterDetailsPage masterPage;
 
@@ -182,23 +182,23 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         final TableColumn columnHeader1 = new TableColumn(resultTable, SWT.CENTER);
         columnHeader1.setWidth(120);
         columnHeader1.setAlignment(SWT.CENTER);
-        columnHeader1.setText("Set A"); // TODO scorreia put here table name instead
+        columnHeader1.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetA")); // TODO scorreia put here table name instead //$NON-NLS-1$
         if (!isHasDeactivatedIndicator) {
             final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
             columnHeader2.setWidth(120);
             columnHeader2.setAlignment(SWT.CENTER);
-            columnHeader2.setText("Set B"); // TODO scorreia put here table name instead
+            columnHeader2.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetB")); // TODO scorreia put here table name instead //$NON-NLS-1$
         }
         createTableItems(resultTable);
 
         creatChart(sectionClient);
         StringBuilder description = new StringBuilder();
         description.append(setAMatchPercent);
-        description.append(" of the data from the A set are found in data from the B set"); 
+        description.append(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ASetFoundInB"));  //$NON-NLS-1$
         if (!isHasDeactivatedIndicator) {
             description.append("\n"); //$NON-NLS-1$
             description.append(setBMatchPercent);
-            description.append(" of the data from the B set are found in data from the A set "); 
+            description.append(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.BSetFoundInA"));  //$NON-NLS-1$
         } else {
             description.append("."); //$NON-NLS-1$
         }
