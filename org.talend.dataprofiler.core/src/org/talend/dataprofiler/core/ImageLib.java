@@ -126,6 +126,9 @@ public final class ImageLib {
     /** Icon for primary key. */
     public static final String PK_COLUMN = "pkColumn.gif"; //$NON-NLS-1$
 
+    /** Icon for refresh workspace. */
+    public static final String REFRESH_SPACE = "refresh.gif"; //$NON-NLS-1$
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */

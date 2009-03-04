@@ -392,7 +392,7 @@ public class DQRespositoryView extends CommonNavigator {
     class RefreshDQReponsitoryViewAction extends Action {
 
         public RefreshDQReponsitoryViewAction() {
-            super("Refresh", ImageLib.getImageDescriptor(ImageLib.SECTION_PREVIEW));
+            super("Refresh", ImageLib.getImageDescriptor(ImageLib.REFRESH_SPACE));
         }
 
         @Override
