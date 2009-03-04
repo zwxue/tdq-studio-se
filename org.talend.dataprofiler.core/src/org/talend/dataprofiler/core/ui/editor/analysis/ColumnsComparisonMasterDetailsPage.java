@@ -51,6 +51,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -67,7 +68,6 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
@@ -462,7 +462,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             analysedElements.add(columnListB.get(i));
         }
         if (analysedElements.size() > 0) {
-            TdDataProvider tdDataProvider = EObjectHelper.getTdDataProvider((Column) analysedElements.get(0));
+            TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider((Column) analysedElements.get(0));
             analysis.getContext().setConnection(tdDataProvider);
         }
         // rowCountIndicator.setAnalyzedElement(value)
@@ -561,8 +561,14 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             return columnSet.toArray();
         }
 
+        @SuppressWarnings("unchecked")
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            setDirty(true);
+            if (oldInput != null && newInput != null) {
+                if (!((List) newInput).isEmpty()) {
+
+                    setDirty(true);
+                }
+            }
         }
 
         public Image getImage(Object element) {
