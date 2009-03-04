@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefa
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
+import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -39,8 +40,9 @@ public class SimpleStatisticsStateTable extends AbstractChartTypeStatesTable {
     }
 
     public JFreeChart getChart() {
-        return TopChartFactory.create3DBarChart(
-                DefaultMessagesImpl.getString("SimpleStatisticsStateTable.SimpleStatistics"), getDataset(), true); //$NON-NLS-1$
+        JFreeChart chart = TopChartFactory.create3DBarChart(DefaultMessagesImpl
+                .getString("SimpleStatisticsStateTable.SimpleStatistics"), getDataset(), true);
+        return ChartDecorator.decorateCategoryPlot(chart);
     }
 
     public ICustomerDataset getCustomerDataset() {

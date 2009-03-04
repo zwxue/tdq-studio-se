@@ -311,6 +311,10 @@ public class CorePlugin extends AbstractUIPlugin {
         refreshAction.run();
     }
 
+    public void refreshDQView() {
+        ((DQRespositoryView) findView(DQRespositoryView.ID)).getCommonViewer().refresh();
+    }
+
     public void doMigrationTask() {
 
         List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();

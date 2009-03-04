@@ -19,7 +19,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
@@ -72,15 +71,6 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
     protected IFolder getStoredFolder() {
         return ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
                 DQStructureManager.DQ_RULES);
-    }
-
-    /**
-     * Getter for pathText.
-     * 
-     * @return the pathText
-     */
-    public Text getPathText() {
-        return this.pathText;
     }
 
 }

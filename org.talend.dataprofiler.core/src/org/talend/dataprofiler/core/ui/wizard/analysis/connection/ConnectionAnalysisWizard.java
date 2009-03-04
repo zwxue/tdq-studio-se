@@ -20,12 +20,13 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
-import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author zqin
@@ -52,7 +53,7 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
 
         addPage(new AnalysisMetadataWizardPage());
 
-        if (anaFilterParameter.getTdDataProvider() == null) {
+        if (getParameter().getTdDataProvider() == null) {
             dpSelectionPage = new ConnAnalysisDPSelectionPage();
             addPage(dpSelectionPage);
         }
@@ -62,27 +63,32 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
     }
 
     @Override
-    protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
-        TdDataProvider tdProvider = anaFilterParameter.getTdDataProvider();
-        analysisBuilder.setAnalysisConnection(tdProvider);
-        ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
-        // MOD xqliu 2009-1-21 feature 4715
-        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
-        indicator.setAnalyzedElement(tdProvider);
-        List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdProvider);
-        if (tdSchemas.size() != 0) {
-            addSchemaIndicator(tdSchemas, indicator);
-        }
-        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tdProvider);
-        for (TdCatalog tdCatalog : tdCatalogs) {
-            CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
+    public ModelElement initCWMResourceBuilder() {
+
+        Analysis analysis = (Analysis) super.initCWMResourceBuilder();
+        if (getAnalysisBuilder() != null) {
+            TdDataProvider tdProvider = getParameter().getTdDataProvider();
+            getAnalysisBuilder().setAnalysisConnection(tdProvider);
+
+            ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
             // MOD xqliu 2009-1-21 feature 4715
-            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);
-            createCatalogIndicator.setAnalyzedElement(tdCatalog);
-            indicator.addSchemaIndicator(createCatalogIndicator);
-            addSchemaIndicator(CatalogHelper.getSchemas(tdCatalog), indicator);
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
+            indicator.setAnalyzedElement(tdProvider);
+            List<TdSchema> tdSchemas = DataProviderHelper.getTdSchema(tdProvider);
+            if (tdSchemas.size() != 0) {
+                addSchemaIndicator(tdSchemas, indicator);
+            }
+            List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tdProvider);
+            for (TdCatalog tdCatalog : tdCatalogs) {
+                CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
+                // MOD xqliu 2009-1-21 feature 4715
+                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);
+                createCatalogIndicator.setAnalyzedElement(tdCatalog);
+                indicator.addSchemaIndicator(createCatalogIndicator);
+                addSchemaIndicator(CatalogHelper.getSchemas(tdCatalog), indicator);
+            }
+            getAnalysisBuilder().addElementToAnalyze(tdProvider, indicator);
         }
-        analysisBuilder.addElementToAnalyze(tdProvider, indicator);
-        super.fillAnalysisBuilder(analysisBuilder);
+        return analysis;
     }
 }

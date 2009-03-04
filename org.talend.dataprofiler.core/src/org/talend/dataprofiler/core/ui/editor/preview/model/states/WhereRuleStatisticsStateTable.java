@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerXYSe
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
+import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
@@ -135,10 +136,12 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     @Override
     public List<JFreeChart> getChartList() {
         List<JFreeChart> ret = new ArrayList<JFreeChart>();
-        ret.add(TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getDataset(), false)); //$NON-NLS-1$
-        ret.add(TopChartFactory.createLineChart(DefaultMessagesImpl
-                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false)); //$NON-NLS-1$
+        JFreeChart stackChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
+                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getDataset(), false);
+        ret.add(ChartDecorator.decorateCategoryPlot(stackChart)); //$NON-NLS-1$
+        JFreeChart lineChart = TopChartFactory.createLineChart(DefaultMessagesImpl
+                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false);
+        ret.add(ChartDecorator.decorateXYPlot(lineChart)); //$NON-NLS-1$
         return ret;
     }
 }

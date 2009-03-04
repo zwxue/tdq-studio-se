@@ -17,9 +17,9 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.wizard.Wizard;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
-import org.talend.dq.analysis.parameters.ConnectionParameter;
+import org.talend.dq.analysis.parameters.SqlFileParameter;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -27,20 +27,20 @@ import org.talend.dq.analysis.parameters.ConnectionParameter;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  * 
  */
-public class CreateSqlFileWizard extends AbstractWizard {
+public class CreateSqlFileWizard extends Wizard {
 
     private CreateSqlFileWizardPage mPage;
 
     private File sqlFile;
 
-    private ConnectionParameter parameter;
+    private SqlFileParameter parameter;
 
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
      * 
      * @param folder
      */
-    public CreateSqlFileWizard(ConnectionParameter parameter) {
+    public CreateSqlFileWizard(SqlFileParameter parameter) {
         this.parameter = parameter;
     }
 
@@ -51,7 +51,7 @@ public class CreateSqlFileWizard extends AbstractWizard {
      */
     @Override
     public void addPages() {
-        mPage = new CreateSqlFileWizardPage();
+        mPage = new CreateSqlFileWizardPage(parameter);
         mPage.setTitle(DefaultMessagesImpl.getString("CreateSqlFileWizard.newSQLFile")); //$NON-NLS-1$
         mPage.setDescription(DefaultMessagesImpl.getString("CreateSqlFileWizard.define")); //$NON-NLS-1$
         mPage.setPageComplete(false);
@@ -66,7 +66,7 @@ public class CreateSqlFileWizard extends AbstractWizard {
     @Override
     public boolean performFinish() {
         IPath absolutePath = new Path(parameter.getFolderProvider().getFolder().getAbsolutePath());
-        String portableString = absolutePath.append(parameter.getName()).addFileExtension("sql").toPortableString(); //$NON-NLS-1$
+        String portableString = absolutePath.append(parameter.getFileName()).addFileExtension("sql").toPortableString(); //$NON-NLS-1$
         sqlFile = new File(portableString);
         try {
             sqlFile.createNewFile();
@@ -84,12 +84,6 @@ public class CreateSqlFileWizard extends AbstractWizard {
      */
     public File getSqlFile() {
         return this.sqlFile;
-    }
-
-    @Override
-    protected ConnectionParameter getConnectionParameter() {
-
-        return parameter;
     }
 
 }

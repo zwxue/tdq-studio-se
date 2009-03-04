@@ -12,23 +12,22 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.talend.commons.emf.EMFSharedResources;
-import org.talend.cwm.constants.DevelopmentStatus;
-import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
-import org.talend.dq.analysis.parameters.ConnectionParameter;
+import org.talend.dq.analysis.parameters.PatternParameter;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.pattern.PatternBuilder;
+import org.talend.dq.pattern.PatternWriter;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -38,8 +37,6 @@ import org.talend.dq.analysis.parameters.ConnectionParameter;
  */
 public class CreatePatternWizard extends AbstractWizard {
 
-    private static Logger log = Logger.getLogger(CreatePatternWizard.class);
-
     private CreatePatternWizardPage1 mPage;
 
     private CreatePatternWizardPage2 mPage2;
@@ -48,11 +45,13 @@ public class CreatePatternWizard extends AbstractWizard {
 
     private ExpressionType type;
 
-    private ConnectionParameter parameter;
+    private PatternParameter parameter;
 
     private String expression;
 
     private String language;
+
+    private PatternBuilder patternBuilder;
 
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
@@ -60,14 +59,14 @@ public class CreatePatternWizard extends AbstractWizard {
      * @param folder
      * @param type
      */
-    public CreatePatternWizard(ConnectionParameter parameter, ExpressionType type) {
+    public CreatePatternWizard(PatternParameter parameter, ExpressionType type) {
         this.type = type;
         this.parameter = parameter;
     }
 
-    public CreatePatternWizard(ConnectionParameter parameter, ExpressionType type, String expression, String language) {
-        this.type = type;
-        this.parameter = parameter;
+    public CreatePatternWizard(PatternParameter parameter, ExpressionType type, String expression, String language) {
+        this(parameter, type);
+
         this.expression = expression;
         this.language = language;
     }
@@ -102,46 +101,27 @@ public class CreatePatternWizard extends AbstractWizard {
         addPage(mPage2);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
-    @Override
-    public boolean performFinish() {
-    
-        
-        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
-        String name = parameter.getName();
-        pattern.setName(name);
-        TaggedValueHelper.setAuthor(pattern, parameter.getAuthor());
-        TaggedValueHelper.setDescription(parameter.getDescription(), pattern);
-        TaggedValueHelper.setPurpose(parameter.getPurpose(), pattern);
-        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(parameter.getStatus()));
-
-        // qzhang fixed bug 4296: set the Pattern is valid
-        TaggedValueHelper.setValidStatus(true, pattern);
-
-        String cl = mPage2.getComboLang();
-        String lang = PatternLanguageType.findLanguageByName(cl);
-        String expr = mPage2.getExpressionText().getText();
-        RegularExpression regularExpr = BooleanExpressionHelper.createRegularExpression(lang, expr);
-        regularExpr.setExpressionType(type.getLiteral());
-
-        pattern.getComponents().add(regularExpr);
-        String fname = DqRepositoryViewService.createFilename(name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
-
+    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+        PatternWriter writer = new PatternWriter();
+        Pattern pattern = (Pattern) cwmElement;
         IFolder folderResource = parameter.getFolderProvider().getFolderResource();
-        IFile file = folderResource.getFile(fname);
-        location = file.getFullPath();
-        if (file.exists()) {
-            log.error(DefaultMessagesImpl.getString("CreatePatternWizard.cannotSavePattern", name, file.getFullPath())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            return false;
-        }
 
-        EMFSharedResources.getInstance().addEObjectToResourceSet(file.getFullPath().toString(), pattern);
-        EMFSharedResources.getInstance().saveLastResource();
-        return true;
+        return writer.createPatternFile(pattern, folderResource);
+    }
+
+    public ModelElement initCWMResourceBuilder() {
+        patternBuilder = new PatternBuilder();
+        boolean patternInitialized = patternBuilder.initializePattern(parameter.getName());
+        if (patternInitialized) {
+            Pattern pattern = patternBuilder.getPattern();
+            String lang = PatternLanguageType.findLanguageByName(parameter.getLanguage());
+            String express = parameter.getExpression();
+            RegularExpression regularExpr = BooleanExpressionHelper.createRegularExpression(lang, express);
+            regularExpr.setExpressionType(type.getLiteral());
+            pattern.getComponents().add(regularExpr);
+            return pattern;
+        }
+        return null;
     }
 
     /**
@@ -154,9 +134,22 @@ public class CreatePatternWizard extends AbstractWizard {
     }
 
     @Override
-    protected ConnectionParameter getConnectionParameter() {
-
+    protected PatternParameter getParameter() {
         return this.parameter;
     }
 
+    @Override
+    protected String getEditorName() {
+        return PatternEditor.class.getName();
+    }
+
+    @Override
+    protected ResourceFileMap getResourceFileMap() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public PatternBuilder getPatternBuilder() {
+        return patternBuilder;
+    }
 }

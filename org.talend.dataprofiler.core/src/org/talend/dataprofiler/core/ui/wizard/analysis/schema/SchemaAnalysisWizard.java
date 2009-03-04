@@ -15,13 +15,14 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.schema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.AnalysisFilterWizard;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
-import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
@@ -42,7 +43,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
 
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
-        if (anaFilterParameter.getTdDataProvider() == null) {
+        if (getParameter().getTdDataProvider() == null) {
             tableAnaDPSelectionPage = new SchemaAnalysisDPSelectionPage();
             addPage(tableAnaDPSelectionPage);
         }
@@ -52,23 +53,32 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
     }
 
     @Override
-    protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
+    public ModelElement initCWMResourceBuilder() {
+        Analysis analysis = (Analysis) super.initCWMResourceBuilder();
 
-        PackagesAnalyisParameter packageParameter = (PackagesAnalyisParameter) anaFilterParameter;
-        TdDataProvider tdProvider = packageParameter.getTdDataProvider();
-        analysisBuilder.setAnalysisConnection(tdProvider);
-        Indicator[] indicators = new Indicator[packageParameter.getPackages().length];
-        int i = 0;
-        for (Package tdSchema : packageParameter.getPackages()) {
-            SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
-            // MOD xqliu 2009-1-21 feature 4715
-            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createSchemaIndicator);
-            createSchemaIndicator.setAnalyzedElement(tdSchema);
-            indicators[i] = createSchemaIndicator;
-            i++;
+        if (getAnalysisBuilder() != null) {
+            PackagesAnalyisParameter packageParameter = getParameter();
+            TdDataProvider tdProvider = packageParameter.getTdDataProvider();
+            getAnalysisBuilder().setAnalysisConnection(tdProvider);
+            Indicator[] indicators = new Indicator[packageParameter.getPackages().length];
+            int i = 0;
+            for (Package tdSchema : packageParameter.getPackages()) {
+                SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
+                // MOD xqliu 2009-1-21 feature 4715
+                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createSchemaIndicator);
+                createSchemaIndicator.setAnalyzedElement(tdSchema);
+                indicators[i] = createSchemaIndicator;
+                i++;
+            }
+            getAnalysisBuilder().addElementsToAnalyze(packageParameter.getPackages(), indicators);
         }
-        analysisBuilder.addElementsToAnalyze(packageParameter.getPackages(), indicators);
-        super.fillAnalysisBuilder(analysisBuilder);
+
+        return analysis;
     }
 
+    @Override
+    protected PackagesAnalyisParameter getParameter() {
+        // TODO Auto-generated method stub
+        return (PackagesAnalyisParameter) super.getParameter();
+    }
 }

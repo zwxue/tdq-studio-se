@@ -19,7 +19,10 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  * 
  * Contains messages often used in wizards or in other UI windows.
  */
-public class UIMessages {
+public final class UIMessages {
+
+    private UIMessages() {
+    }
 
     public static final String MSG_EMPTY_FIELD = DefaultMessagesImpl.getString("UIMessages.empty"); //$NON-NLS-1$
 
@@ -43,5 +46,7 @@ public class UIMessages {
 
     public static final String MSG_SELECT_GENERIC_JDBC = DefaultMessagesImpl.getString("UIMessages.GenericConnection") //$NON-NLS-1$
             + DefaultMessagesImpl.getString("UIMessages.CustomDriver"); //$NON-NLS-1$
+
+    public static final String MSG_ANALYSIS_SAME_NAME = "Warning! A Model with that name already exists! \n\n Do you want to keep this name (there will be two modeles with the same name) ?";
 
 }

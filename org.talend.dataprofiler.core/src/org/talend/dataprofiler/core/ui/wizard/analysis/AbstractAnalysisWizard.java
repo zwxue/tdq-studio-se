@@ -12,19 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.cwm.constants.DevelopmentStatus;
-import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -33,7 +24,9 @@ import org.talend.dq.analysis.AnalysisWriter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * AbstractAnalysisWizard can creat a empty analysis file.
@@ -42,106 +35,50 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
 
     static Logger log = Logger.getLogger(AbstractAnalysisWizard.class);
 
-    protected String analysisName;
-
     protected AnalysisType analysisType;
 
     private AnalysisParameter parameter;
 
-    /**
-     * The folder where to save the analysis.
-     */
-    protected IFolder folderResource;
+    private AnalysisBuilder analysisBuilder;
 
     public AbstractAnalysisWizard(AnalysisParameter parameter) {
         this.parameter = parameter;
     }
 
-    @Override
-    public boolean performFinish() {
-        this.fillAnalysisEditorParam();
-        if (!checkAnalysisEditorParam()) {
-            return false;
+    public ModelElement initCWMResourceBuilder() {
+        analysisBuilder = new AnalysisBuilder();
+        boolean analysisInitialized = analysisBuilder.initializeAnalysis(parameter.getName(), parameter.getAnalysisType());
+        if (analysisInitialized) {
+            return analysisBuilder.getAnalysis();
         }
 
-        try {
-            IFile file = createEmptyAnalysisFile();
-            if (file == null) {
-                return false;
-            }
-            CorePlugin.getDefault().openEditor(file, AnalysisEditor.class.getName());
-        } catch (Exception e) {
-            ExceptionHandler.process(e, Level.ERROR);
-        }
-        return true;
+        return null;
     }
 
-    protected abstract void fillAnalysisEditorParam();
-
-    private boolean checkAnalysisEditorParam() {
-        if (analysisType == null) {
-            log.error("The field 'analysisType' haven't assigned a value."); //$NON-NLS-1$
-            return false;
-        } else if (analysisName == null) {
-            log.error("The field 'analysisName' haven't assigned a value."); //$NON-NLS-1$
-            return false;
-        } else if (folderResource == null) {
-            log.error("The field 'fileURI' haven't assigned a value."); //$NON-NLS-1$
-            return false;
-        }
-        return true;
-    }
-
-    protected IFile createEmptyAnalysisFile() throws DataprofilerCoreException {
-        AnalysisBuilder analysisBuilder = new AnalysisBuilder();
-        boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, analysisType);
-        if (!analysisInitialized) {
-            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
-                    "AbstractAnalysisWizard.FaileInitialize", analysisName)); //$NON-NLS-1$
-        }
-        Analysis analysis = analysisBuilder.getAnalysis();
-        fillAnalysisBuilder(analysisBuilder);
+    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
         AnalysisWriter writer = new AnalysisWriter();
+        Analysis analysis = (Analysis) cwmElement;
 
-        TypedReturnCode<IFile> saved = writer.createAnalysisFile(analysis, folderResource);
-        IFile file;
-        if (saved.isOk()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + folderResource.getFullPath().toString()); //$NON-NLS-1$
-            }
-            file = saved.getObject();
-            Resource anaResource = analysis.eResource();
-            AnaResourceFileHelper.getInstance().register(file, anaResource);
-            AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
-        } else {
-            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
-                    "AbstractAnalysisWizard.saving", folderResource.getFullPath().toString(), saved.getMessage()));//$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        CorePlugin.getDefault().refreshWorkSpace();
-        ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
-
-        return file;
-
-    }
-
-    protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
-
-        String analysisStatue = parameter.getAnalysisStatus();
-        String analysisAuthor = parameter.getAnalysisAuthor();
-        String analysisPurpse = parameter.getAnalysisPurpose();
-        String analysisDescription = parameter.getAnalysisDescription();
-
-        Analysis analysis = analysisBuilder.getAnalysis();
-        TaggedValueHelper.setDevStatus(analysis, DevelopmentStatus.get(analysisStatue));
-        TaggedValueHelper.setAuthor(analysis, analysisAuthor);
-        TaggedValueHelper.setPurpose(analysisPurpse, analysis);
-        TaggedValueHelper.setDescription(analysisDescription, analysis);
+        IFolder folderResource = parameter.getFolderProvider().getFolderResource();
+        return writer.createAnalysisFile(analysis, folderResource);
     }
 
     @Override
-    protected ConnectionParameter getConnectionParameter() {
+    protected String getEditorName() {
+        return AnalysisEditor.class.getName();
+    }
 
+    @Override
+    protected ResourceFileMap getResourceFileMap() {
+        return AnaResourceFileHelper.getInstance();
+    }
+
+    @Override
+    protected ConnectionParameter getParameter() {
         return this.parameter;
+    }
+
+    public AnalysisBuilder getAnalysisBuilder() {
+        return analysisBuilder;
     }
 }

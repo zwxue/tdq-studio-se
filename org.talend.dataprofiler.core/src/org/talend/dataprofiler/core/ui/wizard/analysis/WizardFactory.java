@@ -30,16 +30,21 @@ import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.analysis.parameters.DQRulesParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
+import org.talend.dq.analysis.parameters.PatternParameter;
+import org.talend.dq.analysis.parameters.SqlFileParameter;
 
 /**
  * @author zqin
  * 
  */
-public class WizardFactory {
+public final class WizardFactory {
+
+    private WizardFactory() {
+    }
 
     public static Wizard createAnalysisWizard(AnalysisType type, AnalysisParameter parameter) {
         assert type != null;
@@ -115,12 +120,12 @@ public class WizardFactory {
      * @param parameter
      * @return
      */
-    public static NewDQRulesWizard createNewDQRuleWizard(ConnectionParameter parameter) {
+    public static NewDQRulesWizard createNewDQRuleWizard(DQRulesParameter parameter) {
         return new NewDQRulesWizard(parameter);
     }
 
     public static Wizard createSqlFileWizard(IFolder folder) {
-        ConnectionParameter parameter = new AnalysisFilterParameter();
+        SqlFileParameter parameter = new SqlFileParameter();
         FolderProvider folderProvider = parameter.getFolderProvider();
         if (folderProvider == null) {
             folderProvider = new FolderProvider();
@@ -135,17 +140,16 @@ public class WizardFactory {
         return createPatternWizard(type, null);
     }
 
-    public static Wizard createPatternWizard(ExpressionType type, ConnectionParameter parameter) {
+    public static Wizard createPatternWizard(ExpressionType type, PatternParameter parameter) {
         if (parameter == null) {
-            parameter = new ConnectionParameter();
+            parameter = new PatternParameter();
         }
         return new CreatePatternWizard(parameter, type);
     }
 
-    public static Wizard createPatternWizard(ExpressionType type, ConnectionParameter parameter, String expression,
-            String language) {
+    public static Wizard createPatternWizard(ExpressionType type, PatternParameter parameter, String expression, String language) {
         if (parameter == null) {
-            parameter = new ConnectionParameter();
+            parameter = new PatternParameter();
         }
         return new CreatePatternWizard(parameter, type, expression, language);
     }

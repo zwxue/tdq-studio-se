@@ -12,61 +12,43 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.dqrules;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IPath;
-import org.talend.commons.emf.EMFSharedResources;
-import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.constants.DevelopmentStatus;
-import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
-import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
-import org.talend.dq.analysis.parameters.ConnectionParameter;
+import org.talend.dq.analysis.parameters.DQRulesParameter;
+import org.talend.dq.dqrule.DqRuleBuilder;
+import org.talend.dq.dqrule.DqRuleWriter;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class NewDQRulesWizard extends AbstractWizard {
 
-    private static Logger log = Logger.getLogger(NewDQRulesWizard.class);
-
     private NewDQRulesWizardPage1 mPage;
 
     private NewDQRulesWizardPage2 mPage2;
 
-    @Override
-    public boolean canFinish() {
-        if (mPage2 != null) {
-            if (mPage2.getWhereText() != null) {
-                if (mPage2.getWhereText().getText() != null && !"".equals(mPage2.getWhereText().getText())) {
-                    return mPage2.isPageComplete();
-                }
-            }
-        }
-        return false;
-    }
-
-    private ConnectionParameter parameter;
-
-    private IPath location;
+    private DQRulesParameter parameter;
 
     private Expression expression;
 
-    private final static String EXPRESSION_BODY = "SELECT COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>";
+    private static final String EXPRESSION_BODY = "SELECT COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>";
 
-    private final static String EXPRESSION_LANG = ExecutionLanguage.SQL.getLiteral();
+    private static final String EXPRESSION_LANG = ExecutionLanguage.SQL.getLiteral();
 
     // default value of Criticality Level
     private static final int CRITICALITY_LEVEL_DEFAULT = 1;
 
-    public NewDQRulesWizard(ConnectionParameter parameter) {
+    public NewDQRulesWizard(DQRulesParameter parameter) {
         this.parameter = parameter;
     }
 
@@ -87,40 +69,25 @@ public class NewDQRulesWizard extends AbstractWizard {
         addPage(mPage2);
     }
 
-    @Override
-    protected ConnectionParameter getConnectionParameter() {
-        return this.parameter;
-    }
+    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+        WhereRule whereRule = (WhereRule) cwmElement;
 
-    @Override
-    public boolean performFinish() {
-
-        WhereRule whereRule = RulesFactory.eINSTANCE.createWhereRule();
-        String name = parameter.getName();
-        whereRule.setName(name);
-        String whereClause = mPage2.getWhereText().getText();
-        whereRule.setWhereExpression(whereClause);
+        whereRule.setWhereExpression(parameter.getWhereClause());
         whereRule.setCriticalityLevel(CRITICALITY_LEVEL_DEFAULT);
         whereRule.getSqlGenericExpression().add(getExpression());
 
-        TaggedValueHelper.setAuthor(whereRule, parameter.getAuthor());
-        TaggedValueHelper.setDescription(parameter.getDescription(), whereRule);
-        TaggedValueHelper.setPurpose(parameter.getPurpose(), whereRule);
-        TaggedValueHelper.setDevStatus(whereRule, DevelopmentStatus.get(parameter.getStatus()));
-        TaggedValueHelper.setValidStatus(true, whereRule);
+        IFolder folder = parameter.getFolderProvider().getFolderResource();
+        return DqRuleWriter.getInstance().createDqRuleFile(whereRule, folder);
+    }
 
-        String fname = DqRepositoryViewService.createFilename(name, FactoriesUtil.DQRULE);
-        IFolder folderResource = parameter.getFolderProvider().getFolderResource();
-        IFile file = folderResource.getFile(fname);
-        location = file.getFullPath();
-        if (file.exists()) {
-            log.error(DefaultMessagesImpl.getString("CreatePatternWizard.cannotSavePattern", name, file.getFullPath()));
-            return false;
+    public ModelElement initCWMResourceBuilder() {
+        DqRuleBuilder ruleBuilder = new DqRuleBuilder();
+
+        boolean ruleInitialized = ruleBuilder.initializeDqRuleBuilder(parameter.getName());
+        if (ruleInitialized) {
+            return ruleBuilder.getWhereRule();
         }
-
-        EMFSharedResources.getInstance().addEObjectToResourceSet(file.getFullPath().toString(), whereRule);
-        EMFSharedResources.getInstance().saveLastResource();
-        return true;
+        return null;
     }
 
     public Expression getExpression() {
@@ -130,12 +97,31 @@ public class NewDQRulesWizard extends AbstractWizard {
         return expression;
     }
 
-    /**
-     * Getter for location.
-     * 
-     * @return the location
-     */
-    public IPath getLocation() {
-        return this.location;
+    @Override
+    protected String getEditorName() {
+        return DQRuleEditor.class.getName();
+    }
+
+    @Override
+    protected DQRulesParameter getParameter() {
+        return parameter;
+    }
+
+    @Override
+    protected ResourceFileMap getResourceFileMap() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean canFinish() {
+        if (mPage2 != null) {
+            if (getParameter().getWhereClause() != null) {
+                if (getParameter().getWhereClause() != null && !"".equals(getParameter().getWhereClause())) {
+                    return mPage2.isPageComplete();
+                }
+            }
+        }
+        return false;
     }
 }

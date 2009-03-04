@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
+import org.talend.dq.analysis.parameters.DQRulesParameter;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -29,10 +30,6 @@ import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 public class NewDQRulesWizardPage2 extends AbstractWizardPage {
 
     protected Text whereText;
-
-    public Text getWhereText() {
-        return whereText;
-    }
 
     public NewDQRulesWizardPage2() {
         setPageComplete(true);
@@ -50,16 +47,27 @@ public class NewDQRulesWizardPage2 extends AbstractWizardPage {
         whereText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         GridData data = new GridData(GridData.FILL_BOTH);
         whereText.setLayoutData(data);
+
+        addListeners();
+
+        setControl(container);
+    }
+
+    /**
+     * DOC bzhou Comment method "addListeners".
+     */
+    private void addListeners() {
         whereText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                if (whereText.getText() != null && !"".equals(whereText.getText())) {
+                String whereExpression = whereText.getText();
+                if (whereExpression != null && !"".equals(whereExpression)) {
                     setPageComplete(checkFieldsValue());
+
+                    ((DQRulesParameter) getParameter()).setWhereClause(whereExpression);
                 }
             }
         });
-
-        setControl(container);
     }
 
     public boolean checkFieldsValue() {

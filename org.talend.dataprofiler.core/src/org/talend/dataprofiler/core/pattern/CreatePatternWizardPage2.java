@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.dq.analysis.parameters.PatternParameter;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -90,23 +91,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         expressionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         setControl(container);
         expressionText.setText(expression == null ? PluginConstant.EMPTY_STRING : expression);
-        expressionText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent e) {
-                checkFieldsValue();
-                if (isStatusOnValid()) {
-                    setPageComplete(true);
-                }
-            }
-        });
-        if (getControl() != null) {
-            try {
-                PlatformUI.getWorkbench().getHelpSystem()
-                        .setHelp(getControl(), HelpPlugin.getDefault().getPatternHelpContextID());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         nameLab = new Label(container, SWT.NONE);
         nameLab.setText(DefaultMessagesImpl.getString("CreatePatternWizardPage2.languageSelection")); //$NON-NLS-1$
         String[] types = PatternLanguageType.getAllLanguageTypes();
@@ -118,27 +103,50 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         } else {
             comboLang.setText(language);
         }
+
+        addHelpSurpport();
+
+        addListeners();
+
         if (!checkFieldsValue()) {
             this.setPageComplete(false);
         }
     }
 
     /**
-     * Getter for nameText.
-     * 
-     * @return the nameText
+     * DOC bzhou Comment method "addHelpSurpport".
      */
-    public Text getExpressionText() {
-        return this.expressionText;
+    private void addHelpSurpport() {
+        if (getControl() != null) {
+            try {
+                PlatformUI.getWorkbench().getHelpSystem()
+                        .setHelp(getControl(), HelpPlugin.getDefault().getPatternHelpContextID());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    /**
-     * Getter for comboLang.
-     * 
-     * @return the comboLang
-     */
-    public String getComboLang() {
-        return this.comboLang.getText();
+    private void addListeners() {
+        expressionText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                checkFieldsValue();
+                if (isStatusOnValid()) {
+                    PatternParameter parameter = (PatternParameter) getParameter();
+                    parameter.setExpression(expressionText.getText());
+                    setPageComplete(true);
+                }
+            }
+        });
+
+        comboLang.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                PatternParameter parameter = (PatternParameter) getParameter();
+                parameter.setLanguage(comboLang.getText());
+            }
+        });
     }
 
     @Override

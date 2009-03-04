@@ -12,28 +12,21 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.help.IHelpResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.domain.pattern.ExpressionType;
-import org.talend.dq.analysis.parameters.ConnectionParameter;
+import org.talend.dq.analysis.parameters.PatternParameter;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -84,7 +77,7 @@ public class CreatePatternAction extends Action {
      */
     @Override
     public void run() {
-        ConnectionParameter parameter = new ConnectionParameter();
+        PatternParameter parameter = new PatternParameter();
         FolderProvider folderProvider = new FolderProvider();
         folderProvider.setFolderResource(folder);
         parameter.setFolderProvider(folderProvider);
@@ -107,15 +100,6 @@ public class CreatePatternAction extends Action {
         }
         WizardDialog dialog = new OpeningHelpWizardDialog(Display.getDefault().getActiveShell(), fileWizard, href);
         fileWizard.setWindowTitle(getText());
-        if (WizardDialog.OK == dialog.open()) {
-            try {
-                folder.refreshLocal(IResource.DEPTH_INFINITE, null);
-                IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fileWizard.getLocation());
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file),
-                        PluginConstant.PATTERN_EDITOR);
-            } catch (CoreException e) {
-                e.printStackTrace();
-            }
-        }
+        dialog.open();
     }
 }

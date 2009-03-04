@@ -15,23 +15,22 @@ package org.talend.dataprofiler.core.ui.wizard.database;
 import java.util.LinkedList;
 
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.talend.cwm.management.api.ConnectionService;
-import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.eclipse.core.resources.IFolder;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
-import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.connection.DataProviderBuilder;
+import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DatabaseWizard present the DatabaseForm. Use to manage the metadata connection.
@@ -46,6 +45,8 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     private ManagedDriver driver;
 
+    private String driverPathes;
+
     /**
      * Constructor for DatabaseWizard. Analyse Iselection to extract DatabaseConnection and the pathToSave. Start the
      * Lock Strategy.
@@ -55,6 +56,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      */
     public DatabaseConnectionWizard(DBConnectionParameter connectionParam) {
         this.connectionParam = connectionParam;
+        this.driverPathes = connectionParam.getDriverPath();
     }
 
     /**
@@ -83,85 +85,72 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     }
 
-    /**
-     * This method is called when 'Finish' button is pressed in the wizard. Save metadata close Lock Strategy and close
-     * wizard.
-     */
-    public boolean performFinish() {
-        if (connectionParam.getDriverPath() != null) {
-            int repeatDriverCount = 0;
-            driver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
+    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+        TdDataProvider dataProvider = (TdDataProvider) cwmElement;
 
-            // CorePlugin.getDefault().getPreferenceStore().putValue("DRIVERPATHS", connectionParam.getDriverPath());
-            // CorePlugin.getDefault().getPreferenceStore().putValue("DRIVERNAME",
-            // connectionParam.getDriverClassName());
-            // CorePlugin.getDefault().getPreferenceStore().putValue("DRIVERURL", connectionParam.getJdbcUrl());
-            LinkedList<String> driverFile = new LinkedList<String>();
-            for (String driverpath : connectionParam.getDriverPath().split(";")) { //$NON-NLS-1$
-                driverFile.add(driverpath);
-            }
-            String newDriverName = connectionParam.getJdbcUrl().substring(0, 10);
-            for (ManagedDriver checkedDriver : SQLExplorerPlugin.getDefault().getDriverModel().getDrivers()) {
-                String driverName = checkedDriver.getName();
-                if (driverName != null && driverName.trim().equals(newDriverName.trim())) {
-                    newDriverName += repeatDriverCount++;
-                }
-            }
-            driver.setName(connectionParam.getJdbcUrl().substring(0, 12));
-            driver.setJars(driverFile);
-            driver.setDriverClassName(connectionParam.getDriverClassName());
-            driver.setUrl(connectionParam.getJdbcUrl());
-            SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
-
+        IFolder folder = connectionParam.getFolderProvider().getFolderResource();
+        TypedReturnCode<IFile> save = DataProviderWriter.getInstance().createDataProviderFile(dataProvider, folder);
+        if (save.isOk() && driver != null) {
+            storeInfoToPerference(dataProvider);
         }
-        TypedReturnCode<TdDataProvider> rc = ConnectionService.createConnection(this.connectionParam);
-        if (!rc.isOk()) {
-            if (driver != null) {
-                SQLExplorerPlugin.getDefault().getDriverModel().removeDriver(driver);
-            }
-            MessageDialog
-                    .openInformation(
-                            getShell(),
-                            DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnections"), DefaultMessagesImpl.getString("DatabaseConnectionWizard.createConnectionFailure", rc.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
-            return false;
-        }
-        // MOD scorreia 2009-01-09 password decryption is handled elsewhere
-        // TdDataProvider dataProvider = PasswordHelper.encryptDataProvider2(rc.getObject());
-        TdDataProvider dataProvider = rc.getObject();
+        return save;
+    }
 
-        // MODSCA 2008-03-10 save the provider
-        IFile returnFile = DqRepositoryViewService.saveDataProviderAndStructure(dataProvider, this.connectionParam
-                .getFolderProvider());
-        PrvResourceFileHelper.getInstance().register(returnFile, dataProvider.eResource());
+    public ModelElement initCWMResourceBuilder() {
+        DataProviderBuilder dpBuilder = new DataProviderBuilder();
 
-        if (returnFile != null) {
-            CorePlugin.getDefault().refreshWorkSpace();
-            ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
-            CorePlugin.getDefault().openEditor(returnFile, ConnectionEditor.class.getName());
-        }
-        if (connectionParam.getDriverPath() != null) {
-            StringBuilder driverPara = new StringBuilder();
-            if (CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") != null //$NON-NLS-1$
-                    && !CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
-                driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{" //$NON-NLS-1$ //$NON-NLS-2$
-                        + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
-                        + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
-                        + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
-            } else {
-                driverPara.append("{" //$NON-NLS-1$
-                        + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
-                        + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
-                        + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (driverPathes != null) {
+            LinkedList<String> jars = new LinkedList<String>();
+            for (String driverpath : driverPathes.split(";")) { //$NON-NLS-1$
+                jars.add(driverpath);
             }
-            CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString()); //$NON-NLS-1$
+
+            String name = connectionParam.getJdbcUrl().substring(0, 12);
+            driver = dpBuilder.buildDriverForSQLExploer(name, connectionParam.getDriverClassName(), connectionParam.getJdbcUrl(),
+                    jars);
         }
 
-        return true;
+        boolean dpInitialized = dpBuilder.initializeDataProvider(connectionParam);
+
+        if (dpInitialized) {
+            return dpBuilder.getDataProvider();
+        }
+
+        return null;
     }
 
     @Override
-    protected ConnectionParameter getConnectionParameter() {
-
+    protected DBConnectionParameter getParameter() {
         return this.connectionParam;
+    }
+
+    @Override
+    protected String getEditorName() {
+        return ConnectionEditor.class.getName();
+    }
+
+    @Override
+    protected ResourceFileMap getResourceFileMap() {
+        return PrvResourceFileHelper.getInstance();
+    }
+
+    private void storeInfoToPerference(TdDataProvider dataProvider) {
+        if (connectionParam == null || driver == null || dataProvider == null) {
+            return;
+        }
+        StringBuilder driverPara = new StringBuilder();
+        if (CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") != null //$NON-NLS-1$
+                && !CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+            driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{" //$NON-NLS-1$ //$NON-NLS-2$
+                    + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
+                    + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
+                    + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
+        } else {
+            driverPara.append("{" //$NON-NLS-1$
+                    + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
+                    + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
+                    + dataProvider.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString()); //$NON-NLS-1$
     }
 }

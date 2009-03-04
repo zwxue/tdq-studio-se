@@ -126,6 +126,6 @@ public abstract class AbstractWizardPage extends WizardPage {
     }
 
     protected ConnectionParameter getParameter() {
-        return ((AbstractWizard) getWizard()).getConnectionParameter();
+        return ((AbstractWizard) getWizard()).getParameter();
     }
 }

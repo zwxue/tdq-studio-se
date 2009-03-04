@@ -15,13 +15,14 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.AnalysisFilterWizard;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
-import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
@@ -48,7 +49,7 @@ public class TableAnalysisWizard extends AnalysisFilterWizard {
 
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
-        if (anaFilterParameter.getTdDataProvider() == null) {
+        if (getParameter().getTdDataProvider() == null) {
             tableAnaDPSelectionPage = new TableAnalysisDPSelectionPage();
             tableAnaDPSelectionPage.setCanFinishEarly(true);
             addPage(tableAnaDPSelectionPage);
@@ -56,22 +57,29 @@ public class TableAnalysisWizard extends AnalysisFilterWizard {
     }
 
     @Override
-    protected void fillAnalysisBuilder(AnalysisBuilder analysisBuilder) {
+    public ModelElement initCWMResourceBuilder() {
+        Analysis analysis = (Analysis) super.initCWMResourceBuilder();
 
-        NamedColumnSetAnalysisParameter namedColumnSetParameter = (NamedColumnSetAnalysisParameter) anaFilterParameter;
-        TdDataProvider tdProvider = namedColumnSetParameter.getTdDataProvider();
-        analysisBuilder.setAnalysisConnection(tdProvider);
-        Indicator[] indicators = new Indicator[namedColumnSetParameter.getNamedColumnSets().length];
-        int i = 0;
-        for (NamedColumnSet namedColumnSet : namedColumnSetParameter.getNamedColumnSets()) {
-            RowCountIndicator createIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
-            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createIndicator);
-            createIndicator.setAnalyzedElement(namedColumnSet);
-            indicators[i] = createIndicator;
-            i++;
+        if (getAnalysisBuilder() != null) {
+            TdDataProvider tdProvider = getParameter().getTdDataProvider();
+            getAnalysisBuilder().setAnalysisConnection(tdProvider);
+            Indicator[] indicators = new Indicator[getParameter().getNamedColumnSets().length];
+            int i = 0;
+            for (NamedColumnSet namedColumnSet : getParameter().getNamedColumnSets()) {
+                RowCountIndicator createIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
+                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createIndicator);
+                createIndicator.setAnalyzedElement(namedColumnSet);
+                indicators[i] = createIndicator;
+                i++;
+            }
+            getAnalysisBuilder().addElementsToAnalyze(getParameter().getNamedColumnSets(), indicators);
         }
-        analysisBuilder.addElementsToAnalyze(namedColumnSetParameter.getNamedColumnSets(), indicators);
-        super.fillAnalysisBuilder(analysisBuilder);
+
+        return analysis;
     }
 
+    @Override
+    protected NamedColumnSetAnalysisParameter getParameter() {
+        return (NamedColumnSetAnalysisParameter) super.getParameter();
+    }
 }

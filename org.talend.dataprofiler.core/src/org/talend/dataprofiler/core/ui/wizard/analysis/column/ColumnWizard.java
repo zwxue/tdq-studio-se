@@ -23,8 +23,6 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
  */
 public class ColumnWizard extends AbstractAnalysisWizard {
 
-    private AnalysisParameter parameter;
-
     private WizardPage[] extenalPages;
 
     public WizardPage[] getExtenalPages() {
@@ -40,7 +38,6 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     public ColumnWizard(AnalysisParameter parameter) {
         super(parameter);
-        this.parameter = parameter;
     }
 
     /*
@@ -55,12 +52,5 @@ public class ColumnWizard extends AbstractAnalysisWizard {
         for (WizardPage page : getExtenalPages()) {
             addPage(page);
         }
-    }
-
-    @Override
-    protected void fillAnalysisEditorParam() {
-        this.analysisName = parameter.getAnalysisName();
-        this.analysisType = parameter.getAnalysisType();
-        this.folderResource = parameter.getFolderProvider().getFolderResource();
     }
 }
