@@ -806,6 +806,12 @@
            name="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
            version="1.2.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.EncryptAndDecryptPasswordTask"
+           id="org.talend.dataprofiler.core.migration.impl.EncryptAndDecryptPasswordTask"
+           name="org.talend.dataprofiler.core.migration.impl.EncryptAndDecryptPasswordTask"
+           version="1.2.0">
+     </workspacetask>
   </extension>
 
 </plugin>
