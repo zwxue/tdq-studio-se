@@ -14,12 +14,15 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -28,6 +31,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
@@ -43,6 +47,7 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.factories.PatternIndicatorFactory;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -116,6 +121,12 @@ public final class PatternUtilities {
      */
     public static IndicatorUnit createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis) {
         Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(pfile);
+
+        for (Indicator indicator : columnIndicator.getIndicators()) {
+            if (pattern.getName().equals(indicator.getName())) {
+                return null;
+            }
+        }
 
         // MOD scorreia 2009-01-06: when expression type is not set (version TOP-1.1.x), then it's supposed to be a
         // regexp pattern. This could be false because expression type was not set into SQL pattern neither in TOP-1.1.
@@ -218,5 +229,60 @@ public final class PatternUtilities {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static IFile[] getPatternFileByIndicator(ColumnIndicator clmIndicator) {
+        Indicator[] patternIndicators = clmIndicator.getPatternIndicators();
+        List<IFile> existedPatternFiles = new ArrayList<IFile>();
+
+        if (patternIndicators.length != 0) {
+            for (Indicator patternIndicator : patternIndicators) {
+                PatternMatchingIndicator ptnIndicaotr = (PatternMatchingIndicator) patternIndicator;
+                List<Pattern> patterns = ptnIndicaotr.getParameters().getDataValidDomain().getPatterns();
+                for (Pattern pattern : patterns) {
+                    for (IFile file : getAllPatternFiles()) {
+                        Pattern fpattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                        if (pattern.getName().equals(fpattern.getName())) {
+                            existedPatternFiles.add(file);
+                        }
+                    }
+                }
+            }
+        }
+
+        return existedPatternFiles.toArray(new IFile[existedPatternFiles.size()]);
+    }
+
+    private static Set<IFile> getNestedPatternFiles(Set<IFile> list, IFolder folder) {
+        try {
+            for (IResource resource : folder.members()) {
+                if (resource instanceof IFile) {
+                    IFile file = (IFile) resource;
+                    if (file.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+                        list.add((IFile) resource);
+                    }
+                } else {
+                    getNestedPatternFiles(list, (IFolder) resource);
+                }
+            }
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    private static List<IFile> getAllPatternFiles() {
+        List<IFile> patternFiles = new ArrayList<IFile>();
+
+        IProject libProject = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES);
+        IFolder pfolder = libProject.getFolder(DQStructureManager.PATTERNS);
+        IFolder sfolder = libProject.getFolder(DQStructureManager.SQL_PATTERNS);
+
+        Set<IFile> list = new HashSet<IFile>();
+        patternFiles.addAll(getNestedPatternFiles(list, pfolder));
+        patternFiles.addAll(getNestedPatternFiles(list, sfolder));
+
+        return patternFiles;
     }
 }

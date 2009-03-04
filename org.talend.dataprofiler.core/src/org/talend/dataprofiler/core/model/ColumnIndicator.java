@@ -34,6 +34,7 @@ import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
@@ -534,5 +535,17 @@ public class ColumnIndicator {
         for (IndicatorEnum indicatorEnum : src) {
             dest.add(indicatorEnum);
         }
+    }
+
+    public Indicator[] getPatternIndicators() {
+        List<Indicator> patternIndicators = new ArrayList<Indicator>();
+
+        for (Indicator indicator : getIndicators()) {
+            if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicator.eClass())) {
+                patternIndicators.add(indicator);
+            }
+        }
+
+        return patternIndicators.toArray(new Indicator[patternIndicators.size()]);
     }
 }

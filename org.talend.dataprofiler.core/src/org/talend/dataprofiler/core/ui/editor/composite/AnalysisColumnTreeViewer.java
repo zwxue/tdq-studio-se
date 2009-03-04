@@ -85,6 +85,7 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -107,6 +108,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
@@ -262,27 +264,39 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         this.addItemElements(elements);
     }
 
+    // -----------------begin to create sub controls for every column--------------
+    private CCombo combo;
+
+    private Button addPatternBtn;
+
+    private Label del;
+
+    private ColumnIndicator clmIndicator;
+
+    private TreeItem elementItem;
+
     private void addItemElements(final ColumnIndicator[] elements) {
         for (int i = 0; i < elements.length; i++) {
-            final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
+            elementItem = new TreeItem(tree, SWT.NONE);
+            clmIndicator = (ColumnIndicator) elements[i];
 
-            final ColumnIndicator columnIndicator = (ColumnIndicator) elements[i];
+            String columnName = clmIndicator.getTdColumn().getName();
 
-            treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
-            String columnName = columnIndicator.getTdColumn().getName();
-            treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
-                    + columnIndicator.getTdColumn().getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
-            treeItem.setData(COLUMN_INDICATOR_KEY, columnIndicator);
+            elementItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
+            elementItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING
+                    + PluginConstant.PARENTHESIS_LEFT + clmIndicator.getTdColumn().getSqlDataType().getName()
+                    + PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
+            elementItem.setData(COLUMN_INDICATOR_KEY, clmIndicator);
 
             TreeEditor comboEditor = new TreeEditor(tree);
-            final CCombo combo = new CCombo(tree, SWT.BORDER);
+            combo = new CCombo(tree, SWT.BORDER);
             for (DataminingType type : DataminingType.values()) {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
                 // for presentation
             }
-            DataminingType dataminingType = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
+            DataminingType dataminingType = MetadataHelper.getDataminingType(clmIndicator.getTdColumn());
             if (dataminingType == null) {
-                dataminingType = MetadataHelper.getDefaultDataminingType(columnIndicator.getTdColumn().getJavaType());
+                dataminingType = MetadataHelper.getDefaultDataminingType(clmIndicator.getTdColumn().getJavaType());
             }
 
             if (dataminingType == null) {
@@ -290,136 +304,174 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             } else {
                 combo.setText(dataminingType.getLiteral());
             }
-            combo.addSelectionListener(new SelectionAdapter() {
 
-                public void widgetSelected(SelectionEvent e) {
-                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), columnIndicator.getTdColumn());
-                    setDirty(true);
-                }
-
-            });
             combo.setEditable(false);
 
             comboEditor.minimumWidth = WIDTH1_CELL;
-            comboEditor.setEditor(combo, treeItem, 1);
+            comboEditor.setEditor(combo, elementItem, 1);
 
             TreeEditor addPatternEditor = new TreeEditor(tree);
-            Button addPatternBtn = new Button(tree, SWT.NONE);
+            addPatternBtn = new Button(tree, SWT.NONE);
             addPatternBtn.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
             addPatternBtn.pack();
-            addPatternBtn.addSelectionListener(new SelectionAdapter() {
 
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
-                            new WorkbenchContentProvider());
-
-                    IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                            DQStructureManager.LIBRARIES);
-                    dialog.setInput(defaultPatternFolder);
-                    dialog.setValidator(new ISelectionStatusValidator() {
-
-                        /*
-                         * (non-Javadoc)
-                         * 
-                         * @see org.eclipse.ui.dialogs.ISelectionStatusValidator# validate(java.lang.Object[])
-                         */
-                        public IStatus validate(Object[] selection) {
-                            IStatus status = Status.OK_STATUS;
-                            for (Object patte : selection) {
-                                if (patte instanceof IFile) {
-                                    IFile file = (IFile) patte;
-                                    if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
-                                        Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                                        boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
-                                        if (!validStatus) {
-                                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
-                                                    .getString("AnalysisColumnTreeViewer.chooseValidPatterns")); //$NON-NLS-1$
-                                        }
-                                    }
-                                }
-                            }
-                            return status;
-                        }
-
-                    });
-                    dialog.addFilter(new ViewerFilter() {
-
-                        /*
-                         * (non-Javadoc)
-                         * 
-                         * @see org.eclipse.jface.viewers.ViewerFilter#select(org .eclipse.jface.viewers.Viewer,
-                         * java.lang.Object, java.lang.Object)
-                         */
-                        @Override
-                        public boolean select(Viewer viewer, Object parentElement, Object element) {
-                            if (element instanceof IFile) {
-                                IFile file = (IFile) element;
-                                if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
-                                    return true;
-                                }
-                            } else if (element instanceof IFolder) {
-                                IFolder folder = (IFolder) element;
-                                return PatternUtilities.isLibraiesSubfolder(folder, DQStructureManager.PATTERNS,
-                                        DQStructureManager.SQL_PATTERNS);
-                            }
-                            return false;
-                        }
-                    });
-                    dialog.setContainerMode(true);
-                    dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patternSelector")); //$NON-NLS-1$
-                    dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patterns")); //$NON-NLS-1$
-                    dialog.setSize(80, 30);
-                    dialog.create();
-                    if (dialog.open() == Window.OK) {
-                        for (Object obj : dialog.getResult()) {
-                            if (obj instanceof IFile) {
-                                IFile file = (IFile) obj;
-                                IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, columnIndicator,
-                                        getAnalysis());
-                                if (addIndicatorUnit != null) {
-                                    createOneUnit(treeItem, addIndicatorUnit);
-                                    setDirty(true);
-                                }
-                            }
-                        }
-                    }
-                }
-
-            });
             addPatternEditor.minimumWidth = WIDTH1_CELL;
-            addPatternEditor.setEditor(addPatternBtn, treeItem, 2);
+            addPatternEditor.setEditor(addPatternBtn, elementItem, 2);
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
-            Label delLabel = new Label(tree, SWT.NONE);
-            delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
-            delLabel.pack();
-            delLabel.addMouseListener(new MouseAdapter() {
-
-                @Override
-                public void mouseDown(MouseEvent e) {
-                    deleteColumnItems(columnIndicator);
-                    if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
-                        setElements(columnIndicators);
-                    } else {
-                        removeItemBranch(treeItem);
-                    }
-                }
-
-            });
+            del = new Label(tree, SWT.NONE);
+            del.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+            del.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+            del.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
+            del.pack();
 
             delLabelEditor.minimumWidth = WIDTH1_CELL;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
-            delLabelEditor.setEditor(delLabel, treeItem, 3);
-            treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor, addPatternEditor });
-            if (columnIndicator.hasIndicators()) {
-                createIndicatorItems(treeItem, columnIndicator.getIndicatorUnits());
+            delLabelEditor.setEditor(del, elementItem, 3);
+            elementItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor, addPatternEditor });
+            if (clmIndicator.hasIndicators()) {
+                createIndicatorItems(elementItem, clmIndicator.getIndicatorUnits());
             }
-            treeItem.setExpanded(true);
+            elementItem.setExpanded(true);
+
+            addItemElementListeners();
         }
         this.setDirty(true);
+    }
+
+    private void addItemElementListeners() {
+        combo.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), clmIndicator.getTdColumn());
+                setDirty(true);
+            }
+
+        });
+
+        addPatternBtn.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                DataManager dm = getAnalysis().getContext().getConnection();
+                if (dm == null) {
+                    masterPage.doSave(null);
+                }
+
+                IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES);
+
+                CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
+                        new WorkbenchContentProvider());
+
+                dialog.setInput(defaultPatternFolder);
+                dialog.setValidator(getPatternValidator());
+                dialog.addFilter(getPatternViewerFilter());
+                dialog.setContainerMode(true);
+                dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patternSelector")); //$NON-NLS-1$
+                dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patterns")); //$NON-NLS-1$
+                dialog.setSize(80, 30);
+
+                // IFile[] selectedFiles = PatternUtilities.getPatternFileByIndicator(clmIndicator);
+                // dialog.setInitialSelections(selectedFiles);
+
+                if (dialog.open() == Window.OK) {
+                    for (Object obj : dialog.getResult()) {
+                        if (obj instanceof IFile) {
+                            IFile file = (IFile) obj;
+                            IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, clmIndicator,
+                                    getAnalysis());
+
+                            if (addIndicatorUnit != null) {
+                                createOneUnit(elementItem, addIndicatorUnit);
+                                setDirty(true);
+                            } else {
+                                MessageUI.openError(file.getName() + "\n\nThis indicator is already selected for this column.");
+                            }
+                        }
+                    }
+                }
+            }
+
+            /**
+             * DOC bzhou Comment method "patternViewerFilter".
+             * 
+             * @return
+             */
+            private ViewerFilter getPatternViewerFilter() {
+                return new ViewerFilter() {
+
+                    /*
+                     * (non-Javadoc)
+                     * 
+                     * @see org.eclipse.jface.viewers.ViewerFilter#select(org .eclipse.jface.viewers.Viewer,
+                     * java.lang.Object, java.lang.Object)
+                     */
+                    @Override
+                    public boolean select(Viewer viewer, Object parentElement, Object element) {
+                        if (element instanceof IFile) {
+                            IFile file = (IFile) element;
+                            if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
+                                return true;
+                            }
+                        } else if (element instanceof IFolder) {
+                            IFolder folder = (IFolder) element;
+                            return PatternUtilities.isLibraiesSubfolder(folder, DQStructureManager.PATTERNS,
+                                    DQStructureManager.SQL_PATTERNS);
+                        }
+                        return false;
+                    }
+                };
+            }
+
+            /**
+             * DOC bzhou Comment method "patternValidator".
+             * 
+             * @return
+             */
+            private ISelectionStatusValidator getPatternValidator() {
+                return new ISelectionStatusValidator() {
+
+                    /*
+                     * (non-Javadoc)
+                     * 
+                     * @see org.eclipse.ui.dialogs.ISelectionStatusValidator# validate(java.lang.Object[])
+                     */
+                    public IStatus validate(Object[] selection) {
+                        IStatus status = Status.OK_STATUS;
+                        for (Object patte : selection) {
+                            if (patte instanceof IFile) {
+                                IFile file = (IFile) patte;
+                                if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
+                                    Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                                    boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
+                                    if (!validStatus) {
+                                        status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                                .getString("AnalysisColumnTreeViewer.chooseValidPatterns")); //$NON-NLS-1$
+                                    }
+                                }
+                            }
+                        }
+                        return status;
+                    }
+
+                };
+            }
+
+        });
+
+        del.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseDown(MouseEvent e) {
+                deleteColumnItems(clmIndicator);
+                if (elementItem.getParentItem() != null && elementItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
+                    setElements(columnIndicators);
+                } else {
+                    removeItemBranch(elementItem);
+                }
+            }
+
+        });
     }
 
     private void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
