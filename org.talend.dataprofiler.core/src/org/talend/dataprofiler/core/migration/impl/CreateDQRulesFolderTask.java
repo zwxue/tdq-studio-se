@@ -18,6 +18,7 @@ import java.util.Date;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 
@@ -38,7 +39,7 @@ public class CreateDQRulesFolderTask extends AbstractMigrationTask {
             IFolder createNewFoler = manager.createNewFoler(project, DQStructureManager.DQ_RULES);
             createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.DQRULES_FOLDER_PROPERTY);
-            manager.copyFilesToFolder(DQStructureManager.DQ_RULES_PATH, true, createNewFoler);
+            manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.DQ_RULES_PATH, true, createNewFoler, null);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

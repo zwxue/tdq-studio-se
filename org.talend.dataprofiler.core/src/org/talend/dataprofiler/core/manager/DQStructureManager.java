@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
@@ -140,6 +141,7 @@ public final class DQStructureManager {
     public boolean createDQStructure() {
 
         Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+        Plugin plugin = CorePlugin.getDefault();
         try {
             // create "Data Profiling" project
             IProject project = this.createNewProject(DATA_PROFILING, shell);
@@ -155,20 +157,20 @@ public final class DQStructureManager {
             // check version File
             WorkspaceVersionHelper.storeVersion();
             // Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
-            this.copyFilesToFolder(PATTERN_PATH, true, createNewFoler);
+            this.copyFilesToFolder(plugin, PATTERN_PATH, true, createNewFoler, null);
             createNewFoler = this.createNewFoler(project, SQL_PATTERNS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SQLPATTERNS_FOLDER_PROPERTY);
             // Copy the internet folder from 'org.talend.dataprofiler.core/sql_like' to folder "Libraries/SQL Patterns".
-            this.copyFilesToFolder(SQL_LIKE_PATH, true, createNewFoler);
+            this.copyFilesToFolder(plugin, SQL_LIKE_PATH, true, createNewFoler, null);
             createNewFoler = this.createNewFoler(project, SOURCE_FILES);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SOURCEFILES_FOLDER_PROPERTY);
             // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to folder "Libraries/Source Files".
-            this.copyFilesToFolder(DEMO_PATH, true, createNewFoler);
+            this.copyFilesToFolder(plugin, DEMO_PATH, true, createNewFoler, null);
             // MOD xqliu 2009-02-14 bug 6015
             createNewFoler = this.createNewFoler(project, DQ_RULES);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DQRULES_FOLDER_PROPERTY);
             // Copy the .sql files from 'org.talend.dataprofiler.core/dqrules' to folder "Libraries/DQ Rules".
-            this.copyFilesToFolder(DQ_RULES_PATH, true, createNewFoler);
+            this.copyFilesToFolder(plugin, DQ_RULES_PATH, true, createNewFoler, null);
             // ~
 
             // create "Metadata" project
@@ -249,16 +251,21 @@ public final class DQStructureManager {
      * @throws CoreException
      */
     @SuppressWarnings("unchecked")
-    public void copyFilesToFolder(String srcPath, boolean recurse, IFolder desFolder) throws IOException, CoreException {
+    public void copyFilesToFolder(Plugin plugin, String srcPath, boolean recurse, IFolder desFolder, String suffix)
+            throws IOException, CoreException {
+        if (plugin == null) {
+            return;
+        }
+
         Enumeration paths = null;
-        paths = CorePlugin.getDefault().getBundle().getEntryPaths(srcPath);
+        paths = plugin.getBundle().getEntryPaths(srcPath);
         if (paths == null) {
             return;
         }
         while (paths.hasMoreElements()) {
             String nextElement = (String) paths.nextElement();
             String currentPath = "/" + nextElement; //$NON-NLS-1$
-            URL resourceURL = CorePlugin.getDefault().getBundle().getEntry(currentPath);
+            URL resourceURL = plugin.getBundle().getEntry(currentPath);
             URL fileURL = null;
             File file = null;
             try {
@@ -276,9 +283,14 @@ public final class DQStructureManager {
                     folder.create(true, true, null);
                 }
                 folder.setPersistentProperty(FOLDER_CLASSIFY_KEY, desFolder.getPersistentProperty(FOLDER_CLASSIFY_KEY));
-                copyFilesToFolder(currentPath, recurse, folder);
+                copyFilesToFolder(plugin, currentPath, recurse, folder, suffix);
                 continue;
             }
+
+            if (suffix != null && !file.getName().endsWith(suffix)) {
+                continue;
+            }
+
             String fileName = new Path(fileURL.getPath()).lastSegment();
             InputStream openStream = null;
             openStream = fileURL.openStream();
