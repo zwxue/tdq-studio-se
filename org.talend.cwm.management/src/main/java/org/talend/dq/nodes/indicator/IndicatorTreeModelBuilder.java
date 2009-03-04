@@ -14,6 +14,7 @@ package org.talend.dq.nodes.indicator;
 
 import org.talend.dq.nodes.indicator.impl.IndicatorCategoryNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.i18n.Messages;
 
 /**
  * This class for the indicator tree building.
@@ -43,12 +44,12 @@ public final class IndicatorTreeModelBuilder {
         // build pattern finder categoryNode
         IndicatorEnum[] patternFinderEnums = new IndicatorEnum[] { IndicatorEnum.PatternFreqIndicatorEnum,
                 IndicatorEnum.PatternLowFreqIndicatorEnum };
-        IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode("Pattern frequency statistics",
+        IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode(Messages.getString("IndicatorTreeModelBuilder.PatternStatistics"), //$NON-NLS-1$
                 patternFinderEnums);  
         // build Nominal Statistic categoryNode
         IndicatorEnum[] advanceIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.ModeIndicatorEnum,
                 IndicatorEnum.FrequencyIndicatorEnum, IndicatorEnum.LowFrequencyIndicatorEnum };
-        IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode("Advanced statistics", advanceIndicatorEnums); 
+        IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode(Messages.getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums);  //$NON-NLS-1$
 
         indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
                 patternFinderCategoryNode, advanceCategoryNode };
