@@ -99,7 +99,15 @@ public final class ColumnIndicatorRule {
             }
 
             break;
-
+        // MOD mzhao 2009-03-05 Soundex frequency indicator
+        case SoundexIndicatorEnum:
+        case SoundexLowIndicatorEnum:
+            // MOD mzhao 2009-03-05 do not allow soundex on date field because it is not correctly handle in database.
+            if (!Java2SqlType.isDateInSQL(javaType)
+                    && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
+                return true;
+            }
+            break;
         case MeanIndicatorEnum:
         case MedianIndicatorEnum:
         case BoxIIndicatorEnum:
