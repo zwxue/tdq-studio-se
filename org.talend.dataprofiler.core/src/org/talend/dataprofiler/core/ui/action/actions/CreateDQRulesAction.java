@@ -32,7 +32,7 @@ public class CreateDQRulesAction extends Action {
 
     public CreateDQRulesAction(IFolder folder) {
         setText(DefaultMessagesImpl.getString("DQRulesAction.newDQRule")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_DQ));
         this.folder = folder;
     }
 

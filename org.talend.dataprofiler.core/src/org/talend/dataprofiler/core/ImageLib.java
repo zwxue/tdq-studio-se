@@ -109,6 +109,12 @@ public final class ImageLib {
 
     public static final String VIEW = "view.gif"; //$NON-NLS-1$
 
+    public static final String DQ_RULE = "dqrule_red.png"; //$NON-NLS-1$
+
+    public static final String ADD_DQ = "add_dqrule.png";//$NON-NLS-1$
+
+    public static final String ADD_PATTERN = "add_pattern.png"; //$NON-NLS-1$
+
     /** PK icon from SQL Explorer. */
     public static final String PK_DECORATE = "pk_decorate.gif"; //$NON-NLS-1$
 

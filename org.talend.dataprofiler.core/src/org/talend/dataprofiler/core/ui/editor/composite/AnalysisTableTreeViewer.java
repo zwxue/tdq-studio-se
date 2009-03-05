@@ -34,12 +34,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -262,13 +260,20 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             treeItem.setData(TABLE_INDICATOR_KEY, tableIndicator);
 
             TreeEditor addDQRuleEditor = new TreeEditor(tree);
-            Button addDQRuleBtn = new Button(tree, SWT.NONE);
-            addDQRuleBtn.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.addDQRule")); //$NON-NLS-1$
-            addDQRuleBtn.pack();
-            addDQRuleBtn.addSelectionListener(new SelectionAdapter() {
+            Label addDQRuleLabl = new Label(tree, SWT.NONE);
+            addDQRuleLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+            addDQRuleLabl.setImage(ImageLib.getImage(ImageLib.ADD_DQ));
+            addDQRuleLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.addDQRule")); //$NON-NLS-1$
+            addDQRuleLabl.pack();
+            addDQRuleLabl.addMouseListener(new MouseAdapter() {
 
                 @Override
-                public void widgetSelected(SelectionEvent e) {
+                public void mouseDown(MouseEvent e) {
+                    // Button addDQRuleBtn = new Button(tree, SWT.NONE);
+                    //            addDQRuleBtn.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.addDQRule")); //$NON-NLS-1$
+                    // addDQRuleBtn.pack();
+                    // addDQRuleBtn.addSelectionListener(new SelectionAdapter() {
+
                     CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
                             new WorkbenchContentProvider());
 
@@ -334,7 +339,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             });
             addDQRuleEditor.minimumWidth = WIDTH1_CELL;
-            addDQRuleEditor.setEditor(addDQRuleBtn, treeItem, 1);
+            addDQRuleEditor.setEditor(addDQRuleLabl, treeItem, 1);
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
@@ -675,7 +680,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             if (element instanceof IFile) {
                 WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule((IFile) element);
                 boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
-                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
+                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.DQ_RULE);
                 if (!validStatus) {
                     ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
                             ISharedImages.IMG_OBJS_WARN_TSK);

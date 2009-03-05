@@ -638,7 +638,7 @@
       <editor
             class="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
             extensions="rules"
-            icon="icons/pattern.png"
+            icon="icons/dqrule_red.png"
             id="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
             name="DQRuleEditor">
       </editor>

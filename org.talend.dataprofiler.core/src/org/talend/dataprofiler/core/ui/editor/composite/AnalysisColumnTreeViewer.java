@@ -44,7 +44,6 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -305,13 +304,23 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             comboEditor.setEditor(combo, treeItem, 1);
 
             TreeEditor addPatternEditor = new TreeEditor(tree);
-            Button addPatternBtn = new Button(tree, SWT.NONE);
-            addPatternBtn.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
-            addPatternBtn.pack();
-            addPatternBtn.addSelectionListener(new SelectionAdapter() {
+            Label addPatternLabl = new Label(tree, SWT.NONE);
+            addPatternLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+            addPatternLabl.setImage(ImageLib.getImage(ImageLib.ADD_PATTERN));
+            addPatternLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
+            addPatternLabl.pack();
+
+            addPatternLabl.addMouseListener(new MouseAdapter() {
 
                 @Override
-                public void widgetSelected(SelectionEvent e) {
+                public void mouseDown(MouseEvent e) {
+                    // Button addPatternBtn = new Button(tree, SWT.NONE);
+                    //            addPatternBtn.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
+                    // addPatternBtn.pack();
+                    // addPatternBtn.addSelectionListener(new SelectionAdapter() {
+                    //
+                    // @Override
+                    // public void widgetSelected(SelectionEvent e) {
                     DataManager dm = getAnalysis().getContext().getConnection();
                     if (dm == null) {
                         masterPage.doSave(null);
@@ -386,7 +395,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             });
             addPatternEditor.minimumWidth = WIDTH1_CELL;
-            addPatternEditor.setEditor(addPatternBtn, treeItem, 2);
+            addPatternEditor.setEditor(addPatternLabl, treeItem, 2);
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
             Label delLabel = new Label(tree, SWT.NONE);
