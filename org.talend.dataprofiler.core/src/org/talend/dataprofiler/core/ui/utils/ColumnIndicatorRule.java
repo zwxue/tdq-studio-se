@@ -61,11 +61,7 @@ public final class ColumnIndicatorRule {
         switch (indicatorType) {
         case CountsIndicatorEnum:
         case RowCountIndicatorEnum:
-
-            return true;
         case NullCountIndicatorEnum:
-
-            return true;
         case DistinctCountIndicatorEnum:
         case UniqueIndicatorEnum:
         case DuplicateCountIndicatorEnum:
@@ -73,7 +69,12 @@ public final class ColumnIndicatorRule {
             // MOD scorreia 2008-06-04 enable distinct count, unique count and duplicate count for all types
             // if (dataminingType == DataminingType.NOMINAL) {
             return true;
+        case DefValueCountIndicatorEnum:
+            if (column.getInitialValue().getBody() != null) {
+                return true;
+            }
 
+            break;
         case BlankCountIndicatorEnum:
         case TextIndicatorEnum:
         case MinLengthIndicatorEnum:
