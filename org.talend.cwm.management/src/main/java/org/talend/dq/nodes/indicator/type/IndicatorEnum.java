@@ -55,6 +55,11 @@ public enum IndicatorEnum {
                             IndicatorsPackage.Literals.BLANK_COUNT_INDICATOR,
                             "blank count", //$NON-NLS-1$
                             null),
+    DefValueCountIndicatorEnum(
+                               IndicatorsPackage.DEF_VALUE_COUNT_INDICATOR,
+                               IndicatorsPackage.Literals.DEF_VALUE_COUNT_INDICATOR,
+                               "default value count", //$NON-NLS-1$
+                               null),
 
     MinLengthIndicatorEnum(IndicatorsPackage.MIN_LENGTH_INDICATOR, IndicatorsPackage.Literals.MIN_LENGTH_INDICATOR, "min length", //$NON-NLS-1$
                            null),
@@ -107,7 +112,8 @@ public enum IndicatorEnum {
                                null),
     CountsIndicatorEnum(IndicatorsPackage.COUNTS_INDICATOR, IndicatorsPackage.Literals.COUNTS_INDICATOR, "Simple Statistics", //$NON-NLS-1$
                         new IndicatorEnum[] { RowCountIndicatorEnum, NullCountIndicatorEnum, DistinctCountIndicatorEnum,
-                                UniqueIndicatorEnum, DuplicateCountIndicatorEnum, BlankCountIndicatorEnum }),
+                                UniqueIndicatorEnum, DuplicateCountIndicatorEnum, BlankCountIndicatorEnum,
+                                DefValueCountIndicatorEnum }),
     TextIndicatorEnum(IndicatorsPackage.TEXT_INDICATOR, IndicatorsPackage.Literals.TEXT_INDICATOR, "Text Statistics", //$NON-NLS-1$
                       new IndicatorEnum[] { MinLengthIndicatorEnum, MaxLengthIndicatorEnum, AverageLengthIndicatorEnum }),
     IQRIndicatorEnum(IndicatorsPackage.IQR_INDICATOR, IndicatorsPackage.Literals.IQR_INDICATOR, "Inter Quartile Range", //$NON-NLS-1$
@@ -207,7 +213,7 @@ public enum IndicatorEnum {
 
     public static IndicatorEnum findIndicatorEnum(EClass indicatorType) {
         IndicatorEnum returnEnum = null;
-        EClass ec = WhereRuleIndicatorEnum.getIndicatorType();
+
         if (indicatorType == RowCountIndicatorEnum.getIndicatorType()) {
             returnEnum = RowCountIndicatorEnum;
         } else if (indicatorType == NullCountIndicatorEnum.getIndicatorType()) {
@@ -264,6 +270,8 @@ public enum IndicatorEnum {
             returnEnum = SqlPatternMatchingIndicatorEnum;
         } else if (indicatorType == WhereRuleIndicatorEnum.getIndicatorType()) {
             returnEnum = WhereRuleIndicatorEnum;
+        } else if (indicatorType == DefValueCountIndicatorEnum.getIndicatorType()) {
+            returnEnum = DefValueCountIndicatorEnum;
         }
 
         return returnEnum;
