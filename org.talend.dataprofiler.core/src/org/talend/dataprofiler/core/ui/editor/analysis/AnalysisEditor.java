@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
@@ -158,12 +157,10 @@ public class AnalysisEditor extends CommonFormEditor {
     }
 
     protected void firePropertyChange(final int propertyId) {
-        super.firePropertyChange(propertyId);
-        if (propertyId == IEditorPart.PROP_DIRTY) {
-            if (isDirty() && masterPage != null) {
-                setRunActionButtonState(false);
-            }
+        if (masterPage.isActive()) {
+            setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
         }
+        super.firePropertyChange(propertyId);
     }
 
     protected void translateInput(IEditorInput input) {
@@ -223,6 +220,8 @@ public class AnalysisEditor extends CommonFormEditor {
     }
 
     public void setRunActionButtonState(boolean state) {
-        runAction.setEnabled(state);
+        if (runAction != null) {
+            runAction.setEnabled(state);
+        }
     }
 }
