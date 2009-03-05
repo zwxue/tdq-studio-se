@@ -44,16 +44,24 @@ public final class IndicatorTreeModelBuilder {
         // build pattern finder categoryNode
         IndicatorEnum[] patternFinderEnums = new IndicatorEnum[] { IndicatorEnum.PatternFreqIndicatorEnum,
                 IndicatorEnum.PatternLowFreqIndicatorEnum };
-        IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode(Messages.getString("IndicatorTreeModelBuilder.PatternStatistics"), //$NON-NLS-1$
-                patternFinderEnums);  
+        IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode(Messages
+                .getString("IndicatorTreeModelBuilder.PatternStatistics"), //$NON-NLS-1$
+                patternFinderEnums);
+        // MOD mzhao 2009-03-05 build Soundex Statistic categoryNode
+        IndicatorEnum[] soundexIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.SoundexIndicatorEnum,
+                IndicatorEnum.SoundexLowIndicatorEnum };
+        IndicatorCategoryNode soundexCategoryNode = new IndicatorCategoryNode(Messages
+                .getString("IndicatorTreeModelBuilder.SoundexStatistics"), //$NON-NLS-1$
+                soundexIndicatorEnums);
+
         // build Nominal Statistic categoryNode
         IndicatorEnum[] advanceIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.ModeIndicatorEnum,
                 IndicatorEnum.FrequencyIndicatorEnum, IndicatorEnum.LowFrequencyIndicatorEnum };
-        IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode(Messages.getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums);  //$NON-NLS-1$
+        IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode(Messages
+                .getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums); //$NON-NLS-1$
 
         indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
-                patternFinderCategoryNode, advanceCategoryNode };
+                patternFinderCategoryNode, soundexCategoryNode, advanceCategoryNode };
         return indicatorCategoryNodes;
     }
-
 }

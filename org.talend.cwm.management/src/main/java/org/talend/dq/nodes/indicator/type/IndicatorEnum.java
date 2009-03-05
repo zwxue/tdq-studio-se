@@ -83,6 +83,19 @@ public enum IndicatorEnum {
                               IndicatorsPackage.Literals.LOW_FREQUENCY_INDICATOR,
                               "low frequency table", //$NON-NLS-1$
                               null),
+
+    // MOD mzhao 2009-03-05 Soundex frequency indicator.
+    SoundexIndicatorEnum(
+                         IndicatorsPackage.SOUNDEX_FREQ_INDICATOR,
+                         IndicatorsPackage.Literals.SOUNDEX_FREQ_INDICATOR,
+                         "soundex frequency table", //$NON-NLS-1$
+                         null),
+    SoundexLowIndicatorEnum(
+                            IndicatorsPackage.SOUNDEX_LOW_FREQ_INDICATOR,
+                            IndicatorsPackage.Literals.SOUNDEX_LOW_FREQ_INDICATOR,
+                            "soundex low frequency table", //$NON-NLS-1$
+                            null),
+
     PatternFreqIndicatorEnum(
                              IndicatorsPackage.PATTERN_FREQ_INDICATOR,
                              IndicatorsPackage.Literals.PATTERN_FREQ_INDICATOR,
@@ -250,6 +263,10 @@ public enum IndicatorEnum {
             returnEnum = IQRIndicatorEnum;
         } else if (indicatorType == RangeIndicatorEnum.getIndicatorType()) {
             returnEnum = RangeIndicatorEnum;
+        } else if (indicatorType == SoundexIndicatorEnum.getIndicatorType()) {
+            returnEnum = SoundexIndicatorEnum;
+        } else if (indicatorType == SoundexLowIndicatorEnum.getIndicatorType()) {
+            returnEnum = SoundexLowIndicatorEnum;
         } else if (indicatorType == FrequencyIndicatorEnum.getIndicatorType()) {
             returnEnum = FrequencyIndicatorEnum;
         } else if (indicatorType == LowFrequencyIndicatorEnum.getIndicatorType()) {
