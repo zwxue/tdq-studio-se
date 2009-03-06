@@ -34,6 +34,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
@@ -41,32 +42,46 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.TableIndicator;
+import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
+import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.TableViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TableIndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
@@ -75,12 +90,18 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.FrequencyIndicator;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Table;
 
 /**
@@ -97,8 +118,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     public static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY"; //$NON-NLS-1$
 
     public static final String VIEWER_KEY = "org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer"; //$NON-NLS-1$
-
-    private static final int WIDTH1_CELL = 75;
 
     private Composite parentComp;
 
@@ -189,6 +208,20 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     private void addTreeListener(final Tree tree) {
+        tree.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TreeItem item = (TreeItem) e.item;
+                if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
+                    tree.setMenu(null);
+                } else {
+                    new TableTreeMenuProvider(tree).createTreeMenu();
+                }
+            }
+
+        });
+
         tree.addTreeListener(new TreeAdapter() {
 
             @Override
@@ -222,6 +255,24 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
         });
 
+        tree.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseDoubleClick(MouseEvent e) {
+                TreeItem item = tree.getSelection()[0];
+                if (item != null) {
+                    Object indicatorobj = item.getData(INDICATOR_UNIT_KEY);
+                    Object tableobj = item.getData(TABLE_INDICATOR_KEY);
+                    if (tableobj != null && indicatorobj == null) {
+                        // open DQ Rule selector
+                        showAddDQRuleDialog(item, (TableIndicator) tableobj);
+                    } else if (tableobj != null && indicatorobj != null) {
+                        // open indicator option wizard
+                        openIndicatorOptionDialog(null, item);
+                    }
+                }
+            }
+        });
     }
 
     private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
@@ -269,68 +320,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
                 @Override
                 public void mouseDown(MouseEvent e) {
-                    
-                    CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
-                            new WorkbenchContentProvider());
-
-                    IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                            DQStructureManager.LIBRARIES);
-                    dialog.setInput(defaultPatternFolder);
-                    dialog.setValidator(new ISelectionStatusValidator() {
-
-                        public IStatus validate(Object[] selection) {
-                            IStatus status = Status.OK_STATUS;
-                            for (Object whereRule : selection) {
-                                if (whereRule instanceof IFile) {
-                                    IFile file = (IFile) whereRule;
-                                    if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                                        WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-                                        boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
-                                        if (!validStatus) {
-                                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
-                                                    .getString("AnalysisTableTreeViewer.chooseValidDQRules")); //$NON-NLS-1$
-                                        }
-                                    }
-                                }
-                            }
-                            return status;
-                        }
-
-                    });
-                    dialog.addFilter(new ViewerFilter() {
-
-                        @Override
-                        public boolean select(Viewer viewer, Object parentElement, Object element) {
-                            if (element instanceof IFile) {
-                                IFile file = (IFile) element;
-                                if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                                    return true;
-                                }
-                            } else if (element instanceof IFolder) {
-                                IFolder folder = (IFolder) element;
-                                return DQRuleUtilities.isLibraiesSubfolder(folder, DQStructureManager.DQ_RULES);
-                            }
-                            return false;
-                        }
-                    });
-                    dialog.setContainerMode(true);
-                    dialog.setTitle(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqruleSelector")); //$NON-NLS-1$
-                    dialog.setMessage(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqrules")); //$NON-NLS-1$
-                    dialog.setSize(80, 30);
-                    dialog.create();
-                    if (dialog.open() == Window.OK) {
-                        for (Object obj : dialog.getResult()) {
-                            if (obj instanceof IFile) {
-                                IFile file = (IFile) obj;
-                                TableIndicatorUnit addIndicatorUnit = DQRuleUtilities.createIndicatorUnit(file, tableIndicator,
-                                        getAnalysis());
-                                if (addIndicatorUnit != null) {
-                                    createOneUnit(treeItem, addIndicatorUnit);
-                                    setDirty(true);
-                                }
-                            }
-                        }
-                    }
+                    showAddDQRuleDialog(treeItem, tableIndicator);
                 }
 
             });
@@ -365,6 +355,80 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             treeItem.setExpanded(true);
         }
         this.setDirty(true);
+    }
+
+    /**
+     * DOC xqliu Comment method "showAddDQRuleDialog".
+     * 
+     * @param treeItem
+     * @param tableIndicator
+     */
+    private void showAddDQRuleDialog(final TreeItem treeItem, final TableIndicator tableIndicator) {
+        // Button addDQRuleBtn = new Button(tree, SWT.NONE);
+        //            addDQRuleBtn.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.addDQRule")); //$NON-NLS-1$
+        // addDQRuleBtn.pack();
+        // addDQRuleBtn.addSelectionListener(new SelectionAdapter() {
+
+        CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
+                new WorkbenchContentProvider());
+
+        IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES);
+        dialog.setInput(defaultPatternFolder);
+        dialog.setValidator(new ISelectionStatusValidator() {
+
+            public IStatus validate(Object[] selection) {
+                IStatus status = Status.OK_STATUS;
+                for (Object whereRule : selection) {
+                    if (whereRule instanceof IFile) {
+                        IFile file = (IFile) whereRule;
+                        if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
+                            WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+                            boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
+                            if (!validStatus) {
+                                status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                        .getString("AnalysisTableTreeViewer.chooseValidDQRules")); //$NON-NLS-1$
+                            }
+                        }
+                    }
+                }
+                return status;
+            }
+
+        });
+        dialog.addFilter(new ViewerFilter() {
+
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof IFile) {
+                    IFile file = (IFile) element;
+                    if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
+                        return true;
+                    }
+                } else if (element instanceof IFolder) {
+                    IFolder folder = (IFolder) element;
+                    return DQRuleUtilities.isLibraiesSubfolder(folder, DQStructureManager.DQ_RULES);
+                }
+                return false;
+            }
+        });
+        dialog.setContainerMode(true);
+        dialog.setTitle(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqruleSelector")); //$NON-NLS-1$
+        dialog.setMessage(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqrules")); //$NON-NLS-1$
+        dialog.setSize(80, 30);
+        dialog.create();
+        if (dialog.open() == Window.OK) {
+            for (Object obj : dialog.getResult()) {
+                if (obj instanceof IFile) {
+                    IFile file = (IFile) obj;
+                    TableIndicatorUnit addIndicatorUnit = DQRuleUtilities
+                            .createIndicatorUnit(file, tableIndicator, getAnalysis());
+                    if (addIndicatorUnit != null) {
+                        createOneUnit(treeItem, addIndicatorUnit);
+                        setDirty(true);
+                    }
+                }
+            }
+        }
     }
 
     private void createIndicatorItems(TreeItem treeItem, TableIndicatorUnit[] indicatorUnits) {
@@ -749,5 +813,257 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     private void deleteIndicatorItems(TableIndicator tableIndicator, TableIndicatorUnit inidicatorUnit) {
         tableIndicator.removeIndicatorUnit(inidicatorUnit);
+    }
+
+    private void removeSelectedElements(Tree newTree) {
+        TreeItem[] selection = newTree.getSelection();
+        boolean branchIndicatorExist = false;
+        for (TreeItem item : selection) {
+            TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+            if (indicatorUnit != null) {
+                deleteIndicatorItems((TableIndicator) item.getData(TABLE_INDICATOR_KEY), indicatorUnit);
+            } else {
+                deleteTableItems((TableIndicator) item.getData(TABLE_INDICATOR_KEY));
+            }
+            if (item.getParentItem() != null && item.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
+                branchIndicatorExist = true;
+                continue;
+            } else {
+                removeItemBranch(item);
+            }
+
+        }
+        if (branchIndicatorExist) {
+            setElements(tableIndicators);
+        }
+    }
+
+    /**
+     * DOC xqliu AnalysisTableTreeViewer class global comment. Detailled comment
+     */
+    class TableTreeMenuProvider {
+
+        private Tree tree;
+
+        public TableTreeMenuProvider(Tree tree) {
+            this.tree = tree;
+        }
+
+        /**
+         * DOC xqliu Comment method "createTreeMenu".
+         */
+        public void createTreeMenu() {
+            Menu oldMenu = tree.getMenu();
+            if (oldMenu != null && !oldMenu.isDisposed()) {
+                oldMenu.dispose();
+            }
+            Menu menu = new Menu(tree);
+
+            if (isSelectedTable(tree.getSelection())) {
+                MenuItem previewMenuItem = new MenuItem(menu, SWT.CASCADE);
+                previewMenuItem.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.previewDQElement")); //$NON-NLS-1$
+                previewMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+                previewMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        previewSelectedElements(tree);
+                    }
+
+                });
+
+                MenuItem showLocationMenuItem = new MenuItem(menu, SWT.CASCADE);
+                showLocationMenuItem.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.showDQElement")); //$NON-NLS-1$
+                showLocationMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+                showLocationMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        showSelectedElements(tree);
+                    }
+
+                });
+            }
+
+            if (isSelectedIndicator(tree.getSelection())) {
+                MenuItem showQueryMenuItem = new MenuItem(menu, SWT.CASCADE);
+                showQueryMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.viewQuery")); //$NON-NLS-1$
+                showQueryMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+                showQueryMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        viewQueryForSelectedElement(tree);
+
+                    }
+                });
+            }
+
+            if (isSelectedWhereRuleIndicator(tree.getSelection())) {
+                MenuItem editWhereRUleMenuItem = new MenuItem(menu, SWT.CASCADE);
+                editWhereRUleMenuItem.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.editDQRule")); //$NON-NLS-1$
+                editWhereRUleMenuItem.setImage(ImageLib.getImage(ImageLib.DQ_RULE));
+                editWhereRUleMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        editWhereRule(tree);
+                    }
+
+                });
+            }
+
+            MenuItem addTaskItem = new MenuItem(menu, SWT.CASCADE);
+            addTaskItem.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.AddTask")); //$NON-NLS-1$
+            addTaskItem.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+            addTaskItem.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    TreeItem[] selection = tree.getSelection();
+                    if (selection.length > 0) {
+                        TreeItem treeItem = selection[0];
+                        TableIndicator tableIndicator = (TableIndicator) treeItem.getData(TABLE_INDICATOR_KEY);
+                        TdTable table = tableIndicator.getTdTable();
+                        ModelElement me = getAnalysis();
+                        me.setName(table.getName());
+                        if (table instanceof ModelElement) {
+                            (new TdAddTaskAction(tree.getShell(), me)).run();
+                        }
+                    }
+
+                }
+            });
+
+            MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
+            deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
+            deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+            deleteMenuItem.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    removeSelectedElements(tree);
+                }
+
+            });
+
+            tree.setMenu(menu);
+        }
+
+        private void editWhereRule(Tree tree) {
+            TreeItem[] selection = tree.getSelection();
+            if (selection.length > 0) {
+                TreeItem treeItem = selection[0];
+                TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
+                WhereRuleIndicator indicator = (WhereRuleIndicator) indicatorUnit.getIndicator();
+                WhereRule whereRule = (WhereRule) indicator.getIndicatorDefinition();
+                IFolder whereRuleFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
+                        .getFolder(DQStructureManager.DQ_RULES);
+                IFile file = DQRuleResourceFileHelper.getInstance()
+                        .getWhereRuleFile(whereRule, new IFolder[] { whereRuleFolder });
+                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                try {
+                    activePage.openEditor(new FileEditorInput(file),
+                            "org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"); //$NON-NLS-1$
+                } catch (PartInitException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+
+        private void previewSelectedElements(Tree newTree) {
+            TreeItem[] items = newTree.getSelection();
+            TdTable[] tables = new TdTable[items.length];
+
+            for (int i = 0; i < items.length; i++) {
+                TableIndicator tableIndicator = (TableIndicator) items[i].getData(TABLE_INDICATOR_KEY);
+                TdTable table = tableIndicator.getTdTable();
+                tables[i] = table;
+            }
+
+            new PreviewTableAction(tables[0]).run();
+        }
+
+        private void viewQueryForSelectedElement(Tree newTree) {
+            TreeItem[] selection = newTree.getSelection();
+            for (TreeItem item : selection) {
+                TableIndicator tableIndicator = (TableIndicator) item.getData(TABLE_INDICATOR_KEY);
+                TdTable table = tableIndicator.getTdTable();
+                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(SchemaHelper.getParentSchema(table));
+                IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
+                Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
+                if (expression == null) {
+                    MessageDialogWithToggle
+                            .openWarning(
+                                    null,
+                                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.Warn"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.NoQueryDefined")); //$NON-NLS-1$ //$NON-NLS-2$
+                    return;
+                }
+                new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+                String query = expression.getBody();
+                CorePlugin.getDefault().openInSqlEditor(dataprovider, query, table.getName());
+            }
+        }
+
+        private void showSelectedElements(Tree newTree) {
+            TreeItem[] selection = newTree.getSelection();
+
+            DQRespositoryView dqview = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
+            if (selection.length == 1) {
+                try {
+                    TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
+                    TdTable table = tableIndicator.getTdTable();
+                    dqview.showSelectedElements(table);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        private boolean isSelectedTable(TreeItem[] items) {
+            for (TreeItem item : items) {
+                if (item.getData(INDICATOR_UNIT_KEY) != null || item.getData(DATA_PARAM) != null) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private boolean isSelectedIndicator(TreeItem[] items) {
+
+            if (isSelectedTable(items)) {
+                return false;
+            }
+
+            for (TreeItem item : items) {
+                if (item.getData(DATA_PARAM) != null) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private boolean isSelectedWhereRuleIndicator(TreeItem[] items) {
+            if (!isSelectedIndicator(items)) {
+                return false;
+            }
+
+            for (TreeItem item : items) {
+                TableIndicatorUnit unit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                if (unit != null) {
+
+                    Indicator indicator = unit.getIndicator();
+                    if (!(indicator instanceof WhereRuleIndicator)) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
     }
 }

@@ -16,15 +16,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -99,5 +103,47 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
 
     public Collection<WhereRule> getAllDQRules(IFolder patternFodler) {
         return Collections.EMPTY_LIST;
+    }
+
+    public IFile getWhereRuleFile(WhereRule whereRule, IFolder[] folders) {
+        IFile file = null;
+        if (resourcesNumberChanged) {
+            try {
+                for (int i = 0; i < folders.length; i++) {
+                    searchAllWhereRules(folders[i]);
+                }
+            } catch (CoreException e) {
+                e.printStackTrace();
+            }
+            resourcesNumberChanged = false;
+        }
+        Set<IFile> keySet = whereRulesMap.keySet();
+        for (IFile file2 : keySet) {
+            WhereRule whereRule2 = whereRulesMap.get(file2);
+            Expression e = whereRule.getSqlGenericExpression().get(0);
+            Expression e2 = whereRule2.getSqlGenericExpression().get(0);
+            String et = e.getLanguage();
+            String et2 = e2.getLanguage();
+            if (whereRule2.getName().equals(whereRule.getName())) {
+                boolean b = et == null && et2 == null;
+                b = b || (et != null && et.equals(et2));
+                if (b) {
+                    file = file2;
+                }
+            }
+        }
+        return file;
+    }
+
+    private void searchAllWhereRules(IFolder folder) throws CoreException {
+        for (IResource resource : folder.members()) {
+            if (resource.getType() == IResource.FOLDER) {
+                searchAllWhereRules(folder.getFolder(resource.getName()));
+                continue;
+            }
+            IFile file = (IFile) resource;
+            findWhereRule(file);
+
+        }
     }
 }
