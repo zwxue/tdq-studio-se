@@ -70,7 +70,7 @@ public final class ReportHelper {
 
         USER_MADE("User specified", null); // for the user to set his own file path//$NON-NLS-1$
 
-        public final static String BASIC = "Basic";
+        public static final String BASIC = "Basic";
 
         private String label;
 
@@ -268,7 +268,9 @@ public final class ReportHelper {
     }
 
     /**
-     * Method "setReportType".MOD mzhao 2009-02-16
+     * Method "setReportType".
+     * 
+     * MOD mzhao 2009-02-16
      * 
      * @param report the report object to update
      * @param reportType the report type to set

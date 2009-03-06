@@ -418,6 +418,26 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
     }
 
     @Override
+    public boolean finalizeComputation() {
+        this.distinctComputed = true;
+        return super.finalizeComputation();
+    }
+
+    @Override
+    public boolean prepare() {
+        // TODO Auto-generated method stub
+        return super.prepare();
+    }
+
+    @Override
+    public boolean reset() {
+        this.uniqueValueCount = 0L;
+        this.distinctValueCount = 0L;
+        this.distinctComputed = false;
+        return super.reset();
+    }
+
+    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer(this.getName());
         Set<Object> keySet = this.valueToFreq.keySet();

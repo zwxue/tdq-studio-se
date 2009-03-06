@@ -21,7 +21,10 @@ import org.talend.utils.sql.Java2SqlType;
  * 
  * This class is a helper for handling data quality metadata.
  */
-public class MetadataHelper {
+public final class MetadataHelper {
+
+    private MetadataHelper() {
+    }
 
     /**
      * Method "setDataminingType" sets the type of the content of a column.

@@ -1168,6 +1168,24 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTextParameters_CharactersToReplace() {
+        return (EAttribute)textParametersEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTextParameters_ReplacementCharacters() {
+        return (EAttribute)textParametersEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1586,6 +1604,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(textParametersEClass, TEXT_PARAMETERS__MATCHING_ALGORITHM);
         createEAttribute(textParametersEClass, TEXT_PARAMETERS__IGNORE_CASE);
         createEAttribute(textParametersEClass, TEXT_PARAMETERS__USE_NULLS);
+        createEAttribute(textParametersEClass, TEXT_PARAMETERS__CHARACTERS_TO_REPLACE);
+        createEAttribute(textParametersEClass, TEXT_PARAMETERS__REPLACEMENT_CHARACTERS);
 
         lowerQuartileIndicatorEClass = createEClass(LOWER_QUARTILE_INDICATOR);
 
@@ -1877,6 +1897,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getTextParameters_MatchingAlgorithm(), this.getMatchingAlgorithm(), "matchingAlgorithm", null, 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTextParameters_IgnoreCase(), ecorePackage.getEBoolean(), "ignoreCase", null, 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTextParameters_UseNulls(), ecorePackage.getEBoolean(), "useNulls", null, 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTextParameters_CharactersToReplace(), ecorePackage.getEString(), "charactersToReplace", "abcdefghijklmnopqrstuvwxyz\u00e7\u00e2\u00ea\u00ee\u00f4\u00fb\u00e9\u00e8\u00f9\u00ef\u00f6\u00fcABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c7\u00c2\u00ca\u00ce\u00d4\u00db\u00c9\u00c8\u00d9\u00cf\u00d6\u00dc0123456789", 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTextParameters_ReplacementCharacters(), ecorePackage.getEString(), "replacementCharacters", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999", 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(lowerQuartileIndicatorEClass, LowerQuartileIndicator.class, "LowerQuartileIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

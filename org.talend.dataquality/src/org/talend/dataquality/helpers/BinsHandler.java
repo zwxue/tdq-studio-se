@@ -17,7 +17,10 @@ import org.talend.utils.format.StringFormatUtil;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class BinsHandler {
+public final class BinsHandler {
+
+    private BinsHandler() {
+    }
 
     /**
      * Method "generateOpenBins". The size of the returned array is nbBins -1. We consider that the first bin is made of

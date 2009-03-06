@@ -28,6 +28,8 @@ import org.talend.dataquality.indicators.TextParameters;
  *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#getMatchingAlgorithm <em>Matching Algorithm</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#isIgnoreCase <em>Ignore Case</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#isUseNulls <em>Use Nulls</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#getCharactersToReplace <em>Characters To Replace</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#getReplacementCharacters <em>Replacement Characters</em>}</li>
  * </ul>
  * </p>
  *
@@ -113,6 +115,46 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
      * @ordered
      */
     protected boolean useNulls = USE_NULLS_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getCharactersToReplace() <em>Characters To Replace</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getCharactersToReplace()
+     * @generated
+     * @ordered
+     */
+    protected static final String CHARACTERS_TO_REPLACE_EDEFAULT = "abcdefghijklmnopqrstuvwxyz\u00e7\u00e2\u00ea\u00ee\u00f4\u00fb\u00e9\u00e8\u00f9\u00ef\u00f6\u00fcABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c7\u00c2\u00ca\u00ce\u00d4\u00db\u00c9\u00c8\u00d9\u00cf\u00d6\u00dc0123456789";
+
+    /**
+     * The cached value of the '{@link #getCharactersToReplace() <em>Characters To Replace</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getCharactersToReplace()
+     * @generated
+     * @ordered
+     */
+    protected String charactersToReplace = CHARACTERS_TO_REPLACE_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getReplacementCharacters() <em>Replacement Characters</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getReplacementCharacters()
+     * @generated
+     * @ordered
+     */
+    protected static final String REPLACEMENT_CHARACTERS_EDEFAULT = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";
+
+    /**
+     * The cached value of the '{@link #getReplacementCharacters() <em>Replacement Characters</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getReplacementCharacters()
+     * @generated
+     * @ordered
+     */
+    protected String replacementCharacters = REPLACEMENT_CHARACTERS_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -222,6 +264,48 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getCharactersToReplace() {
+        return charactersToReplace;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setCharactersToReplace(String newCharactersToReplace) {
+        String oldCharactersToReplace = charactersToReplace;
+        charactersToReplace = newCharactersToReplace;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE, oldCharactersToReplace, charactersToReplace));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getReplacementCharacters() {
+        return replacementCharacters;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setReplacementCharacters(String newReplacementCharacters) {
+        String oldReplacementCharacters = replacementCharacters;
+        replacementCharacters = newReplacementCharacters;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS, oldReplacementCharacters, replacementCharacters));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -233,6 +317,10 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
                 return isIgnoreCase() ? Boolean.TRUE : Boolean.FALSE;
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
                 return isUseNulls() ? Boolean.TRUE : Boolean.FALSE;
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+                return getCharactersToReplace();
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
+                return getReplacementCharacters();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -256,6 +344,12 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
                 setUseNulls(((Boolean)newValue).booleanValue());
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+                setCharactersToReplace((String)newValue);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
+                setReplacementCharacters((String)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -281,6 +375,12 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
                 setUseNulls(USE_NULLS_EDEFAULT);
                 return;
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+                setCharactersToReplace(CHARACTERS_TO_REPLACE_EDEFAULT);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
+                setReplacementCharacters(REPLACEMENT_CHARACTERS_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -301,6 +401,10 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
                 return ignoreCase != IGNORE_CASE_EDEFAULT;
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
                 return useNulls != USE_NULLS_EDEFAULT;
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+                return CHARACTERS_TO_REPLACE_EDEFAULT == null ? charactersToReplace != null : !CHARACTERS_TO_REPLACE_EDEFAULT.equals(charactersToReplace);
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
+                return REPLACEMENT_CHARACTERS_EDEFAULT == null ? replacementCharacters != null : !REPLACEMENT_CHARACTERS_EDEFAULT.equals(replacementCharacters);
         }
         return super.eIsSet(featureID);
     }
@@ -323,6 +427,10 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
         result.append(ignoreCase);
         result.append(", useNulls: ");
         result.append(useNulls);
+        result.append(", charactersToReplace: ");
+        result.append(charactersToReplace);
+        result.append(", replacementCharacters: ");
+        result.append(replacementCharacters);
         result.append(')');
         return result.toString();
     }

@@ -34,7 +34,10 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
  * 
  * 
  */
-public class DataqualitySwitchHelper {
+public final class DataqualitySwitchHelper {
+
+    private DataqualitySwitchHelper() {
+    }
 
     public static final SchemaSwitch<ConnectionIndicator> CONNECTION_SWITCH = new SchemaSwitch<ConnectionIndicator>() {
 

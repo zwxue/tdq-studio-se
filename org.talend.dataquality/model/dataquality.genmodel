@@ -326,6 +326,8 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/matchingAlgorithm"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/ignoreCase"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/useNulls"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/charactersToReplace"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/replacementCharacters"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/LowerQuartileIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/UpperQuartileIndicator"/>

@@ -26,7 +26,10 @@ import orgomg.cwm.objectmodel.core.Expression;
  * 
  * Helper class for handling BooleanExpressionNode.
  */
-public class BooleanExpressionHelper {
+public final class BooleanExpressionHelper {
+
+    private BooleanExpressionHelper() {
+    }
 
     /**
      * Default language used in expressions.

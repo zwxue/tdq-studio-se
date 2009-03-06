@@ -6859,13 +6859,31 @@ public interface IndicatorsPackage extends EPackage {
     int TEXT_PARAMETERS__USE_NULLS = 3;
 
     /**
+     * The feature id for the '<em><b>Characters To Replace</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_PARAMETERS__CHARACTERS_TO_REPLACE = 4;
+
+    /**
+     * The feature id for the '<em><b>Replacement Characters</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_PARAMETERS__REPLACEMENT_CHARACTERS = 5;
+
+    /**
      * The number of structural features of the '<em>Text Parameters</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TEXT_PARAMETERS_FEATURE_COUNT = 4;
+    int TEXT_PARAMETERS_FEATURE_COUNT = 6;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.LowerQuartileIndicatorImpl <em>Lower Quartile Indicator</em>}' class.
@@ -11584,6 +11602,28 @@ public interface IndicatorsPackage extends EPackage {
     EAttribute getTextParameters_UseNulls();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.TextParameters#getCharactersToReplace <em>Characters To Replace</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Characters To Replace</em>'.
+     * @see org.talend.dataquality.indicators.TextParameters#getCharactersToReplace()
+     * @see #getTextParameters()
+     * @generated
+     */
+    EAttribute getTextParameters_CharactersToReplace();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.TextParameters#getReplacementCharacters <em>Replacement Characters</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Replacement Characters</em>'.
+     * @see org.talend.dataquality.indicators.TextParameters#getReplacementCharacters()
+     * @see #getTextParameters()
+     * @generated
+     */
+    EAttribute getTextParameters_ReplacementCharacters();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.LowerQuartileIndicator <em>Lower Quartile Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -12602,6 +12642,22 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EAttribute TEXT_PARAMETERS__USE_NULLS = eINSTANCE.getTextParameters_UseNulls();
+
+        /**
+         * The meta object literal for the '<em><b>Characters To Replace</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TEXT_PARAMETERS__CHARACTERS_TO_REPLACE = eINSTANCE.getTextParameters_CharactersToReplace();
+
+        /**
+         * The meta object literal for the '<em><b>Replacement Characters</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TEXT_PARAMETERS__REPLACEMENT_CHARACTERS = eINSTANCE.getTextParameters_ReplacementCharacters();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.LowerQuartileIndicatorImpl <em>Lower Quartile Indicator</em>}' class.
