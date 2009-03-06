@@ -371,7 +371,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
             });
 
-            delLabelEditor.minimumWidth = WIDTH1_CELL;
+            delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
             delLabelEditor.setEditor(delLabel, treeItem, 2);
             treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor });
