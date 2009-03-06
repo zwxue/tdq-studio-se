@@ -385,7 +385,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                                     createOneUnit(treeItem, addIndicatorUnit);
                                     setDirty(true);
                                 } else {
-                                    MessageUI.openError(file.getName()
+                                    Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                                    MessageUI.openError("Pattern: " + pattern.getName()
                                             + "\n\nThis indicator is already selected for this column.");
                                 }
                             }
