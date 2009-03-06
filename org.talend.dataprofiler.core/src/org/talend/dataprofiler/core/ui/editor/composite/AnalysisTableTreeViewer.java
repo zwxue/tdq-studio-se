@@ -386,6 +386,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
         String label = indicatorUnit.getIndicatorName();
+        if (IndicatorEnum.WhereRuleIndicatorEnum.compareTo(type) == 0) {
+            indicatorItem.setImage(0, ImageLib.getImage(ImageLib.DQ_RULE));
+        }
         indicatorItem.setText(0, label);
 
         TreeEditor optionEditor = new TreeEditor(tree);
