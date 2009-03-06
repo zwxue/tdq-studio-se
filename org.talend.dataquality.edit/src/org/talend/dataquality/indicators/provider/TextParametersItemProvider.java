@@ -70,6 +70,8 @@ public class TextParametersItemProvider
             addMatchingAlgorithmPropertyDescriptor(object);
             addIgnoreCasePropertyDescriptor(object);
             addUseNullsPropertyDescriptor(object);
+            addCharactersToReplacePropertyDescriptor(object);
+            addReplacementCharactersPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -163,6 +165,50 @@ public class TextParametersItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Characters To Replace feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addCharactersToReplacePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_TextParameters_charactersToReplace_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_TextParameters_charactersToReplace_feature", "_UI_TextParameters_type"),
+                 IndicatorsPackage.Literals.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Replacement Characters feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addReplacementCharactersPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_TextParameters_replacementCharacters_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_TextParameters_replacementCharacters_feature", "_UI_TextParameters_type"),
+                 IndicatorsPackage.Literals.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This returns TextParameters.gif.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -201,6 +247,8 @@ public class TextParametersItemProvider
             case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
             case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
+            case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
+            case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }
