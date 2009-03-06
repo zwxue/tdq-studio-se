@@ -39,8 +39,10 @@ import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionPro
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dataquality.rules.WhereRule;
 import org.talend.dataquality.utils.DateFormatUtils;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
@@ -129,7 +131,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             if (analysis != null) {
                 Date executionDate = analysis.getResults().getResultMetadata().getExecutionDate();
                 String executeInfo = executionDate == null ? DefaultMessagesImpl.getString("ResourceViewLabelProvider.executed") : PluginConstant.PARENTHESIS_LEFT //$NON-NLS-1$
-                        + DateFormatUtils.getSimpleDateString(executionDate) + PluginConstant.PARENTHESIS_RIGHT;
+                                + DateFormatUtils.getSimpleDateString(executionDate) + PluginConstant.PARENTHESIS_RIGHT;
                 return analysis.getName() + PluginConstant.SPACE_STRING + executeInfo;
             }
         } else if (input.endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
@@ -140,6 +142,10 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             IFile fileElement = (IFile) element;
             TdReport findReport = RepResourceFileHelper.getInstance().findReport(fileElement);
             return findReport.getName();
+        } else if (input.endsWith(FactoriesUtil.DQRULE)) {
+            IFile file = (IFile) element;
+            WhereRule wr = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+            return wr.getName();
         }
         return super.decorateText(input, element);
     }
