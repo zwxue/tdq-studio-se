@@ -18,6 +18,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
+import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
@@ -82,6 +83,10 @@ public class IndicatorCommonUtil {
 
             case BlankCountIndicatorEnum:
                 tempObject = ((BlankCountIndicator) indicator).getBlankCount();
+                break;
+
+            case DefValueCountIndicatorEnum:
+                tempObject = ((DefValueCountIndicator) indicator).getDefaultValCount();
                 break;
 
             case MinLengthIndicatorEnum:

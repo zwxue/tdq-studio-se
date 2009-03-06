@@ -119,6 +119,7 @@ public final class CompositeIndicator {
             case UniqueIndicatorEnum:
             case DuplicateCountIndicatorEnum:
             case BlankCountIndicatorEnum:
+            case DefValueCountIndicatorEnum:
                 simpleList.add(one);
                 break;
             case MinLengthIndicatorEnum:

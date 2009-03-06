@@ -228,7 +228,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                 if (itemButton.isEnabled()) {
                     itemButton.setSelection(selection);
                 } else {
-                    return;
+                    continue;
                 }
                 if (selection) {
                     currentColumnIndicator.addTempIndicatorEnum(((IIndicatorNode) itemButton.getData()).getIndicatorEnum());
