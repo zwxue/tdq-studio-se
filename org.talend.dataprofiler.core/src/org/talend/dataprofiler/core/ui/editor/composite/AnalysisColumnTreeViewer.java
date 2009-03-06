@@ -314,13 +314,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
                 @Override
                 public void mouseDown(MouseEvent e) {
-                    // Button addPatternBtn = new Button(tree, SWT.NONE);
-                    //            addPatternBtn.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
-                    // addPatternBtn.pack();
-                    // addPatternBtn.addSelectionListener(new SelectionAdapter() {
-                    //
-                    // @Override
-                    // public void widgetSelected(SelectionEvent e) {
                     DataManager dm = getAnalysis().getContext().getConnection();
                     if (dm == null) {
                         masterPage.doSave(null);
@@ -395,7 +388,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 }
 
             });
-            addPatternEditor.minimumWidth = WIDTH1_CELL;
+            addPatternEditor.minimumWidth = addPatternLabl.getImage().getBounds().width;
             addPatternEditor.setEditor(addPatternLabl, treeItem, 2);
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
@@ -418,7 +411,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             });
 
-            delLabelEditor.minimumWidth = WIDTH1_CELL;
+            delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
             delLabelEditor.setEditor(delLabel, treeItem, 3);
             treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { comboEditor, delLabelEditor, addPatternEditor });
@@ -480,7 +473,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         });
 
-        optionEditor.minimumWidth = WIDTH1_CELL;
+        optionEditor.minimumWidth = optionLabel.getImage().getBounds().width;
         optionEditor.horizontalAlignment = SWT.CENTER;
         optionEditor.setEditor(optionLabel, indicatorItem, 1);
         // }
@@ -511,7 +504,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         });
 
-        delEditor.minimumWidth = WIDTH1_CELL;
+        delEditor.minimumWidth = delLabel.getImage().getBounds().width;
         delEditor.horizontalAlignment = SWT.CENTER;
         delEditor.setEditor(delLabel, indicatorItem, 3);
         indicatorItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { optionEditor, delEditor });

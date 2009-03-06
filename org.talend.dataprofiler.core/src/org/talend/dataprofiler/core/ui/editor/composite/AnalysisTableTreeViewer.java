@@ -269,11 +269,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
                 @Override
                 public void mouseDown(MouseEvent e) {
-                    // Button addDQRuleBtn = new Button(tree, SWT.NONE);
-                    //            addDQRuleBtn.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.addDQRule")); //$NON-NLS-1$
-                    // addDQRuleBtn.pack();
-                    // addDQRuleBtn.addSelectionListener(new SelectionAdapter() {
-
+                    
                     CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
                             new WorkbenchContentProvider());
 
@@ -338,7 +334,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 }
 
             });
-            addDQRuleEditor.minimumWidth = WIDTH1_CELL;
+            addDQRuleEditor.minimumWidth = addDQRuleLabl.getImage().getBounds().width;
             addDQRuleEditor.setEditor(addDQRuleLabl, treeItem, 1);
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
@@ -359,7 +355,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     }
                 }
             });
-            delLabelEditor.minimumWidth = WIDTH1_CELL;
+            delLabelEditor.minimumWidth = delLabel.getImage().getBounds().width;
             delLabelEditor.horizontalAlignment = SWT.CENTER;
             delLabelEditor.setEditor(delLabel, treeItem, 2);
             treeItem.setData(ITEM_EDITOR_KEY, new TreeEditor[] { addDQRuleEditor, delLabelEditor });
@@ -407,7 +403,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
         });
 
-        optionEditor.minimumWidth = WIDTH1_CELL;
+        optionEditor.minimumWidth = optionLabel.getImage().getBounds().width;
         optionEditor.horizontalAlignment = SWT.CENTER;
         optionEditor.setEditor(optionLabel, indicatorItem, 1);
 
@@ -434,7 +430,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             });
 
-            delEditor.minimumWidth = WIDTH1_CELL;
+            delEditor.minimumWidth = delLabel.getImage().getBounds().width;
             delEditor.horizontalAlignment = SWT.CENTER;
             delEditor.setEditor(delLabel, indicatorItem, 2);
         }

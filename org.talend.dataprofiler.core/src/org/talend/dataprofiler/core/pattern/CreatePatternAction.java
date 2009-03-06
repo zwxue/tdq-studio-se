@@ -59,7 +59,7 @@ public class CreatePatternAction extends Action {
             setText(DefaultMessagesImpl.getString("CreatePatternAction.newRegularPattern")); //$NON-NLS-1$
             break;
         }
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_PATTERN));
         this.folder = folder;
         this.type = type;
     }
