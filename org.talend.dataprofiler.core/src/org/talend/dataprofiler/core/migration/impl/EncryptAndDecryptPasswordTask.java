@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.security.CryptoHelper;
+import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
@@ -69,7 +70,7 @@ public class EncryptAndDecryptPasswordTask extends AbstractMigrationTask {
      */
     public static TdDataProvider encryptDataProvider(TdDataProvider dataProvider) {
         // Delete DataProvider password tag
-        EList dpList = dataProvider.getTaggedValue();
+        EList<TaggedValue> dpList = dataProvider.getTaggedValue();
         if (dpList != null && dpList.size() > 0) {
             int dpSize = dpList.size();
             for (int j = 0; j < dpSize; ++j) {
@@ -86,13 +87,13 @@ public class EncryptAndDecryptPasswordTask extends AbstractMigrationTask {
         }
 
         // Connection password encrypt
-        EList elist = dataProvider.getResourceConnection();
+        EList<ProviderConnection> elist = dataProvider.getResourceConnection();
 
         for (int i = 0; i < elist.size(); ++i) {
             Object obj = elist.get(i);
             if (obj != null) {
                 TdProviderConnection tdpConn = (TdProviderConnection) obj;
-                EList tvList = tdpConn.getTaggedValue();
+                EList<TaggedValue> tvList = tdpConn.getTaggedValue();
                 if (tvList != null && tvList.size() > 0) {
                     int tvSize = tvList.size();
                     for (int j = 0; j < tvSize; ++j) {
