@@ -233,13 +233,13 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                 (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
                 StringFormatUtil.PERCENT).toString());
         TableItem item3 = new TableItem(resultTable, SWT.NULL);
-        item3.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.#Match")); //$NON-NLS-1$
+        item3.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Match")); //$NON-NLS-1$
         item3.setText(1, rowMatchingIndicatorA.getMatchingValueCount().toString());
         TableItem item4 = new TableItem(resultTable, SWT.NULL);
-        item4.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.#NotMatch")); //$NON-NLS-1$
+        item4.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.NotMatch")); //$NON-NLS-1$
         item4.setText(1, rowMatchingIndicatorA.getNotMatchingValueCount().toString());
         TableItem item5 = new TableItem(resultTable, SWT.NULL);
-        item5.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.#rows")); //$NON-NLS-1$
+        item5.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.rows")); //$NON-NLS-1$
         item5.setText(1, columnSetARows.toString());
 
         if (!isHasDeactivatedIndicator) {
