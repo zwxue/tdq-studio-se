@@ -533,8 +533,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             String temp = language.getLiteral();
             execCombo.add(temp);
         }
-        // ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
-        execCombo.setText(ExecutionLanguage.SQL.getLiteral());
+        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        execCombo.setText(executionLanguage.getLiteral());
         execCombo.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
