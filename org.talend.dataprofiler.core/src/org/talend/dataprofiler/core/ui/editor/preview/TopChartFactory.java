@@ -232,9 +232,8 @@ public final class TopChartFactory {
             createXYZDatasets.get(next).addSeriesToXYZDataset(dataset, next);
         }
         String chartName = DefaultMessagesImpl.getString("TopChartFactory.ChartName", numericColumn.getName()); //$NON-NLS-1$
-        JFreeChart chart = TopChartFactory.createBubbleChart(chartName,
-                "average", "count", dataset, PlotOrientation.HORIZONTAL, true, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                true, true);
+        JFreeChart chart = TopChartFactory.createBubbleChart(chartName, DefaultMessagesImpl.getString("TopChartFactory.average"), DefaultMessagesImpl.getString("TopChartFactory.count"), dataset, PlotOrientation.HORIZONTAL, //$NON-NLS-1$ //$NON-NLS-2$
+                true, true, true);
         final XYPlot plot = (XYPlot) chart.getPlot();
         final XYItemRenderer renderer = plot.getRenderer();
         renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator() {
@@ -304,7 +303,8 @@ public final class TopChartFactory {
      */
     public static JFreeChart create3DBarChart(String titile, CategoryDataset dataset, boolean showLegend) {
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, titile, "Value", dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
+        JFreeChart chart = ChartFactory.createBarChart3D(null, titile,
+                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
                 false, true);
 
         CategoryPlot plot = chart.getCategoryPlot();
@@ -334,7 +334,8 @@ public final class TopChartFactory {
      */
     public static JFreeChart createBarChart(String titile, CategoryDataset dataset) {
 
-        return ChartFactory.createBarChart(null, titile, "Value", dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
+        return ChartFactory.createBarChart(null, titile,
+                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
     }
 
     /**
@@ -372,8 +373,8 @@ public final class TopChartFactory {
      */
     public static JFreeChart createStacked3DBarChart(String titile, CategoryDataset dataset, PlotOrientation orientation) {
 
-        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, "Value", dataset, orientation, true, //$NON-NLS-1$
-                false, false);
+        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, DefaultMessagesImpl
+                .getString("TopChartFactory.Value"), dataset, orientation, true, false, false); //$NON-NLS-1$
 
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setRangeGridlinesVisible(true);
@@ -404,7 +405,8 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createStackedBarChart(String title, CategoryDataset dataset, boolean showLegend) {
-        final JFreeChart chart = ChartFactory.createStackedBarChart(null, title, "Value", dataset, PlotOrientation.VERTICAL,
+        final JFreeChart chart = ChartFactory.createStackedBarChart(null, title, DefaultMessagesImpl
+                .getString("TopChartFactory.value"), dataset, PlotOrientation.VERTICAL, //$NON-NLS-1$
                 showLegend, false, false);
         final CategoryPlot plot = chart.getCategoryPlot();
         final ValueAxis rangeAxis = plot.getRangeAxis();
@@ -422,7 +424,8 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createLineChart(String title, XYDataset dataset, boolean showLegend) {
-        final JFreeChart chart = ChartFactory.createXYLineChart(null, title, "Percent", dataset, PlotOrientation.VERTICAL,
+        final JFreeChart chart = ChartFactory.createXYLineChart(null, title, DefaultMessagesImpl
+                .getString("TopChartFactory.Percent"), dataset, PlotOrientation.VERTICAL, //$NON-NLS-1$
                 showLegend, false, false);
 
         final XYPlot plot = chart.getXYPlot();

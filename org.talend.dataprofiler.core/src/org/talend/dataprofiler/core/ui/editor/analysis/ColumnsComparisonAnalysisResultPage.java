@@ -54,9 +54,9 @@ import orgomg.cwm.resource.relational.Column;
  */
 public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultPage {
 
-    private static final String NOT_MATCHING = DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Not_matching");  //$NON-NLS-1$
+    private static final String NOT_MATCHING = DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Not_matching"); //$NON-NLS-1$
 
-    private static final String MATCHING = DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Matching");  //$NON-NLS-1$
+    private static final String MATCHING = DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Matching"); //$NON-NLS-1$
 
     private ColumnsComparisonMasterDetailsPage masterPage;
 
@@ -182,23 +182,35 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         final TableColumn columnHeader1 = new TableColumn(resultTable, SWT.CENTER);
         columnHeader1.setWidth(120);
         columnHeader1.setAlignment(SWT.CENTER);
-        columnHeader1.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetA")); // TODO scorreia put here table name instead //$NON-NLS-1$
+        // add by hcheng for 6503:change the "set A" and "set B" labels
+        Analysis analysis = this.masterPage.getAnalysisHandler().getAnalysis();
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
+        rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
+        String tableNameA = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetA().get(0)).getName();
+        String tableNameB = ColumnHelper.getColumnSetOwner(rowMatchingIndicatorA.getColumnSetB().get(0)).getName();
+        // ~
+        columnHeader1.setText(tableNameA);
+        // columnHeader1.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetA")); // TODO scorreia put here table name instead //$NON-NLS-1$
         if (!isHasDeactivatedIndicator) {
             final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
             columnHeader2.setWidth(120);
             columnHeader2.setAlignment(SWT.CENTER);
-            columnHeader2.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetB")); // TODO scorreia put here table name instead //$NON-NLS-1$
+            columnHeader2.setText(tableNameB);
+            //  columnHeader2.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetB")); // TODO scorreia put here table name instead //$NON-NLS-1$
         }
         createTableItems(resultTable);
 
-        creatChart(sectionClient);
+        creatChart(sectionClient, tableNameA, tableNameB);
         StringBuilder description = new StringBuilder();
         description.append(setAMatchPercent);
-        description.append(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ASetFoundInB"));  //$NON-NLS-1$
+        description.append(DefaultMessagesImpl.getString(
+                "ColumnsComparisonAnalysisResultPage.ASetFoundInB", tableNameA, tableNameB)); //$NON-NLS-1$
         if (!isHasDeactivatedIndicator) {
             description.append("\n"); //$NON-NLS-1$
             description.append(setBMatchPercent);
-            description.append(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.BSetFoundInA"));  //$NON-NLS-1$
+            description.append(DefaultMessagesImpl.getString(
+                    "ColumnsComparisonAnalysisResultPage.BSetFoundInA", tableNameB, tableNameA)); //$NON-NLS-1$
         } else {
             description.append("."); //$NON-NLS-1$
         }
@@ -210,24 +222,24 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         Long columnSetARows = rowMatchingIndicatorA.getMatchingValueCount() + rowMatchingIndicatorA.getNotMatchingValueCount();
 
         TableItem item1 = new TableItem(resultTable, SWT.NULL);
-        item1.setText(0, "%Match"); //$NON-NLS-1$
+        item1.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.%Match")); //$NON-NLS-1$
         setAMatchPercent = StringFormatUtil.format(
                 (rowMatchingIndicatorA.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
                 StringFormatUtil.PERCENT).toString();
         item1.setText(1, setAMatchPercent);
         TableItem item2 = new TableItem(resultTable, SWT.NULL);
-        item2.setText(0, "%NotMatch"); //$NON-NLS-1$
+        item2.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.%NotMatch")); //$NON-NLS-1$
         item2.setText(1, StringFormatUtil.format(
                 (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
                 StringFormatUtil.PERCENT).toString());
         TableItem item3 = new TableItem(resultTable, SWT.NULL);
-        item3.setText(0, "#Match"); //$NON-NLS-1$
+        item3.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.#Match")); //$NON-NLS-1$
         item3.setText(1, rowMatchingIndicatorA.getMatchingValueCount().toString());
         TableItem item4 = new TableItem(resultTable, SWT.NULL);
-        item4.setText(0, "#Not Match"); //$NON-NLS-1$
+        item4.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.#NotMatch")); //$NON-NLS-1$
         item4.setText(1, rowMatchingIndicatorA.getNotMatchingValueCount().toString());
         TableItem item5 = new TableItem(resultTable, SWT.NULL);
-        item5.setText(0, "#Rows"); //$NON-NLS-1$
+        item5.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.#rows")); //$NON-NLS-1$
         item5.setText(1, columnSetARows.toString());
 
         if (!isHasDeactivatedIndicator) {
@@ -246,13 +258,13 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         }
     }
 
-    private void creatChart(Composite parent) {
+    private void creatChart(Composite parent, String tableA, String tableB) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, "SetA"); //$NON-NLS-1$
-        dataset.addValue(rowMatchingIndicatorA.getNotMatchingValueCount(), NOT_MATCHING, "SetA"); //$NON-NLS-1$
+        dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, tableA);
+        dataset.addValue(rowMatchingIndicatorA.getNotMatchingValueCount(), NOT_MATCHING, tableA);
         if (!isHasDeactivatedIndicator) {
-            dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, "SetB"); //$NON-NLS-1$
-            dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, "SetB"); //$NON-NLS-1$
+            dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, tableB);
+            dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, tableB);
         }
         JFreeChart createStacked3DBarChart = TopChartFactory.createStacked3DBarChart(DefaultMessagesImpl
                 .getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
