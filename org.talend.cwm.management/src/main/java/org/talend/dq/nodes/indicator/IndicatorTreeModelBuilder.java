@@ -61,7 +61,7 @@ public final class IndicatorTreeModelBuilder {
                 .getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums); //$NON-NLS-1$
 
         indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
-                patternFinderCategoryNode, soundexCategoryNode, advanceCategoryNode };
+                advanceCategoryNode, patternFinderCategoryNode, soundexCategoryNode };
         return indicatorCategoryNodes;
     }
 }
