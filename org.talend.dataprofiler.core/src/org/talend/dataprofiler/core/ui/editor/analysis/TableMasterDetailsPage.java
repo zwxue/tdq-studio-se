@@ -97,6 +97,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     AnalysisTableTreeViewer treeViewer;
 
+    public AnalysisTableTreeViewer getTreeViewer() {
+        return treeViewer;
+    }
+
     DataFilterComp dataFilterComp;
 
     TableAnalysisHandler analysisHandler;

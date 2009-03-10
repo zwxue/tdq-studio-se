@@ -12,9 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
-import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
-import org.talend.dataprofiler.core.ui.wizard.analysis.connection.AnalysisFilterWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
@@ -28,17 +27,26 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableAnalysisWizard extends AnalysisFilterWizard {
+public class TableAnalysisWizard extends AbstractAnalysisWizard {
+
+    private NamedColumnSet[] namedColumnSet;
+
+    public NamedColumnSet[] getNamedColumnSet() {
+        return namedColumnSet;
+    }
+
+    public void setNamedColumnSet(NamedColumnSet[] namedColumnSet) {
+        this.namedColumnSet = namedColumnSet;
+    }
 
     @Override
     public boolean canFinish() {
-        return tableAnaDPSelectionPage == null ? false : tableAnaDPSelectionPage.isPageComplete();
+        return analysisMetadataWizardPage == null ? false : analysisMetadataWizardPage.isPageComplete();
     }
 
-    private TableAnalysisDPSelectionPage tableAnaDPSelectionPage = null;
+    private AnalysisMetadataWizardPage analysisMetadataWizardPage = null;
 
     /**
-     * 
      * DOC xqliu TableAnalysisWizard constructor comment.
      * 
      * @param parameter
@@ -48,33 +56,43 @@ public class TableAnalysisWizard extends AnalysisFilterWizard {
     }
 
     public void addPages() {
-        addPage(new AnalysisMetadataWizardPage());
-        if (getParameter().getTdDataProvider() == null) {
-            tableAnaDPSelectionPage = new TableAnalysisDPSelectionPage();
-            tableAnaDPSelectionPage.setCanFinishEarly(true);
-            addPage(tableAnaDPSelectionPage);
-        }
+        analysisMetadataWizardPage = new AnalysisMetadataWizardPage();
+        addPage(analysisMetadataWizardPage);
     }
 
     @Override
     public ModelElement initCWMResourceBuilder() {
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
-
-        if (getAnalysisBuilder() != null) {
-            TdDataProvider tdProvider = getParameter().getTdDataProvider();
-            getAnalysisBuilder().setAnalysisConnection(tdProvider);
-            Indicator[] indicators = new Indicator[getParameter().getNamedColumnSets().length];
+        if (getNamedColumnSet() != null) {
+            Indicator[] indicators = new Indicator[getNamedColumnSet().length];
             int i = 0;
-            for (NamedColumnSet namedColumnSet : getParameter().getNamedColumnSets()) {
+            for (NamedColumnSet namedColumnSet : getNamedColumnSet()) {
                 RowCountIndicator createIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
                 DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createIndicator);
                 createIndicator.setAnalyzedElement(namedColumnSet);
                 indicators[i] = createIndicator;
                 i++;
             }
-            getAnalysisBuilder().addElementsToAnalyze(getParameter().getNamedColumnSets(), indicators);
+            getAnalysisBuilder().addElementsToAnalyze(getNamedColumnSet(), indicators);
         }
 
+        // if (getAnalysisBuilder() != null) {
+        // TdDataProvider tdProvider = getParameter().getTdDataProvider();
+        // getAnalysisBuilder().setAnalysisConnection(tdProvider);
+        // NamedColumnSet[] ncs = getParameter().getNamedColumnSets();
+        // if (ncs != null) {
+        // Indicator[] indicators = new Indicator[ncs.length];
+        // int i = 0;
+        // for (NamedColumnSet namedColumnSet : ncs) {
+        // RowCountIndicator createIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
+        // DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createIndicator);
+        // createIndicator.setAnalyzedElement(namedColumnSet);
+        // indicators[i] = createIndicator;
+        // i++;
+        // }
+        // getAnalysisBuilder().addElementsToAnalyze(ncs, indicators);
+        // }
+        // }
         return analysis;
     }
 

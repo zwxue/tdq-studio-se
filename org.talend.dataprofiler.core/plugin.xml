@@ -440,6 +440,17 @@
          </enablement>
       </actionProvider>
       <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateTableAnalysis"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateTableAnalysis">
+         <enablement>
+            <and>
+               <instanceof
+                     value="org.talend.cwm.relational.TdTable">
+               </instanceof>
+            </and>
+         </enablement>
+      </actionProvider>
+      <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateSimpleAnalysis"
             id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateSimpleAnalysis">
          <enablement>

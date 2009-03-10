@@ -49,6 +49,8 @@ public class TableIndicator {
 
     private List<TableIndicatorUnit> specialIndicatorUnitList;
 
+    private List<IndicatorEnum> tempIndicatorEnums = new ArrayList<IndicatorEnum>();
+
     private TdTable tdTable;
 
     public TdTable getTdTable() {
@@ -269,5 +271,37 @@ public class TableIndicator {
         this.indicatorEnumList.remove(indicatorEnum);
         indicatorUnitMap.remove(indicatorEnum);
         this.processIndicator();
+    }
+
+    public void addTempIndicatorEnum(IndicatorEnum indicatorEnum) {
+        if (!tempIndicatorEnums.contains(indicatorEnum)) {
+            tempIndicatorEnums.add(indicatorEnum);
+        }
+    }
+
+    public void storeTempIndicator() {
+        for (IndicatorEnum indEnum : tempIndicatorEnums) {
+            if (!indicatorEnumList.contains(indEnum)) {
+                this.indicatorEnumList.add(indEnum);
+            }
+        }
+        // remove the deleted IndicatorEnum from current indicatorsEnums;
+        Iterator<IndicatorEnum> iterator = indicatorEnumList.iterator();
+        while (iterator.hasNext()) {
+            IndicatorEnum next = iterator.next();
+            if (!tempIndicatorEnums.contains(next)) {
+                iterator.remove();
+            }
+        }
+        // clear tempIndicatorEnums
+        tempIndicatorEnums.clear();
+    }
+
+    public void removeTempIndicatorEnum(IndicatorEnum indicatorEnum) {
+        tempIndicatorEnums.remove(indicatorEnum);
+    }
+
+    public void copyOldIndicatorEnum() {
+        listCopy(tempIndicatorEnums, indicatorEnumList);
     }
 }
