@@ -12,14 +12,22 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
+import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -30,6 +38,22 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
     private NamedColumnSet[] namedColumnSet;
+
+    private AnalysisMetadataWizardPage analysisMetadataWizardPage = null;
+
+    private TableAnalysisDPSelectionPage tableAnalysisDPSelectionPage = null;
+
+    private DQRuleSelectPage dqruleSelectPage = null;
+
+    private boolean showTableSelectPage = true;
+
+    public boolean isShowTableSelectPage() {
+        return showTableSelectPage;
+    }
+
+    public void setShowTableSelectPage(boolean showTableSelectPage) {
+        this.showTableSelectPage = showTableSelectPage;
+    }
 
     public NamedColumnSet[] getNamedColumnSet() {
         return namedColumnSet;
@@ -44,8 +68,6 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         return analysisMetadataWizardPage == null ? false : analysisMetadataWizardPage.isPageComplete();
     }
 
-    private AnalysisMetadataWizardPage analysisMetadataWizardPage = null;
-
     /**
      * DOC xqliu TableAnalysisWizard constructor comment.
      * 
@@ -58,42 +80,68 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     public void addPages() {
         analysisMetadataWizardPage = new AnalysisMetadataWizardPage();
         addPage(analysisMetadataWizardPage);
+
+        if (isShowTableSelectPage()) {
+            tableAnalysisDPSelectionPage = new TableAnalysisDPSelectionPage();
+            addPage(tableAnalysisDPSelectionPage);
+        }
+        dqruleSelectPage = new DQRuleSelectPage();
+        addPage(dqruleSelectPage);
     }
 
     @Override
     public ModelElement initCWMResourceBuilder() {
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
-        if (getNamedColumnSet() != null) {
-            Indicator[] indicators = new Indicator[getNamedColumnSet().length];
-            int i = 0;
-            for (NamedColumnSet namedColumnSet : getNamedColumnSet()) {
-                RowCountIndicator createIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
-                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createIndicator);
-                createIndicator.setAnalyzedElement(namedColumnSet);
-                indicators[i] = createIndicator;
-                i++;
+        NamedColumnSet[] ncs = isShowTableSelectPage() ? getParameter().getNamedColumnSets() : getNamedColumnSet();
+
+        if (ncs != null && getAnalysisBuilder() != null) {
+            List<Indicator> indicatorList = new ArrayList<Indicator>();
+            WhereRule[] whereRules = getWhereRules(dqruleSelectPage.getCViewer().getCheckedElements());
+
+            for (NamedColumnSet namedColumnSet : ncs) {
+                // add RowCountIndicator
+                RowCountIndicator rowCountIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
+                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(rowCountIndicator);
+                rowCountIndicator.setAnalyzedElement(namedColumnSet);
+                indicatorList.add(rowCountIndicator);
+                // add user selected WhereRuleIndicator
+                if (whereRules != null) {
+                    for (WhereRule whereRule : whereRules) {
+                        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
+                        wrIndicator.setAnalyzedElement(namedColumnSet);
+                        wrIndicator.setIndicatorDefinition(whereRule);
+                        indicatorList.add(wrIndicator);
+                    }
+                }
             }
-            getAnalysisBuilder().addElementsToAnalyze(getNamedColumnSet(), indicators);
+            getAnalysisBuilder().addElementsToAnalyze(ncs, indicatorList.toArray(new Indicator[indicatorList.size()]));
+
+            getAnalysisBuilder().setAnalysisConnection(getParameter().getTdDataProvider());
         }
 
-        // if (getAnalysisBuilder() != null) {
-        // TdDataProvider tdProvider = getParameter().getTdDataProvider();
-        // getAnalysisBuilder().setAnalysisConnection(tdProvider);
-        // NamedColumnSet[] ncs = getParameter().getNamedColumnSets();
-        // if (ncs != null) {
-        // Indicator[] indicators = new Indicator[ncs.length];
-        // int i = 0;
-        // for (NamedColumnSet namedColumnSet : ncs) {
-        // RowCountIndicator createIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
-        // DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createIndicator);
-        // createIndicator.setAnalyzedElement(namedColumnSet);
-        // indicators[i] = createIndicator;
-        // i++;
-        // }
-        // getAnalysisBuilder().addElementsToAnalyze(ncs, indicators);
-        // }
-        // }
         return analysis;
+    }
+
+    /**
+     * DOC xqliu Comment method "getWhereRules".
+     * 
+     * @param checkedElements
+     * @return
+     */
+    private WhereRule[] getWhereRules(Object[] objects) {
+        if (objects != null) {
+            List<WhereRule> wrList = new ArrayList<WhereRule>();
+            for (Object object : objects) {
+                if (object instanceof IFile) {
+                    WhereRule wr = DQRuleResourceFileHelper.getInstance().findWhereRule((IFile) object);
+                    if (wr != null) {
+                        wrList.add(wr);
+                    }
+                }
+            }
+            return wrList.toArray(new WhereRule[wrList.size()]);
+        }
+        return null;
     }
 
     @Override

@@ -23,10 +23,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.DecorationOverlayIcon;
-import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
@@ -38,7 +34,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -48,7 +43,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -83,6 +77,7 @@ import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.TableViewerDND;
+import org.talend.dataprofiler.core.ui.wizard.analysis.table.DQRuleLabelProvider;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TableIndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.analysis.Analysis;
@@ -727,52 +722,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      */
     public Analysis getAnalysis() {
         return this.masterPage.getAnalysisHandler().getAnalysis();
-    }
-
-    /**
-     * DOC xqliu AnalysisTableTreeViewer class global comment. Detailled comment
-     */
-    class DQRuleLabelProvider extends LabelProvider {
-
-        @Override
-        public Image getImage(Object element) {
-            if (element instanceof IFolder) {
-                return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-            }
-
-            if (element instanceof IFile) {
-                WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule((IFile) element);
-                boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
-                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.DQ_RULE);
-                if (!validStatus) {
-                    ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-                            ISharedImages.IMG_OBJS_WARN_TSK);
-                    DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
-                            IDecoration.BOTTOM_RIGHT);
-                    imageDescriptor = icon;
-                }
-                return imageDescriptor.createImage();
-            }
-
-            return null;
-        }
-
-        @Override
-        public String getText(Object element) {
-            if (element instanceof IFile) {
-                IFile file = (IFile) element;
-                WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-                if (whereRule != null) {
-                    return whereRule.getName();
-                }
-            }
-
-            if (element instanceof IFolder) {
-                return ((IFolder) element).getName();
-            }
-
-            return ""; //$NON-NLS-1$
-        }
     }
 
     @Override

@@ -118,6 +118,7 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
             if (wizard instanceof TableAnalysisWizard) {
                 TableAnalysisWizard taw = (TableAnalysisWizard) wizard;
                 taw.setNamedColumnSet(getTables());
+                taw.setShowTableSelectPage(false);
             }
             dialog.open();
         }
