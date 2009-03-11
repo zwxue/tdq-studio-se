@@ -117,11 +117,10 @@ public class AnalysisEditor extends CommonFormEditor {
             masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, DefaultMessagesImpl
                     .getString("AnalysisEditor.analysisSetting")); //$NON-NLS-1$
             setPartName(DefaultMessagesImpl.getString("AnalysisEditor.column")); //$NON-NLS-1$
-            ColumnsComparisonAnalysisResultPage columnsComparisonAnalysisReslultPage = new ColumnsComparisonAnalysisResultPage(
-                    this, SECOND_PAGE, ANALYSIS_RESULTS);
+            columnResultPage = new ColumnsComparisonAnalysisResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
-                addPage(columnsComparisonAnalysisReslultPage);
+                addPage(columnResultPage);
             } catch (PartInitException e) {
                 ExceptionHandler.process(e, Level.ERROR);
             }
@@ -188,6 +187,11 @@ public class AnalysisEditor extends CommonFormEditor {
                 && columnResultPage instanceof ColumnCorrelationNominalIntervalResultPage) {
             ((ColumnCorrelationNominalIntervalResultPage) columnResultPage)
                     .refresh((ColumnCorrelationNominalAndIntervalMasterPage) masterPage);
+            isRefreshResultPage = false;
+        }
+        if (isRefreshResultPage && columnResultPage != null && newPageIndex == columnResultPage.getIndex()
+                && columnResultPage instanceof ColumnsComparisonAnalysisResultPage) {
+            ((ColumnsComparisonAnalysisResultPage) columnResultPage).refresh((ColumnsComparisonMasterDetailsPage) masterPage);
             isRefreshResultPage = false;
         }
 

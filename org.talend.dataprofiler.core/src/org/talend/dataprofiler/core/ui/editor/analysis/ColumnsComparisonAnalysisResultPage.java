@@ -66,6 +66,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     private String executeData;
 
+    private Composite analyzedColumnSetsComp;
+
+    private Composite analysisResultsComp;
+
     private boolean isHasDeactivatedIndicator;
 
     private String setAMatchPercent;
@@ -92,11 +96,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
-        Composite analyzedColumnSetsComp = toolkit.createComposite(topComposite);
+        analyzedColumnSetsComp = toolkit.createComposite(topComposite);
         analyzedColumnSetsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         analyzedColumnSetsComp.setLayout(new GridLayout());
         createAnalyzedColumnSetsSection(analyzedColumnSetsComp);
-        Composite analysisResultsComp = toolkit.createComposite(topComposite);
+        analysisResultsComp = toolkit.createComposite(topComposite);
         analysisResultsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         analysisResultsComp.setLayout(new GridLayout());
         createResultSection(analysisResultsComp);
@@ -273,6 +277,14 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         gd.heightHint = 180;
         gd.widthHint = 450;
         ChartUtils.createAWTSWTComp(parent, gd, createStacked3DBarChart);
+    }
+
+    public void refresh(ColumnsComparisonMasterDetailsPage masterPage) {
+        this.masterPage = masterPage;
+        this.summaryComp.dispose();
+        this.analyzedColumnSetsComp.dispose();
+        this.analysisResultsComp.dispose();
+        createFormContent(getManagedForm());
     }
 
     /*

@@ -588,7 +588,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     }
 
     public void fireRuningItemChanged(boolean status) {
-        // TODO Auto-generated method stub
+        super.fireRuningItemChanged(status);
 
     }
 
