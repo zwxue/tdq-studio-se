@@ -41,6 +41,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -55,8 +56,8 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
      */
     private static final List<Column> EMPTY_COLUMN_LIST = Collections.emptyList();
 
-    public TableViewComparisonLevel(Object selectedObj) {
-        super(selectedObj);
+    public TableViewComparisonLevel(AbstractDatabaseFolderNode dbFolderNode) {
+        super(dbFolderNode);
     }
 
     protected void createTempConnectionFile() throws ReloadCompareException {
@@ -177,6 +178,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         // throw new
         // ReloadCompareException("No factory has been found for URI: " + uri);
         // }
+
         leftResource.getContents().clear();
         for (TdColumn column : columnList) {
             DQStructureComparer.clearSubNode(column);

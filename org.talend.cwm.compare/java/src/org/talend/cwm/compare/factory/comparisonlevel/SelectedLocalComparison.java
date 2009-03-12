@@ -82,8 +82,11 @@ public class SelectedLocalComparison implements IComparisonLevel {
 
         createTempConnectionFile();
         // createCopyedProvider();
+        // MOD mzhao 2009-03-09 Set default dbname is first. (When compare local with distant structure, dbname need to
+        // displayed at left panel of compare editor,have not handled case when compared models both from local
+        // structure)
         DQStructureComparer.openDiffCompareEditor(getResource(LEFT_RESOURCE), getResource(RIGHT_RESOURCE), options, uiHandler,
-                DQStructureComparer.getLocalDiffResourceFile());
+                DQStructureComparer.getLocalDiffResourceFile(), firstSelectedDataProvider.getName(), firstSelectedObj);
 
     }
 

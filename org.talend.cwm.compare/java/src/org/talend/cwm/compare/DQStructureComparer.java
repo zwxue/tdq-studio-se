@@ -430,11 +430,19 @@ public final class DQStructureComparer {
         if (columnSet != null) {
             columnSet.getFeature().clear();
             columnSet.getTaggedValue().clear();
+            // ~MOD mzhao 2009-03-12 Clear primary key(contains in ownedElement) as well. If not clear, it will cause
+            // exception: not contained in
+            // a resource...
+            columnSet.getOwnedElement().clear();
             return;
         }
         TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(needReloadElement);
         if (column != null) {
             column.getTaggedValue().clear();
+            // ~MOD mzhao 2009-03-12 Clear primary key as well. If not clear, it will cause exception: not contained in
+            // a resource...
+            column.getUniqueKey().clear();
+            // ~
             return;
         }
     }
@@ -450,7 +458,7 @@ public final class DQStructureComparer {
      * @throws ReloadCompareException
      */
     public static DiffModel openDiffCompareEditor(Resource leftResource, Resource rightResource, Map<String, Object> opt,
-            IUIHandler guiHandler, IFile efmDiffResultFile) throws ReloadCompareException {
+            IUIHandler guiHandler, IFile efmDiffResultFile, String dbName, Object selectedObject) throws ReloadCompareException {
 
         MatchModel match = null;
         try {
@@ -473,7 +481,7 @@ public final class DQStructureComparer {
             throw new ReloadCompareException(e);
         }
         if (guiHandler != null) {
-            guiHandler.popComparisonUI(createDiffResourceFile.getLocation());
+            guiHandler.popComparisonUI(createDiffResourceFile.getLocation(), dbName, selectedObject);
         }
         return diff;
     }

@@ -34,12 +34,15 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.util.RelationalSwitch;
 
 /**
@@ -59,6 +62,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     protected Object selectedObj;
 
+    private AbstractDatabaseFolderNode dbFolderNode = null;
+
     protected TdDataProvider oldDataProvider;
 
     protected TdDataProvider tempReloadProvider;
@@ -69,8 +74,22 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     protected IUIHandler guiHandler;
 
-    public AbstractComparisonLevel(Object selectedObj) {
-        this.selectedObj = selectedObj;
+    public AbstractComparisonLevel(Object selObj) {
+        if (selObj instanceof AbstractDatabaseFolderNode) {
+            AbstractDatabaseFolderNode fNode = (AbstractDatabaseFolderNode) selObj;
+            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(fNode.getParent());
+            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(fNode.getParent());
+            if (ctatlogSwtich != null) {
+                this.selectedObj = ctatlogSwtich;
+            } else if (columnSet != null) {
+
+                this.selectedObj = columnSet;
+            }
+            this.dbFolderNode = fNode;
+        } else {
+            selectedObj = selObj;
+        }
+
         initSwitchValue();
         options = new HashMap<String, Object>();
         options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
@@ -130,8 +149,12 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         createCopyedProvider();
         // MOD mzhao 2009-01-20 Extract method openDiffCompareEditor to class
         // DQStructureComparer.
+        // MOD mzhao 2009-03-09 add param dbname for displaying datasource(db name) in compare
+        // editor.
+
+        Object needReloadObject = dbFolderNode == null ? selectedObj : dbFolderNode;
         DQStructureComparer.openDiffCompareEditor(getLeftResource(), getRightResource(), options, guiHandler, DQStructureComparer
-                .getDiffResourceFile());
+                .getDiffResourceFile(), oldDataProvider.getName(), needReloadObject);
 
         // testInit();
 

@@ -28,55 +28,48 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public final class ComparisonLevelFactory {
 
-	/**
-	 * DOC rli CompareLevelFactory constructor comment.
-	 */
-	private ComparisonLevelFactory() {
-	}
+    /**
+     * DOC rli CompareLevelFactory constructor comment.
+     */
+    private ComparisonLevelFactory() {
+    }
 
-	public static IComparisonLevel creatComparisonLevel(Object selectedObject) {
-		IComparisonLevel comparisonLevel = null;
+    public static IComparisonLevel creatComparisonLevel(Object selectedObject) {
+        IComparisonLevel comparisonLevel = null;
 
-		if (selectedObject instanceof AbstractDatabaseFolderNode) {
-			AbstractDatabaseFolderNode dbFolderNode = (AbstractDatabaseFolderNode) selectedObject;
-			EObject parentEObject = dbFolderNode.getParent();
-			int folderNodeType = dbFolderNode.getFolderNodeType();
-			Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH
-					.doSwitch(parentEObject);
-			if (ctatlogSwtich != null) {
-				comparisonLevel = new CatalogSchemaComparisonLevel(
-						ctatlogSwtich, folderNodeType);
-			}
-			ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
-					.doSwitch(parentEObject);
-			if (columnSet != null) {
-				comparisonLevel = new TableViewComparisonLevel(columnSet);
-			}
+        if (selectedObject instanceof AbstractDatabaseFolderNode) {
+            // MOD mzhao FolderNode param need to pass for later reloading from this folder.
+            AbstractDatabaseFolderNode dbFolderNode = (AbstractDatabaseFolderNode) selectedObject;
+            EObject parentEObject = dbFolderNode.getParent();
+            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(parentEObject);
+            if (ctatlogSwtich != null) {
+                comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
+            }
+            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(parentEObject);
+            if (columnSet != null) {
+                comparisonLevel = new TableViewComparisonLevel(dbFolderNode);
+            }
 
-		} else if (selectedObject instanceof IFile) {
-			comparisonLevel = new DataProviderComparisonLevel(selectedObject);
-		} else {
-			comparisonLevel = null;
-		}
+        } else if (selectedObject instanceof IFile) {
+            comparisonLevel = new DataProviderComparisonLevel(selectedObject);
+        } else {
+            comparisonLevel = null;
+        }
 
-		return comparisonLevel;
-	}
+        return comparisonLevel;
+    }
 
-	/**
-	 * 
-	 * DOC mzhao Compare the selected two elements.
-	 * 
-	 * @param selectedObject1
-	 *            first selected element.
-	 * @param selectedObject2
-	 *            second selected element.
-	 * @return IComparisonLevel
-	 */
-	public static IComparisonLevel creatComparisonLevel(Object selectedObject1,
-			Object selectedObject2) {
-		IComparisonLevel comparisonLevel = new SelectedLocalComparison(
-				selectedObject1, selectedObject2);
-		return comparisonLevel;
-	}
+    /**
+     * 
+     * DOC mzhao Compare the selected two elements.
+     * 
+     * @param selectedObject1 first selected element.
+     * @param selectedObject2 second selected element.
+     * @return IComparisonLevel
+     */
+    public static IComparisonLevel creatComparisonLevel(Object selectedObject1, Object selectedObject2) {
+        IComparisonLevel comparisonLevel = new SelectedLocalComparison(selectedObject1, selectedObject2);
+        return comparisonLevel;
+    }
 
 }

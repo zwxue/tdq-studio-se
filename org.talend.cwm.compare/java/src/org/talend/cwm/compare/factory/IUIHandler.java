@@ -24,12 +24,13 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 public interface IUIHandler {
 
     /**
-     * Method "popComparisonUI" opens a pop-up which displays the differences listed in the given file.
+     * Method "popComparisonUI" opens a pop-up which displays the differences listed in the given file. MOD mzhao
+     * 2009-03-09 Add dbname method for displaying db name info in compare editor.
      * 
      * @param diffResourcePath the path to the difference file
      * @throws ReloadCompareException
      */
-    public void popComparisonUI(final IPath diffResourcePath) throws ReloadCompareException;
+    public void popComparisonUI(final IPath diffResourcePath, String dbName, Object selectedObject) throws ReloadCompareException;
 
     /**
      * Method "popRemoveElement" pops-up a dialog to display the impacts of a change in the data provider.
