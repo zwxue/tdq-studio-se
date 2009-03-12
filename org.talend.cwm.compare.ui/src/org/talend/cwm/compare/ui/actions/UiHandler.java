@@ -13,32 +13,29 @@
 package org.talend.cwm.compare.ui.actions;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.compare.ui.editor.ModelCompareEditorLauncher;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.Messages;
+import org.talend.cwm.compare.ui.editor.ModelElementCompareEditorLauncher;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 public class UiHandler implements IUIHandler {
- 
 
-    
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.cwm.compare.factory.IUIHandler#popComparisonUI(org.eclipse.core.runtime.IPath)
      */
-    public void popComparisonUI(final IPath diffResourcePath) throws ReloadCompareException {
-        new ModelCompareEditorLauncher().open(diffResourcePath);
+    public void popComparisonUI(final IPath diffResourcePath, String dbName, Object selectedObject) throws ReloadCompareException {
+        new ModelElementCompareEditorLauncher(dbName, selectedObject).open(diffResourcePath);
     }
 
     /*
