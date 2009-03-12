@@ -56,6 +56,18 @@ public class ColumnSetHelper {
         return columnSet.getFeature().remove(column);
     }
 
+    /**
+     * 
+     * DOC mzhao 2009-03-12 Remove all columns from this column set.
+     * 
+     * @param column
+     * @param columnSet
+     * @return true if remove successfully, false or else.
+     */
+    public static void clearAllColumns(ColumnSet columnSet) {
+        columnSet.getFeature().clear();
+    }
+
     public static List<TdColumn> getColumns(ColumnSet columnSet) {
         return ColumnHelper.getColumns(columnSet.getFeature());
     }
