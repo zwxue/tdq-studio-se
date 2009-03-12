@@ -154,11 +154,13 @@ public class DataProviderWriter {
 
         // save each catalog is its own file
         Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
-        if (isSuffixWithPRV(file.getFileExtension())) {
-            resource.getContents().addAll(catalogs);
-        } else {
-            ok = addElementsToOwnResources(catalogs, folderProvider, util);
-        }
+        // ~ MOD mzhao 2009-03-11 Not save each catalog or schema to separated files.
+        // if (isSuffixWithPRV(file.getFileExtension())) {
+        resource.getContents().addAll(catalogs);
+        // } else {
+        // ok = addElementsToOwnResources(catalogs, folderProvider, util);
+        // }
+        // ~
 
         if (log.isDebugEnabled()) {
             log.debug("Catalogs added " + ok);
@@ -166,14 +168,15 @@ public class DataProviderWriter {
 
         // save each schema is its own file
         Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(dataProvider);
-        if (isSuffixWithPRV(file.getFileExtension())) {
-            resource.getContents().addAll(schemata);
-            EMFUtil.saveSingleResource(resource);
-        } else {
-            ok = addElementsToOwnResources(schemata, folderProvider, util);
-            util.saveAll();
-        }
-
+        // ~ MOD mzhao 2009-03-11 Not save each catalog or schema to separated files.
+        // if (isSuffixWithPRV(file.getFileExtension())) {
+        resource.getContents().addAll(schemata);
+        EMFUtil.saveSingleResource(resource);
+        // } else {
+        // ok = addElementsToOwnResources(schemata, folderProvider, util);
+        // util.saveAll();
+        // }
+        // ~
         if (log.isDebugEnabled()) {
             log.debug("Schema added " + ok);
         }
