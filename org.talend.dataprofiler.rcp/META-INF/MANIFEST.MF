@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.cwm.compare,
  org.talend.cwm.compare.ui,
  org.talend.utils,
- org.talend.commons;bundle-version="2.2.0"
+ org.talend.commons
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.rcp,

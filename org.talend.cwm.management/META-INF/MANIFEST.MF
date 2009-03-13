@@ -26,7 +26,7 @@ Require-Bundle: org.talend.libraries.apache,
  org.talend.libraries.jdbc.sqlite3;resolution:=optional,
  org.talend.libraries.jdbc.teradata;resolution:=optional,
  org.talend.libraries.jung;bundle-version="1.0.0",
- org.talend.commons;bundle-version="2.2.0"
+ org.talend.commons
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.db.connection,
  org.talend.cwm.dburl,

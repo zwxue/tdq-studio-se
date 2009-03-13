@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.dataprofiler.core,
  org.eclipse.ui.cheatsheets,
  org.eclipse.ui.forms,
- org.talend.commons;bundle-version="2.2.0"
+ org.talend.commons
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

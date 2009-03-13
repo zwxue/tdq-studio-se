@@ -52,6 +52,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.talend.utils,
  org.eclipse.emf.ecore.xmi,
  org.apache.log4j;bundle-version="1.2.13",
- org.talend.commons;bundle-version="2.2.0"
+ org.talend.commons
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.apache.log4j

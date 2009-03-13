@@ -144,7 +144,6 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
 
     public void runProgressMonitorDialog(final boolean validated, final String language) {
         updateCompleted = false;
-        BabiliTool.clear();
         ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(mainComposite.getShell());
         IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
