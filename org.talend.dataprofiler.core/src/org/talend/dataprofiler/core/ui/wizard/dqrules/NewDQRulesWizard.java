@@ -22,6 +22,7 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
+import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.dqrule.DqRuleWriter;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
@@ -42,7 +43,8 @@ public class NewDQRulesWizard extends AbstractWizard {
 
     private Expression expression;
 
-    private static final String EXPRESSION_BODY = "SELECT COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>";
+    private static final String EXPRESSION_BODY = "SELECT COUNT(*) FROM " + GenericSQLHandler.TABLE_NAME + " "
+            + GenericSQLHandler.JOIN_CLAUSE + " " + GenericSQLHandler.WHERE_CLAUSE;
 
     private static final String EXPRESSION_LANG = ExecutionLanguage.SQL.getLiteral();
 
