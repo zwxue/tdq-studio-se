@@ -19,9 +19,9 @@ public class GenericSQLHandler {
 
     private static final String AND_WHERE_CLAUSE = "<%=__AND_WHERE_CLAUSE__%>"; //$NON-NLS-1$
 
-    private static final String WHERE_CLAUSE = "<%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
+    public static final String WHERE_CLAUSE = "<%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
 
-    private static final String TABLE_NAME = "<%=__TABLE_NAME__%>"; //$NON-NLS-1$
+    public static final String TABLE_NAME = "<%=__TABLE_NAME__%>"; //$NON-NLS-1$
 
     private static final String TABLE_NAME2 = "<%=__TABLE_NAME_2__%>"; //$NON-NLS-1$
 
@@ -33,7 +33,7 @@ public class GenericSQLHandler {
 
     private static final String PATTERN_EXPRESSION = "<%=__PATTERN_EXPR__%>"; //$NON-NLS-1$
 
-    private static final String JOIN_CLAUSE = "<%=__JOIN_CLAUSE__%>"; //$NON-NLS-1$
+    public static final String JOIN_CLAUSE = "<%=__JOIN_CLAUSE__%>"; //$NON-NLS-1$
 
     private static final String LIMIT_OFFSET = "<%=__LIMIT_OFFSET__%>"; //$NON-NLS-1$
 
@@ -110,6 +110,11 @@ public class GenericSQLHandler {
         return this;
     }
 
+    public GenericSQLHandler replaceJoinClause(String joinclause) {
+        sqlString = sqlString.replace(JOIN_CLAUSE, joinclause);
+        return this;
+    }
+
     public GenericSQLHandler replaceLimitOffset(String colName, String table, String limitRow, String offset,
             String limitRowPlusOffset) {
         this.replaceColumnTable(colName, table);
@@ -146,4 +151,5 @@ public class GenericSQLHandler {
         return "SELECT COUNT(CASE WHEN " + function + "(" + COLUMN_NAMES + "," + PATTERN_EXPRESSION //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 + ") THEN 1 END), COUNT(*) FROM " + TABLE_NAME + " " + WHERE_CLAUSE; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
 }

@@ -25,7 +25,9 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -45,6 +47,7 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -147,9 +150,18 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         if (StringUtils.isNotBlank(dataFilterAsString)) {
             whereExpression.add(dataFilterAsString);
         }
+        final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (indicatorDefinition instanceof WhereRule) {
             WhereRule wr = (WhereRule) indicatorDefinition;
             whereExpression.add(wr.getWhereExpression());
+            
+            // MOD scorreia 2009-03-13 copy joins conditions into the indicator
+            if (!wr.getJoins().isEmpty()) {
+                for (JoinElement joinelt : wr.getJoins()) {
+                    JoinElement joinCopy = (JoinElement) EcoreUtil.copy(joinelt);
+                    joinConditions.add(joinCopy);
+                }
+            }
         }
         IndicatorParameters parameters = indicator.getParameters();
         if (parameters != null) {
@@ -175,7 +187,10 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         // --- default case
         // TODO for table not for column
-        completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(sqlGenericExpression.getBody(), tableName, table);
+        // TODO scorreia allow join
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(joinConditions) : "";
+
+        completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), tableName, joinclause);
         // ~
         completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
 

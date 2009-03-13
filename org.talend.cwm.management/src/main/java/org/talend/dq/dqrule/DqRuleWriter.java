@@ -50,7 +50,7 @@ public class DqRuleWriter {
         IFile file = folder.getFile(fname);
 
         if (file.exists()) {
-            log.error("Failed to create dq rule file.");
+            log.error("Failed to create dq rule file from " + rule.getName());
             trc.setOk(false);
         } else {
             EMFSharedResources.getInstance().addEObjectToResourceSet(file.getFullPath().toString(), rule);

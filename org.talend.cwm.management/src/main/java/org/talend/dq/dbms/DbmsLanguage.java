@@ -16,9 +16,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -30,8 +34,10 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.JoinElement;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
@@ -805,6 +811,18 @@ public class DbmsLanguage {
     }
 
     /**
+     * DOC scorreia Comment method "fillGenericQueryWithJoin".
+     * 
+     * @param body
+     * @param tableName
+     * @param joinclause
+     * @return
+     */
+    public String fillGenericQueryWithJoin(String genericSQL, String tableName, String joinclause) {
+        return new GenericSQLHandler(genericSQL).replaceTable(tableName).replaceJoinClause(joinclause).getSqlString();
+    }
+
+    /**
      * Method "charLength".
      * 
      * @param columnName
@@ -824,4 +842,98 @@ public class DbmsLanguage {
     public boolean supportRegexp() {
         return false;
     }
+    
+    public String createJoinConditionAsString(List<JoinElement> joinElements) {
+        if (joinElements.isEmpty()) {
+            return "";
+        }
+        // else
+        StringBuilder builder = new StringBuilder();
+        for (JoinElement joinElement : joinElements) {
+            ModelElement colA = joinElement.getColA();
+            String tableA = getTableName(colA);
+            String tableAliasA = joinElement.getTableAliasA();
+            
+            String columnAName = getColumnName(colA);
+            String columnAliasA = joinElement.getColumnAliasA();
+
+            boolean hasTableAliasA = StringUtils.isEmpty(tableAliasA);
+            boolean hasColumnAliasA = StringUtils.isEmpty(columnAliasA);
+
+            
+            ModelElement colB = joinElement.getColB();
+            String tableB = getTableName(colB);
+            String tableAliasB = joinElement.getTableAliasB();
+
+            String columnBName = getColumnName(colB);            
+            String columnAliasB = joinElement.getColumnAliasB();
+
+            boolean hasTableAliasB = StringUtils.isEmpty(tableAliasB);
+            boolean hasColumnAliasB = StringUtils.isEmpty(columnAliasB);
+
+            String operator = joinElement.getOperator();
+
+            // tableA tableAliasA JOIN
+            // builder.append(surroundWithSpaces(quote(tableA)));
+            // if (hasTableAliasA) {
+            // builder.append(surroundWithSpaces(tableAliasA));
+            // }
+            createJoinClause(builder, columnAName, columnAliasA, hasColumnAliasA, tableB, tableAliasB, columnBName, columnAliasB,
+                    hasTableAliasB, hasColumnAliasB, operator);
+        }
+        return builder.toString();
+    }
+
+    /**
+     * DOC scorreia Comment method "createJoinClause".
+     * @param builder
+     * @param columnAName
+     * @param columnAliasA
+     * @param hasColumnAliasA
+     * @param tableB
+     * @param tableAliasB
+     * @param columnBName
+     * @param columnAliasB
+     * @param hasTableAliasB
+     * @param hasColumnAliasB
+     * @param operator
+     */
+    private void createJoinClause(StringBuilder builder, String columnAName, String columnAliasA, boolean hasColumnAliasA,
+            String tableB, String tableAliasB, String columnBName, String columnAliasB, boolean hasTableAliasB,
+            boolean hasColumnAliasB, String operator) {
+        builder.append(" JOIN ");
+        
+        // tableB tableAliasB ON
+        builder.append(surroundWithSpaces(quote(tableB)));
+        if (hasTableAliasB) {
+            builder.append(surroundWithSpaces(tableAliasB));
+        }
+        builder.append(" ON ");
+        
+        // (columaliasA = columnaliasB)
+        builder.append('(');
+        if (hasColumnAliasA) {
+            builder.append(surroundWithSpaces(columnAliasA));
+        } else {
+            builder.append(surroundWithSpaces(quote(columnAName)));
+        }
+        builder.append(operator);
+        if (hasColumnAliasB) {
+            builder.append(surroundWithSpaces(columnAliasB));
+        } else {
+            builder.append(surroundWithSpaces(quote(columnBName)));
+        }
+        builder.append(')');
+    }
+    
+    private String getColumnName(ModelElement colA) {
+        TdColumn columnA = colA != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(colA) : null;
+        return columnA != null ? columnA.getName() : null;
+    }
+
+    private String getTableName(ModelElement colA) {
+        TdColumn columnA = colA != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(colA) : null;
+        return (columnA != null) ? ColumnHelper.getColumnSetFullName(columnA) : null;
+    }
+
 }
