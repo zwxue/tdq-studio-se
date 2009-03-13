@@ -16,6 +16,8 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.talend.commons.i18n.BabiliTool;
+
 /**
  * DOC rli class global comment. Detailled comment <br/>
  * 
@@ -26,7 +28,9 @@ public final class Messages {
 
     private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+    private static final String PLUGIN_ID = "org.talend.dataprofiler.rcp"; //$NON-NLS-1$
+
+    private static ResourceBundle resource = ResourceBundle.getBundle(BUNDLE_NAME);
 
     private Messages() {
     }
@@ -39,7 +43,7 @@ public final class Messages {
      */
     public static String getString(String key) {
         try {
-            return RESOURCE_BUNDLE.getString(key);
+            return getString(key, PLUGIN_ID, resource);
         } catch (MissingResourceException e) {
             return "!" + key + "!"; //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -54,6 +58,43 @@ public final class Messages {
      * @return
      */
     public static String getString(String key, Object... args) {
-        return MessageFormat.format(getString(key), args);
+        return getString(key, PLUGIN_ID, resource, args);
     }
+
+    /**
+     * Returns the i18n formatted message for <i>key</i> in the specified bundle.
+     * 
+     * @param key - the key for the desired string
+     * @param resourceBundle - the ResourceBundle to search in
+     * @return the string for the given key in the given resource bundle
+     */
+    public static String getString(String key, String pluginId, ResourceBundle resourceBundle) {
+        if (resourceBundle == null) {
+            return "!" + key + "!"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        try {
+            if (pluginId != null) {
+                String babiliTranslation = BabiliTool.getBabiliTranslation(key, pluginId);
+                if (babiliTranslation != null) {
+                    return babiliTranslation;
+                }
+            }
+            return resourceBundle.getString(key);
+        } catch (MissingResourceException e) {
+            return "!" + key + "!"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
+
+    /**
+     * Returns the i18n formatted message for <i>key</i> and <i>args</i> in the specified bundle.
+     * 
+     * @param key - the key for the desired string
+     * @param resourceBundle - the ResourceBundle to search in
+     * @param args - arg to include in the string
+     * @return the string for the given key in the given resource bundle
+     */
+    public static String getString(String key, String pluginId, ResourceBundle resourceBundle, Object[] args) {
+        return MessageFormat.format(getString(key, pluginId, resourceBundle), args);
+    }
+
 }
