@@ -16,6 +16,8 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.talend.commons.i18n.BabiliTool;
+
 /**
  * Core of i18n management.<br/>
  * 
@@ -49,12 +51,19 @@ public abstract class MessagesCore {
      * @param resourceBundle - the ResourceBundle to search in
      * @return the string for the given key in the given resource bundle
      */
-    public static String getString(String key, ResourceBundle resourceBundle) {
+    public static String getString(String key, String pluginId, ResourceBundle resourceBundle) {
         if (resourceBundle == null) {
             return KEY_NOT_FOUND_PREFIX + key + KEY_NOT_FOUND_SUFFIX;
         }
         // log.info("Getting key " + key + "in" + resourceBundle.toString());
         try {
+            // modified by hcheng. when pluginId is not null
+            if (pluginId != null) {
+                String babiliTranslation = BabiliTool.getBabiliTranslation(key, pluginId);
+                if (babiliTranslation != null) {
+                    return babiliTranslation;
+                }
+            }
             return resourceBundle.getString(key);
         } catch (MissingResourceException e) {
             return KEY_NOT_FOUND_PREFIX + key + KEY_NOT_FOUND_SUFFIX;
@@ -69,8 +78,31 @@ public abstract class MessagesCore {
      * @param args - arg to include in the string
      * @return the string for the given key in the given resource bundle
      */
+    public static String getString(String key, String pluginId, ResourceBundle resourceBundle, Object[] args) {
+        return MessageFormat.format(getString(key, pluginId, resourceBundle), args);
+    }
+
+    /**
+     * Returns the i18n formatted message for <i>key</i> in the specified bundle.
+     * 
+     * @param key - the key for the desired string
+     * @param resourceBundle - the ResourceBundle to search in
+     * @return the string for the given key in the given resource bundle
+     */
+    public static String getString(String key, ResourceBundle resourceBundle) {
+        return getString(key, null, resourceBundle);
+    }
+
+    /**
+     * Returns the i18n formatted message for <i>key</i> and <i>args</i> in the specified bundle.
+     * 
+     * @param key - the key for the desired string
+     * @param resourceBundle - the ResourceBundle to search in
+     * @param args - arg to include in the string
+     * @return the string for the given key in the given resource bundle
+     */
     public static String getString(String key, ResourceBundle resourceBundle, Object[] args) {
-        return MessageFormat.format(getString(key, resourceBundle), args);
+        return MessageFormat.format(getString(key, null, resourceBundle), args);
     }
 
 }

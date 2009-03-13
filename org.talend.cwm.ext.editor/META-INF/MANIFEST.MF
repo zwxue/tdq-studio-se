@@ -16,5 +16,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.emf.edit.ui;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,
- org.talend.cwm.mip.edit;visibility:=reexport
+ org.talend.cwm.mip.edit;visibility:=reexport,
+ org.talend.commons;bundle-version="2.2.0"
 Bundle-ActivationPolicy: lazy

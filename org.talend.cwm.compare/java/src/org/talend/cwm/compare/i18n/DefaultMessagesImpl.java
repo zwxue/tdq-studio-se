@@ -10,19 +10,28 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.i18n;
+package org.talend.cwm.compare.i18n;
 
 import java.util.ResourceBundle;
 
+import org.talend.dataprofiler.core.i18n.MessagesCore;
+
 /**
+ * Default implementation of MessageCore from org.talend.commons plug-in.<br/>
  * 
- * DOC Administrator class global comment. Detailled comment
+ * Developpers can copy this class in their plug-in and change :
+ * <ul>
+ * <li>the BUNDLE_NAME constant</li>
+ * </ul>
+ * 
+ * $Id: DefaultMessagesImpl.java 3351 2007-05-04 12:14:00 +0000 (星期�? 04 五月 2007) plegall $
+ * 
  */
-public class Messages extends MessagesCore {
+public class DefaultMessagesImpl extends MessagesCore {
 
     private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
-    private static final String PLUGIN_ID = "org.talend.cwm.management"; //$NON-NLS-1$
+    private static final String PLUGIN_ID = "org.talend.cwm.compare"; //$NON-NLS-1$
 
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
 
@@ -33,7 +42,7 @@ public class Messages extends MessagesCore {
      * @return the string for the given key in the class resource bundle
      * @see MessagesCore#getString(String, ResourceBundle)
      */
-    public static String getString(final String key) {
+    public static String getString(String key) {
         return getString(key, PLUGIN_ID, resourceBundle);
     }
 
@@ -45,7 +54,7 @@ public class Messages extends MessagesCore {
      * @return the string for the given key in the given resource bundle
      * @see MessagesCore#getString(String, ResourceBundle, Object[])
      */
-    public static String getString(final String key, final Object... args) {
+    public static String getString(String key, Object... args) {
         return getString(key, PLUGIN_ID, resourceBundle, args);
     }
 }
