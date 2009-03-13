@@ -31,8 +31,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTablePro
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dq.analysis.explore.DQRuleExplorer;
 import org.talend.dq.analysis.explore.DataExplorer;
-import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
@@ -120,7 +120,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     }
 
     public DataExplorer getDataExplorer() {
-        return new SimpleStatisticsExplorer();
+        return new DQRuleExplorer();
     }
 
     public JFreeChart getExampleChart() {

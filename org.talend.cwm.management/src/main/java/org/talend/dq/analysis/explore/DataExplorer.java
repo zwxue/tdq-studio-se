@@ -29,6 +29,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Table;
 
 /**
  * @author scorreia
@@ -44,6 +45,8 @@ public abstract class DataExplorer implements IDataExplorer {
     protected static final String MENU_VIEW_ROWS = Messages.getString("DataExplorer.ViewRows"); //$NON-NLS-1$
 
     protected static final String MENU_VIEW_INVALID_ROWS = Messages.getString("DataExplorer.ViewInvalidRows"); //$NON-NLS-1$
+
+    protected static final String MENU_VIEW_VALID_ROWS = Messages.getString("DataExplorer.ViewValidRows"); //$NON-NLS-1$
 
     private static final String SELECT_ALL = "SELECT * "; //$NON-NLS-1$
 
@@ -144,6 +147,10 @@ public abstract class DataExplorer implements IDataExplorer {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         return dbmsLanguage.toQualifiedName(null, ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner).getName(),
                 columnSetOwner.getName());
+    }
+
+    protected String getFullyQualifiedTableName(Table table) {
+        return dbmsLanguage.toQualifiedName(null, ColumnSetHelper.getParentCatalogOrSchema(table).getName(), table.getName());
     }
 
     /**

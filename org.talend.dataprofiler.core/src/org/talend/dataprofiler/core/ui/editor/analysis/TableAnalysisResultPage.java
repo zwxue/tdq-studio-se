@@ -168,16 +168,6 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
                                 if (!units.isEmpty()) {
                                     IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartStateTable(chartType,
                                             units, tableIndicator);
-                                    System.out.println("11111111111111111::chartType=" + chartType);
-                                    System.out.println("22222222222222222::chartTypeState.getChart()="
-                                            + chartTypeState.getChart());
-                                    ChartDataEntity[] cdes = chartTypeState.getDataEntity();
-                                    System.out.println("4444444444444444::cdes.length=" + cdes.length);
-                                    int i = 0;
-                                    for (ChartDataEntity cde : cdes) {
-                                        i++;
-                                        System.out.println("33333333333333333::ChartDataEntity[" + i + "]=" + cde);
-                                    }
                                     ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(),
                                             chartTypeState.getDataEntity());
 
@@ -335,7 +325,6 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
             }
 
             public void chartMouseMoved(ChartMouseEvent event) {
-                // TODO Auto-generated method stub
 
             }
 
