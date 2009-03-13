@@ -168,6 +168,29 @@ public class RulesItemProviderAdapterFactory extends RulesAdapterFactory impleme
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.rules.JoinElement} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected JoinElementItemProvider joinElementItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.rules.JoinElement}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createJoinElementAdapter() {
+        if (joinElementItemProvider == null) {
+            joinElementItemProvider = new JoinElementItemProvider(this);
+        }
+
+        return joinElementItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -270,6 +293,7 @@ public class RulesItemProviderAdapterFactory extends RulesAdapterFactory impleme
         if (specifiedDQRuleItemProvider != null) specifiedDQRuleItemProvider.dispose();
         if (inferredDQRuleItemProvider != null) inferredDQRuleItemProvider.dispose();
         if (whereRuleItemProvider != null) whereRuleItemProvider.dispose();
+        if (joinElementItemProvider != null) joinElementItemProvider.dispose();
     }
 
 }

@@ -33,6 +33,7 @@ import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.rules.RulesFactory;
 import orgomg.cwm.foundation.datatypes.DatatypesFactory;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.provider.ModelElementItemProvider;
@@ -228,6 +229,7 @@ public class IndicatorItemProvider
             super.getChildrenFeatures(object);
             childrenFeatures.add(IndicatorsPackage.Literals.INDICATOR__PARAMETERS);
             childrenFeatures.add(IndicatorsPackage.Literals.INDICATOR__INSTANTIATED_EXPRESSIONS);
+            childrenFeatures.add(IndicatorsPackage.Literals.INDICATOR__JOIN_CONDITIONS);
         }
         return childrenFeatures;
     }
@@ -279,6 +281,7 @@ public class IndicatorItemProvider
                 return;
             case IndicatorsPackage.INDICATOR__PARAMETERS:
             case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
+            case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
         }
@@ -320,6 +323,11 @@ public class IndicatorItemProvider
             (createChildParameter
                 (IndicatorsPackage.Literals.INDICATOR__INSTANTIATED_EXPRESSIONS,
                  DatatypesFactory.eINSTANCE.createQueryExpression()));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (IndicatorsPackage.Literals.INDICATOR__JOIN_CONDITIONS,
+                 RulesFactory.eINSTANCE.createJoinElement()));
     }
 
     /**
