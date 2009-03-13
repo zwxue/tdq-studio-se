@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -209,9 +210,10 @@ public class TableIndicator {
 
     private TableIndicatorUnit createSpecialIndicatorUnit(IFile fe, IndicatorEnum indicatorEnum, Indicator indicator) {
         if (indicator == null) {
-            IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
+            IndicatorSqlFactory factory = IndicatorSqlFactory.eINSTANCE;
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             if (fe != null && indicator instanceof WhereRuleIndicator) {
+                indicator.setAnalyzedElement(getTdTable());
                 indicator.setIndicatorDefinition(DQRuleResourceFileHelper.getInstance().findWhereRule(fe));
             }
         }

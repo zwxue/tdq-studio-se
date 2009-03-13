@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
@@ -37,8 +38,6 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  */
 public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
-    private NamedColumnSet[] namedColumnSet;
-
     private AnalysisMetadataWizardPage analysisMetadataWizardPage = null;
 
     private TableAnalysisDPSelectionPage tableAnalysisDPSelectionPage = null;
@@ -56,11 +55,23 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     }
 
     public NamedColumnSet[] getNamedColumnSet() {
-        return namedColumnSet;
+        return getParameter() == null ? null : getParameter().getNamedColumnSets();
     }
 
     public void setNamedColumnSet(NamedColumnSet[] namedColumnSet) {
-        this.namedColumnSet = namedColumnSet;
+        if (getParameter() != null) {
+            getParameter().setNamedColumnSets(namedColumnSet);
+        }
+    }
+
+    public TdDataProvider getTdDataProvider() {
+        return getParameter() == null ? null : getParameter().getTdDataProvider();
+    }
+
+    public void setTdDataProvider(TdDataProvider tdDataProvider) {
+        if (getParameter() != null) {
+            getParameter().setTdDataProvider(tdDataProvider);
+        }
     }
 
     @Override
@@ -92,31 +103,32 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     @Override
     public ModelElement initCWMResourceBuilder() {
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
-        NamedColumnSet[] ncs = isShowTableSelectPage() ? getParameter().getNamedColumnSets() : getNamedColumnSet();
+        NamedColumnSet[] ncss = getNamedColumnSet();
+        TdDataProvider tdp = getTdDataProvider();
 
-        if (ncs != null && getAnalysisBuilder() != null) {
+        if (ncss != null && getAnalysisBuilder() != null) {
             List<Indicator> indicatorList = new ArrayList<Indicator>();
             WhereRule[] whereRules = getWhereRules(dqruleSelectPage.getCViewer().getCheckedElements());
 
-            for (NamedColumnSet namedColumnSet : ncs) {
+            for (NamedColumnSet ncs : ncss) {
                 // add RowCountIndicator
                 RowCountIndicator rowCountIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
                 DefinitionHandler.getInstance().setDefaultIndicatorDefinition(rowCountIndicator);
-                rowCountIndicator.setAnalyzedElement(namedColumnSet);
+                rowCountIndicator.setAnalyzedElement(ncs);
                 indicatorList.add(rowCountIndicator);
                 // add user selected WhereRuleIndicator
                 if (whereRules != null) {
                     for (WhereRule whereRule : whereRules) {
                         WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
-                        wrIndicator.setAnalyzedElement(namedColumnSet);
+                        wrIndicator.setAnalyzedElement(ncs);
                         wrIndicator.setIndicatorDefinition(whereRule);
                         indicatorList.add(wrIndicator);
                     }
                 }
             }
-            getAnalysisBuilder().addElementsToAnalyze(ncs, indicatorList.toArray(new Indicator[indicatorList.size()]));
+            getAnalysisBuilder().addElementsToAnalyze(ncss, indicatorList.toArray(new Indicator[indicatorList.size()]));
 
-            getAnalysisBuilder().setAnalysisConnection(getParameter().getTdDataProvider());
+            getAnalysisBuilder().setAnalysisConnection(tdp);
         }
 
         return analysis;

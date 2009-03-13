@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
@@ -57,7 +58,7 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
         FillLayout layout = new FillLayout();
         container.setLayout(layout);
 
-        cViewer = new CheckboxTreeViewer(container, SWT.NONE);
+        cViewer = new ContainerCheckedTreeViewer(container, SWT.NONE);
         cViewer.setLabelProvider(new DQRuleLabelProvider());
         cViewer.setContentProvider(new WorkbenchContentProvider());
         cViewer.setInput(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES));

@@ -112,7 +112,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     }
 
     @Override
-    protected AnalysisHandler getColumnAnalysisHandler() {
+    protected AnalysisHandler getAnalysisHandler() {
         return this.masterPage.getAnalysisHandler();
     }
 
@@ -360,4 +360,5 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
         });
     }
+
 }

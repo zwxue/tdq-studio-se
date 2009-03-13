@@ -48,6 +48,8 @@ public class AnalysisEditor extends CommonFormEditor {
 
     private IFormPage columnResultPage;
 
+    private IFormPage tableResultPage;
+
     private AnalysisType analysisType;
 
     private RunAnalysisAction runAction;
@@ -128,8 +130,10 @@ public class AnalysisEditor extends CommonFormEditor {
         case TABLE:
             masterPage = new TableMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             setPartName(DefaultMessagesImpl.getString("AnalysisEditor.TableAnalysisEditor")); //$NON-NLS-1$
+            tableResultPage = new TableAnalysisResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
+                addPage(tableResultPage);
             } catch (PartInitException e) {
                 ExceptionHandler.process(e, Level.ERROR);
             }

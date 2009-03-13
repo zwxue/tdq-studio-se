@@ -119,12 +119,12 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     }
 
     @Override
-    protected AnalysisHandler getColumnAnalysisHandler() {
+    protected AnalysisHandler getAnalysisHandler() {
         return this.masterPage.getColumnCorrelationAnalysisHandler();
     }
 
     protected void createResultSection(Composite parent) {
-        executeData = getColumnAnalysisHandler().getExecuteData();
+        executeData = getAnalysisHandler().getExecuteData();
         graphicsAndTableSection = this.createSection(form, parent, DefaultMessagesImpl
                 .getString("ColumnCorrelationNominalIntervalResultPage.AnalysisResult"), false, null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);

@@ -183,9 +183,6 @@ public final class CompositeIndicator {
         this.tableIndicatorUnits = initChildTableIndicatorUnits(tempList, tableIndicator.getIndicatorUnits());
         for (TableIndicatorUnit one : tableIndicatorUnits) {
             switch (one.getType()) {
-            case RowCountIndicatorEnum:
-                tableSimpleList.add(one);
-                break;
             case WhereRuleIndicatorEnum:
                 tableWhereRuleList.add(one);
                 break;

@@ -1,0 +1,344 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2009 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dataprofiler.core.ui.editor.analysis;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.entity.CategoryItemEntity;
+import org.jfree.chart.entity.ChartEntity;
+import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.TableIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenerator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.IDataExplorer;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
+
+/**
+ * DOC xqliu class global comment. Detailled comment
+ */
+public class TableAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
+
+    private Composite resultComp;
+
+    TableMasterDetailsPage masterPage;
+
+    private Section resultSection = null;
+
+    /**
+     * DOC xqliu TableAnalysisResultPage constructor comment.
+     * 
+     * @param editor
+     * @param id
+     * @param title
+     */
+    public TableAnalysisResultPage(FormEditor editor, String id, String title) {
+        super(editor, id, title);
+        AnalysisEditor analysisEditor = (AnalysisEditor) editor;
+        this.masterPage = (TableMasterDetailsPage) analysisEditor.getMasterPage();
+    }
+
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        super.createFormContent(managedForm);
+
+        resultComp = toolkit.createComposite(topComposite);
+        resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+        resultComp.setLayout(new GridLayout());
+        createResultSection(resultComp);
+
+        currentEditor.registerSections(new Section[] { resultSection });
+        form.reflow(true);
+    }
+
+    @Override
+    protected AnalysisHandler getAnalysisHandler() {
+        return this.masterPage.getAnalysisHandler();
+    }
+
+    protected void createResultSection(Composite parent) {
+        resultSection = createSection(form, parent,
+                DefaultMessagesImpl.getString("TableAnalysisResultPage.analysisResult"), true, null); //$NON-NLS-1$
+        Composite sectionClient = toolkit.createComposite(resultSection);
+        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        for (final TableIndicator tableIndicator : masterPage.getTreeViewer().getTableIndicator()) {
+
+            ExpandableComposite exComp = toolkit.createExpandableComposite(sectionClient, ExpandableComposite.TWISTIE
+                    | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
+            exComp.setText(DefaultMessagesImpl.getString("TableAnalysisResultPage.table", tableIndicator.getTdTable().getName())); //$NON-NLS-1$
+            exComp.setLayout(new GridLayout());
+            exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+            final Composite comp = toolkit.createComposite(exComp);
+            comp.setLayout(new GridLayout());
+            comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+            exComp.setClient(comp);
+
+            createResultDataComposite(comp, tableIndicator);
+
+            exComp.addExpansionListener(new ExpansionAdapter() {
+
+                public void expansionStateChanged(ExpansionEvent e) {
+
+                    form.reflow(true);
+                }
+
+            });
+        }
+
+        resultSection.setClient(sectionClient);
+    }
+
+    private void createResultDataComposite(final Composite comp, final TableIndicator tableIndicator) {
+        if (tableIndicator.getIndicators().length != 0) {
+
+            final TdTable table = tableIndicator.getTdTable();
+            IRunnableWithProgress rwp = new IRunnableWithProgress() {
+
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+                    monitor
+                            .beginTask(
+                                    DefaultMessagesImpl.getString("TableAnalysisResultPage.createPreview", table.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+
+                    Display.getDefault().asyncExec(new Runnable() {
+
+                        public void run() {
+
+                            Map<EIndicatorChartType, List<TableIndicatorUnit>> indicatorComposite = CompositeIndicator
+                                    .getInstance().getTableIndicatorComposite(tableIndicator);
+                            for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
+                                List<TableIndicatorUnit> units = indicatorComposite.get(chartType);
+                                if (!units.isEmpty()) {
+                                    IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartStateTable(chartType,
+                                            units, tableIndicator);
+                                    System.out.println("11111111111111111::chartType=" + chartType);
+                                    System.out.println("22222222222222222::chartTypeState.getChart()="
+                                            + chartTypeState.getChart());
+                                    ChartDataEntity[] cdes = chartTypeState.getDataEntity();
+                                    System.out.println("4444444444444444::cdes.length=" + cdes.length);
+                                    int i = 0;
+                                    for (ChartDataEntity cde : cdes) {
+                                        i++;
+                                        System.out.println("33333333333333333::ChartDataEntity[" + i + "]=" + cde);
+                                    }
+                                    ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(),
+                                            chartTypeState.getDataEntity());
+
+                                    // create UI
+                                    ExpandableComposite subComp = toolkit.createExpandableComposite(comp,
+                                            ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT
+                                                    | ExpandableComposite.EXPANDED);
+                                    subComp.setText(chartData.getChartType().getLiteral());
+                                    subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+                                    final Composite composite = toolkit.createComposite(subComp, SWT.NULL);
+                                    composite.setLayout(new GridLayout(2, false));
+                                    composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+                                    Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
+
+                                    // create table
+                                    TableViewer tableviewer = chartTypeState.getTableForm(composite);
+                                    tableviewer.setInput(chartData);
+                                    DataExplorer dataExplorer = chartTypeState.getDataExplorer();
+                                    ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
+
+                                    Composite chartTopComp = toolkit.createComposite(composite, SWT.NULL);
+                                    chartTopComp.setLayout(new GridLayout(1, false));
+                                    chartTopComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+                                    // create chart
+                                    List<JFreeChart> charts = chartTypeState.getChartList();
+                                    if (charts != null) {
+                                        for (JFreeChart chart2 : charts) {
+
+                                            ChartComposite chartComp = new ChartComposite(chartTopComp, SWT.NONE, chart2, true);
+
+                                            GridData gd = new GridData();
+                                            gd.widthHint = 550;
+                                            gd.heightHint = 250;
+                                            chartComp.setLayoutData(gd);
+
+                                            addMouseListenerForChart(chartComp, dataExplorer, analysis);
+                                        }
+                                    }
+
+                                    subComp.setClient(composite);
+                                    subComp.addExpansionListener(new ExpansionAdapter() {
+
+                                        @Override
+                                        public void expansionStateChanged(ExpansionEvent e) {
+                                            form.reflow(true);
+                                        }
+
+                                    });
+                                }
+                            }
+                        }
+
+                    });
+
+                    monitor.done();
+                }
+
+            };
+
+            try {
+                new ProgressMonitorDialog(null).run(true, false, rwp);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void setDirty(boolean isDirty) {
+
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
+            ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+        }
+    }
+
+    public void refresh(TableMasterDetailsPage masterPage) {
+        this.masterPage = masterPage;
+        this.summaryComp.dispose();
+        this.resultComp.dispose();
+
+        createFormContent(getManagedForm());
+    }
+
+    private void addMouseListenerForChart(final ChartComposite chartComp, final IDataExplorer explorer, final Analysis analysis) {
+        chartComp.addChartMouseListener(new ChartMouseListener() {
+
+            @SuppressWarnings("unchecked")
+            public void chartMouseClicked(ChartMouseEvent event) {
+                if (event.getTrigger().getButton() != 3) {
+                    return;
+                }
+
+                ChartEntity chartEntity = event.getEntity();
+                if (chartEntity != null) {
+                    CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
+                    ICustomerDataset dataEntity = (ICustomerDataset) cateEntity.getDataset();
+
+                    ChartDataEntity currentDataEntity = null;
+                    ChartDataEntity[] dataEntities = dataEntity.getDataEntities();
+                    if (dataEntities.length == 1) {
+                        currentDataEntity = dataEntities[0];
+                    } else {
+                        for (ChartDataEntity entity : dataEntities) {
+                            if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
+                                currentDataEntity = entity;
+                            } else {
+                                if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
+                                    currentDataEntity = entity;
+                                }
+                            }
+                        }
+                    }
+
+                    if (currentDataEntity != null) {
+                        // create menu
+                        Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
+                        chartComp.setMenu(menu);
+
+                        final Indicator currentIndicator = currentDataEntity.getIndicator();
+                        int createPatternFlag = 0;
+                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
+                        for (final MenuItemEntity itemEntity : itemEntities) {
+                            MenuItem item = new MenuItem(menu, SWT.PUSH);
+                            item.setText(itemEntity.getLabel());
+                            item.addSelectionListener(new SelectionAdapter() {
+
+                                @Override
+                                public void widgetSelected(SelectionEvent e) {
+                                    Display.getDefault().asyncExec(new Runnable() {
+
+                                        public void run() {
+                                            TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                                    .getContext().getConnection());
+                                            String query = itemEntity.getQuery();
+                                            String editorName = currentIndicator.getName();
+                                            CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                        }
+
+                                    });
+                                }
+                            });
+
+                            createPatternFlag++;
+                        }
+
+                        menu.setVisible(true);
+                    }
+                }
+            }
+
+            public void chartMouseMoved(ChartMouseEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+    }
+}

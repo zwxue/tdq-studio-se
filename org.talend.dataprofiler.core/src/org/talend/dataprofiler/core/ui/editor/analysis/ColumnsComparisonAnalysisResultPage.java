@@ -298,7 +298,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     }
 
     @Override
-    protected AnalysisHandler getColumnAnalysisHandler() {
+    protected AnalysisHandler getAnalysisHandler() {
         return this.masterPage.getAnalysisHandler();
     }
 

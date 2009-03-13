@@ -28,6 +28,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Table;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -217,9 +218,16 @@ public class AnalysisHandler {
         List<ColumnSet> existingTables = new ArrayList<ColumnSet>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            ColumnSet columnSet = ColumnHelper.getColumnSetOwner((Column) element);
-            if (!existingTables.contains(columnSet)) {
-                existingTables.add(columnSet);
+            if (element instanceof Column) {
+                ColumnSet columnSet = ColumnHelper.getColumnSetOwner((Column) element);
+                if (!existingTables.contains(columnSet)) {
+                    existingTables.add(columnSet);
+                }
+            } else if (element instanceof Table) {
+                ColumnSet columnSet = (ColumnSet) element;
+                if (!existingTables.contains(columnSet)) {
+                    existingTables.add(columnSet);
+                }
             }
         }
 
@@ -234,9 +242,16 @@ public class AnalysisHandler {
         List<String> existingTables = new ArrayList<String>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            String tableName = ColumnHelper.getColumnSetFullName((Column) element);
-            if (!existingTables.contains(tableName)) {
-                existingTables.add(tableName);
+            if (element instanceof Column) {
+                String tableName = ColumnHelper.getColumnSetFullName((Column) element);
+                if (!existingTables.contains(tableName)) {
+                    existingTables.add(tableName);
+                }
+            } else if (element instanceof Table) {
+                String tableName = ((Table) element).getName();
+                if (!existingTables.contains(tableName)) {
+                    existingTables.add(tableName);
+                }
             }
         }
 

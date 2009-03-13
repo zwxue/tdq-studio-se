@@ -33,6 +33,7 @@ import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -61,6 +62,15 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
         this.rowCount = initRowCount(tableIndicator);
     }
 
+    @Override
+    public JFreeChart getChart() {
+        List<JFreeChart> chartList = getChartList();
+        if (chartList != null && chartList.size() > 0) {
+            return chartList.get(0);
+        }
+        return null;
+    }
+
     private double initRowCount(TableIndicator tableIndicator) {
         double rowCount = 0;
         if (tableIndicator != null) {
@@ -83,6 +93,14 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
             double value = Double.parseDouble(unit.getValue().toString());
             customerdataset.addValue(getRowCount() - value, ROW_KEY_NOT_PASS, columnKey);
             customerdataset.addValue(value, ROW_KEY_PASS, columnKey);
+
+            ChartDataEntity entity = new ChartDataEntity();
+            entity.setIndicator(unit.getIndicator());
+            entity.setLabel(columnKey);
+            entity.setValue(String.valueOf(getRowCount() - value));
+            entity.setPercent(String.valueOf(1 - (value / getRowCount())));
+
+            customerdataset.addDataEntity(entity);
         }
         return customerdataset;
     }

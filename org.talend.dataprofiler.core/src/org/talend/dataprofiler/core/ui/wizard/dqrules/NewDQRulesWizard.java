@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.dqrules;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
@@ -72,6 +73,7 @@ public class NewDQRulesWizard extends AbstractWizard {
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
         WhereRule whereRule = (WhereRule) cwmElement;
 
+        TaggedValueHelper.setValidStatus(true, whereRule);
         whereRule.setWhereExpression(parameter.getWhereClause());
         whereRule.setCriticalityLevel(CRITICALITY_LEVEL_DEFAULT);
         whereRule.getSqlGenericExpression().add(getExpression());
