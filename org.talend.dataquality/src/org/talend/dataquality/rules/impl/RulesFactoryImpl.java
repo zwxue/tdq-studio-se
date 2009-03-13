@@ -64,6 +64,7 @@ public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
             case RulesPackage.SPECIFIED_DQ_RULE: return createSpecifiedDQRule();
             case RulesPackage.INFERRED_DQ_RULE: return createInferredDQRule();
             case RulesPackage.WHERE_RULE: return createWhereRule();
+            case RulesPackage.JOIN_ELEMENT: return createJoinElement();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -107,6 +108,16 @@ public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
     public WhereRule createWhereRule() {
         WhereRuleImpl whereRule = new WhereRuleImpl();
         return whereRule;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public JoinElement createJoinElement() {
+        JoinElementImpl joinElement = new JoinElementImpl();
+        return joinElement;
     }
 
     /**

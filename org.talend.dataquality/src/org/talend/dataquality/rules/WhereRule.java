@@ -17,6 +17,8 @@
  */
 package org.talend.dataquality.rules;
 
+import org.eclipse.emf.common.util.EList;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -31,6 +33,8 @@ package org.talend.dataquality.rules;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.talend.dataquality.rules.WhereRule#getWhereExpression <em>Where Expression</em>}</li>
+ *   <li>{@link org.talend.dataquality.rules.WhereRule#getJoinExpression <em>Join Expression</em>}</li>
+ *   <li>{@link org.talend.dataquality.rules.WhereRule#getJoins <em>Joins</em>}</li>
  * </ul>
  * </p>
  *
@@ -64,5 +68,46 @@ public interface WhereRule extends SpecifiedDQRule {
      * @generated
      */
     void setWhereExpression(String value);
+
+    /**
+     * Returns the value of the '<em><b>Join Expression</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * The join expression to be used in the generated SQL statement. 
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Join Expression</em>' attribute.
+     * @see #setJoinExpression(String)
+     * @see org.talend.dataquality.rules.RulesPackage#getWhereRule_JoinExpression()
+     * @model
+     * @generated
+     */
+    String getJoinExpression();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.rules.WhereRule#getJoinExpression <em>Join Expression</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Join Expression</em>' attribute.
+     * @see #getJoinExpression()
+     * @generated
+     */
+    void setJoinExpression(String value);
+
+    /**
+     * Returns the value of the '<em><b>Joins</b></em>' containment reference list.
+     * The list contents are of type {@link org.talend.dataquality.rules.JoinElement}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Joins</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Joins</em>' containment reference list.
+     * @see org.talend.dataquality.rules.RulesPackage#getWhereRule_Joins()
+     * @model containment="true"
+     * @generated
+     */
+    EList<JoinElement> getJoins();
 
 } // WhereRule

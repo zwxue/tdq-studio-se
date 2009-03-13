@@ -258,6 +258,8 @@
           <details key="documentation" value="a flag that tells whether this indicator is computed or not."/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="joinConditions" upperBound="-1"
+          eType="#//rules/JoinElement" containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="RowCountIndicator" eSuperTypes="#//indicators/Indicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MeanIndicator" eSuperTypes="#//indicators/SumIndicator">
@@ -905,6 +907,24 @@
         <details key="documentation" value="This kind of rule contains a &quot;where&quot; clause which may be used to compute user defined indicators. "/>
       </eAnnotations>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="whereExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="joinExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+        <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+          <details key="documentation" value="The join expression to be used in the generated SQL statement. "/>
+        </eAnnotations>
+      </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="joins" upperBound="-1"
+          eType="#//rules/JoinElement" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="JoinElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="colA" lowerBound="1"
+          eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="colB" lowerBound="1"
+          eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tableAliasA" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tableAliasB" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnAliasA" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnAliasB" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
   </eSubpackages>
 </ecore:EPackage>

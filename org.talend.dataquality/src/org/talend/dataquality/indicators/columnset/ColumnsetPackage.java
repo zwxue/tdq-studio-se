@@ -316,6 +316,15 @@ public interface ColumnsetPackage extends EPackage {
     int COLUMNS_COMPARE_INDICATOR__COMPUTED = IndicatorsPackage.MATCHING_INDICATOR__COMPUTED;
 
     /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMNS_COMPARE_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.MATCHING_INDICATOR__JOIN_CONDITIONS;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -613,6 +622,15 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int VALUE_MATCHING_INDICATOR__COMPUTED = COLUMNS_COMPARE_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALUE_MATCHING_INDICATOR__JOIN_CONDITIONS = COLUMNS_COMPARE_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
@@ -913,6 +931,15 @@ public interface ColumnsetPackage extends EPackage {
     int ROW_MATCHING_INDICATOR__COMPUTED = COLUMNS_COMPARE_INDICATOR__COMPUTED;
 
     /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ROW_MATCHING_INDICATOR__JOIN_CONDITIONS = COLUMNS_COMPARE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1210,6 +1237,15 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int COLUMN_SET_MULTI_VALUE_INDICATOR__COMPUTED = IndicatorsPackage.COMPOSITE_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.COMPOSITE_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
@@ -1574,6 +1610,15 @@ public interface ColumnsetPackage extends EPackage {
     int COUNT_AVG_NULL_INDICATOR__COMPUTED = COLUMN_SET_MULTI_VALUE_INDICATOR__COMPUTED;
 
     /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNT_AVG_NULL_INDICATOR__JOIN_CONDITIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1935,6 +1980,15 @@ public interface ColumnsetPackage extends EPackage {
     int MIN_MAX_DATE_INDICATOR__COMPUTED = COLUMN_SET_MULTI_VALUE_INDICATOR__COMPUTED;
 
     /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_MAX_DATE_INDICATOR__JOIN_CONDITIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2294,6 +2348,15 @@ public interface ColumnsetPackage extends EPackage {
      * @ordered
      */
     int WEAK_CORRELATION_INDICATOR__COMPUTED = COLUMN_SET_MULTI_VALUE_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEAK_CORRELATION_INDICATOR__JOIN_CONDITIONS = COLUMN_SET_MULTI_VALUE_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Analyzed Columns</b></em>' reference list.

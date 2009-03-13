@@ -642,6 +642,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getIndicator_JoinConditions() {
+        return (EReference)indicatorEClass.getEStructuralFeatures().get(8);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1514,6 +1523,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEReference(indicatorEClass, INDICATOR__INDICATOR_DEFINITION);
         createEReference(indicatorEClass, INDICATOR__INSTANTIATED_EXPRESSIONS);
         createEAttribute(indicatorEClass, INDICATOR__COMPUTED);
+        createEReference(indicatorEClass, INDICATOR__JOIN_CONDITIONS);
 
         rowCountIndicatorEClass = createEClass(ROW_COUNT_INDICATOR);
 
@@ -1687,6 +1697,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         IndicatorSqlPackage theIndicatorSqlPackage = (IndicatorSqlPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI);
         ColumnsetPackage theColumnsetPackage = (ColumnsetPackage)EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI);
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+        RulesPackage theRulesPackage = (RulesPackage)EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI);
         DomainPackage theDomainPackage = (DomainPackage)EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI);
 
         // Add subpackages
@@ -1748,6 +1759,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEReference(getIndicator_IndicatorDefinition(), theDefinitionPackage.getIndicatorDefinition(), null, "indicatorDefinition", null, 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getIndicator_InstantiatedExpressions(), theCorePackage.getExpression(), null, "instantiatedExpressions", null, 0, -1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getIndicator_Computed(), ecorePackage.getEBoolean(), "computed", null, 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getIndicator_JoinConditions(), theRulesPackage.getJoinElement(), null, "joinConditions", null, 0, -1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(indicatorEClass, ecorePackage.getEBoolean(), "handle", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEJavaObject(), "data", 0, 1, IS_UNIQUE, IS_ORDERED);

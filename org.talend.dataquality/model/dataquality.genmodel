@@ -197,6 +197,7 @@
             ecoreFeature="ecore:EReference dataquality.ecore#//indicators/Indicator/indicatorDefinition"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/Indicator/instantiatedExpressions"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/computed"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/Indicator/joinConditions"/>
         <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/handle">
           <genParameters ecoreParameter="dataquality.ecore#//indicators/Indicator/handle/data"/>
         </genOperations>
@@ -572,6 +573,19 @@
       <genClasses ecoreClass="dataquality.ecore#//rules/InferredDQRule"/>
       <genClasses ecoreClass="dataquality.ecore#//rules/WhereRule">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/WhereRule/whereExpression"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/WhereRule/joinExpression"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//rules/WhereRule/joins"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//rules/JoinElement">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference dataquality.ecore#//rules/JoinElement/colA"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference dataquality.ecore#//rules/JoinElement/colB"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/JoinElement/operator"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/JoinElement/tableAliasA"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/JoinElement/tableAliasB"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/JoinElement/columnAliasA"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/JoinElement/columnAliasB"/>
       </genClasses>
     </nestedGenPackages>
   </genPackages>

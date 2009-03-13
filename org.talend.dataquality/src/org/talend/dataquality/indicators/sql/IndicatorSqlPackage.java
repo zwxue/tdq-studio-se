@@ -315,6 +315,15 @@ public interface IndicatorSqlPackage extends EPackage {
     int USER_DEF_INDICATOR__COMPUTED = IndicatorsPackage.INDICATOR__COMPUTED;
 
     /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.INDICATOR__JOIN_CONDITIONS;
+
+    /**
      * The number of structural features of the '<em>User Def Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -575,6 +584,15 @@ public interface IndicatorSqlPackage extends EPackage {
      * @ordered
      */
     int WHERE_RULE_INDICATOR__COMPUTED = USER_DEF_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__JOIN_CONDITIONS = USER_DEF_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The number of structural features of the '<em>Where Rule Indicator</em>' class.

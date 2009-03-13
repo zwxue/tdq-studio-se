@@ -29,6 +29,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.JoinElement;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
@@ -46,6 +47,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getIndicatorDefinition <em>Indicator Definition</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isComputed <em>Computed</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getJoinConditions <em>Join Conditions</em>}</li>
  * </ul>
  * </p>
  *
@@ -173,6 +175,16 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @ordered
      */
     protected boolean computed = COMPUTED_EDEFAULT;
+
+    /**
+     * The cached value of the '{@link #getJoinConditions() <em>Join Conditions</em>}' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getJoinConditions()
+     * @generated
+     * @ordered
+     */
+    protected EList<JoinElement> joinConditions;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -413,6 +425,18 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EList<JoinElement> getJoinConditions() {
+        if (joinConditions == null) {
+            joinConditions = new EObjectContainmentEList<JoinElement>(JoinElement.class, this, IndicatorsPackage.INDICATOR__JOIN_CONDITIONS);
+        }
+        return joinConditions;
+    }
+
+    /**
      * <!-- begin-user-doc --> Increments counts for each given data. <!-- end-user-doc -->
      * 
      * @generated NOT
@@ -633,6 +657,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return basicSetParameters(null, msgs);
             case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
                 return ((InternalEList<?>)getInstantiatedExpressions()).basicRemove(otherEnd, msgs);
+            case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
+                return ((InternalEList<?>)getJoinConditions()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -662,6 +688,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return getInstantiatedExpressions();
             case IndicatorsPackage.INDICATOR__COMPUTED:
                 return isComputed() ? Boolean.TRUE : Boolean.FALSE;
+            case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
+                return getJoinConditions();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -699,6 +727,10 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             case IndicatorsPackage.INDICATOR__COMPUTED:
                 setComputed(((Boolean)newValue).booleanValue());
                 return;
+            case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
+                getJoinConditions().clear();
+                getJoinConditions().addAll((Collection<? extends JoinElement>)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -734,6 +766,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             case IndicatorsPackage.INDICATOR__COMPUTED:
                 setComputed(COMPUTED_EDEFAULT);
                 return;
+            case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
+                getJoinConditions().clear();
+                return;
         }
         super.eUnset(featureID);
     }
@@ -761,6 +796,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return instantiatedExpressions != null && !instantiatedExpressions.isEmpty();
             case IndicatorsPackage.INDICATOR__COMPUTED:
                 return computed != COMPUTED_EDEFAULT;
+            case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
+                return joinConditions != null && !joinConditions.isEmpty();
         }
         return super.eIsSet(featureID);
     }

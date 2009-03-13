@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.JoinElement;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -28,6 +29,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getIndicatorDefinition <em>Indicator Definition</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getInstantiatedExpressions <em>Instantiated Expressions</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#isComputed <em>Computed</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.Indicator#getJoinConditions <em>Join Conditions</em>}</li>
  * </ul>
  * </p>
  *
@@ -234,6 +236,22 @@ public interface Indicator extends ModelElement {
      * @generated
      */
     void setComputed(boolean value);
+
+    /**
+     * Returns the value of the '<em><b>Join Conditions</b></em>' containment reference list.
+     * The list contents are of type {@link org.talend.dataquality.rules.JoinElement}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Join Conditions</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Join Conditions</em>' containment reference list.
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_JoinConditions()
+     * @model containment="true"
+     * @generated
+     */
+    EList<JoinElement> getJoinConditions();
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

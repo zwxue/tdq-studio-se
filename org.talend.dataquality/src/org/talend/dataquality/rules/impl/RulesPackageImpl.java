@@ -61,6 +61,7 @@ import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.InferredDQRule;
+import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.SpecifiedDQRule;
@@ -162,6 +163,13 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
      * @generated
      */
     private EClass whereRuleEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass joinElementEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with
@@ -370,6 +378,96 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getWhereRule_JoinExpression() {
+        return (EAttribute)whereRuleEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getWhereRule_Joins() {
+        return (EReference)whereRuleEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getJoinElement() {
+        return joinElementEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getJoinElement_ColA() {
+        return (EReference)joinElementEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getJoinElement_ColB() {
+        return (EReference)joinElementEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getJoinElement_Operator() {
+        return (EAttribute)joinElementEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getJoinElement_TableAliasA() {
+        return (EAttribute)joinElementEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getJoinElement_TableAliasB() {
+        return (EAttribute)joinElementEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getJoinElement_ColumnAliasA() {
+        return (EAttribute)joinElementEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getJoinElement_ColumnAliasB() {
+        return (EAttribute)joinElementEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public RulesFactory getRulesFactory() {
         return (RulesFactory)getEFactoryInstance();
     }
@@ -403,6 +501,17 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
 
         whereRuleEClass = createEClass(WHERE_RULE);
         createEAttribute(whereRuleEClass, WHERE_RULE__WHERE_EXPRESSION);
+        createEAttribute(whereRuleEClass, WHERE_RULE__JOIN_EXPRESSION);
+        createEReference(whereRuleEClass, WHERE_RULE__JOINS);
+
+        joinElementEClass = createEClass(JOIN_ELEMENT);
+        createEReference(joinElementEClass, JOIN_ELEMENT__COL_A);
+        createEReference(joinElementEClass, JOIN_ELEMENT__COL_B);
+        createEAttribute(joinElementEClass, JOIN_ELEMENT__OPERATOR);
+        createEAttribute(joinElementEClass, JOIN_ELEMENT__TABLE_ALIAS_A);
+        createEAttribute(joinElementEClass, JOIN_ELEMENT__TABLE_ALIAS_B);
+        createEAttribute(joinElementEClass, JOIN_ELEMENT__COLUMN_ALIAS_A);
+        createEAttribute(joinElementEClass, JOIN_ELEMENT__COLUMN_ALIAS_B);
     }
 
     /**
@@ -453,6 +562,17 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
 
         initEClass(whereRuleEClass, WhereRule.class, "WhereRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getWhereRule_WhereExpression(), ecorePackage.getEString(), "whereExpression", null, 0, 1, WhereRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getWhereRule_JoinExpression(), ecorePackage.getEString(), "joinExpression", null, 0, 1, WhereRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getWhereRule_Joins(), this.getJoinElement(), null, "joins", null, 0, -1, WhereRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(joinElementEClass, JoinElement.class, "JoinElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getJoinElement_ColA(), theCorePackage.getModelElement(), null, "colA", null, 1, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getJoinElement_ColB(), theCorePackage.getModelElement(), null, "colB", null, 1, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getJoinElement_Operator(), ecorePackage.getEString(), "operator", null, 0, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getJoinElement_TableAliasA(), ecorePackage.getEString(), "tableAliasA", null, 0, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getJoinElement_TableAliasB(), ecorePackage.getEString(), "tableAliasB", null, 0, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getJoinElement_ColumnAliasA(), ecorePackage.getEString(), "columnAliasA", null, 0, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getJoinElement_ColumnAliasB(), ecorePackage.getEString(), "columnAliasB", null, 0, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Create resource
         createResource(eNS_URI);

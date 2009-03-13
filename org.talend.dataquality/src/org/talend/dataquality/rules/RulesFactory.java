@@ -73,6 +73,15 @@ public interface RulesFactory extends EFactory {
     WhereRule createWhereRule();
 
     /**
+     * Returns a new object of class '<em>Join Element</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Join Element</em>'.
+     * @generated
+     */
+    JoinElement createJoinElement();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

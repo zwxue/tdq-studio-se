@@ -93,6 +93,10 @@ public class RulesAdapterFactory extends AdapterFactoryImpl {
                 return createWhereRuleAdapter();
             }
             @Override
+            public Adapter caseJoinElement(JoinElement object) {
+                return createJoinElementAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -177,6 +181,20 @@ public class RulesAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createWhereRuleAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.JoinElement <em>Join Element</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.JoinElement
+     * @generated
+     */
+    public Adapter createJoinElementAdapter() {
         return null;
     }
 

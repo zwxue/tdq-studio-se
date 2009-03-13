@@ -1157,13 +1157,114 @@ public interface RulesPackage extends EPackage {
     int WHERE_RULE__WHERE_EXPRESSION = SPECIFIED_DQ_RULE_FEATURE_COUNT + 0;
 
     /**
+     * The feature id for the '<em><b>Join Expression</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE__JOIN_EXPRESSION = SPECIFIED_DQ_RULE_FEATURE_COUNT + 1;
+
+    /**
+     * The feature id for the '<em><b>Joins</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE__JOINS = SPECIFIED_DQ_RULE_FEATURE_COUNT + 2;
+
+    /**
      * The number of structural features of the '<em>Where Rule</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WHERE_RULE_FEATURE_COUNT = SPECIFIED_DQ_RULE_FEATURE_COUNT + 1;
+    int WHERE_RULE_FEATURE_COUNT = SPECIFIED_DQ_RULE_FEATURE_COUNT + 3;
+
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.rules.impl.JoinElementImpl <em>Join Element</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.rules.impl.JoinElementImpl
+     * @see org.talend.dataquality.rules.impl.RulesPackageImpl#getJoinElement()
+     * @generated
+     */
+    int JOIN_ELEMENT = 4;
+
+    /**
+     * The feature id for the '<em><b>Col A</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JOIN_ELEMENT__COL_A = 0;
+
+    /**
+     * The feature id for the '<em><b>Col B</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JOIN_ELEMENT__COL_B = 1;
+
+    /**
+     * The feature id for the '<em><b>Operator</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JOIN_ELEMENT__OPERATOR = 2;
+
+    /**
+     * The feature id for the '<em><b>Table Alias A</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JOIN_ELEMENT__TABLE_ALIAS_A = 3;
+
+    /**
+     * The feature id for the '<em><b>Table Alias B</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JOIN_ELEMENT__TABLE_ALIAS_B = 4;
+
+    /**
+     * The feature id for the '<em><b>Column Alias A</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JOIN_ELEMENT__COLUMN_ALIAS_A = 5;
+
+    /**
+     * The feature id for the '<em><b>Column Alias B</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JOIN_ELEMENT__COLUMN_ALIAS_B = 6;
+
+    /**
+     * The number of structural features of the '<em>Join Element</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JOIN_ELEMENT_FEATURE_COUNT = 7;
 
 
     /**
@@ -1238,6 +1339,115 @@ public interface RulesPackage extends EPackage {
      * @generated
      */
     EAttribute getWhereRule_WhereExpression();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.rules.WhereRule#getJoinExpression <em>Join Expression</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Join Expression</em>'.
+     * @see org.talend.dataquality.rules.WhereRule#getJoinExpression()
+     * @see #getWhereRule()
+     * @generated
+     */
+    EAttribute getWhereRule_JoinExpression();
+
+    /**
+     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.rules.WhereRule#getJoins <em>Joins</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference list '<em>Joins</em>'.
+     * @see org.talend.dataquality.rules.WhereRule#getJoins()
+     * @see #getWhereRule()
+     * @generated
+     */
+    EReference getWhereRule_Joins();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.rules.JoinElement <em>Join Element</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Join Element</em>'.
+     * @see org.talend.dataquality.rules.JoinElement
+     * @generated
+     */
+    EClass getJoinElement();
+
+    /**
+     * Returns the meta object for the reference '{@link org.talend.dataquality.rules.JoinElement#getColA <em>Col A</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Col A</em>'.
+     * @see org.talend.dataquality.rules.JoinElement#getColA()
+     * @see #getJoinElement()
+     * @generated
+     */
+    EReference getJoinElement_ColA();
+
+    /**
+     * Returns the meta object for the reference '{@link org.talend.dataquality.rules.JoinElement#getColB <em>Col B</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Col B</em>'.
+     * @see org.talend.dataquality.rules.JoinElement#getColB()
+     * @see #getJoinElement()
+     * @generated
+     */
+    EReference getJoinElement_ColB();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.rules.JoinElement#getOperator <em>Operator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Operator</em>'.
+     * @see org.talend.dataquality.rules.JoinElement#getOperator()
+     * @see #getJoinElement()
+     * @generated
+     */
+    EAttribute getJoinElement_Operator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.rules.JoinElement#getTableAliasA <em>Table Alias A</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Table Alias A</em>'.
+     * @see org.talend.dataquality.rules.JoinElement#getTableAliasA()
+     * @see #getJoinElement()
+     * @generated
+     */
+    EAttribute getJoinElement_TableAliasA();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.rules.JoinElement#getTableAliasB <em>Table Alias B</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Table Alias B</em>'.
+     * @see org.talend.dataquality.rules.JoinElement#getTableAliasB()
+     * @see #getJoinElement()
+     * @generated
+     */
+    EAttribute getJoinElement_TableAliasB();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.rules.JoinElement#getColumnAliasA <em>Column Alias A</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Column Alias A</em>'.
+     * @see org.talend.dataquality.rules.JoinElement#getColumnAliasA()
+     * @see #getJoinElement()
+     * @generated
+     */
+    EAttribute getJoinElement_ColumnAliasA();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.rules.JoinElement#getColumnAliasB <em>Column Alias B</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Column Alias B</em>'.
+     * @see org.talend.dataquality.rules.JoinElement#getColumnAliasB()
+     * @see #getJoinElement()
+     * @generated
+     */
+    EAttribute getJoinElement_ColumnAliasB();
 
     /**
      * Returns the factory that creates the instances of the model.
@@ -1324,6 +1534,88 @@ public interface RulesPackage extends EPackage {
          * @generated
          */
         EAttribute WHERE_RULE__WHERE_EXPRESSION = eINSTANCE.getWhereRule_WhereExpression();
+
+        /**
+         * The meta object literal for the '<em><b>Join Expression</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute WHERE_RULE__JOIN_EXPRESSION = eINSTANCE.getWhereRule_JoinExpression();
+
+        /**
+         * The meta object literal for the '<em><b>Joins</b></em>' containment reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference WHERE_RULE__JOINS = eINSTANCE.getWhereRule_Joins();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.rules.impl.JoinElementImpl <em>Join Element</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.rules.impl.JoinElementImpl
+         * @see org.talend.dataquality.rules.impl.RulesPackageImpl#getJoinElement()
+         * @generated
+         */
+        EClass JOIN_ELEMENT = eINSTANCE.getJoinElement();
+
+        /**
+         * The meta object literal for the '<em><b>Col A</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference JOIN_ELEMENT__COL_A = eINSTANCE.getJoinElement_ColA();
+
+        /**
+         * The meta object literal for the '<em><b>Col B</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference JOIN_ELEMENT__COL_B = eINSTANCE.getJoinElement_ColB();
+
+        /**
+         * The meta object literal for the '<em><b>Operator</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute JOIN_ELEMENT__OPERATOR = eINSTANCE.getJoinElement_Operator();
+
+        /**
+         * The meta object literal for the '<em><b>Table Alias A</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute JOIN_ELEMENT__TABLE_ALIAS_A = eINSTANCE.getJoinElement_TableAliasA();
+
+        /**
+         * The meta object literal for the '<em><b>Table Alias B</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute JOIN_ELEMENT__TABLE_ALIAS_B = eINSTANCE.getJoinElement_TableAliasB();
+
+        /**
+         * The meta object literal for the '<em><b>Column Alias A</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute JOIN_ELEMENT__COLUMN_ALIAS_A = eINSTANCE.getJoinElement_ColumnAliasA();
+
+        /**
+         * The meta object literal for the '<em><b>Column Alias B</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute JOIN_ELEMENT__COLUMN_ALIAS_B = eINSTANCE.getJoinElement_ColumnAliasB();
 
     }
 

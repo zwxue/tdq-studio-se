@@ -315,6 +315,15 @@ public interface SchemaPackage extends EPackage {
     int SCHEMA_INDICATOR__COMPUTED = IndicatorsPackage.COMPOSITE_INDICATOR__COMPUTED;
 
     /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SCHEMA_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.COMPOSITE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -689,6 +698,15 @@ public interface SchemaPackage extends EPackage {
     int ABSTRACT_TABLE_INDICATOR__COMPUTED = IndicatorsPackage.INDICATOR__COMPUTED;
 
     /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.INDICATOR__JOIN_CONDITIONS;
+
+    /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -957,6 +975,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int TABLE_INDICATOR__COMPUTED = ABSTRACT_TABLE_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__JOIN_CONDITIONS = ABSTRACT_TABLE_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
@@ -1245,6 +1272,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CATALOG_INDICATOR__COMPUTED = SCHEMA_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CATALOG_INDICATOR__JOIN_CONDITIONS = SCHEMA_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -1596,6 +1632,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CONNECTION_INDICATOR__COMPUTED = CATALOG_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__JOIN_CONDITIONS = CATALOG_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -1975,6 +2020,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int VIEW_INDICATOR__COMPUTED = ABSTRACT_TABLE_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__JOIN_CONDITIONS = ABSTRACT_TABLE_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
