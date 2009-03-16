@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
@@ -61,6 +62,8 @@ import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
+import org.talend.dataquality.indicators.definition.DefinitionPackage;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
@@ -73,7 +76,6 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.i18n.Messages;
-
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -91,6 +93,8 @@ public final class DefinitionHandler {
     private static Logger log = Logger.getLogger(DefinitionHandler.class);
 
     private static DefinitionHandler instance;
+
+    private static final String DQ_RULE_CATEGORY = "_8i9eQBI5Ed6TWL6NwMMHzQ";
 
     private IndicatorsDefinitions indicatorDefinitions;
 
@@ -745,4 +749,17 @@ public final class DefinitionHandler {
         return true;
     }
 
+    /**
+     * Method "getDQRuleIndicatorCategory".
+     * 
+     * @return the category of the DQ Rule indicators
+     */
+    public IndicatorCategory getDQRuleIndicatorCategory() {
+        CwmResource resource = (CwmResource) this.indicatorDefinitions.eResource();
+        EObject object = resource.getEObject(DQ_RULE_CATEGORY);
+        if (object != null && DefinitionPackage.eINSTANCE.getIndicatorCategory().equals(object.eClass())) {
+            return (IndicatorCategory) object;
+        }
+        return null;
+    }
 }

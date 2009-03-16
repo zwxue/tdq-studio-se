@@ -321,6 +321,16 @@
     <taggedValue xmi:id="_ycCDQTh8Ed2XmO7pl5Yuyg" tag="Description" value="contains several count indicators"/>
     <taggedValue xmi:id="_ycCDQjh8Ed2XmO7pl5Yuyg" tag="Purpose" value="analyze the quantity of records"/>
   </categories>
-  <categories xmi:id="_-DfJgLrcEd2PGrJOyhNk-w" name="Correlation" label="Correlation"/>
-  <categories xmi:id="_wQj8IMYUEd27NP4lvE0A4w" name="Overview" label="Overview"/>
+  <categories xmi:id="_-DfJgLrcEd2PGrJOyhNk-w" name="Correlation" label="Correlation">
+    <taggedValue xmi:id="_J0OgABI6Ed6TWL6NwMMHzQ" tag="Description" value="contains correlation indicators"/>
+    <taggedValue xmi:id="_POABEBI6Ed6TWL6NwMMHzQ" tag="Purpose" value="analyze the correlations"/>
+  </categories>
+  <categories xmi:id="_wQj8IMYUEd27NP4lvE0A4w" name="Overview" label="Overview">
+    <taggedValue xmi:id="_Tz5OIBI6Ed6TWL6NwMMHzQ" tag="Description" value="contains overview indicators"/>
+    <taggedValue xmi:id="_Wu94IBI6Ed6TWL6NwMMHzQ" tag="Purpose" value="give an overview of the connections, catalogs, schemas..."/>
+  </categories>
+  <categories xmi:id="_8i9eQBI5Ed6TWL6NwMMHzQ" name="DQ Rule" label="DQ Rule">
+    <taggedValue xmi:id="_ghhXUBI6Ed6TWL6NwMMHzQ" tag="Description" value="contains user defined DQ rules in SQL"/>
+    <taggedValue xmi:id="_kkFN0BI6Ed6TWL6NwMMHzQ" tag="Purpose" value="evaluates number of records for the given rules"/>
+  </categories>
 </dataquality.indicators.definition:IndicatorsDefinitions>

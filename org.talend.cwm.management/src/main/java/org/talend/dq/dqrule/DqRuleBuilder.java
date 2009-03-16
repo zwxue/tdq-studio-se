@@ -13,8 +13,10 @@
 package org.talend.dq.dqrule;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -36,7 +38,10 @@ public class DqRuleBuilder {
 
         this.whereRule = RulesFactory.eINSTANCE.createWhereRule();
         whereRule.setName(ruleName);
-
+        IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
+        if (ruleIndicatorCategory != null) {
+            whereRule.getCategories().add(ruleIndicatorCategory);
+        }
         return true;
     }
 
