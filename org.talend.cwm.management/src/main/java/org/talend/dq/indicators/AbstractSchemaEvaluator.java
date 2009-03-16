@@ -116,6 +116,10 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             int pkCount = getPKCount(catalog, schema, table);
             schemaIndic.setKeyCount(schemaIndic.getKeyCount() + pkCount);
 
+            // TODO get imported/exported keys
+            // getConnection().getMetaData().getImportedKeys(catalog, schema, table);
+            // getConnection().getMetaData().getExportedKeys(catalog, schema, table);
+            
             // indexes
             int idxCount = getIndexCount(catalog, schema, table);
             schemaIndic.setIndexCount(schemaIndic.getIndexCount() + idxCount);

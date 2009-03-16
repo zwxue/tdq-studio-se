@@ -16,7 +16,7 @@
             class="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
             icon="icons/application_home.png"
             id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
-            name="DQ Repository">
+            name="%DQRepository">
       </view>
       <view
             category="org.talend.dataprofiler.view.category"

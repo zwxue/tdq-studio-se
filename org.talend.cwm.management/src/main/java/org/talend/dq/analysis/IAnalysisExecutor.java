@@ -38,4 +38,8 @@ public interface IAnalysisExecutor {
      * @param monitor
      */
     public void setMonitor(IProgressMonitor monitor);
+
+    
+    // TODO scorreia add a method in order to separate preparation of analysis and execution.
+    // public abstract ReturnCode prepareAnalysis(final Analysis analysis)
 }

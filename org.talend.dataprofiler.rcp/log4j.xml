@@ -24,12 +24,13 @@
 
 <!--  Set here specific level for classes  -->
      <logger name="org.talend" additivity="true">	  <level value="info" />	</logger>
+     <logger name="org.talend.cwm.management.api.SoftwareSystemManager" additivity="true">	  <level value="debug" />	</logger>
  
 
 	<root>
 	   <priority value ="warn" />
            <!-- scorreia: put here your appenders -->
-   	   <!-- appender-ref ref="STDOUT" /  -->
+   	   <appender-ref ref="STDOUT" />
    	   <appender-ref ref="RCPAppender" />
 	</root>
 	
