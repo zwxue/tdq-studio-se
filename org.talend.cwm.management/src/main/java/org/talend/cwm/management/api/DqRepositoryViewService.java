@@ -81,6 +81,8 @@ public final class DqRepositoryViewService {
 
     private static Logger log = Logger.getLogger(DqRepositoryViewService.class);
 
+    private static final SimpleDateFormat SMPL_DATE_FMT = new SimpleDateFormat("yyyyMMddhhmmss"); //$NON-NLS-1$
+
     /**
      * if true, the catalogs (and schemas) are stored in the same file as the data provider. Used for tests only.
      * 
@@ -137,8 +139,6 @@ public final class DqRepositoryViewService {
         }
         return techname;
     }
-
-    private static final SimpleDateFormat SMPL_DATE_FMT = new SimpleDateFormat("yyyyMMddhhmm"); //$NON-NLS-1$
 
     /**
      * Method "listTdDataProviders" list all the connections in the given folder.
