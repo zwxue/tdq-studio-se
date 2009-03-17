@@ -31,15 +31,12 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdTable;
-import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.model.TableIndicator;
-import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractTableDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
-import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import orgomg.cwm.resource.relational.Table;
@@ -96,6 +93,11 @@ public abstract class TableViewerDND {
             }
 
             @Override
+            public void dragOver(DropTargetEvent event) {
+                receiver.dragOver(event);
+            }
+
+            @Override
             public void dropAccept(DropTargetEvent event) {
                 super.dropAccept(event);
                 receiver.doDropValidation(event, commonViewer);
@@ -135,10 +137,12 @@ public abstract class TableViewerDND {
         void doDropValidation(DropTargetEvent event, CommonViewer commonViewer);
 
         void drop(DropTargetEvent event, CommonViewer commonViewer, int index);
+
+        void dragOver(DropTargetEvent event);
     }
 
     /**
-     * DOC xqliu TableViewerDND class global comment. Detailled comment
+     * DOC xqliu DQRuleReceiver class global comment. Detailled comment
      */
     static class DQRuleReceiver implements ISelectionReceiver {
 
@@ -153,23 +157,30 @@ public abstract class TableViewerDND {
             WhereRule whereRule = null;
 
             boolean is = false;
-            Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
-            if (firstElement instanceof IFile) {
-                IFile fe = (IFile) firstElement;
-                if (NewSourcePatternActionProvider.EXTENSION_PATTERN.equals(fe.getFileExtension())) {
-                    whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
-                    if (whereRule != null && TaggedValueHelper.getValidStatus(whereRule)) {
-                        is = true;
+            List list = ((StructuredSelection) commonViewer.getSelection()).toList();
+            List<IFile> files = new ArrayList<IFile>();
+            if (list != null && list.size() > 0) {
+                for (Object obj : list) {
+                    if (obj instanceof IFile) {
+                        IFile fe = (IFile) obj;
+                        files.add(fe);
+                        if (FactoriesUtil.DQRULE.equals(fe.getFileExtension())) {
+                            whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
+                            if (whereRule == null || !TaggedValueHelper.getValidStatus(whereRule)) {
+                                is = true;
+                                break;
+                            }
+                        }
                     }
                 }
             }
 
-            if (event.item == null || is) {
+            if (is) {
                 event.detail = DND.DROP_NONE;
             } else {
-                Object data = event.item.getData(AnalysisTableTreeViewer.INDICATOR_UNIT_KEY);
+                Object data = event.widget.getData();
                 if (data != null) {
-                    if (viewer.canDrop(data, whereRule)) {
+                    if (viewer.canDrop(data, files)) {
                         event.detail = DND.DROP_MOVE;
                     } else {
                         event.detail = DND.DROP_NONE;
@@ -182,19 +193,25 @@ public abstract class TableViewerDND {
 
         // @Override
         public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
-            IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
+            List list = ((StructuredSelection) commonViewer.getSelection()).toList();
+            List<IFile> files = new ArrayList<IFile>();
+            for (Object obj : list) {
+                if (obj instanceof IFile) {
+                    files.add((IFile) obj);
+                }
+            }
+
             TreeItem item = (TreeItem) event.item;
             TableIndicator data = (TableIndicator) item.getData(AnalysisTableTreeViewer.TABLE_INDICATOR_KEY);
             AnalysisTableTreeViewer viewer = (AnalysisTableTreeViewer) item.getParent().getData(
                     AnalysisTableTreeViewer.VIEWER_KEY);
-            Analysis analysis = viewer.getAnalysis();
-            TableIndicatorUnit addIndicatorUnit = DQRuleUtilities.createIndicatorUnit(fe, data, analysis);
-            if (addIndicatorUnit != null) {
-                viewer.createOneUnit(item, addIndicatorUnit);
-                viewer.setDirty(true);
-            }
+
+            viewer.dropWhereRules(data, files, index, item);
         }
 
+        public void dragOver(DropTargetEvent event) {
+            event.feedback = DND.FEEDBACK_EXPAND | DND.FEEDBACK_INSERT_AFTER | DND.FEEDBACK_SCROLL | DND.FEEDBACK_SELECT;
+        }
     }
 
     /**
@@ -235,6 +252,10 @@ public abstract class TableViewerDND {
                 viewer.dropTables(selectedTableList, index);
             }
             localSelection = null;
+        }
+
+        public void dragOver(DropTargetEvent event) {
+            event.feedback = DND.FEEDBACK_EXPAND | DND.FEEDBACK_INSERT_AFTER | DND.FEEDBACK_SCROLL | DND.FEEDBACK_SELECT;
         }
     }
 }

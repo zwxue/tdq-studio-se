@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.List;
 
-import org.talend.dataquality.rules.WhereRule;
+import org.eclipse.core.resources.IFile;
 import orgomg.cwm.resource.relational.Table;
 
 /**
@@ -26,24 +26,9 @@ public abstract class AbstractTableDropTree extends AbstractPagePart {
 
     public abstract void dropTables(List<Table> tables, int index);
 
-    /**
-     * DOC xqliu Comment method "dropWhereRules".
-     * 
-     * @param data a TableIndicator
-     * @param whereRules
-     * @param index
-     */
-    public abstract void dropWhereRules(Object data, List<WhereRule> whereRules, int index);
+    public abstract void dropWhereRules(Object data, List<IFile> files, int index);
 
     public abstract boolean canDrop(Table table);
 
-    /**
-     * 
-     * DOC xqliu Comment method "canDrop".
-     * 
-     * @param data a TableIndicator
-     * @param whereRule
-     * @return
-     */
-    public abstract boolean canDrop(Object data, WhereRule whereRule);
+    public abstract boolean canDrop(Object data, List<IFile> files);
 }
