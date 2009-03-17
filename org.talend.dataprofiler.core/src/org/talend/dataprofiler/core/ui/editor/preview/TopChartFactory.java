@@ -37,6 +37,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer3D;
+import org.jfree.chart.renderer.category.StackedBarRenderer;
 import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
@@ -232,8 +233,11 @@ public final class TopChartFactory {
             createXYZDatasets.get(next).addSeriesToXYZDataset(dataset, next);
         }
         String chartName = DefaultMessagesImpl.getString("TopChartFactory.ChartName", numericColumn.getName()); //$NON-NLS-1$
-        JFreeChart chart = TopChartFactory.createBubbleChart(chartName, DefaultMessagesImpl.getString("TopChartFactory.average"), DefaultMessagesImpl.getString("TopChartFactory.count"), dataset, PlotOrientation.HORIZONTAL, //$NON-NLS-1$ //$NON-NLS-2$
-                true, true, true);
+        JFreeChart chart = TopChartFactory
+                .createBubbleChart(
+                        chartName,
+                        DefaultMessagesImpl.getString("TopChartFactory.average"), DefaultMessagesImpl.getString("TopChartFactory.count"), dataset, PlotOrientation.HORIZONTAL, //$NON-NLS-1$ //$NON-NLS-2$
+                        true, true, true);
         final XYPlot plot = (XYPlot) chart.getPlot();
         final XYItemRenderer renderer = plot.getRenderer();
         renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator() {
@@ -408,10 +412,18 @@ public final class TopChartFactory {
         final JFreeChart chart = ChartFactory.createStackedBarChart(null, title, DefaultMessagesImpl
                 .getString("TopChartFactory.value"), dataset, PlotOrientation.VERTICAL, //$NON-NLS-1$
                 showLegend, false, false);
-        final CategoryPlot plot = chart.getCategoryPlot();
-        final ValueAxis rangeAxis = plot.getRangeAxis();
+
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+
+        StackedBarRenderer sbr = (StackedBarRenderer) plot.getRenderer();
+        sbr.setAutoPopulateSeriesPaint(false);
+        sbr.setSeriesPaint(0, Color.RED);
+        sbr.setSeriesPaint(1, Color.GREEN);
+
+        ValueAxis rangeAxis = plot.getRangeAxis();
         rangeAxis.setLowerMargin(0.15);
         rangeAxis.setUpperMargin(0.15);
+
         return chart;
     }
 

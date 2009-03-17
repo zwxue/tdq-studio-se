@@ -40,9 +40,9 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  */
 public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable {
 
-    private final static String ROW_KEY_PASS = "Pass the rule";
+    private static final String ROW_KEY_PASS = "Pass the rule";
 
-    private final static String ROW_KEY_NOT_PASS = "Not pass the rule";
+    private static final String ROW_KEY_NOT_PASS = "Not pass the rule";
 
     private TableIndicator tableIndicator;
 

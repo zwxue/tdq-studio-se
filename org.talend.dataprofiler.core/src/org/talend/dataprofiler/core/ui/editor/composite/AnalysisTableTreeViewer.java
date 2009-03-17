@@ -884,17 +884,19 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 }
             });
 
-            MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
-            deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
-            deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            deleteMenuItem.addSelectionListener(new SelectionAdapter() {
+            if (!isRowCountIndicator(tree.getSelection())) {
+                MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
+                deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
+                deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+                deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    removeSelectedElements(tree);
-                }
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        removeSelectedElements(tree);
+                    }
 
-            });
+                });
+            }
 
             tree.setMenu(menu);
         }
@@ -1014,5 +1016,23 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             return true;
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "isRowCountIndicator".
+     * 
+     * @param selection
+     * @return
+     */
+    public boolean isRowCountIndicator(TreeItem[] selection) {
+        if (selection != null && selection.length > 0) {
+            for (TreeItem ti : selection) {
+                TableIndicatorUnit tiu = (TableIndicatorUnit) ti.getData(INDICATOR_UNIT_KEY);
+                if (tiu.getIndicator() instanceof RowCountIndicator) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
