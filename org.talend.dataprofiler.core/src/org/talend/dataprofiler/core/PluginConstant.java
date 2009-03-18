@@ -46,9 +46,9 @@ public final class PluginConstant {
 
     public static final String SQL_SUFFIX = "*.sql"; //$NON-NLS-1$
 
-    public static final String METADATA_PROJECTNAME = DQStructureManager.METADATA;
+    public static final String METADATA_PROJECTNAME = DQStructureManager.getMetaData();
 
-    public static final String DATA_PROFILING_PROJECTNAME = DQStructureManager.DATA_PROFILING;
+    public static final String DATA_PROFILING_PROJECTNAME = DQStructureManager.getDataProfiling();
 
     public static final String FILE_SUFFIX = "FILE_SUFFIX"; //$NON-NLS-1$
 

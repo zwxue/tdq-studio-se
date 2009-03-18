@@ -33,7 +33,7 @@ public class UpdateProjectPersistentPropertyTask extends AbstractMigrationTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
      */
     public boolean execute() {
-        String[] projects = { DQStructureManager.DATA_PROFILING, DQStructureManager.LIBRARIES, DQStructureManager.METADATA };
+        String[] projects = { DQStructureManager.getDataProfiling(), DQStructureManager.getLibraries(), DQStructureManager.getMetaData() };
         try {
             checkProjectPersistentProperty(projects);
         } catch (CoreException e) {

@@ -143,7 +143,7 @@ public class CreateSqlFileWizardPage extends WizardPage {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                openFolderSelectionDialog(DQStructureManager.LIBRARIES, DQStructureManager.SOURCE_FILES);
+                openFolderSelectionDialog(DQStructureManager.getLibraries(), DQStructureManager.SOURCE_FILES);
             }
         });
     }

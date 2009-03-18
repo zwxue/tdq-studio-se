@@ -51,7 +51,8 @@ public class Activator extends AbstractUIPlugin {
 		}
 		// MOD mzhao 2009-03-16 Feature 6066, Set TOP/TDQ project name to
 		// default standalone one.
-		org.talend.dataquality.PluginConstant.ROOTPROJECTNAME = CorePlugin.DEFAULT_PROJECT_NAME;
+		org.talend.dataquality.PluginConstant
+				.setRootProjectName(CorePlugin.DEFAULT_PROJECT_NAME);
 		plugin = this;
 	}
 

@@ -63,8 +63,8 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
         cViewer.setLabelProvider(new DQRuleLabelProvider());
         cViewer.setContentProvider(new WorkbenchContentProvider());
         // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        cViewer.setInput(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
-                DQStructureManager.LIBRARIES));
+        cViewer.setInput(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
+                DQStructureManager.getLibraries()));
         cViewer.addFilter(new ViewerFilter() {
 
             @Override

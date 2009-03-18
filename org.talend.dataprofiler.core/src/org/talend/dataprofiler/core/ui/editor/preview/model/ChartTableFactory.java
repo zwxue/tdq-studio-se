@@ -214,7 +214,7 @@ public class ChartTableFactory {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
         String query = itemEntity.getQuery();
         String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
-        new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+        new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.getLibraries()).getFolder(
                 DQStructureManager.PATTERNS), ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 

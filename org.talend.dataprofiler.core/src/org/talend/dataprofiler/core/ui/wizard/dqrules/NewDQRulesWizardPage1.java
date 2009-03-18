@@ -48,7 +48,7 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                openFolderSelectionDialog(DQStructureManager.LIBRARIES, DQStructureManager.DQ_RULES);
+                openFolderSelectionDialog(DQStructureManager.getLibraries(), DQStructureManager.DQ_RULES);
             }
         });
         if (getControl() != null) {
@@ -69,7 +69,7 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
 
     @Override
     protected IFolder getStoredFolder() {
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.getLibraries()).getFolder(
                 DQStructureManager.DQ_RULES);
     }
 

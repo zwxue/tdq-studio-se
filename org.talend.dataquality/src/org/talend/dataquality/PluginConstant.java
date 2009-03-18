@@ -18,8 +18,16 @@ package org.talend.dataquality;
  * DOC mzhao Plugin constants. This class is originally developed for handle
  * TDCP launch issues. As root project name must defined at "low level plugin".
  */
-public class PluginConstant {
+public final class PluginConstant {
 	// MOD mzhao 2009-03-13 TDQ/TOP root project
-	public static String ROOTPROJECTNAME = null;
+	private static String rootProjectName;
+
+	public static String getRootProjectName() {
+		return rootProjectName;
+	}
+
+	public static void setRootProjectName(String rootProjectName) {
+		PluginConstant.rootProjectName = rootProjectName;
+	}
 
 }

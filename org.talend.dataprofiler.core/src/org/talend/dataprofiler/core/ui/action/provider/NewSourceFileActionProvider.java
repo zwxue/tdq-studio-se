@@ -48,7 +48,7 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
-                IPath path = new Path(DQStructureManager.LIBRARIES);
+                IPath path = new Path(DQStructureManager.getLibraries());
                 path = path.append(DQStructureManager.SOURCE_FILES);
                 IPath fullPath = ((IFolder) obj).getFullPath();
                 if (path.isPrefixOf(fullPath)) {
@@ -61,7 +61,7 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
                     }
                 }
                 // TODO xqliu move the code to DQRulesActionProvider.java 2009-02-14
-                path = new Path(DQStructureManager.LIBRARIES);
+                path = new Path(DQStructureManager.getLibraries());
                 path = path.append(DQStructureManager.DQ_RULES);
                 fullPath = ((IFolder) obj).getFullPath();
                 if (path.isPrefixOf(fullPath)) {

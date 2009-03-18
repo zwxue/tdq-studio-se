@@ -81,11 +81,11 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             }
         }
         if (element instanceof IProject) {
-            if (DQStructureManager.METADATA.equals(((IProject) element).getName())) {
+            if (DQStructureManager.getMetaData().equals(((IProject) element).getName())) {
                 return ImageLib.getImageDescriptor(ImageLib.METADATA);
-            } else if (DQStructureManager.LIBRARIES.equals(((IProject) element).getName())) {
+            } else if (DQStructureManager.getLibraries().equals(((IProject) element).getName())) {
                 return ImageLib.getImageDescriptor(ImageLib.LIBRARIES);
-            } else if (DQStructureManager.DATA_PROFILING.equals(((IProject) element).getName())) {
+            } else if (DQStructureManager.getDataProfiling().equals(((IProject) element).getName())) {
                 return ImageLib.getImageDescriptor(ImageLib.DATA_PROFILING);
             }
         } else if (element instanceof IFolder) {

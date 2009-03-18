@@ -44,9 +44,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         super();
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         needSortContainers = new ArrayList<IContainer>();
-        needSortContainers.add(root.getProject(DQStructureManager.DATA_PROFILING).getFolder(DQStructureManager.ANALYSIS));
-        needSortContainers.add(root.getProject(DQStructureManager.DATA_PROFILING).getFolder(DQStructureManager.REPORTS));
-        needSortContainers.add(root.getProject(DQStructureManager.METADATA).getFolder(DQStructureManager.DB_CONNECTIONS));
+        needSortContainers.add(root.getProject(DQStructureManager.getDataProfiling()).getFolder(DQStructureManager.ANALYSIS));
+        needSortContainers.add(root.getProject(DQStructureManager.getDataProfiling()).getFolder(DQStructureManager.REPORTS));
+        needSortContainers.add(root.getProject(DQStructureManager.getMetaData()).getFolder(DQStructureManager.DB_CONNECTIONS));
     }
 
     /*

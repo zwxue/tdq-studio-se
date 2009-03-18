@@ -33,7 +33,7 @@ public class CopyDefineFileTask extends AbstractMigrationTask {
 
     public boolean execute() {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject project = root.getProject(DQStructureManager.LIBRARIES);
+        IProject project = root.getProject(DQStructureManager.getLibraries());
 
         IFile file = project.getFile(TALEND_DEFINITION_FILENAME);
         IFile bakfile = project.getFile(TALEND_DEFINITION_BAK_FILENAME);

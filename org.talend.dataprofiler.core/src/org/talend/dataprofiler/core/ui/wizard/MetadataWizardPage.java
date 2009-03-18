@@ -205,10 +205,10 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         if (projectName != null) {
             // MOD mzhao 2009-03-13 Move all folders into one single project {@link CorePlugin#ROOTPROJECTNAME}
-            IFolder theFolder = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(projectName);
+            IFolder theFolder = root.getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(projectName);
             IResource[] allFolders = null;
             try {
-                allFolders = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).members();
+                allFolders = root.getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).members();
             } catch (CoreException e) {
                 log.error(e, e);
             }

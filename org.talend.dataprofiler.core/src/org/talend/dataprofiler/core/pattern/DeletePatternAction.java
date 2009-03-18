@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 
@@ -34,47 +33,58 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
  */
 public class DeletePatternAction extends Action {
 
-    private List<IFile> selectedFiles;
+	private List<IFile> selectedFiles;
 
-    /**
-     * DOC qzhang AddSqlFileAction constructor comment.
-     * 
-     * @param folder
-     */
-    public DeletePatternAction(List<IFile> selectedFiles) {
-        setText(DefaultMessagesImpl.getString("DeletePatternAction.deleteRegularPattern")); //$NON-NLS-1$
-        // setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
-        this.selectedFiles = selectedFiles;
-    }
+	/**
+	 * DOC qzhang AddSqlFileAction constructor comment.
+	 * 
+	 * @param folder
+	 */
+	public DeletePatternAction(List<IFile> selectedFiles) {
+		setText(DefaultMessagesImpl
+				.getString("DeletePatternAction.deleteRegularPattern")); //$NON-NLS-1$
+		// setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.
+		// CREATE_SQL_ACTION));
+		this.selectedFiles = selectedFiles;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.Action#run()
-     */
-    @Override
-    public void run() {
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
-                DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS);
-        for (IFile file : selectedFiles) {
-            if (MessageDialog.openConfirm(new Shell(), DefaultMessagesImpl
-                    .getString("DeletePatternAction.deleteRegularPatternFile"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("DeletePatternAction.areYouDeleteRegularPatternFile", file.getName()))) { //$NON-NLS-1$
-                try {
-                    if (file.exists()) {
-                        file.delete(true, null);
-                    }
-                } catch (CoreException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        try {
-            sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
-        } catch (CoreException e) {
-            e.printStackTrace();
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.action.Action#run()
+	 */
+	@Override
+	public void run() {
+		// MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+		IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(
+						org.talend.dataquality.PluginConstant
+								.getRootProjectName()).getFolder(
+						DQStructureManager.getLibraries()).getFolder(
+						DQStructureManager.PATTERNS);
+		for (IFile file : selectedFiles) {
+			if (MessageDialog
+					.openConfirm(
+							new Shell(),
+							DefaultMessagesImpl
+									.getString("DeletePatternAction.deleteRegularPatternFile"), //$NON-NLS-1$
+							DefaultMessagesImpl
+									.getString(
+											"DeletePatternAction.areYouDeleteRegularPatternFile", file.getName()))) { //$NON-NLS-1$
+				try {
+					if (file.exists()) {
+						file.delete(true, null);
+					}
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		try {
+			sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

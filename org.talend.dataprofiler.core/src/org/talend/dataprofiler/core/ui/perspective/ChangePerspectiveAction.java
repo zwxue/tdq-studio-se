@@ -56,177 +56,198 @@ import org.talend.utils.sugars.TypedReturnCode;
 /**
  * Changes the active perspective. <br/>
  * 
- * $Id: ChangePerspectiveAction.java 1774 2007-02-03 02:05:47 +0000 (Sat, 03 Feb 2007) bqian $
+ * $Id: ChangePerspectiveAction.java 1774 2007-02-03 02:05:47 +0000 (Sat, 03 Feb
+ * 2007) bqian $
  * 
  */
 public class ChangePerspectiveAction extends Action {
 
-    private static Logger log = Logger.getLogger(ChangePerspectiveAction.class);
+	private static Logger log = Logger.getLogger(ChangePerspectiveAction.class);
 
-    private static final String SWITCH_TO_DATA_PROFILING = "Switch to " + PluginConstant.DATAPROFILER_PERSPECTIVE; //$NON-NLS-1$
+	private static final String SWITCH_TO_DATA_PROFILING = "Switch to " + PluginConstant.DATAPROFILER_PERSPECTIVE; //$NON-NLS-1$
 
-    private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to " + PluginConstant.DATAEXPLORER_PERSPECTIVE; //$NON-NLS-1$
+	private static final String SWITCH_TO_DATA_DISCOVERY = "Switch to " + PluginConstant.DATAEXPLORER_PERSPECTIVE; //$NON-NLS-1$
 
-    static ChangePerspectiveAction action;
+	static ChangePerspectiveAction action;
 
-    IPerspectiveRegistry registry = PlatformUI.getWorkbench().getPerspectiveRegistry();
+	IPerspectiveRegistry registry = PlatformUI.getWorkbench()
+			.getPerspectiveRegistry();
 
-    /** Id of the perspective to move to front. */
-    private String perspectiveId;
+	/** Id of the perspective to move to front. */
+	private String perspectiveId;
 
-    private boolean toolbar;
+	private boolean toolbar;
 
-    /**
-     * Constructs a new ChangePerspectiveAction.
-     */
-    public ChangePerspectiveAction(String perspectiveId) {
-        super(perspectiveId, AS_CHECK_BOX);
-        this.perspectiveId = perspectiveId;
-    }
+	/**
+	 * Constructs a new ChangePerspectiveAction.
+	 */
+	public ChangePerspectiveAction(String perspectiveId) {
+		super(perspectiveId, AS_CHECK_BOX);
+		this.perspectiveId = perspectiveId;
+	}
 
-    /**
-     * DOC qzhang ChangePerspectiveAction constructor comment.
-     */
-    public ChangePerspectiveAction(boolean toolbar) {
-        super(""); //$NON-NLS-1$
-        this.toolbar = toolbar;
-        action = this;
-    }
+	/**
+	 * DOC qzhang ChangePerspectiveAction constructor comment.
+	 */
+	public ChangePerspectiveAction(boolean toolbar) {
+		super(""); //$NON-NLS-1$
+		this.toolbar = toolbar;
+		action = this;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.Action#run()
-     */
-    @Override
-    public void run() {
-        IWorkbench workbench = PlatformUI.getWorkbench();
-        IWorkbenchPage page = workbench.getActiveWorkbenchWindow().getActivePage();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.action.Action#run()
+	 */
+	@Override
+	public void run() {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchPage page = workbench.getActiveWorkbenchWindow()
+				.getActivePage();
 
-        if (!perspectiveId.equals(page.getPerspective().getId())) {
-            try {
-                workbench.showPerspective(perspectiveId, workbench.getActiveWorkbenchWindow());
-            } catch (WorkbenchException e) {
-                IStatus status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, IStatus.OK, "Show perspective failed.", e); //$NON-NLS-1$
-                CorePlugin.getDefault().getLog().log(status);
-            }
-        }
-        activeData();
-        IPreferenceStore preferenceStore = CorePlugin.getDefault().getPreferenceStore();
-        IViewPart findView = page.findView(CHEAT_SHEET_VIEW);
-        if (PERSPECTIVE_ID.equals(perspectiveId)) {
-            if (preferenceStore.getBoolean(CHEAT_SHEET_VIEW)) {
-                try {
-                    page.showView(CHEAT_SHEET_VIEW);
-                } catch (PartInitException e) {
-                    e.printStackTrace();
-                }
-            }
-            action.perspectiveId = SE_ID;
-            action.setToolTipText(SWITCH_TO_DATA_DISCOVERY);
-            IPerspectiveDescriptor fp = registry.findPerspectiveWithId(SE_ID);
-            if (fp != null) {
-                action.setImageDescriptor(fp.getImageDescriptor());
-            }
-        } else {
-            preferenceStore.setValue(CHEAT_SHEET_VIEW, findView != null);
-            if (findView != null) {
-                page.hideView(findView);
-            }
-            action.perspectiveId = PERSPECTIVE_ID;
-            action.setToolTipText(SWITCH_TO_DATA_PROFILING);
-            IPerspectiveDescriptor fp = registry.findPerspectiveWithId(PERSPECTIVE_ID);
-            if (fp != null) {
-                action.setImageDescriptor(fp.getImageDescriptor());
-            }
-        }
-    }
+		if (!perspectiveId.equals(page.getPerspective().getId())) {
+			try {
+				workbench.showPerspective(perspectiveId, workbench
+						.getActiveWorkbenchWindow());
+			} catch (WorkbenchException e) {
+				IStatus status = new Status(IStatus.ERROR,
+						CorePlugin.PLUGIN_ID, IStatus.OK,
+						"Show perspective failed.", e); //$NON-NLS-1$
+				CorePlugin.getDefault().getLog().log(status);
+			}
+		}
+		activeData();
+		IPreferenceStore preferenceStore = CorePlugin.getDefault()
+				.getPreferenceStore();
+		IViewPart findView = page.findView(CHEAT_SHEET_VIEW);
+		if (PERSPECTIVE_ID.equals(perspectiveId)) {
+			if (preferenceStore.getBoolean(CHEAT_SHEET_VIEW)) {
+				try {
+					page.showView(CHEAT_SHEET_VIEW);
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				}
+			}
+			action.perspectiveId = SE_ID;
+			action.setToolTipText(SWITCH_TO_DATA_DISCOVERY);
+			IPerspectiveDescriptor fp = registry.findPerspectiveWithId(SE_ID);
+			if (fp != null) {
+				action.setImageDescriptor(fp.getImageDescriptor());
+			}
+		} else {
+			preferenceStore.setValue(CHEAT_SHEET_VIEW, findView != null);
+			if (findView != null) {
+				page.hideView(findView);
+			}
+			action.perspectiveId = PERSPECTIVE_ID;
+			action.setToolTipText(SWITCH_TO_DATA_PROFILING);
+			IPerspectiveDescriptor fp = registry
+					.findPerspectiveWithId(PERSPECTIVE_ID);
+			if (fp != null) {
+				action.setImageDescriptor(fp.getImageDescriptor());
+			}
+		}
+	}
 
-    /**
-     * DOC qzhang Comment method "activeData".
-     */
-    public void activeData() {
-        // PTODO qzhang switch to DB Discovery
-        if (SE_ID.equals(perspectiveId)) {
-            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-            IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
-                    DQStructureManager.METADATA).getFolder(DQStructureManager.DB_CONNECTIONS);
-            List<TdDataProvider> listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder, true);
-            SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
-            AliasManager aliasManager = default1.getAliasManager();
-            aliasManager.getAliases().clear();
-            Set<User> users = new HashSet<User>();
-            try {
-                aliasManager.closeAllConnections();
-            } catch (ExplorerException e1) {
-                log.error(e1, e1);
-            }
-            for (TdDataProvider tdDataProvider : listTdDataProviders) {
-                try {
-                    TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-                    TdProviderConnection providerConnection = tdPc.getObject();
-                    String url = providerConnection.getConnectionString();
-                    Alias alias = new Alias(tdDataProvider.getName());
-                    String user = TaggedValueHelper.getValue("user", providerConnection); //$NON-NLS-1$
-                    // MOD scorreia 2009-01-09 password decryption
-                    String password = DataProviderHelper.getClearTextPassword(providerConnection);
+	/**
+	 * DOC qzhang Comment method "activeData".
+	 */
+	public void activeData() {
+		// PTODO qzhang switch to DB Discovery
+		if (SE_ID.equals(perspectiveId)) {
+			// MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
+			// project.
+			IFolder folder = ResourcesPlugin.getWorkspace().getRoot()
+					.getProject(
+							org.talend.dataquality.PluginConstant
+									.getRootProjectName()).getFolder(
+							DQStructureManager.getMetaData()).getFolder(
+							DQStructureManager.DB_CONNECTIONS);
+			List<TdDataProvider> listTdDataProviders = DqRepositoryViewService
+					.listTdDataProviders(folder, true);
+			SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
+			AliasManager aliasManager = default1.getAliasManager();
+			aliasManager.getAliases().clear();
+			Set<User> users = new HashSet<User>();
+			try {
+				aliasManager.closeAllConnections();
+			} catch (ExplorerException e1) {
+				log.error(e1, e1);
+			}
+			for (TdDataProvider tdDataProvider : listTdDataProviders) {
+				try {
+					TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper
+							.getTdProviderConnection(tdDataProvider);
+					TdProviderConnection providerConnection = tdPc.getObject();
+					String url = providerConnection.getConnectionString();
+					Alias alias = new Alias(tdDataProvider.getName());
+					String user = TaggedValueHelper.getValue(
+							"user", providerConnection); //$NON-NLS-1$
+					// MOD scorreia 2009-01-09 password decryption
+					String password = DataProviderHelper
+							.getClearTextPassword(providerConnection);
 
-                    if ("".equals(user)) { //$NON-NLS-1$
-                        user = "root"; //$NON-NLS-1$
-                    }
+					if ("".equals(user)) { //$NON-NLS-1$
+						user = "root"; //$NON-NLS-1$
+					}
 
-                    User previousUser = new User(user, password);
-                    alias.setDefaultUser(previousUser);
-                    users.add(previousUser);
+					User previousUser = new User(user, password);
+					alias.setDefaultUser(previousUser);
+					users.add(previousUser);
 
-                    alias.setAutoLogon(false);
-                    alias.setConnectAtStartup(true);
-                    alias.setUrl(url);
-                    ManagedDriver manDr = default1.getDriverModel().getDriver(
-                            EDriverName.getId(providerConnection.getDriverClassName()));
-                    alias.setDriver(manDr);
-                    aliasManager.addAlias(alias);
+					alias.setAutoLogon(false);
+					alias.setConnectAtStartup(true);
+					alias.setUrl(url);
+					ManagedDriver manDr = default1.getDriverModel().getDriver(
+							EDriverName.getId(providerConnection
+									.getDriverClassName()));
+					alias.setDriver(manDr);
+					aliasManager.addAlias(alias);
 
-                } catch (ExplorerException e) {
-                    log.error(e, e);
-                }
-            }
-            aliasManager.modelChanged();
-            // SQLExplorerPlugin.getDefault().getPluginPreferences().setValue(IConstants.AUTO_OPEN_EDITOR, false);
-            // for (User user : users) {
-            // OpenPasswordConnectDialogAction openDlgAction = new OpenPasswordConnectDialogAction(user.getAlias(),
-            // user, false);
-            // openDlgAction.run();
-            // }
-        }
-    }
+				} catch (ExplorerException e) {
+					log.error(e, e);
+				}
+			}
+			aliasManager.modelChanged();
+			// SQLExplorerPlugin.getDefault().getPluginPreferences().setValue(
+			// IConstants.AUTO_OPEN_EDITOR, false);
+			// for (User user : users) {
+			// OpenPasswordConnectDialogAction openDlgAction = new
+			// OpenPasswordConnectDialogAction(user.getAlias(),
+			// user, false);
+			// openDlgAction.run();
+			// }
+		}
+	}
 
-    /**
-     * Getter for action.
-     * 
-     * @return the action
-     */
-    public static ChangePerspectiveAction getAction() {
-        return action;
-    }
+	/**
+	 * Getter for action.
+	 * 
+	 * @return the action
+	 */
+	public static ChangePerspectiveAction getAction() {
+		return action;
+	}
 
-    /**
-     * DOC qzhang Comment method "switchTitle".
-     */
-    public void switchTitle() {
-        String id2 = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective().getId();
-        String toID = SE_ID;
-        if (SE_ID.equals(id2)) {
-            toID = PERSPECTIVE_ID;
-            setToolTipText(SWITCH_TO_DATA_PROFILING);
-        } else {
-            setToolTipText(SWITCH_TO_DATA_DISCOVERY);
-            toID = SE_ID;
-        }
-        this.perspectiveId = toID;
-        IPerspectiveDescriptor fp = registry.findPerspectiveWithId(toID);
-        if (fp != null) {
-            setImageDescriptor(fp.getImageDescriptor());
-        }
-    }
+	/**
+	 * DOC qzhang Comment method "switchTitle".
+	 */
+	public void switchTitle() {
+		String id2 = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getActivePage().getPerspective().getId();
+		String toID = SE_ID;
+		if (SE_ID.equals(id2)) {
+			toID = PERSPECTIVE_ID;
+			setToolTipText(SWITCH_TO_DATA_PROFILING);
+		} else {
+			setToolTipText(SWITCH_TO_DATA_DISCOVERY);
+			toID = SE_ID;
+		}
+		this.perspectiveId = toID;
+		IPerspectiveDescriptor fp = registry.findPerspectiveWithId(toID);
+		if (fp != null) {
+			setImageDescriptor(fp.getImageDescriptor());
+		}
+	}
 }

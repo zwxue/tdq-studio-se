@@ -105,7 +105,7 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
     protected void addFilters() {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         final Class[] acceptedClasses = new Class[] { IResource.class, IFolderNode.class, EObject.class, IFile.class };
-        IProject rootProject = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME);
+        IProject rootProject = root.getProject(org.talend.dataquality.PluginConstant.getRootProjectName());
         IResource[] resources = null;
         try {
             resources = rootProject.members();
@@ -115,12 +115,12 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         ArrayList rejectedElements = new ArrayList(resources.length);
         // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
         for (int i = 0; i < resources.length; i++) {
-            if (!resources[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+            if (!resources[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
                     PluginConstant.METADATA_PROJECTNAME))) {
                 rejectedElements.add(resources[i]);
             }
         }
-        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
                 PluginConstant.METADATA_PROJECTNAME).getFile(".project")); //$NON-NLS-1$
         ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
         addFilter(filter);

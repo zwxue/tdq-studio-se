@@ -68,7 +68,7 @@ public final class DQRuleUtilities {
      */
     public static boolean isLibraiesSubfolder(IFolder folder, String... subs) {
         for (String sub : subs) {
-            IPath path = new Path(DQStructureManager.LIBRARIES);
+            IPath path = new Path(DQStructureManager.getLibraries());
             path = path.append(sub);
             IPath fullPath = folder.getFullPath();
             boolean prefixOf = path.isPrefixOf(fullPath);

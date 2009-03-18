@@ -231,7 +231,7 @@ public class RenameSqlFileAction extends Action {
                     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
                     ArrayList rejectedElements = new ArrayList();
 
-                    IProject theProject = root.getProject(DQStructureManager.LIBRARIES);
+                    IProject theProject = root.getProject(DQStructureManager.getLibraries());
                     IProject[] allProjects = root.getProjects();
                     for (int i = 0; i < allProjects.length; i++) {
                         if (!allProjects[i].equals(theProject)) {

@@ -70,7 +70,7 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                openFolderSelectionDialog(DQStructureManager.METADATA, DQStructureManager.DB_CONNECTIONS);
+                openFolderSelectionDialog(DQStructureManager.getMetaData(), DQStructureManager.DB_CONNECTIONS);
             }
         });
 
@@ -80,7 +80,7 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
     @Override
     protected IFolder getStoredFolder() {
         // MOD mzhao 2009-03-13 Feature 6066 Move all folders into single project.
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
                 PluginConstant.METADATA_PROJECTNAME).getFolder(DQStructureManager.DB_CONNECTIONS);
     }
 

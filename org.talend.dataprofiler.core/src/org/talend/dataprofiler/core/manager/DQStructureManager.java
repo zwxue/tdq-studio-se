@@ -79,15 +79,39 @@ public final class DQStructureManager {
 	public static final String DQ_RULES = DefaultMessagesImpl
 			.getString("DQStructureManager.dqRules"); //$NON-NLS-1$
 
-	public static String LIBRARIES = DefaultMessagesImpl
-			.getString("DQStructureManager.libraries"); //$NON-NLS-1$
+	private static String libraries = DefaultMessagesImpl
+			.getString("DQStructureManager.getLibraries()"); //$NON-NLS-1$
 
-	public static String METADATA = DefaultMessagesImpl
-			.getString("DQStructureManager.metadata"); //$NON-NLS-1$
+	public static String getLibraries() {
+		return libraries;
+	}
+
+	public static void setLibraries(String libraries) {
+		DQStructureManager.libraries = libraries;
+	}
+
+	private static String metaData = DefaultMessagesImpl
+			.getString("DQStructureManager.getMetaData()"); //$NON-NLS-1$
+
+	public static String getMetaData() {
+		return metaData;
+	}
+
+	public static void setMetaData(String metaData) {
+		DQStructureManager.metaData = metaData;
+	}
 
 	// Not set final for later add prefix when started as TDCP.
-	public static String DATA_PROFILING = DefaultMessagesImpl
-			.getString("DQStructureManager.data_Profiling"); //$NON-NLS-1$
+	private static String dataProfiling = DefaultMessagesImpl
+			.getString("DQStructureManager.getDataProfiling()"); //$NON-NLS-1$
+
+	public static String getDataProfiling() {
+		return dataProfiling;
+	}
+
+	public static void setDataProfiling(String dataProfiling) {
+		DQStructureManager.dataProfiling = dataProfiling;
+	}
 
 	public static final String ANALYSIS = DefaultMessagesImpl
 			.getString("DQStructureManager.analyses"); //$NON-NLS-1$
@@ -164,16 +188,16 @@ public final class DQStructureManager {
 			// ~ MOD mzhao 2009-03-13 Feature:6066, Put TDQ/TOP folders in one
 			// project.
 			IProject rootProject = this.createNewProject(
-					org.talend.dataquality.PluginConstant.ROOTPROJECTNAME,
+					org.talend.dataquality.PluginConstant.getRootProjectName(),
 					shell);
 			// create "Data Profiling" project
 			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			if (!org.talend.dataquality.PluginConstant.ROOTPROJECTNAME
+			if (!org.talend.dataquality.PluginConstant.getRootProjectName()
 					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
-				DATA_PROFILING = PREFIX_TDQ + DATA_PROFILING;
+				dataProfiling = PREFIX_TDQ + dataProfiling;
 			}
 			IFolder dataProfilingFolder = this.createNewFoler(rootProject,
-					DATA_PROFILING);
+					dataProfiling);
 			IFolder createNewFoler = this.createNewFoler(dataProfilingFolder,
 					ANALYSIS);
 			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
@@ -184,12 +208,12 @@ public final class DQStructureManager {
 
 			// create "Libraries" project
 			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			if (!org.talend.dataquality.PluginConstant.ROOTPROJECTNAME
+			if (!org.talend.dataquality.PluginConstant.getRootProjectName()
 					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
-				LIBRARIES = PREFIX_TDQ + LIBRARIES;
+				libraries = PREFIX_TDQ + libraries;
 			}
 			IFolder librariesFoler = this
-					.createNewFoler(rootProject, LIBRARIES);
+					.createNewFoler(rootProject, libraries);
 			createNewFoler = this.createNewFoler(librariesFoler, PATTERNS);
 			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
 					PATTERNS_FOLDER_PROPERTY);
@@ -227,12 +251,12 @@ public final class DQStructureManager {
 
 			// create "Metadata" project
 			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			if (!org.talend.dataquality.PluginConstant.ROOTPROJECTNAME
+			if (!org.talend.dataquality.PluginConstant.getRootProjectName()
 					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
-				METADATA = PREFIX_TDQ + METADATA;
+				metaData = PREFIX_TDQ + metaData;
 			}
 
-			IFolder metadataFolder = this.createNewFoler(rootProject, METADATA);
+			IFolder metadataFolder = this.createNewFoler(rootProject, metaData);
 			createNewFoler = this
 					.createNewFoler(metadataFolder, DB_CONNECTIONS);
 			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,

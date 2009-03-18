@@ -94,7 +94,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                openFolderSelectionDialog(DQStructureManager.DATA_PROFILING, DQStructureManager.ANALYSIS);
+                openFolderSelectionDialog(DQStructureManager.getDataProfiling(), DQStructureManager.ANALYSIS);
             }
         });
 
@@ -114,7 +114,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
     @Override
     protected IFolder getStoredFolder() {
         // MOD mzhao 2009-03-13 Feature 6066 Move all folders into single project.
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
                 PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
     }
 

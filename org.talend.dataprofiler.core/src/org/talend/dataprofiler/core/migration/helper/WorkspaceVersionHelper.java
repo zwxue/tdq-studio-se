@@ -45,7 +45,9 @@ public class WorkspaceVersionHelper {
 			e1.printStackTrace();
 		}
 		// MOD mzhao 2009-03-13 put all folders in one project.
-		IProject project = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME);
+		IProject project = root
+				.getProject(org.talend.dataquality.PluginConstant
+						.getRootProjectName());
 
 		if (project.exists() && !project.isOpen()) {
 			try {
@@ -55,7 +57,7 @@ public class WorkspaceVersionHelper {
 			}
 		}
 		IFolder librariesFolder = project
-				.getFolder(DQStructureManager.LIBRARIES);
+				.getFolder(DQStructureManager.getLibraries());
 		return librariesFolder.getFile(PluginConstant.VERSION_FILE_PATH);
 	}
 
