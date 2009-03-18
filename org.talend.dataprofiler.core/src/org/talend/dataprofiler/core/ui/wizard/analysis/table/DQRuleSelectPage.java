@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -61,7 +62,9 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
         cViewer = new ContainerCheckedTreeViewer(container, SWT.NONE);
         cViewer.setLabelProvider(new DQRuleLabelProvider());
         cViewer.setContentProvider(new WorkbenchContentProvider());
-        cViewer.setInput(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES));
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        cViewer.setInput(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                DQStructureManager.LIBRARIES));
         cViewer.addFilter(new ViewerFilter() {
 
             @Override

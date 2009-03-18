@@ -191,12 +191,12 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             @Override
             protected void handleRemove() {
-                removeSelectedElements(newTree);
+                // removeSelectedElements(newTree);
             }
 
         };
         parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
-        TableViewerDND.installDND(newTree);
+        TableViewerDND.installDND(newTree); // TODO xqliu add code for drag&drop
         this.addTreeListener(newTree);
         newTree.setData(this);
         return newTree;
@@ -366,9 +366,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
         CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
                 new WorkbenchContentProvider());
-
-        IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES);
-        dialog.setInput(defaultPatternFolder);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME);
+        dialog.setInput(defaultPatternFolder.getFolder(DQStructureManager.LIBRARIES));
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
@@ -737,29 +737,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     @Override
-    public void dropWhereRules(Object data, List<IFile> files, int index) {
-        this.dropWhereRules(data, files, index, null);
-    }
-
-    public void dropWhereRules(Object data, List<IFile> files, int index, TreeItem item) {
-        TreeItem treeItem = null;
-        if (item == null) {
-            if (getTree().getItemCount() > 0) {
-                treeItem = getTree().getItem(0);
-            }
-        } else {
-            treeItem = item;
-        }
-        if (data != null && treeItem != null && files.size() > 0) {
-            Analysis analysis = getAnalysis();
-            for (IFile file : files) {
-                TableIndicatorUnit addIndicatorUnit = DQRuleUtilities.createIndicatorUnit(file, (TableIndicator) data, analysis);
-                if (addIndicatorUnit != null) {
-                    createOneUnit(treeItem, addIndicatorUnit);
-                    setDirty(true);
-                }
-            }
-        }
+    public void dropWhereRules(Object data, List<WhereRule> whereRules, int index) {
+        // TODO drag&dropped the WhereRule
     }
 
     @Override
@@ -776,29 +755,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     @Override
-    public boolean canDrop(Object data, List<IFile> files) {
-        if (data != null && files.size() > 0 && data instanceof TableIndicator) {
-            TableIndicator ti = (TableIndicator) data;
-            TableIndicatorUnit[] tius = ti.getIndicatorUnits();
-            if (tius != null) {
-                int i = 0, j = 0;
-                for (TableIndicatorUnit tiu : tius) {
-                    i++;
-                    j = 0;
-                    String name = tiu.getIndicator().getIndicatorDefinition().getName();
-                    System.out.println("" + i + "::name=" + name);
-                    for (IFile file : files) {
-                        j++;
-                        System.out.println("" + i + "::name=" + name + "|" + j + "::"
-                                + DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName());
-                        if (DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName().equals(name)) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
+    public boolean canDrop(Object data, WhereRule whereRule) {
+        // TODO drag&dropped the WhereRule
         return false;
     }
 
@@ -926,19 +884,17 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 }
             });
 
-            if (!isRowCountIndicator(tree.getSelection())) {
-                MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
-                deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
-                deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-                deleteMenuItem.addSelectionListener(new SelectionAdapter() {
+            MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
+            deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
+            deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+            deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        removeSelectedElements(tree);
-                    }
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    removeSelectedElements(tree);
+                }
 
-                });
-            }
+            });
 
             tree.setMenu(menu);
         }
@@ -950,8 +906,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 WhereRuleIndicator indicator = (WhereRuleIndicator) indicatorUnit.getIndicator();
                 WhereRule whereRule = (WhereRule) indicator.getIndicatorDefinition();
-                IFolder whereRuleFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
-                        .getFolder(DQStructureManager.DQ_RULES);
+                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+                IFolder whereRuleFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME)
+                        .getFolder(DQStructureManager.LIBRARIES).getFolder(DQStructureManager.DQ_RULES);
                 IFile file = DQRuleResourceFileHelper.getInstance()
                         .getWhereRuleFile(whereRule, new IFolder[] { whereRuleFolder });
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -1058,23 +1015,5 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             return true;
         }
-    }
-
-    /**
-     * DOC xqliu Comment method "isRowCountIndicator".
-     * 
-     * @param selection
-     * @return
-     */
-    public boolean isRowCountIndicator(TreeItem[] selection) {
-        if (selection != null && selection.length > 0) {
-            for (TreeItem ti : selection) {
-                TableIndicatorUnit tiu = (TableIndicatorUnit) ti.getData(INDICATOR_UNIT_KEY);
-                if (tiu.getIndicator() instanceof RowCountIndicator) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

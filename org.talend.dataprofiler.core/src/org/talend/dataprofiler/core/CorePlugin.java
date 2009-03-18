@@ -55,287 +55,321 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class CorePlugin extends AbstractUIPlugin {
 
-    private static final String DRIVERPATHS = "DRIVERPATHS"; //$NON-NLS-1$
+	private static final String DRIVERPATHS = "DRIVERPATHS"; //$NON-NLS-1$
 
-    private static final String DRIVERNAME = "DRIVERNAME"; //$NON-NLS-1$
+	private static final String DRIVERNAME = "DRIVERNAME"; //$NON-NLS-1$
 
-    private static final String DRIVERURL = "DRIVERURL"; //$NON-NLS-1$
+	private static final String DRIVERURL = "DRIVERURL"; //$NON-NLS-1$
 
-    private DQRespositoryView respositoryView;
+	public static final String DEFAULT_PROJECT_NAME = "TOP_DEFAULT_PRJ";
 
-    /**
-     * Getter for respositoryView.
-     * 
-     * @return the respositoryView
-     */
-    public DQRespositoryView getRespositoryView() {
-        return this.respositoryView;
-    }
+	private DQRespositoryView respositoryView;
 
-    /**
-     * Sets the respositoryView.
-     * 
-     * @param respositoryView the respositoryView to set
-     */
-    public void setRespositoryView(DQRespositoryView respositoryView) {
-        this.respositoryView = respositoryView;
-    }
+	/**
+	 * Getter for respositoryView.
+	 * 
+	 * @return the respositoryView
+	 */
+	public DQRespositoryView getRespositoryView() {
+		return this.respositoryView;
+	}
 
-    // The plug-in ID
-    public static final String PLUGIN_ID = "org.talend.dataprofiler.core"; //$NON-NLS-1$
+	/**
+	 * Sets the respositoryView.
+	 * 
+	 * @param respositoryView
+	 *            the respositoryView to set
+	 */
+	public void setRespositoryView(DQRespositoryView respositoryView) {
+		this.respositoryView = respositoryView;
+	}
 
-    // The shared instance
-    private static CorePlugin plugin;
+	// The plug-in ID
+	public static final String PLUGIN_ID = "org.talend.dataprofiler.core"; //$NON-NLS-1$
 
-    private RefreshAction refreshAction;
+	// The shared instance
+	private static CorePlugin plugin;
 
-    /**
-     * The constructor.
-     */
-    public CorePlugin() {
-    }
+	private RefreshAction refreshAction;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-     */
-    public void start(BundleContext context) throws Exception {
-        super.start(context);
-        plugin = this;
-        getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
-        try {
-            for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
-                BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	/**
+	 * The constructor.
+	 */
+	public CorePlugin() {
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
+	 */
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		plugin = this;
+		getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
+		try {
+			for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
+				BaseHelpSystem.getBookmarkManager().addBookmark(
+						bookMark.getHref(), bookMark.getLabel());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-     */
-    public void stop(BundleContext context) throws Exception {
-        plugin = null;
-        super.stop(context);
-        // save();
-    }
+	}
 
-    /**
-     * Returns the shared instance.
-     * 
-     * @return the shared instance
-     */
-    public static CorePlugin getDefault() {
-        return plugin;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
+	 */
+	public void stop(BundleContext context) throws Exception {
+		plugin = null;
+		super.stop(context);
+		// save();
+	}
 
-    // public void save() {
-    // NeedSaveDataProviderHelper.saveAllDataProvider();
-    // }
+	/**
+	 * Returns the shared instance.
+	 * 
+	 * @return the shared instance
+	 */
+	public static CorePlugin getDefault() {
+		return plugin;
+	}
 
-    /**
-     * Returns an image descriptor for the image file at the given plug-in relative path.
-     * 
-     * @param path the path
-     * @return the image descriptor
-     */
-    public static ImageDescriptor getImageDescriptor(String path) {
-        return imageDescriptorFromPlugin(PLUGIN_ID, path);
-    }
+	// public void save() {
+	// NeedSaveDataProviderHelper.saveAllDataProvider();
+	// }
 
-    /**
-     * DOC Zqin Comment method "setUsed".
-     * 
-     * @param isUsed
-     */
-    public void setUsed(boolean isUsed) {
-        this.getPreferenceStore().setValue(PluginConstant.PROJECTCREATED_FLAG, isUsed);
+	/**
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
+	 * 
+	 * @param path
+	 *            the path
+	 * @return the image descriptor
+	 */
+	public static ImageDescriptor getImageDescriptor(String path) {
+		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
 
-    }
+	/**
+	 * DOC Zqin Comment method "setUsed".
+	 * 
+	 * @param isUsed
+	 */
+	public void setUsed(boolean isUsed) {
+		this.getPreferenceStore().setValue(PluginConstant.PROJECTCREATED_FLAG,
+				isUsed);
 
-    /**
-     * DOC Zqin Comment method "isUsed".
-     * 
-     * @return
-     */
-    public boolean isUsed() {
-        return this.getPreferenceStore().getBoolean(PluginConstant.PROJECTCREATED_FLAG);
-    }
+	}
 
-    // public void loadExternalDriver(String driverPaths, String driverName, String url) {
-    // String[] driverJarPath = driverPaths.split(";");
-    // LinkedList<String> driverFile = new LinkedList<String>();
-    // for (String driverpath : driverJarPath) {
-    // driverFile.add(driverpath);
-    // }
-    // ManagedDriver driver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
-    // driver.setJars(driverFile);
-    // driver.setDriverClassName(driverName);
-    // driver.setUrl(url);
-    // SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
-    // }
+	/**
+	 * DOC Zqin Comment method "isUsed".
+	 * 
+	 * @return
+	 */
+	public boolean isUsed() {
+		return this.getPreferenceStore().getBoolean(
+				PluginConstant.PROJECTCREATED_FLAG);
+	}
 
-    public void checkDQStructure() {
-        if (!getDefault().isUsed()) {
-            DQStructureManager manager = DQStructureManager.getInstance();
-            getDefault().setUsed(manager.createDQStructure());
-        }
-    }
+	// public void loadExternalDriver(String driverPaths, String driverName,
+	// String url) {
+	// String[] driverJarPath = driverPaths.split(";");
+	// LinkedList<String> driverFile = new LinkedList<String>();
+	// for (String driverpath : driverJarPath) {
+	// driverFile.add(driverpath);
+	// }
+	// ManagedDriver driver = new
+	// ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel
+	// ().createUniqueId());
+	// driver.setJars(driverFile);
+	// driver.setDriverClassName(driverName);
+	// driver.setUrl(url);
+	// SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
+	// }
 
-    /**
-     * DOC Zqin Comment method "getCurrentActiveEditor".
-     * 
-     * @return the current active editor;
-     */
-    public IEditorPart getCurrentActiveEditor() {
-        return getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-    }
+	public void checkDQStructure() {
+		if (!getDefault().isUsed()) {
+			DQStructureManager manager = DQStructureManager.getInstance();
+			getDefault().setUsed(manager.createDQStructure());
+		}
+	}
 
-    /**
-     * DOC Zqin Comment method "runInDQViewer". this method open DQ responsitory view and run the specified query.
-     * 
-     * @param tdDataProvider
-     * @param query
-     */
-    public void runInDQViewer(TdDataProvider tdDataProvider, String query, String editorName) {
-        SQLEditor sqlEditor = openInSqlEditor(tdDataProvider, query, editorName);
-        if (sqlEditor != null) {
-            ExecSQLAction execSQLAction = new ExecSQLAction(sqlEditor);
-            execSQLAction.run();
-        }
-    }
+	/**
+	 * DOC Zqin Comment method "getCurrentActiveEditor".
+	 * 
+	 * @return the current active editor;
+	 */
+	public IEditorPart getCurrentActiveEditor() {
+		return getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.getActiveEditor();
+	}
 
-    /**
-     * 
-     * DOC mzhao Comment method "openInSqlEditor".
-     * 
-     * @param tdDataProvider
-     * @param query
-     * @param editorName
-     */
-    public SQLEditor openInSqlEditor(TdDataProvider tdDataProvider, String query, String editorName) {
-        if (editorName == null) {
-            editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
-        }
+	/**
+	 * DOC Zqin Comment method "runInDQViewer". this method open DQ responsitory
+	 * view and run the specified query.
+	 * 
+	 * @param tdDataProvider
+	 * @param query
+	 */
+	public void runInDQViewer(TdDataProvider tdDataProvider, String query,
+			String editorName) {
+		SQLEditor sqlEditor = openInSqlEditor(tdDataProvider, query, editorName);
+		if (sqlEditor != null) {
+			ExecSQLAction execSQLAction = new ExecSQLAction(sqlEditor);
+			execSQLAction.run();
+		}
+	}
 
-        TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-        TdProviderConnection providerConnection = tdPc.getObject();
-        String url = providerConnection.getConnectionString();
+	/**
+	 * 
+	 * DOC mzhao Comment method "openInSqlEditor".
+	 * 
+	 * @param tdDataProvider
+	 * @param query
+	 * @param editorName
+	 */
+	public SQLEditor openInSqlEditor(TdDataProvider tdDataProvider,
+			String query, String editorName) {
+		if (editorName == null) {
+			editorName = String.valueOf(SQLExplorerPlugin.getDefault()
+					.getEditorSerialNo());
+		}
 
-        SQLExplorerPlugin sqlexplorer = SQLExplorerPlugin.getDefault();
-        Collection<Alias> aliases = sqlexplorer.getAliasManager().getAliases();
+		TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper
+				.getTdProviderConnection(tdDataProvider);
+		TdProviderConnection providerConnection = tdPc.getObject();
+		String url = providerConnection.getConnectionString();
 
-        boolean isExisted = false;
-        for (Alias alias : aliases) {
-            if (alias.getUrl().equals(url)) {
-                isExisted = true;
-            }
-        }
+		SQLExplorerPlugin sqlexplorer = SQLExplorerPlugin.getDefault();
+		Collection<Alias> aliases = sqlexplorer.getAliasManager().getAliases();
 
-        if (!isExisted) {
-            new ChangePerspectiveAction(PluginConstant.SE_ID).run();
-        }
+		boolean isExisted = false;
+		for (Alias alias : aliases) {
+			if (alias.getUrl().equals(url)) {
+				isExisted = true;
+			}
+		}
 
-        SQLEditor editorPart = null;
-        for (Alias alias : aliases) {
-            if (alias.getUrl().equals(url)) {
-                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
-                input.setUser(alias.getDefaultUser());
-                try {
-                    IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-                            .getActivePage();
-                    editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
-                    editorPart.setText(query);
-                    // MOD scorreia 2008-12-12 avoid to execute several times the same query when several connections
-                    // with the same url exist
-                    break;
-                } catch (PartInitException e) {
-                    ExceptionHandler.process(e);
-                }
-            }
-        }
-        return editorPart;
-    }
+		if (!isExisted) {
+			new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+		}
 
-    public IEditorPart openEditor(IFile file, String editorId) {
-        FileEditorInput input = new FileEditorInput(file);
-        // input.setUser(alias.getDefaultUser());
-        try {
+		SQLEditor editorPart = null;
+		for (Alias alias : aliases) {
+			if (alias.getUrl().equals(url)) {
+				SQLEditorInput input = new SQLEditorInput(
+						"SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
+				input.setUser(alias.getDefaultUser());
+				try {
+					IWorkbenchPage page = SQLExplorerPlugin.getDefault()
+							.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage();
+					editorPart = (SQLEditor) page.openEditor(
+							(IEditorInput) input, SQLEditor.class.getName());
+					editorPart.setText(query);
+					// MOD scorreia 2008-12-12 avoid to execute several times
+					// the same query when several connections
+					// with the same url exist
+					break;
+				} catch (PartInitException e) {
+					ExceptionHandler.process(e);
+				}
+			}
+		}
+		return editorPart;
+	}
 
-            return this.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input, editorId);
-        } catch (PartInitException e) {
-            ExceptionHandler.process(e);
-            return null;
-        }
-    }
+	public IEditorPart openEditor(IFile file, String editorId) {
+		FileEditorInput input = new FileEditorInput(file);
+		// input.setUser(alias.getDefaultUser());
+		try {
 
-    /**
-     * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
-     * get the viewPart and focus it. if the viewPart closed, it will be opened.
-     * 
-     * @param viewId the identifier of viewPart
-     * @return
-     */
-    public IViewPart findView(String viewId) {
-        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if (activeWorkbenchWindow == null) {
-            return null;
-        }
-        IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
-        if (page == null) {
-            return null;
-        }
-        IViewPart part = page.findView(viewId);
-        if (part == null) {
-            try {
-                part = page.showView(viewId);
-            } catch (Exception e) {
-                ExceptionHandler.process(e, Level.ERROR);
-            }
-        } else {
-            page.bringToTop(part);
-        }
-        return part;
-    }
+			return this.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().openEditor(input, editorId);
+		} catch (PartInitException e) {
+			ExceptionHandler.process(e);
+			return null;
+		}
+	}
 
-    public void refreshWorkSpace() {
-        if (refreshAction == null) {
-            refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+	/**
+	 * Get viewPart with special partId. If the active page doesn't exsit, the
+	 * method will return null; Else, it will get the viewPart and focus it. if
+	 * the viewPart closed, it will be opened.
+	 * 
+	 * @param viewId
+	 *            the identifier of viewPart
+	 * @return
+	 */
+	public IViewPart findView(String viewId) {
+		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow();
+		if (activeWorkbenchWindow == null) {
+			return null;
+		}
+		IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
+		if (page == null) {
+			return null;
+		}
+		IViewPart part = page.findView(viewId);
+		if (part == null) {
+			try {
+				part = page.showView(viewId);
+			} catch (Exception e) {
+				ExceptionHandler.process(e, Level.ERROR);
+			}
+		} else {
+			page.bringToTop(part);
+		}
+		return part;
+	}
 
-        }
-        refreshAction.run();
-    }
+	public void refreshWorkSpace() {
+		if (refreshAction == null) {
+			refreshAction = new RefreshAction(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow());
 
-    public void refreshDQView() {
-        ((DQRespositoryView) findView(DQRespositoryView.ID)).getCommonViewer().refresh();
-    }
+		}
+		refreshAction.run();
+	}
 
-    public void doMigrationTask() {
+	public void refreshDQView() {
+		((DQRespositoryView) findView(DQRespositoryView.ID)).getCommonViewer()
+				.refresh();
+	}
 
-        List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
+	public void doMigrationTask() {
 
-        if (!tasks.isEmpty()) {
-            for (IWorkspaceMigrationTask task : tasks) {
-                task.execute();
-            }
+		List<IWorkspaceMigrationTask> tasks = MigrationTaskManager
+				.findValidMigrationTasks();
 
-            WorkspaceVersionHelper.storeVersion();
-        }
-    }
+		if (!tasks.isEmpty()) {
+			for (IWorkspaceMigrationTask task : tasks) {
+				task.execute();
+			}
 
-    /**
-     * DOC bzhou Comment method "getProductVersion".
-     * 
-     * @return
-     */
-    public ProductVersion getProductVersion() {
-        Object obj = plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
-        ProductVersion currentVersion = ProductVersion.fromString(obj.toString());
-        return currentVersion;
-    }
+			WorkspaceVersionHelper.storeVersion();
+		}
+	}
+
+	/**
+	 * DOC bzhou Comment method "getProductVersion".
+	 * 
+	 * @return
+	 */
+	public ProductVersion getProductVersion() {
+		Object obj = plugin.getBundle().getHeaders().get(
+				org.osgi.framework.Constants.BUNDLE_VERSION);
+		ProductVersion currentVersion = ProductVersion.fromString(obj
+				.toString());
+		return currentVersion;
+	}
 }

@@ -17,6 +17,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
@@ -78,9 +79,9 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
 
     @Override
     protected IFolder getStoredFolder() {
-
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME).getFolder(
-                DQStructureManager.DB_CONNECTIONS);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into single project.
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                PluginConstant.METADATA_PROJECTNAME).getFolder(DQStructureManager.DB_CONNECTIONS);
     }
 
 }

@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -54,8 +55,9 @@ public class DeleteSqlFileAction extends Action {
      */
     @Override
     public void run() {
-        IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.SOURCE_FILES);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                DQStructureManager.LIBRARIES).getFolder(DQStructureManager.SOURCE_FILES);
         for (IFile file : folder) {
             if (MessageDialog
                     .openConfirm(

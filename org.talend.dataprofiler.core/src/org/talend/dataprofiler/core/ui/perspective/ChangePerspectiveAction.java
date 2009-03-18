@@ -148,8 +148,9 @@ public class ChangePerspectiveAction extends Action {
     public void activeData() {
         // PTODO qzhang switch to DB Discovery
         if (SE_ID.equals(perspectiveId)) {
-            IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
-                    DQStructureManager.DB_CONNECTIONS);
+            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+            IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                    DQStructureManager.METADATA).getFolder(DQStructureManager.DB_CONNECTIONS);
             List<TdDataProvider> listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder, true);
             SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
             AliasManager aliasManager = default1.getAliasManager();

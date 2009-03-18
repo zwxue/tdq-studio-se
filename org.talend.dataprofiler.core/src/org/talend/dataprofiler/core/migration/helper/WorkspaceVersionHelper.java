@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -34,57 +35,65 @@ import org.talend.utils.ProductVersion;
  */
 public class WorkspaceVersionHelper {
 
-    public final static String VERSION = "version"; //$NON-NLS-1$
+	public final static String VERSION = "version"; //$NON-NLS-1$
 
-    public static IFile getVersionFile() {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        try {
-            root.refreshLocal(IResource.DEPTH_INFINITE, null);
-        } catch (CoreException e1) {
-            e1.printStackTrace();
-        }
-        IProject project = root.getProject(DQStructureManager.LIBRARIES);
+	public static IFile getVersionFile() {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		try {
+			root.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e1) {
+			e1.printStackTrace();
+		}
+		// MOD mzhao 2009-03-13 put all folders in one project.
+		IProject project = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME);
 
-        if (project.exists() && !project.isOpen()) {
-            try {
-                project.open(null);
-            } catch (CoreException e) {
-                e.printStackTrace();
-            }
-        }
+		if (project.exists() && !project.isOpen()) {
+			try {
+				project.open(null);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+		IFolder librariesFolder = project
+				.getFolder(DQStructureManager.LIBRARIES);
+		return librariesFolder.getFile(PluginConstant.VERSION_FILE_PATH);
+	}
 
-        return project.getFile(PluginConstant.VERSION_FILE_PATH);
-    }
+	public static ProductVersion getVesion() {
+		IFile versionFile = getVersionFile();
+		if (versionFile.exists()) {
+			Properties pros = new Properties();
+			try {
+				pros.load(versionFile.getContents());
+				String version = pros.getProperty(VERSION);
+				if (version != null && !"".equals(version)) { //$NON-NLS-1$
+					return ProductVersion.fromString(version);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-    public static ProductVersion getVesion() {
-        IFile versionFile = getVersionFile();
-        if (versionFile.exists()) {
-            Properties pros = new Properties();
-            try {
-                pros.load(versionFile.getContents());
-                String version = pros.getProperty(VERSION);
-                if (version != null && !"".equals(version)) { //$NON-NLS-1$
-                    return ProductVersion.fromString(version);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+		return new ProductVersion(0, 0, 0);
+	}
 
-        return new ProductVersion(0, 0, 0);
-    }
+	public static void storeVersion() {
+		IFile versionFile = getVersionFile();
+		// MOD mzhao 2999-03-17 If version file not exist, return;
+		if (!versionFile.exists()) {
+			return;
+		}
+		Properties pros = new Properties();
+		pros.setProperty(VERSION, CorePlugin.getDefault().getProductVersion()
+				.toString());
 
-    public static void storeVersion() {
-        IFile versionFile = getVersionFile();
-        Properties pros = new Properties();
-        pros.setProperty(VERSION, CorePlugin.getDefault().getProductVersion().toString());
-
-        try {
-            pros.store(new FileOutputStream(new File(versionFile.getLocation().toOSString())), null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		try {
+			pros.store(new FileOutputStream(new File(versionFile.getLocation()
+					.toOSString())), null);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

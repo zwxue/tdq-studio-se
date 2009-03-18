@@ -35,8 +35,10 @@ public class CreateDQRulesFolderTask extends AbstractMigrationTask {
     public boolean execute() {
         try {
             DQStructureManager manager = DQStructureManager.getInstance();
-            IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES);
-            IFolder createNewFoler = manager.createNewFoler(project, DQStructureManager.DQ_RULES);
+            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+            IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME);
+            IFolder folder = project.getFolder(DQStructureManager.LIBRARIES);
+            IFolder createNewFoler = manager.createNewFoler(folder, DQStructureManager.DQ_RULES);
             createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.DQRULES_FOLDER_PROPERTY);
             manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.DQ_RULES_PATH, true, createNewFoler, null);

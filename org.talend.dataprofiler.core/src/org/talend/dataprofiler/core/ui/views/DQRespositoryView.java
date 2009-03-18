@@ -184,8 +184,9 @@ public class DQRespositoryView extends CommonNavigator {
                         Analysis analysis = (Analysis) obj;
                         List<RenderedObject> tempList = new ArrayList<RenderedObject>();
                         tempList.add(analysis);
-                        IFolder analysesFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                                PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
+                        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+                        IFolder analysesFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME)
+                                .getFolder(PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
                         IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList, analysesFolder).get(0);
 
                         CorePlugin.getDefault()

@@ -55,6 +55,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
@@ -133,15 +134,24 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     private void addFirstPartFilters() {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         final Class[] acceptedClasses = new Class[] { IResource.class, IFolderNode.class, EObject.class };
-        IProject[] allProjects = root.getProjects();
-        ArrayList rejectedElements = new ArrayList(allProjects.length);
-        for (int i = 0; i < allProjects.length; i++) {
-            if (!allProjects[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME))) {
-                rejectedElements.add(allProjects[i]);
+        // MOD mzhao 2009-03-13 feature 6066 Move all folders into one project.
+        IProject rootProject = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME);
+        IResource[] allResource = null;
+        try {
+            allResource = rootProject.members();
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+        ArrayList rejectedElements = new ArrayList(allResource.length);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        for (int i = 0; i < allResource.length; i++) {
+            if (!allResource[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                    PluginConstant.METADATA_PROJECTNAME))) {
+                rejectedElements.add(allResource[i]);
             }
         }
-        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME).getFile(
-                ".project")); //$NON-NLS-1$
+        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                PluginConstant.METADATA_PROJECTNAME).getFile(".project")); //$NON-NLS-1$
         ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
         this.addFilter(filter);
         this.addFilter(new EMFObjFilter());
@@ -543,9 +553,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 } catch (CoreException e) {
                     log.error("Can't get the children of container:" + container.getLocation());
                 }
-
-                if (container.equals(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
-                        DQStructureManager.DB_CONNECTIONS))) {
+                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+                if (container.equals(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                        DQStructureManager.METADATA).getFolder(DQStructureManager.DB_CONNECTIONS))) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
                 return members;

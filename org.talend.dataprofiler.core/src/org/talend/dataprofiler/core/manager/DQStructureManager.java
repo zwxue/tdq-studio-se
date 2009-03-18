@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -53,266 +54,370 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
  */
 public final class DQStructureManager {
 
-    private static final String DEMO_PATH = "/demo"; //$NON-NLS-1$
+	private static final String DEMO_PATH = "/demo"; //$NON-NLS-1$
 
-    // MOD xqliu 2009-02-14 bug 6015
-    public static final String DQ_RULES_PATH = "/dqrules"; //$NON-NLS-1$
+	// MOD xqliu 2009-02-14 bug 6015
+	public static final String DQ_RULES_PATH = "/dqrules"; //$NON-NLS-1$
 
-    private static final String PATTERN_PATH = "/patterns"; //$NON-NLS-1$
+	private static final String PATTERN_PATH = "/patterns"; //$NON-NLS-1$
 
-    private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
+	private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
-    public static final String REPORTS = DefaultMessagesImpl.getString("DQStructureManager.reports"); //$NON-NLS-1$
+	public static final String REPORTS = DefaultMessagesImpl
+			.getString("DQStructureManager.reports"); //$NON-NLS-1$
 
-    public static final String SOURCE_FILES = DefaultMessagesImpl.getString("DQStructureManager.sourceFiles"); //$NON-NLS-1$
+	public static final String SOURCE_FILES = DefaultMessagesImpl
+			.getString("DQStructureManager.sourceFiles"); //$NON-NLS-1$
 
-    public static final String PATTERNS = DefaultMessagesImpl.getString("DQStructureManager.patterns"); //$NON-NLS-1$
+	public static final String PATTERNS = DefaultMessagesImpl
+			.getString("DQStructureManager.patterns"); //$NON-NLS-1$
 
-    public static final String SQL_PATTERNS = DefaultMessagesImpl.getString("DQStructureManager.sqlPatterns"); //$NON-NLS-1$
+	public static final String SQL_PATTERNS = DefaultMessagesImpl
+			.getString("DQStructureManager.sqlPatterns"); //$NON-NLS-1$
 
-    // MOD xqliu 2009-02-14 bug 6015
-    public static final String DQ_RULES = DefaultMessagesImpl.getString("DQStructureManager.dqRules"); //$NON-NLS-1$
+	// MOD xqliu 2009-02-14 bug 6015
+	public static final String DQ_RULES = DefaultMessagesImpl
+			.getString("DQStructureManager.dqRules"); //$NON-NLS-1$
 
-    public static final String LIBRARIES = DefaultMessagesImpl.getString("DQStructureManager.libraries"); //$NON-NLS-1$
+	public static String LIBRARIES = DefaultMessagesImpl
+			.getString("DQStructureManager.libraries"); //$NON-NLS-1$
 
-    public static final String METADATA = DefaultMessagesImpl.getString("DQStructureManager.metadata"); //$NON-NLS-1$
+	public static String METADATA = DefaultMessagesImpl
+			.getString("DQStructureManager.metadata"); //$NON-NLS-1$
 
-    public static final String DATA_PROFILING = DefaultMessagesImpl.getString("DQStructureManager.data_Profiling"); //$NON-NLS-1$
+	// Not set final for later add prefix when started as TDCP.
+	public static String DATA_PROFILING = DefaultMessagesImpl
+			.getString("DQStructureManager.data_Profiling"); //$NON-NLS-1$
 
-    public static final String ANALYSIS = DefaultMessagesImpl.getString("DQStructureManager.analyses"); //$NON-NLS-1$
+	public static final String ANALYSIS = DefaultMessagesImpl
+			.getString("DQStructureManager.analyses"); //$NON-NLS-1$
 
-    /**
-     * String for the DB connections folder.
-     */
-    public static final String DB_CONNECTIONS = DefaultMessagesImpl.getString("DQStructureManager.dbConnections"); //$NON-NLS-1$
+	/**
+	 * String for the DB connections folder.
+	 */
+	public static final String DB_CONNECTIONS = DefaultMessagesImpl
+			.getString("DQStructureManager.dbConnections"); //$NON-NLS-1$
 
-    public static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_CLASSIFY"); //$NON-NLS-1$
+	public static final QualifiedName FOLDER_CLASSIFY_KEY = new QualifiedName(
+			CorePlugin.PLUGIN_ID, "FOLDER_CLASSIFY"); //$NON-NLS-1$
 
-    public static final String ANALYSIS_FOLDER_PROPERTY = "FOLDER_ANALYSIS_PROPERTY"; //$NON-NLS-1$
+	public static final String ANALYSIS_FOLDER_PROPERTY = "FOLDER_ANALYSIS_PROPERTY"; //$NON-NLS-1$
 
-    public static final String REPORT_FOLDER_PROPERTY = "FOLDER_REPORT_PROPERTY"; //$NON-NLS-1$
+	public static final String REPORT_FOLDER_PROPERTY = "FOLDER_REPORT_PROPERTY"; //$NON-NLS-1$
 
-    public static final String PATTERNS_FOLDER_PROPERTY = "FOLDER_PATTERNS_PROPERTY"; //$NON-NLS-1$
+	public static final String PATTERNS_FOLDER_PROPERTY = "FOLDER_PATTERNS_PROPERTY"; //$NON-NLS-1$
 
-    public static final String SQLPATTERNS_FOLDER_PROPERTY = "SQLPATTERNS_FOLDER_PROPERTY"; //$NON-NLS-1$
+	public static final String SQLPATTERNS_FOLDER_PROPERTY = "SQLPATTERNS_FOLDER_PROPERTY"; //$NON-NLS-1$
 
-    public static final String SOURCEFILES_FOLDER_PROPERTY = "SOURCEFILES_FOLDER_PROPERTY"; //$NON-NLS-1$
+	public static final String SOURCEFILES_FOLDER_PROPERTY = "SOURCEFILES_FOLDER_PROPERTY"; //$NON-NLS-1$
 
-    // MOD xqliu 2009-02-14 bug 6015
-    public static final String DQRULES_FOLDER_PROPERTY = "DQRULES_FOLDER_PROPERTY"; //$NON-NLS-1$
+	// MOD xqliu 2009-02-14 bug 6015
+	public static final String DQRULES_FOLDER_PROPERTY = "DQRULES_FOLDER_PROPERTY"; //$NON-NLS-1$
 
-    public static final String DBCONNECTION_FOLDER_PROPERTY = "DBCONNECTION_FOLDER_PROPERTY"; //$NON-NLS-1$
+	public static final String DBCONNECTION_FOLDER_PROPERTY = "DBCONNECTION_FOLDER_PROPERTY"; //$NON-NLS-1$
 
-    public static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "FOLDER_READ_ONLY"); //$NON-NLS-1$
+	public static final QualifiedName FOLDER_READONLY_KEY = new QualifiedName(
+			CorePlugin.PLUGIN_ID, "FOLDER_READ_ONLY"); //$NON-NLS-1$
 
-    public static final QualifiedName NO_SUBFOLDER_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "NO_SUBFOLDER"); //$NON-NLS-1$
+	public static final QualifiedName NO_SUBFOLDER_KEY = new QualifiedName(
+			CorePlugin.PLUGIN_ID, "NO_SUBFOLDER"); //$NON-NLS-1$
 
-    public static final QualifiedName PROJECT_TDQ_KEY = new QualifiedName(CorePlugin.PLUGIN_ID, "TDQ_PROJECT"); //$NON-NLS-1$
+	public static final QualifiedName PROJECT_TDQ_KEY = new QualifiedName(
+			CorePlugin.PLUGIN_ID, "TDQ_PROJECT"); //$NON-NLS-1$
 
-    public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_PROPERTY"; //$NON-NLS-1$
+	public static final String FOLDER_READONLY_PROPERTY = "FOLDER_READONLY_PROPERTY"; //$NON-NLS-1$
 
-    public static final String NO_SUBFOLDER_PROPERTY = "NO_SUBFOLDER_PROPERTY"; //$NON-NLS-1$
+	public static final String NO_SUBFOLDER_PROPERTY = "NO_SUBFOLDER_PROPERTY"; //$NON-NLS-1$
 
-    public static final String PROJECT_TDQ_PROPERTY = "PROJECT_TDQ_PROPERTY"; //$NON-NLS-1$
+	public static final String PROJECT_TDQ_PROPERTY = "PROJECT_TDQ_PROPERTY"; //$NON-NLS-1$
 
-    private List<String> modleElementSuffixs = null;
+	public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
 
-    private static DQStructureManager manager = new DQStructureManager();
+	private List<String> modleElementSuffixs = null;
 
-    public static DQStructureManager getInstance() {
-        return manager;
-    }
+	private static DQStructureManager manager = new DQStructureManager();
 
-    private DQStructureManager() {
-        init();
-    }
+	public static DQStructureManager getInstance() {
+		return manager;
+	}
 
-    private void init() {
-        modleElementSuffixs = new ArrayList<String>();
-        modleElementSuffixs.add(FactoriesUtil.ANA);
-        modleElementSuffixs.add(FactoriesUtil.REP);
-        modleElementSuffixs.add(FactoriesUtil.PROV);
-    }
+	private DQStructureManager() {
+		init();
+	}
 
-    public List<String> getModelElementSuffixs() {
-        return modleElementSuffixs;
-    }
+	private void init() {
+		modleElementSuffixs = new ArrayList<String>();
+		modleElementSuffixs.add(FactoriesUtil.ANA);
+		modleElementSuffixs.add(FactoriesUtil.REP);
+		modleElementSuffixs.add(FactoriesUtil.PROV);
+	}
 
-    public boolean createDQStructure() {
+	public List<String> getModelElementSuffixs() {
+		return modleElementSuffixs;
+	}
 
-        Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        Plugin plugin = CorePlugin.getDefault();
-        try {
-            // create "Data Profiling" project
-            IProject project = this.createNewProject(DATA_PROFILING, shell);
-            IFolder createNewFoler = this.createNewFoler(project, ANALYSIS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, ANALYSIS_FOLDER_PROPERTY);
-            createNewFoler = this.createNewFoler(project, REPORTS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, REPORT_FOLDER_PROPERTY);
+	public boolean createDQStructure() {
 
-            // create "Libraries" project
-            project = this.createNewProject(LIBRARIES, shell);
-            createNewFoler = this.createNewFoler(project, PATTERNS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, PATTERNS_FOLDER_PROPERTY);
-            // check version File
-            WorkspaceVersionHelper.storeVersion();
-            // Copy the .pattern files from 'org.talend.dataprofiler.core/patterns' to folder "Libraries/Patterns".
-            this.copyFilesToFolder(plugin, PATTERN_PATH, true, createNewFoler, null);
-            createNewFoler = this.createNewFoler(project, SQL_PATTERNS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SQLPATTERNS_FOLDER_PROPERTY);
-            // Copy the internet folder from 'org.talend.dataprofiler.core/sql_like' to folder "Libraries/SQL Patterns".
-            this.copyFilesToFolder(plugin, SQL_LIKE_PATH, true, createNewFoler, null);
-            createNewFoler = this.createNewFoler(project, SOURCE_FILES);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SOURCEFILES_FOLDER_PROPERTY);
-            // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to folder "Libraries/Source Files".
-            this.copyFilesToFolder(plugin, DEMO_PATH, true, createNewFoler, null);
-            // MOD xqliu 2009-02-14 bug 6015
-            createNewFoler = this.createNewFoler(project, DQ_RULES);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DQRULES_FOLDER_PROPERTY);
-            // Copy the .sql files from 'org.talend.dataprofiler.core/dqrules' to folder "Libraries/DQ Rules".
-            this.copyFilesToFolder(plugin, DQ_RULES_PATH, true, createNewFoler, null);
-            // ~
+		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+		Plugin plugin = CorePlugin.getDefault();
+		try {
+			// ~ MOD mzhao 2009-03-13 Feature:6066, Put TDQ/TOP folders in one
+			// project.
+			IProject rootProject = this.createNewProject(
+					org.talend.dataquality.PluginConstant.ROOTPROJECTNAME,
+					shell);
+			// create "Data Profiling" project
+			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
+			if (!org.talend.dataquality.PluginConstant.ROOTPROJECTNAME
+					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
+				DATA_PROFILING = PREFIX_TDQ + DATA_PROFILING;
+			}
+			IFolder dataProfilingFolder = this.createNewFoler(rootProject,
+					DATA_PROFILING);
+			IFolder createNewFoler = this.createNewFoler(dataProfilingFolder,
+					ANALYSIS);
+			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+					ANALYSIS_FOLDER_PROPERTY);
+			createNewFoler = this.createNewFoler(dataProfilingFolder, REPORTS);
+			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+					REPORT_FOLDER_PROPERTY);
 
-            // create "Metadata" project
-            project = this.createNewProject(METADATA, shell);
-            createNewFoler = this.createNewFoler(project, DB_CONNECTIONS);
-            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DBCONNECTION_FOLDER_PROPERTY);
-        } catch (Exception ex) {
-            ExceptionHandler.process(ex);
-            return false;
-        }
+			// create "Libraries" project
+			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
+			if (!org.talend.dataquality.PluginConstant.ROOTPROJECTNAME
+					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
+				LIBRARIES = PREFIX_TDQ + LIBRARIES;
+			}
+			IFolder librariesFoler = this
+					.createNewFoler(rootProject, LIBRARIES);
+			createNewFoler = this.createNewFoler(librariesFoler, PATTERNS);
+			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+					PATTERNS_FOLDER_PROPERTY);
+			// check version File
+			WorkspaceVersionHelper.storeVersion();
+			// Copy the .pattern files from
+			// 'org.talend.dataprofiler.core/patterns' to folder
+			// "Libraries/Patterns".
+			this.copyFilesToFolder(plugin, PATTERN_PATH, true, createNewFoler,
+					null);
+			createNewFoler = this.createNewFoler(librariesFoler, SQL_PATTERNS);
+			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+					SQLPATTERNS_FOLDER_PROPERTY);
+			// Copy the internet folder from
+			// 'org.talend.dataprofiler.core/sql_like' to folder
+			// "Libraries/SQL Patterns".
+			this.copyFilesToFolder(plugin, SQL_LIKE_PATH, true, createNewFoler,
+					null);
+			createNewFoler = this.createNewFoler(librariesFoler, SOURCE_FILES);
+			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+					SOURCEFILES_FOLDER_PROPERTY);
+			// Copy the .sql files from 'org.talend.dataprofiler.core/demo' to
+			// folder "Libraries/Source Files".
+			this.copyFilesToFolder(plugin, DEMO_PATH, true, createNewFoler,
+					null);
+			// MOD xqliu 2009-02-14 bug 6015
+			createNewFoler = this.createNewFoler(librariesFoler, DQ_RULES);
+			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+					DQRULES_FOLDER_PROPERTY);
+			// Copy the .sql files from 'org.talend.dataprofiler.core/dqrules'
+			// to folder "Libraries/DQ Rules".
+			this.copyFilesToFolder(plugin, DQ_RULES_PATH, true, createNewFoler,
+					null);
+			// ~
 
-        return true;
-    }
+			// create "Metadata" project
+			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
+			if (!org.talend.dataquality.PluginConstant.ROOTPROJECTNAME
+					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
+				METADATA = PREFIX_TDQ + METADATA;
+			}
 
-    /**
-     * Creates a new project resource with the special name.
-     * 
-     * @return the created project resource, or <code>null</code> if the project was not created
-     * @throws InterruptedException
-     * @throws InvocationTargetException
-     * @throws CoreException
-     */
-    private IProject createNewProject(String projectName, Shell shell) throws InvocationTargetException, InterruptedException,
-            CoreException {
+			IFolder metadataFolder = this.createNewFoler(rootProject, METADATA);
+			createNewFoler = this
+					.createNewFoler(metadataFolder, DB_CONNECTIONS);
+			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
+					DBCONNECTION_FOLDER_PROPERTY);
+			// ~
+		} catch (Exception ex) {
+			ExceptionHandler.process(ex);
+			return false;
+		}
 
-        final Shell currentShell = shell;
+		return true;
+	}
 
-        // get a project handle
-        final IProject newProjectHandle = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+	/**
+	 * Creates a new project resource with the special name.
+	 * 
+	 * @return the created project resource, or <code>null</code> if the project
+	 *         was not created
+	 * @throws InterruptedException
+	 * @throws InvocationTargetException
+	 * @throws CoreException
+	 */
+	private IProject createNewProject(String projectName, Shell shell)
+			throws InvocationTargetException, InterruptedException,
+			CoreException {
 
-        // final IJavaProject javaProjHandle = JavaCore.create(newProjectHandle);
-        // get a project descriptor
+		final Shell currentShell = shell;
 
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        final IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
+		// get a project handle
+		final IProject newProjectHandle = ResourcesPlugin.getWorkspace()
+				.getRoot().getProject(projectName);
 
-        // create the new project operation
-        IRunnableWithProgress op = new IRunnableWithProgress() {
+		// final IJavaProject javaProjHandle =
+		// JavaCore.create(newProjectHandle);
+		// get a project descriptor
 
-            public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                CreateProjectOperation op = new CreateProjectOperation(description, DefaultMessagesImpl
-                        .getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
-                try {
-                    PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(op, monitor,
-                            WorkspaceUndoUtil.getUIInfoAdapter(currentShell));
-                } catch (ExecutionException e) {
-                    throw new InvocationTargetException(e);
-                }
-            }
-        };
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		final IProjectDescription description = workspace
+				.newProjectDescription(newProjectHandle.getName());
 
-        // run the new project creation o`peration
-        // try {
-        ProgressUI.popProgressDialog(op, shell);
-        newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
-        return newProjectHandle;
-    }
+		// create the new project operation
+		IRunnableWithProgress op = new IRunnableWithProgress() {
 
-    public IFolder createNewFoler(IProject project, String folderName) throws CoreException {
-        IFolder desFolder = project.getFolder(folderName);
-        if (!desFolder.exists()) {
-            desFolder.create(false, true, null);
-        }
-        desFolder.setPersistentProperty(FOLDER_READONLY_KEY, FOLDER_READONLY_PROPERTY);
-        return desFolder;
-    }
+			public void run(IProgressMonitor monitor)
+					throws InvocationTargetException {
+				CreateProjectOperation op = new CreateProjectOperation(
+						description,
+						DefaultMessagesImpl
+								.getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
+				try {
+					PlatformUI.getWorkbench().getOperationSupport()
+							.getOperationHistory().execute(
+									op,
+									monitor,
+									WorkspaceUndoUtil
+											.getUIInfoAdapter(currentShell));
+				} catch (ExecutionException e) {
+					throw new InvocationTargetException(e);
+				}
+			}
+		};
 
-    /**
-     * Copy the files from srcPath to destination folder.
-     * 
-     * @param srcPath The path name in which to look. The path is always relative to the root of this bundle and may
-     * begin with &quot;/&quot;. A path value of &quot;/&quot; indicates the root of this bundle.
-     * @param srcPath
-     * @param recurse If <code>true</code>, recurse into subdirectories(contains directories). Otherwise only return
-     * entries from the specified path.
-     * @param desFolder
-     * @throws IOException
-     * @throws CoreException
-     */
-    @SuppressWarnings("unchecked")
-    public void copyFilesToFolder(Plugin plugin, String srcPath, boolean recurse, IFolder desFolder, String suffix)
-            throws IOException, CoreException {
-        if (plugin == null) {
-            return;
-        }
+		// run the new project creation o`peration
+		// try {
+		// MOD mzhao 2009-03-16 Feature 6066 First check whether project with
+		// this name already exist or not. For TDCP
+		// launching,
+		// project always exist.
+		if (!newProjectHandle.exists()) {
+			ProgressUI.popProgressDialog(op, shell);
+		}
+		newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY,
+				PROJECT_TDQ_PROPERTY);
+		return newProjectHandle;
+	}
 
-        Enumeration paths = null;
-        paths = plugin.getBundle().getEntryPaths(srcPath);
-        if (paths == null) {
-            return;
-        }
-        while (paths.hasMoreElements()) {
-            String nextElement = (String) paths.nextElement();
-            String currentPath = "/" + nextElement; //$NON-NLS-1$
-            URL resourceURL = plugin.getBundle().getEntry(currentPath);
-            URL fileURL = null;
-            File file = null;
-            try {
-                fileURL = FileLocator.toFileURL(resourceURL);
-                file = new File(fileURL.getFile());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (file.isDirectory() && recurse) {
-                if (file.getName().startsWith(".")) { //$NON-NLS-1$
-                    continue;
-                }
-                IFolder folder = desFolder.getFolder(file.getName());
-                if (!folder.exists()) {
-                    folder.create(true, true, null);
-                }
-                folder.setPersistentProperty(FOLDER_CLASSIFY_KEY, desFolder.getPersistentProperty(FOLDER_CLASSIFY_KEY));
-                copyFilesToFolder(plugin, currentPath, recurse, folder, suffix);
-                continue;
-            }
+	/**
+	 * 
+	 * DOC mzhao Create new folder by project or folder.
+	 * 
+	 * @param parentFolder
+	 * @param folderName
+	 * @return
+	 * @throws CoreException
+	 */
+	public IFolder createNewFoler(IContainer parent, String folderName)
+			throws CoreException {
+		IFolder desFolder = null;
 
-            if (suffix != null && !file.getName().endsWith(suffix)) {
-                continue;
-            }
+		if (parent instanceof IProject) {
+			desFolder = ((IProject) parent).getFolder(folderName);
+		} else if (parent instanceof IFolder) {
+			desFolder = ((IFolder) parent).getFolder(folderName);
+		}
+		if (!desFolder.exists()) {
+			desFolder.create(false, true, null);
+		}
+		desFolder.setPersistentProperty(FOLDER_READONLY_KEY,
+				FOLDER_READONLY_PROPERTY);
+		return desFolder;
+	}
 
-            String fileName = new Path(fileURL.getPath()).lastSegment();
-            InputStream openStream = null;
-            openStream = fileURL.openStream();
-            copyFileToFolder(openStream, fileName, desFolder);
-        }
+	/**
+	 * Copy the files from srcPath to destination folder.
+	 * 
+	 * @param srcPath
+	 *            The path name in which to look. The path is always relative to
+	 *            the root of this bundle and may begin with &quot;/&quot;. A
+	 *            path value of &quot;/&quot; indicates the root of this bundle.
+	 * @param srcPath
+	 * @param recurse
+	 *            If <code>true</code>, recurse into subdirectories(contains
+	 *            directories). Otherwise only return entries from the specified
+	 *            path.
+	 * @param desFolder
+	 * @throws IOException
+	 * @throws CoreException
+	 */
+	@SuppressWarnings("unchecked")
+	public void copyFilesToFolder(Plugin plugin, String srcPath,
+			boolean recurse, IFolder desFolder, String suffix)
+			throws IOException, CoreException {
+		if (plugin == null) {
+			return;
+		}
 
-    }
+		Enumeration paths = null;
+		paths = plugin.getBundle().getEntryPaths(srcPath);
+		if (paths == null) {
+			return;
+		}
+		while (paths.hasMoreElements()) {
+			String nextElement = (String) paths.nextElement();
+			String currentPath = "/" + nextElement; //$NON-NLS-1$
+			URL resourceURL = plugin.getBundle().getEntry(currentPath);
+			URL fileURL = null;
+			File file = null;
+			try {
+				fileURL = FileLocator.toFileURL(resourceURL);
+				file = new File(fileURL.getFile());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if (file.isDirectory() && recurse) {
+				if (file.getName().startsWith(".")) { //$NON-NLS-1$
+					continue;
+				}
+				IFolder folder = desFolder.getFolder(file.getName());
+				if (!folder.exists()) {
+					folder.create(true, true, null);
+				}
+				folder.setPersistentProperty(FOLDER_CLASSIFY_KEY, desFolder
+						.getPersistentProperty(FOLDER_CLASSIFY_KEY));
+				copyFilesToFolder(plugin, currentPath, recurse, folder, suffix);
+				continue;
+			}
 
-    private void copyFileToFolder(InputStream inputStream, String fileName, IFolder folder) throws CoreException {
-        if (inputStream == null) {
-            return;
-        }
-        IFile file = folder.getFile(fileName);
-        if (file.exists()) {
-            return;
-        }
-        file.create(inputStream, false, null);
-    }
+			if (suffix != null && !file.getName().endsWith(suffix)) {
+				continue;
+			}
 
-    public boolean isPathValid(IPath path, String label) {
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
-        IFolder newFolder = folder.getFolder(label);
-        return !newFolder.exists();
-    }
+			String fileName = new Path(fileURL.getPath()).lastSegment();
+			InputStream openStream = null;
+			openStream = fileURL.openStream();
+			copyFileToFolder(openStream, fileName, desFolder);
+		}
+
+	}
+
+	private void copyFileToFolder(InputStream inputStream, String fileName,
+			IFolder folder) throws CoreException {
+		if (inputStream == null) {
+			return;
+		}
+		IFile file = folder.getFile(fileName);
+		if (file.exists()) {
+			return;
+		}
+		file.create(inputStream, false, null);
+	}
+
+	public boolean isPathValid(IPath path, String label) {
+		IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(
+				path);
+		IFolder newFolder = folder.getFolder(label);
+		return !newFolder.exists();
+	}
 }

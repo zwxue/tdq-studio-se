@@ -5,50 +5,7 @@
    <extension-point id="service" name="Data Profiler Service" schema="schema/service.exsd"/>
      
    <extension-point id="org.talend.dataprofiler.core.migrationtask" name="Migration tool atomic task" schema="schema/migrationTask.exsd"/>
-     <extension
-         point="org.eclipse.ui.views">
-         <category
-            id="org.talend.dataprofiler.view.category"
-            name="Data Profiler"/>   
-      <view
-            allowMultiple="false"
-            category="org.talend.dataprofiler.view.category"
-            class="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
-            icon="icons/application_home.png"
-            id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
-            name="%DQRepository">
-      </view>
-      <view
-            category="org.talend.dataprofiler.view.category"
-            class="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
-            icon="icons/newspaper.png"
-            id="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
-            name="Detail View">`
-      </view>
-       <view
-            category="org.talend.dataprofiler.view.category"
-            class="org.talend.dataprofiler.core.ui.views.PatternTestView"
-            icon="icons/new_alias.gif"
-            id="org.talend.dataprofiler.core.ui.views.PatternTestView"
-            name="Pattern Test View">`
-      </view>
-      <!-- view
-            category="org.talend.dataprofiler.view.category"
-            class="org.talend.dataprofiler.core.ui.views.GraphsView"
-            icon="icons/TdTable.gif"
-            id="org.talend.dataprofiler.core.ui.views.GraphsView"
-            name="Graphs"/>
-      <view
-            allowMultiple="false"
-            category="org.talend.dataprofiler.view.category"
-            class="org.talend.dataprofiler.core.ui.views.QuanlityView"
-            icon="icons/TdTable.gif"
-            id="org.talend.dataprofiler.core.ui.views.QuanlityView"
-            name="Quality Indicator">
-      </view -->
-      
-    </extension> 
-    
+         
     <extension
          point="org.eclipse.ui.navigator.viewer">
        <viewerContentBinding 
@@ -555,15 +512,6 @@
       
      
      
-  <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.talend.dataprofiler.core.ui.perspective.DataProfilingPerspective"
-            icon="icons/profiler_persp.png"
-            id="org.talend.dataprofiler.DataProfilingPerspective"
-            name="Data Profiler">
-      </perspective>
-   </extension>   
    
  <extension point="org.eclipse.ui.perspectiveExtensions">
   <perspectiveExtension

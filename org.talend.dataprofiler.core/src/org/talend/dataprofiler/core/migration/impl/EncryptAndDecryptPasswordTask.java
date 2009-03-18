@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
@@ -40,8 +41,9 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 public class EncryptAndDecryptPasswordTask extends AbstractMigrationTask {
 
     public boolean execute() {
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
-                DQStructureManager.DB_CONNECTIONS);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                DQStructureManager.METADATA).getFolder(DQStructureManager.DB_CONNECTIONS);
         try {
             IResource[] resource = folder.members();
             if (resource.length > 0) {

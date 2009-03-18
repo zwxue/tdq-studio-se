@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -33,6 +34,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.jfree.util.Log;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
@@ -102,15 +105,23 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
     protected void addFilters() {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         final Class[] acceptedClasses = new Class[] { IResource.class, IFolderNode.class, EObject.class, IFile.class };
-        IProject[] allProjects = root.getProjects();
-        ArrayList rejectedElements = new ArrayList(allProjects.length);
-        for (int i = 0; i < allProjects.length; i++) {
-            if (!allProjects[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME))) {
-                rejectedElements.add(allProjects[i]);
+        IProject rootProject = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME);
+        IResource[] resources = null;
+        try {
+            resources = rootProject.members();
+        } catch (CoreException e) {
+            Log.error(e);
+        }
+        ArrayList rejectedElements = new ArrayList(resources.length);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        for (int i = 0; i < resources.length; i++) {
+            if (!resources[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                    PluginConstant.METADATA_PROJECTNAME))) {
+                rejectedElements.add(resources[i]);
             }
         }
-        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(PluginConstant.METADATA_PROJECTNAME).getFile(
-                ".project")); //$NON-NLS-1$
+        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                PluginConstant.METADATA_PROJECTNAME).getFile(".project")); //$NON-NLS-1$
         ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
         addFilter(filter);
     }

@@ -21,6 +21,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -98,9 +99,9 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
     @Override
     protected IFolder getStoredFolder() {
-
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.PATTERNS);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS);
     }
 
 }

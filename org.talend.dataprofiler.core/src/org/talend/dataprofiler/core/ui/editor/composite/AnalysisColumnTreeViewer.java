@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -318,7 +317,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     if (dm == null) {
                         masterPage.doSave(null);
                     }
-                    IProject libProject = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES);
+                    // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+                    IFolder libProject = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME)
+                            .getFolder(DQStructureManager.LIBRARIES);
 
                     CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
                             new WorkbenchContentProvider());
@@ -1091,10 +1092,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit.getIndicator();
                 Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
-                IFolder patternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
-                        .getFolder(DQStructureManager.PATTERNS);
-                IFolder sqlPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
-                        .getFolder(DQStructureManager.SQL_PATTERNS);
+                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+                IFolder patternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME)
+                        .getFolder(DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS);
+                IFolder sqlPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME)
+                        .getFolder(DQStructureManager.LIBRARIES).getFolder(DQStructureManager.SQL_PATTERNS);
                 IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
                         new IFolder[] { patternFolder, sqlPatternFolder });
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

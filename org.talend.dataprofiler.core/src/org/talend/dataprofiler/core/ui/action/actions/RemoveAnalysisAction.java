@@ -105,9 +105,9 @@ public class RemoveAnalysisAction extends Action {
 
                 RepResourceFileHelper.getInstance().save(report);
             }
-
-            IFolder reportsFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.DATA_PROFILING)
-                    .getFolder(DQStructureManager.REPORTS);
+            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+            IFolder reportsFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                    DQStructureManager.DATA_PROFILING).getFolder(DQStructureManager.REPORTS);
             try {
                 reportsFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {

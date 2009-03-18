@@ -55,6 +55,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
@@ -146,8 +147,9 @@ public class PatternTestView extends ViewPart {
         data.widthHint = 100;
         // data.heightHint = 100;
         dbCombo.setLayoutData(data);
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
-                DQStructureManager.DB_CONNECTIONS);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                DQStructureManager.METADATA).getFolder(DQStructureManager.DB_CONNECTIONS);
         listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder, true);
         List<String> items = new ArrayList<String>();
         for (TdDataProvider tdDataProvider : listTdDataProviders) {
@@ -245,8 +247,10 @@ public class PatternTestView extends ViewPart {
                         language = dbmsLanguage.getDbmsName();
                     }
                 }
-                new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES)
-                        .getFolder(DQStructureManager.PATTERNS), ExpressionType.REGEXP, regularText.getText(), language).run();
+                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+                new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME)
+                        .getFolder(DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS), ExpressionType.REGEXP,
+                        regularText.getText(), language).run();
             }
         });
         createPatternButton.setEnabled(false);
@@ -381,8 +385,9 @@ public class PatternTestView extends ViewPart {
      * DOC rli Comment method "openSQLEditor".
      */
     private void openSQLEditor() {
-        IFolder sourceFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                DQStructureManager.SOURCE_FILES);
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        IFolder sourceFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                DQStructureManager.LIBRARIES).getFolder(DQStructureManager.SOURCE_FILES);
         IFile sqlFile = sourceFolder.getFile("SQL Editor.sql"); //$NON-NLS-1$
         int i = 0;
         while (sqlFile.exists()) {

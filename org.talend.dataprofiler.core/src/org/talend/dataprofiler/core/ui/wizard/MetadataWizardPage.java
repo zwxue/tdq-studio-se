@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -40,6 +41,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
@@ -202,17 +204,23 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         ArrayList rejectedElements = new ArrayList();
 
         if (projectName != null) {
-            IProject theProject = root.getProject(projectName);
-            IProject[] allProjects = root.getProjects();
-            for (int i = 0; i < allProjects.length; i++) {
-                if (!allProjects[i].equals(theProject)) {
-                    rejectedElements.add(allProjects[i]);
+            // MOD mzhao 2009-03-13 Move all folders into one single project {@link CorePlugin#ROOTPROJECTNAME}
+            IFolder theFolder = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(projectName);
+            IResource[] allFolders = null;
+            try {
+                allFolders = root.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).members();
+            } catch (CoreException e) {
+                log.error(e, e);
+            }
+            for (int i = 0; i < allFolders.length; i++) {
+                if (!allFolders[i].equals(theFolder)) {
+                    rejectedElements.add(allFolders[i]);
                 }
             }
 
             if (folderName != null) {
                 try {
-                    IResource[] resourse = theProject.members();
+                    IResource[] resourse = theFolder.members();
                     for (IResource one : resourse) {
                         if (one.getType() == IResource.FOLDER && !one.getName().equals(folderName)) {
                             rejectedElements.add(one);

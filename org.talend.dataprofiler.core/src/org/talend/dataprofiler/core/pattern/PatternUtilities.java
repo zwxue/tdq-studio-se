@@ -36,6 +36,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -274,10 +275,11 @@ public final class PatternUtilities {
 
     private static List<IFile> getAllPatternFiles() {
         List<IFile> patternFiles = new ArrayList<IFile>();
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        IProject libProject = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME);
 
-        IProject libProject = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES);
-        IFolder pfolder = libProject.getFolder(DQStructureManager.PATTERNS);
-        IFolder sfolder = libProject.getFolder(DQStructureManager.SQL_PATTERNS);
+        IFolder pfolder = libProject.getFolder(DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS);
+        IFolder sfolder = libProject.getFolder(DQStructureManager.LIBRARIES).getFolder(DQStructureManager.SQL_PATTERNS);
 
         Set<IFile> list = new HashSet<IFile>();
         patternFiles.addAll(getNestedPatternFiles(list, pfolder));

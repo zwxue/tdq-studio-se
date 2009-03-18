@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -111,12 +112,13 @@ public class ExportFactory {
 
         switch (type) {
         case REGEXP:
-            curFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                    DQStructureManager.PATTERNS);
+            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+            curFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                    DQStructureManager.LIBRARIES).getFolder(DQStructureManager.PATTERNS);
             break;
         case SQL_LIKE:
-            curFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.LIBRARIES).getFolder(
-                    DQStructureManager.SQL_PATTERNS);
+            curFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(
+                    DQStructureManager.LIBRARIES).getFolder(DQStructureManager.SQL_PATTERNS);
             break;
         default:
         }
