@@ -184,8 +184,10 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
 			// MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
 			// project.
 			IFolder folder = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(org.talend.dataquality.PluginConstant.ROOTPROJECTNAME)
-					.getFolder(DQStructureManager.METADATA).getFolder(
+					.getProject(
+							org.talend.dataquality.PluginConstant
+									.getRootProjectName()).getFolder(
+							DQStructureManager.getMetaData()).getFolder(
 							DQStructureManager.DB_CONNECTIONS);
 			FolderProvider fp = new FolderProvider();
 			fp.setFolderResource(folder);
