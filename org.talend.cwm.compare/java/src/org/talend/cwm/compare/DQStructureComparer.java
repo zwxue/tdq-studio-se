@@ -232,7 +232,10 @@ public final class DQStructureComparer {
      * @return IFile
      */
     private static IFile getFile(String fileName) {
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.METADATA).getFolder(
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one single
+        // project.
+        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(
+                org.talend.dataquality.PluginConstant.ROOTPROJECTNAME).getFolder(DQStructureManager.METADATA).getFolder(
                 DQStructureManager.DB_CONNECTIONS);
         IFile file = folder.getFile(fileName);
         return file;
