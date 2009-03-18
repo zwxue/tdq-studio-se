@@ -16,66 +16,75 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.talend.dataprofiler.rcp.i18n.Messages;
+import org.talend.dataprofiler.core.CorePlugin;
 
 /**
  * The activator class controls the plug-in life cycle.
  */
 public class Activator extends AbstractUIPlugin {
 
-    private static Logger log = Logger.getLogger(Activator.class);
+	private static Logger log = Logger.getLogger(Activator.class);
 
-    // The plug-in ID
-    public static final String PLUGIN_ID = "org.talend.dataprofiler.rcp"; //$NON-NLS-1$
+	// The plug-in ID
+	public static final String PLUGIN_ID = "org.talend.dataprofiler.rcp"; //$NON-NLS-1$
 
-    // The shared instance
-    private static Activator plugin;
+	// The shared instance
+	private static Activator plugin;
 
-    /**
-     * The constructor.
-     */
-    public Activator() {
-    }
+	/**
+	 * The constructor.
+	 */
+	public Activator() {
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-     */
-    public void start(BundleContext context) throws Exception {
-        super.start(context);
-        if (log.isInfoEnabled()) {
-            log.info("Starting Talend Data Profiler platform."); //$NON-NLS-1$
-        }
-        plugin = this;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
+	 */
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		if (log.isInfoEnabled()) {
+			log.info("Starting Talend Data Profiler platform."); //$NON-NLS-1$
+		}
+		// MOD mzhao 2009-03-16 Feature 6066, Set TOP/TDQ project name to
+		// default standalone one.
+		org.talend.dataquality.PluginConstant.ROOTPROJECTNAME = CorePlugin.DEFAULT_PROJECT_NAME;
+		plugin = this;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-     */
-    public void stop(BundleContext context) throws Exception {
-        plugin = null;
-        super.stop(context);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
+	 */
+	public void stop(BundleContext context) throws Exception {
+		plugin = null;
+		super.stop(context);
+	}
 
-    /**
-     * Returns the shared instance.
-     * 
-     * @return the shared instance
-     */
-    public static Activator getDefault() {
-        return plugin;
-    }
+	/**
+	 * Returns the shared instance.
+	 * 
+	 * @return the shared instance
+	 */
+	public static Activator getDefault() {
+		return plugin;
+	}
 
-    /**
-     * Returns an image descriptor for the image file at the given. plug-in relative path
-     * 
-     * @param path the path
-     * @return the image descriptor
-     */
-    public static ImageDescriptor getImageDescriptor(String path) {
-        return imageDescriptorFromPlugin(PLUGIN_ID, path);
-    }
+	/**
+	 * Returns an image descriptor for the image file at the given. plug-in
+	 * relative path
+	 * 
+	 * @param path
+	 *            the path
+	 * @return the image descriptor
+	 */
+	public static ImageDescriptor getImageDescriptor(String path) {
+		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+	}
 }
