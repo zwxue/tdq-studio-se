@@ -80,7 +80,7 @@ public final class DQStructureManager {
 			.getString("DQStructureManager.dqRules"); //$NON-NLS-1$
 
 	private static String libraries = DefaultMessagesImpl
-			.getString("DQStructureManager.getLibraries()"); //$NON-NLS-1$
+			.getString("DQStructureManager.libraries"); //$NON-NLS-1$
 
 	public static String getLibraries() {
 		return libraries;
@@ -91,7 +91,7 @@ public final class DQStructureManager {
 	}
 
 	private static String metaData = DefaultMessagesImpl
-			.getString("DQStructureManager.getMetaData()"); //$NON-NLS-1$
+			.getString("DQStructureManager.metadata"); //$NON-NLS-1$
 
 	public static String getMetaData() {
 		return metaData;
@@ -103,7 +103,7 @@ public final class DQStructureManager {
 
 	// Not set final for later add prefix when started as TDCP.
 	private static String dataProfiling = DefaultMessagesImpl
-			.getString("DQStructureManager.getDataProfiling()"); //$NON-NLS-1$
+			.getString("DQStructureManager.data_Profiling"); //$NON-NLS-1$
 
 	public static String getDataProfiling() {
 		return dataProfiling;
