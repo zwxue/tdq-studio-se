@@ -777,6 +777,12 @@
            name="org.talend.dataprofiler.core.migration.impl.EncryptAndDecryptPasswordTask"
            version="1.2.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
+           id="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
+           name="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
+           version="1.2.0">
+     </workspacetask>
   </extension>
 
 </plugin>

@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.migration.helper;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -37,7 +39,7 @@ public class WorkspaceVersionHelper {
 
 	public final static String VERSION = "version"; //$NON-NLS-1$
 
-	public static IFile getVersionFile() {
+	public static File getVersionFile() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		try {
 			root.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -56,17 +58,41 @@ public class WorkspaceVersionHelper {
 				e.printStackTrace();
 			}
 		}
-		IFolder librariesFolder = project
-				.getFolder(DQStructureManager.getLibraries());
-		return librariesFolder.getFile(PluginConstant.VERSION_FILE_PATH);
+		IFolder librariesFolder = project.getFolder(DQStructureManager
+				.getLibraries());
+		// MOD mzhao try to find version in "/Libraries/.verstion.txt" location
+		// if not exist in "/TOP_DEFAULT_PRJ/Libraries/.version.txt".It is only
+		// necessary when migrate version from previouse to 1.2.0 (See feature
+		// 6066), Moreover, the ".version.txt" file must be fetched in static
+		// way, not by finding in "WorkSpace"( means not by
+		// root.getProject(...))
+		IFile versionFileTmp = librariesFolder
+				.getFile(PluginConstant.VERSION_FILE_PATH);
+		if (!versionFileTmp.exists()) {
+			File vf = new File(root.getRawLocation().toOSString()
+					+ IPath.SEPARATOR + DQStructureManager.getLibraries()
+					+ IPath.SEPARATOR + PluginConstant.VERSION_FILE_PATH);
+
+			return vf;
+
+		} else {
+			return new File(versionFileTmp.getRawLocation().toOSString());
+		}
+
 	}
 
+	/**
+	 * 
+	 * MOD mzhao Get version file by static way, not by IFile. See feature 6066
+	 * 
+	 * @return
+	 */
 	public static ProductVersion getVesion() {
-		IFile versionFile = getVersionFile();
+		File versionFile = getVersionFile();
 		if (versionFile.exists()) {
 			Properties pros = new Properties();
 			try {
-				pros.load(versionFile.getContents());
+				pros.load(new FileInputStream(versionFile));
 				String version = pros.getProperty(VERSION);
 				if (version != null && !"".equals(version)) { //$NON-NLS-1$
 					return ProductVersion.fromString(version);
@@ -80,18 +106,13 @@ public class WorkspaceVersionHelper {
 	}
 
 	public static void storeVersion() {
-		IFile versionFile = getVersionFile();
-		// MOD mzhao 2999-03-17 If version file not exist, return;
-		if (!versionFile.exists()) {
-			return;
-		}
+		File versionFile = getVersionFile();
 		Properties pros = new Properties();
 		pros.setProperty(VERSION, CorePlugin.getDefault().getProductVersion()
 				.toString());
 
 		try {
-			pros.store(new FileOutputStream(new File(versionFile.getLocation()
-					.toOSString())), null);
+			pros.store(new FileOutputStream(versionFile), null);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -271,7 +271,10 @@ public final class DQStructureManager {
 	}
 
 	/**
-	 * Creates a new project resource with the special name.
+	 * Creates a new project resource with the special name.MOD mzhao 2009-03-18
+	 * make this method as public.For
+	 * {@link org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask}
+	 * use.
 	 * 
 	 * @return the created project resource, or <code>null</code> if the project
 	 *         was not created
@@ -279,7 +282,7 @@ public final class DQStructureManager {
 	 * @throws InvocationTargetException
 	 * @throws CoreException
 	 */
-	private IProject createNewProject(String projectName, Shell shell)
+	public IProject createNewProject(String projectName, Shell shell)
 			throws InvocationTargetException, InterruptedException,
 			CoreException {
 
