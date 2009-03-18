@@ -110,7 +110,9 @@ public final class DefinitionHandler {
 
     private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME; //$NON-NLS-1$
 
-    private static final String WORKSPACE_PATH = "Libraries/"; //$NON-NLS-1$
+    // MOD mzhao 2009-03-13 Feature:6066 Move all folders into one single
+    // project.
+    private static final String WORKSPACE_PATH = org.talend.dataquality.PluginConstant.ROOTPROJECTNAME + "/Libraries/"; //$NON-NLS-1$
 
     private DefinitionHandler() {
         this.indicatorDefinitions = loadFromFile();
@@ -427,7 +429,7 @@ public final class DefinitionHandler {
             }
 
         };
-        
+
         private final ColumnsetSwitch<Boolean> columnIndicatorSwitch = new ColumnsetSwitch<Boolean>() {
 
             /*
