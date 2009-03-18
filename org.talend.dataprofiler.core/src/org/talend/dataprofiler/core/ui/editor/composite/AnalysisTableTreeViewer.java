@@ -191,12 +191,12 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             @Override
             protected void handleRemove() {
-                // removeSelectedElements(newTree);
+                removeSelectedElements(newTree);
             }
 
         };
         parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
-        TableViewerDND.installDND(newTree); // TODO xqliu add code for drag&drop
+        TableViewerDND.installDND(newTree);
         this.addTreeListener(newTree);
         newTree.setData(this);
         return newTree;
@@ -737,8 +737,29 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     @Override
-    public void dropWhereRules(Object data, List<WhereRule> whereRules, int index) {
-        // TODO drag&dropped the WhereRule
+    public void dropWhereRules(Object data, List<IFile> files, int index) {
+        this.dropWhereRules(data, files, index, null);
+    }
+
+    public void dropWhereRules(Object data, List<IFile> files, int index, TreeItem item) {
+        TreeItem treeItem = null;
+        if (item == null) {
+            if (getTree().getItemCount() > 0) {
+                treeItem = getTree().getItem(0);
+            }
+        } else {
+            treeItem = item;
+        }
+        if (data != null && treeItem != null && files.size() > 0) {
+            Analysis analysis = getAnalysis();
+            for (IFile file : files) {
+                TableIndicatorUnit addIndicatorUnit = DQRuleUtilities.createIndicatorUnit(file, (TableIndicator) data, analysis);
+                if (addIndicatorUnit != null) {
+                    createOneUnit(treeItem, addIndicatorUnit);
+                    setDirty(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -755,8 +776,29 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     @Override
-    public boolean canDrop(Object data, WhereRule whereRule) {
-        // TODO drag&dropped the WhereRule
+    public boolean canDrop(Object data, List<IFile> files) {
+        if (data != null && files.size() > 0 && data instanceof TableIndicator) {
+            TableIndicator ti = (TableIndicator) data;
+            TableIndicatorUnit[] tius = ti.getIndicatorUnits();
+            if (tius != null) {
+                int i = 0, j = 0;
+                for (TableIndicatorUnit tiu : tius) {
+                    i++;
+                    j = 0;
+                    String name = tiu.getIndicator().getIndicatorDefinition().getName();
+                    System.out.println("" + i + "::name=" + name);
+                    for (IFile file : files) {
+                        j++;
+                        System.out.println("" + i + "::name=" + name + "|" + j + "::"
+                                + DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName());
+                        if (DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName().equals(name)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
         return false;
     }
 
@@ -884,17 +926,19 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 }
             });
 
-            MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
-            deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
-            deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            deleteMenuItem.addSelectionListener(new SelectionAdapter() {
+            if (!isRowCountIndicator(tree.getSelection())) {
+                MenuItem deleteMenuItem = new MenuItem(menu, SWT.CASCADE);
+                deleteMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.removeElement")); //$NON-NLS-1$
+                deleteMenuItem.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+                deleteMenuItem.addSelectionListener(new SelectionAdapter() {
 
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    removeSelectedElements(tree);
-                }
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        removeSelectedElements(tree);
+                    }
 
-            });
+                });
+            }
 
             tree.setMenu(menu);
         }
@@ -1015,5 +1059,23 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             return true;
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "isRowCountIndicator".
+     * 
+     * @param selection
+     * @return
+     */
+    public boolean isRowCountIndicator(TreeItem[] selection) {
+        if (selection != null && selection.length > 0) {
+            for (TreeItem ti : selection) {
+                TableIndicatorUnit tiu = (TableIndicatorUnit) ti.getData(INDICATOR_UNIT_KEY);
+                if (tiu.getIndicator() instanceof RowCountIndicator) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
