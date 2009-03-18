@@ -15,7 +15,11 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 import org.eclipse.jface.wizard.WizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author zqin
@@ -43,6 +47,25 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#initCWMResourceBuilder()
+     */
+    @Override
+    public ModelElement initCWMResourceBuilder() {
+        Analysis analysis = (Analysis) super.initCWMResourceBuilder();
+
+        Indicator indicator = getMatchedIndicator();
+
+        if (indicator != null) {
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
+            analysis.getResults().getIndicators().add(indicator);
+        }
+
+        return analysis;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -52,5 +75,9 @@ public class ColumnWizard extends AbstractAnalysisWizard {
         for (WizardPage page : getExtenalPages()) {
             addPage(page);
         }
+    }
+
+    protected Indicator getMatchedIndicator() {
+        return null;
     }
 }

@@ -65,9 +65,12 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
+import org.talend.dataprofiler.core.ui.utils.JungGraphGenerator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.indicators.graph.GraphBuilder;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -136,7 +139,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createGraphicsSectionPart(sectionClient, columnSetMultiIndicator);
+            this.createGraphicsSectionPart(sectionClient);
         }
 
         Composite simpleSatisticsComp = toolkit.createComposite(sectionClient);
@@ -162,7 +165,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         graphicsAndTableSection.setClient(sectionClient);
     }
 
-    private Section createGraphicsSectionPart(Composite parentComp, ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
+    private Section createGraphicsSectionPart(Composite parentComp) {
         Section section = createSection(form, parentComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), //$NON-NLS-1$
                 true, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ 
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -170,13 +173,25 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         Composite sectionClient = toolkit.createComposite(section);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
-
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
 
         chartComposite = toolkit.createComposite(sectionClient);
         chartComposite.setLayout(new GridLayout());
-        chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        createBubbleOrGanttChart(form, chartComposite, columnSetMultiValueIndicator);
+
+        if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
+            GridData gd = new GridData();
+            gd.widthHint = 900;
+            gd.heightHint = 450;
+            chartComposite.setLayoutData(gd);
+            GraphBuilder gBuilder = new GraphBuilder();
+            gBuilder.setTotalWeight(columnSetMultiIndicator.getCount());
+            List<Object[]> listRows = columnSetMultiIndicator.getListRows();
+            JungGraphGenerator generator = new JungGraphGenerator(gBuilder, listRows);
+            generator.generate(chartComposite, false);
+        } else {
+            createBubbleOrGanttChart(form, chartComposite, columnSetMultiIndicator);
+        }
+
         section.setClient(sectionClient);
         return section;
     }

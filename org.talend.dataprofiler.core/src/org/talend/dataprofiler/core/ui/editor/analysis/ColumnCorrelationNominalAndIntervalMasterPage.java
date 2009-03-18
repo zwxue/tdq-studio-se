@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -59,23 +58,24 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
+import org.talend.dataprofiler.core.ui.utils.JungGraphGenerator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
-import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -85,8 +85,7 @@ import orgomg.cwm.resource.relational.Column;
  * @author xzhao
  * 
  */
-public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnalysisMetadataPage implements IRuningStatusListener,
-        PropertyChangeListener {
+public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnCorrelationNominalAndIntervalMasterPage.class);
 
@@ -94,11 +93,11 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     DataFilterComp dataFilterComp;
 
-    ColumnCorrelationAnalysisHandler columnCorrelationAnalysisHandler;
+    ColumnCorrelationAnalysisHandler correlationAnalysisHandler;
 
     private ColumnSetMultiValueIndicator columnSetMultiIndicator;
 
-    private String execLang;
+    protected String execLang;
 
     private String stringDataFilter;
 
@@ -108,7 +107,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private static final int TREE_MAX_LENGTH = 400;
 
-    private Composite[] previewChartCompsites;
+    protected Composite[] previewChartCompsites;
 
     private EList<ModelElement> analyzedColumns;
 
@@ -126,23 +125,18 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        // columnSetMultiValueIndicator = columnCorrelationAnalysisHandler.getIndicator();
-        /*
-         * if (columnSetMultiValueIndicator == null) { ColumnsetFactoryImpl columnsetFactory = (ColumnsetFactoryImpl)
-         * ColumnsetFactoryImpl.init(); columnSetMultiValueIndicator =
-         * columnsetFactory.createColumnSetMultiValueIndicator(); }
-         */
-        columnCorrelationAnalysisHandler = new ColumnCorrelationAnalysisHandler();
-        columnCorrelationAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
-        stringDataFilter = columnCorrelationAnalysisHandler.getStringDataFilter();
-        analyzedColumns = columnCorrelationAnalysisHandler.getAnalyzedColumns();
+
+        correlationAnalysisHandler = new ColumnCorrelationAnalysisHandler();
+        correlationAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
+        stringDataFilter = correlationAnalysisHandler.getStringDataFilter();
+        analyzedColumns = correlationAnalysisHandler.getAnalyzedColumns();
         CountAvgNullIndicator currentCountAvgNullIndicator;
-        if (columnCorrelationAnalysisHandler.getIndicator() == null) {
+        if (correlationAnalysisHandler.getIndicator() == null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             currentCountAvgNullIndicator = columnsetFactory.createCountAvgNullIndicator();
             columnSetMultiIndicator = currentCountAvgNullIndicator;
         } else {
-            columnSetMultiIndicator = (ColumnSetMultiValueIndicator) columnCorrelationAnalysisHandler.getIndicator();
+            columnSetMultiIndicator = (ColumnSetMultiValueIndicator) correlationAnalysisHandler.getIndicator();
         }
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
@@ -150,18 +144,10 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 continue;
             }
             // currentColumnIndicator = new ColumnIndicator(tdColumn);
-            DataminingType dataminingType = DataminingType.get(columnCorrelationAnalysisHandler.getDatamingType(tdColumn));
+            DataminingType dataminingType = correlationAnalysisHandler.getDatamingType(tdColumn);
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, tdColumn);
         }
     }
-
-    // @Override
-    // protected ModelElement getCurrentModelElement(FormEditor editor) {
-    //
-    // FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-    // Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
-    // return findAnalysis;
-    // }
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
@@ -176,14 +162,22 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         topComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
-        if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
-            form.setText(DefaultMessagesImpl
-                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisInterval")); //$NON-NLS-1$
-        } else {
-            form.setText(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisDate")); //$NON-NLS-1$
-        }
         metadataSection.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
+
+        // set title of form.
+        if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
+            form.setText(DefaultMessagesImpl
+                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisInterval")); //$NON-NLS-1$
+        }
+
+        if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
+            form.setText(DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CorrelationAnalysisDate")); //$NON-NLS-1$
+        }
+
+        if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
+            form.setText("Nominal Columns Correlation");
+        }
 
         createAnalysisColumnsSection(form, topComp);
 
@@ -276,7 +270,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         chartComposite.setLayout(new GridLayout());
         chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        final Analysis analysis = columnCorrelationAnalysisHandler.getAnalysis();
+        final Analysis analysis = correlationAnalysisHandler.getAnalysis();
 
         refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -318,73 +312,85 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
 
         List<Composite> previewChartList = new ArrayList<Composite>();
-        List<Column> numericOrDateList = new ArrayList<Column>();
-        if (columnSetMultiIndicator instanceof CountAvgNullIndicator) {
-            numericOrDateList = columnSetMultiIndicator.getNumericColumns();
+
+        if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
+            GraphBuilder gBuilder = new GraphBuilder();
+            gBuilder.setTotalWeight(columnSetMultiIndicator.getCount());
+            List<Object[]> listRows = columnSetMultiIndicator.getListRows();
+            JungGraphGenerator generator = new JungGraphGenerator(gBuilder, listRows);
+            generator.generate(composite, false);
+
         } else {
-            numericOrDateList = columnSetMultiIndicator.getDateColumns();
-        }
-        for (Column column : numericOrDateList) {
-            final TdColumn tdColumn = (TdColumn) column;
 
-            ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
-                    | ExpandableComposite.CLIENT_INDENT);
-            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column", tdColumn.getName())); //$NON-NLS-1$
-            exComp.setLayout(new GridLayout());
-            exComp.setData(columnSetMultiIndicator);
-            previewChartList.add(exComp);
-
-            final Composite comp = toolkit.createComposite(exComp);
-            comp.setLayout(new GridLayout());
-            comp.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-            if (tdColumn != null) {
-                IRunnableWithProgress rwp = new IRunnableWithProgress() {
-
-                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview", //$NON-NLS-1$
-                                tdColumn.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-                        Display.getDefault().asyncExec(new Runnable() {
-
-                            public void run() {
-
-                                // carete chart
-                                HideSeriesChartComposite hcc = new HideSeriesChartComposite(comp, columnSetMultiIndicator,
-                                        tdColumn, false);
-
-                                GridData gd = new GridData();
-                                gd.heightHint = 230;
-                                gd.widthHint = 460;
-                                hcc.setLayoutData(gd);
-                            }
-
-                        });
-
-                        monitor.done();
-                    }
-
-                };
-
-                try {
-                    new ProgressMonitorDialog(getSite().getShell()).run(true, false, rwp);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+            List<Column> numericOrDateList = new ArrayList<Column>();
+            if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
+                numericOrDateList = columnSetMultiIndicator.getNumericColumns();
+            }
+            if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
+                numericOrDateList = columnSetMultiIndicator.getDateColumns();
             }
 
-            exComp.addExpansionListener(new ExpansionAdapter() {
+            for (Column column : numericOrDateList) {
+                final TdColumn tdColumn = (TdColumn) column;
 
-                @Override
-                public void expansionStateChanged(ExpansionEvent e) {
-                    getChartComposite().layout();
-                    form.reflow(true);
+                ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
+                        | ExpandableComposite.CLIENT_INDENT);
+                exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column", tdColumn.getName())); //$NON-NLS-1$
+                exComp.setLayout(new GridLayout());
+                exComp.setData(columnSetMultiIndicator);
+                previewChartList.add(exComp);
+
+                final Composite comp = toolkit.createComposite(exComp);
+                comp.setLayout(new GridLayout());
+                comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+                if (tdColumn != null) {
+                    IRunnableWithProgress rwp = new IRunnableWithProgress() {
+
+                        public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                            monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview", //$NON-NLS-1$
+                                    tdColumn.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                            Display.getDefault().asyncExec(new Runnable() {
+
+                                public void run() {
+                                    // carete chart
+                                    GridData gd = new GridData();
+                                    gd.heightHint = 230;
+                                    gd.widthHint = 460;
+
+                                    HideSeriesChartComposite hcc = new HideSeriesChartComposite(comp, columnSetMultiIndicator,
+                                            tdColumn, false);
+                                    hcc.setLayoutData(gd);
+                                }
+
+                            });
+
+                            monitor.done();
+                        }
+
+                    };
+
+                    try {
+                        new ProgressMonitorDialog(getSite().getShell()).run(true, false, rwp);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
 
-            });
+                exComp.addExpansionListener(new ExpansionAdapter() {
 
-            exComp.setExpanded(true);
+                    @Override
+                    public void expansionStateChanged(ExpansionEvent e) {
+                        getChartComposite().layout();
+                        form.reflow(true);
+                    }
 
-            exComp.setClient(comp);
+                });
+
+                exComp.setExpanded(true);
+
+                exComp.setClient(comp);
+            }
         }
 
         if (!previewChartList.isEmpty()) {
@@ -464,120 +470,60 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      */
 
     public void saveAnalysis() throws DataprofilerCoreException {
-
-        columnCorrelationAnalysisHandler.clearAnalysis();
+        correlationAnalysisHandler.clearAnalysis();
         columnSetMultiIndicator.getAnalyzedColumns().clear();
-        // MOD 2009-2-20 hcheng fixed in feature 6203
-        Analysis analysis = columnCorrelationAnalysisHandler.getAnalysis();
+
+        // set execute engine
+        Analysis analysis = correlationAnalysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
-        List<String> comboStringList = new ArrayList<String>();
-        List<String> correctString = new ArrayList<String>();
+
+        // set data filter
+        correlationAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
+
+        // save analysis
         List<Column> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
-        for (int i = 0; i < columnSetMultiValueList.size(); i++) {
-            TdColumn tdColumn = (TdColumn) columnSetMultiValueList.get(i);
-            if (columnSetMultiIndicator instanceof CountAvgNullIndicator && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
-                MessageDialog
-                        .openWarning(
-                                new Shell(),
-                                DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warning"), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.ColumnNotUsed")); //$NON-NLS-1$ //$NON-NLS-2$
-                return;
-            } else if (columnSetMultiIndicator instanceof MinMaxDateIndicator
-                    && Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
-                MessageDialog
-                        .openWarning(
-                                new Shell(),
-                                DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.Warn"), DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NumbericColumn")); //$NON-NLS-1$ //$NON-NLS-2$
-                return;
-            }
-            String comboString = MetadataHelper.getDataminingType(tdColumn).getLiteral();
-            comboStringList.add(comboString);
-        }
-        boolean isSave = true;
-        correctString.add(DataminingType.NOMINAL.getLiteral());
-        correctString.add(DataminingType.INTERVAL.getLiteral());
 
-        for (String combo : comboStringList) {
-            if (!correctString.contains(combo)) {
-                isSave = false;
-                break;
+        TdDataProvider tdProvider = null;
+        if (columnSetMultiValueList != null) {
+            if (columnSetMultiValueList.size() != 0) {
+                tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnSetMultiValueList
+                        .get(0)));
+                analysis.getContext().setConnection(tdProvider);
+                columnSetMultiIndicator.getAnalyzedColumns().addAll(columnSetMultiValueList);
             }
-        }
-        if (!isSave) {
-            MessageDialog.openWarning(new Shell(), DefaultMessagesImpl
-                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.Warning_"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.analysisHandlesColumns")); //$NON-NLS-1$
 
+            correlationAnalysisHandler.addIndicator(columnSetMultiValueList, columnSetMultiIndicator);
+        }
+
+        String urlString = analysis.eResource() != null ? analysis.eResource().getURI().toFileString()
+                : PluginConstant.EMPTY_STRING;
+
+        ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
+        if (saved.isOk()) {
+            if (tdProvider != null) {
+                PrvResourceFileHelper.getInstance().save(tdProvider);
+            }
+            // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
+            if (log.isDebugEnabled()) {
+                log.debug("Saved in  " + urlString + " successful");
+            }
         } else {
-            TdDataProvider tdProvider = null;
-            // Analysis analysis = columnCorrelationAnalysisHandler.getAnalysis();
-            EList<ModelElement> tdColumns = columnCorrelationAnalysisHandler.getAnalyzedColumns();
-            if (columnSetMultiValueList != null) {
-                if (columnSetMultiValueList.size() != 0) {
-                    tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH
-                            .doSwitch(columnSetMultiValueList.get(0)));
-                    analysis.getContext().setConnection(tdProvider);
-                    columnSetMultiIndicator.getAnalyzedColumns().addAll(columnSetMultiValueList);
-                }
-
-                columnCorrelationAnalysisHandler.addIndicator(columnSetMultiValueList, columnSetMultiIndicator);
-            }
-            // if (providerList.size() != 0) {
-            //           
-            // }
-            columnCorrelationAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
-            // boolean modifiedResourcesSaved = analysisHandler.saveModifiedResources();
-            // if (!modifiedResourcesSaved) {
-            // log.error("Problem when saving modified resource.");
-            // }
-            // AnalysisWriter writer = new AnalysisWriter();
-
-            String urlString = analysis.eResource() != null ? analysis.eResource().getURI().toFileString()
-                    : PluginConstant.EMPTY_STRING;
-            // try {
-            // urlString = editorInput.getFile();
-            // analysisHandler.getAnalysis().setUrl(urlString);
-            // } catch (MalformedURLException e) {
-            // e.printStackTrace();
-            // }
-
-            // FIXME after i set the options of bins designer, and when saving the file, it cause a exception.
-
-            // File file = new File(editorInput.getFile().getParent() + File.separator + fileName);
-            // ReturnCode saved = writer.save(analysisHandler.getAnalysis(), file);
-            ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
-            if (saved.isOk()) {
-                if (tdProvider != null) {
-                    PrvResourceFileHelper.getInstance().save(tdProvider);
-                }
-                // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true);
-                if (log.isDebugEnabled()) {
-                    log.debug("Saved in  " + urlString + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-            } else {
-                throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
-                        "ColumnMasterDetailsPage.problem", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            }
-
-            treeViewer.setDirty(false);
-            dataFilterComp.setDirty(false);
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.problem", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
+
+        treeViewer.setDirty(false);
+        dataFilterComp.setDirty(false);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
-            this.columnCorrelationAnalysisHandler.setStringDataFilter((String) evt.getNewValue());
+            this.correlationAnalysisHandler.setStringDataFilter((String) evt.getNewValue());
         }
 
     }
-
-    // public void setDirty(boolean isDirty) {
-    // if (this.isDirty != isDirty) {
-    // this.isDirty = isDirty;
-    // ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
-    // }
-    // }
 
     @Override
     public boolean isDirty() {
@@ -614,7 +560,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     public ColumnCorrelationAnalysisHandler getColumnCorrelationAnalysisHandler() {
-        return columnCorrelationAnalysisHandler;
+        return correlationAnalysisHandler;
     }
 
     public ColumnSetMultiValueIndicator getColumnSetMultiValueIndicator() {
@@ -631,15 +577,55 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     @Override
     protected ReturnCode canSave() {
+        String message = null;
         List<Column> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
 
         if (!columnSetMultiValueList.isEmpty()) {
             if (!ColumnHelper.isFromSameTable(columnSetMultiValueList)) {
-                return new ReturnCode(DefaultMessagesImpl
-                        .getString("ColumnCorrelationNominalAndIntervalMasterPage.CannotCreateAnalysis"), false); //$NON-NLS-1$
+                message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CannotCreateAnalysis");
             }
+
+            List<Column> columns = treeViewer.getColumnSetMultiValueList();
+
+            if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
+                for (int i = 0; i < columns.size(); i++) {
+                    TdColumn tdColumn = (TdColumn) columns.get(i);
+                    if (Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                        message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.ColumnNotUsed");
+                        break;
+                    }
+                }
+            }
+
+            if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
+                for (int i = 0; i < columns.size(); i++) {
+                    TdColumn tdColumn = (TdColumn) columns.get(i);
+                    if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
+                        message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.ColumnNotUsed");
+                        break;
+                    }
+                }
+            }
+
+            if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
+                for (int i = 0; i < columns.size(); i++) {
+                    TdColumn tdColumn = (TdColumn) columns.get(i);
+
+                    if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
+                        message = "Not all columnes are NOMINAL.";
+                        break;
+                    }
+                }
+            }
+        } else {
+            message = "No any columns is analyzed.";
         }
-        return new ReturnCode(true);
+
+        if (message == null) {
+            return new ReturnCode(true);
+        }
+
+        return new ReturnCode(message, false);
     }
 
     @Override

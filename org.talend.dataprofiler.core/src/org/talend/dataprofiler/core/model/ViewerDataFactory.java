@@ -24,7 +24,10 @@ import org.talend.dq.analysis.category.CategoryHandler;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class ViewerDataFactory {
+public final class ViewerDataFactory {
+
+    private ViewerDataFactory() {
+    }
 
     public static Object createTreeData() {
         List<AnalysisTypeNode> returnList = new ArrayList<AnalysisTypeNode>();

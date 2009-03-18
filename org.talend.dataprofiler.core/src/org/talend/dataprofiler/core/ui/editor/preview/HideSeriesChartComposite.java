@@ -171,6 +171,10 @@ public class HideSeriesChartComposite extends ChartComposite {
             ChartDecorator.decorateCategoryPlot(jchart);
         }
 
+        if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator().equals(indicator.eClass())) {
+            // create the chart
+        }
+
         return jchart;
     }
 

@@ -17,12 +17,16 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 
 /**
- * @author zqin
- * 
+ * DOC BZhou class global comment. Detailled comment
  */
-public class ColumnTimeWizard extends ColumnWizard {
+public class ColumnNumbericWizard extends ColumnWizard {
 
-    public ColumnTimeWizard(AnalysisParameter parameter) {
+    /**
+     * DOC BZhou ColumnNumbericWizard constructor comment.
+     * 
+     * @param parameter
+     */
+    public ColumnNumbericWizard(AnalysisParameter parameter) {
         super(parameter);
     }
 
@@ -33,6 +37,7 @@ public class ColumnTimeWizard extends ColumnWizard {
      */
     @Override
     protected Indicator getMatchedIndicator() {
-        return ColumnsetFactory.eINSTANCE.createMinMaxDateIndicator();
+
+        return ColumnsetFactory.eINSTANCE.createCountAvgNullIndicator();
     }
 }

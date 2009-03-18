@@ -18,6 +18,8 @@ import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.pattern.CreatePatternWizard;
 import org.talend.dataprofiler.core.sql.CreateSqlFileWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.catalog.CatalogAnalysisWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnNominalWizard;
+import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnNumbericWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnTimeWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionAnalysisWizard;
@@ -55,10 +57,16 @@ public final class WizardFactory {
                 parameter = new AnalysisParameter();
             }
             parameter.setAnalysisTypeName(type.getLiteral());
-            if (((AnalysisLabelParameter) parameter).getCategoryLabel().trim().equals("Numerical Correlation Analysis")) { //$NON-NLS-1$
-                return new ColumnWizard(parameter);
-            } else {
+            if (((AnalysisLabelParameter) parameter).isNumbericCorrelation()) {
+                return new ColumnNumbericWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isDateCorrelation()) {
                 return new ColumnTimeWizard(parameter);
+            }
+
+            if (((AnalysisLabelParameter) parameter).isNominalCorrelation()) {
+                return new ColumnNominalWizard(parameter);
             }
         case MULTIPLE_COLUMN:
             if (parameter == null) {
