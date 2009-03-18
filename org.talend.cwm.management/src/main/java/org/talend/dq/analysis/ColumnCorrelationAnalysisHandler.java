@@ -126,18 +126,14 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
     }
 
     /**
-     * Method "getDatamingType".
+     * DOC BZhou Comment method "getDatamingType".
      * 
      * @param column
-     * @return the datamining type literal if any or empty string
+     * @return
      */
-    public String getDatamingType(TdColumn column) {
-        DataminingType dmType = MetadataHelper.getDataminingType(column);
-        if (dmType == null) {
-            return ""; //$NON-NLS-1$
-        }
-        // else
-        return dmType.getLiteral();
+    public DataminingType getDatamingType(TdColumn column) {
+
+        return MetadataHelper.getDataminingType(column);
     }
 
     /**

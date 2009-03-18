@@ -31,5 +31,6 @@
   <categories analysisType="Column Correlation Analysis" label="Column Correlation Analysis">
     <subCategories analysisType="Column Correlation Analysis" label="Numerical Correlation Analysis"/>
     <subCategories analysisType="Column Correlation Analysis" label="Time Correlation Analysis"/>
+    <subCategories analysisType="Column Correlation Analysis" label="Nominal Correlation Analysis"/>
   </categories>
 </dataquality.category:AnalysisCategories>

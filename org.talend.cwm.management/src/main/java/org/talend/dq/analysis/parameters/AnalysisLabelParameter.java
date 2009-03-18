@@ -19,10 +19,12 @@ package org.talend.dq.analysis.parameters;
  * 
  */
 public class AnalysisLabelParameter extends AnalysisParameter {
-    
+
     public static final String NUMBERIC_CORRELATION = "Numerical Correlation Analysis"; //$NON-NLS-1$
-    
+
     public static final String DATE_CORRELATION = "Date Correlation Analysis"; //$NON-NLS-1$
+
+    public static final String NOMINAL_CORRELATION = "Nominal Correlation Analysis"; //$NON-NLS-1$
 
     protected String categoryLabel;
 
@@ -32,5 +34,17 @@ public class AnalysisLabelParameter extends AnalysisParameter {
 
     public void setCategoryLabel(String categoryLabel) {
         this.categoryLabel = categoryLabel;
+    }
+
+    public boolean isNumbericCorrelation() {
+        return NUMBERIC_CORRELATION.equals(categoryLabel);
+    }
+
+    public boolean isDateCorrelation() {
+        return DATE_CORRELATION.equals(categoryLabel);
+    }
+
+    public boolean isNominalCorrelation() {
+        return NOMINAL_CORRELATION.equals(categoryLabel);
     }
 }
