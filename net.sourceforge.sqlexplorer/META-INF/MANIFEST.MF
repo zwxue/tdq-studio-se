@@ -92,3 +92,4 @@ Export-Package: META-INF,
  org.eclipse.jface.preference
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
+Bundle-Localization: plugin
