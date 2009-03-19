@@ -17,8 +17,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction;
+import org.talend.dataprofiler.core.ui.action.actions.ImportConnecionFromTOSAction;
 
 /**
  * @author rli
@@ -45,6 +47,10 @@ public class NewConnectionActionProvider extends CommonActionProvider {
                         .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
                     CreateConnectionAction createConnectionAction = new CreateConnectionAction(folder);
                     menu.add(createConnectionAction);
+                    if (!CorePlugin.getDefault().isRunStandalone()) {
+                        ImportConnecionFromTOSAction importAction = new ImportConnecionFromTOSAction();
+                        menu.add(importAction);
+                    }
                     // menu.insertBefore("group.edit", createConnectionAction);
                 }
             } catch (CoreException e) {
