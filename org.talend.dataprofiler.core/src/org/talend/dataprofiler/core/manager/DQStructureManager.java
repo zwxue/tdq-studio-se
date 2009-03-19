@@ -192,10 +192,7 @@ public final class DQStructureManager {
 					shell);
 			// create "Data Profiling" project
 			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			if (!org.talend.dataquality.PluginConstant.getRootProjectName()
-					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
-				dataProfiling = PREFIX_TDQ + dataProfiling;
-			}
+			dataProfiling = PREFIX_TDQ + dataProfiling;
 			IFolder dataProfilingFolder = this.createNewFoler(rootProject,
 					dataProfiling);
 			IFolder createNewFoler = this.createNewFoler(dataProfilingFolder,
@@ -208,10 +205,7 @@ public final class DQStructureManager {
 
 			// create "Libraries" project
 			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			if (!org.talend.dataquality.PluginConstant.getRootProjectName()
-					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
-				libraries = PREFIX_TDQ + libraries;
-			}
+			libraries = PREFIX_TDQ + libraries;
 			IFolder librariesFoler = this
 					.createNewFoler(rootProject, libraries);
 			createNewFoler = this.createNewFoler(librariesFoler, PATTERNS);
@@ -251,10 +245,7 @@ public final class DQStructureManager {
 
 			// create "Metadata" project
 			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			if (!org.talend.dataquality.PluginConstant.getRootProjectName()
-					.equalsIgnoreCase(CorePlugin.DEFAULT_PROJECT_NAME)) {
-				metaData = PREFIX_TDQ + metaData;
-			}
+			metaData = PREFIX_TDQ + metaData;
 
 			IFolder metadataFolder = this.createNewFoler(rootProject, metaData);
 			createNewFoler = this

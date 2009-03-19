@@ -105,8 +105,16 @@ public class WorkspaceVersionHelper {
 		return new ProductVersion(0, 0, 0);
 	}
 
+	/**
+	 * 
+	 * MOD mzhao 2009-03-19, Get version file as "java.io.File", and if this
+	 * file dose not exist,return.
+	 */
 	public static void storeVersion() {
 		File versionFile = getVersionFile();
+		if (!versionFile.exists()) {
+			return;
+		}
 		Properties pros = new Properties();
 		pros.setProperty(VERSION, CorePlugin.getDefault().getProductVersion()
 				.toString());
