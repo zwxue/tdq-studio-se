@@ -20,7 +20,7 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="org.talend.dataprofiler.help.actionSet"
-            label="actionSet"
+            label="%actionSet.label.actionSet"
             visible="true">
          <action
                class="org.talend.dataprofiler.help.actions.ViewBookMarksAction"

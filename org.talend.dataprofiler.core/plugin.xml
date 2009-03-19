@@ -85,8 +85,8 @@
 		</actionProvider>
 		<commonFilter
             id="org.eclipse.ui.navigator.resources.filters.htmlFolder"
-            name="htmlFolder"
-            description="html folder "
+            name="%commonFilter.name.htmlFolder"
+            description="%commonFilter.description.htmlfolder"
             activeByDefault="true"
             >
          <filterExpression>
@@ -102,7 +102,7 @@
             contentProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider"
             id="org.talend.dataprofiler.core.DQContent.emfContent"
             labelProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider"
-            name="DQ EMF Content"
+            name="%navigatorContent.name.DQContent"
             priority="normal">
            <triggerPoints> 
              <or>
@@ -135,7 +135,7 @@
       </navigatorContent>    
       
       <navigatorContent
-            name="DQ Resource"
+            name="%navigatorContent.name.DQResource"
             priority="low"
             activeByDefault="true"
 			            contentProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider"
@@ -578,28 +578,28 @@
             extensions="ana"
             icon="icons/chart_bar.png"
             id="org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"
-            name="AnalysisEditor">
+            name="%editor.name.AnalysisEditor">
       </editor>
       <editor
             class="org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"
             extensions="prv"
             icon="icons/TdDataProvider.gif"
             id="org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"
-            name="ConnectionEditor">
+            name="%editor.name.ConnectionEditor">
       </editor>
       <editor
             class="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
             extensions="pattern"
             icon="icons/pattern.png"
             id="org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"
-            name="PatternEditor">
+            name="%editor.name.PatternEditor">
       </editor>
       <editor
             class="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
             extensions="rules"
             icon="icons/dqrule_red.png"
             id="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
-            name="DQRuleEditor">
+            name="%editor.name.DQRuleEditor">
       </editor>
    </extension>
   <extension
@@ -683,14 +683,14 @@
    <extension
 	point="org.eclipse.ui.contexts">
 	<context
-		name="DQ ViewScope"
-		description="The context of DQRespositoryView"
+		name="%context.name.DQViewScope"
+		description="%context.description.contextDQRespositoryView"
 		id="org.talend.dataprofiler.core.ui.views.DQRespositoryView.viewScope"
 		parentId="org.eclipse.ui.contexts.window">
 	</context>
 	<context
-		name="Pattern Test ViewScope"
-		description="The context of PatternTestView"
+		name="%context.name.PatternTestViewScope"
+		description="%context.description.contextPatternTestView"
 		id="org.talend.dataprofiler.core.ui.views.PatternTestView.viewScope"
 		parentId="org.eclipse.ui.contexts.window">
 	</context>
@@ -700,15 +700,15 @@
         point="org.eclipse.ui.commands">
      <command
            id="org.talend.dataprofiler.core.removeAnalysis"
-           name="removeAnalysis">
+           name="%command.name.removeAnalysis">
      </command>
      <command
            id="org.talend.dataprofiler.core.runAnalysis"
-           name="runAnalysis">
+           name="%command.name.runAnalysis">
      </command>
      <command
            id="org.talend.dataprofiler.core.testRegular"
-           name="testRegular">
+           name="%command.name.testRegular">
      </command>
   </extension>
   <extension
@@ -736,19 +736,19 @@
      <page
            class="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            id="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
-           name="Data Profiler">
+           name="%page.name.DataProfiler">
      </page>
      <page
            category="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            class="org.talend.dataprofiler.core.ui.pref.UDFPreferencePage"
            id="org.talend.dataprofiler.core.ui.pref.UDFPreferencePage"
-           name="UDF Preference">
+           name="%page.name.UDFPreference">
      </page>
      <page
            category="org.talend.dataprofiler.core.ui.pref.DataProfilerPreferencePage"
            class="org.talend.dataprofiler.core.ui.pref.I18nPreferencePage"
            id="org.talend.dataprofiler.core.ui.pref.I18nPreferencePage"
-           name="I18nPreferencePage">
+           name="%page.name.I18nPreferencePage">
      </page>
   </extension>
   <extension

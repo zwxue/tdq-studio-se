@@ -6,28 +6,28 @@
          point="org.eclipse.ui.views">
          <category
             id="org.talend.dataprofiler.view.category"
-            name="Data Profiler"/>   
+            name="%category.name.DataProfiler"/>   
       <view
             allowMultiple="false"
             category="org.talend.dataprofiler.view.category"
             class="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
             icon="icons/application_home.png"
             id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
-            name="DQRepository">
+            name="%view.name.DQRepository">
       </view>
       <view
             category="org.talend.dataprofiler.view.category"
             class="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
             icon="icons/newspaper.png"
             id="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
-            name="Detail View">`
+            name="%view.name.DetailView">`
       </view>
        <view
             category="org.talend.dataprofiler.view.category"
             class="org.talend.dataprofiler.core.ui.views.PatternTestView"
             icon="icons/new_alias.gif"
             id="org.talend.dataprofiler.core.ui.views.PatternTestView"
-            name="Pattern Test View">`
+            name="%view.name.PatternTestView">`
       </view>
       <!-- view
             category="org.talend.dataprofiler.view.category"
@@ -52,7 +52,7 @@
             class="org.talend.dataprofiler.core.ui.perspective.DataProfilingPerspective"
             icon="icons/profiler_persp.png"
             id="org.talend.dataprofiler.DataProfilingPerspective"
-            name="Data Profiler">
+            name="%perspective.name.DataProfiler">
       </perspective>
    </extension>   
 
