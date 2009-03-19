@@ -12,15 +12,19 @@
 // ============================================================================
 package org.talend.dq.helper.resourcehelper;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -28,7 +32,6 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * This class help the '.prv' file to store the corresponding DataProvider value.
@@ -142,7 +145,50 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
         return returnCode;
     }
 
-    public Collection<DataProvider> getAllDataProviders(IFolder patternFodler) {
-        return Collections.EMPTY_LIST;
+    public List<TdDataProvider> getAllDataProviders(IFolder folder) {
+        List<IFile> allPRVFiles = new ArrayList<IFile>();
+        searchAllDataProvider(folder, allPRVFiles);
+
+        List<TdDataProvider> allDataProviders = new ArrayList<TdDataProvider>();
+        if (!allPRVFiles.isEmpty()) {
+            for (IFile file : allPRVFiles) {
+                TypedReturnCode<TdDataProvider> rc = readFromFile(file);
+                if (rc.isOk()) {
+                    TdDataProvider dataProvider = rc.getObject();
+                    allDataProviders.add(dataProvider);
+                }
+            }
+        }
+
+        return allDataProviders;
+    }
+
+    private List<IFile> searchAllDataProvider(IFolder folder, List<IFile> allPRVFiles) {
+
+        try {
+            for (IResource resource : folder.members()) {
+                if (resource.getType() == IResource.FOLDER) {
+                    searchAllDataProvider(folder.getFolder(resource.getName()), allPRVFiles);
+                    continue;
+                }
+                IFile file = (IFile) resource;
+                if (file.getFileExtension().equals(FactoriesUtil.PROV)) {
+                    allPRVFiles.add(file);
+                }
+            }
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+
+        return allPRVFiles;
+    }
+
+    private List<TdDataProvider> operation(Collection<TypedReturnCode<TdDataProvider>> values) {
+        List<TdDataProvider> dataProviders = new ArrayList<TdDataProvider>();
+        for (TypedReturnCode<TdDataProvider> rc : values) {
+            dataProviders.add(rc.getObject());
+        }
+
+        return dataProviders;
     }
 }
