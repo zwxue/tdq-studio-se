@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Data Explorer"
+            name="%category.name.DataExplorer"
             id="SQLExplorerPlugin">
       </category>
       <view
@@ -14,21 +14,21 @@
             class="net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView"
             icon="icons/tree_mode.gif"
             id="net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView"
-            name="Database Structure"/>
+            name="%view.name.DatabaseStructure"/>
       <view
             allowMultiple="false"
             category="SQLExplorerPlugin"
             class="net.sourceforge.sqlexplorer.plugin.views.DatabaseDetailView"
             icon="icons/app_obj.gif"
             id="net.sourceforge.sqlexplorer.plugin.views.DatabaseDetailView"
-            name="Database Detail"/>
+            name="%view.name.DatabaseDetail"/>
       <view
             allowMultiple="false"
             category="SQLExplorerPlugin"
             class="net.sourceforge.sqlexplorer.connections.ConnectionsView"
             icon="icons/alias.gif"
             id="net.sourceforge.sqlexplorer.connections.ConnectionsView"
-            name="Connections">
+            name="%view.name.Connections">
       </view>
       <view
             allowMultiple="false"
@@ -36,14 +36,14 @@
             class="net.sourceforge.sqlexplorer.plugin.views.SQLHistoryView"
             icon="icons/sql_history.gif"
             id="net.sourceforge.sqlexplorer.plugin.views.SQLHistoryView"
-            name="SQL History">
+            name="%view.name.SQLHistory">
       </view>
       <view
             allowMultiple="false"
             category="SQLExplorerPlugin"
             class="net.sourceforge.sqlexplorer.plugin.views.DataPreviewView"
             id="net.sourceforge.sqlexplorer.plugin.views.DataPreviewView"
-            name="Data Preview">
+            name="%view.name.DataPreview">
       </view>
    </extension>
    <extension
@@ -53,7 +53,7 @@
             fixed="false"
             icon="icons/logo16.gif"
             id="net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"
-            name="Data Explorer">
+            name="%perspective.name.DataExplorer">
       </perspective>
    </extension>
    <extension
@@ -61,7 +61,7 @@
       <page
             class="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"
             id="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"
-            name="Data Explorer">
+            name="%page.name.DataExplorer">
       </page>
       
    </extension>
@@ -70,10 +70,10 @@
          point="org.eclipse.ui.preferencePages">
       <page class="net.sourceforge.sqlexplorer.preferences.DriverPreferencePage" 
       		category="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage" 
-      		name="JDBC Drivers" 
+      		name="%page.name.JDBCDrivers" 
       		id="net.sourceforge.sqlexplorer.preferences.DriverPreferencePage"/>
       <page
-            name="SQL Editor"
+            name="%page.name.SQLEditor"
             category="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"
             class="net.sourceforge.sqlexplorer.preferences.SQLPreferencePage"
             id="net.sourceforge.sqlexplorer.preferences.SQLPreferencePage">
@@ -82,7 +82,7 @@
             category="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"
             class="net.sourceforge.sqlexplorer.preferences.ConfirmationsPreferencePage"
             id="net.sourceforge.sqlexplorer.preferences.ConfirmationsPreferencePage"
-            name="Confirmations"/>
+            name="%page.name.Confirmations"/>
    </extension>
    <extension
          id="editors"
@@ -94,7 +94,7 @@
             extensions="sql"
             icon="icons/editor.gif"
             id="net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"
-            name="Sql Editor">
+            name="%editor.name.SqlEditor">
       </editor>
       <editor
             class="net.sourceforge.sqlexplorer.filelist.FileListEditor"
@@ -102,7 +102,7 @@
             extensions="fls"
             icon="icons/filelist.gif"
             id="net.sourceforge.sqlexplorer.filelist.FileListEditor"
-            name="File List Editor"/>
+            name="%editor.name.FileListEditor"/>
    </extension>
    <extension point="org.eclipse.ui.viewActions">
       <viewContribution
@@ -113,9 +113,9 @@
                enablesFor="1"
                icon="icons/commit.gif"
                id="net.sourceforge.sqlexplorer.actions.commit"
-               label="Commit"
+               label="%action.label.Commit"
                toolbarPath="additions"
-               tooltip="Commit">
+               tooltip="%action.tooltip.Commit">
          </action>
       </viewContribution>     
       <viewContribution
@@ -126,9 +126,9 @@
                enablesFor="1"
                icon="icons/rollback.gif"
                id="net.sourceforge.sqlexplorer.actions.rollback"
-               label="Roll Back"
+               label="%action.label.RollBack"
                toolbarPath="additions"
-               tooltip="Rollback">
+               tooltip="%action.tooltip.Rollback">
          </action>
       </viewContribution>
       <viewContribution
@@ -140,9 +140,9 @@
                enablesFor="*"
                icon="icons/removeAll_co.gif"
                id="net.sourceforge.sqlexplorer.actions.closeAll"
-               label="Close All Connections"
+               label="%action.label.CloseAllConnections"
                toolbarPath="additions"
-               tooltip="Close All Connections">
+               tooltip="%action.tooltip.CloseAllConnections">
          </action>
       </viewContribution>
       <viewContribution
@@ -154,9 +154,9 @@
                enablesFor="*"
                icon="icons/remove_att.gif"
                id="net.sourceforge.sqlexplorer.actions.close"
-               label="Close Connection"
+               label="%action.label.CloseConnection"
                toolbarPath="additions"
-               tooltip="Close Connection">
+               tooltip="%action.tooltip.CloseConnection">
          </action>
       </viewContribution>
 
@@ -164,10 +164,10 @@
             id="net.sourceforge.sqlexplorer.connections.actions.NewEditor"
             targetID="net.sourceforge.sqlexplorer.plugin.views.ConnectionsView">
          <action
-               label="New SQL Editor"
+               label="%action.label.NewSQLEditor"
                icon="icons/new_editor.gif"
                class="net.sourceforge.sqlexplorer.connections.actions.NewEditorAction"
-               tooltip="New SQL Editor"
+               tooltip="%action.tooltip.NewSQLEditor"
                enablesFor="*"
                toolbarPath="additions"
                id="net.sourceforge.sqlexplorer.actions.newEditor">
@@ -177,17 +177,17 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            name="SQLExplorer"
+            name="%category.name.SQLExplorer"
             id="net.sourceforge.sqlexplorer.new">
       </category>
       <wizard
-            name="SQLExplorer SQL Editor"
+            name="%wizard.name.SQLExplorerSQLEditor"
             icon="icons/edittsk_tsk.gif"
             category="net.sourceforge.sqlexplorer.new"
             class="net.sourceforge.sqlexplorer.plugin.wizards.NewSQLEditorWizard"
             id="net.sourceforge.sqlexplorer.plugin.wizards.sqleditor">
          <description>
-            Create a new empty SQL file
+            %wizard.description.CreateEmptySQLfile
          </description>
          <selection
                class="org.eclipse.core.resources.IResource">
@@ -278,7 +278,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="net.sourceforge.sqlexplorer.application"
-            name="SQL Explorer">
+            name="%product.name.SQLExplorer">
          <property
                name="windowImages"
                value="icons/logo16.gif,icons/logo32.gif"/>
