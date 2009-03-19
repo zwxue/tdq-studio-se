@@ -14,15 +14,28 @@ package org.talend.dataprofiler.core.ui.editor.dqrules;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -33,13 +46,18 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataquality.rules.JoinElement;
+import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -52,15 +70,27 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     private static final int CRITICALITY_LEVEL_MAX = 10;
 
+    private static final String DEFAULT_OPERATOR = "=";
+
+    private static final String[] OPERATORS = { "=", ">", "<", ">=", "<=" };
+
+    final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
+
     private WhereRule whereRule;
 
     private ScrolledForm form;
 
     private Section dqRuleDefinitionSection;
 
+    private Section joinConditionSection;
+
     private Text whereText;
 
     private Text criticalityLevelText;
+
+    private List<JoinElement> tempJoinElements;
+
+    private Composite joinElementComp;
 
     public Text getCriticalityLevelText() {
         return criticalityLevelText;
@@ -81,13 +111,6 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         super(editor, id, title);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement(org.eclipse.ui.forms.editor
-     * .FormEditor)
-     */
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
         FileEditorInput input = (FileEditorInput) editor.getEditorInput();
@@ -95,11 +118,6 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         return whereRule;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
-     */
     @Override
     public void setDirty(boolean isDirty) {
         if (this.isDirty != isDirty) {
@@ -108,11 +126,6 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-     */
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             ((DQRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
@@ -122,12 +135,18 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         form = managedForm.getForm();
-
         form.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.dqRuleSettings")); //$NON-NLS-1$
+
         metadataSection.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.DQRuleMetadata")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.setProperties")); //$NON-NLS-1$
+
+        resetJoinElements();
+
         creatDQRuleDefinitionSection(topComp);
-        currentEditor.registerSections(new Section[] { dqRuleDefinitionSection });
+        createJoinConditionSection(topComp);
+
+        currentEditor.registerSections(new Section[] { dqRuleDefinitionSection, joinConditionSection });
+
     }
 
     /**
@@ -204,12 +223,30 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         if (checkValus()) {
             TaggedValueHelper.setValidStatus(true, whereRule);
             whereRule.setCriticalityLevel(Integer.valueOf(getCriticalityLevelText().getText()));
-            whereRule.setWhereExpression(getWhereText().getText());
+            whereRule.setWhereExpression(whereText.getText());
+            whereRule.getJoins().clear();
+            whereRule.getJoins().addAll(cleanJoins(tempJoinElements));
             EMFUtil.saveSingleResource(whereRule.eResource());
             ret = true;
         }
         return ret;
 
+    }
+
+    /**
+     * DOC xqliu Comment method "cleanJoins".
+     * 
+     * @param joinElements
+     * @return
+     */
+    private List<JoinElement> cleanJoins(List<JoinElement> joinElements) {
+        List<JoinElement> retJoinElements = new ArrayList<JoinElement>();
+        for (JoinElement je : joinElements) {
+            if (je.getColA() != null && je.getColB() != null) {
+                retJoinElements.add(je);
+            }
+        }
+        return retJoinElements;
     }
 
     /**
@@ -268,5 +305,238 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
                 setDirty(true);
             }
         });
+    }
+
+    /**
+     * DOC xqliu Comment method "createJoinConditionSection".
+     * 
+     * @param topComp
+     */
+    private void createJoinConditionSection(Composite topComp) {
+        joinConditionSection = createSection(form, topComp, DefaultMessagesImpl
+                .getString("DQRuleMasterDetailsPage.joinCondition"), false, null); //$NON-NLS-1$
+
+        Label label = new Label(joinConditionSection, SWT.WRAP);
+        label.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.textJoinCondition")); //$NON-NLS-1$
+        joinConditionSection.setDescriptionControl(label);
+
+        createJoinConditionComp();
+    }
+
+    /**
+     * DOC xqliu Comment method "createJoinConditionComp".
+     * 
+     * @return
+     */
+    private Composite createJoinConditionComp() {
+
+        Composite newComp = toolkit.createComposite(joinConditionSection);
+        newComp.setLayout(new GridLayout());
+
+        joinElementComp = new Composite(newComp, SWT.NONE);
+        joinElementComp.setLayout(new GridLayout());
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(joinElementComp);
+        for (int i = 0; i < tempJoinElements.size(); i++) {
+            creatNewJoinElementLine(tempJoinElements.get(i));
+        }
+        createAddButton(newComp);
+
+        joinConditionSection.setClient(newComp);
+        return newComp;
+    }
+
+    /**
+     * DOC xqliu Comment method "createAddButton".
+     * 
+     * @param parent top composite
+     */
+    private void createAddButton(Composite parent) {
+        final Button addButton = new Button(parent, SWT.NONE);
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setToolTipText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.add")); //$NON-NLS-1$
+        GridData labelGd = new GridData();
+        labelGd.horizontalAlignment = SWT.CENTER;
+        labelGd.widthHint = 65;
+        addButton.setLayoutData(labelGd);
+        addButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                JoinElement newJoinElement = RulesFactory.eINSTANCE.createJoinElement();
+                newJoinElement.setOperator(DEFAULT_OPERATOR);
+                creatNewJoinElementLine(newJoinElement);
+                tempJoinElements.add(newJoinElement);
+                form.reflow(true);
+                setDirty(true);
+            }
+        });
+    }
+
+    /**
+     * DOC xqliu Comment method "creatNewJoinElementLine".
+     * 
+     * @param joinElement
+     */
+    private void creatNewJoinElementLine(JoinElement joinElement) {
+        final Composite expressComp = new Composite(joinElementComp, SWT.NONE);
+        expressComp.setLayout(new GridLayout(6, false));
+        final JoinElement fje = joinElement;
+        boolean flag = false;
+        if (fje.getColA() != null && fje.getColB() != null && fje.getOperator() != null) {
+            flag = true;
+        }
+
+        final Label labelL = new Label(expressComp, SWT.NONE);
+        labelL.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
+        GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(labelL);
+
+        final Text textL = new Text(expressComp, SWT.BORDER);
+        textL.setEditable(false);
+        textL.setText(flag ? fje.getColA().getName() : PluginConstant.EMPTY_STRING);
+        GridDataFactory.fillDefaults().span(1, 1).grab(true, false).applyTo(textL);
+        ((GridData) textL.getLayoutData()).widthHint = 100;
+
+        DropTarget targetL = new DropTarget(textL, DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
+        targetL.setTransfer(new Transfer[] { transfer });
+        targetL.addDropListener(new ColumnDropTargetListener(fje, ColumnDropTargetListener.LEFT));
+
+        final CCombo combo = new CCombo(expressComp, SWT.BORDER);
+        combo.setEditable(false);
+        combo.setItems(OPERATORS);
+        combo.setText(flag ? fje.getOperator() : DEFAULT_OPERATOR);
+        GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(combo);
+        combo.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                fje.setOperator(combo.getText());
+                setDirty(true);
+            }
+        });
+
+        final Label labelR = new Label(expressComp, SWT.NONE);
+        labelR.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
+        GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(labelR);
+
+        final Text textR = new Text(expressComp, SWT.BORDER);
+        textR.setEditable(false);
+        textR.setText(flag ? fje.getColB().getName() : PluginConstant.EMPTY_STRING);
+        GridDataFactory.fillDefaults().span(1, 1).grab(true, false).applyTo(textR);
+        ((GridData) textR.getLayoutData()).widthHint = 100;
+
+        DropTarget targetR = new DropTarget(textR, DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
+        targetR.setTransfer(new Transfer[] { transfer });
+        targetR.addDropListener(new ColumnDropTargetListener(fje, ColumnDropTargetListener.RIGHT));
+
+        Button delButton = new Button(expressComp, SWT.NONE);
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        delButton.setToolTipText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.delete")); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(delButton);
+        delButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                tempJoinElements.remove(fje);
+                expressComp.dispose();
+                joinElementComp.layout();
+                form.reflow(true);
+                setDirty(true);
+            }
+        });
+
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
+    }
+
+    private void resetJoinElements() {
+        if (tempJoinElements == null) {
+            tempJoinElements = new ArrayList<JoinElement>();
+        } else {
+            tempJoinElements.clear();
+        }
+        tempJoinElements.addAll(whereRule.getJoins());
+    }
+
+    /**
+     * DOC xqliu DQRuleMasterDetailsPage class global comment. Detailled comment
+     */
+    private class ColumnDropTargetListener implements DropTargetListener {
+
+        private JoinElement joinElement;
+
+        private int index;
+
+        public static final int LEFT = 1;
+
+        public static final int RIGHT = 2;
+
+        public JoinElement getJoinElement() {
+            if (joinElement == null) {
+                joinElement = RulesFactory.eINSTANCE.createJoinElement();
+                joinElement.setOperator(DEFAULT_OPERATOR);
+            }
+            return joinElement;
+        }
+
+        public int getIndex() {
+            if (index != LEFT && index != RIGHT) {
+                index = LEFT;
+            }
+            return index;
+        }
+
+        public ColumnDropTargetListener(JoinElement je, int index) {
+            super();
+            this.joinElement = je;
+            this.index = index;
+        }
+
+        public void dragEnter(DropTargetEvent event) {
+            if (event.detail == DND.DROP_DEFAULT)
+                event.detail = DND.DROP_COPY;
+        }
+
+        public void dragOver(DropTargetEvent event) {
+            event.feedback = DND.FEEDBACK_NONE;
+        }
+
+        public void dragOperationChanged(DropTargetEvent event) {
+            if (event.detail == DND.DROP_DEFAULT)
+                event.detail = DND.DROP_COPY;
+        }
+
+        public void dragLeave(DropTargetEvent event) {
+        }
+
+        public void dropAccept(DropTargetEvent event) {
+        }
+
+        public void drop(DropTargetEvent event) {
+            if (transfer.isSupportedType(event.currentDataType)) {
+                if (event.data instanceof TreeSelection) {
+                    TreeSelection ts = (TreeSelection) event.data;
+                    if (ts.getFirstElement() instanceof Column) {
+                        Column column = (Column) ts.getFirstElement();
+                        setColumn(column);
+
+                        DropTarget target = (DropTarget) event.widget;
+                        Text text = (Text) target.getControl();
+                        text.setText(column.getName());
+                    }
+                }
+            }
+        }
+
+        public void setColumn(Column column) {
+            switch (getIndex()) {
+            case LEFT:
+                getJoinElement().setColA(column);
+                getJoinElement().setColumnAliasA(column.getName());
+                getJoinElement().setTableAliasA(ColumnHelper.getColumnSetOwner(column).getName());
+                break;
+            case RIGHT:
+                getJoinElement().setColB(column);
+                getJoinElement().setColumnAliasB(column.getName());
+                getJoinElement().setTableAliasB(ColumnHelper.getColumnSetOwner(column).getName());
+                break;
+            default:
+            }
+        }
     }
 }
