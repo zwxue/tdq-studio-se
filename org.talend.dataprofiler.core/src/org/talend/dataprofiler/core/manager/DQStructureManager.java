@@ -83,22 +83,15 @@ public final class DQStructureManager {
 			.getString("DQStructureManager.libraries"); //$NON-NLS-1$
 
 	public static String getLibraries() {
-		return libraries;
-	}
-
-	public static void setLibraries(String libraries) {
-		DQStructureManager.libraries = libraries;
+		return PREFIX_TDQ + libraries;
 	}
 
 	private static String metaData = DefaultMessagesImpl
 			.getString("DQStructureManager.metadata"); //$NON-NLS-1$
 
 	public static String getMetaData() {
-		return metaData;
-	}
-
-	public static void setMetaData(String metaData) {
-		DQStructureManager.metaData = metaData;
+		// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
+		return PREFIX_TDQ + metaData;
 	}
 
 	// Not set final for later add prefix when started as TDCP.
@@ -106,11 +99,7 @@ public final class DQStructureManager {
 			.getString("DQStructureManager.data_Profiling"); //$NON-NLS-1$
 
 	public static String getDataProfiling() {
-		return dataProfiling;
-	}
-
-	public static void setDataProfiling(String dataProfiling) {
-		DQStructureManager.dataProfiling = dataProfiling;
+		return PREFIX_TDQ + dataProfiling;
 	}
 
 	public static final String ANALYSIS = DefaultMessagesImpl
@@ -192,9 +181,8 @@ public final class DQStructureManager {
 					shell);
 			// create "Data Profiling" project
 			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			dataProfiling = PREFIX_TDQ + dataProfiling;
 			IFolder dataProfilingFolder = this.createNewFoler(rootProject,
-					dataProfiling);
+					getDataProfiling());
 			IFolder createNewFoler = this.createNewFoler(dataProfilingFolder,
 					ANALYSIS);
 			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
@@ -205,9 +193,8 @@ public final class DQStructureManager {
 
 			// create "Libraries" project
 			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			libraries = PREFIX_TDQ + libraries;
-			IFolder librariesFoler = this
-					.createNewFoler(rootProject, libraries);
+			IFolder librariesFoler = this.createNewFoler(rootProject,
+					getLibraries());
 			createNewFoler = this.createNewFoler(librariesFoler, PATTERNS);
 			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
 					PATTERNS_FOLDER_PROPERTY);
@@ -244,10 +231,9 @@ public final class DQStructureManager {
 			// ~
 
 			// create "Metadata" project
-			// MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-			metaData = PREFIX_TDQ + metaData;
 
-			IFolder metadataFolder = this.createNewFoler(rootProject, metaData);
+			IFolder metadataFolder = this.createNewFoler(rootProject,
+					getMetaData());
 			createNewFoler = this
 					.createNewFoler(metadataFolder, DB_CONNECTIONS);
 			createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY,
