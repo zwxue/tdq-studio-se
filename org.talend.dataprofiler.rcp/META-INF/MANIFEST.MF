@@ -28,3 +28,4 @@ Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataprofiler.rcp,
  org.talend.dataprofiler.rcp.intro
 Eclipse-RegisterBuddy: org.apache.log4j
+Bundle-Localization: plugin
