@@ -66,7 +66,18 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     @Override
     public Object[] getChildren(Object element) {
         // ~MOD mzhao 2009-03-20,Feature 6066.
-        if (element instanceof IProject) {
+        if (element instanceof IWorkspaceRoot) {
+            Object currentOpenProject = null;
+            for (Object child : super.getChildren(element)) {
+                if (child instanceof IProject) {
+                    if (((IProject) child).getName().equals(PluginConstant.getRootProjectName())) {
+                        currentOpenProject = child;
+                        break;
+                    }
+                }
+            }
+            return new Object[] { currentOpenProject };
+        } else if (element instanceof IProject) {
             List<Object> projectChildren = new ArrayList<Object>();
             for (Object child : super.getChildren(element)) {
                 if (child instanceof IFolder) {

@@ -116,7 +116,7 @@ public final class DefinitionHandler {
 	// project.
 	private static final String WORKSPACE_PATH = org.talend.dataquality.PluginConstant
 			.getRootProjectName()
-			+ "/Libraries/"; //$NON-NLS-1$
+			+ "/TDQ_Libraries/"; //$NON-NLS-1$
 
 	private DefinitionHandler() {
 		this.indicatorDefinitions = loadFromFile();
@@ -531,6 +531,7 @@ public final class DefinitionHandler {
 
 			/*
 			 * (non-Javadoc)
+			 * 
 			 * 
 			 * 
 			 * @seeorg.talend.dataquality.indicators.columnset.util.ColumnsetSwitch

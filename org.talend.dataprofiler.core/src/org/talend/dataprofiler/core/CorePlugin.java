@@ -151,22 +151,22 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * DOC Zqin Comment method "setUsed".
+     * DOC Zqin Comment method "setUsed". MOD zhao 2009-03-20 feture 6066
      * 
      * @param isUsed
      */
-    public void setUsed(boolean isUsed) {
-        this.getPreferenceStore().setValue(PluginConstant.PROJECTCREATED_FLAG, isUsed);
+    public void setUsed(boolean isUsed, String projectName) {
+        this.getPreferenceStore().setValue(PluginConstant.PROJECTCREATED_FLAG + projectName, isUsed);
 
     }
 
     /**
-     * DOC Zqin Comment method "isUsed".
+     * DOC Zqin Comment method "isUsed". MOD mzhao 2009-03-20 feature 6066
      * 
      * @return
      */
-    public boolean isUsed() {
-        return this.getPreferenceStore().getBoolean(PluginConstant.PROJECTCREATED_FLAG);
+    public boolean isUsed(String projectName) {
+        return this.getPreferenceStore().getBoolean(PluginConstant.PROJECTCREATED_FLAG + projectName);
     }
 
     /**
@@ -195,9 +195,10 @@ public class CorePlugin extends AbstractUIPlugin {
     // }
 
     public void checkDQStructure() {
-        if (!getDefault().isUsed()) {
+        // MOD mzhao 2009-03-20,Feature 6066, Check weather project created or not by project name.
+        if (!getDefault().isUsed(org.talend.dataquality.PluginConstant.getRootProjectName())) {
             DQStructureManager manager = DQStructureManager.getInstance();
-            getDefault().setUsed(manager.createDQStructure());
+            getDefault().setUsed(manager.createDQStructure(), org.talend.dataquality.PluginConstant.getRootProjectName());
         }
     }
 
