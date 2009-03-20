@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -270,7 +271,12 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
             @SuppressWarnings("unchecked")
             public void chartMouseClicked(ChartMouseEvent event) {
-                if (event.getTrigger().getButton() != 3) {
+                boolean flag = event.getTrigger().getButton() != MouseEvent.BUTTON3;
+
+                chartComp.setDomainZoomable(flag);
+                chartComp.setRangeZoomable(flag);
+
+                if (flag) {
                     return;
                 }
 

@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class SimpleStatisticsExplorer extends DataExplorer {
 
-     /*
+    /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
@@ -32,6 +32,7 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         case RowCountIndicatorEnum:
         case NullCountIndicatorEnum:
         case BlankCountIndicatorEnum:
+        case DefValueCountIndicatorEnum:
             map.put(MENU_VIEW_ROWS, getRowsStatement());
             break;
 
@@ -52,6 +53,5 @@ public class SimpleStatisticsExplorer extends DataExplorer {
 
         return map;
     }
-
 
 }
