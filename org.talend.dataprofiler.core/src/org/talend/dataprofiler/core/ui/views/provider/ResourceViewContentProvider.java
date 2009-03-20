@@ -18,6 +18,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -25,6 +27,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 
@@ -33,7 +36,8 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
  */
 public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
-    // private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
+    // private static Logger log =
+    // Logger.getLogger(ResourceViewContentProvider.class);
 
     private List<IContainer> needSortContainers;
 
@@ -44,19 +48,36 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         super();
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         needSortContainers = new ArrayList<IContainer>();
-        needSortContainers.add(root.getProject(DQStructureManager.getDataProfiling()).getFolder(DQStructureManager.ANALYSIS));
-        needSortContainers.add(root.getProject(DQStructureManager.getDataProfiling()).getFolder(DQStructureManager.REPORTS));
-        needSortContainers.add(root.getProject(DQStructureManager.getMetaData()).getFolder(DQStructureManager.DB_CONNECTIONS));
+        // MOD mzhao 2009-03-20, Feature 6066.
+        needSortContainers.add(root.getProject(PluginConstant.getRootProjectName()).getFolder(
+                DQStructureManager.getDataProfiling()).getFolder(DQStructureManager.ANALYSIS));
+        needSortContainers.add(root.getProject(PluginConstant.getRootProjectName()).getFolder(
+                DQStructureManager.getDataProfiling()).getFolder(DQStructureManager.REPORTS));
+        needSortContainers.add(root.getProject(PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getMetaData())
+                .getFolder(DQStructureManager.DB_CONNECTIONS));
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionContentProvider#getChildren(java.lang.Object)
+     * @seeorg.eclipse.ui.internal.navigator.resources.workbench.
+     * ResourceExtensionContentProvider#getChildren(java.lang.Object)
      */
     @Override
     public Object[] getChildren(Object element) {
-        if (element instanceof IFile) {
+        // ~MOD mzhao 2009-03-20,Feature 6066.
+        if (element instanceof IProject) {
+            List<Object> projectChildren = new ArrayList<Object>();
+            for (Object child : super.getChildren(element)) {
+                if (child instanceof IFolder) {
+                    if (((IFolder) child).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
+                        projectChildren.add(child);
+                    }
+                }
+            }
+            return projectChildren.toArray();
+            // ~
+        } else if (element instanceof IFile) {
             IFile file = (IFile) element;
             if (file.getName().endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
@@ -86,7 +107,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             // if (element instanceof IFile) {
             // list.add((IFile) element);
             // } else {
-            // log.error("The elemnt:" + ((IFolder) element).getFullPath() + " can't display on the workspace!");
+            // log.error("The elemnt:" + ((IFolder) element).getFullPath() +
+            // " can't display on the workspace!");
             // }
         }
 
