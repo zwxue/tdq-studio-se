@@ -55,6 +55,10 @@ public class CreateUserFolderProvider extends CommonActionProvider {
     public void fillContextMenu(IMenuManager menu) {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IFolder) {
+            // MOD mzhao 2009-03-23, Feature 6066
+            if (((IFolder) obj).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
+                return;
+            }
             currentSelection = (IFolder) obj;
             try {
                 if (currentSelection.getPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY) != null) {
