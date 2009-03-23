@@ -62,9 +62,10 @@ public final class EMFSharedResources {
 	 * @return
 	 */
 	private Resource initSoftwareDeploymentResource() {
+		// MOD mzhao 2009-03-23,Feature 6066
 		URI sUri = URI
 				.createPlatformResourceURI(
-						"/"		+ PluginConstant.getRootProjectName() + "/Libraries/.softwaresystem." + SoftwaredeploymentPackage.eNAME, false); //$NON-NLS-1$
+						"/"		+ PluginConstant.getRootProjectName() + "/TDQ_Libraries/.softwaresystem." + SoftwaredeploymentPackage.eNAME, false); //$NON-NLS-1$
 		Resource resource = resourceSet.getResource(sUri, false);
 		if (resource != null) {
 			return resource;
