@@ -22,7 +22,7 @@ public class AnalysisLabelParameter extends AnalysisParameter {
 
     public static final String NUMBERIC_CORRELATION = "Numerical Correlation Analysis"; //$NON-NLS-1$
 
-    public static final String DATE_CORRELATION = "Date Correlation Analysis"; //$NON-NLS-1$
+    public static final String DATE_CORRELATION = "Time Correlation Analysis"; //$NON-NLS-1$
 
     public static final String NOMINAL_CORRELATION = "Nominal Correlation Analysis"; //$NON-NLS-1$
 
