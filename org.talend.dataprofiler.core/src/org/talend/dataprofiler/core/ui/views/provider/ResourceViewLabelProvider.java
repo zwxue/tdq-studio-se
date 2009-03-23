@@ -171,6 +171,6 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
 					.findWhereRule(file);
 			return wr.getName();
 		}
-		return super.decorateText(input, element);
+		return super.decorateText(input.replace(DQStructureManager.PREFIX_TDQ, ""), element);
 	}
 }
