@@ -23,6 +23,7 @@ import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
@@ -34,6 +35,7 @@ import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.SoundexFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
@@ -120,7 +122,13 @@ public class IndicatorCommonUtil {
                 for (Object o : valueSet) {
                     frequencyExt[i] = new FrequencyExt();
                     frequencyExt[i].setKey(o);
-                    frequencyExt[i].setValue(frequency.getCount(o));
+                    if (IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator().equals(frequency.eClass())
+                            || IndicatorsPackage.eINSTANCE.getSoundexLowFreqIndicator().equals(frequency.eClass())) {
+                        // MOD scorreia 2009-03-23 display distinct count when working with Soundex
+                        frequencyExt[i].setValue(((SoundexFreqIndicator) frequency).getDistinctCount(o));
+                    } else {
+                        frequencyExt[i].setValue(frequency.getCount(o));
+                    }
                     frequencyExt[i].setFrequency(frequency.getFrequency(o));
                     i++;
                 }

@@ -1726,11 +1726,19 @@
     <children xmi:type="notation:Node" xmi:id="_l0Q9MPa4Ed2VJp1DoAIsLA" type="1001">
       <children xmi:type="notation:Node" xmi:id="_l0m7cPa4Ed2VJp1DoAIsLA" type="4001"/>
       <children xmi:type="notation:Node" xmi:id="_l0m7cfa4Ed2VJp1DoAIsLA" type="5001">
+        <children xmi:type="notation:Node" xmi:id="_0YUD4BfSEd6B5KaghCULpw" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//indicators/SoundexFreqIndicator/valueToDistinctFreq"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_0YUD4RfSEd6B5KaghCULpw"/>
+        </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_l0m7cva4Ed2VJp1DoAIsLA"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_l0m7c_a4Ed2VJp1DoAIsLA"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_l0nigPa4Ed2VJp1DoAIsLA"/>
       </children>
       <children xmi:type="notation:Node" xmi:id="_l0nigfa4Ed2VJp1DoAIsLA" type="5002">
+        <children xmi:type="notation:Node" xmi:id="_C8NyMBfTEd6B5KaghCULpw" type="2002">
+          <element xmi:type="ecore:EOperation" href="dataquality.ecore#//indicators/SoundexFreqIndicator/getDistinctCount"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_C8NyMRfTEd6B5KaghCULpw"/>
+        </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_l0oJkPa4Ed2VJp1DoAIsLA"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_l0oJkfa4Ed2VJp1DoAIsLA"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_l0oJkva4Ed2VJp1DoAIsLA"/>
@@ -1753,7 +1761,7 @@
       </children>
       <styles xmi:type="notation:ShapeStyle" xmi:id="_oMmGgfa4Ed2VJp1DoAIsLA" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
       <element xmi:type="ecore:EClass" href="dataquality.ecore#//indicators/SoundexLowFreqIndicator"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oMmGgva4Ed2VJp1DoAIsLA" x="1027" y="1261"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oMmGgva4Ed2VJp1DoAIsLA" x="1196" y="1300"/>
     </children>
     <children xmi:type="notation:Node" xmi:id="_AjMfMAmXEd6w7eJyxVgg0Q" type="1001">
       <children xmi:type="notation:Node" xmi:id="_Aj0xUAmXEd6w7eJyxVgg0Q" type="4001"/>

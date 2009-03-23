@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
 
@@ -19,11 +21,33 @@ import org.talend.dataquality.indicators.SoundexFreqIndicator;
  * An implementation of the model object '<em><b>Soundex Freq Indicator</b></em>'.
  * <!-- end-user-doc -->
  * <p>
+ * The following features are implemented:
+ * <ul>
+ *   <li>{@link org.talend.dataquality.indicators.impl.SoundexFreqIndicatorImpl#getValueToDistinctFreq <em>Value To Distinct Freq</em>}</li>
+ * </ul>
  * </p>
  *
  * @generated
  */
 public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements SoundexFreqIndicator {
+    /**
+     * The default value of the '{@link #getValueToDistinctFreq() <em>Value To Distinct Freq</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getValueToDistinctFreq()
+     * @generated
+     * @ordered
+     */
+    protected static final HashMap<Object, Long> VALUE_TO_DISTINCT_FREQ_EDEFAULT = null;
+    /**
+     * The cached value of the '{@link #getValueToDistinctFreq() <em>Value To Distinct Freq</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getValueToDistinctFreq()
+     * @generated
+     * @ordered
+     */
+    protected HashMap<Object, Long> valueToDistinctFreq = VALUE_TO_DISTINCT_FREQ_EDEFAULT;
     private static Logger log = Logger.getLogger(SoundexFreqIndicatorImpl.class);
     
     /**
@@ -45,6 +69,113 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         return IndicatorsPackage.Literals.SOUNDEX_FREQ_INDICATOR;
     }
 
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public HashMap<Object, Long> getValueToDistinctFreq() {
+        return valueToDistinctFreq;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setValueToDistinctFreq(HashMap<Object, Long> newValueToDistinctFreq) {
+        HashMap<Object, Long> oldValueToDistinctFreq = valueToDistinctFreq;
+        valueToDistinctFreq = newValueToDistinctFreq;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ, oldValueToDistinctFreq, valueToDistinctFreq));
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT getDistinctCount(Object dataValue)
+     */
+    public Long getDistinctCount(Object dataValue) {
+        Long freq = this.valueToDistinctFreq.get(dataValue);
+        return (freq == null) ? 0L : freq;
+
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
+        switch (featureID) {
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+                return getValueToDistinctFreq();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void eSet(int featureID, Object newValue) {
+        switch (featureID) {
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+                setValueToDistinctFreq((HashMap<Object, Long>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public void eUnset(int featureID) {
+        switch (featureID) {
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+                setValueToDistinctFreq(VALUE_TO_DISTINCT_FREQ_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public boolean eIsSet(int featureID) {
+        switch (featureID) {
+            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+                return VALUE_TO_DISTINCT_FREQ_EDEFAULT == null ? valueToDistinctFreq != null : !VALUE_TO_DISTINCT_FREQ_EDEFAULT.equals(valueToDistinctFreq);
+        }
+        return super.eIsSet(featureID);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String toString() {
+        if (eIsProxy()) return super.toString();
+
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (valueToDistinctFreq: ");
+        result.append(valueToDistinctFreq);
+        result.append(')');
+        return result.toString();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -56,19 +187,23 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     public boolean storeSqlResults(List<Object[]> objects) {
         // handle case when no row is returned because there is no value.
         if (objects.isEmpty()) {
-
             if (log.isInfoEnabled()) {
-                log.info("Query for frequency table did not return any result. "
-                        + "Check the options of this indicator. Bins must contains some data.");
+                log
+                        .info("Query for soundex frequency table did not return any result. "
+                                + "Check the options of this indicator.");
             }
             this.setValueToFreq(new HashMap<Object, Long>());
             return true;
         } // else we got some values
 
-        final int nbColumns = 3;
+        final int nbColumns = 4;
+        // columns of result set are: value, soundex, count(*) , count(distinct)
         if (!checkResults(objects, nbColumns)) {
             return false;
         }
+
+        // --- count the distinct records
+        HashMap<Object, Long> mapVal2DistinctFreq = new HashMap<Object, Long>();
         HashMap<Object, Long> mapVal2Freq = new HashMap<Object, Long>();
         boolean debug = log.isDebugEnabled();
         StringBuffer matrix = debug ? new StringBuffer() : null;
@@ -78,8 +213,10 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
                 return false;
             }
             Object value = getValueFields(value2freq);
-            Long freq = Long.valueOf(String.valueOf(value2freq[nbColumns - 1]));
+            Long freq = Long.valueOf(String.valueOf(value2freq[nbColumns - 2])); 
             mapVal2Freq.put(value, freq);
+            Long distinctFreq = Long.valueOf(String.valueOf(value2freq[nbColumns - 1]));
+            mapVal2DistinctFreq.put(value, distinctFreq);
             if (debug) {
                 matrix.append("\n").append("\"").append(value).append("\"").append(",").append(freq);
             }
@@ -89,6 +226,8 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         }
 
         this.setValueToFreq(mapVal2Freq);
+        this.setValueToDistinctFreq(mapVal2DistinctFreq);
+        
         return true;
     }
 
@@ -99,8 +238,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      */
     @Override
     protected Object getValueFields(Object[] value2freq) {
-        int nbFields = value2freq.length;
-        assert (nbFields == 3);
+        assert (value2freq.length == 4);
         return value2freq[0];
     }
     

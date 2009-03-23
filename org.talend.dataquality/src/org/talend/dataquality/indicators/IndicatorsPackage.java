@@ -10733,13 +10733,22 @@ public interface IndicatorsPackage extends EPackage {
     int SOUNDEX_FREQ_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
+     * The feature id for the '<em><b>Value To Distinct Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
      * The number of structural features of the '<em>Soundex Freq Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SOUNDEX_FREQ_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+    int SOUNDEX_FREQ_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 1;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.SoundexLowFreqIndicatorImpl <em>Soundex Low Freq Indicator</em>}' class.
@@ -11047,6 +11056,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int SOUNDEX_LOW_FREQ_INDICATOR__VALUE_TO_FREQ = SOUNDEX_FREQ_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The feature id for the '<em><b>Value To Distinct Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SOUNDEX_LOW_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ = SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ;
 
     /**
      * The number of structural features of the '<em>Soundex Low Freq Indicator</em>' class.
@@ -12219,6 +12237,17 @@ public interface IndicatorsPackage extends EPackage {
     EClass getSoundexFreqIndicator();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.SoundexFreqIndicator#getValueToDistinctFreq <em>Value To Distinct Freq</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Value To Distinct Freq</em>'.
+     * @see org.talend.dataquality.indicators.SoundexFreqIndicator#getValueToDistinctFreq()
+     * @see #getSoundexFreqIndicator()
+     * @generated
+     */
+    EAttribute getSoundexFreqIndicator_ValueToDistinctFreq();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.SoundexLowFreqIndicator <em>Soundex Low Freq Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -13228,6 +13257,14 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass SOUNDEX_FREQ_INDICATOR = eINSTANCE.getSoundexFreqIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Value To Distinct Freq</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ = eINSTANCE.getSoundexFreqIndicator_ValueToDistinctFreq();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.SoundexLowFreqIndicatorImpl <em>Soundex Low Freq Indicator</em>}' class.

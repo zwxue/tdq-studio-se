@@ -357,7 +357,12 @@
       <genClasses ecoreClass="dataquality.ecore#//indicators/DefValueCountIndicator">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/DefValueCountIndicator/defaultValCount"/>
       </genClasses>
-      <genClasses ecoreClass="dataquality.ecore#//indicators/SoundexFreqIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/SoundexFreqIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/SoundexFreqIndicator/valueToDistinctFreq"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/SoundexFreqIndicator/getDistinctCount">
+          <genParameters ecoreParameter="dataquality.ecore#//indicators/SoundexFreqIndicator/getDistinctCount/dataValue"/>
+        </genOperations>
+      </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/SoundexLowFreqIndicator"/>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">

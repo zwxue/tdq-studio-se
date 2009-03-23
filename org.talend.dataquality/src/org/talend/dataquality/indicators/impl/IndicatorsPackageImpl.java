@@ -1413,6 +1413,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getSoundexFreqIndicator_ValueToDistinctFreq() {
+        return (EAttribute)soundexFreqIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getSoundexLowFreqIndicator() {
         return soundexLowFreqIndicatorEClass;
     }
@@ -1653,6 +1662,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(defValueCountIndicatorEClass, DEF_VALUE_COUNT_INDICATOR__DEFAULT_VAL_COUNT);
 
         soundexFreqIndicatorEClass = createEClass(SOUNDEX_FREQ_INDICATOR);
+        createEAttribute(soundexFreqIndicatorEClass, SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ);
 
         soundexLowFreqIndicatorEClass = createEClass(SOUNDEX_LOW_FREQ_INDICATOR);
 
@@ -1948,6 +1958,10 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getDefValueCountIndicator_DefaultValCount(), ecorePackage.getELongObject(), "defaultValCount", null, 0, 1, DefValueCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(soundexFreqIndicatorEClass, SoundexFreqIndicator.class, "SoundexFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getSoundexFreqIndicator_ValueToDistinctFreq(), this.getJavaHashMap(), "valueToDistinctFreq", null, 0, 1, SoundexFreqIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        op = addEOperation(soundexFreqIndicatorEClass, ecorePackage.getELongObject(), "getDistinctCount", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, ecorePackage.getEJavaObject(), "dataValue", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(soundexLowFreqIndicatorEClass, SoundexLowFreqIndicator.class, "SoundexLowFreqIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
