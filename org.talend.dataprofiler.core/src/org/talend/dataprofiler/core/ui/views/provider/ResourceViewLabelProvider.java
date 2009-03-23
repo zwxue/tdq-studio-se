@@ -171,6 +171,10 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
 					.findWhereRule(file);
 			return wr.getName();
 		}
-		return super.decorateText(input.replace(DQStructureManager.PREFIX_TDQ, ""), element);
+		// MOD scorreia 2009-03-23 remove prefix in DQ Repository view
+        if (element instanceof IFolder && input.startsWith(DQStructureManager.PREFIX_TDQ)) {
+            input = input.replaceFirst(DQStructureManager.PREFIX_TDQ, "");
+        }
+        return super.decorateText(input, element);
 	}
 }
