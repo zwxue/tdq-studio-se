@@ -49,6 +49,11 @@ public final class ComparatorsFactory {
 
     public static final int LOW_FREQUENCY_COMPARATOR_ID = 5;
 
+    // MOD mzhao 2009-03-23 Feature 6307
+    public static final int SOUNDEX_FREQUENCY_COMPARATOR_ID = 6;
+
+    public static final int SOUNDEX_LOW_FREQUENCY_COMPARATOR_ID = 7;
+
     /**
      * DOC zqin Comment method "sort".
      * 
@@ -95,6 +100,11 @@ public final class ComparatorsFactory {
         case FREQUENCY_COMPARATOR_ID:
             return new FrequencyIndicatorComparator();
         case LOW_FREQUENCY_COMPARATOR_ID:
+            return new LowFrequencyIndicatorComparator();
+            // MOD mzhao 2009-03-23 Feature 6307
+        case SOUNDEX_FREQUENCY_COMPARATOR_ID:
+            return new FrequencyIndicatorComparator();
+        case SOUNDEX_LOW_FREQUENCY_COMPARATOR_ID:
             return new LowFrequencyIndicatorComparator();
         default:
             return new ModelElementComparator();

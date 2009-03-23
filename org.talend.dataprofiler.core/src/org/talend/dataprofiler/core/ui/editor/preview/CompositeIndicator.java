@@ -37,8 +37,9 @@ public final class CompositeIndicator {
 
     private Map<EIndicatorChartType, List<TableIndicatorUnit>> tableSeparatedMap;
 
-    private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, patternFrequencylist,
-            patternLowFrequencyList, summaryList, patternList, sqlPatternList, modelIndicatorList;
+    private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, soundexFrequencyList,
+            soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, summaryList, patternList, sqlPatternList,
+            modelIndicatorList;
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
@@ -63,6 +64,8 @@ public final class CompositeIndicator {
         textList = new ArrayList<IndicatorUnit>();
         frequencyList = new ArrayList<IndicatorUnit>();
         lowFrequencyList = new ArrayList<IndicatorUnit>();
+        soundexFrequencyList = new ArrayList<IndicatorUnit>();
+        soundexLowFrequencyList = new ArrayList<IndicatorUnit>();
         patternFrequencylist = new ArrayList<IndicatorUnit>();
         patternLowFrequencyList = new ArrayList<IndicatorUnit>();
         summaryList = new ArrayList<IndicatorUnit>();
@@ -81,6 +84,8 @@ public final class CompositeIndicator {
         textList.clear();
         frequencyList.clear();
         lowFrequencyList.clear();
+        soundexFrequencyList.clear();
+        soundexLowFrequencyList.clear();
         patternFrequencylist.clear();
         patternLowFrequencyList.clear();
         summaryList.clear();
@@ -133,6 +138,14 @@ public final class CompositeIndicator {
             case LowFrequencyIndicatorEnum:
                 lowFrequencyList.add(one);
                 break;
+            // ~ MOD mzhao 2009-03-23 Feature 6307
+            case SoundexIndicatorEnum:
+                soundexFrequencyList.add(one);
+                break;
+            case SoundexLowIndicatorEnum:
+                soundexLowFrequencyList.add(one);
+                break;
+            // ~
             case PatternFreqIndicatorEnum:
                 patternFrequencylist.add(one);
                 break;
@@ -167,6 +180,8 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.TEXT_STATISTICS, textList);
         separatedMap.put(EIndicatorChartType.FREQUENCE_STATISTICS, frequencyList);
         separatedMap.put(EIndicatorChartType.LOW_FREQUENCE_STATISTICS, lowFrequencyList);
+        separatedMap.put(EIndicatorChartType.SOUNDEX_FREQUENCY_TABLE, soundexFrequencyList);
+        separatedMap.put(EIndicatorChartType.SOUNDEX_LOW_FREQUENCY_TABLE, soundexLowFrequencyList);
         separatedMap.put(EIndicatorChartType.PATTERN_FREQUENCE_STATISTICS, patternFrequencylist);
         separatedMap.put(EIndicatorChartType.PATTERN_LOW_FREQUENCE_STATISTICS, patternLowFrequencyList);
         separatedMap.put(EIndicatorChartType.SUMMARY_STATISTICS, summaryList);

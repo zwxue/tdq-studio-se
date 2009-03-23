@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 
 import java.util.List;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
@@ -32,5 +33,10 @@ public class LowFrequencyStatisticsState extends FrequencyTypeStates {
     protected void sortIndicator(FrequencyExt[] frequencyExt) {
         // TODO Auto-generated method stub
         ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.LOW_FREQUENCY_COMPARATOR_ID);
+    }
+
+    @Override
+    protected String getTitle() {
+        return DefaultMessagesImpl.getString("FrequencyTypeStates.LowFreqyebctStatistics");
     }
 }

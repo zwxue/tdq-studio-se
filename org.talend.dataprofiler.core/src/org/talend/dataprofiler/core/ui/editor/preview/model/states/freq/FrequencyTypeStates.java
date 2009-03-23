@@ -43,7 +43,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
     public JFreeChart getChart() {
         // TODO Auto-generated method stub
-        return TopChartFactory.createBarChart(DefaultMessagesImpl.getString("FrequencyTypeStates.FreqyebctStatistics"), getDataset()); //$NON-NLS-1$
+        return TopChartFactory.createBarChart(getTitle(), getDataset()); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -101,7 +101,9 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity
+                .setFieldNames(new String[] {
+                        DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         entity.setFieldWidths(new Integer[] { 200, 150, 150 });
         return entity;
     }
@@ -119,4 +121,6 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     }
 
     protected abstract void sortIndicator(FrequencyExt[] frequencyExt);
+
+    protected abstract String getTitle();
 }

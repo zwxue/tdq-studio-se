@@ -105,6 +105,9 @@ public class IndicatorCommonUtil {
             case LowFrequencyIndicatorEnum:
             case PatternFreqIndicatorEnum:
             case PatternLowFreqIndicatorEnum:
+                // MOD mzhao 2009-03-23,Feature 6307
+            case SoundexIndicatorEnum:
+            case SoundexLowIndicatorEnum:
                 FrequencyIndicator frequency = (FrequencyIndicator) indicator;
                 Set<Object> valueSet = frequency.getDistinctValues();
                 if (valueSet == null) {

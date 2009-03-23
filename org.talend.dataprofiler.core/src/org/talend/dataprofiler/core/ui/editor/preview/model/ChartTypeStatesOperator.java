@@ -27,6 +27,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.Frequenc
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.LowFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.PatternFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.PatternLowFrequencyStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.SoundexFrequencyTableState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.SoundexLowFrequencyTableState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.REGEXPatternStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.SQLPatternStatisticsState;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -71,7 +73,11 @@ public final class ChartTypeStatesOperator {
 
         case SUMMARY_STATISTICS:
             return new SummaryStatisticsState(units);
-
+            // MOD mzhao 2009-03-23, Soundex frequency.
+        case SOUNDEX_FREQUENCY_TABLE:
+            return new SoundexFrequencyTableState(units);
+        case SOUNDEX_LOW_FREQUENCY_TABLE:
+            return new SoundexLowFrequencyTableState(units);
         default:
             return null;
         }
