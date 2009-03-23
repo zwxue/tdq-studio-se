@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -23,6 +24,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
@@ -35,6 +37,8 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
  * DOC rli class global comment. Detailled comment
  */
 public class ResourceViewContentProvider extends WorkbenchContentProvider {
+
+    private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
 
     // private static Logger log =
     // Logger.getLogger(ResourceViewContentProvider.class);
@@ -76,18 +80,19 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     }
                 }
             }
-            return new Object[] { currentOpenProject };
-        } else if (element instanceof IProject) {
-            List<Object> projectChildren = new ArrayList<Object>();
-            for (Object child : super.getChildren(element)) {
-                if (child instanceof IFolder) {
-                    if (((IFolder) child).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
-                        projectChildren.add(child);
+            List<Object> folders = new ArrayList<Object>();
+            try {
+                Object[] rootFolders = new Object[0];
+                rootFolders = ((IProject) currentOpenProject).members(false);
+                for (Object folder : rootFolders) {
+                    if (folder instanceof IFolder && ((IFolder) folder).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
+                        folders.add(folder);
                     }
                 }
+            } catch (CoreException e) {
+                log.error(e);
             }
-            return projectChildren.toArray();
-            // ~
+            return folders.toArray();
         } else if (element instanceof IFile) {
             IFile file = (IFile) element;
             if (file.getName().endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
