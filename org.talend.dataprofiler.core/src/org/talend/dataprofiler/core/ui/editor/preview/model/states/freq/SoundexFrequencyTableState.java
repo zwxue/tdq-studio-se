@@ -14,9 +14,11 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
+import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 
 /**
@@ -39,4 +41,18 @@ public class SoundexFrequencyTableState extends FrequencyTypeStates {
         return DefaultMessagesImpl.getString("FrequencyTypeStates.SoundexFreqyebctStatistics");
     }
 
+    @Override
+    protected ITableLabelProvider getLabelProvider() {
+        return new SoundexBaseChartTableLabelProvider();
+    }
+
+    @Override
+    protected TableStructureEntity getTableStructure() {
+        TableStructureEntity entity = new TableStructureEntity();
+        entity
+                .setFieldNames(new String[] {
+                        DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.distinctCount"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity.setFieldWidths(new Integer[] { 180, 120, 100, 100 });
+        return entity;
+    }
 }

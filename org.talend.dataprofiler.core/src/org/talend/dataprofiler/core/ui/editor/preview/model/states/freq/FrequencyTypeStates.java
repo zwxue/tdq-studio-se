@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructur
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
@@ -70,7 +71,8 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setIndicator(unit.getIndicator());
-
+                    // MOD mzhao feature:6307 display soundex distinct count and real count.
+                    entity.setKey(freqExt.getKey());
                     entity.setLabelNull(freqExt.getKey() == null);
                     entity.setLabel(keyLabel);
                     entity.setValue(String.valueOf(freqExt.getValue()));
@@ -123,4 +125,30 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     protected abstract void sortIndicator(FrequencyExt[] frequencyExt);
 
     protected abstract String getTitle();
+
+    /**
+     * 
+     * DOC mzhao FrequencyTypeStates, soundex frequency label provider.Feature: 6307
+     */
+    protected class SoundexBaseChartTableLabelProvider extends BaseChartTableLabelProvider {
+
+        @Override
+        public String getColumnText(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+
+            switch (columnIndex) {
+            case 0:
+                return entity.getLabel();
+            case 1:
+                return entity.getValue();
+            case 2:
+                return String.valueOf(((FrequencyIndicator) entity.getIndicator()).getCount(entity.getKey()));
+            case 3:
+                return entity.getPersent();
+            default:
+                return ""; //$NON-NLS-1$
+            }
+        }
+
+    }
 }
