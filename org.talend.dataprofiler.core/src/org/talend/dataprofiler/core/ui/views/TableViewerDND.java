@@ -94,13 +94,17 @@ public abstract class TableViewerDND {
 
             @Override
             public void dragOver(DropTargetEvent event) {
-                receiver.dragOver(event);
+                if (receiver != null) {
+                    receiver.dragOver(event);
+                }
             }
 
             @Override
             public void dropAccept(DropTargetEvent event) {
                 super.dropAccept(event);
-                receiver.doDropValidation(event, commonViewer);
+                if (receiver != null) {
+                    receiver.doDropValidation(event, commonViewer);
+                }
             }
 
             @Override
@@ -122,7 +126,9 @@ public abstract class TableViewerDND {
                     }
 
                 }
-                receiver.drop(event, commonViewer, index);
+                if (receiver != null) {
+                    receiver.drop(event, commonViewer, index);
+                }
             }
         };
 
@@ -202,11 +208,16 @@ public abstract class TableViewerDND {
             }
 
             TreeItem item = (TreeItem) event.item;
-            TableIndicator data = (TableIndicator) item.getData(AnalysisTableTreeViewer.TABLE_INDICATOR_KEY);
-            AnalysisTableTreeViewer viewer = (AnalysisTableTreeViewer) item.getParent().getData(
-                    AnalysisTableTreeViewer.VIEWER_KEY);
+            if (item != null) {
+                Object obj = item.getData(AnalysisTableTreeViewer.TABLE_INDICATOR_KEY);
+                if (obj != null && obj instanceof TableIndicator) {
+                    TableIndicator data = (TableIndicator) obj;
+                    AnalysisTableTreeViewer viewer = (AnalysisTableTreeViewer) item.getParent().getData(
+                            AnalysisTableTreeViewer.VIEWER_KEY);
 
-            viewer.dropWhereRules(data, files, index, item);
+                    viewer.dropWhereRules(data, files, index, item);
+                }
+            }
         }
 
         public void dragOver(DropTargetEvent event) {

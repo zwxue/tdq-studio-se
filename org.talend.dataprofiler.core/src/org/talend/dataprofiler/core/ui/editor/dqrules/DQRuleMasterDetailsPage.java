@@ -518,6 +518,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
                         DropTarget target = (DropTarget) event.widget;
                         Text text = (Text) target.getControl();
                         text.setText(column.getName());
+
+                        setDirty(true);
                     }
                 }
             }
