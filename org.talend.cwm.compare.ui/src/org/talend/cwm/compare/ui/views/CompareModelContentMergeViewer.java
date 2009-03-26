@@ -15,6 +15,7 @@ package org.talend.cwm.compare.ui.views;
 
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.internal.ChangePropertyAction;
 import org.eclipse.core.resources.IFile;
@@ -33,6 +34,7 @@ import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -48,7 +50,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 @SuppressWarnings("restriction")
 public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
-
+	private static Logger log = Logger
+			.getLogger(CompareModelContentMergeViewer.class);
 	private Object selectedOjbect = null;
 
 	public CompareModelContentMergeViewer(Composite parent,
@@ -133,12 +136,14 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 			Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH
 					.doSwitch(((AbstractDatabaseFolderNode) selectedOjbect)
 							.getParent());
+
 			if (ctatlogSwtich != null) {
 				resourceFile = PrvResourceFileHelper.getInstance()
 						.findCorrespondingFile(
 								DataProviderHelper
 										.getTdDataProvider(ctatlogSwtich));
-				modelElement = ctatlogSwtich;
+				modelElement = DataProviderHelper
+						.getTdDataProvider(ctatlogSwtich);
 			}
 			ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
 					.doSwitch(((AbstractDatabaseFolderNode) selectedOjbect)
@@ -147,14 +152,17 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 				resourceFile = PrvResourceFileHelper.getInstance()
 						.findCorrespondingFile(
 								DataProviderHelper.getDataProvider(columnSet));
-				modelElement = columnSet;
+				modelElement = DataProviderHelper.getDataProvider(columnSet);
 			}
 		}
 		if (modelElement != null && resourceFile != null) {
-			String dialogMessage = "impacted analyses";
+			String titleMessage = DefaultMessagesImpl
+					.getString("CompareModelContentMergeViewer.ImpactAnalyses");
+
 			int showDialog = DeleteModelElementConfirmDialog
 					.showElementImpactDialog(null,
-							new ModelElement[] { modelElement }, dialogMessage);
+							new ModelElement[] { modelElement }, titleMessage,
+							titleMessage);
 			if (showDialog == Window.OK) {
 				EObjectHelper
 						.removeDependencys(new IResource[] { resourceFile });
@@ -165,11 +173,15 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
 		int diffItemsCount = ((ModelCompareInput) getInput()).getDiffAsList()
 				.size();
-		super.copy(leftToRight);
-		// MOD mzhao 2009-03-11 copy from right to left.need reload the
-		// currently selected element.
-		if (!leftToRight && diffItemsCount > 0) {
-			new ReloadDatabaseAction(selectedOjbect, null).run();
+		try {
+			super.copy(leftToRight);
+			// MOD mzhao 2009-03-11 copy from right to left.need reload the
+			// currently selected element.
+			if (!leftToRight && diffItemsCount > 0) {
+				new ReloadDatabaseAction(selectedOjbect, null).run();
+			}
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 	}

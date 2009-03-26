@@ -21,6 +21,7 @@ import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.editor.ModelElementCompareEditorLauncher;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -29,31 +30,43 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class UiHandler implements IUIHandler {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.compare.factory.IUIHandler#popComparisonUI(org.eclipse.core.runtime.IPath)
-     */
-    public void popComparisonUI(final IPath diffResourcePath, String dbName, Object selectedObject) throws ReloadCompareException {
-        new ModelElementCompareEditorLauncher(dbName, selectedObject).open(diffResourcePath);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.talend.cwm.compare.factory.IUIHandler#popComparisonUI(org.eclipse
+	 * .core.runtime.IPath)
+	 */
+	public void popComparisonUI(final IPath diffResourcePath, String dbName,
+			Object selectedObject) throws ReloadCompareException {
+		new ModelElementCompareEditorLauncher(dbName, selectedObject)
+				.open(diffResourcePath);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.compare.factory.IUIHandler#popRemoveElement(org.talend.cwm.softwaredeployment.TdDataProvider)
-     */
-    public void popRemoveElement(final TdDataProvider provider) {
-        // TODO Auto-generated method stub
-        final Display display = PlatformUI.getWorkbench().getDisplay();
-        display.asyncExec(new Runnable() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.talend.cwm.compare.factory.IUIHandler#popRemoveElement(org.talend
+	 * .cwm.softwaredeployment.TdDataProvider)
+	 */
+	public void popRemoveElement(final TdDataProvider provider) {
+		// TODO Auto-generated method stub
+		final Display display = PlatformUI.getWorkbench().getDisplay();
+		display.asyncExec(new Runnable() {
 
-            public void run() {
-
-                DeleteModelElementConfirmDialog.showElementImpactDialog(new Shell(display), new ModelElement[] { provider },
-                        Messages.getString("UiHandler.followingAnalysisBeImpact")); //$NON-NLS-1$
-            }
-        });
-    }
+			public void run() {
+				String titleMessage = DefaultMessagesImpl
+						.getString("DeleteModelElementConfirmDialog.confirmElementDelete");
+				DeleteModelElementConfirmDialog
+						.showElementImpactDialog(
+								new Shell(display),
+								new ModelElement[] { provider },
+								titleMessage,
+								Messages
+										.getString("UiHandler.followingAnalysisBeImpact")); //$NON-NLS-1$
+			}
+		});
+	}
 
 }

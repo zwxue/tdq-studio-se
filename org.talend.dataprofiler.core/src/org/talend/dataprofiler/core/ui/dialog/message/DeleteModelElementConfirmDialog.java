@@ -220,12 +220,22 @@ public class DeleteModelElementConfirmDialog {
         }
     }
 
-    public static int showElementImpactDialog(Shell parentShell, ModelElement[] modelElements, String dialogMessage) {
+    /**
+     * 
+     * MOD mzhao 2009-03-26, Impact existing analyses when copy remote structure from remote to local on comparison
+     * editor.
+     * 
+     * @param parentShell
+     * @param modelElements
+     * @param dialogMessage
+     * @return
+     */
+    public static int showElementImpactDialog(Shell parentShell, ModelElement[] modelElements, String dialogTitle,
+            String dialogMessage) {
         addDenpendencyElements(modelElements);
         ImpactNode[] impactElements = getImpactNodes();
         if (impactElements.length > 0) {
-            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, DefaultMessagesImpl
-                    .getString("DeleteModelElementConfirmDialog.confirmElementDelete"), null, dialogMessage, //$NON-NLS-1$
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
