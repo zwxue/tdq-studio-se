@@ -43,6 +43,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public final class DataProviderHelper {
 
+    public static final String USER = "user";
+
     public static final String PASSWORD = "password"; //$NON-NLS-1$
 
     public static final String PASSPHRASE = "99ZwBDt1L9yMX2ApJx fnv94o99OeHbCGuIHTy22 V9O6cZ2i374fVjdV76VX9g49DG1r3n90hT5c1"; //$NON-NLS-1$
@@ -362,6 +364,21 @@ public final class DataProviderHelper {
         }
         CryptoHelper cryptoHelper = new CryptoHelper(PASSPHRASE);
         return cryptoHelper.decrypt(encryptedPassword);
+    }
+
+    public static String getClearTextUser(DataProvider dataProvider) {
+        TypedReturnCode<TdProviderConnection> rc = getTdProviderConnection(dataProvider);
+        return rc.isOk() ? getClearTextUser(rc.getObject()) : null;
+    }
+
+    /**
+     * DOC bZhou Comment method "getClearTextUser".
+     * 
+     * @param provConnection
+     * @return
+     */
+    public static String getClearTextUser(TdProviderConnection provConnection) {
+        return TaggedValueHelper.getValue(USER, provConnection);
     }
 
     /**
