@@ -142,12 +142,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
         TdProviderConnection connection = DataProviderHelper.getTdProviderConnection(tdDataProvider).getObject();
-        String loginValue = TaggedValueHelper.getValue(PluginConstant.USER_PROPERTY, connection);
+        String loginValue = DataProviderHelper.getClearTextUser(connection);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
 
         // MOD scorreia 2009-01-09 handle encrypted password
         String passwordValue = DataProviderHelper.getClearTextPassword(connection);
-        // TaggedValueHelper.getValue(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, connection);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
