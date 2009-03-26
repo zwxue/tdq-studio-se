@@ -48,7 +48,7 @@ public final class DomainHelper {
 
     private DomainHelper() {
     }
-    
+
     /**
      * The available pattern types.
      */
@@ -478,27 +478,31 @@ public final class DomainHelper {
      */
     public static String getExpressionType(Pattern pattern) {
         if (pattern != null) {
-            PatternComponent component = pattern.getComponents().get(0);
-            if (component == null) {
-                return null;
-            } else {
-                RegularExpression regexp = DataqualitySwitchHelper.REGULAR_EXPR_SWITCH.doSwitch(component);
-                if (regexp != null) {
-                    String expressionType = regexp.getExpressionType();
-                    if (StringUtils.isEmpty(expressionType)) {
-                        // identify the expression from the path where it is stored (useful for old patterns created in
-                        // version 1.1 and before)
-                        final Resource resource = regexp.eResource();
-                        if (resource != null) {
-                            // do not replace these strings. They are the folder names in version 1.1
-                            if (resource.getURI().toString().contains(SQL_PATTERN_FOLDER)) {
-                                expressionType = ExpressionType.SQL_LIKE.getLiteral();
-                            } else if (resource.getURI().toString().contains(PATTERN_FOLDER)) {
-                                expressionType = ExpressionType.REGEXP.getLiteral();
+            EList<PatternComponent> components = pattern.getComponents();
+            if (!components.isEmpty()) {
+                PatternComponent component = components.get(0);
+                if (component == null) {
+                    return null;
+                } else {
+                    RegularExpression regexp = DataqualitySwitchHelper.REGULAR_EXPR_SWITCH.doSwitch(component);
+                    if (regexp != null) {
+                        String expressionType = regexp.getExpressionType();
+                        if (StringUtils.isEmpty(expressionType)) {
+                            // identify the expression from the path where it is stored (useful for old patterns created
+                            // in
+                            // version 1.1 and before)
+                            final Resource resource = regexp.eResource();
+                            if (resource != null) {
+                                // do not replace these strings. They are the folder names in version 1.1
+                                if (resource.getURI().toString().contains(SQL_PATTERN_FOLDER)) {
+                                    expressionType = ExpressionType.SQL_LIKE.getLiteral();
+                                } else if (resource.getURI().toString().contains(PATTERN_FOLDER)) {
+                                    expressionType = ExpressionType.REGEXP.getLiteral();
+                                }
                             }
                         }
+                        return expressionType;
                     }
-                    return expressionType;
                 }
             }
         }
