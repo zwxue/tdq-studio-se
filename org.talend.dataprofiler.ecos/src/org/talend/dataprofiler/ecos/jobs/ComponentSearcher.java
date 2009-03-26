@@ -1,0 +1,129 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2009 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dataprofiler.ecos.jobs;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.talend.dataprofiler.ecos.model.IEcosComponent;
+import org.talend.dataprofiler.ecos.model.IRevision;
+import org.talend.dataprofiler.ecos.model.RevisionInfo;
+import org.talend.dataprofiler.ecos.model.impl.EcosComponent;
+import org.talend.dataprofiler.ecos.model.impl.Revision;
+import org.talend.dataprofiler.ecos.service.EcosystemService;
+
+/**
+ * Search for component extensions.
+ */
+public class ComponentSearcher {
+
+    private static final String RELEASE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"; //$NON-NLS-1$
+
+    private static DateFormat formatter = new SimpleDateFormat(RELEASE_DATE_FORMAT);
+
+    private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
+
+    /**
+     * Find available components.
+     * 
+     * @param version The tos version.
+     * @param language The project language.
+     * @return
+     */
+    public static List<IEcosComponent> getAvailableComponentExtensions(String version, String categry) {
+        return getAvailableComponentExtensions(version, categry, false);
+    }
+
+    /**
+     * DOC bZhou Comment method "getAvailableComponentExtensions".
+     * 
+     * @param version
+     * @param categry
+     * @param reload
+     * @return
+     */
+    public static List<IEcosComponent> getAvailableComponentExtensions(String version, String categry, boolean reload) {
+        if (extensions.isEmpty() || reload) {
+            try {
+                List<RevisionInfo> revisions = EcosystemService.getRevisionList(categry, version);
+
+                Map<String, IEcosComponent> extensionsMap = new HashMap<String, IEcosComponent>();
+
+                for (RevisionInfo revision : revisions) {
+                    IEcosComponent extension = extensionsMap.get(revision.getExtension_name());
+                    if (extension == null) {
+                        extension = new EcosComponent();
+                        extension.setName(revision.getExtension_name());
+                        extension.setAuthor(revision.getAuthor_name());
+                        extension.setCategry(categry);
+                        extension.setDescription(revision.getExtension_description());
+
+                        extensionsMap.put(extension.getName(), extension);
+                        extensions.add(extension);
+                    }
+
+                    IRevision rev = convertRevision(revision);
+                    extension.getRevisions().add(rev);
+                    if (extension.getLatestRevision() == null || extension.getLatestRevision().getDate().before(rev.getDate())) {
+                        // assumes that the revision with latest release date is the newest one.
+                        extension.setLatestRevision(rev);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return extensions;
+
+    }
+
+    /**
+     * Convert the web service returned value to our model object.
+     * 
+     * @param revision The message returned from web service method call.
+     * @return
+     * @throws ParseException
+     */
+    private static IRevision convertRevision(RevisionInfo revision) throws ParseException {
+        IRevision rev = new Revision();
+        rev.setDate(formatter.parse(revision.getRevision_date()));
+        rev.setName(revision.getRevision_name());
+        rev.setUrl(revision.getDownload_url());
+        rev.setDescription(revision.getRevision_description());
+        rev.setId(revision.getRevision_id());
+        rev.setFileName(revision.getFilename());
+        return rev;
+    }
+
+    /**
+     * Find the components that have been installed.
+     * 
+     * @param components
+     * @return
+     */
+    public static List<IEcosComponent> getInstalledExtensions(List<IEcosComponent> components) {
+        List<IEcosComponent> installed = new ArrayList<IEcosComponent>();
+        for (IEcosComponent component : components) {
+            if (component.getInstalledLocation() != null) {
+                installed.add(component);
+            }
+        }
+        return installed;
+
+    }
+}
