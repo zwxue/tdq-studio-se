@@ -123,13 +123,16 @@
                  <instanceof value="org.talend.dq.nodes.foldernode.IFolderNode"/>
                  <instanceof
                        value="org.eclipse.emf.ecore.EObject">
-                 </instanceof> 
+                 </instanceof>
              </or>
            </triggerPoints> 
            <possibleChildren> 
               <or> 
                 <instanceof value="org.eclipse.emf.ecore.resource.Resource"/>
-                <instanceof value="org.eclipse.emf.ecore.EObject"/>  
+                <instanceof value="org.eclipse.emf.ecore.EObject"/>
+                <instanceof
+                      value="org.talend.dataprofiler.ecos.model.IEcosComponent">
+                </instanceof>  
               </or> 
            </possibleChildren>   
       </navigatorContent>    
@@ -140,14 +143,17 @@
             activeByDefault="true"
 			            contentProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider"
             			labelProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider"			
-            id="org.talend.dataprofiler.core.DQContent.resourceContent">         
+            id="org.talend.dataprofiler.core.DQContent.resourceContent">
          <enablement>
-		         <or>         
-		            <adapt type="org.eclipse.core.resources.IProject" /> 
-		            <instanceof 
-		                  	value="org.eclipse.core.resources.IResource" /> 
-		         </or>
-         </enablement>          
+            <or>
+               <adapt
+                     type="org.eclipse.core.resources.IProject">
+               </adapt>
+               <instanceof
+                     value="org.eclipse.core.resources.IResource">
+               </instanceof>
+            </or>
+         </enablement>
         <dropAssistant
               class="org.talend.dataprofiler.core.ui.views.resources.ResourceDropAdapterAssistant"
               id="org.talend.dataprofiler.core.ui.views.resources.ResourceDropAdapterAssistant">
@@ -378,6 +384,15 @@
                <adapt
                      type="org.eclipse.core.resources.IFolder">
                </adapt>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.ImportRemotePatternActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.ImportRemotePatternActionProvider">
+         <enablement>
+            <adapt
+                  type="org.talend.dataprofiler.ecos.model.IEcosComponent">
+            </adapt>
          </enablement>
       </actionProvider>
       <actionProvider

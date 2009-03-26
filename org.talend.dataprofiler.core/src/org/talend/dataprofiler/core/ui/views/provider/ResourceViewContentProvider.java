@@ -26,9 +26,11 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -98,6 +100,13 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             if (file.getName().endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 return new Object[] { pattern };
+            }
+        } else if (element instanceof IFolder) {
+            IFolder folder = (IFolder) element;
+            if (folder.getName().equals(DQStructureManager.EXCHANGE)) {
+                String category = "1";
+                String version = CorePlugin.getDefault().getProductVersion().toString();
+                return ComponentSearcher.getAvailableComponentExtensions(version, category).toArray();
             }
         }
         if (needSortContainers.contains(element)) {

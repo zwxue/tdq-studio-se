@@ -14,11 +14,19 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import jxl.Cell;
+import jxl.CellType;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.read.biff.BiffException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -40,11 +48,16 @@ import com.csvreader.CsvReader;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class ImportFactory {
+public final class ImportFactory {
 
     private static final char CURRENT_SEPARATOR = '\t';
 
-    static void importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip, boolean rename) {
+    private ImportFactory() {
+
+    }
+
+    public static void importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
+            boolean rename) {
 
         Set<String> names = PatternUtilities.getAllPatternNames(selectionFolder);
 
@@ -98,6 +111,68 @@ public class ImportFactory {
                 e.printStackTrace();
             }
         }
+
+        if ("xls".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+            Map<Integer, PatternLanguageType> expressionMap = new HashMap<Integer, PatternLanguageType>();
+            try {
+                WorkbookSettings settings = new WorkbookSettings();
+                settings.setEncoding("UTF-8"); //$NON-NLS-1$
+                Workbook rwb = Workbook.getWorkbook(importFile, settings);
+                Sheet[] sheets = rwb.getSheets();
+                for (Sheet sheet : sheets) {
+                    Cell[] headerRow = sheet.getRow(0);
+
+                    for (Cell cell : headerRow) {
+                        for (PatternLanguageType languageType : PatternLanguageType.values()) {
+                            if (cell.getContents().equals(languageType.getExcelEnum().getLiteral())) {
+                                expressionMap.put(cell.getColumn(), languageType);
+                            }
+                        }
+                    }
+
+                    for (int i = 1; i < sheet.getRows(); i++) {
+                        Cell[] row = sheet.getRow(i);
+                        Cell cell = row[0];
+                        if (CellType.LABEL.equals(cell.getType())) {
+                            String contents = cell.getContents();
+                            if (names.contains(contents)) {
+                                if (skip) {
+                                    continue;
+                                }
+                                if (rename) {
+                                    contents = contents + "(" + new Date() + ")";
+                                }
+                            }
+
+                            PatternParameters patternParameters = new ImportFactory().new PatternParameters();
+
+                            patternParameters.name = contents;
+                            patternParameters.auther = row[6].getContents();
+                            patternParameters.description = row[2].getContents();
+                            patternParameters.purpose = row[1].getContents();
+                            patternParameters.status = DevelopmentStatus.DRAFT.getLiteral();
+
+                            for (int columnIndex : expressionMap.keySet()) {
+                                String rowContent = row[columnIndex].getContents();
+                                if (!rowContent.equals("")) {
+                                    patternParameters.regex.put(expressionMap.get(columnIndex).getLiteral(), rowContent);
+                                }
+                            }
+
+                            createAndStorePattern(patternParameters, selectionFolder, type);
+
+                            names.add(contents);
+                        }
+                    }
+                }
+
+                rwb.close();
+            } catch (BiffException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static void createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
@@ -105,7 +180,7 @@ public class ImportFactory {
         Pattern pattern = PatternResourceFileHelper.getInstance().createPattern(parameters.name, parameters.auther,
                 parameters.description, parameters.purpose, parameters.status);
 
-        for (String key : parameters.regex.keySet()) {            
+        for (String key : parameters.regex.keySet()) {
             RegularExpression regularExpr = BooleanExpressionHelper.createRegularExpression(key, parameters.regex.get(key), type);
             pattern.getComponents().add(regularExpr);
         }

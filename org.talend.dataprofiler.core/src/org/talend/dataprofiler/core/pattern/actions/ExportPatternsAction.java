@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.pattern;
+package org.talend.dataprofiler.core.pattern.actions;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -19,7 +19,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.dataprofiler.core.pattern.ExportPatternsWizard;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -28,22 +28,27 @@ public class ExportPatternsAction extends Action {
 
     private IFolder folder;
 
-    private ExpressionType type;
+    private boolean isForExchange;
 
     /**
      * DOC zqin ExportPatternsAction constructor comment.
      */
-    public ExportPatternsAction(IFolder folder, ExpressionType type) {
-        setText(DefaultMessagesImpl.getString("ExportPatternsAction.exportPattern")); //$NON-NLS-1$
+    public ExportPatternsAction(IFolder folder, boolean isForExchange) {
+        if (isForExchange) {
+            setText("Export for Talend Exchange");
+        } else {
+            setText(DefaultMessagesImpl.getString("ExportPatternsAction.exportPattern")); //$NON-NLS-1$
+        }
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.PATTERN_REG));
+
         this.folder = folder;
-        this.type = type;
+        this.isForExchange = isForExchange;
     }
 
     @Override
     public void run() {
 
-        ExportPatternsWizard wizard = new ExportPatternsWizard(folder, type);
+        ExportPatternsWizard wizard = new ExportPatternsWizard(folder, isForExchange);
         WizardDialog dialog = new WizardDialog(null, wizard);
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {

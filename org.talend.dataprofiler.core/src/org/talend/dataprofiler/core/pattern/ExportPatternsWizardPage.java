@@ -25,6 +25,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
@@ -49,27 +50,23 @@ public class ExportPatternsWizardPage extends WizardPage {
 
     private CheckboxTreeViewer selectedPatternsTree;
 
-    public ProgressBar getProgressBar() {
-        return progressBar;
-    }
-
-    public CheckboxTreeViewer getSelectedPatternsTree() {
-        return selectedPatternsTree;
-    }
-
-    public String getTargetFile() {
-        return fileText.getText();
-    }
+    private boolean isForExchange;
 
     /**
      * DOC zqin ExportPatternsWizardPage constructor comment.
      */
-    public ExportPatternsWizardPage(IFolder folder) {
+    public ExportPatternsWizardPage(IFolder folder, boolean isForExchange) {
         super(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternWizardPage")); //$NON-NLS-1$
 
-        setTitle(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternToFile")); //$NON-NLS-1$
-        setDescription(DefaultMessagesImpl.getString("ExportPatternsWizardPage.chooseFileToExportPattern")); //$NON-NLS-1$
+        if (isForExchange) {
+            setTitle("Export patterns for Talend Exchange");
+            setDescription("Choose a folder where to export the patterns.");
+        } else {
+            setTitle(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternToFile")); //$NON-NLS-1$
+            setDescription(DefaultMessagesImpl.getString("ExportPatternsWizardPage.chooseFileToExportPattern")); //$NON-NLS-1$
+        }
 
+        this.isForExchange = isForExchange;
         this.folder = folder;
     }
 
@@ -91,7 +88,11 @@ public class ExportPatternsWizardPage extends WizardPage {
         fileComp.setLayout(layout);
         fileComp.setLayoutData(gridData);
         Label label = new Label(fileComp, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("ExportPatternsWizardPage.selectFile")); //$NON-NLS-1$
+        if (isForExchange) {
+            label.setText("Select a folder:");
+        } else {
+            label.setText(DefaultMessagesImpl.getString("ExportPatternsWizardPage.selectFile")); //$NON-NLS-1$
+        }
         fileText = new Text(fileComp, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gridData);
@@ -107,17 +108,28 @@ public class ExportPatternsWizardPage extends WizardPage {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
-                dialog.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
-                if (fileText.getText() != null) {
-                    dialog.setFileName(fileText.getText());
-                }
-                String path = dialog.open();
-                if (path != null) {
-                    if (!path.endsWith(".csv")) { //$NON-NLS-1$
-                        path = path + ".csv"; //$NON-NLS-1$
+                String path = "";
+
+                if (isForExchange) {
+                    DirectoryDialog dialog = new DirectoryDialog(Display.getDefault().getActiveShell());
+                    if (fileText.getText() != null) {
+                        dialog.setFilterPath(fileText.getText());
+                    }
+                    path = dialog.open();
+                } else {
+                    FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
+                    dialog.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
+                    if (fileText.getText() != null) {
+                        dialog.setFileName(fileText.getText());
                     }
 
+                    path = dialog.open();
+                    if (path != null && !path.endsWith(".csv")) { //$NON-NLS-1$
+                        path = path + ".csv"; //$NON-NLS-1$
+                    }
+                }
+
+                if (path != null) {
                     fileText.setText(path);
                 }
             }
@@ -163,4 +175,15 @@ public class ExportPatternsWizardPage extends WizardPage {
         setControl(container);
     }
 
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public CheckboxTreeViewer getSelectedPatternsTree() {
+        return selectedPatternsTree;
+    }
+
+    public String getTargetFile() {
+        return fileText.getText();
+    }
 }

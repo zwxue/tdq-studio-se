@@ -18,6 +18,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
@@ -43,6 +44,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 // get the icon for primary key
                 return ImageLib.getImage(ImageLib.PK_COLUMN);
             }
+        } else if (element instanceof IEcosComponent) {
+            return ImageLib.getImage(ImageLib.EXCHANGE);
         }
         return super.getImage(element);
     }
@@ -55,6 +58,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             }
 
             return ((IFolderNode) element).getName();
+        } else if (element instanceof IEcosComponent) {
+            return ((IEcosComponent) element).getName();
         }
 
         // PTODO qzhang fixed bug 4176: Display expressions as children of the patterns

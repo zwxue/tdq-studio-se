@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core Plug-in
 Bundle-SymbolicName: org.talend.dataprofiler.core; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.3.qualifier
 Bundle-Activator: org.talend.dataprofiler.core.CorePlugin
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.eclipse.ui,
@@ -30,10 +30,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.help.ui,
  org.talend.dataprofiler.libraries,
  org.eclipse.ui.editors,
- org.apache.log4j;bundle-version="1.2.13",
- org.eclipse.ui.browser;bundle-version="3.2.200",
+ org.apache.log4j,
+ org.eclipse.ui.browser,
  org.talend.libraries.javacsv,
- org.talend.libraries.jung
+ org.talend.libraries.jung,
+ org.talend.dataprofiler.ecos
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,

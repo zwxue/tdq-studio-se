@@ -135,6 +135,9 @@ public final class ImageLib {
     /** Icon for refresh workspace. */
     public static final String REFRESH_SPACE = "refresh.gif"; //$NON-NLS-1$
 
+    /** Icon for Talend Exchange folder. */
+    public static final String EXCHANGE = "ecosystem_view.gif";
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */

@@ -16,33 +16,33 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.utils.io.FilesUtils;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class ExportPatternsWizard extends Wizard {
 
-    private IFolder folder;
+    private static Logger log = Logger.getLogger(ExportPatternsWizard.class);
 
-    private ExpressionType type;
+    private IFolder folder;
 
     private ExportPatternsWizardPage page;
 
-    /**
-     * DOC zqin ExportPatternsWizard constructor comment.
-     */
-    public ExportPatternsWizard(IFolder folder, ExpressionType type) {
+    private boolean isForExchange;
+
+    public ExportPatternsWizard(IFolder folder, boolean isForExchange) {
         this.folder = folder;
-        this.type = type;
+        this.isForExchange = isForExchange;
     }
 
     /*
@@ -70,14 +70,23 @@ public class ExportPatternsWizard extends Wizard {
 
         boolean isContinue = true;
 
-        if (file.exists()) {
+        if (file.exists() && !isForExchange) {
             isContinue = MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("ExportPatternsWizard.fileAlreadyExist")); //$NON-NLS-1$
         }
 
         if (isContinue) {
+            ExportFactory.export(file, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
 
-            ExportFactory.exportToFile(seletedPatterns.toArray(new Pattern[seletedPatterns.size()]), file, type);
+            if (isForExchange && file.isDirectory()) {
+                for (File patternFile : file.listFiles()) {
+                    try {
+                        FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            }
             return true;
         }
 
@@ -86,7 +95,7 @@ public class ExportPatternsWizard extends Wizard {
 
     @Override
     public void addPages() {
-        page = new ExportPatternsWizardPage(folder);
+        page = new ExportPatternsWizardPage(folder, isForExchange);
         addPage(page);
     }
 

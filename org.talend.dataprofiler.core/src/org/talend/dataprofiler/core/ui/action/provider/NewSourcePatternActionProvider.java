@@ -23,9 +23,9 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.pattern.CreatePatternAction;
-import org.talend.dataprofiler.core.pattern.ExportPatternsAction;
-import org.talend.dataprofiler.core.pattern.ImportPatternsAction;
+import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
+import org.talend.dataprofiler.core.pattern.actions.ExportPatternsAction;
+import org.talend.dataprofiler.core.pattern.actions.ImportPatternsAction;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 
 /**
@@ -60,7 +60,8 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
 
                     if (type != null) {
                         menu.add(new ImportPatternsAction((IFolder) obj, type));
-                        menu.add(new ExportPatternsAction((IFolder) obj, type));
+                        menu.add(new ExportPatternsAction((IFolder) obj, false));
+                        menu.add(new ExportPatternsAction((IFolder) obj, true));
                         menu.add(new CreatePatternAction((IFolder) obj, type));
                     }
                 } catch (Exception e) {

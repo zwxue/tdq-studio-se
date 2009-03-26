@@ -20,14 +20,12 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -39,135 +37,108 @@ import com.csvreader.CsvWriter;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class ExportFactory {
+public final class ExportFactory {
 
-	private static final char CURRENT_SEPARATOR = '\t';
+    private static Logger log = Logger.getLogger(ExportFactory.class);
 
-	private static ExpressionType type;
+    private static final char CURRENT_SEPARATOR = '\t';
 
-	static void exportToFile(Pattern[] patterns, File exportFile,
-			ExpressionType type) {
+    private ExportFactory() {
+    }
 
-		String fileExtName = getFileExtName(exportFile);
-		ExportFactory.type = type;
+    static void export(File exportFile, IFolder folder, Pattern... patterns) {
 
-		if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+        if (exportFile.isDirectory()) {
+            for (Pattern pattern : patterns) {
+                File file = new File(exportFile, pattern.getName() + ".csv");
+                export(file, folder, pattern);
+            }
+        }
 
-			try {
+        String fileExtName = getFileExtName(exportFile);
 
-				CsvWriter out = new CsvWriter(new FileOutputStream(exportFile),
-						CURRENT_SEPARATOR, Charset.defaultCharset());
-				out.setEscapeMode(CsvWriter.ESCAPE_MODE_BACKSLASH);
-				out.setTextQualifier('"');
-				out.setForceQualifier(true);
+        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
 
-				PatternToExcelEnum[] values = PatternToExcelEnum.values();
-				String[] temp = new String[values.length];
+            try {
 
-				for (int i = 0; i < patterns.length + 1; i++) {
+                CsvWriter out = new CsvWriter(new FileOutputStream(exportFile), CURRENT_SEPARATOR, Charset.defaultCharset());
+                out.setEscapeMode(CsvWriter.ESCAPE_MODE_BACKSLASH);
+                out.setTextQualifier('"');
+                out.setForceQualifier(true);
 
-					for (int j = 0; j < values.length; j++) {
-						if (i == 0) {
-							temp[j] = values[j].getLiteral();
-						} else {
-							temp[j] = getRelatedValueFromPattern(
-									patterns[i - 1]).get(values[j]);
-						}
-					}
+                PatternToExcelEnum[] values = PatternToExcelEnum.values();
+                String[] temp = new String[values.length];
 
-					out.writeRecord(temp);
-				}
+                for (int i = 0; i < patterns.length + 1; i++) {
 
-				out.flush();
-				out.close();
+                    for (int j = 0; j < values.length; j++) {
+                        if (i == 0) {
+                            temp[j] = values[j].getLiteral();
+                        } else {
+                            temp[j] = getRelatedValueFromPattern(patterns[i - 1], folder).get(values[j]);
+                        }
+                    }
 
-			} catch (FileNotFoundException fe) {
-				MessageDialogWithToggle
-						.openError(
-								null,
-								DefaultMessagesImpl
-										.getString("ExportFactory.errorOne"), DefaultMessagesImpl.getString("ExportFactory.notFoundFile")); //$NON-NLS-1$ //$NON-NLS-2$
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+                    out.writeRecord(temp);
+                }
 
-	private static String getFileExtName(File file) {
-		String name = file.getName();
-		int index = name.lastIndexOf('.');
-		if (index == -1) {
-			return null;
-		}
+                out.flush();
+                out.close();
 
-		if (index == (name.length() - 1)) {
-			return ""; //$NON-NLS-1$
-		}
+            } catch (FileNotFoundException fe) {
+                MessageDialogWithToggle
+                        .openError(
+                                null,
+                                DefaultMessagesImpl.getString("ExportFactory.errorOne"), DefaultMessagesImpl.getString("ExportFactory.notFoundFile")); //$NON-NLS-1$ //$NON-NLS-2$
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
 
-		return name.substring(index + 1);
-	}
+    private static String getFileExtName(File file) {
+        String name = file.getName();
+        int index = name.lastIndexOf('.');
+        if (index == -1) {
+            return null;
+        }
 
-	private static Map<PatternToExcelEnum, String> getRelatedValueFromPattern(
-			Pattern pattern) {
+        if (index == (name.length() - 1)) {
+            return ""; //$NON-NLS-1$
+        }
 
-		Map<PatternToExcelEnum, String> patternMap = new HashMap<PatternToExcelEnum, String>();
+        return name.substring(index + 1);
+    }
 
-		IFolder curFolder = null;
+    private static Map<PatternToExcelEnum, String> getRelatedValueFromPattern(Pattern pattern, IFolder folder) {
 
-		switch (type) {
-		case REGEXP:
-			// MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-			// project.
-			curFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					org.talend.dataquality.PluginConstant.getRootProjectName())
-					.getFolder(DQStructureManager.getLibraries()).getFolder(
-							DQStructureManager.PATTERNS);
-			break;
-		case SQL_LIKE:
-			curFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					org.talend.dataquality.PluginConstant.getRootProjectName())
-					.getFolder(DQStructureManager.getLibraries()).getFolder(
-							DQStructureManager.SQL_PATTERNS);
-			break;
-		default:
-		}
+        Map<PatternToExcelEnum, String> patternMap = new HashMap<PatternToExcelEnum, String>();
 
-		if (curFolder != null) {
-			IFile file = PatternResourceFileHelper.getInstance()
-					.getPatternFile(pattern, new IFolder[] { curFolder });
-			URI relativeURI = curFolder.getLocationURI().relativize(
-					file.getParent().getLocationURI());
+        if (folder != null) {
+            IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern, new IFolder[] { folder });
+            URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
 
-			// get the basic information
-			patternMap.put(PatternToExcelEnum.Label, pattern.getName());
-			patternMap.put(PatternToExcelEnum.Purpose, TaggedValueHelper
-					.getPurpose(pattern));
-			patternMap.put(PatternToExcelEnum.Description, TaggedValueHelper
-					.getDescription(pattern));
-			patternMap.put(PatternToExcelEnum.Author, TaggedValueHelper
-					.getAuthor(pattern));
-			patternMap.put(PatternToExcelEnum.RelativePath, relativeURI
-					.toString());
+            // get the basic information
+            patternMap.put(PatternToExcelEnum.Label, pattern.getName());
+            patternMap.put(PatternToExcelEnum.Purpose, TaggedValueHelper.getPurpose(pattern));
+            patternMap.put(PatternToExcelEnum.Description, TaggedValueHelper.getDescription(pattern));
+            patternMap.put(PatternToExcelEnum.Author, TaggedValueHelper.getAuthor(pattern));
+            patternMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
 
-			for (PatternLanguageType languagetype : PatternLanguageType
-					.values()) {
-				for (PatternComponent component : pattern.getComponents()) {
-					Expression expression = ((RegularExpression) component)
-							.getExpression();
-					if (expression != null
-							&& expression.getLanguage().equalsIgnoreCase(
-									languagetype.getLiteral())) {
-						patternMap.put(languagetype.getExcelEnum(), expression
-								.getBody());
-					}
-				}
+            for (PatternLanguageType languagetype : PatternLanguageType.values()) {
+                for (PatternComponent component : pattern.getComponents()) {
+                    Expression expression = ((RegularExpression) component).getExpression();
+                    if (expression != null && expression.getLanguage().equalsIgnoreCase(languagetype.getLiteral())) {
+                        patternMap.put(languagetype.getExcelEnum(), expression.getBody());
+                    }
+                }
 
-				if (!patternMap.containsKey(languagetype.getExcelEnum())) {
-					patternMap.put(languagetype.getExcelEnum(), ""); //$NON-NLS-1$
-				}
-			}
-		}
+                if (!patternMap.containsKey(languagetype.getExcelEnum())) {
+                    patternMap.put(languagetype.getExcelEnum(), ""); //$NON-NLS-1$
+                }
+            }
+        }
 
-		return patternMap;
-	}
+        return patternMap;
+    }
 }
