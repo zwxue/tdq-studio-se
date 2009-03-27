@@ -41,7 +41,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#getComponent()
      */
-    @Override
     public IEcosComponent getComponent() {
         return component;
     }
@@ -51,7 +50,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#getDate()
      */
-    @Override
     public Date getDate() {
         return date;
     }
@@ -61,7 +59,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#getDescription()
      */
-    @Override
     public String getDescription() {
         return description;
     }
@@ -71,7 +68,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#getFileName()
      */
-    @Override
     public String getFileName() {
         return fileName;
     }
@@ -81,9 +77,8 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#getId()
      */
-    @Override
     public int getId() {
-        return id;
+        return 0;
     }
 
     /*
@@ -91,7 +86,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#getName()
      */
-    @Override
     public String getName() {
         return name;
     }
@@ -101,7 +95,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#getUrl()
      */
-    @Override
     public String getUrl() {
         return url;
     }
@@ -111,7 +104,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#setComponent(org.talend.dataprofiler.ecos.model.IEcosComponent)
      */
-    @Override
     public void setComponent(IEcosComponent value) {
         this.component = value;
     }
@@ -121,7 +113,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#setDate(java.util.Date)
      */
-    @Override
     public void setDate(Date value) {
         this.date = value;
     }
@@ -131,7 +122,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#setDescription(java.lang.String)
      */
-    @Override
     public void setDescription(String value) {
         this.description = value;
     }
@@ -141,7 +131,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#setFileName(java.lang.String)
      */
-    @Override
     public void setFileName(String value) {
         this.fileName = value;
     }
@@ -151,7 +140,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#setId(int)
      */
-    @Override
     public void setId(int value) {
         this.id = value;
     }
@@ -161,7 +149,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#setName(java.lang.String)
      */
-    @Override
     public void setName(String value) {
         this.name = value;
     }
@@ -171,7 +158,6 @@ public class Revision implements IRevision {
      * 
      * @see org.talend.dataprofiler.ecos.model.IRevision#setUrl(java.lang.String)
      */
-    @Override
     public void setUrl(String value) {
         this.url = value;
     }

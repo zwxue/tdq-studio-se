@@ -44,7 +44,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getAuthor()
      */
-    @Override
     public String getAuthor() {
         return author;
     }
@@ -54,7 +53,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getDescription()
      */
-    @Override
     public String getDescription() {
         return description;
     }
@@ -64,7 +62,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getInstalledLocation()
      */
-    @Override
     public String getInstalledLocation() {
         return installedLocation;
     }
@@ -74,7 +71,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getInstalledRevision()
      */
-    @Override
     public IRevision getInstalledRevision() {
         return installedRevision;
     }
@@ -84,7 +80,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getLatestRevision()
      */
-    @Override
     public IRevision getLatestRevision() {
         return latestRevision;
     }
@@ -94,7 +89,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getName()
      */
-    @Override
     public String getName() {
         return name;
     }
@@ -104,7 +98,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getRevisions()
      */
-    @Override
     public List<IRevision> getRevisions() {
         if (revisions == null) {
             revisions = new ArrayList<IRevision>();
@@ -118,7 +111,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setAuthor(java.lang.String)
      */
-    @Override
     public void setAuthor(String value) {
         this.author = value;
     }
@@ -128,7 +120,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setDescription(java.lang.String)
      */
-    @Override
     public void setDescription(String value) {
         this.description = value;
 
@@ -139,7 +130,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getCategory()
      */
-    @Override
     public String getCategry() {
         return categry;
     }
@@ -149,7 +139,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setCategory(java.lang.String)
      */
-    @Override
     public void setCategry(String categry) {
         this.categry = categry;
     }
@@ -159,7 +148,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setInstalledLocation(java.lang.String)
      */
-    @Override
     public void setInstalledLocation(String value) {
         this.installedLocation = value;
     }
@@ -171,7 +159,6 @@ public class EcosComponent implements IEcosComponent {
      * org.talend.dataprofiler.ecos.model.IEcosComponent#setInstalledRevision(org.talend.dataprofiler.ecos.model.IRevision
      * )
      */
-    @Override
     public void setInstalledRevision(IRevision value) {
         this.installedRevision = value;
     }
@@ -182,7 +169,6 @@ public class EcosComponent implements IEcosComponent {
      * @see
      * org.talend.dataprofiler.ecos.model.IEcosComponent#setLatestRevision(org.talend.dataprofiler.ecos.model.IRevision)
      */
-    @Override
     public void setLatestRevision(IRevision value) {
         this.latestRevision = value;
     }
@@ -192,7 +178,6 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setName(java.lang.String)
      */
-    @Override
     public void setName(String value) {
         this.name = value;
     }
