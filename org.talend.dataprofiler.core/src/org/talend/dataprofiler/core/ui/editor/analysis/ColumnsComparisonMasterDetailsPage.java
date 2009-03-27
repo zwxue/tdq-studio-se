@@ -610,10 +610,16 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             ColumnSet ownerA = null;
             ColumnSet ownerB = null;
             for (int i = 0; i < columnListA.size(); i++) {
-                if (!((TdColumn) columnListA.get(i)).getSqlDataType().getName().equals(
-                        ((TdColumn) columnListB.get(i)).getSqlDataType().getName())) {
-                    return new ReturnCode(
-                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
+                // MOD mzhao 2009-03-27,Feature:6439,LongText and Varchar could be possible to compare.
+                String dataTypeNameA = ((TdColumn) columnListA.get(i)).getSqlDataType().getName();
+                String dataTypeNameB = ((TdColumn) columnListB.get(i)).getSqlDataType().getName();
+                if (!dataTypeNameA.equals(dataTypeNameB)) {
+                    if (!((dataTypeNameA.toLowerCase().contains("varchar") || dataTypeNameA.toLowerCase().contains("longtext")) && (dataTypeNameB
+                            .toLowerCase().contains("varchar") || dataTypeNameB.toLowerCase().contains("longtext")))) {
+                        return new ReturnCode(DefaultMessagesImpl
+                                .getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
+                    }
+
                 }
                 ownerA = ColumnHelper.getColumnSetOwner(columnListA.get(i));
                 ownerB = ColumnHelper.getColumnSetOwner(columnListB.get(i));
