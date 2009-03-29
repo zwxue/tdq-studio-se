@@ -148,7 +148,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
         if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator().equals(indicator.eClass())) {
             jchart = TopChartFactory.createBubbleChart(indicator, column);
-            ChartDecorator.decorateXYPlot(jchart);
+            ChartDecorator.decorate(jchart);
         }
 
         if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator().equals(indicator.eClass())) {
@@ -168,7 +168,7 @@ public class HideSeriesChartComposite extends ChartComposite {
             plot.setRenderer(renderer);
             plot.getDomainAxis().setMaximumCategoryLabelWidthRatio(10.0f);
 
-            ChartDecorator.decorateCategoryPlot(jchart);
+            ChartDecorator.decorate(jchart);
         }
 
         if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator().equals(indicator.eClass())) {

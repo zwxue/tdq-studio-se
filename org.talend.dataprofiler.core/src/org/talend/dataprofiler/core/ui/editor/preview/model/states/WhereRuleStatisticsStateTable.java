@@ -156,10 +156,12 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
         List<JFreeChart> ret = new ArrayList<JFreeChart>();
         JFreeChart stackChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
                 .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getDataset(), false);
-        ret.add(ChartDecorator.decorateCategoryPlot(stackChart)); //$NON-NLS-1$
+        ChartDecorator.decorate(stackChart);
+        ret.add(stackChart); //$NON-NLS-1$
         JFreeChart lineChart = TopChartFactory.createLineChart(DefaultMessagesImpl
                 .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false);
-        ret.add(ChartDecorator.decorateXYPlot(lineChart)); //$NON-NLS-1$
+        ChartDecorator.decorate(lineChart);
+        ret.add(lineChart); //$NON-NLS-1$
         return ret;
     }
 }

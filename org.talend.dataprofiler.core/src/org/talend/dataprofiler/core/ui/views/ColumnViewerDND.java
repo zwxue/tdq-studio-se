@@ -101,11 +101,11 @@ public class ColumnViewerDND {
             /*
              * (non-Javadoc)
              * 
-             * @see org.eclipse.swt.dnd.DropTargetAdapter#dropAccept(org.eclipse.swt.dnd.DropTargetEvent)
+             * @see org.eclipse.swt.dnd.TreeDropTargetEffect#dragOver(org.eclipse.swt.dnd.DropTargetEvent)
              */
             @Override
-            public void dropAccept(DropTargetEvent event) {
-                super.dropAccept(event);
+            public void dragOver(DropTargetEvent event) {
+                super.dragOver(event);
                 receiver.doDropValidation(event, commonViewer);
             }
 

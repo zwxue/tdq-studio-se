@@ -198,7 +198,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                                     ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
                                     // create chart
-                                    JFreeChart chart = ChartDecorator.decorateCategoryPlot(chartTypeState.getChart());
+
+                                    JFreeChart chart = chartTypeState.getChart();
+                                    ChartDecorator.decorate(chart);
                                     if (chart != null) {
                                         ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 

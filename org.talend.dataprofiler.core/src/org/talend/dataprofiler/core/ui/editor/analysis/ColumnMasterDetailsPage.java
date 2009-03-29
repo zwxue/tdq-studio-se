@@ -444,7 +444,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 List<IndicatorUnit> units = indicatorComposite.get(chartType);
                 if (!units.isEmpty()) {
                     final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
-                    JFreeChart chart = ChartDecorator.decorateCategoryPlot(chartTypeState.getChart());
+                    JFreeChart chart = chartTypeState.getChart();
+                    ChartDecorator.decorate(chart);
 
                     if (chart != null) {
                         final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);

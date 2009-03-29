@@ -42,7 +42,8 @@ public class SimpleStatisticsStateTable extends AbstractChartTypeStatesTable {
     public JFreeChart getChart() {
         JFreeChart chart = TopChartFactory.create3DBarChart(DefaultMessagesImpl
                 .getString("SimpleStatisticsStateTable.SimpleStatistics"), getDataset(), true);
-        return ChartDecorator.decorateCategoryPlot(chart);
+        ChartDecorator.decorate(chart);
+        return chart;
     }
 
     public ICustomerDataset getCustomerDataset() {

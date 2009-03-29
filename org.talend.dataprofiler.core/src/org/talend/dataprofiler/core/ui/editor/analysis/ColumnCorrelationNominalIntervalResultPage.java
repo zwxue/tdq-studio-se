@@ -58,13 +58,14 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.ui.TextAnchor;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
-import org.talend.dataprofiler.core.ui.utils.ChartUtils;
+import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataprofiler.core.ui.utils.JungGraphGenerator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -368,8 +369,12 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
         renderer3d.setItemMargin(0.2);
-        plot.setForegroundAlpha(0.50f);
-        ChartUtils.createAWTSWTComp(composite, new GridData(GridData.FILL_BOTH), chart);
+        // plot.setForegroundAlpha(0.50f);
+
+        ChartDecorator.decorate(chart);
+        ChartComposite chartComp = new ChartComposite(composite, SWT.NONE, chart);
+        chartComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        // ChartUtils.createAWTSWTComp(composite, new GridData(GridData.FILL_BOTH), chart);
     }
 
     private Section createTableSectionPart(Composite parentComp, String title,
