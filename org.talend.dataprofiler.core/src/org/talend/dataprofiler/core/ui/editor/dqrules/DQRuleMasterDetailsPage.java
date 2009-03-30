@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.views.WhereClauseDND;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
@@ -142,7 +143,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         resetJoinElements();
 
-        creatDQRuleDefinitionSection(topComp);
+        createDQRuleDefinitionSection(topComp);
         createJoinConditionSection(topComp);
 
         currentEditor.registerSections(new Section[] { dqRuleDefinitionSection, joinConditionSection });
@@ -154,7 +155,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
      * 
      * @param topComp
      */
-    private void creatDQRuleDefinitionSection(Composite topComp) {
+    private void createDQRuleDefinitionSection(Composite topComp) {
         dqRuleDefinitionSection = createSection(form, topComp, DefaultMessagesImpl
                 .getString("DQRuleMasterDetailsPage.dqRuleDefinition"), false, null); //$NON-NLS-1$
 
@@ -162,6 +163,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         label.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.text")); //$NON-NLS-1$
         dqRuleDefinitionSection.setDescriptionControl(label);
 
+        String temp = DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.dqRuleDefinition");
         createDQRuleDefinitionComp();
     }
 
@@ -194,6 +196,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         label2.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
         whereText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        WhereClauseDND.installDND(whereText);
         whereText.setText(whereRule.getWhereExpression());
         data = new GridData(GridData.FILL_BOTH);
         data.heightHint = 180;

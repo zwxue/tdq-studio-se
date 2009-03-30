@@ -29,8 +29,8 @@ public class DQRuleExplorer extends DataExplorer {
 
         switch (this.indicatorEnum) {
         case WhereRuleIndicatorEnum:
-            map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement());
-            map.put(MENU_VIEW_VALID_ROWS, getRowsStatement());
+            map.put(MENU_VIEW_INVALID_ROWS, getRowsStatement(false));
+            map.put(MENU_VIEW_VALID_ROWS, getRowsStatement(true));
             break;
         default:
         }
@@ -38,10 +38,16 @@ public class DQRuleExplorer extends DataExplorer {
         return map;
     }
 
-    private String getInvalidRowsStatement() {
+    /**
+     * DOC xqliu Comment method "getRowsStatement".
+     * 
+     * @param valid
+     * @return
+     */
+    private String getRowsStatement(boolean valid) {
+        String non = valid ? "" : "!";
         Table table = (Table) indicator.getAnalyzedElement();
         String whereClause = ((WhereRule) ((WhereRuleIndicator) indicator).getIndicatorDefinition()).getWhereExpression();
-        return "SELECT * FROM " + getFullyQualifiedTableName(table) + dbmsLanguage.where() + "!(" + whereClause + ")";
+        return "SELECT * FROM " + getFullyQualifiedTableName(table) + dbmsLanguage.where() + non + "(" + whereClause + ")";
     }
-
 }

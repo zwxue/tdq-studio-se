@@ -89,19 +89,11 @@ public abstract class TableViewerDND {
                     event.feedback = DND.FEEDBACK_EXPAND;
                     receiver.doDropValidation(event, commonViewer);
                 }
-
             }
 
             @Override
             public void dragOver(DropTargetEvent event) {
-                if (receiver != null) {
-                    receiver.dragOver(event);
-                }
-            }
-
-            @Override
-            public void dropAccept(DropTargetEvent event) {
-                super.dropAccept(event);
+                super.dragOver(event);
                 if (receiver != null) {
                     receiver.doDropValidation(event, commonViewer);
                 }
@@ -143,8 +135,6 @@ public abstract class TableViewerDND {
         void doDropValidation(DropTargetEvent event, CommonViewer commonViewer);
 
         void drop(DropTargetEvent event, CommonViewer commonViewer, int index);
-
-        void dragOver(DropTargetEvent event);
     }
 
     /**
@@ -158,39 +148,24 @@ public abstract class TableViewerDND {
                 lastValidOperation = event.detail;
             }
 
-            Tree tree = (Tree) ((DropTarget) event.widget).getControl();
-            AbstractTableDropTree viewer = (AbstractTableDropTree) tree.getData();
-            WhereRule whereRule = null;
-
-            boolean is = false;
-            List list = ((StructuredSelection) commonViewer.getSelection()).toList();
-            List<IFile> files = new ArrayList<IFile>();
-            if (list != null && list.size() > 0) {
-                for (Object obj : list) {
-                    if (obj instanceof IFile) {
-                        IFile fe = (IFile) obj;
-                        files.add(fe);
-                        if (FactoriesUtil.DQRULE.equals(fe.getFileExtension())) {
-                            whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
-                            if (whereRule == null || !TaggedValueHelper.getValidStatus(whereRule)) {
-                                is = true;
-                                break;
-                            }
-                        }
+            boolean is = true;
+            Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
+            if (firstElement instanceof IFile) {
+                IFile fe = (IFile) firstElement;
+                if (FactoriesUtil.DQRULE.equals(fe.getFileExtension())) {
+                    WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
+                    if (whereRule != null && TaggedValueHelper.getValidStatus(whereRule)) {
+                        is = false;
                     }
                 }
             }
 
-            if (is) {
+            if (event.item == null || is) {
                 event.detail = DND.DROP_NONE;
             } else {
-                Object data = event.widget.getData();
+                Object data = event.item.getData(AnalysisTableTreeViewer.INDICATOR_UNIT_KEY);
                 if (data != null) {
-                    if (viewer.canDrop(data, files)) {
-                        event.detail = DND.DROP_MOVE;
-                    } else {
-                        event.detail = DND.DROP_NONE;
-                    }
+                    event.detail = DND.DROP_NONE;
                 } else {
                     event.detail = lastValidOperation;
                 }
@@ -263,10 +238,6 @@ public abstract class TableViewerDND {
                 viewer.dropTables(selectedTableList, index);
             }
             localSelection = null;
-        }
-
-        public void dragOver(DropTargetEvent event) {
-            event.feedback = DND.FEEDBACK_EXPAND | DND.FEEDBACK_INSERT_AFTER | DND.FEEDBACK_SCROLL | DND.FEEDBACK_SELECT;
         }
     }
 }

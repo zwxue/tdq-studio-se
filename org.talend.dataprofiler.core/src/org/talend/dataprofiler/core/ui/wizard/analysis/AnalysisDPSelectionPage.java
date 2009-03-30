@@ -35,7 +35,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.jfree.util.Log;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
@@ -55,12 +54,20 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
 
     private String nameLabTxt = null;
 
+    private boolean multiSelect;
+
     public AnalysisDPSelectionPage(String labText, AdapterFactoryContentProvider contentProvider) {
         init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public AnalysisDPSelectionPage(String title, String message, String labText, AdapterFactoryContentProvider contentProvider) {
         init(title, message, contentProvider, labText);
+    }
+
+    public AnalysisDPSelectionPage(String title, String message, String labText, AdapterFactoryContentProvider contentProvider,
+            boolean multiSelect) {
+        init(title, message, contentProvider, labText);
+        this.multiSelect = multiSelect;
     }
 
     private void init(String title, String message, AdapterFactoryContentProvider contentProvider, String labText) {
@@ -91,8 +98,8 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         Composite treeContainer = new Composite(parent, SWT.NONE);
         treeContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         treeContainer.setLayout(new FillLayout());
-
-        fViewer = new TreeViewer(treeContainer, SWT.BORDER);
+        int style = this.multiSelect ? SWT.BORDER | SWT.MULTI : SWT.BORDER;
+        fViewer = new TreeViewer(treeContainer, style);
         fViewer.setContentProvider(fContentProvider);
         fViewer.setLabelProvider(fLabelProvider);
         fViewer.setInput(ResourcesPlugin.getWorkspace().getRoot());
@@ -115,13 +122,14 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         ArrayList rejectedElements = new ArrayList(resources.length);
         // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
         for (int i = 0; i < resources.length; i++) {
-            if (!resources[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
-                    PluginConstant.METADATA_PROJECTNAME))) {
+            if (!resources[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(
+                    org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(PluginConstant.METADATA_PROJECTNAME))) {
                 rejectedElements.add(resources[i]);
             }
         }
-        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
-                PluginConstant.METADATA_PROJECTNAME).getFile(".project")); //$NON-NLS-1$
+        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(
+                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(PluginConstant.METADATA_PROJECTNAME)
+                .getFile(".project")); //$NON-NLS-1$
         ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
         addFilter(filter);
     }

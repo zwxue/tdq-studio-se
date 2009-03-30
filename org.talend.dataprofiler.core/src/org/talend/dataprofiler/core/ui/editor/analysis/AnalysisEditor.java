@@ -222,6 +222,9 @@ public class AnalysisEditor extends CommonFormEditor {
         if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
             ((ColumnMasterDetailsPage) masterPage).performGlobalAction(id);
         }
+        if (analysisType == AnalysisType.TABLE) {
+            ((TableMasterDetailsPage) masterPage).performGlobalAction(id);
+        }
     }
 
     public void setRefreshResultPage(boolean isRefreshResultPage) {

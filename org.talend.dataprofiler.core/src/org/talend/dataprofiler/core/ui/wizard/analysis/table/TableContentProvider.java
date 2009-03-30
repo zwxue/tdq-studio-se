@@ -14,42 +14,62 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdTable;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
+import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.PluginConstant;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
+import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableContentProvider extends AdapterFactoryContentProvider {
+public class TableContentProvider extends DQRepositoryViewContentProvider {
 
     private static Logger log = Logger.getLogger(TableContentProvider.class);
 
     public TableContentProvider() {
-        super(MNComposedAdapterFactory.getAdapterFactory());
+        super();
     }
 
     @Override
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof IContainer) {
+            IContainer container = ((IContainer) parentElement);
+            IResource[] members = null;
             try {
-                return ((IContainer) parentElement).members();
+                members = container.members();
             } catch (CoreException e) {
-                log
-                        .error(DefaultMessagesImpl.getString("TableContentProvider.cannotGetChildren") + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+                log.error("Can't get the children of container:" + container.getLocation());
             }
-        } else if (parentElement instanceof IFile) {
-            IFile prvFile = (IFile) parentElement;
-            if (prvFile.getName().endsWith(PluginConstant.PRV_SUFFIX)) {
-                parentElement = PrvResourceFileHelper.getInstance().getFileResource((IFile) parentElement);
-                return ComparatorsFactory.sort(super.getChildren(parentElement), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+            if (container.equals(ResourcesPlugin.getWorkspace().getRoot().getProject(
+                    org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getMetaData())
+                    .getFolder(DQStructureManager.DB_CONNECTIONS))) {
+                ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
             }
+            return members;
+        } else if (parentElement instanceof NamedColumnSet) {
+            return null;
+        } else if (parentElement instanceof NamedColumnSetFolderNode) {
+            NamedColumnSetFolderNode folderNode = (NamedColumnSetFolderNode) parentElement;
+            if (folderNode instanceof ViewFolderNode) {
+                return null;
+            }
+            folderNode.loadChildren();
+            Object[] children = folderNode.getChildren();
+            if (children != null && children.length > 0) {
+                if (!(children[0] instanceof ColumnSet)) {
+                    return children;
+                }
+            }
+            return ComparatorsFactory.sort(children, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
         }
         return super.getChildren(parentElement);
     }
@@ -70,5 +90,60 @@ public class TableContentProvider extends AdapterFactoryContentProvider {
     @Override
     public boolean hasChildren(Object element) {
         return !(element instanceof TdTable);
+    }
+
+    /**
+     * This class will combine catlogName and columnSetName as a key.
+     */
+    class CatalogSchemaKey {
+
+        private final String catalogName;
+
+        private final String schemaName;
+
+        public CatalogSchemaKey(ColumnSet columnSet) {
+            this.schemaName = SchemaHelper.getParentSchema(columnSet) == null ? "" : SchemaHelper.getParentSchema(columnSet)
+                    .getName();
+            this.catalogName = CatalogHelper.getParentCatalog(columnSet) == null ? "" : CatalogHelper.getParentCatalog(columnSet)
+                    .getName();
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 22;
+            int result = 1;
+            result = prime * result + ((schemaName == null) ? 0 : schemaName.hashCode());
+            result = prime * result + ((catalogName == null) ? 0 : catalogName.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final CatalogSchemaKey other = (CatalogSchemaKey) obj;
+            if (catalogName == null) {
+                if (other.catalogName != null) {
+                    return false;
+                }
+            } else if (!catalogName.equals(other.catalogName)) {
+                return false;
+            }
+            if (schemaName == null) {
+                if (other.schemaName != null) {
+                    return false;
+                }
+            } else if (!schemaName.equals(other.schemaName)) {
+                return false;
+            }
+            return true;
+        }
     }
 }

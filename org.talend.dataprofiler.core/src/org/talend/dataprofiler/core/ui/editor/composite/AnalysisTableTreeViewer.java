@@ -53,8 +53,9 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -71,9 +72,9 @@ import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.TableViewerDND;
@@ -187,6 +188,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         columnOperation.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.operation")); //$NON-NLS-1$
 
         parent.layout();
+
         AbstractAnalysisActionHandler actionHandler = new AbstractAnalysisActionHandler(parent) {
 
             @Override
@@ -195,6 +197,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             }
 
         };
+
         parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
         TableViewerDND.installDND(newTree);
         this.addTreeListener(newTree);
@@ -289,7 +292,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         return null;
     }
 
-    private void setElements(final TableIndicator[] elements) {
+    public void setElements(final TableIndicator[] elements) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
         tree.setData(VIEWER_KEY, this);
@@ -370,7 +373,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
                 org.talend.dataquality.PluginConstant.getRootProjectName());
         dialog.setInput(defaultPatternFolder.getFolder(DQStructureManager.getLibraries()));
-        // System.out.println("0000000000000000::" + defaultPatternFolder.getFolder(DQStructureManager.getLibraries()));
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
@@ -422,6 +424,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     if (addIndicatorUnit != null) {
                         createOneUnit(treeItem, addIndicatorUnit);
                         setDirty(true);
+                    } else {
+                        WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+                        MessageUI.openError("WhereRule: " + whereRule.getName()
+                                + "\n\nThis indicator is already selected for this table.");
                     }
                 }
             }
@@ -659,7 +665,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     /**
      * DOC xqliu Comment method "setInput".
      * 
-     * @param columns
+     * @param objs
      */
     public void setInput(Object[] objs) {
         if (objs != null && objs.length != 0) {
@@ -667,9 +673,19 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 return;
             }
         }
+
         List<TdTable> tableList = new ArrayList<TdTable>();
         for (Object obj : objs) {
-            tableList.add((TdTable) obj);
+            TdTable table = (TdTable) obj;
+            TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+            if (tdProvider == null) {
+                MessageUI.openError("Table: " + table.getName() + "'s DataProvider is null!");
+            } else if (this.getAnalysis().getContext().getConnection() != null
+                    && !tdProvider.equals(this.getAnalysis().getContext().getConnection())) {
+                MessageUI.openError("Table: " + table.getName() + "'s DataProvider is invalid!");
+            } else {
+                tableList.add(table);
+            }
         }
         List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
         for (TableIndicator tableIndicator : tableIndicators) {
@@ -697,7 +713,16 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     private String isExpressionNull(TreeItem item) {
         String expressContent = null;
-        // TODO xqliu add method code!!!
+        TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+        TableIndicator tableIndicator = (TableIndicator) item.getData(TABLE_INDICATOR_KEY);
+        TdTable table = tableIndicator.getTdTable();
+        TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(ColumnSetHelper.getParentCatalogOrSchema(table));
+
+        DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
+        Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
+        if (expression != null) {
+            expressContent = expression.getBody();
+        }
         return expressContent;
     }
 
@@ -766,6 +791,14 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     @Override
     public boolean canDrop(Table table) {
+        TdDataProvider tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+        if (tdProvider == null) {
+            return false;
+        } else if (this.getAnalysis().getContext().getConnection() != null
+                && !tdProvider.equals(this.getAnalysis().getContext().getConnection())) {
+            return false;
+        }
+
         List<TdTable> existTables = new ArrayList<TdTable>();
 
         for (TableIndicator tableIndicator : getTableIndicator()) {
@@ -788,17 +821,18 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     i++;
                     j = 0;
                     String name = tiu.getIndicator().getIndicatorDefinition().getName();
-                    System.out.println("" + i + "::name=" + name);
+                    // System.out.println("" + i + "::name=" + name);
                     for (IFile file : files) {
                         j++;
-                        System.out.println("" + i + "::name=" + name + "|" + j + "::"
-                                + DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName());
+                        // System.out.println("" + i + "::name=" + name + "|" + j + "::"
+                        // + DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName());
                         if (DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName().equals(name)) {
                             return false;
                         }
                     }
                 }
             }
+            System.out.println("111111111111111111::true");
             return true;
         }
         return false;
@@ -810,6 +844,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     private void removeSelectedElements(Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
+        if (isRowCountIndicator(selection)) {
+            return;
+        }
+
         boolean branchIndicatorExist = false;
         for (TreeItem item : selection) {
             TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
@@ -987,20 +1025,23 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             for (TreeItem item : selection) {
                 TableIndicator tableIndicator = (TableIndicator) item.getData(TABLE_INDICATOR_KEY);
                 TdTable table = tableIndicator.getTdTable();
-                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(SchemaHelper.getParentSchema(table));
-                IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
-                Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
-                if (expression == null) {
-                    MessageDialogWithToggle
-                            .openWarning(
-                                    null,
-                                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.Warn"), DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.NoQueryDefined")); //$NON-NLS-1$ //$NON-NLS-2$
-                    return;
+                TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+                Object temp = item.getData(INDICATOR_UNIT_KEY);
+                if (temp != null) {
+                    TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+                    DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
+                    Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
+                    if (expression == null) {
+                        MessageDialogWithToggle
+                                .openWarning(
+                                        null,
+                                        DefaultMessagesImpl.getString("AnalysisTableTreeViewer.Warn"), DefaultMessagesImpl.getString("AnalysisTableTreeViewer.NoQueryDefined")); //$NON-NLS-1$ //$NON-NLS-2$
+                        return;
+                    }
+                    new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+                    String query = expression.getBody();
+                    CorePlugin.getDefault().openInSqlEditor(dataprovider, query, table.getName());
                 }
-                new ChangePerspectiveAction(PluginConstant.SE_ID).run();
-                String query = expression.getBody();
-                CorePlugin.getDefault().openInSqlEditor(dataprovider, query, table.getName());
             }
         }
 

@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
@@ -48,8 +49,15 @@ public final class DQRuleUtilities {
      * @return
      */
     public static TableIndicatorUnit createIndicatorUnit(IFile fe, TableIndicator tableIndicator, Analysis analysis) {
-        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
         WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
+
+        for (Indicator indicator : tableIndicator.getIndicators()) {
+            if (whereRule.getName().equals(indicator.getName())) {
+                return null;
+            }
+        }
+
+        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
         wrIndicator.setAnalyzedElement(tableIndicator.getTdTable());
         wrIndicator.setIndicatorDefinition(whereRule);
 
