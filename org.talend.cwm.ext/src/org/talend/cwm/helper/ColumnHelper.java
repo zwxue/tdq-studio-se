@@ -194,6 +194,12 @@ public final class ColumnHelper {
         return null;
     }
 
+    /**
+     * DOC bZhou Comment method "isFromSameConnection".
+     * 
+     * @param columns
+     * @return
+     */
     public static boolean isFromSameConnection(List<Column> columns) {
         assert columns != null;
 
@@ -206,6 +212,12 @@ public final class ColumnHelper {
         return dataProviderSets.size() == 1;
     }
 
+    /**
+     * DOC bZhou Comment method "isFromSameTable".
+     * 
+     * @param columns
+     * @return
+     */
     public static boolean isFromSameTable(List<Column> columns) {
         assert columns != null;
 

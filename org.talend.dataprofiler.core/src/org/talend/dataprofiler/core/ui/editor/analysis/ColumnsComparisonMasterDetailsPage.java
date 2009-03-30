@@ -70,9 +70,9 @@ import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -603,43 +603,40 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         if (columnListA.size() != columnListB.size()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage"), false); //$NON-NLS-1$
         }
-        if (columnListA.size() > 0) {
-            // whether the columns on a same table
-            ColumnSet columnSetOwnerA = null;
-            ColumnSet columnSetOwnerB = null;
-            ColumnSet ownerA = null;
-            ColumnSet ownerB = null;
-            for (int i = 0; i < columnListA.size(); i++) {
-                // MOD mzhao 2009-03-27,Feature:6439,LongText and Varchar could be possible to compare.
-                String dataTypeNameA = ((TdColumn) columnListA.get(i)).getSqlDataType().getName();
-                String dataTypeNameB = ((TdColumn) columnListB.get(i)).getSqlDataType().getName();
-                if (!dataTypeNameA.equals(dataTypeNameB)) {
-                    if (!((dataTypeNameA.toLowerCase().contains("varchar") || dataTypeNameA.toLowerCase().contains("longtext")) && (dataTypeNameB
-                            .toLowerCase().contains("varchar") || dataTypeNameB.toLowerCase().contains("longtext")))) {
-                        return new ReturnCode(DefaultMessagesImpl
-                                .getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
-                    }
 
+        if (columnListA.size() > 0) {
+
+            if (!ColumnHelper.isFromSameTable(columnListA) || !ColumnHelper.isFromSameTable(columnListB)) {
+                return new ReturnCode(
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameElementMessage"), false); //$NON-NLS-1$
+            }
+
+            for (int i = 0; i < columnListA.size(); i++) {
+                Column columnA = columnListA.get(i);
+                Column columnB = columnListB.get(i);
+
+                ColumnSet ownerA = ColumnHelper.getColumnSetOwner(columnA);
+                ColumnSet ownerB = ColumnHelper.getColumnSetOwner(columnB);
+
+                int typeA = ((TdColumn) columnA).getJavaType();
+                int typeB = ((TdColumn) columnB).getJavaType();
+                if (!Java2SqlType.isGenericSameType(typeA, typeB)) {
+                    return new ReturnCode(
+                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
                 }
-                ownerA = ColumnHelper.getColumnSetOwner(columnListA.get(i));
-                ownerB = ColumnHelper.getColumnSetOwner(columnListB.get(i));
-                if (i == 0) {
-                    columnSetOwnerA = ownerA;
-                    columnSetOwnerB = ownerB;
-                } else {
-                    if ((columnSetOwnerA != ownerA) || (columnSetOwnerB != ownerB)) {
-                        return new ReturnCode(DefaultMessagesImpl
-                                .getString("ColumnsComparisonMasterDetailsPage.notSameElementMessage"), false); //$NON-NLS-1$
-                    }
+
+                if (!ColumnSetHelper.isFromSamePackage(ownerA, ownerB)) {
+                    return new ReturnCode(
+                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage"), false); //$NON-NLS-1$
                 }
             }
 
-            // whether have a same schema/catalog.
-            Package parentCatalogOrSchemaA = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerA);
-            Package parentCatalogOrSchemaB = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwnerB);
-            if (!parentCatalogOrSchemaA.getName().equals(parentCatalogOrSchemaB.getName())) {
-                return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage"), //$NON-NLS-1$
-                        false);
+            List<Column> allColumns = new ArrayList<Column>();
+            allColumns.addAll(columnListA);
+            allColumns.addAll(columnListB);
+
+            if (ColumnHelper.isFromSameTable(allColumns)) {
+                return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.TwoSideColumns"), false); //$NON-NLS-1$
             }
         }
 

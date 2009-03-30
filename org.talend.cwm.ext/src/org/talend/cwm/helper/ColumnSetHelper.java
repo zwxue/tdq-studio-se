@@ -14,7 +14,9 @@ package org.talend.cwm.helper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -237,5 +239,23 @@ public class ColumnSetHelper {
             }
         }
         return tableNames.toArray(new String[tableNames.size()]);
+    }
+
+    /**
+     * DOC bZhou Comment method "isFromSamePackage".
+     * 
+     * this method is used to judge columnset whether from same package.
+     * 
+     * @param sets
+     * @return
+     */
+    public static boolean isFromSamePackage(ColumnSet... sets) {
+        Set<Package> container = new HashSet<Package>();
+
+        for (ColumnSet set : sets) {
+            container.add(getParentCatalogOrSchema(set));
+        }
+
+        return container.size() == 1;
     }
 }

@@ -60,7 +60,7 @@ public final class MetadataHelper {
             return DataminingType.INTERVAL;
         }
 
-        if (Java2SqlType.isOtheTypeInSQL(javaSqlType)) {
+        if (Java2SqlType.isOtherTypeInSQL(javaSqlType)) {
             return DataminingType.OTHER;
         }
 
