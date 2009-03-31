@@ -62,9 +62,6 @@ public final class ChartDecorator {
                 decorateCategoryPlot(chart);
 
                 int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
-                int columnCount = chart.getCategoryPlot().getDataset().getColumnCount();
-
-                System.out.println("Row:" + rowCount + " Column:" + columnCount);
 
                 for (int i = 0; i < rowCount; i++) {
                     ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, colorList.get(i));

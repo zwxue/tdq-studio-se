@@ -41,6 +41,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dq.analysis.AnalysisExecutorSelector;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -71,7 +72,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     public RunAnalysisAction() {
-        super(DefaultMessagesImpl.getString("RunAnalysisAction.Run"));  //$NON-NLS-1$
+        super(DefaultMessagesImpl.getString("RunAnalysisAction.Run")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
     }
 
@@ -134,22 +135,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                 });
                 // MOD xqliu 2009-02-09 bug 6237
-                ReturnCode executed = null;
-                AnalysisExecutorThread aet = new AnalysisExecutorThread(analysis, monitor);
-                // aet.run();
-                // executed = aet.getExecuted();
-                new Thread(aet).start();
-                while (true) {
-                    if (aet.getExecuted() != null) {
-                        executed = aet.getExecuted();
-                        break;
-                    }
-                    if (monitor.isCanceled()) {
-                        executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
-                        break;
-                    }
-                }
-                aet = null;
+                ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(analysis, null);
+                AnaResourceFileHelper.getInstance().save(analysis);
                 monitor.done();
                 // ~
                 Display.getDefault().asyncExec(new Runnable() {

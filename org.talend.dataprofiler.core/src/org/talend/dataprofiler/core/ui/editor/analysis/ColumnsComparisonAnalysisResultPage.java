@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -22,10 +23,18 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableCursor;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -33,21 +42,39 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.entity.CategoryItemEntity;
+import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenerator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
+import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.analysis.explore.RowMatchExplorer;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.utils.format.StringFormatUtil;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -223,7 +250,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         resultSection.layout();
     }
 
-    private void createTableItems(Table resultTable) {
+    private void createTableItems(final Table resultTable) {
         Long columnSetARows = rowMatchingIndicatorA.getMatchingValueCount() + rowMatchingIndicatorA.getNotMatchingValueCount();
 
         TableItem item1 = new TableItem(resultTable, SWT.NULL);
@@ -261,15 +288,145 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             item4.setText(2, rowMatchingIndicatorB.getNotMatchingValueCount().toString());
             item5.setText(2, columnSetBRows.toString());
         }
+        // add by hcheng for 6530 (add menus for table)
+        final TableCursor cursor = new TableCursor(resultTable, SWT.NONE);
+
+        cursor.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                int column = cursor.getColumn();
+
+                if (column == 1) {
+                    resultTable.setMenu(createMenu(resultTable, rowMatchingIndicatorA));
+                }
+
+                if (column == 2) {
+                    resultTable.setMenu(createMenu(resultTable, rowMatchingIndicatorB));
+                }
+            }
+        });
+        // ~
+    }
+
+    /**
+     * 
+     * DOC hcheng Comment method "createMenu".
+     * 
+     * @param resultTable
+     * @param indicator
+     * @return
+     */
+    private Menu createMenu(final Table resultTable, final RowMatchingIndicator indicator) {
+
+        if (indicator == null) {
+            return null;
+        }
+
+        final TdTable columnSet = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
+
+        getAnalysisHandler().getAnalyzedColumns();
+
+        if (columnSet == null) {
+            return null;
+        }
+        Menu menu = new Menu(resultTable);
+        MenuItem itemMatch = new MenuItem(menu, SWT.PUSH);
+        MenuItem itemNotMatch = new MenuItem(menu, SWT.PUSH);
+        MenuItem itemRow = new MenuItem(menu, SWT.PUSH);
+
+        itemMatch.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ViewMatch")); //$NON-NLS-1$
+        itemMatch.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        itemNotMatch.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ViewNotMatch")); //$NON-NLS-1$
+        itemNotMatch.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        itemRow.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ViewRows")); //$NON-NLS-1$
+        itemRow.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+
+        itemMatch.addListener(SWT.Selection, new Listener() {
+
+            public void handleEvent(Event event) {
+
+                TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
+
+                DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
+
+                Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
+                String instantiatedSQL = instantiatedExpression.getBody();
+                String dbname = ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName() + "."; //$NON-NLS-1$
+
+                int l = instantiatedSQL.indexOf(" LEFT JOIN "); //$NON-NLS-1$
+                int w = instantiatedSQL.indexOf(dbmsLanguage.where());
+                String whereClause = instantiatedSQL.substring(w).replace(dbmsLanguage.isNull(), dbmsLanguage.isNotNull());
+
+                String fromClause = instantiatedSQL.substring(l, w).replace(" JOIN ", " JOIN " + dbname); //$NON-NLS-1$ //$NON-NLS-2$
+                String query = "select * " + dbmsLanguage.from() + dbname + columnSet.getName() + fromClause + whereClause; //$NON-NLS-1$
+                CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+            }
+
+        });
+
+        itemNotMatch.addListener(SWT.Selection, new Listener() {
+
+            public void handleEvent(Event event) {
+
+                TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
+
+                DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
+                Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
+                String instantiatedSQL = instantiatedExpression.getBody();
+                String dbname = ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName() + "."; //$NON-NLS-1$
+                int b = instantiatedSQL.indexOf(dbmsLanguage.from());
+                String fromClause1 = instantiatedSQL.substring(b);
+                String fromClause2 = fromClause1.replace(" JOIN ", " JOIN " + dbname); //$NON-NLS-1$ //$NON-NLS-2$
+                String fromClause = fromClause2.replace(dbmsLanguage.from(), dbmsLanguage.from() + dbname); //$NON-NLS-1$
+                String query = "select " + columnSet.getName() + ".*" + fromClause; //$NON-NLS-1$ //$NON-NLS-2$
+
+                CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+            }
+        });
+
+        itemRow.addListener(SWT.Selection, new Listener() {
+
+            public void handleEvent(Event event) {
+
+                TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
+
+                DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
+
+                String query = "select * " + dbmsLanguage.from() + ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName() //$NON-NLS-1$
+                        + "." + columnSet.getName(); //$NON-NLS-1$
+
+                CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+            }
+
+        });
+        return menu;
     }
 
     private void creatChart(Composite parent, String tableA, String tableB) {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        CustomerDefaultCategoryDataset dataset = new CustomerDefaultCategoryDataset();
+        // DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, tableA);
         dataset.addValue(rowMatchingIndicatorA.getNotMatchingValueCount(), NOT_MATCHING, tableA);
+        // add by hcheng
+        PatternChartDataEntity dataEntityA = new PatternChartDataEntity();
+        dataEntityA.setLabel(tableA);
+        dataEntityA.setIndicator(rowMatchingIndicatorA);
+        dataEntityA.setNumMatch(rowMatchingIndicatorA.getMatchingValueCount().toString());
+        dataEntityA.setNumNoMatch(rowMatchingIndicatorA.getNotMatchingValueCount().toString());
+
+        dataset.addDataEntity(dataEntityA);
+
         if (!isHasDeactivatedIndicator) {
             dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, tableB);
             dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, tableB);
+
+            PatternChartDataEntity dataEntityB = new PatternChartDataEntity();
+            dataEntityB.setLabel(tableB);
+            dataEntityB.setIndicator(rowMatchingIndicatorB);
+            dataEntityB.setNumMatch(rowMatchingIndicatorB.getMatchingValueCount().toString());
+            dataEntityB.setNumNoMatch(rowMatchingIndicatorB.getNotMatchingValueCount().toString());
+
+            dataset.addDataEntity(dataEntityB);
         }
         JFreeChart chart = TopChartFactory.createStacked3DBarChart(DefaultMessagesImpl
                 .getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
@@ -280,8 +437,90 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         gd.heightHint = 180;
         gd.widthHint = 450;
 
-        ChartComposite chartComp = new ChartComposite(parent, SWT.NONE, chart);
+        final ChartComposite chartComp = new ChartComposite(parent, SWT.NONE, chart);
         chartComp.setLayoutData(gd);
+
+        // add by hcheng for 6530(add menu to "View query result" for chart )
+        chartComp.addChartMouseListener(new ChartMouseListener() {
+
+            public void chartMouseClicked(ChartMouseEvent event) {
+
+                boolean flag = event.getTrigger().getButton() != MouseEvent.BUTTON3;
+
+                chartComp.setDomainZoomable(flag);
+                chartComp.setRangeZoomable(flag);
+
+                if (flag) {
+                    return;
+                }
+
+                ChartEntity chartEntity = event.getEntity();
+                if (chartEntity != null) {
+                    CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
+                    CustomerDefaultCategoryDataset dataEntity = (CustomerDefaultCategoryDataset) cateEntity.getDataset();
+
+                    Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
+                    chartComp.setMenu(menu);
+
+                    ChartDataEntity currentDataEntity = null;
+                    ChartDataEntity[] dataEntities = dataEntity.getDataEntities();
+                    if (dataEntities.length == 1) {
+                        currentDataEntity = dataEntities[0];
+                    } else {
+                        for (ChartDataEntity entity : dataEntities) {
+                            if (cateEntity.getColumnKey().compareTo(entity.getLabel()) == 0) {
+                                currentDataEntity = entity;
+                            } else {
+                                if (cateEntity.getRowKey().compareTo(entity.getLabel()) == 0) {
+                                    currentDataEntity = entity;
+                                }
+                            }
+                        }
+                    }
+
+                    if (currentDataEntity != null) {
+                        RowMatchExplorer explorer = new RowMatchExplorer();
+                        final Analysis analysis = getAnalysisHandler().getAnalysis();
+                        final Indicator indicator = currentDataEntity.getIndicator();
+
+                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
+                        for (final MenuItemEntity itemEntity : itemEntities) {
+                            MenuItem menuItem = new MenuItem(menu, SWT.NONE);
+                            menuItem.setText(itemEntity.getLabel());
+                            menuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+                            menuItem.addSelectionListener(new SelectionAdapter() {
+
+                                public void widgetSelected(SelectionEvent e) {
+                                    Display.getDefault().asyncExec(new Runnable() {
+
+                                        public void run() {
+                                            TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                                    .getContext().getConnection());
+                                            String query = itemEntity.getQuery();
+                                            String editorName = indicator.getAnalyzedElement().getName();
+                                            CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                        }
+
+                                    });
+                                }
+                            });
+                        }
+                    }
+
+                    menu.setVisible(true);
+                }
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.jfree.chart.ChartMouseListener#chartMouseMoved(org.jfree.chart.ChartMouseEvent)
+             */
+            public void chartMouseMoved(ChartMouseEvent event) {
+
+            }
+        });
+        // ~
     }
 
     public void refresh(ColumnsComparisonMasterDetailsPage masterPage) {

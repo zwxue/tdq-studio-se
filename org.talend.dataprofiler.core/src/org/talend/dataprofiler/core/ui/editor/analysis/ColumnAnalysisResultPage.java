@@ -314,6 +314,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                         for (final MenuItemEntity itemEntity : itemEntities) {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
+                            item.setImage(itemEntity.getIcon());
                             item.addSelectionListener(new SelectionAdapter() {
 
                                 @Override
