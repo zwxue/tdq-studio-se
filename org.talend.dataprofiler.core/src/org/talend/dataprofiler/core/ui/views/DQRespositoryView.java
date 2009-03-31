@@ -56,6 +56,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
@@ -104,8 +105,7 @@ public class DQRespositoryView extends CommonNavigator {
             setLinkingEnabled(false);
         }
 
-        getViewSite().getActionBars().getToolBarManager().add(
-                new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()));
+        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
     }
 
     /*
@@ -386,5 +386,16 @@ public class DQRespositoryView extends CommonNavigator {
             recursiveExpandTree(workspaceParent);
         }
 
+    }
+
+    /**
+     * DOC bZhou DQRespositoryView class global comment. Detailled comment
+     */
+    class RefreshDQReponsitoryViewAction extends RefreshAction {
+
+        public RefreshDQReponsitoryViewAction() {
+            super(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+            setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_SPACE));
+        }
     }
 }
