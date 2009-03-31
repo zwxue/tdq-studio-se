@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -48,14 +47,15 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
@@ -104,7 +104,8 @@ public class DQRespositoryView extends CommonNavigator {
             setLinkingEnabled(false);
         }
 
-        getViewSite().getActionBars().getToolBarManager().add(new RefreshDQReponsitoryViewAction());
+        getViewSite().getActionBars().getToolBarManager().add(
+                new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow()));
     }
 
     /*
@@ -368,17 +369,15 @@ public class DQRespositoryView extends CommonNavigator {
                 recursiveExpandTree(emfParent);
                 commonViewer.expandToLevel(emfParent, 1);
             }
-        }
-        // User provider get IFolderNode parent will be null, here must call
-        // IFolderNode.getParent.
-        else if (item instanceof IFolderNode) {
+        } else if (item instanceof IFolderNode) {
+            // User provider get IFolderNode parent will be null, here must call
+            // IFolderNode.getParent.
             IFolderNode folderNode = (IFolderNode) item;
             Object eo = folderNode.getParent();
             recursiveExpandTree(eo);
             commonViewer.expandToLevel(eo, 1);
-        }
-        // Workspace resources
-        else {
+        } else {
+            // Workspace resources
             Object workspaceParent = provider.getParent(item);
             if (workspaceParent == null) {
                 return;
@@ -387,23 +386,5 @@ public class DQRespositoryView extends CommonNavigator {
             recursiveExpandTree(workspaceParent);
         }
 
-    }
-
-    /**
-     * DOC hcheng DQRespositoryView class global comment. Detailled comment
-     * 
-     * add for 6148:Add a button in the DQ repository view toolbar to refresh the view
-     */
-    class RefreshDQReponsitoryViewAction extends Action {
-
-        public RefreshDQReponsitoryViewAction() {
-            super("Refresh", ImageLib.getImageDescriptor(ImageLib.REFRESH_SPACE));
-        }
-
-        @Override
-        public void run() {
-            getCommonViewer().refresh();
-            DQRespositoryView dq = new DQRespositoryView();
-        }
     }
 }
