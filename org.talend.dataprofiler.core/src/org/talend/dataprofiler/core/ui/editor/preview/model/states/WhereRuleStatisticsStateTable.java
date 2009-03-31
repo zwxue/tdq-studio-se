@@ -27,22 +27,22 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerXYSeriesCollection;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.PatternLabelProvider;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dq.analysis.explore.DQRuleExplorer;
 import org.talend.dq.analysis.explore.DataExplorer;
-import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable {
 
-    private static final String ROW_KEY_PASS = "Pass the rule";
+    private static final String ROW_KEY_PASS = "matching";
 
-    private static final String ROW_KEY_NOT_PASS = "Not pass the rule";
+    private static final String ROW_KEY_NOT_PASS = "not matching";
 
     private TableIndicator tableIndicator;
 
@@ -94,11 +94,12 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
             customerdataset.addValue(getRowCount() - value, ROW_KEY_NOT_PASS, columnKey);
             customerdataset.addValue(value, ROW_KEY_PASS, columnKey);
 
-            ChartDataEntity entity = new ChartDataEntity();
+            WhereRuleChartDataEntity entity = new WhereRuleChartDataEntity();
+            entity.setRowCount(getRowCount());
             entity.setIndicator(unit.getIndicator());
             entity.setLabel(columnKey);
-            entity.setValue(String.valueOf(getRowCount() - value));
-            entity.setPercent(String.valueOf(1 - (value / getRowCount())));
+            entity.setNumMatch(String.valueOf(value));
+            entity.setNumNoMatch(String.valueOf(getRowCount() - value));
 
             customerdataset.addDataEntity(entity);
         }
@@ -132,14 +133,14 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
         TableStructureEntity entity = new TableStructureEntity();
         entity
                 .setFieldNames(new String[] {
-                        DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.Label"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        entity.setFieldWidths(new Integer[] { 200, 150, 150 });
+                        DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.Label"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.Match"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.NoMatch"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.Match_"), DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.NoMatch_") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        entity.setFieldWidths(new Integer[] { 200, 75, 75, 75, 75 });
         return entity;
     }
 
     @Override
     protected ITableLabelProvider getLabelProvider() {
-        return new BaseChartTableLabelProvider();
+        return new PatternLabelProvider();
     }
 
     @Override
@@ -155,13 +156,15 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
     public List<JFreeChart> getChartList() {
         List<JFreeChart> ret = new ArrayList<JFreeChart>();
         JFreeChart stackChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getDataset(), false);
+                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getDataset(), true);
         ChartDecorator.decorate(stackChart);
         ret.add(stackChart); //$NON-NLS-1$
-        JFreeChart lineChart = TopChartFactory.createLineChart(DefaultMessagesImpl
-                .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false);
-        ChartDecorator.decorate(lineChart);
-        ret.add(lineChart); //$NON-NLS-1$
+        if (false) { // show line chart only in TDQ!!!
+            JFreeChart lineChart = TopChartFactory.createLineChart(DefaultMessagesImpl
+                    .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false);
+            ChartDecorator.decorate(lineChart);
+            ret.add(lineChart); //$NON-NLS-1$
+        }
         return ret;
     }
 }
