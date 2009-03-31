@@ -405,8 +405,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     private void creatChart(Composite parent, String tableA, String tableB) {
         CustomerDefaultCategoryDataset dataset = new CustomerDefaultCategoryDataset();
         // DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, tableA);
         dataset.addValue(rowMatchingIndicatorA.getNotMatchingValueCount(), NOT_MATCHING, tableA);
+        dataset.addValue(rowMatchingIndicatorA.getMatchingValueCount(), MATCHING, tableA);
         // add by hcheng
         PatternChartDataEntity dataEntityA = new PatternChartDataEntity();
         dataEntityA.setLabel(tableA);
@@ -417,8 +417,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         dataset.addDataEntity(dataEntityA);
 
         if (!isHasDeactivatedIndicator) {
-            dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, tableB);
             dataset.addValue(rowMatchingIndicatorB.getNotMatchingValueCount(), NOT_MATCHING, tableB);
+            dataset.addValue(rowMatchingIndicatorB.getMatchingValueCount(), MATCHING, tableB);
 
             PatternChartDataEntity dataEntityB = new PatternChartDataEntity();
             dataEntityB.setLabel(tableB);

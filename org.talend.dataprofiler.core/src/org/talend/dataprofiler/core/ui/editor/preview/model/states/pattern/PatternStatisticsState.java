@@ -43,7 +43,9 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
 
     public JFreeChart getChart() {
         // TODO Auto-generated method stub
-        return TopChartFactory.createStacked3DBarChart(DefaultMessagesImpl.getString("PatternStatisticsState.PatternStatistics"), getDataset(), PlotOrientation.VERTICAL); //$NON-NLS-1$
+        return TopChartFactory
+                .createStacked3DBarChart(
+                        DefaultMessagesImpl.getString("PatternStatisticsState.PatternStatistics"), getDataset(), PlotOrientation.VERTICAL); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -54,8 +56,8 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
             double notMathCount = patternExt.getNotMatchingValueCount();
             double machCount = patternExt.getMatchingValueCount();
 
-            customerdataset.addValue(machCount, "matching", label); //$NON-NLS-1$
             customerdataset.addValue(notMathCount, "not matching", label); //$NON-NLS-1$
+            customerdataset.addValue(machCount, "matching", label); //$NON-NLS-1$
 
             PatternChartDataEntity patternEntity = new PatternChartDataEntity();
             patternEntity.setIndicator(unit.getIndicator());
@@ -82,7 +84,9 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("PatternStatisticsState.Label"), DefaultMessagesImpl.getString("PatternStatisticsState.Match"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch"), DefaultMessagesImpl.getString("PatternStatisticsState.Match_"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch_") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        entity
+                .setFieldNames(new String[] {
+                        DefaultMessagesImpl.getString("PatternStatisticsState.Label"), DefaultMessagesImpl.getString("PatternStatisticsState.Match"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch"), DefaultMessagesImpl.getString("PatternStatisticsState.Match_"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch_") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         entity.setFieldWidths(new Integer[] { 200, 75, 75, 75, 75 });
         return entity;
     }

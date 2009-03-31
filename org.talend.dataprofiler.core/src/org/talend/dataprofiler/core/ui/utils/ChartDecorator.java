@@ -183,9 +183,9 @@ public final class ChartDecorator {
 
     static {
         colorList.add(COLOR_7);
+        colorList.add(COLOR_2);
         colorList.add(COLOR_0);
         colorList.add(COLOR_1);
-        colorList.add(COLOR_2);
         colorList.add(COLOR_3);
         colorList.add(COLOR_4);
         colorList.add(COLOR_5);
