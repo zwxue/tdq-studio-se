@@ -20,6 +20,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.BinsDesignerF
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.DataThresholdsForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.ExpectedValueForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.IndicatorThresholdsForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.JavaOptionsForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.NumbericNominalForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextLengthForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextParametersForm;
@@ -103,6 +104,11 @@ public final class IndicatorFormFactory {
         case ExpectedValueForm:
 
             form = new ExpectedValueForm(parent, SWT.NONE, parameters);
+            break;
+
+        case JavaOptionsForm:
+
+            form = new JavaOptionsForm(parent, SWT.NONE, parameters);
             break;
 
         default:

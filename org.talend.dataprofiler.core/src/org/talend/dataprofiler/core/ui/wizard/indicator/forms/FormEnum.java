@@ -39,7 +39,8 @@ public enum FormEnum {
     TextLengthForm("Text Length", "html/wizard/indicator/TextLength.html"), //$NON-NLS-1$ //$NON-NLS-2$
     FreqTextLengthForm("Blank Options", "html/wizard/indicator/BlankOptions.html"), //$NON-NLS-1$ //$NON-NLS-2$
     NumbericNominalForm("Frequency Table Parameters", ""), //$NON-NLS-1$ //$NON-NLS-2$
-    ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html"); //$NON-NLS-1$ //$NON-NLS-2$
+    ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    JavaOptionsForm("Java Options", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
     private String formName;
 
@@ -141,7 +142,7 @@ public enum FormEnum {
                 }
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
-                forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm };
+                forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
             } else if (dataminingType == DataminingType.NOMINAL) {
 
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
