@@ -21,9 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Cursor;
@@ -34,9 +33,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.jfree.chart.ChartMouseEvent;
+import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.CategoryTextAnnotation;
 import org.jfree.chart.axis.CategoryAnchor;
+import org.jfree.chart.entity.ChartEntity;
+import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.labels.CategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.XYPlot;
@@ -45,19 +48,29 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.ui.TextAnchor;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataprofiler.core.ui.utils.ChartUtils;
+import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.ValueAggregator;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dq.analysis.explore.MultiColumnSetValueExplorer;
 
 /**
  * DOC bzhou class global comment. Detailled comment
  */
 public class HideSeriesChartComposite extends ChartComposite {
+
+    private static Logger log = Logger.getLogger(HideSeriesChartComposite.class);
 
     private ColumnSetMultiValueIndicator indicator;
 
@@ -71,9 +84,12 @@ public class HideSeriesChartComposite extends ChartComposite {
 
     private Map<String, RowColumPair> hightlightSeriesMap = new HashMap<String, RowColumPair>();
 
-    public HideSeriesChartComposite(Composite comp, ColumnSetMultiValueIndicator indicator, TdColumn column, boolean isNeedUtility) {
-        super(comp, SWT.NONE);
+    private Analysis analysis = null;
 
+    public HideSeriesChartComposite(Composite comp, Analysis ana, ColumnSetMultiValueIndicator indicator, TdColumn column,
+            boolean isNeedUtility) {
+        super(comp, SWT.NONE);
+        this.analysis = ana;
         this.indicator = indicator;
         this.column = column;
         this.isNeedUtility = isNeedUtility;
@@ -87,41 +103,85 @@ public class HideSeriesChartComposite extends ChartComposite {
 
     private void addSpecifiedListeners() {
 
-        this.addSWTListener(new MouseAdapter() {
+        // MOD mzhao 2009-03-30, Feature 6503, add view rows menu item.
+        this.addChartMouseListener(new ChartMouseListener() {
 
-            @Override
-            public void mouseDoubleClick(MouseEvent e) {
-                ChartUtils.showChartInFillScreen(createChart(), indicator);
-            }
+            public void chartMouseClicked(ChartMouseEvent event) {
 
-            @Override
-            public void mouseDown(MouseEvent e) {
+                setRangeZoomable(event.getTrigger().getButton() == 1);
+                setDomainZoomable(event.getTrigger().getButton() == 1);
 
-                setRangeZoomable(e.button == 1);
-                setDomainZoomable(e.button == 1);
-
-                if (e.button == 3) {
-                    Menu menu = new Menu(getShell(), SWT.POP_UP);
-                    setMenu(menu);
-                    MenuItem item = new MenuItem(menu, SWT.PUSH);
-                    item.setText("Show in full screen");
-
-                    item.addSelectionListener(new SelectionAdapter() {
-
-                        @Override
-                        public void widgetSelected(SelectionEvent e) {
-                            Display.getDefault().asyncExec(new Runnable() {
-
-                                public void run() {
-                                    ChartUtils.showChartInFillScreen(createChart(), indicator);
-                                }
-                            });
-                        }
-                    });
-
-                    menu.setVisible(true);
+                if (event.getTrigger().getButton() != 3) {
+                    return;
                 }
+                // create menu
+                Menu menu = new Menu(getShell(), SWT.POP_UP);
+                setMenu(menu);
+                MenuItem itemShowInFullScreen = new MenuItem(menu, SWT.PUSH);
+                itemShowInFullScreen.setText("Show in full screen");
+                itemShowInFullScreen.addSelectionListener(new SelectionAdapter() {
+
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        Display.getDefault().asyncExec(new Runnable() {
+
+                            public void run() {
+                                ChartUtils.showChartInFillScreen(createChart(), indicator);
+                            }
+                        });
+                    }
+                });
+
+                ChartEntity chartEntity = event.getEntity();
+                if (chartEntity != null) {
+                    XYItemEntity xyItemEntity = (XYItemEntity) chartEntity;
+                    DefaultXYZDataset xyzDataSet = (DefaultXYZDataset) xyItemEntity.getDataset();
+
+                    final Comparable<?> seriesKey = xyzDataSet.getSeriesKey(xyItemEntity.getSeriesIndex());
+                    final String seriesK = String.valueOf(seriesKey);
+                    try {
+                        final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(indicator,
+                                column);
+                        final ValueAggregator valueAggregator = createXYZDatasets.get(seriesKey);
+                        valueAggregator.addSeriesToXYZDataset(xyzDataSet, seriesK);
+                        String seriesLabel = valueAggregator.getLabels(seriesK).get(xyItemEntity.getItem());
+                        final String queryString = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis,
+                                seriesK, seriesLabel);
+
+                        MenuItem item = new MenuItem(menu, SWT.PUSH);
+                        item.setText("View rows");
+                        item.addSelectionListener(new SelectionAdapter() {
+
+                            @Override
+                            public void widgetSelected(SelectionEvent e) {
+                                Display.getDefault().asyncExec(new Runnable() {
+
+                                    public void run() {
+                                        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                                .getContext().getConnection());
+                                        String query = queryString;
+                                        String editorName = "Nominal value of " + seriesK;
+                                        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                    }
+
+                                });
+                            }
+
+                        });
+
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                        log.error(e);
+                    }
+
+                }
+                menu.setVisible(true);
             }
+
+            public void chartMouseMoved(ChartMouseEvent event) {
+
+            }
+
         });
     }
 

@@ -358,8 +358,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                                     gd.heightHint = 230;
                                     gd.widthHint = 460;
 
-                                    HideSeriesChartComposite hcc = new HideSeriesChartComposite(comp, columnSetMultiIndicator,
-                                            tdColumn, false);
+                                    HideSeriesChartComposite hcc = new HideSeriesChartComposite(comp, analysis,
+                                            columnSetMultiIndicator, tdColumn, false);
                                     hcc.setLayoutData(gd);
                                 }
 
@@ -639,4 +639,5 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         return new ReturnCode(true);
 
     }
+
 }
