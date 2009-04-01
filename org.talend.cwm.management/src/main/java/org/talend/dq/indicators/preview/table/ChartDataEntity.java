@@ -12,284 +12,273 @@
 // ============================================================================
 package org.talend.dq.indicators.preview.table;
 
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
 import org.talend.utils.sql.Java2SqlType;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public class ChartDataEntity {
 
-	private static Logger log = Logger.getLogger(ChartDataEntity.class);
+    private static Logger log = Logger.getLogger(ChartDataEntity.class);
 
-	private String label;
+    private String label;
 
-	private String value;
+    private String value;
 
-	private Indicator indicator;
+    private Indicator indicator;
 
-	private String percent;
+    private String percent;
 
-	private Boolean outOfRange = null;
+    private Boolean outOfRange = null;
 
-	protected String range;
+    protected String range;
 
-	private boolean labelNull = false;
-	// MOD mzhao 2009-03-24, feature 6307 Show soundex distinct count and count
-	// label.
-	private Object key = null;
+    private boolean labelNull = false;
 
-	public ChartDataEntity() {
+    // MOD mzhao 2009-03-24, feature 6307 Show soundex distinct count and count
+    // label.
+    private Object key = null;
 
-	}
+    public ChartDataEntity() {
 
-	public ChartDataEntity(Indicator indicator, String label, String value) {
-		this(indicator, label, value, null, false);
-	}
+    }
 
-	public ChartDataEntity(Indicator indicator, String label, String value,
-			String percent, boolean labelNull) {
-		this.label = label;
-		this.value = value;
-		this.percent = percent;
-		this.labelNull = labelNull;
-		this.indicator = indicator;
-	}
+    public ChartDataEntity(Indicator indicator, String label, String value) {
+        this(indicator, label, value, null, false);
+    }
 
-	/**
-	 * Getter for labelNull.
-	 * 
-	 * @return true if the given label represents a null value
-	 */
-	public boolean isLabelNull() {
-		return this.labelNull;
-	}
+    public ChartDataEntity(Indicator indicator, String label, String value, String percent, boolean labelNull) {
+        this.label = label;
+        this.value = value;
+        this.percent = percent;
+        this.labelNull = labelNull;
+        this.indicator = indicator;
+    }
 
-	/**
-	 * Sets the labelNull.
-	 * 
-	 * @param labelNull
-	 *            set to true if the label represents the null value
-	 */
-	public void setLabelNull(boolean labelNull) {
-		this.labelNull = labelNull;
-	}
+    /**
+     * Getter for labelNull.
+     * 
+     * @return true if the given label represents a null value
+     */
+    public boolean isLabelNull() {
+        return this.labelNull;
+    }
 
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Sets the labelNull.
+     * 
+     * @param labelNull set to true if the label represents the null value
+     */
+    public void setLabelNull(boolean labelNull) {
+        this.labelNull = labelNull;
+    }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public String getValue() {
-		if (value != null) {
-			return StringFormatUtil.format(value, StringFormatUtil.NUMBER)
-					.toString();
-		} else {
-			return null;
-		}
-	}
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public String getValue() {
+        if (value != null) {
+            return StringFormatUtil.format(value, StringFormatUtil.NUMBER).toString();
+        } else {
+            return null;
+        }
+    }
 
-	// MOD mzhao 2009-03-24, feature 6307 Show soundex distinct count and count
-	// label.
-	public Object getKey() {
-		return key;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	// MOD mzhao 2009-03-24, feature 6307 Show soundex distinct count and count
-	// label.
-	public void setKey(Object key) {
-		this.key = key;
-	}
+    // MOD mzhao 2009-03-24, feature 6307 Show soundex distinct count and count
+    // label.
+    public Object getKey() {
+        return key;
+    }
 
-	public String getPersent() {
-		if (percent != null) {
-			if (percent.matches("-?\\d+(\\.\\d+)?")) {
-				return StringFormatUtil.format(percent,
-						StringFormatUtil.PERCENT).toString();
-			} else {
-				return "N/A";
-			}
-		} else {
-			return null;
-		}
-	}
+    // MOD mzhao 2009-03-24, feature 6307 Show soundex distinct count and count
+    // label.
+    public void setKey(Object key) {
+        this.key = key;
+    }
 
-	public void setPercent(String percent) {
-		this.percent = percent;
-	}
+    public String getPersent() {
+        if (percent != null) {
+            if (percent.matches("-?\\d+(\\.\\d+)?")) {
+                return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
+            } else {
+                return "N/A";
+            }
+        } else {
+            return null;
+        }
+    }
 
-	public Indicator getIndicator() {
-		return indicator;
-	}
+    public void setPercent(String percent) {
+        this.percent = percent;
+    }
 
-	public void setIndicator(Indicator indicator) {
-		this.indicator = indicator;
-	}
+    public Indicator getIndicator() {
+        return indicator;
+    }
 
-	/**
-	 * DOC Zqin Comment method "isOutOfRange".
-	 * 
-	 * @return
-	 */
-	public boolean isOutOfRange(String inputValue) {
-		outOfRange = false;
+    public void setIndicator(Indicator indicator) {
+        this.indicator = indicator;
+    }
 
-		if (inputValue == null || indicator == null) {
-			return false;
-		}
+    /**
+     * DOC Zqin Comment method "isOutOfRange".
+     * 
+     * @return
+     */
+    public boolean isOutOfRange(String inputValue) {
+        outOfRange = false;
 
-		IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator
-				.eClass());
+        if (inputValue == null || indicator == null) {
+            return false;
+        }
 
-		switch (indicatorEnum) {
-		case ModeIndicatorEnum:
-			String expectedValue = IndicatorHelper.getExpectedValue(indicator);
-			if (expectedValue != null) {
+        IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
 
-				Boolean ignoreCaseOption = IndicatorHelper
-						.ignoreCaseOption(indicator);
+        switch (indicatorEnum) {
+        case ModeIndicatorEnum:
+            String expectedValue = IndicatorHelper.getExpectedValue(indicator);
+            if (expectedValue != null) {
 
-				outOfRange = !StringUtils.equals(value, expectedValue);
+                Boolean ignoreCaseOption = IndicatorHelper.ignoreCaseOption(indicator);
 
-				if (ignoreCaseOption) {
-					outOfRange = !(ignoreCaseOption && StringUtils
-							.equalsIgnoreCase(value, expectedValue));
-				}
-			}
-			break;
-		default:
+                outOfRange = !StringUtils.equals(value, expectedValue);
 
-			outOfRange = checkRange(inputValue);
-		}
+                if (ignoreCaseOption) {
+                    outOfRange = !(ignoreCaseOption && StringUtils.equalsIgnoreCase(value, expectedValue));
+                }
+            }
+            break;
+        default:
 
-		return outOfRange;
-	}
+            outOfRange = checkRange(inputValue);
+        }
 
-	protected String[] getDefinedRange(String inString) {
-		boolean flag = inString.indexOf('%') > 0;
-		String[] threshold = IndicatorHelper.getDataThreshold(indicator);
+        return outOfRange;
+    }
 
-		if (threshold == null) {
-			if (flag) {
-				threshold = IndicatorHelper
-						.getIndicatorThresholdInPercent(indicator);
-			} else {
-				threshold = IndicatorHelper.getIndicatorThreshold(indicator);
-			}
-		}
+    protected String[] getDefinedRange(String inString) {
+        boolean flag = inString.indexOf('%') > 0;
+        String[] threshold = IndicatorHelper.getDataThreshold(indicator);
 
-		return threshold;
-	}
+        if (threshold == null) {
+            if (flag) {
+                threshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
+            } else {
+                threshold = IndicatorHelper.getIndicatorThreshold(indicator);
+            }
+        }
 
-	private boolean checkRange(String inString) {
+        return threshold;
+    }
 
-		String[] definedRange = getDefinedRange(inString);
-		if (definedRange != null && definedRange.length >= 2) {
+    private boolean checkRange(String inString) {
 
-			range = "[" + definedRange[0] + "," + definedRange[1] + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        String[] definedRange = getDefinedRange(inString);
+        if (definedRange != null && definedRange.length >= 2) {
 
-			int sqltype = ((TdColumn) indicator.getAnalyzedElement())
-					.getJavaType();
+            range = "[" + definedRange[0] + "," + definedRange[1] + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-			boolean isChildOfRange = IndicatorsPackage.eINSTANCE
-					.getValueIndicator().isSuperTypeOf(indicator.eClass());
-			if (Java2SqlType.isDateInSQL(sqltype) && isChildOfRange) {
+            ModelElement temp = indicator.getAnalyzedElement();
+            int sqltype = temp instanceof TdTable ? Types.INTEGER : ((TdColumn) temp).getJavaType();
 
-				try {
-					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
-					Date dValue = format.parse(value);
+            boolean isChildOfRange = IndicatorsPackage.eINSTANCE.getValueIndicator().isSuperTypeOf(indicator.eClass());
+            if (Java2SqlType.isDateInSQL(sqltype) && isChildOfRange) {
 
-					if ("".equals(definedRange[0])) { //$NON-NLS-1$
-						Date max = format.parse(definedRange[1]);
-						range = "[*, " + definedRange[1] + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-						return dValue.after(max);
-					} else if ("".equals(definedRange[1])) { //$NON-NLS-1$
-						Date min = format.parse(definedRange[0]);
-						range = "[" + definedRange[0] + ", *]"; //$NON-NLS-1$ //$NON-NLS-2$
-						return dValue.before(min);
-					} else {
-						Date min = format.parse(definedRange[0]);
-						Date max = format.parse(definedRange[1]);
-						return dValue.after(max) || dValue.before(min);
-					}
-				} catch (Exception e) {
-					log.error(e, e);
-					return false;
-				}
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
+                    Date dValue = format.parse(value);
 
-			} else {
-				Double min = StringFormatUtil.formatDouble(definedRange[0]);
-				Double max = StringFormatUtil.formatDouble(definedRange[1]);
+                    if ("".equals(definedRange[0])) { //$NON-NLS-1$
+                        Date max = format.parse(definedRange[1]);
+                        range = "[*, " + definedRange[1] + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+                        return dValue.after(max);
+                    } else if ("".equals(definedRange[1])) { //$NON-NLS-1$
+                        Date min = format.parse(definedRange[0]);
+                        range = "[" + definedRange[0] + ", *]"; //$NON-NLS-1$ //$NON-NLS-2$
+                        return dValue.before(min);
+                    } else {
+                        Date min = format.parse(definedRange[0]);
+                        Date max = format.parse(definedRange[1]);
+                        return dValue.after(max) || dValue.before(min);
+                    }
+                } catch (Exception e) {
+                    log.error(e, e);
+                    return false;
+                }
 
-				// handle min and max
-				Double dValue = inString != null ? StringFormatUtil
-						.parseDouble(inString) : Double.NaN;
-				if (min == null || Double.isNaN(min)) {
-					min = Double.NEGATIVE_INFINITY;
-				}
+            } else {
+                Double min = StringFormatUtil.formatDouble(definedRange[0]);
+                Double max = StringFormatUtil.formatDouble(definedRange[1]);
 
-				if (max == null || Double.isNaN(max)) {
-					max = Double.POSITIVE_INFINITY;
-				}
+                // handle min and max
+                Double dValue = inString != null ? StringFormatUtil.parseDouble(inString) : Double.NaN;
+                if (min == null || Double.isNaN(min)) {
+                    min = Double.NEGATIVE_INFINITY;
+                }
 
-				return dValue < min || dValue > max;
-			}
-		}
+                if (max == null || Double.isNaN(max)) {
+                    max = Double.POSITIVE_INFINITY;
+                }
 
-		return false;
-	}
+                return dValue < min || dValue > max;
+            }
+        }
 
-	/**
-	 * DOC Zqin Comment method "getRangeAsString".
-	 * 
-	 * @return retrun the message when indicator value out the defined range.
-	 */
-	public String getRangeAsString() {
+        return false;
+    }
 
-		StringBuilder msg = new StringBuilder();
+    /**
+     * DOC Zqin Comment method "getRangeAsString".
+     * 
+     * @return retrun the message when indicator value out the defined range.
+     */
+    public String getRangeAsString() {
 
-		if (indicator != null) {
-			IndicatorEnum indicatorEnum = IndicatorEnum
-					.findIndicatorEnum(indicator.eClass());
+        StringBuilder msg = new StringBuilder();
 
-			if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
-				msg
-						.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-			} else if (indicatorEnum == IndicatorEnum.BoxIIndicatorEnum) {
-				if (isOutOfRange(getValue())) {
-					msg
-							.append("This value is outside the expected data's thresholds: " + range); //$NON-NLS-1$
-				}
-			} else {
-				if (isOutOfRange(getValue())) {
-					msg
-							.append("This value is outside the expected indicator's thresholds: " + range); //$NON-NLS-1$
-					msg.append("\n"); //$NON-NLS-1$
-				}
-				if (isOutOfRange(getPersent())) {
-					msg
-							.append("This value is outside the expected indicator's thresholds in percent: " + range); //$NON-NLS-1$
-				}
-			}
-		}
+        if (indicator != null) {
+            IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
 
-		return msg.length() == 0 ? null : msg.toString();
-	}
+            if (indicatorEnum == IndicatorEnum.ModeIndicatorEnum) {
+                msg.append("This value differs from the expected value: \"" + IndicatorHelper.getExpectedValue(indicator) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            } else if (indicatorEnum == IndicatorEnum.BoxIIndicatorEnum) {
+                if (isOutOfRange(getValue())) {
+                    msg.append("This value is outside the expected data's thresholds: " + range); //$NON-NLS-1$
+                }
+            } else {
+                if (isOutOfRange(getValue())) {
+                    msg.append("This value is outside the expected indicator's thresholds: " + range); //$NON-NLS-1$
+                    msg.append("\n"); //$NON-NLS-1$
+                }
+                if (isOutOfRange(getPersent())) {
+                    msg.append("This value is outside the expected indicator's thresholds in percent: " + range); //$NON-NLS-1$
+                }
+            }
+        }
+
+        return msg.length() == 0 ? null : msg.toString();
+    }
 }

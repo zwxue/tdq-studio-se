@@ -321,7 +321,7 @@ public final class TopChartFactory {
         renderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer3d.setItemMargin(0.2);
-//        plot.setForegroundAlpha(0.50f);
+        // plot.setForegroundAlpha(0.50f);
 
         // CategoryAxis domainAxis = plot.getDomainAxis();
         // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
@@ -419,6 +419,11 @@ public final class TopChartFactory {
         sbr.setAutoPopulateSeriesPaint(false);
         sbr.setSeriesPaint(0, Color.RED);
         sbr.setSeriesPaint(1, Color.GREEN);
+        sbr.setBaseItemLabelsVisible(true);
+        sbr.setRenderAsPercentages(true);
+        sbr.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(), //$NON-NLS-1$
+                new DecimalFormat("0.00%"))); //$NON-NLS-1$
+        sbr.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
 
         ValueAxis rangeAxis = plot.getRangeAxis();
         rangeAxis.setLowerMargin(0.15);
