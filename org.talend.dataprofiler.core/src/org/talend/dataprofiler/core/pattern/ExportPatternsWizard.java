@@ -82,6 +82,7 @@ public class ExportPatternsWizard extends Wizard {
                 for (File patternFile : file.listFiles()) {
                     try {
                         FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
+                        patternFile.delete();
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                     }

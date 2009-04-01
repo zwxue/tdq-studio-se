@@ -51,8 +51,10 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.PluginChecker;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
+import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -81,13 +83,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private Group tContainer;
 
-    private boolean switchFlag = false;
-
     /**
      * DOC qzhang RespositoryDetailView constructor comment.
      */
     public RespositoryDetailView() {
-        switchFlag = PluginChecker.isTDQLoaded();
     }
 
     @Override
@@ -115,7 +114,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         gContainer.setLayoutData(data);
 
         // create extend group
-        if (switchFlag) {
+        if (PluginChecker.isTDQLoaded()) {
             tContainer = new Group(composite, SWT.NONE);
             tContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.Technical")); //$NON-NLS-1$
             tContainer.setLayout(new GridLayout(2, false));
@@ -133,7 +132,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private void createTechnicalDetail(EObject fe) {
         newLabelAndText(tContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.group.Identifier"), ResourceHelper.getUUID(fe)); //$NON-NLS-1$
-        
+
         newLabelAndText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"), fe.eResource() //$NON-NLS-1$
                 .getURI().toPlatformString(false));
     }
@@ -194,9 +193,13 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 TdColumn column = (TdColumn) fe;
                 createTdColumn(column);
                 is = false;
+            } else if (fe instanceof IEcosComponent) {
+                IEcosComponent component = (IEcosComponent) fe;
+                createEcosComponent(component);
+                is = false;
             }
 
-            if (switchFlag) {
+            if (PluginChecker.isTDQLoaded()) {
                 if (fe instanceof EObject) {
                     createTechnicalDetail((EObject) fe);
                 } else if (fe instanceof IFile) {
@@ -225,12 +228,28 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         }
     }
 
+    /**
+     * DOC bZhou Comment method "createEcosComponent".
+     * 
+     * @param component
+     */
+    private void createEcosComponent(IEcosComponent component) {
+        newLabelAndText(gContainer, "Name:", component.getName());
+        newLabelAndText(gContainer, "Author:", component.getAuthor());
+        newLabelAndText(gContainer, "Description:", component.getDescription());
+        newLabelAndText(gContainer, "Type:", ExpressionType.get(Integer.parseInt(component.getCategry())).getLiteral());
+    }
+
     private void createTableDetail(Table table) {
         createNameCommentDetail(table);
         List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.size())); //$NON-NLS-1$
+        newLabelAndText(
+                gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.size())); //$NON-NLS-1$
         List<ForeignKey> foreignKeys = TableHelper.getForeignKeys(table);
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.size()));         //$NON-NLS-1$
+        newLabelAndText(
+                gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.size())); //$NON-NLS-1$
     }
 
     private boolean createFileDetail(boolean is, IFile fe2) {
@@ -276,7 +295,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         return object;
     }
 
-    
     private void createPatternDetail(Pattern pattern) {
         createName(pattern);
         createPurpose(pattern);
@@ -297,7 +315,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(ana);
         createPurpose(ana);
         createDescription(ana);
-        
+
         String description = ana.getParameters().getAnalysisType().getLiteral();
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.otherType"), description); //$NON-NLS-1$
 
@@ -348,11 +366,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         newLabelAndText(gContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.modificationDate"), new Date(modificationStamp).toString()); //$NON-NLS-1$
     }
-   
+
     private void createReportDetail(TdReport rep) {
         createName(rep);
         createPurpose(rep);
-        createDescription(rep);        
+        createDescription(rep);
         int description = ReportHelper.getAnalyses(rep).size();
         newLabelAndText(gContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyses"), String.valueOf(description)); //$NON-NLS-1$
@@ -367,7 +385,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         final Expression initialValue = column.getInitialValue();
         String defValueText = (initialValue != null) ? initialValue.getBody() : null;
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.DefaultValue"), defValueText); //$NON-NLS-1$
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.Size"), String.valueOf(column.getLength())); //$NON-NLS-1$
+        newLabelAndText(gContainer,
+                DefaultMessagesImpl.getString("RespositoryDetailView.Size"), String.valueOf(column.getLength())); //$NON-NLS-1$
     }
 
     private void createNameCommentDetail(ModelElement element) {
@@ -392,7 +411,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(dataProvider);
         createPurpose(dataProvider);
         createDescription(dataProvider);
-        
+
         String connectionString = DataProviderHelper.getTdProviderConnection(dataProvider).getObject().getConnectionString();
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
 
@@ -407,12 +426,12 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     }
 
-    private void createDescription(ModelElement dataProvider) {        
+    private void createDescription(ModelElement dataProvider) {
         String description = TaggedValueHelper.getDescription(dataProvider);
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.description"), description); //$NON-NLS-1$
     }
 
-    private void createPurpose(ModelElement dataProvider) {        
+    private void createPurpose(ModelElement dataProvider) {
         String purpose = TaggedValueHelper.getPurpose(dataProvider);
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.purpose"), purpose); //$NON-NLS-1$
     }
