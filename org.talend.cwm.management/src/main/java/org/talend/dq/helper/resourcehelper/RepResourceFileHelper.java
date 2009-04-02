@@ -63,6 +63,11 @@ public final class RepResourceFileHelper extends ResourceFileMap {
 
     private void searchAllReports(IFolder folder) throws CoreException {
         for (IResource resource : folder.members()) {
+            // ~MOD mzhao if the member is a instance of IFolder, forget it.
+            if (resource instanceof IFolder) {
+                continue;
+            }
+            // ~
             if (resource.getType() == IResource.FOLDER) {
                 searchAllReports(folder.getFolder(resource.getName()));
             }
