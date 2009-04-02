@@ -601,7 +601,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 for (int i = 0; i < columns.size(); i++) {
                     TdColumn tdColumn = (TdColumn) columns.get(i);
                     if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
-                        message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.ColumnNotUsed");
+                        message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NumbericColumn");
                         break;
                     }
                 }
