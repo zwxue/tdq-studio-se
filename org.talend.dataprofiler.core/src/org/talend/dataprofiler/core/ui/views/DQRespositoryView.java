@@ -94,6 +94,7 @@ public class DQRespositoryView extends CommonNavigator {
 
     public DQRespositoryView() {
         super();
+        CorePlugin.getDefault().doMigrationTaskDQStructureChange();
         CorePlugin.getDefault().checkDQStructure();
         CorePlugin.getDefault().doMigrationTask();
         CorePlugin.getDefault().setRespositoryView(this);

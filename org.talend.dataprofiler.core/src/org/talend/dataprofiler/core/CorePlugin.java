@@ -44,6 +44,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
@@ -337,10 +338,33 @@ public class CorePlugin extends AbstractUIPlugin {
 
         if (!tasks.isEmpty()) {
             for (IWorkspaceMigrationTask task : tasks) {
-                task.execute();
+                // MOD mzhao 2009-04-02, Do migration for dq structure before CREATE DQStructure and before other
+                // migrations.
+                if (!(task instanceof TDCPFolderMergeTask)) {
+                    task.execute();
+                }
             }
 
             WorkspaceVersionHelper.storeVersion();
+        }
+    }
+
+    /**
+     * 
+     * DOC mzhao 2009-04-02, Do migration for dq structure before CREATE DQStructure and before other migrations.
+     */
+    public void doMigrationTaskDQStructureChange() {
+
+        List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
+
+        if (!tasks.isEmpty()) {
+            for (IWorkspaceMigrationTask task : tasks) {
+                if (task instanceof TDCPFolderMergeTask) {
+                    task.execute();
+                    break;
+                }
+
+            }
         }
     }
 
