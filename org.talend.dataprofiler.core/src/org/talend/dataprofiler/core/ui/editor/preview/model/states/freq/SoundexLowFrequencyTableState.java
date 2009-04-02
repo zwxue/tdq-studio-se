@@ -20,6 +20,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.SoundexFrequencyExplorer;
 
 /**
  * 
@@ -54,5 +56,10 @@ public class SoundexLowFrequencyTableState extends FrequencyTypeStates {
                         DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.distinctCount"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         entity.setFieldWidths(new Integer[] { 180, 120, 100, 100 });
         return entity;
+    }
+
+    @Override
+    public DataExplorer getDataExplorer() {
+        return new SoundexFrequencyExplorer();
     }
 }

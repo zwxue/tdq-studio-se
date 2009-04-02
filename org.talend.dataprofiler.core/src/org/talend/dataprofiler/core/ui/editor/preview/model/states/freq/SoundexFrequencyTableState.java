@@ -20,6 +20,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dq.analysis.explore.DataExplorer;
+import org.talend.dq.analysis.explore.SoundexFrequencyExplorer;
 
 /**
  * 
@@ -29,6 +31,11 @@ public class SoundexFrequencyTableState extends FrequencyTypeStates {
 
     public SoundexFrequencyTableState(List<IndicatorUnit> units) {
         super(units);
+    }
+
+    @Override
+    public DataExplorer getDataExplorer() {
+        return new SoundexFrequencyExplorer();
     }
 
     @Override
