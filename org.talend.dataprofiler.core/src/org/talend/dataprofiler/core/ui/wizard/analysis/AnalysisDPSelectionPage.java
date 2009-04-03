@@ -12,15 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
-import java.util.ArrayList;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -34,12 +27,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.jfree.util.Log;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
-import org.talend.dq.nodes.foldernode.IFolderNode;
 
 /**
  * DOC mzhao class global comment. This class provide abstract methods for client to add different filter and listener.
@@ -55,6 +45,9 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
     private String nameLabTxt = null;
 
     private boolean multiSelect;
+
+    private IFolder metadataFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
+            org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(PluginConstant.METADATA_PROJECTNAME);
 
     public AnalysisDPSelectionPage(String labText, AdapterFactoryContentProvider contentProvider) {
         init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$
@@ -89,8 +82,9 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
 
         createMetaDataTree(container);
         setControl(container);
-        addFilters();
+        addFilters(new EMFObjFilter());
         addListeners();
+
     }
 
     private void createMetaDataTree(Composite parent) {
@@ -102,41 +96,16 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         fViewer = new TreeViewer(treeContainer, style);
         fViewer.setContentProvider(fContentProvider);
         fViewer.setLabelProvider(fLabelProvider);
-        fViewer.setInput(ResourcesPlugin.getWorkspace().getRoot());
+        fViewer.setInput(metadataFolder);
         // fViewer.expandAll();
     }
 
     protected abstract void addListeners();
 
-    @SuppressWarnings("unchecked")
-    protected void addFilters() {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        final Class[] acceptedClasses = new Class[] { IResource.class, IFolderNode.class, EObject.class, IFile.class };
-        IProject rootProject = root.getProject(org.talend.dataquality.PluginConstant.getRootProjectName());
-        IResource[] resources = null;
-        try {
-            resources = rootProject.members();
-        } catch (CoreException e) {
-            Log.error(e);
+    protected void addFilters(ViewerFilter... filters) {
+        for (ViewerFilter filter : filters) {
+            fViewer.addFilter(filter);
         }
-        ArrayList rejectedElements = new ArrayList(resources.length);
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        for (int i = 0; i < resources.length; i++) {
-            if (!resources[i].equals(ResourcesPlugin.getWorkspace().getRoot().getProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(PluginConstant.METADATA_PROJECTNAME))) {
-                rejectedElements.add(resources[i]);
-            }
-        }
-        rejectedElements.add(ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(PluginConstant.METADATA_PROJECTNAME)
-                .getFile(".project")); //$NON-NLS-1$
-        ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
-        addFilter(filter);
-    }
-
-    protected void addFilter(ViewerFilter filter) {
-        fViewer.addFilter(filter);
-        fViewer.addFilter(new EMFObjFilter());
     }
 
     protected void addListener(IDoubleClickListener doubleClickListener) {

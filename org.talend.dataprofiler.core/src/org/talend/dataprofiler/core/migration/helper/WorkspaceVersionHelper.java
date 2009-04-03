@@ -35,7 +35,7 @@ import org.talend.utils.ProductVersion;
  */
 public class WorkspaceVersionHelper {
 
-    public final static String VERSION = "version"; //$NON-NLS-1$
+    public static final String VERSION = "version"; //$NON-NLS-1$
 
     /**
      * 
