@@ -47,7 +47,7 @@ public final class ConnectionUtils {
 
     public static final int LOGIN_TIMEOUT_SECOND = 20;
 
-    private static boolean timeout = true;
+    private static boolean timeout = Boolean.valueOf(Messages.getString("ConnectionUtils.isTimeOut"));
 
     public static boolean isTimeout() {
         return timeout;
