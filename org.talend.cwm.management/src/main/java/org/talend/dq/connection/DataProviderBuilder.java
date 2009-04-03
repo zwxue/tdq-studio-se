@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
@@ -35,10 +36,16 @@ public class DataProviderBuilder {
 
     private DataProvider dataProvider;
 
-    public boolean initializeDataProvider(DBConnectionParameter parameter) {
+    public ReturnCode initializeDataProvider(DBConnectionParameter parameter) {
+        ReturnCode returnCode = new ReturnCode();
+        String msg = "OK is OK! ";
         if (initialized) {
-            log.warn("Pattern already initialized. ");
-            return false;
+            msg = "Pattern already initialized. ";
+            log.warn(msg);
+
+            returnCode.setOk(false);
+            returnCode.setMessage(msg);
+            return returnCode;
         }
 
         DBConnect connector = new DBConnect(parameter);
@@ -46,15 +53,20 @@ public class DataProviderBuilder {
             dataProvider = TalendCwmFactory.createDataProvider(connector);
             String connectionName = parameter.getName();
             dataProvider.setName(connectionName);
-            return true;
+
+            returnCode.setOk(true);
+            return returnCode;
         } catch (SQLException e) {
-            String mess = "Failed to create a data provider for the given connection parameters: " + e.getMessage();
-            log.warn(mess, e);
+            msg = "Failed to create a data provider for the given connection parameters: " + e.getMessage();
+            log.warn(msg, e);
+
+            returnCode.setOk(false);
+            returnCode.setMessage(msg);
         } finally {
             connector.closeConnection();
         }
 
-        return false;
+        return returnCode;
     }
 
     public DataProvider getDataProvider() {

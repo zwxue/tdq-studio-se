@@ -18,6 +18,7 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -29,6 +30,7 @@ import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -110,10 +112,16 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                     jars);
         }
 
-        boolean dpInitialized = dpBuilder.initializeDataProvider(connectionParam);
+        ReturnCode rc = dpBuilder.initializeDataProvider(connectionParam);
 
-        if (dpInitialized) {
+        if (rc.isOk()) {
             return dpBuilder.getDataProvider();
+        } else {
+            MessageDialog
+                    .openInformation(
+                            getShell(),
+                            DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
+                                    + rc.getMessage());
         }
 
         return null;
