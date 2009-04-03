@@ -122,27 +122,43 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
-    public static Connection createConnectionWithTimeout(Driver driver, String url, Properties props) throws SQLException {
+    public synchronized static Connection createConnectionWithTimeout(Driver driver, String url, Properties props)
+            throws SQLException {
         Connection ret = null;
         if (isTimeout()) {
             ConnectionCreator cc = new ConnectionCreator(driver, url, props);
             new Thread(cc).start();
             long begin = System.currentTimeMillis();
+            boolean isTimeout = false;
+            boolean isOK = false;
+            boolean isException = false;
             while (true) {
-                if (System.currentTimeMillis() - begin > LOGIN_TEMEOUT_MILLISECOND) {
-                    break;
-                }
                 if (cc.getConnection() != null) {
+                    isOK = true;
                     ret = cc.getConnection();
                     break;
                 }
                 if (cc.getExecption() != null) {
-                    throw cc.getExecption();
+                    isException = true;
+                    break;
+                }
+                if (System.currentTimeMillis() - begin > LOGIN_TEMEOUT_MILLISECOND) {
+                    isTimeout = true;
+                    break;
                 }
             }
-            cc = null;
-            if (ret == null) {
+            if (isTimeout) {
+                cc = null;
                 throw new SQLException(Messages.getString("ConnectionUtils.ConnectionTimeout")); //$NON-NLS-1$
+            }
+            if (isException) {
+                SQLException e = cc.getExecption();
+                cc = null;
+                throw e;
+            }
+            if (isOK) {
+                ret = cc.getConnection();
+                cc = null;
             }
         } else {
             ret = driver.connect(url, props);
