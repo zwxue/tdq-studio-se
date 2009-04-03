@@ -13,22 +13,18 @@
 package org.talend.dataprofiler.core.migration.helper;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.jfree.util.Log;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -41,44 +37,25 @@ public class WorkspaceVersionHelper {
 
     public final static String VERSION = "version"; //$NON-NLS-1$
 
-    public static File getVersionFile() {
+    /**
+     * 
+     * MOD mzhao Get version file
+     * 
+     * @return
+     */
+    public static IFile getVersionFile() {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        try {
-            root.refreshLocal(IResource.DEPTH_INFINITE, null);
-        } catch (CoreException e1) {
-            e1.printStackTrace();
+        // Try to find from /Libraries/.version.txt
+        IPath versionFilePath = Path.fromOSString(root.getFullPath() + File.separator + "Libaries" + File.separator
+                + PluginConstant.VERSION_FILE_PATH);
+        IFile versionFile = root.getFile(versionFilePath);
+        if (!versionFile.exists()) {
+            versionFilePath = Path.fromOSString(root.getFullPath() + File.separator
+                    + org.talend.dataquality.PluginConstant.getRootProjectName() + File.separator
+                    + DQStructureManager.getLibraries() + File.separator + PluginConstant.VERSION_FILE_PATH);
+            versionFile = root.getFile(versionFilePath);
         }
-        // MOD mzhao 2009-03-13 put all folders in one project.
-        IProject project = root.getProject(org.talend.dataquality.PluginConstant.getRootProjectName());
-
-        if (project.exists() && !project.isOpen()) {
-            try {
-                project.open(null);
-            } catch (CoreException e) {
-                e.printStackTrace();
-            }
-        }
-        IFolder librariesFolder = project.getFolder(DQStructureManager.getLibraries());
-        // MOD mzhao try to find version in "/Libraries/.verstion.txt" location
-        // if not exist in "/TOP_DEFAULT_PRJ/Libraries/.version.txt".It is only
-        // necessary when migrate version from previouse to 1.2.0 (See feature
-        // 6066), Moreover, the ".version.txt" file must be fetched in static
-        // way, not by finding in "WorkSpace"( means not by
-        // root.getProject(...))
-        IFile versionFileTmp = librariesFolder.getFile(PluginConstant.VERSION_FILE_PATH);
-        if (!versionFileTmp.exists()) {
-            // MOD mzhao 2009-04-02, As there is "TDQ" prefix added to "Libraries" folder, remove it before getting old
-            // structure.
-            File vf = new File(root.getRawLocation().toOSString() + IPath.SEPARATOR
-                    + StringUtils.removeStart(DQStructureManager.getLibraries(), DQStructureManager.PREFIX_TDQ) + IPath.SEPARATOR
-                    + PluginConstant.VERSION_FILE_PATH);
-
-            return vf;
-
-        } else {
-            return new File(versionFileTmp.getRawLocation().toOSString());
-        }
-
+        return versionFile;
     }
 
     /**
@@ -88,18 +65,21 @@ public class WorkspaceVersionHelper {
      * @return
      */
     public static ProductVersion getVesion() {
-        File versionFile = getVersionFile();
-        if (versionFile.exists()) {
-            Properties pros = new Properties();
-            try {
-                pros.load(new FileInputStream(versionFile));
+        IFile versionFile = getVersionFile();
+        try {
+            versionFile.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+            if (versionFile.exists()) {
+                Properties pros = new Properties();
+
+                pros.load(versionFile.getContents());
                 String version = pros.getProperty(VERSION);
                 if (version != null && !"".equals(version)) { //$NON-NLS-1$
                     return ProductVersion.fromString(version);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return new ProductVersion(0, 0, 0);
@@ -107,24 +87,14 @@ public class WorkspaceVersionHelper {
 
     /**
      * 
-     * MOD mzhao 2009-03-19, Get version file as "java.io.File", and if this file dose not exist,return. MOD mzhao
-     * 2009-04-02, if this file dose not exist,create.
+     * MOD mzhao 2009-04-03
      */
     public static void storeVersion() {
-        File versionFile = getVersionFile();
-        if (!versionFile.exists()) {
-            try {
-                versionFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.error(e, e);
-            }
-        }
+        IFile versionFile = getVersionFile();
         Properties pros = new Properties();
         pros.setProperty(VERSION, CorePlugin.getDefault().getProductVersion().toString());
-
         try {
-            pros.store(new FileOutputStream(versionFile), null);
+            pros.store(new FileOutputStream(new File(versionFile.getLocation().toOSString())), null);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
