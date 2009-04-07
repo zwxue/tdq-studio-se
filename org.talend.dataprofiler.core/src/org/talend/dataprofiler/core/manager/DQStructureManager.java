@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -64,6 +65,10 @@ public final class DQStructureManager {
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
 
     private static final String EXCHANGE_PATH = "/exchange";//$NON-NLS-1$
+
+    public static final String JRXML_REPORT_FOLDER = "JRXML Reports";//$NON-NLS-1$
+
+    public static final String JRXML_FOLDER_PROPERTY = "JRXML_FOLDER_PROPERTY"; //$NON-NLS-1$
 
     public static final String REPORTS = DefaultMessagesImpl.getString("DQStructureManager.reports"); //$NON-NLS-1$
 
@@ -213,9 +218,9 @@ public final class DQStructureManager {
             createNewFoler = this.createNewFoler(librariesFoler, EXCHANGE);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, EXCHANGE_FOLDER_PROPERTY);
             createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY, DQStructureManager.NO_SUBFOLDER_PROPERTY);
-
+            // MOD mzhao 2009-04-07, create jrxml folder.
+            checkJRXMLFolderExist();
             // create "Metadata" project
-
             IFolder metadataFolder = this.createNewFoler(rootProject, getMetaData());
             createNewFoler = this.createNewFoler(metadataFolder, DB_CONNECTIONS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DBCONNECTION_FOLDER_PROPERTY);
@@ -226,6 +231,25 @@ public final class DQStructureManager {
         }
 
         return true;
+    }
+
+    // MOD mzhao 2009-04-07
+    private static IFolder checkJRXMLFolderExist() {
+        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(
+                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getLibraries())
+                .getFolder(JRXML_REPORT_FOLDER);
+        try {
+            if (!folder.exists()) {
+                folder.create(false, true, null);
+            }
+            folder.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+            folder.setPersistentProperty(DQStructureManager.FOLDER_READONLY_KEY, DQStructureManager.FOLDER_READONLY_PROPERTY);
+            folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, JRXML_FOLDER_PROPERTY);
+            folder.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY, DQStructureManager.NO_SUBFOLDER_PROPERTY);
+        } catch (CoreException coreExp) {
+            ExceptionHandler.process(coreExp);
+        }
+        return folder;
     }
 
     /**

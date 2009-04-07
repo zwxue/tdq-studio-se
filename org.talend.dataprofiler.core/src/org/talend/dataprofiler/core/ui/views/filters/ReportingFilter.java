@@ -35,8 +35,11 @@ public class ReportingFilter extends AbstractViewerFilter {
         if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
             try {
+                // MOD mzhao 2009-04-07, Add filter for JRXML Report folder.
                 if (DQStructureManager.REPORT_FOLDER_PROPERTY.equals(folder
-                        .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
+                        .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))
+                        || DQStructureManager.JRXML_FOLDER_PROPERTY.equals(folder
+                                .getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY))) {
                     return false;
                 }
             } catch (CoreException e) {
