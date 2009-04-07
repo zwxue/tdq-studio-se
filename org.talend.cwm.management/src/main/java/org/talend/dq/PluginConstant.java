@@ -42,4 +42,6 @@ public final class PluginConstant {
     public static final String REP_SUFFIX = "." + FactoriesUtil.REP; //$NON-NLS-1$
 
     public static final String PATTERN_SUFFIX = "*.pattern"; //$NON-NLS-1$
+
+    public static final String CONNECTION_TIMEOUT = "CONNECTION_TIMEOUT"; //$NON-NLS-1$
 }

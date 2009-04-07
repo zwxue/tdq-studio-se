@@ -32,6 +32,8 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
+import org.talend.dq.CWMPlugin;
+import org.talend.dq.PluginConstant;
 import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -47,7 +49,7 @@ public final class ConnectionUtils {
 
     public static final int LOGIN_TIMEOUT_SECOND = 20;
 
-    private static boolean timeout = Boolean.valueOf(Messages.getString("ConnectionUtils.isTimeOut"));
+    private static boolean timeout = CWMPlugin.getDefault().getPluginPreferences().getBoolean(PluginConstant.CONNECTION_TIMEOUT);
 
     public static boolean isTimeout() {
         return timeout;
