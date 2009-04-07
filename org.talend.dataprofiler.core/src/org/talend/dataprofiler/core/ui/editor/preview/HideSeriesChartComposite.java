@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -38,6 +39,7 @@ import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.CategoryTextAnnotation;
 import org.jfree.chart.axis.CategoryAnchor;
+import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.labels.CategoryToolTipGenerator;
@@ -52,6 +54,7 @@ import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.ui.TextAnchor;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -64,6 +67,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dq.analysis.explore.MultiColumnSetValueExplorer;
+import orgomg.cwm.resource.relational.Column;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -103,7 +107,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
     private void addSpecifiedListeners() {
 
-        // MOD mzhao 2009-03-30, Feature 6503, add view rows menu item.
+        // MOD mzhao 2009-03-30, Feature 6530, add view rows menu item.
         this.addChartMouseListener(new ChartMouseListener() {
 
             public void chartMouseClicked(ChartMouseEvent event) {
@@ -134,52 +138,95 @@ public class HideSeriesChartComposite extends ChartComposite {
 
                 ChartEntity chartEntity = event.getEntity();
                 if (chartEntity != null) {
-                    XYItemEntity xyItemEntity = (XYItemEntity) chartEntity;
-                    DefaultXYZDataset xyzDataSet = (DefaultXYZDataset) xyItemEntity.getDataset();
-
-                    final Comparable<?> seriesKey = xyzDataSet.getSeriesKey(xyItemEntity.getSeriesIndex());
-                    final String seriesK = String.valueOf(seriesKey);
-                    try {
-                        final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(indicator,
-                                column);
-                        final ValueAggregator valueAggregator = createXYZDatasets.get(seriesKey);
-                        valueAggregator.addSeriesToXYZDataset(xyzDataSet, seriesK);
-                        String seriesLabel = valueAggregator.getLabels(seriesK).get(xyItemEntity.getItem());
-                        final String queryString = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis,
-                                seriesK, seriesLabel);
-
-                        MenuItem item = new MenuItem(menu, SWT.PUSH);
-                        item.setText("View rows");
-                        item.addSelectionListener(new SelectionAdapter() {
-
-                            @Override
-                            public void widgetSelected(SelectionEvent e) {
-                                Display.getDefault().asyncExec(new Runnable() {
-
-                                    public void run() {
-                                        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
-                                                .getContext().getConnection());
-                                        String query = queryString;
-                                        String editorName = "Nominal value of " + seriesK;
-                                        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
-                                    }
-
-                                });
-                            }
-
-                        });
-
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                        log.error(e);
+                    if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator().equals(indicator.eClass())) {
+                        addMenuOnBubbleChart(chartEntity, menu);
+                    } else if (ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator().equals(indicator.eClass())) {
+                        addMenuOnGantChart(chartEntity, menu);
                     }
-
                 }
                 menu.setVisible(true);
             }
 
+            private void addMenuOnBubbleChart(ChartEntity chartEntity, Menu menu) {
+                // TODO Auto-generated method stub
+                XYItemEntity xyItemEntity = (XYItemEntity) chartEntity;
+
+                DefaultXYZDataset xyzDataSet = (DefaultXYZDataset) xyItemEntity.getDataset();
+                int ind = xyItemEntity.getSeriesIndex();
+                final Comparable<?> seriesKey = xyzDataSet.getSeriesKey(xyItemEntity.getSeriesIndex());
+                final String seriesK = String.valueOf(seriesKey);
+
+                try {
+                    final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(indicator, column);
+
+                    final ValueAggregator valueAggregator = createXYZDatasets.get(seriesKey);
+
+                    valueAggregator.addSeriesToXYZDataset(xyzDataSet, seriesK);
+                    String seriesLabel = valueAggregator.getLabels(seriesK).get(xyItemEntity.getItem());
+                    EList<Column> nominalList = indicator.getNominalColumns();
+                    final String queryString = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis,
+                            nominalList, seriesK, seriesLabel);
+
+                    MenuItem item = new MenuItem(menu, SWT.PUSH);
+                    item.setText("View rows");
+                    item.addSelectionListener(new SelectionAdapter() {
+
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            Display.getDefault().asyncExec(new Runnable() {
+
+                                public void run() {
+                                    TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                            .getContext().getConnection());
+                                    String query = queryString;
+                                    String editorName = ColumnHelper.getColumnSetOwner(column).getName();
+                                    CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                }
+
+                            });
+                        }
+
+                    });
+
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    log.error(e);
+                }
+
+            }
+
             public void chartMouseMoved(ChartMouseEvent event) {
 
+            }
+
+        });
+    }
+
+    private void addMenuOnGantChart(ChartEntity chartEntity, Menu menu) {
+        CategoryItemEntity itemEntity = (CategoryItemEntity) chartEntity;
+
+        String seriesK = itemEntity.getRowKey().toString();
+        String seriesLabel = itemEntity.getColumnKey().toString();
+        EList<Column> nominalList = indicator.getNominalColumns();
+        final String sql = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis, nominalList, seriesK,
+                seriesLabel);
+        MenuItem item = new MenuItem(menu, SWT.PUSH);
+        item.setText("View rows");
+        item.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis.getContext()
+                                .getConnection());
+                        String query = sql;
+                        String editorName = ColumnHelper.getColumnSetOwner(column).getName();
+                        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                    }
+
+                });
             }
 
         });
@@ -310,6 +357,7 @@ public class HideSeriesChartComposite extends ChartComposite {
             Task task = taskList.get(column);
             // Task task = taskSeriesColl.getSeries(row).get(column);
             String taskDescription = task.getDescription();
+
             Date startDate = task.getDuration().getStart();
             Date endDate = task.getDuration().getEnd();
             return taskDescription + ",     " + startDate + "---->" + endDate; //$NON-NLS-1$ //$NON-NLS-2$

@@ -234,7 +234,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                                 HideSeriesChartComposite hcc = new HideSeriesChartComposite(comp, getAnalysisHandler()
                                         .getAnalysis(), columnSetMultiValueIndicator, tdColumn, true);
                                 GridData gd = new GridData();
-                                gd.widthHint = 900;
+                                gd.widthHint = 800;
                                 gd.heightHint = 450;
                                 hcc.setLayoutData(gd);
                             }
