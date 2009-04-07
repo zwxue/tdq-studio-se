@@ -15,7 +15,10 @@ package org.talend.dq.analysis.explore;
 
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -26,7 +29,7 @@ public class MultiColumnSetValueExplorer extends DataExplorer {
 
     private static final String SELECT_ALL_FROM = "SELECT * FROM "; //$NON-NLS-1$
 
-    private static final String WHERE = " WHERE ";
+    private static final String WHERE = " WHERE "; //$NON-NLS-1$
 
     private static MultiColumnSetValueExplorer instance = null;
 
@@ -45,10 +48,44 @@ public class MultiColumnSetValueExplorer extends DataExplorer {
         return null;
     }
 
-    public String getQueryStirng(Column column, Analysis ana, String columnName, String columnValue) {
+    public String getQueryStirng(Column column, Analysis ana, EList<Column> nominalList, String columnName, String columnValue) {
         setAnalysis(ana);
-        String queryString = SELECT_ALL_FROM + getFullyQualifiedTableName(column) + WHERE + columnName + dbmsLanguage.equal()
-                + columnValue;
+        // MOD by hcheng for 6530
+        String queryString = SELECT_ALL_FROM + getFullyQualifiedTableName(column);
+        int col = columnName.indexOf(" "); //$NON-NLS-1$
+        int val = columnValue.indexOf("|"); //$NON-NLS-1$
+        for (Column nominal : nominalList) {
+            final TdColumn tdColumn = (TdColumn) nominal;
+
+            if (col > 0 && val > 0) {
+                String[] name = columnName.split(" "); //$NON-NLS-1$
+                String[] value = columnValue.split(" \\| "); //$NON-NLS-1$
+
+                for (int i = 0; i < name.length; i++) {
+                    String where = dbmsLanguage.and();
+                    if (i == 0) {
+                        where = dbmsLanguage.where();
+                    }
+                    queryString = buildWhereClause(queryString, tdColumn, name[i], value[i], where);
+                }
+            } else {
+                queryString = buildWhereClause(queryString, tdColumn, columnName.trim(), columnValue, dbmsLanguage.where());
+            }
+        }
+        return queryString;
+
+    }
+
+    private String buildWhereClause(String queryString, final TdColumn tdColumn, String name, String value, String where) {
+        if (tdColumn.getName().equals(name) && !value.equals("null")) { //$NON-NLS-1$
+            if (Java2SqlType.isTextInSQL(tdColumn.getJavaType())) {
+                queryString += where + name + dbmsLanguage.equal() + "'" + value + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else {
+                queryString += where + name + dbmsLanguage.equal() + value;
+            }
+        } else if (tdColumn.getName().equals(name) && value.equals("null")) { //$NON-NLS-1$
+            queryString += where + name + dbmsLanguage.isNull();
+        }
         return queryString;
     }
 }

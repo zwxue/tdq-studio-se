@@ -24,6 +24,15 @@ import orgomg.cwm.resource.relational.Table;
  */
 public class RowMatchExplorer extends DataExplorer {
 
+    private static RowMatchExplorer instance = null;
+
+    public static RowMatchExplorer getInstance() {
+        if (instance == null) {
+            instance = new RowMatchExplorer();
+        }
+        return instance;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -91,7 +100,7 @@ public class RowMatchExplorer extends DataExplorer {
      * 
      * @return
      */
-    private String getAllRowsStatement() {
+    public String getAllRowsStatement() {
         Table table = (Table) indicator.getAnalyzedElement();
         return "select * " + dbmsLanguage.from() + getFullyQualifiedTableName(table); //$NON-NLS-1$
     }
