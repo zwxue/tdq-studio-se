@@ -40,7 +40,7 @@ public enum FormEnum {
     FreqTextLengthForm("Blank Options", "html/wizard/indicator/BlankOptions.html"), //$NON-NLS-1$ //$NON-NLS-2$
     NumbericNominalForm("Frequency Table Parameters", ""), //$NON-NLS-1$ //$NON-NLS-2$
     ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html"), //$NON-NLS-1$ //$NON-NLS-2$
-    JavaOptionsForm("Java Options", ""); //$NON-NLS-1$ //$NON-NLS-2$
+    JavaOptionsForm("Java Options", "html/wizard/indicator/JavaOptions.html"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private String formName;
 
