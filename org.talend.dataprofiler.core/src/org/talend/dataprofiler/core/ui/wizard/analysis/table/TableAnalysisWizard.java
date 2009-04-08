@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
@@ -30,6 +31,7 @@ import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -98,6 +100,21 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         }
         dqruleSelectPage = new DQRuleSelectPage();
         addPage(dqruleSelectPage);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#createAndSaveCWMFile(orgomg.cwm.objectmodel
+     * .core.ModelElement)
+     */
+    @Override
+    public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
+        Analysis analysis = (Analysis) cwmElement;
+        DependenciesHandler.getInstance().setDependencyOn(analysis, analysis.getContext().getConnection());
+
+        return super.createAndSaveCWMFile(analysis);
     }
 
     @Override

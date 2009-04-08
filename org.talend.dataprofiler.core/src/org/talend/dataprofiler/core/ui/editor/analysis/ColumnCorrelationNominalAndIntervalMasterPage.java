@@ -481,18 +481,17 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         correlationAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 
         // save analysis
-        List<Column> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
+        List<Column> columnList = treeViewer.getColumnSetMultiValueList();
 
         TdDataProvider tdProvider = null;
-        if (columnSetMultiValueList != null) {
-            if (columnSetMultiValueList.size() != 0) {
-                tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnSetMultiValueList
-                        .get(0)));
-                analysis.getContext().setConnection(tdProvider);
-                columnSetMultiIndicator.getAnalyzedColumns().addAll(columnSetMultiValueList);
-            }
-
-            correlationAnalysisHandler.addIndicator(columnSetMultiValueList, columnSetMultiIndicator);
+        if (columnList != null && columnList.size() != 0) {
+            tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
+            analysis.getContext().setConnection(tdProvider);
+            columnSetMultiIndicator.getAnalyzedColumns().addAll(columnList);
+            correlationAnalysisHandler.addIndicator(columnList, columnSetMultiIndicator);
+        } else {
+            analysis.getContext().setConnection(null);
+            analysis.getClientDependency().clear();
         }
 
         String urlString = analysis.eResource() != null ? analysis.eResource().getURI().toFileString()
@@ -617,8 +616,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                     }
                 }
             }
-        } else {
-            message = "No any columns is analyzed.";
         }
 
         if (message == null) {

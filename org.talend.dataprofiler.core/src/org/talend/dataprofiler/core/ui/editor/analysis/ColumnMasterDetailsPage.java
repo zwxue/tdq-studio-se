@@ -58,6 +58,7 @@ import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -82,7 +83,6 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.ColumnAnalysisHandler;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -558,11 +558,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         TdDataProvider tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
-        if (columnIndicators != null) {
-            if (columnIndicators.length != 0) {
-                tdProvider = EObjectHelper.getTdDataProvider(columnIndicators[0].getTdColumn());
-                analysis.getContext().setConnection(tdProvider);
-            }
+        if (columnIndicators != null && columnIndicators.length != 0) {
+
+            tdProvider = DataProviderHelper.getTdDataProvider(columnIndicators[0].getTdColumn());
+            analysis.getContext().setConnection(tdProvider);
+
             for (ColumnIndicator columnIndicator : columnIndicators) {
                 analysisHandler.addIndicator(columnIndicator.getTdColumn(), columnIndicator.getIndicators());
                 DataminingType type = MetadataHelper.getDataminingType(columnIndicator.getTdColumn());
@@ -571,6 +571,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 }
                 analysisHandler.setDatamingType(type.getLiteral(), columnIndicator.getTdColumn());
             }
+        } else {
+            analysis.getContext().setConnection(null);
+            analysis.getClientDependency().clear();
         }
         // if (providerList.size() != 0) {
         //           

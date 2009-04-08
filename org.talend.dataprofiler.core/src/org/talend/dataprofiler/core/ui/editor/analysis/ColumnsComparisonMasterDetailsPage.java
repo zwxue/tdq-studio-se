@@ -464,6 +464,9 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         if (analysedElements.size() > 0) {
             TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider((Column) analysedElements.get(0));
             analysis.getContext().setConnection(tdDataProvider);
+        } else {
+            analysis.getContext().setConnection(null);
+            analysis.getClientDependency().clear();
         }
         // rowCountIndicator.setAnalyzedElement(value)
         // rowMatchingIndicatorA
