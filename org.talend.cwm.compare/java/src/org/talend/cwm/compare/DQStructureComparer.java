@@ -487,6 +487,8 @@ public final class DQStructureComparer {
 			// a resource...
 			column.getUniqueKey().clear();
 			// ~
+			// ~MOD mzhao 2009-04-08 Clear foreign key.
+			column.getKeyRelationship().clear();
 			return;
 		}
 	}
