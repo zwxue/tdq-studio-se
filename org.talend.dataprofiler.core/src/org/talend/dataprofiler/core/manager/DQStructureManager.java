@@ -245,7 +245,6 @@ public final class DQStructureManager {
             folder.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
             folder.setPersistentProperty(DQStructureManager.FOLDER_READONLY_KEY, DQStructureManager.FOLDER_READONLY_PROPERTY);
             folder.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY, JRXML_FOLDER_PROPERTY);
-            folder.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY, DQStructureManager.NO_SUBFOLDER_PROPERTY);
         } catch (CoreException coreExp) {
             ExceptionHandler.process(coreExp);
         }

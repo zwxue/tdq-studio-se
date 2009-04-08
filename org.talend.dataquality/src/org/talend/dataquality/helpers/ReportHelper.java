@@ -280,6 +280,7 @@ public final class ReportHelper {
      */
     public static boolean setReportType(TdReport report, Analysis analysis, ReportType reportType, String jrxmlFullPath) {
         boolean ok = true;
+        reportType = reportType == null ? ReportHelper.ReportType.USER_MADE : reportType;
         switch (reportType) {
         case USER_MADE:
             report.setReportType(reportType.getLabel(), jrxmlFullPath, analysis);
