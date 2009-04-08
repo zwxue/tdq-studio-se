@@ -99,12 +99,13 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
         comboLang.setItems(types);
         comboLang.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         if (types.length > 0 && language == null) {
-            comboLang.setText(PatternLanguageType.ALL_DATABASE_TYPE.getName());
-            PatternParameter parameter = (PatternParameter) getParameter();
-            parameter.setLanguage(PatternLanguageType.ALL_DATABASE_TYPE.getName());
-        } else {
-            comboLang.setText(language);
+            language = PatternLanguageType.ALL_DATABASE_TYPE.getName();
         }
+
+        comboLang.setText(language);
+        PatternParameter parameter = (PatternParameter) getParameter();
+        parameter.setLanguage(language);
+        parameter.setExpression(expression);
 
         addHelpSurpport();
 

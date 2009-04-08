@@ -78,29 +78,31 @@ public class CreatePatternAction extends Action {
      */
     @Override
     public void run() {
-        PatternParameter parameter = new PatternParameter();
-        FolderProvider folderProvider = new FolderProvider();
-        folderProvider.setFolderResource(folder);
-        parameter.setFolderProvider(folderProvider);
+        if (folder.exists()) {
+            PatternParameter parameter = new PatternParameter();
+            FolderProvider folderProvider = new FolderProvider();
+            folderProvider.setFolderResource(folder);
+            parameter.setFolderProvider(folderProvider);
 
-        CreatePatternWizard fileWizard;
-        if (this.expression != null && this.lanuage != null) {
-            fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter, expression, lanuage);
-        } else {
-            fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter);
+            CreatePatternWizard fileWizard;
+            if (this.expression != null && this.lanuage != null) {
+                fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter, expression, lanuage);
+            } else {
+                fileWizard = (CreatePatternWizard) WizardFactory.createPatternWizard(type, parameter);
+            }
+            IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getPatternHelpContextID());
+            IHelpResource[] relatedTopics = context.getRelatedTopics();
+            String href = relatedTopics[0].getHref();
+            switch (type) {
+            case SQL_LIKE:
+                href = relatedTopics[1].getHref();
+                break;
+            default:
+                break;
+            }
+            WizardDialog dialog = new OpeningHelpWizardDialog(Display.getDefault().getActiveShell(), fileWizard, href);
+            fileWizard.setWindowTitle(getText());
+            dialog.open();
         }
-        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getPatternHelpContextID());
-        IHelpResource[] relatedTopics = context.getRelatedTopics();
-        String href = relatedTopics[0].getHref();
-        switch (type) {
-        case SQL_LIKE:
-            href = relatedTopics[1].getHref();
-            break;
-        default:
-            break;
-        }
-        WizardDialog dialog = new OpeningHelpWizardDialog(Display.getDefault().getActiveShell(), fileWizard, href);
-        fileWizard.setWindowTitle(getText());
-        dialog.open();
     }
 }
