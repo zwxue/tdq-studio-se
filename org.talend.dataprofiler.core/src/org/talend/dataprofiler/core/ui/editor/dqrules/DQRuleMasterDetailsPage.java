@@ -46,7 +46,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
-import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -153,17 +152,16 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     /**
      * DOC xqliu Comment method "creatDQRuleDefinitionSection".
      * 
-     * @param topComp
+     * @param comp
      */
-    private void createDQRuleDefinitionSection(Composite topComp) {
-        dqRuleDefinitionSection = createSection(form, topComp, DefaultMessagesImpl
+    private void createDQRuleDefinitionSection(Composite comp) {
+        dqRuleDefinitionSection = createSection(form, comp, DefaultMessagesImpl
                 .getString("DQRuleMasterDetailsPage.dqRuleDefinition"), false, null); //$NON-NLS-1$
 
         Label label = new Label(dqRuleDefinitionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.text")); //$NON-NLS-1$
         dqRuleDefinitionSection.setDescriptionControl(label);
 
-        String temp = DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.dqRuleDefinition");
         createDQRuleDefinitionComp();
     }
 
@@ -313,10 +311,10 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     /**
      * DOC xqliu Comment method "createJoinConditionSection".
      * 
-     * @param topComp
+     * @param comp
      */
-    private void createJoinConditionSection(Composite topComp) {
-        joinConditionSection = createSection(form, topComp, DefaultMessagesImpl
+    private void createJoinConditionSection(Composite comp) {
+        joinConditionSection = createSection(form, comp, DefaultMessagesImpl
                 .getString("DQRuleMasterDetailsPage.joinCondition"), false, null); //$NON-NLS-1$
 
         Label label = new Label(joinConditionSection, SWT.WRAP);
@@ -532,13 +530,15 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             switch (getIndex()) {
             case LEFT:
                 getJoinElement().setColA(column);
-                getJoinElement().setColumnAliasA(column.getName());
-                getJoinElement().setTableAliasA(ColumnHelper.getColumnSetOwner(column).getName());
+                // MOD scorreia 2009-04-08 removed alias setting
+                // getJoinElement().setColumnAliasA(column.getName());
+                // getJoinElement().setTableAliasA(ColumnHelper.getColumnSetOwner(column).getName());
                 break;
             case RIGHT:
                 getJoinElement().setColB(column);
-                getJoinElement().setColumnAliasB(column.getName());
-                getJoinElement().setTableAliasB(ColumnHelper.getColumnSetOwner(column).getName());
+                // MOD scorreia 2009-04-08 removed alias setting
+                // getJoinElement().setColumnAliasB(column.getName());
+                // getJoinElement().setTableAliasB(ColumnHelper.getColumnSetOwner(column).getName());
                 break;
             default:
             }

@@ -7,16 +7,12 @@
 package org.talend.dataquality.rules.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesPackage;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -480,26 +476,20 @@ public class JoinElementImpl extends EObjectImpl implements JoinElement {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated NOT
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
-
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (operator: ");
-        result.append(operator);
-        result.append(", tableAliasA: ");
+        StringBuffer result = new StringBuffer();
         result.append(tableAliasA);
-        result.append(", tableAliasB: ");
-        result.append(tableAliasB);
-        result.append(", columnAliasA: ");
+        result.append(".");
         result.append(columnAliasA);
-        result.append(", columnAliasB: ");
+        result.append(operator);
+        result.append(tableAliasB);
+        result.append(".");
         result.append(columnAliasB);
-        result.append(')');
         return result.toString();
     }
 

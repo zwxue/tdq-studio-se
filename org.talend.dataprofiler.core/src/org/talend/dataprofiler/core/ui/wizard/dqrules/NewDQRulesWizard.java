@@ -14,18 +14,17 @@ package org.talend.dataprofiler.core.ui.wizard.dqrules;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
-import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
-import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.dqrule.DqRuleWriter;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -42,11 +41,6 @@ public class NewDQRulesWizard extends AbstractWizard {
     private DQRulesParameter parameter;
 
     private Expression expression;
-
-    private static final String EXPRESSION_BODY = "SELECT COUNT(*) FROM " + GenericSQLHandler.TABLE_NAME + " "
-            + GenericSQLHandler.JOIN_CLAUSE + " " + GenericSQLHandler.WHERE_CLAUSE;
-
-    private static final String EXPRESSION_LANG = ExecutionLanguage.SQL.getLiteral();
 
     // default value of Criticality Level
     private static final int CRITICALITY_LEVEL_DEFAULT = 1;
@@ -96,7 +90,8 @@ public class NewDQRulesWizard extends AbstractWizard {
 
     public Expression getExpression() {
         if (expression == null) {
-            expression = BooleanExpressionHelper.createExpression(EXPRESSION_LANG, EXPRESSION_BODY);
+            expression = (Expression) EcoreUtil.copy(DefinitionHandler.getInstance().getDQRuleDefaultIndicatorDefinition()
+                    .getSqlGenericExpression().get(0));
         }
         return expression;
     }

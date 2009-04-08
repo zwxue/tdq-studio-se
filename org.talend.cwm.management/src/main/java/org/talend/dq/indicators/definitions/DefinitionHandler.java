@@ -96,7 +96,9 @@ public final class DefinitionHandler {
 	private static DefinitionHandler instance;
 
 	private static final String DQ_RULE_CATEGORY = "_8i9eQBI5Ed6TWL6NwMMHzQ";
-
+    
+	private static final String DQ_RULE_DEFINITION = "_UUIyoCOMEd6YB57jaCfKaA";
+    
 	private IndicatorsDefinitions indicatorDefinitions;
 
 	/**
@@ -830,4 +832,18 @@ public final class DefinitionHandler {
 		}
 		return null;
 	}
+	
+    /**
+     * Method "getDQRuleDefaultIndicatorDefinition".
+     * 
+     * @return the default indicator definition of the DQ rule.
+     */
+    public IndicatorDefinition getDQRuleDefaultIndicatorDefinition() {
+        CwmResource resource = (CwmResource) this.indicatorDefinitions.eResource();
+        EObject object = resource.getEObject(DQ_RULE_DEFINITION);
+        if (object != null && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(object.eClass())) {
+            return (IndicatorDefinition) object;
+        }
+        return null;
+    }
 }

@@ -273,6 +273,11 @@
     <taggedValue xmi:id="_vf0k4vkbEd2z55b7dTkWFw" tag="Purpose" value="evaluates frequencies of values on several columns"/>
     <sqlGenericExpression xmi:id="_vf0k4_kbEd2z55b7dTkWFw" body="SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>" language="SQL"/>
   </indicatorDefinitions>
+  <indicatorDefinitions xmi:id="_UUIyoCOMEd6YB57jaCfKaA" name="DQ Rule" label="DQ Rule">
+    <taggedValue xmi:id="_lwpFwCOMEd6YB57jaCfKaA" tag="Description" value="Computes the number of records matching the DQ Rule"/>
+    <taggedValue xmi:id="_r4i4ICOMEd6YB57jaCfKaA" tag="Purpose" value="estimates the number of record matching the rule"/>
+    <sqlGenericExpression xmi:id="_axQAACOMEd6YB57jaCfKaA" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__JOIN_CLAUSE__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
+  </indicatorDefinitions>
   <categories xmi:id="_ccKHEBF2Ed2PKb6nEJEvhw" name="Simple Statistics" label="Simple Statistics">
     <taggedValue xmi:id="_ycAOEDh8Ed2XmO7pl5Yuyg" tag="Description" value="do some simple statistics by several counting methods"/>
     <taggedValue xmi:id="_ycA1IDh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluate different numbers of records"/>

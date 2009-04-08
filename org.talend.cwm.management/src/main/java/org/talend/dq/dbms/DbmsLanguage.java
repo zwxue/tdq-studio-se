@@ -42,12 +42,11 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author scorreia
  * 
- * This class handle DBMS specific SQL terms and functions.
+ * This class handle DBMS specific SQL terms and functions. It provides methods to handle SQL clause and evrything
+ * related to a specific DBMS.
  * 
- * TODO scorreia split this class into specific subclasses for each DBMS and let the factory choose the appropriate
- * instance.
- * 
- * TODO use SupportDBUrlType
+ * this class provides a default implementation. Subclasses exist for each DBMS so that specific implementation can be
+ * written.
  */
 public class DbmsLanguage {
 
@@ -857,8 +856,8 @@ public class DbmsLanguage {
             String columnAName = getColumnName(colA);
             String columnAliasA = joinElement.getColumnAliasA();
 
-            boolean hasTableAliasA = StringUtils.isEmpty(tableAliasA);
-            boolean hasColumnAliasA = StringUtils.isEmpty(columnAliasA);
+            boolean hasTableAliasA = !StringUtils.isEmpty(tableAliasA);
+            boolean hasColumnAliasA = !StringUtils.isEmpty(columnAliasA);
 
             
             ModelElement colB = joinElement.getColB();
@@ -868,61 +867,60 @@ public class DbmsLanguage {
             String columnBName = getColumnName(colB);            
             String columnAliasB = joinElement.getColumnAliasB();
 
-            boolean hasTableAliasB = StringUtils.isEmpty(tableAliasB);
-            boolean hasColumnAliasB = StringUtils.isEmpty(columnAliasB);
+            boolean hasTableAliasB = !StringUtils.isEmpty(tableAliasB);
+            boolean hasColumnAliasB = !StringUtils.isEmpty(columnAliasB);
 
             String operator = joinElement.getOperator();
 
             // tableA tableAliasA JOIN
             // builder.append(surroundWithSpaces(quote(tableA)));
-            // if (hasTableAliasA) {
-            // builder.append(surroundWithSpaces(tableAliasA));
-            // }
-            createJoinClause(builder, columnAName, columnAliasA, hasColumnAliasA, tableB, tableAliasB, columnBName, columnAliasB,
-                    hasTableAliasB, hasColumnAliasB, operator);
+            if (hasTableAliasA) {
+                builder.append(surroundWithSpaces(tableAliasA));
+            }
+            builder.append(" JOIN ");
+
+            // tableB tableAliasB ON
+            builder.append(surroundWithSpaces(quote(tableB)));
+            if (hasTableAliasB) {
+                builder.append(surroundWithSpaces(tableAliasB));
+            }
+            builder.append(" ON ");
+
+            String tA = hasTableAliasA ? null : quote(tableA);
+            String tB = hasTableAliasB ? null : quote(tableB);
+            String cA = hasColumnAliasA ? columnAliasA : quote(columnAName);
+            String cB = hasColumnAliasB ? columnAliasB : quote(columnBName);
+            createJoinClause(builder, tA, cA, tB, cB, operator);
         }
         return builder.toString();
     }
 
     /**
-     * DOC scorreia Comment method "createJoinClause".
+     * Method "createJoinClause" appends a join condition to the builder.
+     * 
      * @param builder
-     * @param columnAName
-     * @param columnAliasA
-     * @param hasColumnAliasA
-     * @param tableB
-     * @param tableAliasB
-     * @param columnBName
-     * @param columnAliasB
-     * @param hasTableAliasB
-     * @param hasColumnAliasB
-     * @param operator
+     * @param tableA the name of the table or null
+     * @param columnAName a column name (or an alias)
+     * @param tableB the name of the second table or null
+     * @param columnBName the column name (or an alias)
+     * @param operator the operator used in the join
+     * 
+     * When using a column alias instead of a name, the table name must be set to null (because it's not required)
      */
-    private void createJoinClause(StringBuilder builder, String columnAName, String columnAliasA, boolean hasColumnAliasA,
-            String tableB, String tableAliasB, String columnBName, String columnAliasB, boolean hasTableAliasB,
-            boolean hasColumnAliasB, String operator) {
-        builder.append(" JOIN ");
-        
-        // tableB tableAliasB ON
-        builder.append(surroundWithSpaces(quote(tableB)));
-        if (hasTableAliasB) {
-            builder.append(surroundWithSpaces(tableAliasB));
-        }
-        builder.append(" ON ");
-        
+    private void createJoinClause(StringBuilder builder, String tableA, String columnAName, String tableB, String columnBName,
+            String operator) {
         // (columaliasA = columnaliasB)
         builder.append('(');
-        if (hasColumnAliasA) {
-            builder.append(surroundWithSpaces(columnAliasA));
-        } else {
-            builder.append(surroundWithSpaces(quote(columnAName)));
+        if (tableA != null) {
+            builder.append(surroundWithSpaces(tableA + "."));
         }
+        builder.append(surroundWithSpaces(columnAName));
+
         builder.append(operator);
-        if (hasColumnAliasB) {
-            builder.append(surroundWithSpaces(columnAliasB));
-        } else {
-            builder.append(surroundWithSpaces(quote(columnBName)));
+        if (tableB != null) {
+            builder.append(surroundWithSpaces(tableB + "."));
         }
+        builder.append(surroundWithSpaces(columnBName));
         builder.append(')');
     }
     
