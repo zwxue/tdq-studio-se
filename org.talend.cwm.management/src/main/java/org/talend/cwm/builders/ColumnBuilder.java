@@ -67,6 +67,14 @@ public class ColumnBuilder extends CwmBuilder {
         // --- add columns to table
         ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         while (columns.next()) {
+            // TODO scorreia other informations for columns can be retrieved here
+            // get the default value
+            // MOD mzhao 2009-04-09,Bug 6840: fetch LONG or LONG RAW column first , as these kind of columns are read as
+            // stream,if not read by select order, there will be "Stream has already been closed" error.
+            Object defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
+            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
+            Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
+
             String colName = columns.getString(GetColumn.COLUMN_NAME.name());
             TdColumn column = ColumnHelper.createTdColumn(colName);
             column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
@@ -78,19 +86,13 @@ public class ColumnBuilder extends CwmBuilder {
             String colComment = getComment(colName, columns);
             TaggedValueHelper.setComment(colComment, column);
 
-            // TODO scorreia other informations for columns can be retrieved here
-            // get the default value
-            Object defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
-            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
-            Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
-            column.setInitialValue(defExpression);
-            
             // --- create and set type of column
             // TODO scorreia get type of column on demand, not on creation of column
             TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);
             column.setSqlDataType(sqlDataType);
             // column.setType(sqlDataType); // it's only reference to previous sql data type
 
+            column.setInitialValue(defExpression);
             tableColumns.add(column);
         }
 
