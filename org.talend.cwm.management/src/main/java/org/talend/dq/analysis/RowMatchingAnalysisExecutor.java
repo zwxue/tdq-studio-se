@@ -91,7 +91,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
             Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
-            boolean useNulls = true; // // TODO scorreia allow the user to set it at false
+            boolean useNulls = false; // TODO scorreia create an indicator for each option
             Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnSetA, columnSetB,
                     useNulls);
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
@@ -120,7 +120,11 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String genericSQL = sqlGenericExpression.getBody();        
         String joinClause = createJoinClause(tableNameA, columnSetA, tableNameB, columnSetB, useNulls);
         String whereClause = createWhereClause(tableNameB, columnSetB);
-
+        if (useNulls) {
+            // add a where clause to avoid the equality of rows fully null (i.e. rows like "null,null,null"
+            whereClause += dbms().and() + '(' + createNotNullCondition(tableNameA, columnSetA) + ')';
+        }
+        
         String instantiatedSQL = dbms().fillGenericQueryWithJoin(genericSQL, tableNameA, tableNameB, joinClause, whereClause);
         Expression instantiatedExpression = CoreFactory.eINSTANCE.createExpression();
         instantiatedExpression.setLanguage(sqlGenericExpression.getLanguage());
@@ -137,12 +141,33 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @return
      */
     private String createWhereClause(String tableNameB, EList<Column> columnSetB) {
+        final String isNull = dbms().isNull();
+        final String and = dbms().and();
+        return conditionOnAllColumns(tableNameB, columnSetB, isNull, and);
+    }
+
+    private String createNotNullCondition(String tableNameB, EList<Column> columnSetB) {
+        final String isNotNull = dbms().isNotNull();
+        final String or = dbms().or();
+        return conditionOnAllColumns(tableNameB, columnSetB, isNotNull, or);
+    }
+
+    /**
+     * DOC scorreia Comment method "conditionOnAllColumns".
+     * 
+     * @param tableName
+     * @param columnSet
+     * @param isNull
+     * @param and
+     * @return
+     */
+    private String conditionOnAllColumns(String tableName, EList<Column> columnSet, final String isNull, final String and) {
+        int size = columnSet.size();
         StringBuilder builder = new StringBuilder();
-        int size = columnSetB.size();
         for (int i = 0; i < size; i++) {
-            builder.append(tableNameB).append('.').append(getQuotedColumnName(columnSetB.get(i))).append(dbms().isNull());
+            builder.append(tableName).append('.').append(getQuotedColumnName(columnSet.get(i))).append(isNull);
             if (i != size - 1) {
-                builder.append(dbms().and());
+                builder.append(and);
             }
         }
         return builder.toString();
