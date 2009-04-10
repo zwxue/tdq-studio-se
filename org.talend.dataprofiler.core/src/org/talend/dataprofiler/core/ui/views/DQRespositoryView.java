@@ -94,7 +94,10 @@ public class DQRespositoryView extends CommonNavigator {
 
     public DQRespositoryView() {
         super();
-        CorePlugin.getDefault().doMigrationTaskDQStructureChange();
+        // MOD mzhao 2009-04-09, TDCP do not need structure migration.
+        if (org.talend.dataquality.PluginConstant.isNeedDQStructureChangedMigration()) {
+            CorePlugin.getDefault().doMigrationTaskDQStructureChange();
+        }
         CorePlugin.getDefault().checkDQStructure();
         CorePlugin.getDefault().doMigrationTask();
         CorePlugin.getDefault().setRespositoryView(this);

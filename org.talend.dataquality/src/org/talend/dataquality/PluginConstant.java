@@ -21,6 +21,17 @@ package org.talend.dataquality;
 public final class PluginConstant {
 	// MOD mzhao 2009-03-13 TDQ/TOP root project
 	private static String rootProjectName;
+	// MOD mzhao 2009-04-09
+	private static boolean isNeedDQStructureChangedMigration = true;
+
+	public static boolean isNeedDQStructureChangedMigration() {
+		return isNeedDQStructureChangedMigration;
+	}
+
+	public static void setNeedDQStructureChangedMigration(
+			boolean isNeedDQStructureChangedMigration) {
+		PluginConstant.isNeedDQStructureChangedMigration = isNeedDQStructureChangedMigration;
+	}
 
 	public static String getRootProjectName() {
 		return rootProjectName;
