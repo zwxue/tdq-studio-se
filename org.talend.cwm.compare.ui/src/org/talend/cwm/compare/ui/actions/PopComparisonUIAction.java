@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -56,21 +55,16 @@ public class PopComparisonUIAction extends Action {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
                 final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(selectedObject);
-                Display.getDefault().asyncExec(new Runnable() {
 
-                    public void run() {
-                        try {
-                            creatComparisonLevel.popComparisonUI(new UiHandler());
-                        } catch (ReloadCompareException e) {
-                            log.error(e, e);
-                        }
-
-                    }
-                });
+                try {
+                    creatComparisonLevel.popComparisonUI(new UiHandler());
+                } catch (ReloadCompareException e) {
+                    log.error(e, e);
+                }
             }
         };
         try {
-            ProgressUI.popProgressDialog(op, shell);
+            ProgressUI.popProgressDialog(op);
             // ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
         } catch (InvocationTargetException e) {
             MessageDialog

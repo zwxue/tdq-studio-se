@@ -17,17 +17,15 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.ImageLib;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 
 /**
  * DOC mzhao class global comment. Compare selected model elements action.
@@ -58,7 +56,6 @@ public class SelectedComparisonAction extends Action {
 
     @Override
     public void run() {
-        final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
@@ -79,15 +76,9 @@ public class SelectedComparisonAction extends Action {
             }
         };
         try {
-            ProgressUI.popProgressDialog(op, shell);
-            // ((DQRespositoryView)
-            // CorePlugin.getDefault().findView(DQRespositoryView
-            // .ID)).getCommonViewer().refresh();
+            ProgressUI.popProgressDialog(op);
         } catch (InvocationTargetException e) {
-            MessageDialog
-                    .openInformation(
-                            shell,
-                            Messages.getString("PopComparisonUIAction.connectionFailure"), Messages.getString("PopComparisonUIAction.checkConnectionFailure") + e.getCause().getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageUI.openError(Messages.getString("PopComparisonUIAction.checkConnectionFailure", e.getCause().getMessage()));
             log.error(e, e);
         } catch (InterruptedException e) {
             log.error(e, e);
