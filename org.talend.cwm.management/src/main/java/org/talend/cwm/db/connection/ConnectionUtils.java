@@ -97,7 +97,14 @@ public final class ConnectionUtils {
                 }
             }
             Connection connection = null;
-            if (driverClassName.equals("org.hsqldb.jdbcDriver")) { //$NON-NLS-1$
+            if (driverClassName.equals("org.hsqldb.jdbcDriver")) { //$NON-NLS-1$getClassDriver 
+                // MOD mzhao 2009-04-13, Try to load driver first as there will cause exception: No suitable driver
+                // found... if not load.
+                try {
+                    Class.forName("org.hsqldb.jdbcDriver");
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 // MOD xqliu 2009-02-02 bug 5261
                 if (isTimeout()) {
                     DriverManager.setLoginTimeout(LOGIN_TIMEOUT_SECOND);

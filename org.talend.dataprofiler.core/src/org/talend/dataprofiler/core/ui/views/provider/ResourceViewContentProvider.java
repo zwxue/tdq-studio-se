@@ -88,6 +88,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 rootFolders = ((IProject) currentOpenProject).members(false);
                 for (Object folder : rootFolders) {
                     if (folder instanceof IFolder && ((IFolder) folder).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
+                        // ~ MOD mzhao 2009-04-13, Move reporting db folder into project folder.
+                        if (((IFolder) folder).getName().trim().equals("TDQ_reporting_db")) {
+                            continue;
+                        }
+                        // ~
                         folders.add(folder);
                     }
                 }
