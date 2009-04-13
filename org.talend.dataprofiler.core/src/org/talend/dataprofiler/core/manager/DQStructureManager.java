@@ -38,7 +38,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
@@ -168,12 +167,11 @@ public final class DQStructureManager {
 
     public boolean createDQStructure() {
 
-        Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
         Plugin plugin = CorePlugin.getDefault();
         try {
             // ~ MOD mzhao 2009-03-13 Feature:6066, Put TDQ/TOP folders in one
             // project.
-            IProject rootProject = this.createNewProject(org.talend.dataquality.PluginConstant.getRootProjectName(), shell);
+            IProject rootProject = createNewProject(org.talend.dataquality.PluginConstant.getRootProjectName());
             // create "Data Profiling" project
             // MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
             IFolder dataProfilingFolder = this.createNewFoler(rootProject, getDataProfiling());
@@ -260,10 +258,7 @@ public final class DQStructureManager {
      * @throws InvocationTargetException
      * @throws CoreException
      */
-    public IProject createNewProject(String projectName, Shell shell) throws InvocationTargetException, InterruptedException,
-            CoreException {
-
-        final Shell currentShell = shell;
+    public IProject createNewProject(String projectName) throws InvocationTargetException, InterruptedException, CoreException {
 
         // get a project handle
         final IProject newProjectHandle = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
@@ -283,7 +278,7 @@ public final class DQStructureManager {
                         .getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
                 try {
                     PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(op, monitor,
-                            WorkspaceUndoUtil.getUIInfoAdapter(currentShell));
+                            WorkspaceUndoUtil.getUIInfoAdapter(null));
                 } catch (ExecutionException e) {
                     throw new InvocationTargetException(e);
                 }
@@ -297,7 +292,7 @@ public final class DQStructureManager {
         // launching,
         // project always exist.
         if (!newProjectHandle.exists()) {
-            ProgressUI.popProgressDialog(op, shell);
+            ProgressUI.popProgressDialog(op);
         }
         newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
         return newProjectHandle;

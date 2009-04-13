@@ -24,7 +24,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 
@@ -44,14 +43,12 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
         try {
             // Create one project.
             IProject rootProject = DQStructureManager.getInstance().createNewProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName(),
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+                    org.talend.dataquality.PluginConstant.getRootProjectName());
             // Delete first if dq structure has already constructed.
             rootProject.delete(true, true, new NullProgressMonitor());
             // create brandly new one.
             rootProject = DQStructureManager.getInstance().createNewProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName(),
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+                    org.talend.dataquality.PluginConstant.getRootProjectName());
             // Copy "top level" folders already as projects in TOP/TDQ into this
             // project.
             IResource[] resources = ResourcesPlugin.getWorkspace().getRoot().members();

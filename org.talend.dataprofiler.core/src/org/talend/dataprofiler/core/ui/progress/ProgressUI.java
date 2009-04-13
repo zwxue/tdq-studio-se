@@ -16,19 +16,41 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Shell;
 
 /**
- * DOC rli  class global comment. Detailled comment
- * <br/>
- *
+ * DOC rli class global comment. Detailled comment <br/>
+ * 
  */
-public class ProgressUI {
+public final class ProgressUI {
 
-    public static void popProgressDialog(IRunnableWithProgress runnable,
-            Shell shell) throws InvocationTargetException, InterruptedException {
-        // ProgressMonitorDialog dialog = new ProgressMonitorJobsDialog(this.getViewSite().getShell());
-        final ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
-        dialog.run(true, true, runnable);
+    private ProgressUI() {
+    }
+
+    /**
+     * DOC bZhou Comment method "popProgressDialog".
+     * 
+     * @param runnable
+     * @param shell
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     */
+    public static void popProgressDialog(IRunnableWithProgress runnable) throws InvocationTargetException, InterruptedException {
+        popProgressDialog(runnable, true, true);
+    }
+
+    /**
+     * DOC bZhou Comment method "popProgressDialog".
+     * 
+     * @param shell
+     * @param runnable
+     * @param fork
+     * @param cancelable
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     */
+    public static void popProgressDialog(IRunnableWithProgress runnable, boolean fork, boolean cancelable)
+            throws InvocationTargetException, InterruptedException {
+        ProgressMonitorDialog dialog = new ProgressMonitorDialog(null);
+        dialog.run(fork, cancelable, runnable);
     }
 }

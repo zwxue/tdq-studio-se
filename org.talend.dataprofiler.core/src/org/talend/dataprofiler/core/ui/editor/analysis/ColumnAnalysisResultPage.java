@@ -19,8 +19,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -46,7 +46,6 @@ import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -61,6 +60,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -78,6 +78,8 @@ import org.talend.dq.pattern.PatternTransformer;
  * DOC zqin class global comment. Detailled comment
  */
 public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
+
+    private static Logger log = Logger.getLogger(ColumnAnalysisResultPage.class);
 
     private Composite resultComp;
 
@@ -120,34 +122,60 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     protected void createResultSection(Composite parent) {
         resultSection = createSection(form, parent,
                 DefaultMessagesImpl.getString("ColumnAnalysisResultPage.analysisResult"), true, null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(resultSection);
+        final Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        for (final ColumnIndicator columnIndicator : masterPage.getTreeViewer().getColumnIndicator()) {
+        final ColumnIndicator[] columnIndicatores = masterPage.getTreeViewer().getColumnIndicator();
 
-            ExpandableComposite exComp = toolkit.createExpandableComposite(sectionClient, ExpandableComposite.TWISTIE
-                    | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
-            exComp.setText(DefaultMessagesImpl.getString(
-                    "ColumnAnalysisResultPage.Column", columnIndicator.getTdColumn().getName())); //$NON-NLS-1$
-            exComp.setLayout(new GridLayout());
-            exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
-            final Composite comp = toolkit.createComposite(exComp);
-            comp.setLayout(new GridLayout());
-            comp.setLayoutData(new GridData(GridData.FILL_BOTH));
-            exComp.setClient(comp);
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+             */
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                monitor.beginTask("Analysising...", columnIndicatores.length);
 
-            createResultDataComposite(comp, columnIndicator);
+                for (final ColumnIndicator columnIndicator : columnIndicatores) {
 
-            exComp.addExpansionListener(new ExpansionAdapter() {
+                    monitor.subTask(columnIndicator.getTdColumn().getName());
 
-                public void expansionStateChanged(ExpansionEvent e) {
+                    ExpandableComposite exComp = toolkit.createExpandableComposite(sectionClient, ExpandableComposite.TWISTIE
+                            | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
+                    exComp.setText(DefaultMessagesImpl.getString(
+                            "ColumnAnalysisResultPage.Column", columnIndicator.getTdColumn().getName())); //$NON-NLS-1$
+                    exComp.setLayout(new GridLayout());
+                    exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-                    form.reflow(true);
+                    final Composite comp = toolkit.createComposite(exComp);
+                    comp.setLayout(new GridLayout());
+                    comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+                    exComp.setClient(comp);
+
+                    createResultDataComposite(comp, columnIndicator);
+
+                    exComp.addExpansionListener(new ExpansionAdapter() {
+
+                        public void expansionStateChanged(ExpansionEvent e) {
+
+                            form.reflow(true);
+                        }
+
+                    });
+
+                    monitor.worked(1);
                 }
 
-            });
+                monitor.done();
+            }
+        };
+
+        try {
+            ProgressUI.popProgressDialog(rwp, false, true);
+        } catch (Exception ex) {
+            log.error(ex, ex);
         }
 
         resultSection.setClient(sectionClient);
@@ -156,86 +184,58 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
     private void createResultDataComposite(final Composite comp, final ColumnIndicator columnIndicator) {
         if (columnIndicator.getIndicators().length != 0) {
 
-            final TdColumn column = columnIndicator.getTdColumn();
-            IRunnableWithProgress rwp = new IRunnableWithProgress() {
+            Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
+                    .getIndicatorComposite(columnIndicator);
+            for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
+                List<IndicatorUnit> units = indicatorComposite.get(chartType);
+                if (!units.isEmpty()) {
+                    IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+                    ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(), chartTypeState
+                            .getDataEntity());
 
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    // create UI
+                    ExpandableComposite subComp = toolkit.createExpandableComposite(comp, ExpandableComposite.TWISTIE
+                            | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
+                    subComp.setText(chartData.getChartType().getLiteral());
+                    subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-                    monitor
-                            .beginTask(
-                                    DefaultMessagesImpl.getString("ColumnAnalysisResultPage.createPreview", column.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                    final Composite composite = toolkit.createComposite(subComp, SWT.NULL);
+                    composite.setLayout(new GridLayout(2, false));
+                    composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-                    Display.getDefault().asyncExec(new Runnable() {
+                    Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
 
-                        public void run() {
+                    // create table
+                    TableViewer tableviewer = chartTypeState.getTableForm(composite);
+                    tableviewer.setInput(chartData);
+                    DataExplorer dataExplorer = chartTypeState.getDataExplorer();
+                    ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
-                            Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
-                                    .getIndicatorComposite(columnIndicator);
-                            for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
-                                List<IndicatorUnit> units = indicatorComposite.get(chartType);
-                                if (!units.isEmpty()) {
-                                    IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
-                                    ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(),
-                                            chartTypeState.getDataEntity());
+                    // create chart
 
-                                    // create UI
-                                    ExpandableComposite subComp = toolkit.createExpandableComposite(comp,
-                                            ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT
-                                                    | ExpandableComposite.EXPANDED);
-                                    subComp.setText(chartData.getChartType().getLiteral());
-                                    subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+                    JFreeChart chart = chartTypeState.getChart();
+                    ChartDecorator.decorate(chart);
+                    if (chart != null) {
+                        ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
-                                    final Composite composite = toolkit.createComposite(subComp, SWT.NULL);
-                                    composite.setLayout(new GridLayout(2, false));
-                                    composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+                        GridData gd = new GridData();
+                        gd.widthHint = 550;
+                        gd.heightHint = 250;
+                        cc.setLayoutData(gd);
 
-                                    Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
+                        addMouseListenerForChart(cc, dataExplorer, analysis);
+                    }
 
-                                    // create table
-                                    TableViewer tableviewer = chartTypeState.getTableForm(composite);
-                                    tableviewer.setInput(chartData);
-                                    DataExplorer dataExplorer = chartTypeState.getDataExplorer();
-                                    ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
+                    subComp.setClient(composite);
+                    subComp.addExpansionListener(new ExpansionAdapter() {
 
-                                    // create chart
-
-                                    JFreeChart chart = chartTypeState.getChart();
-                                    ChartDecorator.decorate(chart);
-                                    if (chart != null) {
-                                        ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
-
-                                        GridData gd = new GridData();
-                                        gd.widthHint = 550;
-                                        gd.heightHint = 250;
-                                        cc.setLayoutData(gd);
-
-                                        addMouseListenerForChart(cc, dataExplorer, analysis);
-                                    }
-
-                                    subComp.setClient(composite);
-                                    subComp.addExpansionListener(new ExpansionAdapter() {
-
-                                        @Override
-                                        public void expansionStateChanged(ExpansionEvent e) {
-                                            form.reflow(true);
-                                        }
-
-                                    });
-                                }
-                            }
+                        @Override
+                        public void expansionStateChanged(ExpansionEvent e) {
+                            form.reflow(true);
                         }
 
                     });
-
-                    monitor.done();
                 }
-
-            };
-
-            try {
-                new ProgressMonitorDialog(null).run(true, false, rwp);
-            } catch (Exception ex) {
-                ex.printStackTrace();
             }
         }
     }
