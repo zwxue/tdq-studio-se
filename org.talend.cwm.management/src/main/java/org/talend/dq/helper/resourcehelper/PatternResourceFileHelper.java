@@ -84,7 +84,7 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
             try {
                 searchAllPatternes(patternFodler);
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
             resourcesNumberChanged = false;
         }
@@ -188,7 +188,7 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
                     searchAllPatternes(folders[i]);
                 }
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
             resourcesNumberChanged = false;
         }

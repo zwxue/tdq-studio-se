@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -34,6 +35,8 @@ import org.talend.utils.ProductVersion;
  * DOC bzhou class global comment. Detailled comment
  */
 public class WorkspaceVersionHelper {
+
+    protected static Logger log = Logger.getLogger(WorkspaceVersionHelper.class);
 
     public static final String VERSION = "version"; //$NON-NLS-1$
 
@@ -79,7 +82,7 @@ public class WorkspaceVersionHelper {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return new ProductVersion(0, 0, 0);
@@ -96,9 +99,9 @@ public class WorkspaceVersionHelper {
         try {
             pros.store(new FileOutputStream(new File(versionFile.getLocation().toOSString())), null);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error(e, e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 }

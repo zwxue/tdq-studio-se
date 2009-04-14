@@ -229,7 +229,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             this.isDirty = false;
         } catch (DataprofilerCoreException e) {
             ExceptionHandler.process(e, Level.ERROR);
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

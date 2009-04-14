@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -116,6 +117,8 @@ import orgomg.cwm.resource.relational.Column;
  * 
  */
 public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
+
+    protected static Logger log = Logger.getLogger(AnalysisColumnTreeViewer.class);
 
     /**
      * 
@@ -1132,7 +1135,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     activePage.openEditor(new FileEditorInput(file),
                             "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"); //$NON-NLS-1$
                 } catch (PartInitException e1) {
-                    e1.printStackTrace();
+                    log.error(e1, e1);
                 }
             }
         }
@@ -1200,7 +1203,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     dqview.showSelectedElements(column);
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
         }

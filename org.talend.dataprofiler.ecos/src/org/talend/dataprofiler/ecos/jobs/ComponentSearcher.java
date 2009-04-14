@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataprofiler.ecos.model.IRevision;
 import org.talend.dataprofiler.ecos.model.RevisionInfo;
@@ -31,6 +32,8 @@ import org.talend.dataprofiler.ecos.service.EcosystemService;
  * Search for component extensions.
  */
 public class ComponentSearcher {
+
+    protected static Logger log = Logger.getLogger(ComponentSearcher.class);
 
     private static final String RELEASE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"; //$NON-NLS-1$
 
@@ -85,7 +88,7 @@ public class ComponentSearcher {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
         return extensions;

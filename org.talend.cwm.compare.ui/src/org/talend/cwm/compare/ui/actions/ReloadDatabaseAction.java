@@ -63,7 +63,7 @@ public class ReloadDatabaseAction extends Action {
                             creatComparisonLevel.reloadCurrentLevelElement();
                         } catch (ReloadCompareException e) {
                             // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            log.error(e, e);
                         }
 
                     }

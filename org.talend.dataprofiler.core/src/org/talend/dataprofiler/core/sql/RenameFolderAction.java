@@ -13,6 +13,7 @@
 
 package org.talend.dataprofiler.core.sql;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -29,6 +30,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  * 
  */
 public class RenameFolderAction extends Action {
+
+    protected static Logger log = Logger.getLogger(RenameFolderAction.class);
 
     private IFolder obj;
 
@@ -49,7 +52,8 @@ public class RenameFolderAction extends Action {
      */
     @Override
     public void run() {
-        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), DefaultMessagesImpl.getString("RenameFolderAction.renameFolderName"), //$NON-NLS-1$
+        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(), DefaultMessagesImpl
+                .getString("RenameFolderAction.renameFolderName"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("RenameFolderAction.inputNewFolderName"), null, new IInputValidator() { //$NON-NLS-1$
 
                     public String isValid(String newText) {
@@ -63,7 +67,7 @@ public class RenameFolderAction extends Action {
             try {
                 obj.move(folder.getFullPath(), true, null);
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

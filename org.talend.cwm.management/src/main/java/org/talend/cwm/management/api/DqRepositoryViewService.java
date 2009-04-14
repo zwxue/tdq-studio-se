@@ -153,7 +153,7 @@ public final class DqRepositoryViewService {
         try {
             members = folder.members();
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
             return new ArrayList<TdDataProvider>();
         }
         for (IResource res : members) {

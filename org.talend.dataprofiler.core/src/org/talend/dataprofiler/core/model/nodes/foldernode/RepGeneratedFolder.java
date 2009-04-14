@@ -83,7 +83,7 @@ public class RepGeneratedFolder extends AbstractFolderNode implements IWorkbench
             }
             this.setChildren(children.toArray(new IResource[children.size()]));
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
     }

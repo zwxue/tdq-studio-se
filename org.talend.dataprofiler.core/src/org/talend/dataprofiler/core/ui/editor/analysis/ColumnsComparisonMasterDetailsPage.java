@@ -666,7 +666,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 Column column = (Column) selection[0].getData();
                 dqview.showSelectedElements(column);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

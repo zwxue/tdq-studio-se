@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
@@ -25,6 +26,8 @@ import org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction;
  * 
  */
 public class NewAnalysisActionProvider extends CommonActionProvider {
+
+    protected static Logger log = Logger.getLogger(NewAnalysisActionProvider.class);
 
     public NewAnalysisActionProvider() {
     }
@@ -43,7 +46,7 @@ public class NewAnalysisActionProvider extends CommonActionProvider {
                     menu.add(createAnalysisAction);
                 }
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

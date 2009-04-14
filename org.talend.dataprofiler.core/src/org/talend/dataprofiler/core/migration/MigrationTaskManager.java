@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -28,6 +29,8 @@ import org.talend.utils.ProductVersion;
  * DOC bzhou class global comment. Detailled comment
  */
 public class MigrationTaskManager {
+
+    protected static Logger log = Logger.getLogger(MigrationTaskManager.class);
 
     public static final String EXTENSION_ID = "org.talend.dataprofiler.core.migrationtask"; //$NON-NLS-1$
 
@@ -52,7 +55,7 @@ public class MigrationTaskManager {
                 try {
                     validTasks.add((IWorkspaceMigrationTask) elem.createExecutableExtension(ATTR_CLASS));
                 } catch (CoreException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
         }
@@ -70,7 +73,7 @@ public class MigrationTaskManager {
             try {
                 allTasks.add((IWorkspaceMigrationTask) elem.createExecutableExtension(ATTR_CLASS));
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
 
@@ -87,7 +90,7 @@ public class MigrationTaskManager {
                 try {
                     return (IWorkspaceMigrationTask) elem.createExecutableExtension(ATTR_CLASS);
                 } catch (CoreException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
         }

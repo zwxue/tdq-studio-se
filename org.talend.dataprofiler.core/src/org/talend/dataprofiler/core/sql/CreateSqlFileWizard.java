@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.sql;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.Wizard;
@@ -28,6 +29,8 @@ import org.talend.dq.analysis.parameters.SqlFileParameter;
  * 
  */
 public class CreateSqlFileWizard extends Wizard {
+
+    protected static Logger log = Logger.getLogger(CreateSqlFileWizard.class);
 
     private CreateSqlFileWizardPage mPage;
 
@@ -72,7 +75,7 @@ public class CreateSqlFileWizard extends Wizard {
             sqlFile.createNewFile();
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         return false;
     }

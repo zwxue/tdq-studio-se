@@ -3,6 +3,8 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.io.*;
 
+import org.apache.log4j.Logger;
+
 import Zql.*;
 
 /**
@@ -34,7 +36,9 @@ import Zql.*;
  */
 public class ZDemo {
 
-  public static void main(String args[]) {
+    protected static Logger log = Logger.getLogger(ZDemo.class);
+
+    public static void main(String args[]) {
     try {
 
       ZqlParser p = null;
@@ -60,7 +64,7 @@ public class ZDemo {
       }
 
     } catch(Exception e) {
-      e.printStackTrace();
+      log.error(e, e);
     }
   }
 

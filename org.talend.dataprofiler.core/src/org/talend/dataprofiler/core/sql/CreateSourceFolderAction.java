@@ -58,7 +58,6 @@ public class CreateSourceFolderAction extends Action {
             // try {
             // resl.create(true, false, null);
             // } catch (CoreException e) {
-            // e.printStackTrace();
             // }
         }
     }

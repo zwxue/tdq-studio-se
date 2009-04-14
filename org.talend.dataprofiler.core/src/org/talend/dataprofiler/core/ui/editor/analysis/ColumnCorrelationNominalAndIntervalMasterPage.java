@@ -373,7 +373,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                     try {
                         new ProgressMonitorDialog(getSite().getShell()).run(true, false, rwp);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        log.error(ex, ex);
                     }
                 }
 
@@ -410,7 +410,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 chartComposite.layout();
                 getForm().reflow(true);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error(ex, ex);
             }
 
         }

@@ -22,6 +22,7 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -55,6 +56,8 @@ import org.talend.utils.sugars.TypedReturnCode;
  * The activator class controls the plug-in life cycle.
  */
 public class CorePlugin extends AbstractUIPlugin {
+
+    protected static Logger log = Logger.getLogger(CorePlugin.class);
 
     private static final String DRIVERPATHS = "DRIVERPATHS"; //$NON-NLS-1$
 
@@ -112,7 +115,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
     }

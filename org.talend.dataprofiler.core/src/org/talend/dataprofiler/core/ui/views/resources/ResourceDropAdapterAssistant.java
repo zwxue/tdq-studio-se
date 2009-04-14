@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -53,6 +54,8 @@ import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
  * DOC rli class global comment. Detailled comment
  */
 public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
+
+    protected static Logger log = Logger.getLogger(ResourceDropAdapterAssistant.class);
 
     private static final IResource[] NO_RESOURCES = new IResource[0];
 
@@ -208,7 +211,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                             return Status.OK_STATUS;
                         }
                     } catch (CoreException e) {
-                        e.printStackTrace();
+                        log.error(e, e);
                     }
                 } else if (res.getName().endsWith(org.talend.dq.PluginConstant.ANA_SUFFIX)
                         && (targetRes.getType() == IResource.FILE)) {

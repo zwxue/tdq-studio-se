@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.sql;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -34,53 +35,51 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
  */
 public class DeleteSqlFileAction extends Action {
 
-	private List<IFile> folder;
+    protected static Logger log = Logger.getLogger(DeleteSqlFileAction.class);
 
-	/**
-	 * DOC qzhang AddSqlFileAction constructor comment.
-	 * 
-	 * @param selectedFiles
-	 */
-	public DeleteSqlFileAction(List<IFile> selectedFiles) {
-		setText(DefaultMessagesImpl.getString("DeleteSqlFileAction.delete")); //$NON-NLS-1$
-		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
-		this.folder = selectedFiles;
-	}
+    private List<IFile> folder;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		// MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-		IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(
-						org.talend.dataquality.PluginConstant
-								.getRootProjectName()).getFolder(
-						DQStructureManager.getLibraries()).getFolder(
-						DQStructureManager.SOURCE_FILES);
-		for (IFile file : folder) {
-			if (MessageDialog
-					.openConfirm(
-							new Shell(),
-							DefaultMessagesImpl
-									.getString("DeleteSqlFileAction.deleteSqlFile"), DefaultMessagesImpl.getString("DeleteSqlFileAction.areYouDeleteSqlFile", file.getName()))) { //$NON-NLS-1$ //$NON-NLS-2$
-				try {
-					if (file.exists()) {
-						file.delete(true, null);
-					}
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		try {
-			sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * DOC qzhang AddSqlFileAction constructor comment.
+     * 
+     * @param selectedFiles
+     */
+    public DeleteSqlFileAction(List<IFile> selectedFiles) {
+        setText(DefaultMessagesImpl.getString("DeleteSqlFileAction.delete")); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
+        this.folder = selectedFiles;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
+        IFolder sourceFiles = ResourcesPlugin.getWorkspace().getRoot().getProject(
+                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getLibraries())
+                .getFolder(DQStructureManager.SOURCE_FILES);
+        for (IFile file : folder) {
+            if (MessageDialog
+                    .openConfirm(
+                            new Shell(),
+                            DefaultMessagesImpl.getString("DeleteSqlFileAction.deleteSqlFile"), DefaultMessagesImpl.getString("DeleteSqlFileAction.areYouDeleteSqlFile", file.getName()))) { //$NON-NLS-1$ //$NON-NLS-2$
+                try {
+                    if (file.exists()) {
+                        file.delete(true, null);
+                    }
+                } catch (CoreException e) {
+                    log.error(e, e);
+                }
+            }
+        }
+        try {
+            sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+    }
 
 }

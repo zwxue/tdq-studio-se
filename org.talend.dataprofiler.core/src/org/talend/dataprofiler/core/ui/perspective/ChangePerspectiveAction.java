@@ -118,7 +118,7 @@ public class ChangePerspectiveAction extends Action {
                 try {
                     page.showView(CHEAT_SHEET_VIEW);
                 } catch (PartInitException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
             action.perspectiveId = SE_ID;

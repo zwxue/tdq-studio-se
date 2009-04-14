@@ -13,6 +13,7 @@
 
 package org.talend.dataprofiler.core.ui;
 
+import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.talend.cwm.exception.TalendException;
@@ -24,6 +25,8 @@ import org.talend.dq.analysis.TestMultiColAnalysisCreation;
  * DOC scorreia class global comment. Detailled comment
  */
 public class TestBubbleChart {
+
+    protected static Logger log = Logger.getLogger(TestBubbleChart.class);
 
     /**
      * DOC scorreia Comment method "main".
@@ -40,7 +43,7 @@ public class TestBubbleChart {
             frame.pack();
             frame.setVisible(true);
         } catch (TalendException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
     }

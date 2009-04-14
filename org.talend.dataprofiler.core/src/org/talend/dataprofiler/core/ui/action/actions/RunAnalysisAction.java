@@ -111,7 +111,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         this.listener = ((AnalysisEditor) reference.getEditor(true)).getMasterPage();
                     }
                 } catch (PartInitException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
         }

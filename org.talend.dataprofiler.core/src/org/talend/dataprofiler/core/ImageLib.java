@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -27,6 +28,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  * 
  */
 public final class ImageLib {
+
+    protected static Logger log = Logger.getLogger(ImageLib.class);
 
     private static ImageRegistry imageRegistry;
 
@@ -205,7 +208,7 @@ public final class ImageLib {
         try {
             return new URL(installURL, "icons/"); //$NON-NLS-1$
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error(e, e);
             return null;
         }
     }

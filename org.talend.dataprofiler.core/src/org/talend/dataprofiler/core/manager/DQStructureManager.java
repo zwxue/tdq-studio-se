@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -53,6 +54,8 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
  * 
  */
 public final class DQStructureManager {
+
+    protected static Logger log = Logger.getLogger(DQStructureManager.class);
 
     private static final String DEMO_PATH = "/demo"; //$NON-NLS-1$
 
@@ -356,7 +359,7 @@ public final class DQStructureManager {
                 fileURL = FileLocator.toFileURL(resourceURL);
                 file = new File(fileURL.getFile());
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
             if (file.isDirectory() && recurse) {
                 if (file.getName().startsWith(".")) { //$NON-NLS-1$

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern.actions;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -25,6 +26,8 @@ import org.talend.dataprofiler.core.pattern.ExportPatternsWizard;
  * DOC zqin class global comment. Detailled comment
  */
 public class ExportPatternsAction extends Action {
+
+    protected static Logger log = Logger.getLogger(ExportPatternsAction.class);
 
     private IFolder folder;
 
@@ -55,7 +58,7 @@ public class ExportPatternsAction extends Action {
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

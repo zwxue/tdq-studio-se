@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.text.MessageFormat;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,13 +32,16 @@ import Zql.ZqlParser;
  */
 public class SqlIndicatorHandlerTest {
 
+    protected static Logger log = Logger.getLogger(SqlIndicatorHandlerTest.class);
+
     private static final String[] ALL_GENERIC_SQL = { "select count(*) from {1}", "select count({0}) from {1}",
             "select count({0}) from {1} where {0} is null", "select count(distinct {0})  from {1} ",
             "select distinct({0}) as h, count({0}) from {1} group by h order by h DESC" };
 
     /**
      * Test method for
-     * {@link org.talend.dq.indicators.SqlIndicatorHandler#getCompletedSqlString(java.lang.String, java.lang.String, java.lang.String)}.
+     * {@link org.talend.dq.indicators.SqlIndicatorHandler#getCompletedSqlString(java.lang.String, java.lang.String, java.lang.String)}
+     * .
      */
     @Test
     public void testGetCompletedSqlString() {
@@ -70,7 +74,7 @@ public class SqlIndicatorHandlerTest {
                 printVector("Zorder by:", orderBy);
 
             } catch (ParseException e) {
-                e.printStackTrace();
+                log.error(e, e);
                 Assert.fail(e.getLocalizedMessage());
             }
 

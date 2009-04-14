@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.catalog;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -34,6 +35,8 @@ import orgomg.cwm.objectmodel.core.Package;
  * 
  */
 public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
+
+    protected static Logger log = Logger.getLogger(CatalogAnalysisDPSelectionPage.class);
 
     private static String newAnaStr = DefaultMessagesImpl.getString("CatologAnalysisPageStep0.newAnalysis"); //$NON-NLS-1$
 
@@ -84,7 +87,7 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                     }
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
 

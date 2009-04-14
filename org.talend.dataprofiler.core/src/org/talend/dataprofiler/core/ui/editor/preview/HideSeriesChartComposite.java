@@ -189,8 +189,7 @@ public class HideSeriesChartComposite extends ChartComposite {
                     });
 
                 } catch (Throwable e) {
-                    e.printStackTrace();
-                    log.error(e);
+                    log.error(e, e);
                 }
 
             }

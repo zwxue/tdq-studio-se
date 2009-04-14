@@ -21,6 +21,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -73,282 +74,262 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public class RefreshActionDelegate implements IObjectActionDelegate {
 
-	protected static final EMFUtil EMFUTIL = EMFSharedResources
-			.getSharedEmfUtil();
+    protected static Logger log = Logger.getLogger(RefreshActionDelegate.class);
 
-	protected IWorkbenchPart workbenchpart;
+    protected static final EMFUtil EMFUTIL = EMFSharedResources.getSharedEmfUtil();
 
-	protected Object selectedObject;
+    protected IWorkbenchPart workbenchpart;
 
-	protected IFile selectedFileObject;
+    protected Object selectedObject;
 
-	protected TdCatalog selectedCatalog;
+    protected IFile selectedFileObject;
 
-	protected TdSchema selectedSchema;
+    protected TdCatalog selectedCatalog;
 
-	protected TdDataProvider selectedDataProvider;
+    protected TdSchema selectedSchema;
 
-	private static final boolean CAT_WITH_PRV = true;
+    protected TdDataProvider selectedDataProvider;
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.workbenchpart = targetPart;
-	}
+    private static final boolean CAT_WITH_PRV = true;
 
-	public void run(IAction action) {
-		// DQStructureComparer.copyCurrentResourceFile(m_SelectedFileObject);
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.workbenchpart = targetPart;
+    }
 
-		if (selectedObject instanceof TdDataProvider) {
-			// TODO:
-		} else if (selectedObject instanceof TdSchema) {
-			// TODO:
-		} else if (selectedObject instanceof TdTable) {
-			// TODO:
-		} else if (selectedObject instanceof TdView) {
-			// TODO:
-		}
+    public void run(IAction action) {
+        // DQStructureComparer.copyCurrentResourceFile(m_SelectedFileObject);
 
-		synchronize();
-		// DQStructureComparer.deleteCopiedResourceFile();
-	}
+        if (selectedObject instanceof TdDataProvider) {
+            // TODO:
+        } else if (selectedObject instanceof TdSchema) {
+            // TODO:
+        } else if (selectedObject instanceof TdTable) {
+            // TODO:
+        } else if (selectedObject instanceof TdView) {
+            // TODO:
+        }
 
-	@SuppressWarnings("restriction")
-	private void synchronizeDirect() {
-		EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-		ResourceSet resourceSet = util.getResourceSet();
-		URI uri = URI.createPlatformResourceURI(selectedFileObject
-				.getFullPath().toString(), false);
-		final Resource resource = resourceSet.createResource(uri);
-		boolean ok;
+        synchronize();
+        // DQStructureComparer.deleteCopiedResourceFile();
+    }
 
-		Collection<? extends ModelElement> schemata = DataProviderHelper
-				.getTdSchema(selectedDataProvider);
-		if (CAT_WITH_PRV) {
-			ok = resource.getContents().addAll(schemata);
-		} else {
-			// ok = addElementsToOwnResources(schemata,
-			// folderProvider.getFolderResource(), util);
-			// util.save();
-		}
-	}
+    @SuppressWarnings("restriction")
+    private void synchronizeDirect() {
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+        ResourceSet resourceSet = util.getResourceSet();
+        URI uri = URI.createPlatformResourceURI(selectedFileObject.getFullPath().toString(), false);
+        final Resource resource = resourceSet.createResource(uri);
+        boolean ok;
 
-	private void synchronize() {
-		// Load Model from Prv File
-		// Creates the resourceSet where we'll load the models
-		final ResourceSet resourceSet = new ResourceSetImpl();
-		try {
+        Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(selectedDataProvider);
+        if (CAT_WITH_PRV) {
+            ok = resource.getContents().addAll(schemata);
+        } else {
+            // ok = addElementsToOwnResources(schemata,
+            // folderProvider.getFolderResource(), util);
+            // util.save();
+        }
+    }
 
-			final EObject alreadySavedModel = ModelUtils.load(
-					selectedFileObject.toString(), resourceSet);
-			TypedReturnCode<TdDataProvider> rc = null;
+    private void synchronize() {
+        // Load Model from Prv File
+        // Creates the resourceSet where we'll load the models
+        final ResourceSet resourceSet = new ResourceSetImpl();
+        try {
 
-			EList<ProviderConnection> connections = ((TdDataProvider) alreadySavedModel)
-					.getResourceConnection();
-			ListIterator<ProviderConnection> li = connections.listIterator();
-			if (li.hasNext()) {
-				TdProviderConnection pc = (TdProviderConnection) li.next();
-				String dbUrl = pc.getConnectionString();
-				String driverClassName = pc.getDriverClassName();
-				EList<EObject> pcObjects = pc.eContents();
-				ListIterator<EObject> liEObject = pcObjects.listIterator();
+            final EObject alreadySavedModel = ModelUtils.load(selectedFileObject.toString(), resourceSet);
+            TypedReturnCode<TdDataProvider> rc = null;
 
-				Properties parameters = new Properties();
+            EList<ProviderConnection> connections = ((TdDataProvider) alreadySavedModel).getResourceConnection();
+            ListIterator<ProviderConnection> li = connections.listIterator();
+            if (li.hasNext()) {
+                TdProviderConnection pc = (TdProviderConnection) li.next();
+                String dbUrl = pc.getConnectionString();
+                String driverClassName = pc.getDriverClassName();
+                EList<EObject> pcObjects = pc.eContents();
+                ListIterator<EObject> liEObject = pcObjects.listIterator();
 
-				while (liEObject.hasNext()) {
-					EObject eo = liEObject.next();
-					if (eo instanceof TaggedValue) {
-						String tag = ((TaggedValue) eo).getTag();
-						System.out.print(tag);
-						String value = ((TaggedValue) eo).getValue();
-						System.out.println(" " + value); //$NON-NLS-1$
-						parameters.put(tag, value);
-					}
+                Properties parameters = new Properties();
 
-				}
+                while (liEObject.hasNext()) {
+                    EObject eo = liEObject.next();
+                    if (eo instanceof TaggedValue) {
+                        String tag = ((TaggedValue) eo).getTag();
+                        System.out.print(tag);
+                        String value = ((TaggedValue) eo).getValue();
+                        System.out.println(" " + value); //$NON-NLS-1$
+                        parameters.put(tag, value);
+                    }
 
-				System.out.println(dbUrl);
-				System.out.println(driverClassName);
-				DBConnectionParameter dbcp = new DBConnectionParameter();
+                }
 
-				dbcp.setName(pc.getName());
-				dbcp.setAuthor(TaggedValueHelper.getAuthor(pc));
-				dbcp.setDescription(TaggedValueHelper.getDescription(pc));
-				dbcp.setPurpose(TaggedValueHelper.getPurpose(pc));
-				dbcp.setStatus(TaggedValueHelper.getValue("Status", pc)); //$NON-NLS-1$
+                System.out.println(dbUrl);
+                System.out.println(driverClassName);
+                DBConnectionParameter dbcp = new DBConnectionParameter();
 
-				dbcp.setDriverClassName(driverClassName);
-				dbcp.setJdbcUrl(dbUrl);
-				dbcp.setParameters(parameters);
-				rc = ConnectionService.createConnection(dbcp);
-			}
-			System.out.println(alreadySavedModel.toString());
-			// MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-			// project.
-			IFolder folder = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(
-							org.talend.dataquality.PluginConstant
-									.getRootProjectName()).getFolder(
-							DQStructureManager.getMetaData()).getFolder(
-							DQStructureManager.DB_CONNECTIONS);
-			FolderProvider fp = new FolderProvider();
-			fp.setFolderResource(folder);
-			IFile file2 = loadDataProviderAndStructureInMemory(rc.getObject(),
-					fp);
+                dbcp.setName(pc.getName());
+                dbcp.setAuthor(TaggedValueHelper.getAuthor(pc));
+                dbcp.setDescription(TaggedValueHelper.getDescription(pc));
+                dbcp.setPurpose(TaggedValueHelper.getPurpose(pc));
+                dbcp.setStatus(TaggedValueHelper.getValue("Status", pc)); //$NON-NLS-1$
 
-			final EObject model2 = ModelUtils.load(file2.toString(),
-					resourceSet);
+                dbcp.setDriverClassName(driverClassName);
+                dbcp.setJdbcUrl(dbUrl);
+                dbcp.setParameters(parameters);
+                rc = ConnectionService.createConnection(dbcp);
+            }
+            System.out.println(alreadySavedModel.toString());
+            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
+            // project.
+            IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(
+                    org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getMetaData())
+                    .getFolder(DQStructureManager.DB_CONNECTIONS);
+            FolderProvider fp = new FolderProvider();
+            fp.setFolderResource(folder);
+            IFile file2 = loadDataProviderAndStructureInMemory(rc.getObject(), fp);
 
-			// MODSCA 2008-03-31 add option for ignoring some elements
-			Map<String, Object> options = new HashMap<String, Object>();
-			options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-			options.put(MatchOptions.OPTION_SEARCH_WINDOW, 500);
+            final EObject model2 = ModelUtils.load(file2.toString(), resourceSet);
 
-			// Creates the match then the diff model for those two models
-			final MatchModel match = MatchService.doMatch(alreadySavedModel,
-					model2, options);
-			final DiffModel diff = DiffService.doDiff(match, false);
+            // MODSCA 2008-03-31 add option for ignoring some elements
+            Map<String, Object> options = new HashMap<String, Object>();
+            options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+            options.put(MatchOptions.OPTION_SEARCH_WINDOW, 500);
 
-			// MODSCA 2008-03-31 play around with the elements
-			// EList matchedElements = match.getMatchedElements();
-			// for (Object m : matchedElements) {
-			// MatchElement elt = (MatchElement) m;
-			//
-			// }
-			EList<UnMatchElement> unMatchedElements = match
-					.getUnMatchedElements();
-			for (Object object : unMatchedElements) {
-				UnMatchElement unMatched = (UnMatchElement) object;
-				ModelElement modelElt = (ModelElement) unMatched.getElement();
-				System.out.println("Unmatched elt= " + modelElt.getName()); //$NON-NLS-1$
-			}
-			System.out.println("LEFT MODEL=" + match.getLeftModel()); //$NON-NLS-1$
-			EList<DiffElement> ownedElements = diff.getOwnedElements();
-			// for (DiffElement oe : ownedElements) {
-			// // System.out.println(oe.g);
-			// }
-			// if (true) {
-			// return;
-			// }
+            // Creates the match then the diff model for those two models
+            final MatchModel match = MatchService.doMatch(alreadySavedModel, model2, options);
+            final DiffModel diff = DiffService.doDiff(match, false);
 
-			// Prints the results
-			try {
-				System.out.println(ModelUtils.serialize(match));
-				System.out.println(ModelUtils.serialize(diff));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            // MODSCA 2008-03-31 play around with the elements
+            // EList matchedElements = match.getMatchedElements();
+            // for (Object m : matchedElements) {
+            // MatchElement elt = (MatchElement) m;
+            //
+            // }
+            EList<UnMatchElement> unMatchedElements = match.getUnMatchedElements();
+            for (Object object : unMatchedElements) {
+                UnMatchElement unMatched = (UnMatchElement) object;
+                ModelElement modelElt = (ModelElement) unMatched.getElement();
+                System.out.println("Unmatched elt= " + modelElt.getName()); //$NON-NLS-1$
+            }
+            System.out.println("LEFT MODEL=" + match.getLeftModel()); //$NON-NLS-1$
+            EList<DiffElement> ownedElements = diff.getOwnedElements();
+            // for (DiffElement oe : ownedElements) {
+            // // System.out.println(oe.g);
+            // }
+            // if (true) {
+            // return;
+            // }
 
-			// Serializes the result as "result.emfdiff" in the directory this
-			// class has been called from.
-			String outputFile = "out/result.emfdiff"; //$NON-NLS-1$
-			System.out.println("saving emfdiff as \"" + outputFile + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-			final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE
-					.createModelInputSnapshot();
-			snapshot.setDate(Calendar.getInstance().getTime());
-			snapshot.setMatch(match);
-			snapshot.setDiff(diff);
-			ModelUtils.save(snapshot, outputFile); //$NON-NLS-1$
+            // Prints the results
+            try {
+                System.out.println(ModelUtils.serialize(match));
+                System.out.println(ModelUtils.serialize(diff));
+            } catch (IOException e) {
+                log.error(e, e);
+            }
 
-		} catch (IOException e) {
-			System.out.print(e.getMessage());
-			// e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			System.out.print(e.getMessage());
-			e.printStackTrace();
-		}
-	}
+            // Serializes the result as "result.emfdiff" in the directory this
+            // class has been called from.
+            String outputFile = "out/result.emfdiff"; //$NON-NLS-1$
+            System.out.println("saving emfdiff as \"" + outputFile + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+            snapshot.setDate(Calendar.getInstance().getTime());
+            snapshot.setMatch(match);
+            snapshot.setDiff(diff);
+            ModelUtils.save(snapshot, outputFile); //$NON-NLS-1$
 
-	private IFile loadDataProviderAndStructureInMemory(
-			TdDataProvider dataProvider, FolderProvider folderProvider) {
+        } catch (IOException e) {
+            System.out.print(e.getMessage());
+            // log.error(e, e);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            System.out.print(e.getMessage());
+            log.error(e, e);
+        }
+    }
 
-		IPath folderPath = ((folderProvider != null) && folderProvider
-				.getFolder() != null) ? folderProvider.getFolderResource()
-				.getFullPath() : null;
-		if (folderPath == null) { // do not serialize data
-			System.out
-					.println("Data provider not serialized: no folder given."); //$NON-NLS-1$
-			return null;
-		}
+    private IFile loadDataProviderAndStructureInMemory(TdDataProvider dataProvider, FolderProvider folderProvider) {
 
-		// --- add resources in resource set
-		EMFUtil util = EMFSharedResources.getSharedEmfUtil();
-		ResourceSet resourceSet = util.getResourceSet();
+        IPath folderPath = ((folderProvider != null) && folderProvider.getFolder() != null) ? folderProvider.getFolderResource()
+                .getFullPath() : null;
+        if (folderPath == null) { // do not serialize data
+            System.out.println("Data provider not serialized: no folder given."); //$NON-NLS-1$
+            return null;
+        }
 
-		String fileName = ".refresh.prv"; //$NON-NLS-1$
-		IFile file = folderProvider.getFolderResource().getFile(fileName);
-		// File file = new File(dataproviderFilename);
-		if (file.exists()) {
-			try {
-				file.delete(true, null);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
-		URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(),
-				false);
-		final Resource resource = resourceSet.createResource(uri);
-		boolean ok = resource.getContents().add(dataProvider);
+        // --- add resources in resource set
+        EMFUtil util = EMFSharedResources.getSharedEmfUtil();
+        ResourceSet resourceSet = util.getResourceSet();
 
-		// save each catalog is its own file
-		Collection<? extends ModelElement> catalogs = DataProviderHelper
-				.getTdCatalogs(dataProvider);
-		if (CAT_WITH_PRV) {
-			ok = resource.getContents().addAll(catalogs);
-		} else {
-			// ok = addElementsToOwnResources(catalogs,
-			// folderProvider.getFolderResource(), util);
-		}
+        String fileName = ".refresh.prv"; //$NON-NLS-1$
+        IFile file = folderProvider.getFolderResource().getFile(fileName);
+        // File file = new File(dataproviderFilename);
+        if (file.exists()) {
+            try {
+                file.delete(true, null);
+            } catch (CoreException e) {
+                log.error(e, e);
+            }
+        }
+        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+        final Resource resource = resourceSet.createResource(uri);
+        boolean ok = resource.getContents().add(dataProvider);
 
-		// save each schema is its own file
-		Collection<? extends ModelElement> schemata = DataProviderHelper
-				.getTdSchema(dataProvider);
-		if (CAT_WITH_PRV) {
-			ok = resource.getContents().addAll(schemata);
-		} else {
-			// ok = addElementsToOwnResources(schemata,
-			// folderProvider.getFolderResource(), util);
-			// util.save();
-		}
-		Iterator<? extends ModelElement> it = schemata.iterator();
-		while (it.hasNext()) {
-			TdSchema tdschema = (TdSchema) it.next();
-			Collection<? extends ModelElement> tables = SchemaHelper
-					.getTables(tdschema);
-			ok = resource.getContents().addAll(tables);
-			Collection<? extends ModelElement> views = SchemaHelper
-					.getViews(tdschema);
-			ok = resource.getContents().addAll(views);
+        // save each catalog is its own file
+        Collection<? extends ModelElement> catalogs = DataProviderHelper.getTdCatalogs(dataProvider);
+        if (CAT_WITH_PRV) {
+            ok = resource.getContents().addAll(catalogs);
+        } else {
+            // ok = addElementsToOwnResources(catalogs,
+            // folderProvider.getFolderResource(), util);
+        }
 
-		}
+        // save each schema is its own file
+        Collection<? extends ModelElement> schemata = DataProviderHelper.getTdSchema(dataProvider);
+        if (CAT_WITH_PRV) {
+            ok = resource.getContents().addAll(schemata);
+        } else {
+            // ok = addElementsToOwnResources(schemata,
+            // folderProvider.getFolderResource(), util);
+            // util.save();
+        }
+        Iterator<? extends ModelElement> it = schemata.iterator();
+        while (it.hasNext()) {
+            TdSchema tdschema = (TdSchema) it.next();
+            Collection<? extends ModelElement> tables = SchemaHelper.getTables(tdschema);
+            ok = resource.getContents().addAll(tables);
+            Collection<? extends ModelElement> views = SchemaHelper.getViews(tdschema);
+            ok = resource.getContents().addAll(views);
 
-		EMFUtil.saveSingleResource(resource);
+        }
 
-		return file;
-	}
+        EMFUtil.saveSingleResource(resource);
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		if (selection != null && selection instanceof TreeSelection) {
-			TreeSelection ts = (TreeSelection) selection;
-			TreePath[] treepaths = ts.getPaths();
-			if (treepaths.length >= 1) {
-				int count = treepaths[0].getSegmentCount();
-				for (int i = 0; i < count; i++) {
-					Object o = treepaths[0].getSegment(i);
-					if (o instanceof IFile) {
-						if (((IFile) o).getFileExtension().toLowerCase()
-								.equals("prv")) { //$NON-NLS-1$
-							selectedFileObject = (IFile) o;
-						}
-					} else if (o instanceof TdSchema) {
-						selectedSchema = (TdSchema) o;
-					} else if (o instanceof TdCatalog) {
-						selectedCatalog = (TdCatalog) o;
-					} else if (o instanceof TdDataProvider) {
-						selectedDataProvider = (TdDataProvider) o;
-					}
-				}
-			}
-			selectedObject = ts.getFirstElement();
-		}
-	}
+        return file;
+    }
+
+    public void selectionChanged(IAction action, ISelection selection) {
+        if (selection != null && selection instanceof TreeSelection) {
+            TreeSelection ts = (TreeSelection) selection;
+            TreePath[] treepaths = ts.getPaths();
+            if (treepaths.length >= 1) {
+                int count = treepaths[0].getSegmentCount();
+                for (int i = 0; i < count; i++) {
+                    Object o = treepaths[0].getSegment(i);
+                    if (o instanceof IFile) {
+                        if (((IFile) o).getFileExtension().toLowerCase().equals("prv")) { //$NON-NLS-1$
+                            selectedFileObject = (IFile) o;
+                        }
+                    } else if (o instanceof TdSchema) {
+                        selectedSchema = (TdSchema) o;
+                    } else if (o instanceof TdCatalog) {
+                        selectedCatalog = (TdCatalog) o;
+                    } else if (o instanceof TdDataProvider) {
+                        selectedDataProvider = (TdDataProvider) o;
+                    }
+                }
+            }
+            selectedObject = ts.getFirstElement();
+        }
+    }
 }

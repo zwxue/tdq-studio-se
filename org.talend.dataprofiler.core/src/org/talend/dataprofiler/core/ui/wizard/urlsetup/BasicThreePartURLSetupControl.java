@@ -130,10 +130,10 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                                     comboDriver.add(classes[i].getName());
                                 }
                             } catch (MalformedURLException ex) {
-                                ex.printStackTrace();
+                                log.error(ex, ex);
 
                             } catch (IOException ex) {
-                                ex.printStackTrace();
+                                log.error(ex, ex);
 
                             }
                         }

@@ -19,6 +19,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -35,6 +36,8 @@ import org.talend.dataprofiler.core.service.IBrandingService;
  * 
  */
 public class LicenseWizardPage extends WizardPage {
+
+    protected static Logger log = Logger.getLogger(LicenseWizardPage.class);
 
     /** CLUF field. */
     private Text clufText;
@@ -96,9 +99,9 @@ public class LicenseWizardPage extends WizardPage {
             }
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error(e, e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         return license;
     }

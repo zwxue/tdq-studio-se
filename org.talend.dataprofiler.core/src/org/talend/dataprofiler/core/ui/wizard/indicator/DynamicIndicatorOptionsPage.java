@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -33,6 +34,8 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
  * DOC zqin class global comment. Detailled comment
  */
 public class DynamicIndicatorOptionsPage extends WizardPage {
+
+    protected static Logger log = Logger.getLogger(DynamicIndicatorOptionsPage.class);
 
     private IndicatorUnit indicatorUnit;
 
@@ -112,7 +115,7 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
                 item.setControl(iForm);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return tabFolder;

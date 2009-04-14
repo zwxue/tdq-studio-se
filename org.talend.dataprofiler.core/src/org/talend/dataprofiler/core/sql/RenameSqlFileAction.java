@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -62,6 +63,8 @@ import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
  */
 public class RenameSqlFileAction extends Action {
 
+    protected static Logger log = Logger.getLogger(RenameSqlFileAction.class);
+
     private IFile folder;
 
     private String newname;
@@ -101,7 +104,7 @@ public class RenameSqlFileAction extends Action {
             folder.getParent().refreshLocal(IResource.DEPTH_ONE, null);
             sourceFiles.refreshLocal(IResource.DEPTH_ONE, null);
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 
@@ -247,7 +250,7 @@ public class RenameSqlFileAction extends Action {
                             }
                         }
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        log.error(ex, ex);
                     }
 
                     ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());

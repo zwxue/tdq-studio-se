@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
@@ -32,6 +33,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  * 
  */
 public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
+
+    protected static Logger log = Logger.getLogger(ViewFolderNode.class);
 
     /**
      * @param name
@@ -104,7 +107,7 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
             return ok;
         } catch (TalendException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
             return false;
         }
     }

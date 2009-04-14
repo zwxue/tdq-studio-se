@@ -86,7 +86,7 @@ public class TestMultiColAnalysisCreation {
             myTest.run();
         } catch (TalendException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

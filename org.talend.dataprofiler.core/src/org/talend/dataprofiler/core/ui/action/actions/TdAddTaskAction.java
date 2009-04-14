@@ -16,6 +16,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -36,6 +37,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 @SuppressWarnings("restriction")
 public class TdAddTaskAction extends Action {
+
+    protected static Logger log = Logger.getLogger(TdAddTaskAction.class);
 
     private Shell shell = null;
 
@@ -81,7 +84,7 @@ public class TdAddTaskAction extends Action {
             }
 
         } catch (Exception e1) {
-            e1.printStackTrace();
+            log.error(e1, e1);
         }
     }
 

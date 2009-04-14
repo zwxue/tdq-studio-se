@@ -1,5 +1,6 @@
 package org.talend.dataprofiler.help.actions;
 
+import org.apache.log4j.Logger;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -13,6 +14,8 @@ import org.talend.dataprofiler.help.BookmarksHelpView;
 
 @SuppressWarnings("restriction")
 public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
+
+    protected static Logger log = Logger.getLogger(ViewBookMarksAction.class);
 
     public void dispose() {
         // TODO Auto-generated method stub
@@ -47,7 +50,7 @@ public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

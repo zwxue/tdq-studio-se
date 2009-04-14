@@ -15,6 +15,8 @@ package org.talend.sqltools;
 import java.io.ByteArrayInputStream;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import Zql.ParseException;
 import Zql.ZExp;
 import Zql.ZExpression;
@@ -26,6 +28,8 @@ import Zql.ZqlParser;
  * DOC scorreia class global comment. Detailled comment
  */
 public final class ZQueryHelper {
+
+    protected static Logger log = Logger.getLogger(ZQueryHelper.class);
 
     private ZQueryHelper() {
     }
@@ -64,7 +68,7 @@ public final class ZQueryHelper {
                     ZExpression expr = (ZExpression) parser.readExpression();
                     v.add(expr);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
         }

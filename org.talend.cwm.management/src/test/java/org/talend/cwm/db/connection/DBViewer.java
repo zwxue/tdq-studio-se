@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Logger;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.ConnectionUtils;
@@ -28,6 +29,8 @@ import org.talend.utils.sql.ConnectionUtils;
  * Example code from http://www.unix.org.ua/orelly/java-ent/jenut/ch02_09.htm.
  */
 public class DBViewer {
+
+    protected static Logger log = Logger.getLogger(DBViewer.class);
 
     public static void main(java.lang.String[] args) {
 
@@ -77,10 +80,10 @@ public class DBViewer {
             System.out.println("SQL Exception: " + e.getMessage());
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (IllegalAccessException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 }

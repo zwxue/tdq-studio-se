@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -81,6 +82,8 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  * 
  */
 public class DQRespositoryView extends CommonNavigator {
+
+    protected static Logger log = Logger.getLogger(DQRespositoryView.class);
 
     public static final String ID = "org.talend.dataprofiler.core.ui.views.DQRespositoryView"; //$NON-NLS-1$
 
@@ -311,7 +314,7 @@ public class DQRespositoryView extends CommonNavigator {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

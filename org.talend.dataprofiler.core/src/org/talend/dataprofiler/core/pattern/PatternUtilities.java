@@ -239,7 +239,7 @@ public final class PatternUtilities {
                 }
             }
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         return list;
     }
@@ -279,7 +279,7 @@ public final class PatternUtilities {
                 }
             }
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return list;

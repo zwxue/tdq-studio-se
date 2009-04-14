@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
@@ -30,6 +31,8 @@ import org.talend.dataprofiler.core.ui.action.actions.DeleteDQRuleAction;
  * DOC xqliu class global comment. Detailled comment
  */
 public class DQRulesActionProvider extends CommonActionProvider {
+
+    protected static Logger log = Logger.getLogger(DQRulesActionProvider.class);
 
     public static final String EXTENSION_DQRULE = FactoriesUtil.DQRULE;
 
@@ -51,7 +54,7 @@ public class DQRulesActionProvider extends CommonActionProvider {
                         menu.add(new CreateDQRulesAction(folder));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
         }

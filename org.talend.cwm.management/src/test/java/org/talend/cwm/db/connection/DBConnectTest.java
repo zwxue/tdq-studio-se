@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.talend.cwm.relational.TdCatalog;
@@ -32,6 +33,8 @@ import org.talend.utils.properties.TypedProperties;
  * DOC scorreia class global comment. Detailled comment
  */
 public class DBConnectTest {
+
+    protected static Logger log = Logger.getLogger(DBConnectTest.class);
 
     private static final Class<DBConnectTest> THAT = DBConnectTest.class;
 
@@ -173,7 +176,8 @@ public class DBConnectTest {
 
     /**
      * Test method for
-     * {@link org.talend.cwm.db.connection.DBConnect#storeInResourceSet(org.eclipse.emf.ecore.EObject, java.lang.String)}.
+     * {@link org.talend.cwm.db.connection.DBConnect#storeInResourceSet(org.eclipse.emf.ecore.EObject, java.lang.String)}
+     * .
      */
     @Test
     public void testStoreInResourceSet() {
@@ -249,7 +253,7 @@ public class DBConnectTest {
             ok = connect.connect();
             ok = ok && connect.retrieveDatabaseStructure();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         assertTrue(ok);
         connect.closeConnection();
@@ -266,7 +270,7 @@ public class DBConnectTest {
             ok = connect.connect();
             ok = ok && connect.retrieveDeployedSystemInformations();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         assertTrue(ok);
         connect.closeConnection();

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.talend.dq.PluginConstant;
 
 /**
@@ -31,6 +32,8 @@ import org.talend.dq.PluginConstant;
  * 
  */
 public final class SupportDBUrlStore {
+
+    protected static Logger log = Logger.getLogger(SupportDBUrlStore.class);
 
     private static final Properties PROP = new Properties();
 
@@ -53,7 +56,7 @@ public final class SupportDBUrlStore {
             PROP.load(in);
             in.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 
@@ -137,7 +140,7 @@ public final class SupportDBUrlStore {
         if (propUrlValue == null) {
             return PluginConstant.EMPTY_STRING;
         }
-        
+
         String argHost = (host == null) ? PluginConstant.EMPTY_STRING : host;
         String argPort = (port == null) ? PluginConstant.EMPTY_STRING : port;
         String argDBName = (dbName == null) ? PluginConstant.EMPTY_STRING : dbName;
@@ -225,7 +228,7 @@ public final class SupportDBUrlStore {
             }
             // System.out.println(p.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

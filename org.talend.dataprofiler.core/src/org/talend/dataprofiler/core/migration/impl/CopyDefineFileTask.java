@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -26,6 +27,8 @@ import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
  * DOC bzhou class global comment. Detailled comment
  */
 public class CopyDefineFileTask extends AbstractMigrationTask {
+
+    protected static Logger log = Logger.getLogger(CopyDefineFileTask.class);
 
     private static final String TALEND_DEFINITION_FILENAME = ".Talend.definition"; //$NON-NLS-1$
 
@@ -49,7 +52,7 @@ public class CopyDefineFileTask extends AbstractMigrationTask {
 
                 return true;
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e, e);
                 return false;
             }
         }

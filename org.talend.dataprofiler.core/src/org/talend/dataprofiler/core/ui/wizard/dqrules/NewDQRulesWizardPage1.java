@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.dqrules;
 
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,6 +29,8 @@ import org.talend.dataprofiler.help.HelpPlugin;
  * DOC xqliu class global comment. Detailled comment
  */
 public class NewDQRulesWizardPage1 extends MetadataWizardPage {
+
+    protected static Logger log = Logger.getLogger(NewDQRulesWizardPage1.class);
 
     protected HashMap<String, String> metadata;
 
@@ -56,7 +59,7 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
                 PlatformUI.getWorkbench().getHelpSystem()
                         .setHelp(getControl(), HelpPlugin.getDefault().getDQRulesHelpContextID());
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

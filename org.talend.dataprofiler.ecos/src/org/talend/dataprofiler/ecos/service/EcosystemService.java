@@ -31,6 +31,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.map.JavaTypeMapper;
 import org.eclipse.core.runtime.FileLocator;
@@ -46,6 +47,8 @@ import org.talend.dataprofiler.ecos.proxy.EcosystemSocketFactory;
  * DOC bZhou class global comment. Detailled comment
  */
 public abstract class EcosystemService {
+
+    protected static Logger log = Logger.getLogger(EcosystemService.class);
 
     public static String VERSION_LIST_URL = "http://talendforge.org/exchange/top/api/get_version_list.php"; //$NON-NLS-1$
 
@@ -126,7 +129,7 @@ public abstract class EcosystemService {
             });
             return versions.toArray(new String[versions.size()]);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         return new String[0];
     }
@@ -217,7 +220,7 @@ public abstract class EcosystemService {
             URL fileUrl = FileLocator.toFileURL(url);
             return new File(fileUrl.getPath());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         return null;
     }

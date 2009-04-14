@@ -56,7 +56,7 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         try {
             searchAllReports(reportsFolder);
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         return allRepMap.values();
     }

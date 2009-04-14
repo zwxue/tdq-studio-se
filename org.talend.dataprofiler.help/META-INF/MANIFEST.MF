@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.help,
  org.eclipse.help.ui,
  org.eclipse.help.webapp,
- org.eclipse.equinox.http.jetty
+ org.eclipse.equinox.http.jetty,
+ org.apache.log4j;bundle-version="1.2.13"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.help,
  org.talend.dataprofiler.help.actions

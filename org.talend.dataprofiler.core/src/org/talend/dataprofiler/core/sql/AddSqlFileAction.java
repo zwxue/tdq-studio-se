@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.sql;
 import static org.talend.dataprofiler.core.PluginConstant.SE_ID;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -37,6 +38,8 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
  * 
  */
 public class AddSqlFileAction extends Action {
+
+    protected static Logger log = Logger.getLogger(AddSqlFileAction.class);
 
     private IFolder folder;
 
@@ -68,7 +71,7 @@ public class AddSqlFileAction extends Action {
             try {
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
             ChangePerspectiveAction action = new ChangePerspectiveAction(SE_ID);
             action.run();
@@ -77,7 +80,7 @@ public class AddSqlFileAction extends Action {
                         .openEditor(new SQLEditorInput(fileWizard.getSqlFile()),
                                 "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
             } catch (PartInitException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

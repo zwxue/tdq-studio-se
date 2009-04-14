@@ -522,7 +522,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 chartComposite.getParent().layout();
                 chartComposite.layout();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error(ex, ex);
             }
         }
     }
@@ -619,7 +619,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // urlString = editorInput.getFile();
         // analysisHandler.getAnalysis().setUrl(urlString);
         // } catch (MalformedURLException e) {
-        // e.printStackTrace();
         // }
 
         // FIXME after i set the options of bins designer, and when saving the file, it cause a exception.

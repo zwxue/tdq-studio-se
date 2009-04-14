@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -35,6 +36,8 @@ import org.talend.utils.sugars.ReturnCode;
  * DOC scorreia class global comment. Detailled comment
  */
 public final class ConnectionIndicEvalMain {
+
+    protected static Logger log = Logger.getLogger(ConnectionIndicEvalMain.class);
 
     private ConnectionIndicEvalMain() {
     }
@@ -91,16 +94,16 @@ public final class ConnectionIndicEvalMain {
             ConnectionUtils.closeConnection(connection);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (IllegalAccessException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

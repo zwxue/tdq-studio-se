@@ -15,6 +15,7 @@ package org.talend.dq.nodes.indicator;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.impl.MedianIndicatorImpl;
 
@@ -23,6 +24,8 @@ import org.talend.dataquality.indicators.impl.MedianIndicatorImpl;
  * 
  */
 public class IndicatorsInstanceFactory {
+
+    protected static Logger log = Logger.getLogger(IndicatorsInstanceFactory.class);
 
     private static Map<String, Indicator> instanceMap = new HashMap<String, Indicator>();
 
@@ -34,17 +37,17 @@ public class IndicatorsInstanceFactory {
                 instanceMap.put(cla.getSimpleName(), indicator);
             } catch (InstantiationException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error(e, e);
             } catch (IllegalAccessException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
         return indicator;
     }
 
     public static void main(String[] args) {
-      IndicatorsInstanceFactory.getIndicatorInstance(MedianIndicatorImpl.class);
+        IndicatorsInstanceFactory.getIndicatorInstance(MedianIndicatorImpl.class);
     }
 
 }

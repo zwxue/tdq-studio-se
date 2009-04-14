@@ -8,5 +8,6 @@ Bundle-ClassPath: lib/Zql.jar,
  .
 Export-Package: Zql,
  org.talend.sqltools
-Require-Bundle: org.junit4;resolution:=optional
+Require-Bundle: org.junit4;resolution:=optional,
+ org.apache.log4j;bundle-version="1.2.13"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

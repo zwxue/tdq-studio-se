@@ -92,7 +92,7 @@ public class TestMultiNominalColAnalysis {
             myFirstTest.run(g);
         } catch (TalendException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

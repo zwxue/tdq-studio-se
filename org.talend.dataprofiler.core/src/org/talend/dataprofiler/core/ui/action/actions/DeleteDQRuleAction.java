@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -32,6 +33,8 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
  * DOC xqliu class global comment. Detailled comment
  */
 public class DeleteDQRuleAction extends Action {
+
+    protected static Logger log = Logger.getLogger(DeleteDQRuleAction.class);
 
     private List<IFile> folder;
 
@@ -58,14 +61,14 @@ public class DeleteDQRuleAction extends Action {
                         file.delete(true, null);
                     }
                 } catch (CoreException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             }
         }
         try {
             sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

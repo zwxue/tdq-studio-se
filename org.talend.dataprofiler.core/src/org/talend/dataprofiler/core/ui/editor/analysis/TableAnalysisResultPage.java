@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -73,6 +74,8 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  * DOC xqliu class global comment. Detailled comment
  */
 public class TableAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
+
+    protected static Logger log = Logger.getLogger(TableAnalysisResultPage.class);
 
     private Composite resultComp;
 
@@ -234,7 +237,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
             try {
                 new ProgressMonitorDialog(null).run(true, false, rwp);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error(ex, ex);
             }
         }
     }

@@ -18,11 +18,14 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public final class CheckValueUtils {
+
+    protected static Logger log = Logger.getLogger(CheckValueUtils.class);
 
     private CheckValueUtils() {
     }
@@ -116,7 +119,7 @@ public final class CheckValueUtils {
 
                 return ad.after(bd);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e, e);
                 return false;
 
             }

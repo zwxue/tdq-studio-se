@@ -335,7 +335,7 @@ public final class TalendCwmFactory {
             // OLD code : connector.saveInFiles();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 }

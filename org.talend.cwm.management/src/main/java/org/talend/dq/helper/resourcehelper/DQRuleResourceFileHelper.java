@@ -113,7 +113,7 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
                     searchAllWhereRules(folders[i]);
                 }
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
             resourcesNumberChanged = false;
         }

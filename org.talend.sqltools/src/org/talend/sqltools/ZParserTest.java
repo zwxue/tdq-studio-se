@@ -14,6 +14,8 @@ package org.talend.sqltools;
 
 import java.io.ByteArrayInputStream;
 
+import org.apache.log4j.Logger;
+
 import Zql.ParseException;
 import Zql.ZQuery;
 import Zql.ZqlParser;
@@ -22,6 +24,8 @@ import Zql.ZqlParser;
  * DOC scorreia class global comment. Detailled comment
  */
 public class ZParserTest {
+
+    protected static Logger log = Logger.getLogger(ZParserTest.class);
 
     private static final String SELECT_EXTRACT = "SELECT  EXTRACT(YEAR FROM TEST_DATE) AS Y , COUNT(*) c FROM TEST_TABLES.TEST_COUNT r GROUP BY Y ORDER BY c DESC ;"; //$NON-NLS-1$
 
@@ -61,7 +65,7 @@ public class ZParserTest {
             }
             myTest.parseQuery(sqlString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

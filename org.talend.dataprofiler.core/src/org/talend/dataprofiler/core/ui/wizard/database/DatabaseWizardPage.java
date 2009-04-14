@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -55,6 +56,8 @@ import org.talend.utils.sugars.ReturnCode;
  * 
  */
 class DatabaseWizardPage extends AbstractWizardPage {
+
+    protected static Logger log = Logger.getLogger(DatabaseWizardPage.class);
 
     /* use this to paint a more helpful UI for the JDBC URL */
     private SupportDBUrlType lastTimeDBType;
@@ -262,7 +265,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
                     }
                 } catch (Exception e) {
                     rc.setOk(false);
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             } else {
                 rc.setOk(false);
@@ -288,7 +291,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
             Class c = cl.loadClass(driverName);
             driver = (Driver) c.newInstance();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex, ex);
             return null;
         }
         return driver;

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -41,6 +42,8 @@ import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider;
  * DOC zqin class global comment. Detailled comment
  */
 public class ExportPatternsWizardPage extends WizardPage {
+
+    protected static Logger log = Logger.getLogger(ExportPatternsWizardPage.class);
 
     private IFolder folder;
 
@@ -161,7 +164,7 @@ public class ExportPatternsWizardPage extends WizardPage {
         try {
             selectedPatternsTree.setCheckedElements(folder.members());
         } catch (CoreException e1) {
-            e1.printStackTrace();
+            log.error(e1, e1);
         }
 
         Composite monitorComp = new Composite(container, SWT.NONE);

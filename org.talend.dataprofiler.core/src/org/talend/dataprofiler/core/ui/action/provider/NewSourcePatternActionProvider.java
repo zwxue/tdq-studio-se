@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
@@ -35,6 +36,8 @@ import org.talend.dataquality.domain.pattern.ExpressionType;
  * 
  */
 public class NewSourcePatternActionProvider extends CommonActionProvider {
+
+    protected static Logger log = Logger.getLogger(NewSourcePatternActionProvider.class);
 
     public static final String EXTENSION_PATTERN = FactoriesUtil.PATTERN;
 
@@ -65,7 +68,7 @@ public class NewSourcePatternActionProvider extends CommonActionProvider {
                         menu.add(new CreatePatternAction((IFolder) obj, type));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
             } else if (obj instanceof IFile) {
                 IFile file = (IFile) obj;

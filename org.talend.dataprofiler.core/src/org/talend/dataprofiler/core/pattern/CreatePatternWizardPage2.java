@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -38,6 +39,8 @@ import org.talend.dq.analysis.parameters.PatternParameter;
  * 
  */
 public class CreatePatternWizardPage2 extends AbstractWizardPage {
+
+    protected static Logger log = Logger.getLogger(CreatePatternWizardPage2.class);
 
     private Text expressionText;
 
@@ -125,7 +128,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
                 PlatformUI.getWorkbench().getHelpSystem()
                         .setHelp(getControl(), HelpPlugin.getDefault().getPatternHelpContextID());
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

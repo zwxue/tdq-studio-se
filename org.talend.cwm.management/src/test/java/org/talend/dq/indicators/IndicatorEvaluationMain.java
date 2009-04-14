@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -55,6 +56,8 @@ import orgomg.cwm.foundation.datatypes.QueryExpression;
  * DOC scorreia class global comment. Detailled comment
  */
 public final class IndicatorEvaluationMain {
+
+    protected static Logger log = Logger.getLogger(IndicatorEvaluationMain.class);
 
     private static final char SEP = ',';
 
@@ -193,16 +196,16 @@ public final class IndicatorEvaluationMain {
 
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (IllegalAccessException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

@@ -7,7 +7,8 @@ Bundle-Activator: org.talend.dataprofiler.ecos.EcosPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.talend.libraries.apache,
  org.apache.commons.discovery,
- org.talend.utils
+ org.talend.utils,
+ org.apache.log4j;bundle-version="1.2.13"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: lib/axis.jar,

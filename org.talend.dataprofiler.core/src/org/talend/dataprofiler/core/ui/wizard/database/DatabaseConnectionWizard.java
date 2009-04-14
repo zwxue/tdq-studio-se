@@ -16,6 +16,7 @@ import java.util.LinkedList;
 
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,6 +39,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DatabaseWizard present the DatabaseForm. Use to manage the metadata connection.
  */
 public class DatabaseConnectionWizard extends AbstractWizard {
+
+    protected static Logger log = Logger.getLogger(DatabaseConnectionWizard.class);
 
     private DatabaseMetadataWizardPage propertiesWizardPage;
 
@@ -82,7 +85,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             addPage(propertiesWizardPage);
             addPage(databaseWizardPage);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
     }

@@ -28,6 +28,7 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -49,6 +50,8 @@ import com.csvreader.CsvReader;
  * DOC zqin class global comment. Detailled comment
  */
 public final class ImportFactory {
+
+    protected static Logger log = Logger.getLogger(ImportFactory.class);
 
     private static final char CURRENT_SEPARATOR = '\t';
 
@@ -108,7 +111,7 @@ public final class ImportFactory {
                 reader.close();
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
 
@@ -168,9 +171,9 @@ public final class ImportFactory {
 
                 rwb.close();
             } catch (BiffException e) {
-                e.printStackTrace();
+                log.error(e, e);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }
@@ -204,7 +207,7 @@ public final class ImportFactory {
                 selectionFolder = folder;
             }
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         IFile pfile = selectionFolder.getFile(fname);

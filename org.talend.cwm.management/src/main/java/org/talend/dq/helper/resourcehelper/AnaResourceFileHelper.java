@@ -61,7 +61,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
                 allAnalysisMap.clear();
                 searchAllAnalysis(analysesFolder);
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
             resourcesNumberChanged = false;
         }

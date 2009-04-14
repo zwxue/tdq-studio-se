@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IMenuManager;
@@ -25,6 +26,8 @@ import org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction;
  * 
  */
 public class NewConnectionActionProvider extends CommonActionProvider {
+
+    protected static Logger log = Logger.getLogger(NewConnectionActionProvider.class);
 
     /**
      * 
@@ -48,7 +51,7 @@ public class NewConnectionActionProvider extends CommonActionProvider {
                     // menu.insertBefore("group.edit", createConnectionAction);
                 }
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

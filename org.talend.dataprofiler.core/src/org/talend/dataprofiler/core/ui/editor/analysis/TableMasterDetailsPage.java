@@ -490,7 +490,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 try {
                     new ProgressMonitorDialog(getSite().getShell()).run(true, false, rwp);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.error(ex, ex);
                 }
             }
 
@@ -631,7 +631,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 chartComposite.getParent().layout();
                 chartComposite.layout();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error(ex, ex);
             }
         }
     }

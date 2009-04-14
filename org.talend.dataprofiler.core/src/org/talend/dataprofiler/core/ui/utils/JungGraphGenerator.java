@@ -38,6 +38,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.layout.GridData;
@@ -75,6 +76,8 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
  * DOC bZhou class global comment. Detailled comment
  */
 public class JungGraphGenerator {
+
+    protected static Logger log = Logger.getLogger(JungGraphGenerator.class);
 
     private static final int DOUBLE_CLICK_COUNT = 2;
 
@@ -158,7 +161,7 @@ public class JungGraphGenerator {
             try {
                 vvFrame.setSelected(true);
             } catch (java.beans.PropertyVetoException ex) {
-                ex.printStackTrace();
+                log.error(ex, ex);
             }
             desktop.add(vvFrame);
 
@@ -174,7 +177,7 @@ public class JungGraphGenerator {
                     try {
                         dialog.setSelected(true);
                     } catch (java.beans.PropertyVetoException ex) {
-                        ex.printStackTrace();
+                        log.error(ex, ex);
                     }
                 }
             });

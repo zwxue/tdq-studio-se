@@ -15,6 +15,7 @@ package org.talend.cwm.compare.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -26,6 +27,8 @@ import org.eclipse.swt.graphics.Image;
  * 
  */
 public class ImageLib {
+
+    protected static Logger log = Logger.getLogger(ImageLib.class);
 
     private static ImageRegistry imageRegistry;
 
@@ -95,7 +98,7 @@ public class ImageLib {
         try {
             return new URL(installURL, "icons/"); //$NON-NLS-1$
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error(e, e);
             return null;
         }
     }

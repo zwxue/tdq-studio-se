@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.IEditorPart;
@@ -32,6 +33,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC rli class global comment. Detailled comment
  */
 public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormPage implements IRuningStatusListener {
+
+    protected static Logger log = Logger.getLogger(AbstractAnalysisMetadataPage.class);
 
     protected Analysis analysis;
 
@@ -62,7 +65,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 this.isDirty = false;
             } catch (DataprofilerCoreException e) {
                 ExceptionHandler.process(e, Level.ERROR);
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

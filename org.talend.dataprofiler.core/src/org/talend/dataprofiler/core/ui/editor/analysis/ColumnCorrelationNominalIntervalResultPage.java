@@ -21,6 +21,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -78,6 +79,8 @@ import orgomg.cwm.resource.relational.Column;
  * DOC xzhao class global comment. Detailled comment
  */
 public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
+
+    protected static Logger log = Logger.getLogger(ColumnCorrelationNominalIntervalResultPage.class);
 
     private Composite resultComp;
 
@@ -249,7 +252,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                 try {
                     new ProgressMonitorDialog(getSite().getShell()).run(true, false, rwp);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.error(ex, ex);
                 }
             }
 

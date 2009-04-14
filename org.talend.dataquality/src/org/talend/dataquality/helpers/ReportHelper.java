@@ -312,8 +312,7 @@ public final class ReportHelper {
         try {
             report.setDateFrom(DateUtils.parse(DateUtils.PATTERN_1, dateText));
         } catch (ParseException e) {
-            log.error(e);
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 
@@ -334,8 +333,7 @@ public final class ReportHelper {
         try {
             report.setDateTo(DateUtils.parse(DateUtils.PATTERN_1, dateText));
         } catch (ParseException e) {
-            log.error(e);
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 

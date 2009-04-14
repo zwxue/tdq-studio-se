@@ -16,6 +16,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -34,6 +35,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  * 
  */
 public class DeleteFolderAction extends Action {
+
+    protected static Logger log = Logger.getLogger(DeleteFolderAction.class);
 
     private IFolder obj;
 
@@ -63,7 +66,7 @@ public class DeleteFolderAction extends Action {
             folder.delete(true, null);
             parent.refreshLocal(IResource.DEPTH_INFINITE, null);
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 
@@ -77,7 +80,8 @@ public class DeleteFolderAction extends Action {
             action.run();
             return action.isFilesDeleted();
         }
-        return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), DefaultMessagesImpl.getString("DeleteFolderAction.deleteFold"), //$NON-NLS-1$
+        return MessageDialog.openConfirm(Display.getDefault().getActiveShell(), DefaultMessagesImpl
+                .getString("DeleteFolderAction.deleteFold"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("DeleteFolderAction.areYouDeleteFolder")); //$NON-NLS-1$
 
     }
@@ -87,7 +91,7 @@ public class DeleteFolderAction extends Action {
         try {
             members = folder.members();
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         for (IResource res : members) {
             if (res.getType() == IResource.FILE) {

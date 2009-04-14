@@ -75,16 +75,16 @@ public class DatabaseContentRetrieverTest {
             return ConnectionUtils.createConnection(url, driverClassName, connectionParams);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (IllegalAccessException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
         fail("No CONNECTION found " + url);
         return null;
@@ -134,7 +134,8 @@ public class DatabaseContentRetrieverTest {
 
     /**
      * Test method for
-     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getTablesWithColumns(java.lang.String, java.lang.String, java.lang.String, java.sql.Connection)}.
+     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getTablesWithColumns(java.lang.String, java.lang.String, java.lang.String, java.sql.Connection)}
+     * .
      */
     @Test
     public void testGetTablesWithColumns() {
@@ -159,7 +160,8 @@ public class DatabaseContentRetrieverTest {
 
     /**
      * Test method for
-     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getTablesWithColumns(java.lang.String, java.lang.String, java.lang.String, java.sql.Connection)}.
+     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getTablesWithColumns(java.lang.String, java.lang.String, java.lang.String, java.sql.Connection)}
+     * .
      */
     @Test
     public void testGetColumns() {
@@ -182,7 +184,8 @@ public class DatabaseContentRetrieverTest {
 
     /**
      * Test method for
-     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getTablesWithoutColumns(java.lang.String, java.lang.String, java.lang.String, java.sql.Connection)}.
+     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getTablesWithoutColumns(java.lang.String, java.lang.String, java.lang.String, java.sql.Connection)}
+     * .
      */
     @Test
     public void testGetTablesWithoutColumns() {
@@ -206,7 +209,8 @@ public class DatabaseContentRetrieverTest {
 
     /**
      * Test method for
-     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getViewsWithColumns(java.lang.String, java.lang.String, java.lang.String, java.sql.Connection)}.
+     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getViewsWithColumns(java.lang.String, java.lang.String, java.lang.String, java.sql.Connection)}
+     * .
      */
     @Test
     public void testGetViewsWithColumns() {
@@ -229,7 +233,8 @@ public class DatabaseContentRetrieverTest {
 
     /**
      * Test method for
-     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getDataProvider(java.sql.Driver, java.lang.String, java.util.Properties)}.
+     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getDataProvider(java.sql.Driver, java.lang.String, java.util.Properties)}
+     * .
      */
     @Test
     public void testGetDataProvider() {
@@ -238,7 +243,8 @@ public class DatabaseContentRetrieverTest {
 
     /**
      * Test method for
-     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getProviderConnection(java.lang.String, java.lang.String, java.util.Properties, java.sql.Connection)}.
+     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getProviderConnection(java.lang.String, java.lang.String, java.util.Properties, java.sql.Connection)}
+     * .
      */
     @Test
     public void testGetProviderConnection() {

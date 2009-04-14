@@ -19,6 +19,7 @@ import java.util.List;
 
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -40,6 +41,8 @@ import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
  * 
  */
 public class OpenSqlFileAction extends Action {
+
+    protected static Logger log = Logger.getLogger(OpenSqlFileAction.class);
 
     private List<IFile> folder;
 
@@ -74,7 +77,7 @@ public class OpenSqlFileAction extends Action {
                 editorInput = new SQLEditorInput(new File(portableString));
                 ap.openEditor(editorInput, "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
             } catch (PartInitException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
     }

@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -48,6 +49,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class ExampleLauncher {
+
+    protected static Logger log = Logger.getLogger(ExampleLauncher.class);
 
     /**
      * This class doesn't need to be instantiated.
@@ -109,7 +112,7 @@ public final class ExampleLauncher {
                     System.out.println(ModelUtils.serialize(match));
                     System.out.println(ModelUtils.serialize(diff));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
 
                 // Serializes the result as "result.emfdiff" in the directory this class has been called from.
@@ -122,9 +125,9 @@ public final class ExampleLauncher {
                 ModelUtils.save(snapshot, outputFile); //$NON-NLS-1$
             } catch (IOException e) {
                 // shouldn't be thrown
-                e.printStackTrace();
+                log.error(e, e);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         } else {
             System.out.println("usage : Launcher <Model1> <Model2>"); //$NON-NLS-1$

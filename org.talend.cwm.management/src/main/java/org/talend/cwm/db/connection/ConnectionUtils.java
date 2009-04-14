@@ -103,7 +103,7 @@ public final class ConnectionUtils {
                 try {
                     Class.forName("org.hsqldb.jdbcDriver");
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    log.error(e, e);
                 }
                 // MOD xqliu 2009-02-02 bug 5261
                 if (isTimeout()) {

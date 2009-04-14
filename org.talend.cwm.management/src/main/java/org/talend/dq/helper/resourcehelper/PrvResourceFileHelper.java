@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -38,6 +39,8 @@ import org.talend.utils.sugars.TypedReturnCode;
  * 
  */
 public final class PrvResourceFileHelper extends ResourceFileMap {
+
+    protected static Logger log = Logger.getLogger(PrvResourceFileHelper.class);
 
     private Map<IFile, TypedReturnCode<TdDataProvider>> providerMap = new HashMap<IFile, TypedReturnCode<TdDataProvider>>();
 
@@ -177,7 +180,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
                 }
             }
         } catch (CoreException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
 
         return allPRVFiles;

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.filters;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
@@ -21,6 +22,8 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
  * DOC rli class global comment. Detailled comment
  */
 public class ReportingFilter extends AbstractViewerFilter {
+
+    protected static Logger log = Logger.getLogger(ReportingFilter.class);
 
     public static final int FILTER_ID = 2;
 
@@ -43,7 +46,7 @@ public class ReportingFilter extends AbstractViewerFilter {
                     return false;
                 }
             } catch (CoreException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
         }
         return true;

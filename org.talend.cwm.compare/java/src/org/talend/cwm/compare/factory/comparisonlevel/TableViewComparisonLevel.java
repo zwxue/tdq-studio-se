@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -50,6 +51,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * DOC rli class global comment. Detailled comment
  */
 public class TableViewComparisonLevel extends AbstractComparisonLevel {
+
+    protected static Logger log = Logger.getLogger(TableViewComparisonLevel.class);
 
     /**
      * 
@@ -93,7 +96,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         try {
             match = MatchService.doContentMatch((ColumnSet) selectedObj, getSavedReloadObject(), options);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error(e, e);
             return false;
         }
         final DiffModel diff = DiffService.doDiff(match, false);
