@@ -42,6 +42,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.talend.commons.i18n.BabiliInfo;
 import org.talend.commons.i18n.BabiliTool;
 import org.talend.commons.i18n.BabiliUpdateUtil;
+import org.talend.commons.i18n.ImportBabiliCancelException;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -144,6 +145,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
 
     public void runProgressMonitorDialog(final boolean validated, final String language) {
         updateCompleted = false;
+        BabiliTool.clear();
         ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(mainComposite.getShell());
         IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
@@ -152,8 +154,9 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
 
                     String version = getCurrentVersion(true);
                     // get list from Babili
-                    List<BabiliInfo> bList = BabiliUpdateUtil.getBabiliList(language, validated, version);
+                    List<BabiliInfo> bList = BabiliUpdateUtil.getBabiliList(language, validated, version, monitor);
                     for (BabiliInfo info : bList) {
+                        BabiliUpdateUtil.checkProcessCancel(monitor);
                         // store to memory
                         String pluginId = info.getFilepath();
                         int pos = pluginId.indexOf("/"); //$NON-NLS-1$
@@ -167,14 +170,8 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
                         updateCompleted = true;
 
                     }
-                    if (monitor.isCanceled()) {
-                        try {
-                            throw new InterruptedException(DefaultMessagesImpl.getString("I18nPreferencePage.operationCancelled")); //$NON-NLS-1$
-                        } catch (InterruptedException e) {
-                            ExceptionHandler.process(e);
-                        }
-                    }
-
+                } catch (ImportBabiliCancelException e) {
+                    updateCompleted = false;
                 } catch (Exception e1) {
                     ExceptionHandler.process(e1);
                 } finally {
@@ -199,6 +196,8 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
                             DefaultMessagesImpl.getString("I18nPreferencePage.completeInfo")); //$NON-NLS-1$
                 }
             });
+        } else {
+            BabiliTool.clear();
         }
     }
 
