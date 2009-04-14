@@ -161,24 +161,26 @@ public final class PatternUtilities {
         // support the regular expressions (=> check
         // DB type, DB number version, existence of UDF)
         DataManager dm = analysis.getContext().getConnection();
-        TypedReturnCode<Connection> trc = JavaSqlFactory.createConnection((TdDataProvider) dm);
+        if (dm != null) {
+            TypedReturnCode<Connection> trc = JavaSqlFactory.createConnection((TdDataProvider) dm);
 
-        if (trc != null) {
-            Connection conn = trc.getObject();
+            if (trc != null) {
+                Connection conn = trc.getObject();
 
-            try {
-                SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
-                dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
-            } catch (SQLException e) {
-                log.error(e, e);
+                try {
+                    SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
+                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
+                } catch (SQLException e) {
+                    log.error(e, e);
+                }
             }
-        }
 
-        if (!(dbmsLanguage.supportRegexp() || isDBDefinedUDF(dbmsLanguage))) {
-            MessageDialogWithToggle.openInformation(null,
-                    DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
-                            .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$
-            return null;
+            if (!(dbmsLanguage.supportRegexp() || isDBDefinedUDF(dbmsLanguage))) {
+                MessageDialogWithToggle.openInformation(null,
+                        DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
+                                .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$
+                return null;
+            }
         }
 
         // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition

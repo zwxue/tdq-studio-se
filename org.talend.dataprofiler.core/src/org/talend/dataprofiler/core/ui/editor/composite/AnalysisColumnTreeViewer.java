@@ -249,6 +249,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         tree.setData(VIEWER_KEY, this);
         this.columnIndicators = elements;
         addItemElements(elements);
+        initializedConnection(elements);
     }
 
     public void addElements(final ColumnIndicator[] elements) {
@@ -260,6 +261,27 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         this.columnIndicators = newsArray;
         this.addItemElements(elements);
+        initializedConnection(elements);
+    }
+
+    /**
+     * DOC Administrator Comment method "initializedConnection". for 6560
+     * 
+     * @param columnIndicator
+     * 
+     */
+    private void initializedConnection(ColumnIndicator[] columnIndicatores) {
+        Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
+        DataManager connection = analysis.getContext().getConnection();
+
+        if (columnIndicatores != null && columnIndicatores.length > 0) {
+
+            if (connection == null) {
+                TdColumn column = columnIndicatores[0].getTdColumn();
+                TdDataProvider tdDataProvider = DataProviderHelper.getTdDataProvider(column);
+                connection = tdDataProvider;
+            }
+        }
     }
 
     private void addItemElements(final ColumnIndicator[] elements) {
