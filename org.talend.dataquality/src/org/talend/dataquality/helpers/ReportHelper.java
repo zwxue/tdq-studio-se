@@ -36,362 +36,336 @@ import orgomg.cwm.analysis.informationvisualization.RenderedObject;
  */
 public final class ReportHelper {
 
-	private static Logger log = Logger.getLogger(ReportHelper.class);
+    private static Logger log = Logger.getLogger(ReportHelper.class);
 
-	// ~ADD mzhao 2009-02-05
+    // ~ADD mzhao 2009-02-05
 
-	// ~
+    // ~
 
-	/**
-	 * The report types. MOD mzhao 2009-02-19 MOD mzhao 2009-04-15 jrxml
-	 * template files changed its location.
-	 */
-	public static enum ReportType {
+    /**
+     * The report types. MOD mzhao 2009-02-19 MOD mzhao 2009-04-15 jrxml template files changed its location.
+     */
+    public static enum ReportType {
 
-		// Analysis: multi column
-		BASIC_MUTICOLUMN("Basic", "/reports/column/report_01.jrxml"), EVOLUTION_MUTICOLUMN(
-				"Evolution", "/reports/column/report_02.jrxml"),
-		// Analysis: connection
-		BASIC_CONNECTION("Basic", "/reports/overview/report_03.jrxml"), EVOLUTION_CONNECTION(
-				"Evolution", "/reports/overview/report_03.jrxml"),
-		// EVOLUTION_CONNECTION("Basic", "/reports/column/report_04.jrxml"),
-		// Analysis: schema
-		BASIC_SCHEMA("Basic", "/reports/overview/report_03.jrxml"), EVOLUTION_SCHEMA(
-				"Evolution", "/reports/overview/report_03.jrxml"),
-		// TODO assign type to specific jrxml
-		// Analysis: catalog
-		BASIC_CATALOG("Basic", "/reports/overview/report_03.jrxml"), EVOLUTION_CATALOG(
-				"Evolution", "/reports/overview/report_03.jrxml"),
-		// Analysis: table
-		BASIC_TABLE("Basic", "/reports/column/report_01.jrxml"), EVOLUTION_TABLE(
-				"Evolution", "/reports/dq_rule/report_04.jrxml"),
-		// Analysis: column comparison
-		BASIC_COLUMNS_COMPARISON("Basic", "/reports/overview/report_03.jrxml"), EVOLUTION_COLUMNS_COMPARISON(
-				"Evolution", "/reports/overview/report_03.jrxml"),
+        // Analysis: multi column
+        BASIC_MUTICOLUMN("Basic", "/reports/column/report_01.jrxml"),
+        EVOLUTION_MUTICOLUMN("Evolution", "/reports/column/report_02.jrxml"),
+        // Analysis: connection
+        BASIC_CONNECTION("Basic", "/reports/overview/report_03.jrxml"),
+        EVOLUTION_CONNECTION("Evolution", "/reports/overview/report_03.jrxml"),
+        // EVOLUTION_CONNECTION("Basic", "/reports/column/report_04.jrxml"),
+        // Analysis: schema
+        BASIC_SCHEMA("Basic", "/reports/overview/report_03.jrxml"),
+        EVOLUTION_SCHEMA("Evolution", "/reports/overview/report_03.jrxml"),
+        // TODO assign type to specific jrxml
+        // Analysis: catalog
+        BASIC_CATALOG("Basic", "/reports/overview/report_03.jrxml"),
+        EVOLUTION_CATALOG("Evolution", "/reports/overview/report_03.jrxml"),
+        // Analysis: table
+        BASIC_TABLE("Basic", "/reports/column/report_01.jrxml"),
+        EVOLUTION_TABLE("Evolution", "/reports/dq_rule/report_04.jrxml"),
+        // Analysis: column comparison
+        BASIC_COLUMNS_COMPARISON("Basic", "/reports/overview/report_03.jrxml"),
+        EVOLUTION_COLUMNS_COMPARISON("Evolution", "/reports/overview/report_03.jrxml"),
 
-		USER_MADE("User specified", null); // for the user to set his own file path//$NON-NLS-1$
+        USER_MADE("User specified", null); // for the user to set his own file path//$NON-NLS-1$
 
-		public static final String BASIC = "Basic";
+        public static final String BASIC = "Basic";
 
-		private String label;
+        private String label;
 
-		/**
-		 * Getter for label.
-		 * 
-		 * @return the label
-		 */
-		public String getLabel() {
-			return this.label;
-		}
+        /**
+         * Getter for label.
+         * 
+         * @return the label
+         */
+        public String getLabel() {
+            return this.label;
+        }
 
-		/**
-		 * Getter for jrxmlFilename.
-		 * 
-		 * @return the jrxmlFilename
-		 */
-		public String getJrxmlFilename() {
-			return this.jrxmlFilename;
-		}
+        /**
+         * Getter for jrxmlFilename.
+         * 
+         * @return the jrxmlFilename
+         */
+        public String getJrxmlFilename() {
+            return this.jrxmlFilename;
+        }
 
-		private String jrxmlFilename;
+        private String jrxmlFilename;
 
-		/**
-		 * Sets the jrxmlFilename.
-		 * 
-		 * @param jrxmlFilename
-		 *            the jrxmlFilename to set
-		 */
-		public void setJrxmlFilename(String jrxmlFilename) {
-			this.jrxmlFilename = jrxmlFilename;
-		}
+        /**
+         * Sets the jrxmlFilename.
+         * 
+         * @param jrxmlFilename the jrxmlFilename to set
+         */
+        public void setJrxmlFilename(String jrxmlFilename) {
+            this.jrxmlFilename = jrxmlFilename;
+        }
 
-		ReportType(String lab, String filename) {
-			this.label = lab;
-			this.jrxmlFilename = filename;
-		}
+        ReportType(String lab, String filename) {
+            this.label = lab;
+            this.jrxmlFilename = filename;
+        }
 
-		public static List<String> getLabels() {
-			List<String> list = new ArrayList<String>();
-			for (ReportType t : ReportType.values()) {
-				if (!list.contains(t.getLabel())) {
-					list.add(t.getLabel());
-				}
-			}
-			return list;
-		}
+        public static List<String> getLabels() {
+            List<String> list = new ArrayList<String>();
+            for (ReportType t : ReportType.values()) {
+                if (!list.contains(t.getLabel())) {
+                    list.add(t.getLabel());
+                }
+            }
+            return list;
+        }
 
-		/**
-		 * DOC qzhang Comment method "getReportType". MOD mzhao 2009-02-19
-		 * 
-		 * @param text
-		 * @return
-		 */
-		public static ReportType getReportType(AnalysisType anaType, String text) {
-			if (USER_MADE.getLabel().equals(text)) {
-				return USER_MADE;
-			}
-			// Multi column
-			if (anaType.getName()
-					.equals(AnalysisType.MULTIPLE_COLUMN.getName())) {
-				if (BASIC_MUTICOLUMN.getLabel().equals(text)) {
-					return BASIC_MUTICOLUMN;
-				} else if (EVOLUTION_MUTICOLUMN.getLabel().equals(text)) {
-					return EVOLUTION_MUTICOLUMN;
-				}
-			} else if (anaType.getName().equals(
-					AnalysisType.CONNECTION.getName())) {
-				if (BASIC_CONNECTION.getLabel().equals(text)) {
-					return BASIC_CONNECTION;
-				} else if (EVOLUTION_CONNECTION.getLabel().equals(text)) {
-					return EVOLUTION_CONNECTION;
-				}
-			} else if (anaType.getName().equals(AnalysisType.SCHEMA.getName())) {
-				if (BASIC_SCHEMA.getLabel().equals(text)) {
-					return BASIC_SCHEMA;
-				} else if (EVOLUTION_SCHEMA.getLabel().equals(text)) {
-					return EVOLUTION_SCHEMA;
-				}
-			} else if (anaType.getName().equals(AnalysisType.CATALOG.getName())) {
-				if (BASIC_CATALOG.getLabel().equals(text)) {
-					return BASIC_CATALOG;
-				} else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
-					return EVOLUTION_CATALOG;
-				}
-			} else if (anaType.getName().equals(AnalysisType.TABLE.getName())) {
-				if (BASIC_TABLE.getLabel().equals(text)) {
-					return BASIC_TABLE;
-				} else if (EVOLUTION_TABLE.getLabel().equals(text)) {
-					return EVOLUTION_TABLE;
-				}
-			} else if (anaType.getName().equals(
-					AnalysisType.COLUMNS_COMPARISON.getName())) {
-				if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
-					return BASIC_COLUMNS_COMPARISON;
-				} else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
-					return EVOLUTION_COLUMNS_COMPARISON;
-				}
-			}
+        /**
+         * DOC qzhang Comment method "getReportType". MOD mzhao 2009-02-19
+         * 
+         * @param text
+         * @return
+         */
+        public static ReportType getReportType(AnalysisType anaType, String text) {
+            if (USER_MADE.getLabel().equals(text)) {
+                return USER_MADE;
+            }
+            // Multi column
+            if (anaType.getName().equals(AnalysisType.MULTIPLE_COLUMN.getName())) {
+                if (BASIC_MUTICOLUMN.getLabel().equals(text)) {
+                    return BASIC_MUTICOLUMN;
+                } else if (EVOLUTION_MUTICOLUMN.getLabel().equals(text)) {
+                    return EVOLUTION_MUTICOLUMN;
+                }
+            } else if (anaType.getName().equals(AnalysisType.CONNECTION.getName())) {
+                if (BASIC_CONNECTION.getLabel().equals(text)) {
+                    return BASIC_CONNECTION;
+                } else if (EVOLUTION_CONNECTION.getLabel().equals(text)) {
+                    return EVOLUTION_CONNECTION;
+                }
+            } else if (anaType.getName().equals(AnalysisType.SCHEMA.getName())) {
+                if (BASIC_SCHEMA.getLabel().equals(text)) {
+                    return BASIC_SCHEMA;
+                } else if (EVOLUTION_SCHEMA.getLabel().equals(text)) {
+                    return EVOLUTION_SCHEMA;
+                }
+            } else if (anaType.getName().equals(AnalysisType.CATALOG.getName())) {
+                if (BASIC_CATALOG.getLabel().equals(text)) {
+                    return BASIC_CATALOG;
+                } else if (EVOLUTION_CATALOG.getLabel().equals(text)) {
+                    return EVOLUTION_CATALOG;
+                }
+            } else if (anaType.getName().equals(AnalysisType.TABLE.getName())) {
+                if (BASIC_TABLE.getLabel().equals(text)) {
+                    return BASIC_TABLE;
+                } else if (EVOLUTION_TABLE.getLabel().equals(text)) {
+                    return EVOLUTION_TABLE;
+                }
+            } else if (anaType.getName().equals(AnalysisType.COLUMNS_COMPARISON.getName())) {
+                if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
+                    return BASIC_COLUMNS_COMPARISON;
+                } else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
+                    return EVOLUTION_COLUMNS_COMPARISON;
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		public static ReportType getReportType(Analysis ana, String text) {
-			AnalysisType at = AnalysisHelper.getAnalysisType(ana);
-			return getReportType(at, text);
-		}
+        public static ReportType getReportType(Analysis ana, String text) {
+            AnalysisType at = AnalysisHelper.getAnalysisType(ana);
+            return getReportType(at, text);
+        }
 
-	}
+    }
 
-	private ReportHelper() {
-	}
+    private ReportHelper() {
+    }
 
-	/**
-	 * Method "getAnalyses".
-	 * 
-	 * @param report
-	 * @return a list of analyses or an empty list. Do not use this list to add
-	 *         analysis to the report.
-	 */
-	public static List<Analysis> getAnalyses(TdReport report) {
-		List<Analysis> analyses = new ArrayList<Analysis>();
-		EList<RenderedObject> components = report.getComponent();
-		for (RenderedObject renderedObject : components) {
-			Analysis analysis = DataqualitySwitchHelper.ANALYSIS_SWITCH
-					.doSwitch(renderedObject);
-			if (analysis != null) {
-				analyses.add(analysis);
-			}
-		}
-		return analyses;
-	}
+    /**
+     * Method "getAnalyses".
+     * 
+     * @param report
+     * @return a list of analyses or an empty list. Do not use this list to add analysis to the report.
+     */
+    public static List<Analysis> getAnalyses(TdReport report) {
+        List<Analysis> analyses = new ArrayList<Analysis>();
+        EList<RenderedObject> components = report.getComponent();
+        for (RenderedObject renderedObject : components) {
+            Analysis analysis = DataqualitySwitchHelper.ANALYSIS_SWITCH.doSwitch(renderedObject);
+            if (analysis != null) {
+                analyses.add(analysis);
+            }
+        }
+        return analyses;
+    }
 
-	/**
-	 * Method "removeAnalyses".
-	 * 
-	 * @param report
-	 * @param analyses
-	 *            analyses to remove from the report
-	 * @return true if the analyses list of the report changed as a result of
-	 *         the call.
-	 */
-	public static boolean removeAnalyses(TdReport report,
-			Collection<Analysis> analyses) {
-		boolean removed = true;
-		for (Analysis analysis : analyses) {
-			if (!report.removeAnalysis(analysis)) {
-				removed = false;
-			}
-		}
-		return removed;
-	}
+    /**
+     * Method "removeAnalyses".
+     * 
+     * @param report
+     * @param analyses analyses to remove from the report
+     * @return true if the analyses list of the report changed as a result of the call.
+     */
+    public static boolean removeAnalyses(TdReport report, Collection<Analysis> analyses) {
+        boolean removed = true;
+        for (Analysis analysis : analyses) {
+            if (!report.removeAnalysis(analysis)) {
+                removed = false;
+            }
+        }
+        return removed;
+    }
 
-	/**
-	 * Method "addAnalyses".
-	 * 
-	 * @param analyses
-	 *            a collection of analyses.
-	 * @param report
-	 *            a report (must not be null)
-	 * @return true if the analysis list changed as a result of the call.
-	 */
-	public static boolean addAnalyses(Collection<Analysis> analyses,
-			TdReport report) {
-		boolean added = true;
-		for (Analysis analysis : analyses) {
-			if (!report.addAnalysis(analysis)) {
-				added = false;
-			}
-		}
-		return added;
-	}
+    /**
+     * Method "addAnalyses".
+     * 
+     * @param analyses a collection of analyses.
+     * @param report a report (must not be null)
+     * @return true if the analysis list changed as a result of the call.
+     */
+    public static boolean addAnalyses(Collection<Analysis> analyses, TdReport report) {
+        boolean added = true;
+        for (Analysis analysis : analyses) {
+            if (!report.addAnalysis(analysis)) {
+                added = false;
+            }
+        }
+        return added;
+    }
 
-	public static TdReport createReport(String name) {
-		TdReport report = ReportsFactory.eINSTANCE.createTdReport();
-		report.setName(name);
-		return report;
-	}
+    public static TdReport createReport(String name) {
+        TdReport report = ReportsFactory.eINSTANCE.createTdReport();
+        report.setName(name);
+        return report;
+    }
 
-	/**
-	 * Method "mustRefreshAllAnalyses".
-	 * 
-	 * @param report
-	 * @param refresh
-	 *            true if all analyses must be refreshed. False means that no
-	 *            analysis will be refreshed.
-	 */
-	public static void mustRefreshAllAnalyses(TdReport report, boolean refresh) {
-		EList<AnalysisMap> analysisMap = report.getAnalysisMap();
-		for (AnalysisMap map : analysisMap) {
-			map.setMustRefresh(refresh);
-		}
-	}
+    /**
+     * Method "mustRefreshAllAnalyses".
+     * 
+     * @param report
+     * @param refresh true if all analyses must be refreshed. False means that no analysis will be refreshed.
+     */
+    public static void mustRefreshAllAnalyses(TdReport report, boolean refresh) {
+        EList<AnalysisMap> analysisMap = report.getAnalysisMap();
+        for (AnalysisMap map : analysisMap) {
+            map.setMustRefresh(refresh);
+        }
+    }
 
-	/**
-	 * Method "getExecutionInformations" returns the execution informations of
-	 * the given report. If none existed, they are created and stored in the
-	 * report.
-	 * 
-	 * @param report
-	 *            a report
-	 * @return the existing execution informations
-	 */
-	public static ExecutionInformations getExecutionInformations(TdReport report) {
-		ExecutionInformations execInformations = report.getExecInformations();
-		if (execInformations == null) {
-			execInformations = AnalysisFactory.eINSTANCE
-					.createExecutionInformations();
-			report.setExecInformations(execInformations);
-		}
-		return execInformations;
-	}
+    /**
+     * Method "getExecutionInformations" returns the execution informations of the given report. If none existed, they
+     * are created and stored in the report.
+     * 
+     * @param report a report
+     * @return the existing execution informations
+     */
+    public static ExecutionInformations getExecutionInformations(TdReport report) {
+        ExecutionInformations execInformations = report.getExecInformations();
+        if (execInformations == null) {
+            execInformations = AnalysisFactory.eINSTANCE.createExecutionInformations();
+            report.setExecInformations(execInformations);
+        }
+        return execInformations;
+    }
 
-	/**
-	 * Method "setReportType".
-	 * 
-	 * MOD mzhao 2009-02-16
-	 * 
-	 * @param report
-	 *            the report object to update
-	 * @param reportType
-	 *            the report type to set
-	 * @param jrxmlFullPath
-	 *            the full path to the jxrxml file (can be null when the type of
-	 *            report is different from the USER_DEFINED)
-	 * @return true if everything is set correctly, false otherwise.
-	 */
-	public static boolean setReportType(TdReport report, Analysis analysis,
-			ReportType reportType, String jrxmlFullPath) {
-		boolean ok = true;
-		reportType = reportType == null ? ReportHelper.ReportType.USER_MADE
-				: reportType;
-		switch (reportType) {
-		case USER_MADE:
-			report
-					.setReportType(reportType.getLabel(), jrxmlFullPath,
-							analysis);
-			if (StringUtils.isBlank(jrxmlFullPath)) {
-				// do not log an error here
-				ok = false;
-			}
-			break;
-		default:
-			report.setReportType(reportType.getLabel(), null, analysis);
-			break;
-		}
-		return ok;
-	}
+    /**
+     * Method "setReportType".
+     * 
+     * MOD mzhao 2009-02-16
+     * 
+     * @param report the report object to update
+     * @param reportType the report type to set
+     * @param jrxmlFullPath the full path to the jxrxml file (can be null when the type of report is different from the
+     * USER_DEFINED)
+     * @return true if everything is set correctly, false otherwise.
+     */
+    public static boolean setReportType(TdReport report, Analysis analysis, ReportType reportType, String jrxmlFullPath) {
+        boolean ok = true;
+        reportType = reportType == null ? ReportHelper.ReportType.USER_MADE : reportType;
+        switch (reportType) {
+        case USER_MADE:
+            report.setReportType(reportType.getLabel(), jrxmlFullPath, analysis);
+            if (StringUtils.isBlank(jrxmlFullPath)) {
+                // do not log an error here
+                ok = false;
+            }
+            break;
+        default:
+            report.setReportType(reportType.getLabel(), null, analysis);
+            break;
+        }
+        return ok;
+    }
 
-	/**
-	 * 
-	 * DOC mzhao Set analysis filter date from.
-	 * 
-	 * @param report
-	 * @param dateText
-	 * @return
-	 * @throws ParseException
-	 */
-	public static void setAnalysisFilterDateFrom(TdReport report,
-			String dateText) {
-		if (dateText == null || dateText.trim().equals("")) {
-			return;
-		}
-		try {
-			report.setDateFrom(DateUtils.parse(DateUtils.PATTERN_1, dateText));
-		} catch (ParseException e) {
-			log.error(e, e);
-		}
-	}
+    /**
+     * 
+     * DOC mzhao Set analysis filter date from.
+     * 
+     * @param report
+     * @param dateText
+     * @return
+     * @throws ParseException
+     */
+    public static void setAnalysisFilterDateFrom(TdReport report, String dateText) {
+        if (dateText == null || dateText.trim().equals("")) {
+            return;
+        }
+        try {
+            report.setDateFrom(DateUtils.parse(DateUtils.PATTERN_1, dateText));
+        } catch (ParseException e) {
+            log.error(e, e);
+        }
+    }
 
-	/**
-	 * 
-	 * DOC mzhao Comment method "setAnalysisFilterDateFrom".
-	 * 
-	 * @param report
-	 * @param dateText
-	 * @return
-	 * @return
-	 * @throws ParseException
-	 */
-	public static void setAnalysisFilterDateTo(TdReport report, String dateText) {
-		if (dateText == null || dateText.trim().equals("")) {
-			return;
-		}
-		try {
-			report.setDateTo(DateUtils.parse(DateUtils.PATTERN_1, dateText));
-		} catch (ParseException e) {
-			log.error(e, e);
-		}
-	}
+    /**
+     * 
+     * DOC mzhao Comment method "setAnalysisFilterDateFrom".
+     * 
+     * @param report
+     * @param dateText
+     * @return
+     * @return
+     * @throws ParseException
+     */
+    public static void setAnalysisFilterDateTo(TdReport report, String dateText) {
+        if (dateText == null || dateText.trim().equals("")) {
+            return;
+        }
+        try {
+            report.setDateTo(DateUtils.parse(DateUtils.PATTERN_1, dateText));
+        } catch (ParseException e) {
+            log.error(e, e);
+        }
+    }
 
-	/**
-	 * 
-	 * DOC mzhao Comment method "getReportType".
-	 * 
-	 * @param report
-	 * @param analysis
-	 * @return
-	 */
-	public static String getReportType(TdReport report, Analysis analysis) {
-		String reportType = null;
-		EList<AnalysisMap> anMaps = report.getAnalysisMap();
-		for (AnalysisMap anMap : anMaps) {
-			if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
-				reportType = anMap.getReportType();
-				break;
-			}
-		}
-		return reportType;
-	}
+    /**
+     * 
+     * DOC mzhao Comment method "getReportType".
+     * 
+     * @param report
+     * @param analysis
+     * @return
+     */
+    public static String getReportType(TdReport report, Analysis analysis) {
+        String reportType = null;
+        EList<AnalysisMap> anMaps = report.getAnalysisMap();
+        for (AnalysisMap anMap : anMaps) {
+            if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
+                reportType = anMap.getReportType();
+                break;
+            }
+        }
+        return reportType;
+    }
 
-	public static String getReportJrxml(TdReport report, Analysis analysis) {
-		String jrxmlSource = null;
-		EList<AnalysisMap> anMaps = report.getAnalysisMap();
-		for (AnalysisMap anMap : anMaps) {
-			if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
-				jrxmlSource = anMap.getJrxmlSource();
-				break;
-			}
-		}
-		return jrxmlSource;
-	}
+    public static String getReportJrxml(TdReport report, Analysis analysis) {
+        String jrxmlSource = null;
+        EList<AnalysisMap> anMaps = report.getAnalysisMap();
+        for (AnalysisMap anMap : anMaps) {
+            if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
+                jrxmlSource = anMap.getJrxmlSource();
+                break;
+            }
+        }
+        return jrxmlSource;
+    }
 }
