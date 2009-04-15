@@ -51,7 +51,7 @@ public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements Wher
             return false;
         }
         Long c = Long.valueOf(String.valueOf(objects.get(0)[0]));
-        this.setCount(c);
+        this.setUserCount(c);
         return true;
     }
 

@@ -1011,25 +1011,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             connection.close();
 
             // --- finalize indicators by setting the row count and null when they exist.
-            Set<ModelElement> analyzedElements = elementToIndicator.keySet();
-            for (ModelElement modelElement : analyzedElements) {
-                // get row count indicator
-                RowCountIndicator rowCount = getRowCountIndicator(modelElement, elementToIndicator);
-                // get null count indicator
-                NullCountIndicator nullCount = getNullCountIndicator(modelElement, elementToIndicator);
-
-                List<Indicator> list = elementToIndicator.get(modelElement);
-                for (Indicator ind : list) {
-                    // set row count value to each indicator
-                    if (rowCount != null) {
-                        ind.setCount(rowCount.getCount());
-                    }
-                    // set null count value to each indicator
-                    if (nullCount != null) {
-                        ind.setNullCount(nullCount.getNullCount());
-                    }
-                }
-            }
+            setRowCountAndNullCount(elementToIndicator);
 
         } catch (SQLException e) {
             log.error(e, e);
@@ -1039,6 +1021,32 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             ConnectionUtils.closeConnection(connection);
         }
         return ok;
+    }
+
+    /**
+     * DOC scorreia Comment method "setRowCountAndNullCount".
+     * @param elementToIndicator
+     */
+    protected void setRowCountAndNullCount(Map<ModelElement, List<Indicator>> elementToIndicator) {
+        Set<ModelElement> analyzedElements = elementToIndicator.keySet();
+        for (ModelElement modelElement : analyzedElements) {
+            // get row count indicator
+            RowCountIndicator rowCount = getRowCountIndicator(modelElement, elementToIndicator);
+            // get null count indicator
+            NullCountIndicator nullCount = getNullCountIndicator(modelElement, elementToIndicator);
+
+            List<Indicator> list = elementToIndicator.get(modelElement);
+            for (Indicator ind : list) {
+                // set row count value to each indicator
+                if (rowCount != null) {
+                    ind.setCount(rowCount.getCount());
+                }
+                // set null count value to each indicator
+                if (nullCount != null) {
+                    ind.setNullCount(nullCount.getNullCount());
+                }
+            }
+        }
     }
 
     /**

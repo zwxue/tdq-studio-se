@@ -431,7 +431,9 @@
       </nestedGenPackages>
       <nestedGenPackages prefix="IndicatorSql" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/sql">
-        <genClasses ecoreClass="dataquality.ecore#//indicators/sql/UserDefIndicator"/>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/sql/UserDefIndicator">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/sql/UserDefIndicator/userCount"/>
+        </genClasses>
         <genClasses ecoreClass="dataquality.ecore#//indicators/sql/WhereRuleIndicator"/>
       </nestedGenPackages>
       <nestedGenPackages prefix="Columnset" basePackage="org.talend.dataquality.indicators"

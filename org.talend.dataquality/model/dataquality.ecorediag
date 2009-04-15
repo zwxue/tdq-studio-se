@@ -3859,6 +3859,10 @@
     <children xmi:type="notation:Node" xmi:id="_LceoEOuqEd2AHpjopqcH4Q" type="1001">
       <children xmi:type="notation:Node" xmi:id="_LceoE-uqEd2AHpjopqcH4Q" type="4001"/>
       <children xmi:type="notation:Node" xmi:id="_LceoFOuqEd2AHpjopqcH4Q" type="5001">
+        <children xmi:type="notation:Node" xmi:id="_fsW7sCm5Ed6dcc9B6MKOsw" type="2001">
+          <element xmi:type="ecore:EAttribute" href="dataquality.ecore#//indicators/sql/UserDefIndicator/userCount"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_fsW7sSm5Ed6dcc9B6MKOsw"/>
+        </children>
         <styles xmi:type="notation:DrawerStyle" xmi:id="_LceoFeuqEd2AHpjopqcH4Q"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_LceoFuuqEd2AHpjopqcH4Q"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_LceoF-uqEd2AHpjopqcH4Q"/>

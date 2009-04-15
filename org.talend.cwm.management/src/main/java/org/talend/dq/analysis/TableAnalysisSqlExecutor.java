@@ -295,6 +295,11 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             }
 
             connection.close();
+            
+            // --- finalize indicators by setting the row count and null when they exist.
+            ColumnAnalysisSqlExecutor finalization = new ColumnAnalysisSqlExecutor();
+            finalization.setRowCountAndNullCount(elementToIndicator);
+            
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();

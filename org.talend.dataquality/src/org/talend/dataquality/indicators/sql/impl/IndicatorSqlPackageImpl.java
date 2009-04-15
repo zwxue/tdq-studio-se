@@ -295,6 +295,15 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getUserDefIndicator_UserCount() {
+        return (EAttribute)userDefIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getWhereRuleIndicator() {
         return whereRuleIndicatorEClass;
     }
@@ -328,6 +337,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
         // Create classes and their features
         userDefIndicatorEClass = createEClass(USER_DEF_INDICATOR);
+        createEAttribute(userDefIndicatorEClass, USER_DEF_INDICATOR__USER_COUNT);
 
         whereRuleIndicatorEClass = createEClass(WHERE_RULE_INDICATOR);
     }
@@ -368,6 +378,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
         // Initialize classes and features; add operations and parameters
         initEClass(userDefIndicatorEClass, UserDefIndicator.class, "UserDefIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getUserDefIndicator_UserCount(), ecorePackage.getELongObject(), "userCount", null, 0, 1, UserDefIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(whereRuleIndicatorEClass, WhereRuleIndicator.class, "WhereRuleIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     }

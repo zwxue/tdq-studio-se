@@ -15,6 +15,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -22,10 +23,13 @@ import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.talend.dataquality.analysis.provider.DataqualityEditPlugin;
 
 import org.talend.dataquality.indicators.provider.IndicatorItemProvider;
 
+import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 
 /**
@@ -63,8 +67,31 @@ public class UserDefIndicatorItemProvider
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
+            addUserCountPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
+    }
+
+    /**
+     * This adds a property descriptor for the User Count feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addUserCountPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_UserDefIndicator_userCount_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_UserDefIndicator_userCount_feature", "_UI_UserDefIndicator_type"),
+                 IndicatorSqlPackage.Literals.USER_DEF_INDICATOR__USER_COUNT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
     }
 
     /**
@@ -102,6 +129,12 @@ public class UserDefIndicatorItemProvider
     @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
+
+        switch (notification.getFeatureID(UserDefIndicator.class)) {
+            case IndicatorSqlPackage.USER_DEF_INDICATOR__USER_COUNT:
+                fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+                return;
+        }
         super.notifyChanged(notification);
     }
 

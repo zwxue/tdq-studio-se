@@ -324,13 +324,22 @@ public interface IndicatorSqlPackage extends EPackage {
     int USER_DEF_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>User Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__USER_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 0;
+
+    /**
      * The number of structural features of the '<em>User Def Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int USER_DEF_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 0;
+    int USER_DEF_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 1;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl <em>Where Rule Indicator</em>}' class.
@@ -595,6 +604,15 @@ public interface IndicatorSqlPackage extends EPackage {
     int WHERE_RULE_INDICATOR__JOIN_CONDITIONS = USER_DEF_INDICATOR__JOIN_CONDITIONS;
 
     /**
+     * The feature id for the '<em><b>User Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__USER_COUNT = USER_DEF_INDICATOR__USER_COUNT;
+
+    /**
      * The number of structural features of the '<em>Where Rule Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -613,6 +631,17 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      */
     EClass getUserDefIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getUserCount <em>User Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>User Count</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getUserCount()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_UserCount();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.sql.WhereRuleIndicator <em>Where Rule Indicator</em>}'.
@@ -655,6 +684,14 @@ public interface IndicatorSqlPackage extends EPackage {
          * @generated
          */
         EClass USER_DEF_INDICATOR = eINSTANCE.getUserDefIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>User Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__USER_COUNT = eINSTANCE.getUserDefIndicator_UserCount();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl <em>Where Rule Indicator</em>}' class.
