@@ -11,7 +11,7 @@
 //
 // ============================================================================
 
-package org.talend.rcp.branding.top;
+package org.talend.dataprofiler.rcp.intro;
 
 import java.util.Properties;
 
