@@ -840,7 +840,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
-                TreeItem item = tree.getSelection()[0];
+                TreeItem[] selection = tree.getSelection();
+                if (selection.length == 0) {
+                    return;
+                }
+
+                TreeItem item = selection[0];
                 if (item != null) {
                     Object indicatorobj = item.getData(INDICATOR_UNIT_KEY);
                     Object columnobj = item.getData(COLUMN_INDICATOR_KEY);
