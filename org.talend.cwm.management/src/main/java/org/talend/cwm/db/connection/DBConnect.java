@@ -354,8 +354,10 @@ public class DBConnect {
             // MOD xqliu 2009-02-03 bug 5261
             connection = ConnectionUtils.createConnectionWithTimeout(driver, dbUrl, props);
             // connection = DriverManager.getConnection(dbUrl, props);
-
-            this.providerConnection = DatabaseContentRetriever.getProviderConnection(dbUrl, driverClassName, props, connection);
+            if (connection != null) {
+                this.providerConnection = DatabaseContentRetriever.getProviderConnection(dbUrl, driverClassName, props,
+                        connection);
+            }
         } catch (InstantiationException e) {
             log.error(e, e);
             ok = false;

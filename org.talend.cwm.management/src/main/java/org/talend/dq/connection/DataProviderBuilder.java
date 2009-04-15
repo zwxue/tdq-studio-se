@@ -51,11 +51,17 @@ public class DataProviderBuilder {
         DBConnect connector = new DBConnect(parameter);
         try {
             dataProvider = TalendCwmFactory.createDataProvider(connector);
-            String connectionName = parameter.getName();
-            dataProvider.setName(connectionName);
+            if (dataProvider != null) {
+                String connectionName = parameter.getName();
+                dataProvider.setName(connectionName);
 
-            returnCode.setOk(true);
-            return returnCode;
+                returnCode.setOk(true);
+                return returnCode;
+            } else {
+                returnCode.setOk(false);
+                returnCode.setMessage("Can't create data provider!");
+                return returnCode;
+            }
         } catch (SQLException e) {
             msg = "Failed to create a data provider for the given connection parameters: " + e.getMessage();
             log.warn(msg, e);

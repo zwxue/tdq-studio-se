@@ -153,10 +153,13 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                         }
                     }
                     if (comboDriver.getItemCount() > 0) {
-                        comboDriver.setText(comboDriver.getItem(0));
-                        connectionParam.setDriverClassName(comboDriver.getText());
+                        String driverClassName = comboDriver.getItem(0);
+                        comboDriver.setText(driverClassName);
+                        connectionParam.setDriverClassName(driverClassName);
                         if (abstractWizardPage instanceof DatabaseWizardPage) {
                             ((DatabaseWizardPage) abstractWizardPage).updateButtonState();
+                            ((DatabaseWizardPage) abstractWizardPage).updateLoginPassEnable(!SupportDBUrlType.SQLITE3DEFAULTURL
+                                    .getDbDriver().equals(driverClassName));
                         }
                     }
                 }

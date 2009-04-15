@@ -256,8 +256,14 @@ public class DatabaseWizardPage extends AbstractWizardPage {
             CorePlugin corePlugin = CorePlugin.getDefault();
             ReturnCode rc = new ReturnCode();
             // String[] driverpaths = this.connectionParam.getDriverPath().split(";");
-            Driver externalDriver = createGenericJDBC(this.connectionParam.getDriverPath(), this.connectionParam
-                    .getDriverClassName());
+            Driver externalDriver = null;
+            String errorMsg = "";
+            try {
+                externalDriver = createGenericJDBC(this.connectionParam.getDriverPath(), this.connectionParam
+                        .getDriverClassName());
+            } catch (Exception e1) {
+                errorMsg = e1.getLocalizedMessage();
+            }
             if (externalDriver != null) {
                 try {
                     DriverManager.registerDriver(externalDriver);
@@ -266,13 +272,16 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                             .getJdbcUrl(), this.connectionParam.getParameters());
                     if (connection == null) {
                         rc.setOk(false);
+                        rc.setMessage(DefaultMessagesImpl.getString("DatabaseWizardPage.connIsNULL"));
                     }
                 } catch (Exception e) {
                     rc.setOk(false);
+                    rc.setMessage(e.getLocalizedMessage());
                     log.error(e, e);
                 }
             } else {
                 rc.setOk(false);
+                rc.setMessage(errorMsg);
             }
             return rc;
         } else {
@@ -282,7 +291,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         }
     }
 
-    private Driver createGenericJDBC(String driverJars, String driverName) {
+    private Driver createGenericJDBC(String driverJars, String driverName) throws Exception {
         Driver driver = null;
         String[] driverJarPath = driverJars.split(";"); //$NON-NLS-1$
         try {
@@ -296,7 +305,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
             driver = (Driver) c.newInstance();
         } catch (Exception ex) {
             log.error(ex, ex);
-            return null;
+            throw ex;
         }
         return driver;
     }
