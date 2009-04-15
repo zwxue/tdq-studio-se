@@ -74,7 +74,6 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.utils.format.StringFormatUtil;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -347,18 +346,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
                 TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
 
-                DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
+                RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
+                rowMatchExplorer.setAnalysis(masterPage.analysis);
+                rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", ""));
 
-                Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
-                String instantiatedSQL = instantiatedExpression.getBody();
-                String dbname = ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName() + "."; //$NON-NLS-1$
-
-                int l = instantiatedSQL.indexOf(" LEFT JOIN "); //$NON-NLS-1$
-                int w = instantiatedSQL.indexOf(dbmsLanguage.where());
-                String whereClause = instantiatedSQL.substring(w).replace(dbmsLanguage.isNull(), dbmsLanguage.isNotNull());
-
-                String fromClause = instantiatedSQL.substring(l, w).replace(" JOIN ", " JOIN " + dbname); //$NON-NLS-1$ //$NON-NLS-2$
-                String query = "select * " + dbmsLanguage.from() + dbname + columnSet.getName() + fromClause + whereClause; //$NON-NLS-1$
+                String query = rowMatchExplorer.getRowsMatchStatement();
                 CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
             }
 
@@ -370,16 +362,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
                 TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
 
-                DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
-                Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
-                String instantiatedSQL = instantiatedExpression.getBody();
-                String dbname = ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName() + "."; //$NON-NLS-1$
-                int b = instantiatedSQL.indexOf(dbmsLanguage.from());
-                String fromClause1 = instantiatedSQL.substring(b);
-                String fromClause2 = fromClause1.replace(" JOIN ", " JOIN " + dbname); //$NON-NLS-1$ //$NON-NLS-2$
-                String fromClause = fromClause2.replace(dbmsLanguage.from(), dbmsLanguage.from() + dbname); //$NON-NLS-1$
-                String query = "select " + columnSet.getName() + ".*" + fromClause; //$NON-NLS-1$ //$NON-NLS-2$
+                RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
+                rowMatchExplorer.setAnalysis(masterPage.analysis);
+                rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", ""));
 
+                String query = rowMatchExplorer.getRowsNotMatchStatement();
                 CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
             }
         });
@@ -392,8 +379,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
                 DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
 
-                String query = "select * " + dbmsLanguage.from() + ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName() //$NON-NLS-1$
-                        + "." + columnSet.getName(); //$NON-NLS-1$
+                String query = "SELECT * " + dbmsLanguage.from() + dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName()) //$NON-NLS-1$
+                        + "." + dbmsLanguage.quote(columnSet.getName()); //$NON-NLS-1$
 
                 CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
             }

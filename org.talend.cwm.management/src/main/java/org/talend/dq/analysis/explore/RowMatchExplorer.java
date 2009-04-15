@@ -15,23 +15,18 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.i18n.Messages;
-import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.Table;
 
 /**
  * DOC hcheng class global comment. Detailled comment
  */
 public class RowMatchExplorer extends DataExplorer {
-
-    private static RowMatchExplorer instance = null;
-
-    public static RowMatchExplorer getInstance() {
-        if (instance == null) {
-            instance = new RowMatchExplorer();
-        }
-        return instance;
-    }
 
     /*
      * (non-Javadoc)
@@ -54,22 +49,14 @@ public class RowMatchExplorer extends DataExplorer {
      * @return
      */
     public String getRowsNotMatchStatement() {
-        Table table = (Table) indicator.getAnalyzedElement();
-        int i = getFullyQualifiedTableName(table).indexOf("."); //$NON-NLS-1$
-        String dbname = getFullyQualifiedTableName(table).substring(0, i + 1);
 
-        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
-        String instantiatedSQL = instantiatedExpression.getBody();
-        if (instantiatedSQL == null) {
-            return null;
+        String queryMatch = getRowsMatchStatement();
+        String query = null;
+        query = queryMatch.replace(dbmsLanguage.in(), " NOT IN "); //$NON-NLS-1$
+        if (query.indexOf(dbmsLanguage.and()) > 0) {
+            query = query.replace(dbmsLanguage.and(), dbmsLanguage.or());
         }
-        int b = instantiatedSQL.indexOf(dbmsLanguage.from());
-
-        String fromClause1 = instantiatedSQL.substring(b);
-        String fromClause2 = fromClause1.replace(" LEFT JOIN ", " LEFT JOIN " + dbname); //$NON-NLS-1$ //$NON-NLS-2$
-        String fromClause = fromClause2.replace(dbmsLanguage.from(), dbmsLanguage.from() + dbname);
-
-        return "select " + table.getName() + ".*" + fromClause; //$NON-NLS-1$ //$NON-NLS-2$
+        return query;
     }
 
     /**
@@ -78,21 +65,32 @@ public class RowMatchExplorer extends DataExplorer {
      * @return
      */
     public String getRowsMatchStatement() {
-        Table table = (Table) indicator.getAnalyzedElement();
-        int i = getFullyQualifiedTableName(table).indexOf("."); //$NON-NLS-1$
-        String dbname = getFullyQualifiedTableName(table).substring(0, i + 1);
+        Table tablea = (Table) indicator.getAnalyzedElement();
 
-        Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
-        String instantiatedSQL = instantiatedExpression.getBody();
-        if (instantiatedSQL == null) {
-            return null;
+        String tableA = tablea.getName();
+        String query = "SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea); //$NON-NLS-1$
+
+        if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
+            Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
+            String tableB = tableb.getName();
+            EList<Column> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
+            EList<Column> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
+
+            String where = null;
+
+            for (int i = 0; i < columnSetA.size(); i++) {
+                where = dbmsLanguage.and();
+                if (i == 0) {
+                    where = dbmsLanguage.where();
+                }
+                String clause = "SELECT " + dbmsLanguage.quote(tableB) + "." + dbmsLanguage.quote(columnSetB.get(i).getName()) //$NON-NLS-1$ //$NON-NLS-2$
+                        + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);
+                query += where + dbmsLanguage.quote(tableA) + "." + dbmsLanguage.quote(columnSetA.get(i).getName()) //$NON-NLS-1$
+                        + dbmsLanguage.in() + inBrackets(clause);
+            }
         }
-        int l = instantiatedSQL.indexOf(" LEFT JOIN "); //$NON-NLS-1$
-        int w = instantiatedSQL.indexOf(dbmsLanguage.where());
-        String whereClause = instantiatedSQL.substring(w).replace(dbmsLanguage.isNull(), dbmsLanguage.isNotNull());
 
-        String fromClause = instantiatedSQL.substring(l, w).replace(" JOIN ", " JOIN " + dbname); //$NON-NLS-1$ //$NON-NLS-2$
-        return "select * " + dbmsLanguage.from() + getFullyQualifiedTableName(table) + fromClause + whereClause; //$NON-NLS-1$
+        return query;
     }
 
     /**
@@ -102,7 +100,7 @@ public class RowMatchExplorer extends DataExplorer {
      */
     public String getAllRowsStatement() {
         Table table = (Table) indicator.getAnalyzedElement();
-        return "select * " + dbmsLanguage.from() + getFullyQualifiedTableName(table); //$NON-NLS-1$
+        return "SELECT * " + dbmsLanguage.from() + getFullyQualifiedTableName(table); //$NON-NLS-1$
     }
 
 }
