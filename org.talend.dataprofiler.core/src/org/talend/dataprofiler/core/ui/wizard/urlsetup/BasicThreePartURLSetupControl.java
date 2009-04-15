@@ -42,6 +42,8 @@ import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
+import org.talend.dataprofiler.core.ui.wizard.database.DatabaseWizardPage;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 
 /**
@@ -55,8 +57,15 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
     public static Driver driver;
 
+    protected AbstractWizardPage abstractWizardPage;
+
     public BasicThreePartURLSetupControl(Composite parent, SupportDBUrlType dbType) {
         super(parent, dbType);
+    }
+
+    public BasicThreePartURLSetupControl(Composite parent, SupportDBUrlType dbType, AbstractWizardPage abstractWizardPage) {
+        super(parent, dbType);
+        this.abstractWizardPage = abstractWizardPage;
     }
 
     protected void createPart(Composite parent, String dbLiteral, final DBConnectionParameter connectionParam) {
@@ -109,7 +118,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    connectionParam.setDriverClassName(comboDriver.getText());
+                    String driverClassName = comboDriver.getText();
+                    connectionParam.setDriverClassName(driverClassName);
+                    if (abstractWizardPage instanceof DatabaseWizardPage) {
+                        ((DatabaseWizardPage) abstractWizardPage).updateLoginPassEnable(!SupportDBUrlType.SQLITE3DEFAULTURL
+                                .getDbDriver().equals(driverClassName));
+                    }
                 }
 
             });
@@ -140,6 +154,10 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                     }
                     if (comboDriver.getItemCount() > 0) {
                         comboDriver.setText(comboDriver.getItem(0));
+                        connectionParam.setDriverClassName(comboDriver.getText());
+                        if (abstractWizardPage instanceof DatabaseWizardPage) {
+                            ((DatabaseWizardPage) abstractWizardPage).updateButtonState();
+                        }
                     }
                 }
             });
@@ -152,6 +170,9 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
                 public void modifyText(ModifyEvent e) {
                     connectionParam.setJdbcUrl(urlText.getText());
+                    if (abstractWizardPage instanceof DatabaseWizardPage) {
+                        ((DatabaseWizardPage) abstractWizardPage).updateButtonState();
+                    }
                 }
 
             });

@@ -55,7 +55,7 @@ import org.talend.utils.sugars.ReturnCode;
  * This class reused the class in QuantumPlugin.
  * 
  */
-class DatabaseWizardPage extends AbstractWizardPage {
+public class DatabaseWizardPage extends AbstractWizardPage {
 
     protected static Logger log = Logger.getLogger(DatabaseWizardPage.class);
 
@@ -81,6 +81,10 @@ class DatabaseWizardPage extends AbstractWizardPage {
     private DBConnectionParameter connectionParam;
 
     private boolean dbTypeSwitchFlag = false;
+
+    private Text username;
+
+    private Text passwordText;
 
     private PropertyChangeListener listener = new PropertyChangeListener() {
 
@@ -114,7 +118,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
 
         Label label = new Label(tempComp, SWT.NULL);
         label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.login")); //$NON-NLS-1$
-        final Text username = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
+        username = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
 
         GridData fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
         username.setLayoutData(fullHorizontal);
@@ -129,7 +133,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
 
         label = new Label(tempComp, SWT.NULL);
         label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.password")); //$NON-NLS-1$
-        final Text passwordText = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
+        passwordText = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
         passwordText.setEchoChar('*');
         fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
         passwordText.setLayoutData(fullHorizontal);
@@ -308,7 +312,7 @@ class DatabaseWizardPage extends AbstractWizardPage {
 
             disposeOfCurrentJDBCControls();
 
-            this.urlSetupControl = URLSetupControlFactory.create(dbType, this.container, connectionParam);
+            this.urlSetupControl = URLSetupControlFactory.create(dbType, this.container, connectionParam, this);
             GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
             data.horizontalSpan = 2;
             this.urlSetupControl.setLayoutData(data);
@@ -395,35 +399,33 @@ class DatabaseWizardPage extends AbstractWizardPage {
         setPageComplete(isComplete);
     }
 
-    /**
-     * 
-     */
-    private void updateButtonState() {
+    public void updateButtonState() {
         boolean complete = true;
-        if (connectionURL.trim().equals("")) { //$NON-NLS-1$
-            if (checkButton != null) {
-                checkButton.setEnabled(complete);
-            }
-            setPageComplete(complete);
-        } else {
-
-            String dbTypeName = this.connectionParam.getSqlTypeName();
-
-            if (!SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(dbTypeName)) {
-                if (!SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbTypeName)) {
-                    complete &= this.userid != null && !this.userid.trim().equals(""); //$NON-NLS-1$
+        String dbTypeName = this.connectionParam.getSqlTypeName();
+        if (!SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(dbTypeName)) {
+            if (SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey().equals(dbTypeName)) {
+                // deal with generic jdbc;
+                String driverName = this.connectionParam.getDriverClassName() == null ? "" : this.connectionParam
+                        .getDriverClassName();
+                String connURL = this.connectionParam.getJdbcUrl() == null ? "" : this.connectionParam.getJdbcUrl();
+                String userName = this.userid == null ? "" : this.userid;
+                if ("".equals(driverName) || "".equals(connURL)) {
+                    complete = false;
                 } else {
-                    // deal with sqlite;
-                    String filename = this.connectionParam.getFilePath();
-                    complete &= filename != null && !filename.trim().equals(""); //$NON-NLS-1$
+                    complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver().equals(driverName) ? true : !"".equals(userName);
                 }
+            } else if (SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbTypeName)) {
+                // deal with sqlite;
+                String filename = this.connectionParam.getFilePath();
+                complete &= filename != null && !filename.trim().equals(""); //$NON-NLS-1$
+            } else {
+                complete &= this.userid != null && !this.userid.trim().equals(""); //$NON-NLS-1$
             }
-
-            if (checkButton != null) {
-                checkButton.setEnabled(complete);
-            }
-            setPageComplete(complete);
         }
+        if (checkButton != null) {
+            checkButton.setEnabled(complete);
+        }
+        setPageComplete(complete);
     }
 
     /**
@@ -483,4 +485,9 @@ class DatabaseWizardPage extends AbstractWizardPage {
         }
     }
 
+    public boolean updateLoginPassEnable(boolean enable) {
+        username.setEnabled(enable);
+        passwordText.setEnabled(enable);
+        return enable;
+    }
 }
