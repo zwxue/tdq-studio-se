@@ -148,50 +148,52 @@ public class HideSeriesChartComposite extends ChartComposite {
             }
 
             private void addMenuOnBubbleChart(ChartEntity chartEntity, Menu menu) {
-                // TODO Auto-generated method stub
-                XYItemEntity xyItemEntity = (XYItemEntity) chartEntity;
 
-                DefaultXYZDataset xyzDataSet = (DefaultXYZDataset) xyItemEntity.getDataset();
-                int ind = xyItemEntity.getSeriesIndex();
-                final Comparable<?> seriesKey = xyzDataSet.getSeriesKey(xyItemEntity.getSeriesIndex());
-                final String seriesK = String.valueOf(seriesKey);
+                if (chartEntity instanceof XYItemEntity) {
 
-                try {
-                    final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(indicator, column);
+                    XYItemEntity xyItemEntity = (XYItemEntity) chartEntity;
 
-                    final ValueAggregator valueAggregator = createXYZDatasets.get(seriesKey);
+                    DefaultXYZDataset xyzDataSet = (DefaultXYZDataset) xyItemEntity.getDataset();
+                    final Comparable<?> seriesKey = xyzDataSet.getSeriesKey(xyItemEntity.getSeriesIndex());
+                    final String seriesK = String.valueOf(seriesKey);
 
-                    valueAggregator.addSeriesToXYZDataset(xyzDataSet, seriesK);
-                    String seriesLabel = valueAggregator.getLabels(seriesK).get(xyItemEntity.getItem());
-                    EList<Column> nominalList = indicator.getNominalColumns();
-                    final String queryString = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis,
-                            nominalList, seriesK, seriesLabel);
+                    try {
+                        final Map<String, ValueAggregator> createXYZDatasets = ChartDatasetUtils.createXYZDatasets(indicator,
+                                column);
 
-                    MenuItem item = new MenuItem(menu, SWT.PUSH);
-                    item.setText("View rows");
-                    item.addSelectionListener(new SelectionAdapter() {
+                        final ValueAggregator valueAggregator = createXYZDatasets.get(seriesKey);
 
-                        @Override
-                        public void widgetSelected(SelectionEvent e) {
-                            Display.getDefault().asyncExec(new Runnable() {
+                        valueAggregator.addSeriesToXYZDataset(xyzDataSet, seriesK);
+                        String seriesLabel = valueAggregator.getLabels(seriesK).get(xyItemEntity.getItem());
+                        EList<Column> nominalList = indicator.getNominalColumns();
+                        final String queryString = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis,
+                                nominalList, seriesK, seriesLabel);
 
-                                public void run() {
-                                    TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
-                                            .getContext().getConnection());
-                                    String query = queryString;
-                                    String editorName = ColumnHelper.getColumnSetOwner(column).getName();
-                                    CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
-                                }
+                        MenuItem item = new MenuItem(menu, SWT.PUSH);
+                        item.setText("View rows");
+                        item.addSelectionListener(new SelectionAdapter() {
 
-                            });
-                        }
+                            @Override
+                            public void widgetSelected(SelectionEvent e) {
+                                Display.getDefault().asyncExec(new Runnable() {
 
-                    });
+                                    public void run() {
+                                        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis
+                                                .getContext().getConnection());
+                                        String query = queryString;
+                                        String editorName = ColumnHelper.getColumnSetOwner(column).getName();
+                                        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                                    }
 
-                } catch (Throwable e) {
-                    log.error(e, e);
+                                });
+                            }
+
+                        });
+
+                    } catch (Throwable e) {
+                        log.error(e, e);
+                    }
                 }
-
             }
 
             public void chartMouseMoved(ChartMouseEvent event) {
@@ -202,33 +204,36 @@ public class HideSeriesChartComposite extends ChartComposite {
     }
 
     private void addMenuOnGantChart(ChartEntity chartEntity, Menu menu) {
-        CategoryItemEntity itemEntity = (CategoryItemEntity) chartEntity;
 
-        String seriesK = itemEntity.getRowKey().toString();
-        String seriesLabel = itemEntity.getColumnKey().toString();
-        EList<Column> nominalList = indicator.getNominalColumns();
-        final String sql = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis, nominalList, seriesK,
-                seriesLabel);
-        MenuItem item = new MenuItem(menu, SWT.PUSH);
-        item.setText("View rows");
-        item.addSelectionListener(new SelectionAdapter() {
+        if (chartEntity instanceof CategoryItemEntity) {
+            CategoryItemEntity itemEntity = (CategoryItemEntity) chartEntity;
 
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Display.getDefault().asyncExec(new Runnable() {
+            String seriesK = itemEntity.getRowKey().toString();
+            String seriesLabel = itemEntity.getColumnKey().toString();
+            EList<Column> nominalList = indicator.getNominalColumns();
+            final String sql = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis, nominalList, seriesK,
+                    seriesLabel);
+            MenuItem item = new MenuItem(menu, SWT.PUSH);
+            item.setText("View rows");
+            item.addSelectionListener(new SelectionAdapter() {
 
-                    public void run() {
-                        TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis.getContext()
-                                .getConnection());
-                        String query = sql;
-                        String editorName = ColumnHelper.getColumnSetOwner(column).getName();
-                        CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
-                    }
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    Display.getDefault().asyncExec(new Runnable() {
 
-                });
-            }
+                        public void run() {
+                            TdDataProvider tdDataProvider = SwitchHelpers.TDDATAPROVIDER_SWITCH.doSwitch(analysis.getContext()
+                                    .getConnection());
+                            String query = sql;
+                            String editorName = ColumnHelper.getColumnSetOwner(column).getName();
+                            CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
+                        }
 
-        });
+                    });
+                }
+
+            });
+        }
     }
 
     private void createHideSeriesArea() {

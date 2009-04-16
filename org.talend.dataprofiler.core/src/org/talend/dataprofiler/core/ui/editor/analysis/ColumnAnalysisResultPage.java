@@ -283,7 +283,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                 }
 
                 ChartEntity chartEntity = event.getEntity();
-                if (chartEntity != null) {
+                if (chartEntity != null && chartEntity instanceof CategoryItemEntity) {
                     CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
                     ICustomerDataset dataEntity = (ICustomerDataset) cateEntity.getDataset();
 

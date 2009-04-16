@@ -442,7 +442,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                 }
 
                 ChartEntity chartEntity = event.getEntity();
-                if (chartEntity != null) {
+                if (chartEntity != null && chartEntity instanceof CategoryItemEntity) {
                     CategoryItemEntity cateEntity = (CategoryItemEntity) chartEntity;
                     CustomerDefaultCategoryDataset dataEntity = (CustomerDefaultCategoryDataset) cateEntity.getDataset();
 
