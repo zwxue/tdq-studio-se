@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.pattern;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.talend.cwm.dburl.SupportDBUrlType;
 
 /**
@@ -68,12 +69,14 @@ public enum PatternLanguageType {
             SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
             SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
             PatternToExcelEnum.SQLite3Regexp),
-            // MOD scorreia 2008-12-16 removed "generic jdbc" because its meaning is the same as ALL_DATABASE_TYPE
+    // MOD scorreia 2008-12-16 removed "generic jdbc" because its meaning is the same as ALL_DATABASE_TYPE
     TERADATA(
              10,
              SupportDBUrlType.TERADATADEFAULTURL.getLanguage(),
              SupportDBUrlType.TERADATADEFAULTURL.getLanguage(),
              PatternToExcelEnum.Teradata);
+
+    private static Logger log = Logger.getLogger(PatternLanguageType.class);
 
     private int index;
 
@@ -109,7 +112,7 @@ public enum PatternLanguageType {
     public static String findLanguageByName(String name) {
 
         for (PatternLanguageType oneType : values()) {
-            if (name != null && name.equals(oneType.getName())) {
+            if (name != null && name.equalsIgnoreCase(oneType.getName())) {
                 return oneType.getLiteral();
             }
         }

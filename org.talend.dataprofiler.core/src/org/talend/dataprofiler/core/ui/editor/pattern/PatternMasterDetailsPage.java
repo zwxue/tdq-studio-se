@@ -196,7 +196,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 remainDBTypeList.addAll(allDBTypeList);
                 for (PatternComponent patternComponent : tempPatternComponents) {
                     String language = ((RegularExpressionImpl) patternComponent).getExpression().getLanguage();
-                    remainDBTypeList.remove(language);
+                    String languageName = PatternLanguageType.findNameByLanguage(language);
+                    remainDBTypeList.remove(languageName);
                 }
                 if (remainDBTypeList.size() == 0) {
                     MessageDialog
@@ -205,8 +206,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                                     DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
                     return;
                 }
-                RegularExpression newRegularExpress = BooleanExpressionHelper.createRegularExpression(remainDBTypeList.get(0),
-                        null);
+
+                String language = PatternLanguageType.findLanguageByName(remainDBTypeList.get(0));
+                RegularExpression newRegularExpress = BooleanExpressionHelper.createRegularExpression(language, null);
                 newRegularExpress.setExpressionType(expressionType);
                 creatNewExpressLine(newRegularExpress);
                 tempPatternComponents.add(newRegularExpress);
