@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 public class EcosPlugin extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.talend.dataprofiler.ecos";
+	public static final String PLUGIN_ID = "org.talend.dataprofiler.ecos"; //$NON-NLS-1$
 
 	// The shared instance
 	private static EcosPlugin plugin;

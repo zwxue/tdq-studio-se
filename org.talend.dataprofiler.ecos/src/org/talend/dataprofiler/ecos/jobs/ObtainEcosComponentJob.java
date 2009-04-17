@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.talend.dataprofiler.ecos.EcosConstants;
+import org.talend.dataprofiler.ecos.i18n.DefaultMessagesImpl;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataprofiler.ecos.service.EcosystemService;
 
@@ -50,7 +51,7 @@ public class ObtainEcosComponentJob extends Job {
      */
     @Override
     protected IStatus run(IProgressMonitor monitor) {
-        monitor.beginTask("searching components....", IProgressMonitor.UNKNOWN);
+        monitor.beginTask(DefaultMessagesImpl.getString("ObtainEcosComponentJob.searchComponents"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
         // run in another thread, make it possible to stop the remote procedure call when user press cancel
         // button

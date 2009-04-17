@@ -61,7 +61,7 @@ public abstract class EcosystemService {
     private static MultiValueMap versionMap = new MultiValueMap();
 
     static {
-        System.setProperty("axis.socketFactory", EcosystemSocketFactory.class.getName());
+        System.setProperty("axis.socketFactory", EcosystemSocketFactory.class.getName()); //$NON-NLS-1$
     }
 
     /**
@@ -73,8 +73,8 @@ public abstract class EcosystemService {
     public static String normalizeVersion(String version) {
         Matcher matcher = VERSION_PATTERN.matcher(version);
         if (matcher.matches()) {
-            String str = version.substring(0, version.indexOf("_r"));
-            return str.replaceAll("\\.RC", "RC").replaceAll("\\.M", "M");
+            String str = version.substring(0, version.indexOf("_r")); //$NON-NLS-1$
+            return str.replaceAll("\\.RC", "RC").replaceAll("\\.M", "M"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         } else {
             // try again, ignore M, RC
             matcher = DEFAULT_PATTERN.matcher(version);
@@ -94,7 +94,7 @@ public abstract class EcosystemService {
     }
 
     public static String getMainVersion(String version) {
-        Pattern pattern = Pattern.compile("(\\d+\\.\\d+).*");
+        Pattern pattern = Pattern.compile("(\\d+\\.\\d+).*"); //$NON-NLS-1$
         Matcher matcher = pattern.matcher(version);
         if (matcher.matches()) {
             version = matcher.group(1);
@@ -108,7 +108,7 @@ public abstract class EcosystemService {
             String jsonContent = sendGetRequest(VERSION_LIST_URL);
             List<VersionInfo> list = parseJsonObject(jsonContent, VersionInfo.class);
 
-            Pattern pattern = Pattern.compile("(\\d+\\.\\d+).*");
+            Pattern pattern = Pattern.compile("(\\d+\\.\\d+).*"); //$NON-NLS-1$
             for (VersionInfo info : list) {
                 String name = info.getName();
                 Matcher matcher = pattern.matcher(name);
@@ -184,8 +184,8 @@ public abstract class EcosystemService {
      * @return
      */
     public static boolean isRevisionNewerThan(Revision revision1, Revision revision2) {
-        String[] rev1 = revision1.getName().split("\\.");
-        String[] rev2 = revision2.getName().split("\\.");
+        String[] rev1 = revision1.getName().split("\\."); //$NON-NLS-1$
+        String[] rev2 = revision2.getName().split("\\."); //$NON-NLS-1$
         for (int i = 0; i < rev1.length && i < rev2.length; i++) {
             int a = Integer.parseInt(rev1[i]);
             int b = Integer.parseInt(rev2[i]);
@@ -201,9 +201,9 @@ public abstract class EcosystemService {
 
     public static List<RevisionInfo> getRevisionList(String category, String version) throws Exception {
         StringBuffer url = new StringBuffer();
-        url.append(REVISION_LIST_URL).append("?categories=").append(category).append("&version=");
+        url.append(REVISION_LIST_URL).append("?categories=").append(category).append("&version="); //$NON-NLS-1$ //$NON-NLS-2$
         String[] branch = getBranch(version);
-        url.append(StringUtils.join(branch, ","));
+        url.append(StringUtils.join(branch, ",")); //$NON-NLS-1$
         String jsonContent = sendGetRequest(url.toString());
         System.out.println(url);
         return parseJsonObject(jsonContent, RevisionInfo.class);

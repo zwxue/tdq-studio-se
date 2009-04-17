@@ -12,16 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.ecos;
 
+import org.talend.dataprofiler.ecos.i18n.DefaultMessagesImpl;
+
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class EcosConstants {
 
-    public final static String OBTAIN_COMPONENT_TITLE = "Obtain Talend Exchange Component";
+    public final static String OBTAIN_COMPONENT_TITLE = DefaultMessagesImpl.getString("EcosConstants.ObtainExchangeComponent"); //$NON-NLS-1$
 
-    public final static String DOWNLOAD_TASK_TITLE = "Download component";
+    public final static String DOWNLOAD_TASK_TITLE = DefaultMessagesImpl.getString("EcosConstants.DownloadComponent"); //$NON-NLS-1$
 
-    public final static String RELOAD_PALETTE = "";
+    public final static String RELOAD_PALETTE = ""; //$NON-NLS-1$
 
-    public final static String DOWNLOAD_TASK_NAME = "Download";
+    public final static String DOWNLOAD_TASK_NAME = DefaultMessagesImpl.getString("EcosConstants.Download"); //$NON-NLS-1$
 }

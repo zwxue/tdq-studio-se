@@ -33,7 +33,7 @@ public class EcosystemSocketFactory implements SocketFactory {
     protected static Log log = LogFactory.getLog(EcosystemSocketFactory.class.getName());
 
     /** Field CONNECT_TIMEOUT */
-    public static String CONNECT_TIMEOUT = "axis.client.connect.timeout";
+    public static String CONNECT_TIMEOUT = "axis.client.connect.timeout"; //$NON-NLS-1$
 
     /** attributes */
     protected Hashtable attributes = null;
@@ -50,11 +50,11 @@ public class EcosystemSocketFactory implements SocketFactory {
 
     static {
         try {
-            inetClass = Class.forName("java.net.InetSocketAddress");
+            inetClass = Class.forName("java.net.InetSocketAddress"); //$NON-NLS-1$
             plain = false;
             inetConstructor = inetClass.getConstructor(new Class[] { String.class, int.class });
             socketConstructor = Socket.class.getConstructor(new Class[] {});
-            connect = Socket.class.getMethod("connect", new Class[] { inetClass.getSuperclass(), int.class });
+            connect = Socket.class.getMethod("connect", new Class[] { inetClass.getSuperclass(), int.class }); //$NON-NLS-1$
         } catch (Exception e) {
             plain = true;
         }
@@ -89,7 +89,7 @@ public class EcosystemSocketFactory implements SocketFactory {
             timeout = (value != null) ? Integer.parseInt(value) : 0;
         }
 
-        TransportClientProperties tcp = TransportClientPropertiesFactory.create("http");
+        TransportClientProperties tcp = TransportClientPropertiesFactory.create("http"); //$NON-NLS-1$
 
         Socket sock = null;
         boolean hostInNonProxyList = isHostInNonProxyList(host, tcp.getNonProxyHosts());
@@ -97,9 +97,9 @@ public class EcosystemSocketFactory implements SocketFactory {
         if (tcp.getProxyUser().length() != 0) {
             StringBuffer tmpBuf = new StringBuffer();
 
-            tmpBuf.append(tcp.getProxyUser()).append(":").append(tcp.getProxyPassword());
-            otherHeaders.append(HTTPConstants.HEADER_PROXY_AUTHORIZATION).append(": Basic ").append(
-                    Base64.encode(tmpBuf.toString().getBytes())).append("\r\n");
+            tmpBuf.append(tcp.getProxyUser()).append(":").append(tcp.getProxyPassword()); //$NON-NLS-1$
+            otherHeaders.append(HTTPConstants.HEADER_PROXY_AUTHORIZATION).append(": Basic ").append( //$NON-NLS-1$
+                    Base64.encode(tmpBuf.toString().getBytes())).append("\r\n"); //$NON-NLS-1$
         }
         if (port == -1) {
             port = 80;
@@ -158,7 +158,7 @@ public class EcosystemSocketFactory implements SocketFactory {
          * The http.nonProxyHosts system property is a list enclosed in double quotes with items separated by a vertical
          * bar.
          */
-        StringTokenizer tokenizer = new StringTokenizer(nonProxyHosts, "|\"");
+        StringTokenizer tokenizer = new StringTokenizer(nonProxyHosts, "|\""); //$NON-NLS-1$
 
         while (tokenizer.hasMoreTokens()) {
             String pattern = tokenizer.nextToken();
