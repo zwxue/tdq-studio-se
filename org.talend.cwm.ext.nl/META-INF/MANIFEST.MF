@@ -3,5 +3,5 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Nl Fragment
 Bundle-SymbolicName: org.talend.cwm.ext.nl
 Bundle-Version: 1.0.0.qualifier
-Fragment-Host: org.talend.cwm.ext;bundle-version="1.0.0"
+Fragment-Host: org.talend.cwm.ext
 Bundle-Vendor: .Talend SA.
