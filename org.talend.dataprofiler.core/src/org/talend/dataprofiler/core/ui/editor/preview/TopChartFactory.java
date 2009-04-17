@@ -36,9 +36,8 @@ import org.jfree.chart.plot.CrosshairState;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.BarRenderer3D;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.StackedBarRenderer;
-import org.jfree.chart.renderer.category.StackedBarRenderer3D;
 import org.jfree.chart.renderer.xy.XYBubbleRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
@@ -305,22 +304,26 @@ public final class TopChartFactory {
      * @param showLegend
      * @return
      */
-    public static JFreeChart create3DBarChart(String titile, CategoryDataset dataset, boolean showLegend) {
-
-        JFreeChart chart = ChartFactory.createBarChart3D(null, titile,
+    public static JFreeChart createBarChart(String titile, CategoryDataset dataset, boolean showLegend) {
+        // MOD hcheng for 6965,Use 2D bar charts instead of 3D bar charts
+        JFreeChart chart = ChartFactory.createBarChart(null, titile,
                 DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
-                false, true);
+                true, false);
 
         CategoryPlot plot = chart.getCategoryPlot();
+        plot.getRangeAxis().setUpperMargin(0.08);
+        // plot.getRangeAxis().setLowerBound(-0.08);
+
         plot.setRangeGridlinesVisible(true);
 
-        BarRenderer3D renderer3d = (BarRenderer3D) plot.getRenderer();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
 
-        renderer3d.setBaseItemLabelsVisible(true);
-        renderer3d.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        renderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer3d.setItemMargin(0.2);
+        renderer.setBaseItemLabelsVisible(true);
+        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer.setItemMargin(0.2);
+        renderer.setBase(0.04);
         // plot.setForegroundAlpha(0.50f);
 
         // CategoryAxis domainAxis = plot.getDomainAxis();
@@ -375,15 +378,16 @@ public final class TopChartFactory {
      * @param orientation
      * @return
      */
-    public static JFreeChart createStacked3DBarChart(String titile, CategoryDataset dataset, PlotOrientation orientation) {
+    public static JFreeChart createStackedBarChart(String titile, CategoryDataset dataset, PlotOrientation orientation) {
 
-        JFreeChart chart = ChartFactory.createStackedBarChart3D(null, null, DefaultMessagesImpl
-                .getString("TopChartFactory.Value"), dataset, orientation, true, false, false); //$NON-NLS-1$
+        JFreeChart chart = ChartFactory.createStackedBarChart(null, null,
+                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, orientation, true, false, false); //$NON-NLS-1$
 
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setRangeGridlinesVisible(true);
 
-        StackedBarRenderer3D renderer = (StackedBarRenderer3D) plot.getRenderer();
+        // MOD by hcheng for 6965,Use 2D bar charts instead of 3D bar charts
+        StackedBarRenderer renderer = (StackedBarRenderer) plot.getRenderer();
         renderer.setSeriesPaint(0, Color.GREEN);
         renderer.setSeriesPaint(1, Color.RED);
         renderer.setBaseItemLabelsVisible(true);

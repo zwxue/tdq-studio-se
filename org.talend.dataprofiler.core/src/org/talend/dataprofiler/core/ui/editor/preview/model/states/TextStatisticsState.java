@@ -40,7 +40,8 @@ public class TextStatisticsState extends AbstractChartTypeStates {
     }
 
     public JFreeChart getChart() {
-        return TopChartFactory.create3DBarChart(DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics"), getDataset(), true); //$NON-NLS-1$
+        return TopChartFactory.createBarChart(
+                DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics"), getDataset(), true); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -79,7 +80,9 @@ public class TextStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("TextStatisticsState.Label"), DefaultMessagesImpl.getString("TextStatisticsState.Value") }); //$NON-NLS-1$ //$NON-NLS-2$
+        entity
+                .setFieldNames(new String[] {
+                        DefaultMessagesImpl.getString("TextStatisticsState.Label"), DefaultMessagesImpl.getString("TextStatisticsState.Value") }); //$NON-NLS-1$ //$NON-NLS-2$
         entity.setFieldWidths(new Integer[] { 200, 300 });
         return entity;
     }

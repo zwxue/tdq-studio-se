@@ -44,7 +44,7 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     public JFreeChart getChart() {
         // TODO Auto-generated method stub
         return TopChartFactory
-                .createStacked3DBarChart(
+                .createStackedBarChart(
                         DefaultMessagesImpl.getString("PatternStatisticsState.PatternStatistics"), getDataset(), PlotOrientation.VERTICAL); //$NON-NLS-1$
     }
 

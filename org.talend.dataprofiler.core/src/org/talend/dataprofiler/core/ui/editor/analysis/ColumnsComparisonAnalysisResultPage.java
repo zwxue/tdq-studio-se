@@ -415,7 +415,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
             dataset.addDataEntity(dataEntityB);
         }
-        JFreeChart chart = TopChartFactory.createStacked3DBarChart(DefaultMessagesImpl
+        JFreeChart chart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
                 .getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
                 PlotOrientation.HORIZONTAL);
         ChartDecorator.decorate(chart);

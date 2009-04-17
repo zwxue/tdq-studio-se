@@ -61,9 +61,11 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
         } else {
             if (isIntact()) {
                 BoxAndWhiskerCategoryDataset dataset = (BoxAndWhiskerCategoryDataset) getDataset();
-                return TopChartFactory.createBoxAndWhiskerChart(DefaultMessagesImpl.getString("SummaryStatisticsState.SummaryStatistics"), dataset); //$NON-NLS-1$
+                return TopChartFactory.createBoxAndWhiskerChart(DefaultMessagesImpl
+                        .getString("SummaryStatisticsState.SummaryStatistics"), dataset); //$NON-NLS-1$
             } else {
-                return TopChartFactory.create3DBarChart(DefaultMessagesImpl.getString("SummaryStatisticsState.Summary_Statistics"), getDataset(), false); //$NON-NLS-1$
+                return TopChartFactory.createBarChart(
+                        DefaultMessagesImpl.getString("SummaryStatisticsState.Summary_Statistics"), getDataset(), false); //$NON-NLS-1$
             }
         }
     }
@@ -143,7 +145,9 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("SummaryStatisticsState.Label"), DefaultMessagesImpl.getString("SummaryStatisticsState.Count") }); //$NON-NLS-1$ //$NON-NLS-2$
+        entity
+                .setFieldNames(new String[] {
+                        DefaultMessagesImpl.getString("SummaryStatisticsState.Label"), DefaultMessagesImpl.getString("SummaryStatisticsState.Count") }); //$NON-NLS-1$ //$NON-NLS-2$
         entity.setFieldWidths(new Integer[] { 200, 300 });
         return entity;
     }

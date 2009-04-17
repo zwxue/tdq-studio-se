@@ -39,7 +39,8 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
     }
 
     public JFreeChart getChart() {
-        return TopChartFactory.create3DBarChart(DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), getDataset(), true); //$NON-NLS-1$
+        return TopChartFactory.createBarChart(
+                DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), getDataset(), true); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -75,7 +76,9 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
     protected TableStructureEntity getTableStructure() {
 
         TableStructureEntity entity = new TableStructureEntity();
-        entity.setFieldNames(new String[] { DefaultMessagesImpl.getString("SimpleStatisticsState.Label"), DefaultMessagesImpl.getString("SimpleStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity
+                .setFieldNames(new String[] {
+                        DefaultMessagesImpl.getString("SimpleStatisticsState.Label"), DefaultMessagesImpl.getString("SimpleStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         entity.setFieldWidths(new Integer[] { 200, 150, 150 });
         return entity;
     }

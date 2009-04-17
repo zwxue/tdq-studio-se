@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
@@ -50,22 +49,15 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.ItemLabelAnchor;
-import org.jfree.chart.labels.ItemLabelPosition;
-import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer3D;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
-import org.jfree.ui.TextAnchor;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
+import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataprofiler.core.ui.utils.JungGraphGenerator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
@@ -349,30 +341,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         dataset.addValue(columnSetMultiValueIndicator.getDuplicateCount(), DefaultMessagesImpl
                 .getString("ColumnCorrelationNominalIntervalResultPage.Duplicate_Count"), ""); //$NON-NLS-1$ //$NON-NLS-2$
 
-        JFreeChart chart = ChartFactory.createBarChart3D(DefaultMessagesImpl
-                .getString("ColumnCorrelationNominalIntervalResultPage.SimpleSatisticalChart"), // chart title //$NON-NLS-1$
-                DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.SimpleSatistics"), // domain axis label //$NON-NLS-1$
-                DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.Value"), // range axis label //$NON-NLS-1$
-                dataset, // data
-                PlotOrientation.VERTICAL, // orientation
-                true, // include legend
-                true, // tooltips
-                false // urls
-                );
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        // CategoryAxis axis = plot.getDomainAxis();
-        // axis.setVisible(false);
-        plot.setRangeGridlinesVisible(true);
-
-        BarRenderer3D renderer3d = (BarRenderer3D) plot.getRenderer();
-
-        renderer3d.setBaseItemLabelsVisible(true);
-        renderer3d.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        renderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer3d.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer3d.setBaseItemLabelFont(new Font("SansSerif", Font.BOLD, 12)); //$NON-NLS-1$
-        renderer3d.setItemMargin(0.2);
-        // plot.setForegroundAlpha(0.50f);
+        JFreeChart chart = TopChartFactory.createBarChart(DefaultMessagesImpl
+                .getString("ColumnCorrelationNominalIntervalResultPage.SimpleSatistics"), dataset, true); //$NON-NLS-1$
 
         ChartDecorator.decorate(chart);
         ChartComposite chartComp = new ChartComposite(composite, SWT.NONE, chart);
@@ -473,7 +443,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             Object[] elements = (Object[]) element;
 
             for (Object elem : elements) {
-                if (elem == null || "".equals(elem)) {
+                if (elem == null || "".equals(elem)) { //$NON-NLS-1$
                     return bg;
                 }
             }
