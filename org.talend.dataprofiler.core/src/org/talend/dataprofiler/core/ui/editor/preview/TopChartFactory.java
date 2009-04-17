@@ -418,9 +418,9 @@ public final class TopChartFactory {
                 showLegend, false, false);
 
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        plot.setRangeGridlinesVisible(true);
 
         StackedBarRenderer sbr = (StackedBarRenderer) plot.getRenderer();
-        sbr.setAutoPopulateSeriesPaint(false);
         sbr.setSeriesPaint(0, Color.RED);
         sbr.setSeriesPaint(1, Color.GREEN);
         sbr.setBaseItemLabelsVisible(true);
@@ -429,9 +429,10 @@ public final class TopChartFactory {
                 new DecimalFormat("0.00%"))); //$NON-NLS-1$
         sbr.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
 
-        ValueAxis rangeAxis = plot.getRangeAxis();
-        rangeAxis.setLowerMargin(0.15);
-        rangeAxis.setUpperMargin(0.15);
+        NumberAxis axis = (NumberAxis) plot.getRangeAxis();
+        axis.setNumberFormatOverride(NumberFormat.getPercentInstance());
+        axis.setUpperMargin(0.05f);
+        axis.setLowerMargin(0.01f);
 
         return chart;
     }
