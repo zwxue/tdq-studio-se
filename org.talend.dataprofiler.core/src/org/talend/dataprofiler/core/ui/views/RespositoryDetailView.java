@@ -75,385 +75,445 @@ import orgomg.cwm.resource.relational.Table;
 /**
  * @author qzhang
  * 
- * Detail view of the Data profiler.
+ *         Detail view of the Data profiler.
  */
-public class RespositoryDetailView extends ViewPart implements ISelectionListener {
+public class RespositoryDetailView extends ViewPart implements
+		ISelectionListener {
 
-    private Group gContainer;
+	private Group gContainer;
 
-    private Group tContainer;
+	private Group tContainer;
 
-    /**
-     * DOC qzhang RespositoryDetailView constructor comment.
-     */
-    public RespositoryDetailView() {
-    }
+	/**
+	 * DOC qzhang RespositoryDetailView constructor comment.
+	 */
+	public RespositoryDetailView() {
+	}
 
-    @Override
-    public void createPartControl(Composite parent) {
-        Composite comp = new Composite(parent, SWT.NONE);
-        comp.setLayout(new FillLayout());
-        ScrolledComposite scomp = new ScrolledComposite(comp, SWT.H_SCROLL | SWT.V_SCROLL);
-        scomp.setLayout(new FillLayout());
+	@Override
+	public void createPartControl(Composite parent) {
+		Composite comp = new Composite(parent, SWT.NONE);
+		comp.setLayout(new FillLayout());
+		ScrolledComposite scomp = new ScrolledComposite(comp, SWT.H_SCROLL
+				| SWT.V_SCROLL);
+		scomp.setLayout(new FillLayout());
 
-        Composite composite = new Composite(scomp, SWT.NONE);
-        composite.setLayout(new GridLayout());
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		Composite composite = new Composite(scomp, SWT.NONE);
+		composite.setLayout(new GridLayout());
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        scomp.setExpandHorizontal(true);
-        scomp.setExpandVertical(true);
-        scomp.setMinWidth(400);
-        scomp.setMinHeight(350);
-        scomp.setContent(composite);
+		scomp.setExpandHorizontal(true);
+		scomp.setExpandVertical(true);
+		scomp.setMinWidth(400);
+		scomp.setMinHeight(350);
+		scomp.setContent(composite);
 
-        gContainer = new Group(composite, SWT.NONE);
-        gContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.General")); //$NON-NLS-1$
-        GridLayout layout = new GridLayout(2, false);
-        GridData data = new GridData(GridData.FILL_BOTH);
-        gContainer.setLayout(layout);
-        gContainer.setLayoutData(data);
+		gContainer = new Group(composite, SWT.NONE);
+		gContainer.setText(DefaultMessagesImpl
+				.getString("RespositoryDetailView.group.General")); //$NON-NLS-1$
+		GridLayout layout = new GridLayout(2, false);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		gContainer.setLayout(layout);
+		gContainer.setLayoutData(data);
 
-        // create extend group
-        if (PluginChecker.isTDQLoaded()) {
-            tContainer = new Group(composite, SWT.NONE);
-            tContainer.setText(DefaultMessagesImpl.getString("RespositoryDetailView.group.Technical")); //$NON-NLS-1$
-            tContainer.setLayout(new GridLayout(2, false));
-            tContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
+		// create extend group
+		if (PluginChecker.isTDQLoaded()) {
+			tContainer = new Group(composite, SWT.NONE);
+			tContainer.setText(DefaultMessagesImpl
+					.getString("RespositoryDetailView.group.Technical")); //$NON-NLS-1$
+			tContainer.setLayout(new GridLayout(2, false));
+			tContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-            createExtDefault();
-        }
+			createExtDefault();
+		}
 
-        createDefault();
-        getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
-        initializeToolBar();
+		createDefault();
+		getSite().getWorkbenchWindow().getSelectionService()
+				.addSelectionListener(this);
+		initializeToolBar();
 
-    }
+	}
 
-    private void createTechnicalDetail(EObject fe) {
-        newLabelAndText(tContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.group.Identifier"), ResourceHelper.getUUID(fe)); //$NON-NLS-1$
+	private void createTechnicalDetail(EObject fe) {
+		newLabelAndText(
+				tContainer,
+				DefaultMessagesImpl
+						.getString("RespositoryDetailView.group.Identifier"), ResourceHelper.getUUID(fe)); //$NON-NLS-1$
 
-        newLabelAndText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"), fe.eResource() //$NON-NLS-1$
-                .getURI().toPlatformString(false));
-    }
+		newLabelAndText(
+				tContainer,
+				DefaultMessagesImpl
+						.getString("RespositoryDetailView.group.FilePath"), fe.eResource() //$NON-NLS-1$
+						.getURI().toPlatformString(false));
+	}
 
-    private void createTechnicalDetail(IFile fe) {
-        EObject object = getEObject(fe);
+	private void createTechnicalDetail(IFile fe) {
+		EObject object = getEObject(fe);
 
-        if (object != null) {
-            createTechnicalDetail(object);
-        }
-    }
+		if (object != null) {
+			createTechnicalDetail(object);
+		}
+	}
 
-    private void createDefault() {
-        newText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
-    }
+	private void createDefault() {
+		newText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
+	}
 
-    private void createExtDefault() {
-        newText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
-    }
+	private void createExtDefault() {
+		newText(tContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
+	}
 
-    @Override
-    public void setFocus() {
-        gContainer.setFocus();
-    }
+	@Override
+	public void setFocus() {
+		gContainer.setFocus();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-     * org.eclipse.jface.viewers.ISelection)
-     */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        clearContainer();
-        boolean is = true;
-        if (part instanceof DQRespositoryView) {
-            StructuredSelection sel = (StructuredSelection) selection;
-            Object fe = sel.getFirstElement();
-            if (fe instanceof IFile) {
-                IFile fe2 = (IFile) fe;
-                is = createFileDetail(is, fe2);
-            } else if (fe instanceof TdCatalog) {
-                TdCatalog catalog = (TdCatalog) fe;
-                createTdCatalogDetail(catalog);
-                is = false;
-            } else if (fe instanceof TdSchema) {
-                TdSchema schema = (TdSchema) fe;
-                createTdSchemaDetail(schema);
-                is = false;
-            } else if (fe instanceof TdTable) {
-                ModelElement element = (ModelElement) fe;
-                createTableDetail((Table) element);
-                is = false;
-            } else if (fe instanceof TdView) {
-                ModelElement element = (ModelElement) fe;
-                createNameCommentDetail(element);
-                is = false;
-            } else if (fe instanceof TdColumn) {
-                TdColumn column = (TdColumn) fe;
-                createTdColumn(column);
-                is = false;
-            } else if (fe instanceof IEcosComponent) {
-                IEcosComponent component = (IEcosComponent) fe;
-                createEcosComponent(component);
-                is = false;
-            }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	 */
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		clearContainer();
+		boolean is = true;
+		if (part instanceof DQRespositoryView) {
+			StructuredSelection sel = (StructuredSelection) selection;
+			Object fe = sel.getFirstElement();
+			if (fe instanceof IFile) {
+				IFile fe2 = (IFile) fe;
+				is = createFileDetail(is, fe2);
+			} else if (fe instanceof TdCatalog) {
+				TdCatalog catalog = (TdCatalog) fe;
+				createTdCatalogDetail(catalog);
+				is = false;
+			} else if (fe instanceof TdSchema) {
+				TdSchema schema = (TdSchema) fe;
+				createTdSchemaDetail(schema);
+				is = false;
+			} else if (fe instanceof TdTable) {
+				ModelElement element = (ModelElement) fe;
+				createTableDetail((Table) element);
+				is = false;
+			} else if (fe instanceof TdView) {
+				ModelElement element = (ModelElement) fe;
+				createNameCommentDetail(element);
+				is = false;
+			} else if (fe instanceof TdColumn) {
+				TdColumn column = (TdColumn) fe;
+				createTdColumn(column);
+				is = false;
+			} else if (fe instanceof IEcosComponent) {
+				IEcosComponent component = (IEcosComponent) fe;
+				createEcosComponent(component);
+				is = false;
+			} else if (fe instanceof RegularExpression) {
+				// MOD mzhao 2009-04-20,Bug 6349.
+				RegularExpression regularExpression = (RegularExpression) fe;
+				createRegularExpression(regularExpression);
+				is = false;
+			}
 
-            if (PluginChecker.isTDQLoaded()) {
-                if (fe instanceof EObject) {
-                    createTechnicalDetail((EObject) fe);
-                } else if (fe instanceof IFile) {
-                    createTechnicalDetail((IFile) fe);
-                } else {
-                    createExtDefault();
-                }
-            }
-        } else if (part instanceof CommonFormEditor) {
-            CommonFormEditor editor = (CommonFormEditor) part;
-            IEditorInput editorInput = editor.getEditorInput();
-            if (editorInput instanceof IFileEditorInput) {
-                IFileEditorInput input = (IFileEditorInput) editorInput;
-                IFile file = input.getFile();
-                is = createFileDetail(is, file);
-            }
-        }
+			if (PluginChecker.isTDQLoaded()) {
+				if (fe instanceof EObject) {
+					createTechnicalDetail((EObject) fe);
+				} else if (fe instanceof IFile) {
+					createTechnicalDetail((IFile) fe);
+				} else {
+					createExtDefault();
+				}
+			}
+		} else if (part instanceof CommonFormEditor) {
+			CommonFormEditor editor = (CommonFormEditor) part;
+			IEditorInput editorInput = editor.getEditorInput();
+			if (editorInput instanceof IFileEditorInput) {
+				IFileEditorInput input = (IFileEditorInput) editorInput;
+				IFile file = input.getFile();
+				is = createFileDetail(is, file);
+			}
+		}
 
-        if (is) {
-            createDefault();
-        }
+		if (is) {
+			createDefault();
+		}
 
-        gContainer.layout();
-        if (tContainer != null) {
-            tContainer.layout();
-        }
-    }
+		gContainer.layout();
+		if (tContainer != null) {
+			tContainer.layout();
+		}
+	}
 
-    /**
-     * DOC bZhou Comment method "createEcosComponent".
-     * 
-     * @param component
-     */
-    private void createEcosComponent(IEcosComponent component) {
-        newLabelAndText(gContainer, "Name:", component.getName());
-        newLabelAndText(gContainer, "Author:", component.getAuthor());
-        newLabelAndText(gContainer, "Description:", component.getDescription());
-        newLabelAndText(gContainer, "Type:", ExpressionType.get(Integer.parseInt(component.getCategry())).getLiteral());
-    }
+	/**
+	 * DOC bZhou Comment method "createEcosComponent".
+	 * 
+	 * @param component
+	 */
+	private void createEcosComponent(IEcosComponent component) {
+		newLabelAndText(gContainer, "Name:", component.getName());
+		newLabelAndText(gContainer, "Author:", component.getAuthor());
+		newLabelAndText(gContainer, "Description:", component.getDescription());
+		newLabelAndText(gContainer, "Type:", ExpressionType.get(
+				Integer.parseInt(component.getCategry())).getLiteral());
+	}
 
-    private void createTableDetail(Table table) {
-        createNameCommentDetail(table);
-        List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
-        newLabelAndText(
-                gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.size())); //$NON-NLS-1$
-        List<ForeignKey> foreignKeys = TableHelper.getForeignKeys(table);
-        newLabelAndText(
-                gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.size())); //$NON-NLS-1$
-    }
+	private void createRegularExpression(RegularExpression regularExpression) {
+		newLabelAndText(gContainer, "Expression:", regularExpression
+				.getExpression().getBody());
+	}
 
-    private boolean createFileDetail(boolean is, IFile fe2) {
-        if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
-            TdDataProvider dataProvider = tdProvider.getObject();
-            createDataProviderDetail(dataProvider);
-            is = false;
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
-            Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe2);
-            createPatternDetail(pattern);
-            is = false;
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.ANA)) {
-            Analysis ana = AnaResourceFileHelper.getInstance().findAnalysis(fe2);
-            createAnaysisDetail(ana);
-            is = false;
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.REP)) {
-            TdReport rep = RepResourceFileHelper.getInstance().findReport(fe2);
-            createReportDetail(rep);
-            is = false;
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.SQL)) {
-            createSqlFileDetail(fe2);
-            is = false;
-        }
-        return is;
-    }
+	private void createTableDetail(Table table) {
+		createNameCommentDetail(table);
+		List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl
+						.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : String.valueOf(primaryKeys.size())); //$NON-NLS-1$
+		List<ForeignKey> foreignKeys = TableHelper.getForeignKeys(table);
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl
+						.getString("RespositoryDetailView.Foreignkeys"), foreignKeys.isEmpty() ? null : String.valueOf(foreignKeys.size())); //$NON-NLS-1$
+	}
 
-    private EObject getEObject(IFile fe2) {
-        EObject object = null;
+	private boolean createFileDetail(boolean is, IFile fe2) {
+		if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
+			TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper
+					.getInstance().findProvider(fe2);
+			TdDataProvider dataProvider = tdProvider.getObject();
+			createDataProviderDetail(dataProvider);
+			is = false;
+		} else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+			Pattern pattern = PatternResourceFileHelper.getInstance()
+					.findPattern(fe2);
+			createPatternDetail(pattern);
+			is = false;
+		} else if (fe2.getFileExtension().equals(FactoriesUtil.ANA)) {
+			Analysis ana = AnaResourceFileHelper.getInstance()
+					.findAnalysis(fe2);
+			createAnaysisDetail(ana);
+			is = false;
+		} else if (fe2.getFileExtension().equals(FactoriesUtil.REP)) {
+			TdReport rep = RepResourceFileHelper.getInstance().findReport(fe2);
+			createReportDetail(rep);
+			is = false;
+		} else if (fe2.getFileExtension().equals(FactoriesUtil.SQL)) {
+			createSqlFileDetail(fe2);
+			is = false;
+		}
+		return is;
+	}
 
-        if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
-            TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper.getInstance().findProvider(fe2);
-            TdDataProvider dataProvider = tdProvider.getObject();
-            object = dataProvider;
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
-            object = PatternResourceFileHelper.getInstance().findPattern(fe2);
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.ANA)) {
-            object = AnaResourceFileHelper.getInstance().findAnalysis(fe2);
-        } else if (fe2.getFileExtension().equals(FactoriesUtil.REP)) {
-            object = RepResourceFileHelper.getInstance().findReport(fe2);
-        }
+	private EObject getEObject(IFile fe2) {
+		EObject object = null;
 
-        return object;
-    }
+		if (fe2.getFileExtension().equals(FactoriesUtil.PROV)) {
+			TypedReturnCode<TdDataProvider> tdProvider = PrvResourceFileHelper
+					.getInstance().findProvider(fe2);
+			TdDataProvider dataProvider = tdProvider.getObject();
+			object = dataProvider;
+		} else if (fe2.getFileExtension().equals(FactoriesUtil.PATTERN)) {
+			object = PatternResourceFileHelper.getInstance().findPattern(fe2);
+		} else if (fe2.getFileExtension().equals(FactoriesUtil.ANA)) {
+			object = AnaResourceFileHelper.getInstance().findAnalysis(fe2);
+		} else if (fe2.getFileExtension().equals(FactoriesUtil.REP)) {
+			object = RepResourceFileHelper.getInstance().findReport(fe2);
+		}
 
-    private void createPatternDetail(Pattern pattern) {
-        createName(pattern);
-        createPurpose(pattern);
-        createDescription(pattern);
+		return object;
+	}
 
-        EList<PatternComponent> components = pattern.getComponents();
-        StringBuilder description = new StringBuilder();
-        for (PatternComponent poc : components) {
-            if (poc instanceof RegularExpression) {
-                RegularExpression expression = (RegularExpression) poc;
-                description.append("  ").append(expression.getExpression().getLanguage()); //$NON-NLS-1$
-            }
-        }
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type"), description.toString().trim()); //$NON-NLS-1$
-    }
+	private void createPatternDetail(Pattern pattern) {
+		createName(pattern);
+		createPurpose(pattern);
+		createDescription(pattern);
 
-    private void createAnaysisDetail(Analysis ana) {
-        createName(ana);
-        createPurpose(ana);
-        createDescription(ana);
+		EList<PatternComponent> components = pattern.getComponents();
+		StringBuilder description = new StringBuilder();
+		for (PatternComponent poc : components) {
+			if (poc instanceof RegularExpression) {
+				RegularExpression expression = (RegularExpression) poc;
+				description
+						.append("  ").append(expression.getExpression().getLanguage()); //$NON-NLS-1$
+			}
+		}
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl.getString("RespositoryDetailView.type"), description.toString().trim()); //$NON-NLS-1$
+	}
 
-        String description = ana.getParameters().getAnalysisType().getLiteral();
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.otherType"), description); //$NON-NLS-1$
+	private void createAnaysisDetail(Analysis ana) {
+		createName(ana);
+		createPurpose(ana);
+		createDescription(ana);
 
-        AnalysisContext context = ana.getContext();
-        int numn = context.getAnalysedElements().size();
-        newLabelAndText(gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyzedElements"), String.valueOf(numn)); //$NON-NLS-1$
+		String description = ana.getParameters().getAnalysisType().getLiteral();
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.otherType"), description); //$NON-NLS-1$
 
-        DataManager connection = context.getConnection();
-        if (connection == null) {
-            description = null;
-        } else {
-            description = connection.getName();
-        }
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.connection"), description); //$NON-NLS-1$
-    }
+		AnalysisContext context = ana.getContext();
+		int numn = context.getAnalysedElements().size();
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl
+						.getString("RespositoryDetailView.numberOfAnalyzedElements"), String.valueOf(numn)); //$NON-NLS-1$
 
-    private void newText(Composite composite, String inputText) {
-        newText(composite, inputText, DefaultMessagesImpl.getString("RespositoryDetailView.none")); //$NON-NLS-1$
-    }
+		DataManager connection = context.getConnection();
+		if (connection == null) {
+			description = null;
+		} else {
+			description = connection.getName();
+		}
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.connection"), description); //$NON-NLS-1$
+	}
 
-    private void newLabelAndText(Composite composite, String labelString, String inputText) {
-        Label label = new Label(composite, SWT.NONE);
-        label.setText(labelString);
-        newText(composite, inputText, DefaultMessagesImpl.getString("RespositoryDetailView.none")); //$NON-NLS-1$
-    }
+	private void newText(Composite composite, String inputText) {
+		newText(composite, inputText, DefaultMessagesImpl
+				.getString("RespositoryDetailView.none")); //$NON-NLS-1$
+	}
 
-    private void newText(Composite composite, String inputText, String defaultText) {
-        Text text = new Text(composite, SWT.NONE);
-        text.setEditable(false);
-        if (inputText == null || inputText.trim().length() == 0) {
-            text.setForeground(text.getDisplay().getSystemColor(SWT.COLOR_RED));
-            text.setText(defaultText);
-        } else {
-            text.setText(inputText);
-        }
-        GridData data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
-    }
+	private void newLabelAndText(Composite composite, String labelString,
+			String inputText) {
+		Label label = new Label(composite, SWT.NONE);
+		label.setText(labelString);
+		newText(composite, inputText, DefaultMessagesImpl
+				.getString("RespositoryDetailView.none")); //$NON-NLS-1$
+	}
 
-    private void createSqlFileDetail(IFile fe2) {
-        newLabelAndText(gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.filename"), fe2.getFullPath().toPortableString()); //$NON-NLS-1$
+	private void newText(Composite composite, String inputText,
+			String defaultText) {
+		Text text = new Text(composite, SWT.NONE);
+		text.setEditable(false);
+		if (inputText == null || inputText.trim().length() == 0) {
+			text.setForeground(text.getDisplay().getSystemColor(SWT.COLOR_RED));
+			text.setText(defaultText);
+		} else {
+			text.setText(inputText);
+		}
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		text.setLayoutData(data);
+	}
 
-        // MODSCA 20080728 changed to getLocalTimeStamp() because modificationStamp was 1 or 2 (=> year 1970)
-        // long modificationStamp = fe2.getModificationStamp();
-        long modificationStamp = fe2.getLocalTimeStamp();
-        newLabelAndText(gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.modificationDate"), new Date(modificationStamp).toString()); //$NON-NLS-1$
-    }
+	private void createSqlFileDetail(IFile fe2) {
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl.getString("RespositoryDetailView.filename"), fe2.getFullPath().toPortableString()); //$NON-NLS-1$
 
-    private void createReportDetail(TdReport rep) {
-        createName(rep);
-        createPurpose(rep);
-        createDescription(rep);
-        int description = ReportHelper.getAnalyses(rep).size();
-        newLabelAndText(gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyses"), String.valueOf(description)); //$NON-NLS-1$
-    }
+		// MODSCA 20080728 changed to getLocalTimeStamp() because
+		// modificationStamp was 1 or 2 (=> year 1970)
+		// long modificationStamp = fe2.getModificationStamp();
+		long modificationStamp = fe2.getLocalTimeStamp();
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl
+						.getString("RespositoryDetailView.modificationDate"), new Date(modificationStamp).toString()); //$NON-NLS-1$
+	}
 
-    private void createTdColumn(TdColumn column) {
-        createNameCommentDetail(column);
-        newLabelAndText(gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.typex"), column.getSqlDataType().getName()); //$NON-NLS-1$
-        String purpose = column.getIsNullable().isNullable();
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.nullable"), purpose); //$NON-NLS-1$
-        final Expression initialValue = column.getInitialValue();
-        String defValueText = (initialValue != null) ? initialValue.getBody() : null;
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.DefaultValue"), defValueText); //$NON-NLS-1$
-        newLabelAndText(gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.Size"), String.valueOf(column.getLength())); //$NON-NLS-1$
-    }
+	private void createReportDetail(TdReport rep) {
+		createName(rep);
+		createPurpose(rep);
+		createDescription(rep);
+		int description = ReportHelper.getAnalyses(rep).size();
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl
+						.getString("RespositoryDetailView.numberOfAnalyses"), String.valueOf(description)); //$NON-NLS-1$
+	}
 
-    private void createNameCommentDetail(ModelElement element) {
-        createName(element);
-        String purpose = TaggedValueHelper.getComment(element);
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.remarks"), purpose); //$NON-NLS-1$
-    }
+	private void createTdColumn(TdColumn column) {
+		createNameCommentDetail(column);
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl.getString("RespositoryDetailView.typex"), column.getSqlDataType().getName()); //$NON-NLS-1$
+		String purpose = column.getIsNullable().isNullable();
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.nullable"), purpose); //$NON-NLS-1$
+		final Expression initialValue = column.getInitialValue();
+		String defValueText = (initialValue != null) ? initialValue.getBody()
+				: null;
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.DefaultValue"), defValueText); //$NON-NLS-1$
+		newLabelAndText(
+				gContainer,
+				DefaultMessagesImpl.getString("RespositoryDetailView.Size"), String.valueOf(column.getLength())); //$NON-NLS-1$
+	}
 
-    private void createName(ModelElement element) {
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.name"), element.getName()); //$NON-NLS-1$
-    }
+	private void createNameCommentDetail(ModelElement element) {
+		createName(element);
+		String purpose = TaggedValueHelper.getComment(element);
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.remarks"), purpose); //$NON-NLS-1$
+	}
 
-    private void createTdSchemaDetail(TdSchema schema) {
-        createName(schema);
-    }
+	private void createName(ModelElement element) {
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.name"), element.getName()); //$NON-NLS-1$
+	}
 
-    private void createTdCatalogDetail(TdCatalog catalog) {
-        createName(catalog);
-    }
+	private void createTdSchemaDetail(TdSchema schema) {
+		createName(schema);
+	}
 
-    private void createDataProviderDetail(TdDataProvider dataProvider) {
-        createName(dataProvider);
-        createPurpose(dataProvider);
-        createDescription(dataProvider);
+	private void createTdCatalogDetail(TdCatalog catalog) {
+		createName(catalog);
+	}
 
-        String connectionString = DataProviderHelper.getTdProviderConnection(dataProvider).getObject().getConnectionString();
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
+	private void createDataProviderDetail(TdDataProvider dataProvider) {
+		createName(dataProvider);
+		createPurpose(dataProvider);
+		createDescription(dataProvider);
 
-        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
-        if (softwareSystem == null) {
-            softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
-        }
-        String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype(); //$NON-NLS-1$
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
-        String version = (softwareSystem == null) ? "" : softwareSystem.getVersion(); //$NON-NLS-1$
-        newLabelAndText(gContainer, "Version: ", version); //$NON-NLS-1$
+		String connectionString = DataProviderHelper.getTdProviderConnection(
+				dataProvider).getObject().getConnectionString();
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
 
-    }
+		TdSoftwareSystem softwareSystem = DataProviderHelper
+				.getSoftwareSystem(dataProvider);
+		if (softwareSystem == null) {
+			softwareSystem = SoftwareSystemManager.getInstance()
+					.getSoftwareSystem(dataProvider);
+		}
+		String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype(); //$NON-NLS-1$
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
+		String version = (softwareSystem == null) ? "" : softwareSystem.getVersion(); //$NON-NLS-1$
+		newLabelAndText(gContainer, "Version: ", version); //$NON-NLS-1$
 
-    private void createDescription(ModelElement dataProvider) {
-        String description = TaggedValueHelper.getDescription(dataProvider);
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.description"), description); //$NON-NLS-1$
-    }
+	}
 
-    private void createPurpose(ModelElement dataProvider) {
-        String purpose = TaggedValueHelper.getPurpose(dataProvider);
-        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.purpose"), purpose); //$NON-NLS-1$
-    }
+	private void createDescription(ModelElement dataProvider) {
+		String description = TaggedValueHelper.getDescription(dataProvider);
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.description"), description); //$NON-NLS-1$
+	}
 
-    private void clearContainer() {
-        if (gContainer != null && !gContainer.isDisposed()) {
-            Control[] children = gContainer.getChildren();
-            for (Control control : children) {
-                control.dispose();
-            }
-        }
+	private void createPurpose(ModelElement dataProvider) {
+		String purpose = TaggedValueHelper.getPurpose(dataProvider);
+		newLabelAndText(gContainer, DefaultMessagesImpl
+				.getString("RespositoryDetailView.purpose"), purpose); //$NON-NLS-1$
+	}
 
-        if (tContainer != null && !tContainer.isDisposed()) {
-            Control[] children = tContainer.getChildren();
-            for (Control control : children) {
-                control.dispose();
-            }
-        }
-    }
+	private void clearContainer() {
+		if (gContainer != null && !gContainer.isDisposed()) {
+			Control[] children = gContainer.getChildren();
+			for (Control control : children) {
+				control.dispose();
+			}
+		}
 
-    private void initializeToolBar() {
-        getViewSite().getActionBars().getToolBarManager();
-    }
+		if (tContainer != null && !tContainer.isDisposed()) {
+			Control[] children = tContainer.getChildren();
+			for (Control control : children) {
+				control.dispose();
+			}
+		}
+	}
+
+	private void initializeToolBar() {
+		getViewSite().getActionBars().getToolBarManager();
+	}
 
 }
