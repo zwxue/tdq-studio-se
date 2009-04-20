@@ -131,7 +131,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     @Override
     public boolean performFinish() {
-        if (StringUtils.equals(numberTxt.getText(), String.valueOf(parameters.getTopN()))) {
+        if (!StringUtils.equals(numberTxt.getText(), String.valueOf(parameters.getTopN()))) {
             return false;
         }
         return true;

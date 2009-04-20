@@ -183,6 +183,12 @@ public enum FormEnum {
 
             break;
 
+        case SoundexIndicatorEnum:
+        case SoundexLowIndicatorEnum:
+            forms = new FormEnum[] { NumbericNominalForm };
+
+            break;
+
         default:
 
         }
