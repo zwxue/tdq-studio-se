@@ -64,8 +64,7 @@ public class PopComparisonUIAction extends Action {
             }
         };
         try {
-            ProgressUI.popProgressDialog(op);
-            // ((DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID)).getCommonViewer().refresh();
+            ProgressUI.popProgressDialog(op, false, false);
         } catch (InvocationTargetException e) {
             MessageDialog
                     .openInformation(
