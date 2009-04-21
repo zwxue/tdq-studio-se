@@ -71,7 +71,9 @@ public final class ColumnIndicatorRule {
             return true;
         case DefValueCountIndicatorEnum:
             if (column.getInitialValue().getBody() != null) {
-                return true;
+                // MOD scorreia 2009-04-21 bug 6979
+                // non nullable numeric column give a non null default value as ''
+                return column.getInitialValue().getBody().length() != 0 || Java2SqlType.isTextInSQL(javaType);
             }
 
             break;
