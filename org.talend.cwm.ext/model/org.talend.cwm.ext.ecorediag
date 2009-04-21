@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation">
+  <notation:Diagram xmi:id="_lq_2QC5MEd6OgZo9FbLZ_g" type="EcoreTools" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_lsx-8C5MEd6OgZo9FbLZ_g" type="1002">
+      <children xmi:type="notation:Node" xmi:id="_ls23cC5MEd6OgZo9FbLZ_g" type="4006"/>
+      <children xmi:type="notation:Node" xmi:id="_ls3egC5MEd6OgZo9FbLZ_g" type="5003">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ls3egS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ls3egi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ls3egy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_lsx-8S5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13543102" lineColor="0"/>
+      <styles xmi:type="notation:MultiDiagramLinkStyle" xmi:id="_lsx-8i5MEd6OgZo9FbLZ_g"/>
+      <element xmi:type="ecore:EPackage" href="org.talend.cwm.ext.ecore#//relational"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lsx-8y5MEd6OgZo9FbLZ_g"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ls4FkC5MEd6OgZo9FbLZ_g" type="1002">
+      <children xmi:type="notation:Node" xmi:id="_ls4FlC5MEd6OgZo9FbLZ_g" type="4006"/>
+      <children xmi:type="notation:Node" xmi:id="_ls4FlS5MEd6OgZo9FbLZ_g" type="5003">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ls4Fli5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ls4Fly5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ls4FmC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ls4FkS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13543102" lineColor="0"/>
+      <styles xmi:type="notation:MultiDiagramLinkStyle" xmi:id="_ls4Fki5MEd6OgZo9FbLZ_g"/>
+      <element xmi:type="ecore:EPackage" href="org.talend.cwm.ext.ecore#//softwaredeployment"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ls4Fky5MEd6OgZo9FbLZ_g" x="170"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ls4soC5MEd6OgZo9FbLZ_g" type="1002">
+      <children xmi:type="notation:Node" xmi:id="_ls4spC5MEd6OgZo9FbLZ_g" type="4006"/>
+      <children xmi:type="notation:Node" xmi:id="_ls4spS5MEd6OgZo9FbLZ_g" type="5003">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ls4spi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ls4spy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ls4sqC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ls4soS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13543102" lineColor="0"/>
+      <styles xmi:type="notation:MultiDiagramLinkStyle" xmi:id="_ls4soi5MEd6OgZo9FbLZ_g"/>
+      <element xmi:type="ecore:EPackage" href="org.talend.cwm.ext.ecore#//constants"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ls4soy5MEd6OgZo9FbLZ_g" x="385"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_lq_2QS5MEd6OgZo9FbLZ_g"/>
+    <element xmi:type="ecore:EPackage" href="org.talend.cwm.ext.ecore#/"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_m8bB4C5MEd6OgZo9FbLZ_g" type="EcoreTools" name="relational_Diagram0" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_m8bo8C5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_m8c3EC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_m8c3ES5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8c3Ei5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8c3Ey5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8c3FC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8deIC5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8deIS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8deIi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8deIy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_m8bo8S5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//relational/TdTable"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m8bo8i5MEd6OgZo9FbLZ_g"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_m8esQC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_m8esQy5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_m8fTUC5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8fTUS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8fTUi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8fTUy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8f6YC5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8f6YS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8f6Yi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8f6Yy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_m8esQS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//relational/TdView"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m8esQi5MEd6OgZo9FbLZ_g" x="160"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_m8f6ZC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_m8ghcC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_m8ghcS5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8ghci5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8ghcy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8ghdC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8hIgC5MEd6OgZo9FbLZ_g" type="5002">
+        <children xmi:type="notation:Node" xmi:id="_m8hvkC5MEd6OgZo9FbLZ_g" type="2002">
+          <element xmi:type="ecore:EOperation" href="org.talend.cwm.ext.ecore#//relational/TdCatalog/addSchema"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8hvkS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8hIgS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8hIgi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8hIgy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_m8f6ZS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//relational/TdCatalog"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m8f6Zi5MEd6OgZo9FbLZ_g" x="320"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_m8iWoC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_m8i9sC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_m8jkwC5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8jkwS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8jkwi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8jkwy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8kL0C5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8kL0S5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8kL0i5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8kL0y5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_m8iWoS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//relational/TdSchema"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m8iWoi5MEd6OgZo9FbLZ_g" x="635"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_m8kL1C5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_m8ky4C5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_m8ky4S5MEd6OgZo9FbLZ_g" type="5001">
+        <children xmi:type="notation:Node" xmi:id="_m8lZ8C5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//relational/TdColumn/javaType"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8lZ8S5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8ky4i5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8ky4y5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8ky5C5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8ky5S5MEd6OgZo9FbLZ_g" type="5002">
+        <children xmi:type="notation:Node" xmi:id="_m8mBAC5MEd6OgZo9FbLZ_g" type="2002">
+          <element xmi:type="ecore:EOperation" href="org.talend.cwm.ext.ecore#//relational/TdColumn/setContentType"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8mBAS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_m8moEC5MEd6OgZo9FbLZ_g" type="2002">
+          <element xmi:type="ecore:EOperation" href="org.talend.cwm.ext.ecore#//relational/TdColumn/getContentType"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8moES5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8ky5i5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8ky5y5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8ky6C5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_m8kL1S5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//relational/TdColumn"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m8kL1i5MEd6OgZo9FbLZ_g" x="802" y="203"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_m8nPIC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_m8odQC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_m8odQS5MEd6OgZo9FbLZ_g" type="5001">
+        <children xmi:type="notation:Node" xmi:id="_m8pEUC5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//relational/TdSqlDataType/javaDataType"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8pEUS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_m8pEUi5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//relational/TdSqlDataType/nullable"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8pEUy5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_m8pEVC5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//relational/TdSqlDataType/unsignedAttribute"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8pEVS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_m8prYC5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//relational/TdSqlDataType/caseSensitive"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8prYS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_m8prYi5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//relational/TdSqlDataType/autoIncrement"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8prYy5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_m8prZC5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//relational/TdSqlDataType/localTypeName"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8prZS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_m8qScC5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//relational/TdSqlDataType/searchable"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m8qScS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8odQi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8odQy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8odRC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8odRS5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8odRi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8odRy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8odSC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_m8nPIS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//relational/TdSqlDataType"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m8nPIi5MEd6OgZo9FbLZ_g" x="795"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_m8qSci5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_m8rgkC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_m8rgkS5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8rgki5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8rgky5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8rglC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8sHoC5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8sHoS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8sHoi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8sHoy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_m8qScy5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//relational/TdTrigger"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m8qSdC5MEd6OgZo9FbLZ_g" x="1059"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_m8sHpC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_m8susC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_m8susS5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8susi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8susy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8sutC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8sutS5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_m8suti5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_m8suty5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_m8suuC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_m8sHpS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//relational/TdProcedure"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_m8sHpi5MEd6OgZo9FbLZ_g" x="1219"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_m8bB4S5MEd6OgZo9FbLZ_g"/>
+    <element xmi:type="ecore:EPackage" href="org.talend.cwm.ext.ecore#//relational"/>
+    <edges xmi:type="notation:Edge" xmi:id="_m8uj4C5MEd6OgZo9FbLZ_g" type="3002" source="_m8kL1C5MEd6OgZo9FbLZ_g" target="_m8nPIC5MEd6OgZo9FbLZ_g">
+      <children xmi:type="notation:Node" xmi:id="_m8vK8C5MEd6OgZo9FbLZ_g" type="4011">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_m8vK8S5MEd6OgZo9FbLZ_g" x="-10" y="-10"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_m8vyAC5MEd6OgZo9FbLZ_g" type="4012">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_m8vyAS5MEd6OgZo9FbLZ_g" x="10" y="10"/>
+      </children>
+      <styles xmi:type="notation:ConnectorStyle" xmi:id="_m8uj4S5MEd6OgZo9FbLZ_g" lineColor="0"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_m8uj4i5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10"/>
+      <element xmi:type="ecore:EReference" href="org.talend.cwm.ext.ecore#//relational/TdColumn/sqlDataType"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_m8uj4y5MEd6OgZo9FbLZ_g" points="[0, 0, 0, 60]$[0, -60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_m-EnsC5MEd6OgZo9FbLZ_g" id="(0.5,0.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_m-FOwC5MEd6OgZo9FbLZ_g" id="(0.5,1.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_pl4-gC5MEd6OgZo9FbLZ_g" type="EcoreTools" name="softwaredeployment_Diagram0" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_pl5lkC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_pl6MoC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_pl6MoS5MEd6OgZo9FbLZ_g" type="5001">
+        <children xmi:type="notation:Node" xmi:id="_pl6zsC5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection/login"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_pl6zsS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_pl6zsi5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection/password"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_pl6zsy5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_pl6ztC5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection/connectionString"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_pl6ztS5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_pl-eEC5MEd6OgZo9FbLZ_g" type="2001">
+          <element xmi:type="ecore:EAttribute" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection/driverClassName"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_pl-eES5MEd6OgZo9FbLZ_g"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pl6Moi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pl6Moy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pl6MpC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_pl6MpS5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pl6Mpi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pl6Mpy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pl6MqC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_pl5lkS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdProviderConnection"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_pl5lki5MEd6OgZo9FbLZ_g"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_pl_FIC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_pl_FIy5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_pl_FJC5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pl_FJS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pl_FJi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pl_FJy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_pl_sMC5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pl_sMS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pl_sMi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pl_sMy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_pl_FIS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdDataManager"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_pl_FIi5MEd6OgZo9FbLZ_g" x="254"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_pl_sNC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_pmATQC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_pmATQS5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pmATQi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pmATQy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pmATRC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_pmATRS5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pmATRi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pmATRy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pmATSC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_pl_sNS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdDataProvider"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_pl_sNi5MEd6OgZo9FbLZ_g" x="436"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_pmA6UC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_pmA6Uy5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_pmA6VC5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pmA6VS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pmA6Vi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pmA6Vy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_pmBhYC5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pmBhYS5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pmBhYi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pmBhYy5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_pmA6US5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdSoftwareSystem"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_pmA6Ui5MEd6OgZo9FbLZ_g" x="615"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_pmBhZC5MEd6OgZo9FbLZ_g" type="1001">
+      <children xmi:type="notation:Node" xmi:id="_pmCIcC5MEd6OgZo9FbLZ_g" type="4001"/>
+      <children xmi:type="notation:Node" xmi:id="_pmCIcS5MEd6OgZo9FbLZ_g" type="5001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pmCIci5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pmCIcy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pmCIdC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_pmCIdS5MEd6OgZo9FbLZ_g" type="5002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_pmCIdi5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_pmCIdy5MEd6OgZo9FbLZ_g"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_pmCIeC5MEd6OgZo9FbLZ_g"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_pmBhZS5MEd6OgZo9FbLZ_g" fontName="Sans Serif" fontHeight="10" fillColor="13761016" lineColor="0"/>
+      <element xmi:type="ecore:EClass" href="org.talend.cwm.ext.ecore#//softwaredeployment/TdMachine"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_pmBhZi5MEd6OgZo9FbLZ_g" x="812"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_pl4-gS5MEd6OgZo9FbLZ_g"/>
+    <element xmi:type="ecore:EPackage" href="org.talend.cwm.ext.ecore#//softwaredeployment"/>
+  </notation:Diagram>
+</xmi:XMI>
