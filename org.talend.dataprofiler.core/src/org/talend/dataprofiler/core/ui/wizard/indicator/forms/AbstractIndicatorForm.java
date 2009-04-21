@@ -16,6 +16,7 @@ import org.eclipse.help.ui.internal.views.ReusableHelpPart;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
+import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.indicators.IndicatorParameters;
 
 /**
@@ -62,7 +63,7 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
         String href = getFormEnum().getHelpHref();
 
         ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
-        if (lastActiveInstance != null) {
+        if (lastActiveInstance != null && href.endsWith(HelpPlugin.HELP_FILE_SUFFIX)) {
             lastActiveInstance.showURL(href);
         }
     }
