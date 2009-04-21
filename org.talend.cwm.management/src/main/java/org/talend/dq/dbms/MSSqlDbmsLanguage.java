@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
@@ -20,6 +23,7 @@ import org.talend.utils.ProductVersion;
  * DOC scorreia class global comment. Detailled comment
  */
 public class MSSqlDbmsLanguage extends DbmsLanguage {
+    private static final Pattern selectPattern = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE);
 
     /**
      * DOC scorreia MSSqlDbmsLanguage constructor comment.
@@ -37,7 +41,6 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
      */
     MSSqlDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -111,8 +114,8 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getTopNQuery(String query, int n) {
-        // FIXME scorreia check this
-        return super.getTopNQuery(query, n);
+        Matcher m = selectPattern.matcher(query);
+        return m.replaceFirst("SELECT TOP " + n + " ");
     }
 
     /*
