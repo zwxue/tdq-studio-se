@@ -28,6 +28,7 @@ import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -219,6 +220,18 @@ public class SelectedLocalComparison implements IComparisonLevel {
                         if (column1 != null) {
                             Column findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
                             rootElement = findMathedColumn;
+
+                            if (findMathedColumn instanceof TdColumn) {
+                                ((TdColumn) rootElement).getTaggedValue().clear();
+                                // ~MOD 2009-04-21 Clear primary key as well. If not clear, it
+                                // will cause exception: not contained in
+                                // a resource
+                                ((TdColumn) rootElement).getUniqueKey().clear();
+
+                                // ~MOD 2009-04-21 Clear foreign key.
+                                ((TdColumn) rootElement).getKeyRelationship().clear();
+                            }
+
                             // meList.add(findMathedColumn);
                         }
                     }
