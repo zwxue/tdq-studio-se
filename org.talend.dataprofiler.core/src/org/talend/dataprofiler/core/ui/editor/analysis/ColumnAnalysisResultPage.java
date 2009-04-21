@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -63,6 +64,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeSta
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
@@ -273,6 +275,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
             @SuppressWarnings("unchecked")
             public void chartMouseClicked(ChartMouseEvent event) {
+
                 boolean flag = event.getTrigger().getButton() != MouseEvent.BUTTON3;
 
                 chartComp.setDomainZoomable(flag);
@@ -319,6 +322,14 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
                                 @Override
                                 public void widgetSelected(SelectionEvent e) {
+                                    if (getAnalysisHandler().getAnalysis().getParameters().getExecutionLanguage().equals(
+                                            ExecutionLanguage.JAVA)) {
+                                        MessageDialog
+                                                .openInformation(resultComp.getShell(), "Information",
+                                                        "Java execution engine does not allow to execute this action. Try with the SQL execution engine.");
+                                        return;
+                                    }
+
                                     Display.getDefault().asyncExec(new Runnable() {
 
                                         public void run() {
@@ -369,5 +380,4 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
         });
     }
-
 }
