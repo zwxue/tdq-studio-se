@@ -46,7 +46,8 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
     public ICustomerDataset getCustomerDataset() {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
-            double value = Double.parseDouble(unit.getValue().toString());
+            final Object unitValue = unit.getValue();
+            double value = unitValue != null ? Double.parseDouble(unitValue.toString()) : Double.NaN;
             String label = unit.getIndicatorName();
 
             customerdataset.addValue(value, label, ""); //$NON-NLS-1$

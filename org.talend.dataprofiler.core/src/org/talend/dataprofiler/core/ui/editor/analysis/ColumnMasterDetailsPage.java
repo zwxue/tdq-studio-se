@@ -721,7 +721,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage
 	}
 
 	public Composite[] getPreviewChartCompsites() {
-		if (!previewChartList.isEmpty()) {
+		if (previewChartList != null && !previewChartList.isEmpty()) {
 			this.previewChartCompsites = previewChartList
 					.toArray(new Composite[previewChartList.size()]);
 		}
