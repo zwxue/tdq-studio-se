@@ -32,6 +32,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -110,6 +112,12 @@ public final class ImportFactory {
 
                 reader.close();
 
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        MessageDialog.openInformation(null, "Information", "Patterns imported in the \"Patterns\" folder");
+                    }
+                });
             } catch (Exception e) {
                 log.error(e, e);
             }

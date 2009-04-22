@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -194,6 +195,14 @@ public class ImportRemotePatternAction extends Action {
                     if (extension.getInstalledRevision().getName().equals(extension.getLatestRevision().getName())) {
                         if (localZipFile.exists() && checkIfExisted(extension.getInstalledLocation())) {
                             monitor.done();
+
+                            Display.getDefault().asyncExec(new Runnable() {
+
+                                public void run() {
+                                    MessageDialogWithToggle.openInformation(null, "Information", "File has existed.");
+                                }
+                            });
+
                             return;
                         }
                     } else {
