@@ -41,6 +41,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
@@ -53,7 +54,10 @@ import org.talend.dq.pattern.PatternTransformer;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class ChartTableFactory {
+public final class ChartTableFactory {
+
+    private ChartTableFactory() {
+    }
 
     public static void addMenuAndTip(final TableViewer tbViewer, final IDataExplorer explorer, final Analysis analysis) {
 
@@ -63,8 +67,9 @@ public class ChartTableFactory {
 
             @Override
             public void mouseDown(MouseEvent e) {
+                ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
 
-                if (e.button == 3) {
+                if (e.button == 3 && ExecutionLanguage.JAVA != currentEngine) {
                     StructuredSelection selection = (StructuredSelection) tbViewer.getSelection();
 
                     ChartDataEntity dataEntity = (ChartDataEntity) selection.getFirstElement();
