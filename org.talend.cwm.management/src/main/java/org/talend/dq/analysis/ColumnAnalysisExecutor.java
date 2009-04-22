@@ -15,6 +15,7 @@ package org.talend.dq.analysis;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,14 +31,18 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.indicators.IndicatorEvaluator;
-import org.talend.dq.sql.converters.CwmZQuery;
 import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -52,6 +57,10 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
 
     protected Map<ModelElement, Package> schemata = new HashMap<ModelElement, Package>();
+
+    private DbmsLanguage dbmsLanguage;
+
+    protected Analysis cachedAnalysis;
 
     protected boolean isAccessWith(TdDataProvider dp) {
         if (dataprovider == null) {
@@ -148,7 +157,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      */
     @Override
     protected String createSqlStatement(Analysis analysis) {
-        CwmZQuery query = new CwmZQuery();
+        this.cachedAnalysis = analysis;
+        // CwmZQuery query = new CwmZQuery();
+        StringBuilder sql = new StringBuilder("SELECT ");
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
@@ -156,7 +167,10 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             return null;
         }
         Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
-        for (ModelElement modelElement : analysedElements) {
+        final Iterator<ModelElement> iterator = analysedElements.iterator();
+        while (iterator.hasNext()) { // for (ModelElement modelElement : analysedElements) {
+            ModelElement modelElement = iterator.next();
+
             // --- preconditions
             TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
             if (col == null) {
@@ -174,22 +188,42 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             }
             // else add into select
 
-            if (!query.addSelect(col)) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.Problem"); //$NON-NLS-1$
-                return null;
+            sql.append(this.quote(col.getName()));
+            // append comma if more columns exist
+            if (iterator.hasNext()) {
+                sql.append(',');
             }
+
+            // if (!query.addSelect(col)) {
+            //                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.Problem"); //$NON-NLS-1$
+            // return null;
+            // }
             // add from
             fromPart.add(colSet);
 
-            // TODO add where part
-
         }
 
-        if (!query.addFrom(fromPart)) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.ProblemAddFromPart"); //$NON-NLS-1$
+        if (fromPart.size() != 1) {
+            log.error("Java analysis must be run on only one table. The number of different tables is " + fromPart.size() + ".");
+            this.errorMessage = "Cannot run a Java analysis on several tables. Use only columns from one table.";
             return null;
         }
-        return query.generateStatement();
+
+        // add from clause
+        sql.append(dbms().from());
+        sql.append(this.quote(fromPart.iterator().next().getName()));
+
+        // add where clause
+        // --- get data filter
+        ColumnAnalysisHandler handler = new ColumnAnalysisHandler();
+        handler.setAnalysis(analysis);
+        String stringDataFilter = handler.getStringDataFilter();
+
+        sql.append(GenericSQLHandler.WHERE_CLAUSE);
+
+        String sqlStatement = sql.toString();
+        sqlStatement = dbms().addWhereToStatement(sqlStatement, stringDataFilter);
+        return sqlStatement;
     }
 
     @Override
@@ -255,4 +289,53 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         return true;
     }
 
+    /**
+     * Method "dbms".
+     * 
+     * @return the DBMS language (not null)
+     */
+    protected DbmsLanguage dbms() {
+        if (this.dbmsLanguage == null) {
+            this.dbmsLanguage = createDbmsLanguage();
+        }
+        return this.dbmsLanguage;
+    }
+
+    private DbmsLanguage createDbmsLanguage() {
+        DataManager connection = this.cachedAnalysis.getContext().getConnection();
+        return DbmsLanguageFactory.createDbmsLanguage(connection);
+    }
+
+    /**
+     * Method "quote".
+     * 
+     * @param input
+     * @return the given string between quotes (for SQL)
+     */
+    protected String quote(String input) {
+        return dbms().quote(input);
+    }
+
+    /**
+     * Method "getQuotedColumnName".
+     * 
+     * @param column a column
+     * @return the quoted column name
+     */
+    protected String getQuotedColumnName(Column column) {
+        assert column != null;
+        String quotedColName = quote(column.getName());
+        return quotedColName;
+    }
+
+    /**
+     * Method "getQuotedTableName".
+     * 
+     * @param column
+     * @return the quoted table name
+     */
+    protected String getQuotedTableName(Column column) {
+        String table = quote(ColumnHelper.getColumnSetFullName(column));
+        return table;
+    }
 }

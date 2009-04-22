@@ -60,17 +60,13 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.dbms.DbmsLanguage;
-import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.i18n.Messages;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 import Zql.ParseException;
@@ -89,13 +85,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * TODO scorreia this constant must be replaced by a default preference and the possibility to the user to change it
      * for each indicator.
      */
-    private static final int TOP_N = 10;
+    private static final int TOP_N = org.talend.dataquality.PluginConstant.DEFAULT_TOP_N;
 
     private static Logger log = Logger.getLogger(ColumnAnalysisSqlExecutor.class);
 
-    private DbmsLanguage dbmsLanguage;
-
-    protected Analysis cachedAnalysis;
 
     /*
      * (non-Javadoc)
@@ -322,7 +315,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (!Java2SqlType.isNumbericInSQL(javaType)) {
                     defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
-                whereExpression.add(colName + dbmsLanguage.equal() + defValue);
+                whereExpression.add(colName + dbms().equal() + defValue);
             }
 
             // --- default case
@@ -338,15 +331,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return true;
     }
 
-    /**
-     * Method "getQuotedTableName".
-     * @param tdColumn
-     * @return the quoted table name
-     */
-    protected String getQuotedTableName(TdColumn tdColumn) {
-        String table = quote(ColumnHelper.getColumnSetFullName(tdColumn));
-        return table;
-    }
+ 
 
     /**
      * Method "duplicateForCrossJoin". For some SQL queries, auto-joins are used in subqueries. This means that the
@@ -391,17 +376,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return duplicatedWhereExpressions;
     }
 
-    /**
-     * Method "getQuotedColumnName".
-     * 
-     * @param column a column
-     * @return the quoted column name
-     */
-    protected String getQuotedColumnName(Column column) {
-        assert column != null;
-        String quotedColName = quote(column.getName());
-        return quotedColName;
-    }
+ 
 
     /**
      * DOC scorreia Comment method "getTableTableAliasA".
@@ -888,22 +863,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return Long.valueOf(String.valueOf(myResultSet.get(0)[0]));
     }
 
-    private DbmsLanguage createDbmsLanguage() {
-        DataManager connection = this.cachedAnalysis.getContext().getConnection();
-        return DbmsLanguageFactory.createDbmsLanguage(connection);
-    }
 
-    /**
-     * Method "dbms".
-     * 
-     * @return the DBMS language (not null)
-     */
-    protected DbmsLanguage dbms() {
-        if (this.dbmsLanguage == null) {
-            this.dbmsLanguage = createDbmsLanguage();
-        }
-        return this.dbmsLanguage;
-    }
 
     /**
      * 
@@ -931,23 +891,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return sqlGenericString.replaceAll("'", "''"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    /**
-     * DOC scorreia Comment method "getUpperCase".
-     * 
-     * @param language
-     * @param colName
-     * @return
-     */
-
-    /**
-     * Method "quote".
-     * 
-     * @param input
-     * @return the given string between quotes (for SQL)
-     */
-    protected String quote(String input) {
-        return dbms().quote(input);
-    }
 
     /**
      * Method "traceError".

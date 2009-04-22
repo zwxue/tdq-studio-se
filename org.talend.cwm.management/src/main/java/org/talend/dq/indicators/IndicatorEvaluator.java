@@ -47,6 +47,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
         statement.setFetchSize(fetchSize);
         // MOD xqliu 2009-02-09 bug 6237
         if (continueRun()) {
+            if (log.isInfoEnabled()) {
+                log.info("Executing query: " + sqlStatement);
+            }
             statement.execute(sqlStatement);
         }
 

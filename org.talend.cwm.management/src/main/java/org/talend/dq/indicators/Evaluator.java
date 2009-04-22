@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.i18n.Messages;
 import org.talend.utils.collections.MultiMapHelper;
@@ -56,10 +57,23 @@ public abstract class Evaluator<T> {
      * @return true if ok
      */
     public boolean storeIndicator(T elementToAnalyze, Indicator indicator) {
-        this.allIndicators.add(indicator);
-        return MultiMapHelper.addUniqueObjectToListMap(elementToAnalyze, indicator, elementToIndicators);
+        boolean ok = true;
+        final List<Indicator> indicatorLeaves = IndicatorHelper.getIndicatorLeaves(indicator);
+        this.allIndicators.addAll(indicatorLeaves);
+        for (Indicator leaf : indicatorLeaves) {
+            if (!MultiMapHelper.addUniqueObjectToListMap(elementToAnalyze, leaf, elementToIndicators)) {
+                ok = false;
+            }
+        }
+        return ok;
     }
 
+    /**
+     * Method "getIndicators".
+     * 
+     * @param elementName
+     * @return the indicator to be computed for the given element
+     */
     public List<Indicator> getIndicators(T elementName) {
         List<Indicator> indics = elementToIndicators.get(elementName);
         return (indics != null) ? indics : new ArrayList<Indicator>();
@@ -100,9 +114,7 @@ public abstract class Evaluator<T> {
             }
             return rc;
         } catch (SQLException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Exception while executing SQL query " + sqlStatement, e);
-            }
+            log.error("Exception while executing SQL query " + sqlStatement, e);
             rc.setReturnCode(e.getMessage(), false);
         }
         return rc;
