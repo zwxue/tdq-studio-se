@@ -40,4 +40,4 @@ Export-Package: EDU.oswego.cs.dl.util.concurrent,
  edu.uci.ics.jung.visualization.subLayout,
  edu.uci.ics.jung.visualization.transform,
  edu.uci.ics.jung.visualization.transform.shape
-Require-Bundle: org.talend.libraries.apache;bundle-version="1.0.0"
+Require-Bundle: org.talend.libraries.apache
