@@ -108,8 +108,9 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     public AnalysisColumnNominalIntervalTreeViewer(Composite parent) {
         parentComp = parent;
-        this.tree = createTree(parent);
+        tree = createTree(parent);
         tree.setData(this);
+        columnSetMultiValueList = new ArrayList<Column>();
     }
 
     public AnalysisColumnNominalIntervalTreeViewer(Composite parent, ColumnCorrelationNominalAndIntervalMasterPage masterPage) {
@@ -152,9 +153,29 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         };
 
         parent.setData(AbstractMetadataFormPage.ACTION_HANDLER, actionHandler);
-        // ColumnViewerDND.installDND(newTree);
-        // TreeViewerDNDDecorator treeDND = new TreeViewerDNDDecorator();
-        // treeDND.installDND(newTree, true);
+
+        addSourceDND(newTree);
+        addTargetDND(newTree);
+
+        addTreeListener(newTree);
+        return newTree;
+    }
+
+    /**
+     * DOC bZhou Comment method "addTargetDND".
+     * 
+     * @param newTree
+     */
+    private void addTargetDND(final Tree newTree) {
+        ColumnViewerDND.installDND(newTree);
+    }
+
+    /**
+     * DOC bZhou Comment method "addSourceDND".
+     * 
+     * @param newTree
+     */
+    private void addSourceDND(final Tree newTree) {
         final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
         Transfer[] types = new Transfer[] { transfer };
         int operations = DND.DROP_COPY | DND.DROP_MOVE;
@@ -188,10 +209,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
             }
         });
-        ColumnViewerDND.installDND(newTree);
-
-        this.addTreeListener(newTree);
-        return newTree;
     }
 
     /**
@@ -312,7 +329,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
         tree.setData(this);
-        this.columnSetMultiValueList = columns;
         addItemElements(columns, 0);
         // addItemElements(columns);
     }
@@ -321,6 +337,9 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         for (int i = 0; i < columns.size(); i++) {
             final TdColumn column = (TdColumn) columns.get(i);
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE, index);
+
+            columnSetMultiValueList.add(index, column);
+
             String columnName = column.getName();
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
@@ -400,23 +419,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     public void addElements(final List<Column> columns, int index) {
         this.addItemElements(columns, index);
-    }
-
-    // private void createIndicatorItems(final TreeItem treeItem,
-    // IndicatorUnit[] indicatorUnits) {
-    // for (IndicatorUnit indicatorUnit : indicatorUnits) {
-    // createOneUnit(treeItem, indicatorUnit);
-    // }
-    // }
-
-    /**
-     * DOC xzhao Comment method "deleteIndicatorItems".
-     * 
-     * @param treeItem
-     * @param inidicatorUnit
-     */
-    private void deleteIndicatorItems(ColumnIndicator columnIndicator, IndicatorUnit inidicatorUnit) {
-        columnIndicator.removeIndicatorUnit(inidicatorUnit);
     }
 
     /**
@@ -586,7 +588,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     @Override
     public void dropColumns(List<Column> columns, int index) {
-        this.columnSetMultiValueList.addAll(index, columns);
         this.addElements(columns, index);
         // this.setElements(columnSetMultiValueList);
     }

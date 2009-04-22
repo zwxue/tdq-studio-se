@@ -123,6 +123,7 @@ public class ColumnViewerDND {
                     // TreeItem item = new TreeItem(targetControl, SWT.NONE);
                     // item.setText(texts);
                     // item.setText(text);
+                    index = 0;
                 } else {
                     TreeItem item = (TreeItem) event.item;
                     TreeItem[] items = targetControl.getItems();
