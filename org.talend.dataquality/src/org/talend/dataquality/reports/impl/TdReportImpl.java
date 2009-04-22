@@ -18,9 +18,9 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.PresentationParameter;
@@ -443,8 +443,8 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             AnalysisMap createAnalysisMap = ReportsFactory.eINSTANCE.createAnalysisMap();
             createAnalysisMap.setAnalysis(analysis);
             createAnalysisMap.setMustRefresh(true); // refresh by default
-            createAnalysisMap.setReportType(ReportType.getReportType(analysis, ReportType.BASIC).getLabel());// MOD mzhao 2009-02-16 Basic
-                                                                                         // type by default.
+            // MOD mzhao 2009-02-16 Basic type by default.
+            createAnalysisMap.setReportType(ReportType.getReportType(analysis, ReportHelper.BASIC).getLabel());
             this.getAnalysisMap().add(createAnalysisMap);
         }
         return added;

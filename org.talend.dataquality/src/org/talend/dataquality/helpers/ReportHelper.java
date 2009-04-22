@@ -29,6 +29,8 @@ import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.dates.DateUtils;
+import org.talend.utils.properties.PropertiesLoader;
+import org.talend.utils.properties.TypedProperties;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
 /**
@@ -40,37 +42,44 @@ public final class ReportHelper {
 
     // ~ADD mzhao 2009-02-05
 
-    // ~
+    public static final String BASIC = "Basic"; // TODO externalize
 
+    public static final String EVOLUTION = "Evolution"; // TODO externalize
+
+    public static final String USER_DEFINED = "User defined"; // TODO externalize
+
+    private static final TypedProperties PROPS = PropertiesLoader
+            .getProperties(ReportHelper.class, "predefined_jrxml.properties");
+    
     /**
-     * The report types. MOD mzhao 2009-02-19 MOD mzhao 2009-04-15 jrxml template files changed its location.
+     * The report types.
+     * 
+     * MOD mzhao 2009-02-19 MOD mzhao 2009-04-15 jrxml template files changed its location.
      */
     public static enum ReportType {
 
         // Analysis: multi column
-        BASIC_MUTICOLUMN("Basic", "/reports/column/report_01.jrxml"),
-        EVOLUTION_MUTICOLUMN("Evolution", "/reports/column/report_02.jrxml"),
+        BASIC_MUTICOLUMN(BASIC, PROPS.getProperty("BASIC_MUTICOLUMN")), //$NON-NLS-1$
+        EVOLUTION_MUTICOLUMN(EVOLUTION, PROPS.getProperty("EVOLUTION_MUTICOLUMN")), //$NON-NLS-1$
         // Analysis: connection
-        BASIC_CONNECTION("Basic", "/reports/overview/report_03.jrxml"),
-        EVOLUTION_CONNECTION("Evolution", "/reports/overview/report_03.jrxml"),
-        // EVOLUTION_CONNECTION("Basic", "/reports/column/report_04.jrxml"),
+        BASIC_CONNECTION(BASIC, PROPS.getProperty("BASIC_CONNECTION")), //$NON-NLS-1$
+        EVOLUTION_CONNECTION(EVOLUTION, PROPS.getProperty("EVOLUTION_CONNECTION")), //$NON-NLS-1$
+        // EVOLUTION_CONNECTION(BASIC, "/reports/column/report_04.jrxml"),
         // Analysis: schema
-        BASIC_SCHEMA("Basic", "/reports/overview/report_03.jrxml"),
-        EVOLUTION_SCHEMA("Evolution", "/reports/overview/report_03.jrxml"),
+        BASIC_SCHEMA(BASIC, PROPS.getProperty("BASIC_SCHEMA")), //$NON-NLS-1$
+        EVOLUTION_SCHEMA(EVOLUTION, PROPS.getProperty("EVOLUTION_SCHEMA")), //$NON-NLS-1$
         // TODO assign type to specific jrxml
         // Analysis: catalog
-        BASIC_CATALOG("Basic", "/reports/overview/report_03.jrxml"),
-        EVOLUTION_CATALOG("Evolution", "/reports/overview/report_03.jrxml"),
+        BASIC_CATALOG(BASIC, PROPS.getProperty("BASIC_CATALOG")), //$NON-NLS-1$
+        EVOLUTION_CATALOG(EVOLUTION, PROPS.getProperty("EVOLUTION_CATALOG")), //$NON-NLS-1$
         // Analysis: table
-        BASIC_TABLE("Basic", "/reports/column/report_01.jrxml"),
-        EVOLUTION_TABLE("Evolution", "/reports/dq_rule/report_04.jrxml"),
+        BASIC_TABLE(BASIC, PROPS.getProperty("BASIC_TABLE")), //$NON-NLS-1$
+        EVOLUTION_TABLE(EVOLUTION, PROPS.getProperty("EVOLUTION_TABLE")), //$NON-NLS-1$
         // Analysis: column comparison
-        BASIC_COLUMNS_COMPARISON("Basic", "/reports/overview/report_03.jrxml"),
-        EVOLUTION_COLUMNS_COMPARISON("Evolution", "/reports/overview/report_03.jrxml"),
+        BASIC_COLUMNS_COMPARISON(BASIC, PROPS.getProperty("BASIC_COLUMNS_COMPARISON")), //$NON-NLS-1$
+        EVOLUTION_COLUMNS_COMPARISON(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_COMPARISON")), //$NON-NLS-1$
 
-        USER_MADE("User specified", null); // for the user to set his own file path//$NON-NLS-1$
-
-        public static final String BASIC = "Basic";
+        USER_MADE(USER_DEFINED, null); // for the user to set his own file path
 
         private String label;
 
