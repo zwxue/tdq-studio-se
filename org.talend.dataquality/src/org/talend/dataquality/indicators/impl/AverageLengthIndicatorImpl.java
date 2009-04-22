@@ -164,7 +164,7 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
      */
     @Override
     public String toString() {
-        return super.toString();
+        return "Average Length = " + this.getAverageLength();
     }
 
     /*
@@ -243,4 +243,17 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
         return this.getSumLength().longValue(); // FIXME scorreia use getRealValue method instead
     }
 
+    @Override
+    public boolean finalizeComputation() {
+        return super.finalizeComputation();
+    }
+
+    @Override
+    public boolean reset() {
+        this.sumLength = SUM_LENGTH_EDEFAULT;
+        return super.reset();
+    }
+
+    
+    
 } // AverageLengthIndicatorImpl

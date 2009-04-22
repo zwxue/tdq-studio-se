@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -47,6 +48,10 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @ordered
      */
     protected Long duplicateValueCount = DUPLICATE_VALUE_COUNT_EDEFAULT;
+
+    private Set<Object> uniqueObjects = new HashSet<Object>();
+
+    private Set<Object> duplicateObjects = new HashSet<Object>();
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -188,6 +193,33 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     @Override
     public Long getIntegerValue() {
         return this.getDuplicateValueCount();
+    }
+
+    @Override
+    public boolean finalizeComputation() {
+        uniqueObjects.removeAll(duplicateObjects);
+        this.setDuplicateValueCount(Long.valueOf(duplicateObjects.size()));
+        return super.finalizeComputation();
+    }
+
+    @Override
+    public boolean handle(Object data) {
+        super.handle(data);
+        if (data != null) {
+            if (!this.uniqueObjects.add(data)) {
+                // store duplicate objects
+                duplicateObjects.add(data);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean reset() {
+        this.duplicateValueCount = DUPLICATE_VALUE_COUNT_EDEFAULT;
+        this.uniqueObjects.clear();
+        this.duplicateObjects.clear();
+        return super.reset();
     }
 
 } // DuplicateCountIndicatorImpl

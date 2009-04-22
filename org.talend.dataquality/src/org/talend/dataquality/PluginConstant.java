@@ -23,6 +23,11 @@ public final class PluginConstant {
 	private static String rootProjectName;
 	// MOD mzhao 2009-04-09
 	private static boolean isNeedDQStructureChangedMigration = true;
+	
+	/**
+     * Default value used in frequency tables.
+     */
+    public static final int DEFAULT_TOP_N = 10;
 
 	public static boolean isNeedDQStructureChangedMigration() {
 		return isNeedDQStructureChangedMigration;

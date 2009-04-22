@@ -17,9 +17,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.utils.collections.MapValueSorter;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Frequency Indicator</b></em>'. <!--
@@ -412,6 +414,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         }
         freq++;
         // TODO scorreia compute distinct values ?
+        // TODO scorreia handle options (for numeric values and date values)
         valueToFreq.put(data, freq);
         return freq > 0;
 
@@ -419,14 +422,19 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     @Override
     public boolean finalizeComputation() {
-        this.distinctComputed = true;
+        final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
+        List<Object> mostFrequent = getReducedValues(topN);
+        HashMap<Object, Long> map = new HashMap<Object, Long>();
+        for (Object object : mostFrequent) {
+            map.put(object, valueToFreq.get(object));
+        }
+        this.setValueToFreq(map);
+        // this.distinctComputed = true;
         return super.finalizeComputation();
     }
 
-    @Override
-    public boolean prepare() {
-        // TODO Auto-generated method stub
-        return super.prepare();
+    protected List<Object> getReducedValues(int n) {
+        return new MapValueSorter().getMostFrequent(this.valueToFreq, n);
     }
 
     @Override
@@ -434,6 +442,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         this.uniqueValueCount = 0L;
         this.distinctValueCount = 0L;
         this.distinctComputed = false;
+        this.getValueToFreq().clear();
         return super.reset();
     }
 

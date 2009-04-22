@@ -53,4 +53,32 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
 
         return IndicatorValueType.REAL_VALUE;
     }
+
+    @Override
+    public boolean handle(Object data) {
+        boolean ok = super.handle(data);
+        if (isLess(data)) {
+            this.value = String.valueOf(data);
+        }
+        return ok;
+    }
+
+    /**
+     * DOC scorreia Comment method "isLess".
+     * 
+     * @param data
+     * @return
+     */
+    private boolean isLess(Object data) {
+        // FIXME scorreia implement me
+        throw new UnsupportedOperationException("Don't know how to compare this data yet " + data);
+    }
+
+    @Override
+    public boolean reset() {
+        this.value = VALUE_EDEFAULT;
+        return super.reset();
+    }
+    
+    
 } // MinValueIndicatorImpl

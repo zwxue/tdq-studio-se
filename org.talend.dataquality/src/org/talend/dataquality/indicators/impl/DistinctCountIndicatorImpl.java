@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -47,6 +48,8 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
      * @ordered
      */
     protected Long distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
+    
+    private Set<Object> distinctObjects = new HashSet<Object>();
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -190,4 +193,40 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
         return this.getDistinctValueCount();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handle(java.lang.Object)
+     * 
+     * ADDED scorreia 2009-04-17 handle(Object data)
+     */
+    @Override
+    public boolean handle(Object data) {
+        super.handle(data);
+        if (data != null) {
+            this.distinctObjects.add(data);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean finalizeComputation() {
+        this.setDistinctValueCount(Long.valueOf(distinctObjects.size()));
+        return super.finalizeComputation();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#reset()
+     */
+    @Override
+    public boolean reset() {
+        this.distinctObjects.clear();
+        this.distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
+        return super.reset();
+    }
+
+    
+    
 } // DistinctCountIndicatorImpl

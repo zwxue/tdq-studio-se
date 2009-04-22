@@ -187,4 +187,10 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
         return this.getLength();
     }
 
+    @Override
+    public boolean reset() {
+        this.length = LENGTH_EDEFAULT;
+        return super.reset();
+    }
+    
 } // LengthIndicatorImpl

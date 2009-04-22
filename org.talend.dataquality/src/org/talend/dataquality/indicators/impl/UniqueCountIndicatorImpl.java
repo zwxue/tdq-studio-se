@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +49,8 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
      */
     protected Long uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
 
+    private Set<Object> uniqueObjects = new HashSet<Object>();
+    private Set<Object> duplicateObjects = new HashSet<Object>();
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
@@ -189,6 +192,33 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
     @Override
     public Long getIntegerValue() {
         return this.getUniqueValueCount();
+    }
+
+    @Override
+    public boolean finalizeComputation() {
+        uniqueObjects.removeAll(duplicateObjects);
+        this.setUniqueValueCount(Long.valueOf(uniqueObjects.size()));
+        return super.finalizeComputation();
+    }
+
+    @Override
+    public boolean handle(Object data) {
+        super.handle(data);
+        if (data != null) {
+            if (!this.uniqueObjects.add(data)) {
+                // store duplicate objects
+                duplicateObjects.add(data);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean reset() {
+        this.uniqueValueCount = UNIQUE_VALUE_COUNT_EDEFAULT;
+        this.uniqueObjects.clear();
+        this.duplicateObjects.clear();
+        return super.reset();
     }
 
 } // UniqueCountIndicatorImpl

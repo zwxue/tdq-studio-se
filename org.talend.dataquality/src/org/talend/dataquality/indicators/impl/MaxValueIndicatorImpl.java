@@ -52,4 +52,25 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
         return IndicatorValueType.REAL_VALUE;
     }
 
+    @Override
+    public boolean handle(Object data) {
+        boolean ok = super.handle(data);
+        if (isGreater(data)) {
+            this.value = String.valueOf(data);
+        }
+        return ok;
+    }
+
+    /**
+     * DOC scorreia Comment method "isGreater".
+     * 
+     * @param data
+     * @return
+     */
+    private boolean isGreater(Object data) {
+        // FIXME scorreia implement me
+        throw new UnsupportedOperationException("Don't know how to compare this data yet " + data);
+    }
+
+    
 } // MaxValueIndicatorImpl

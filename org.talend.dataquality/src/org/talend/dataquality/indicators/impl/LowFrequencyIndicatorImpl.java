@@ -6,10 +6,12 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import org.eclipse.emf.ecore.EClass;
+import java.util.List;
 
+import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowFrequencyIndicator;
+import org.talend.utils.collections.MapValueSorter;
 
 /**
  * <!-- begin-user-doc -->
@@ -40,4 +42,11 @@ public class LowFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements
         return IndicatorsPackage.Literals.LOW_FREQUENCY_INDICATOR;
     }
 
+    @Override
+    protected List<Object> getReducedValues(int n) {
+        return new MapValueSorter().getLessFrequent(this.valueToFreq, n);
+    }
+
+    
+    
 } //LowFrequencyIndicatorImpl
