@@ -72,7 +72,7 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
 
     /**
      * Returns the name of the given {@link IFile}, delegates to {@link AdapterFactoryLabelProvider#getText(Object)} if
-     * not an {@link IFile}. MOD mzhao 2009-03-10 adapte for upper panel customized displaying items.
+     * not an {@link IFile}. MOD mzhao 2009-03-10 adapt for upper panel customized displaying items.
      * 
      * @param object Object we seek the name for.
      * @return The name of the given object.
@@ -118,7 +118,7 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
                     }
                     text = "model \"" + modelName + "\" has been removed";
                 } else {
-                    text = object.toString();
+                    text = adapterProvider.getText(object);
                 }
 
             }
