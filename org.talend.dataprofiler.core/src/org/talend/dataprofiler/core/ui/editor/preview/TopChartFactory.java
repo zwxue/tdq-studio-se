@@ -241,6 +241,8 @@ public final class TopChartFactory {
         final XYItemRenderer renderer = plot.getRenderer();
         renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator() {
 
+            private static final long serialVersionUID = 1L;
+
             /*
              * (non-Javadoc)
              * 
@@ -255,6 +257,9 @@ public final class TopChartFactory {
                 String label = valueAggregator.getLabels(seriesK).get(item);
                 final Object[] itemArray = super.createItemArray(dset, series, item);
                 itemArray[0] = label;
+                itemArray[1] = "avg=" + itemArray[1];
+                itemArray[2] = "record count=" + itemArray[2];
+                itemArray[3] = "null count=" + itemArray[3];
                 return itemArray;
             }
 
