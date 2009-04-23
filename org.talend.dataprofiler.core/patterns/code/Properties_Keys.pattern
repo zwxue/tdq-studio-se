@@ -6,7 +6,7 @@
   <taggedValue xmi:id="_DVfAxAMtEd6stMai_3cDIQ" tag="Status" value="Draft"/>
   <taggedValue xmi:id="_DVfAxQMtEd6stMai_3cDIQ" tag="Validation_Status" value="true"/>
   <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_DVfAxgMtEd6stMai_3cDIQ" expressionType="REGEXP">
-    <expression xmi:id="_DVfAxwMtEd6stMai_3cDIQ" body="'^[-+&lt;>[:alnum:]._@&amp;*]*\\[?\\]?$'" language="ALL_DATABASE_TYPE"/>
+    <expression xmi:id="_DVfAxwMtEd6stMai_3cDIQ" body="'^[-+&lt;>[:alnum:]._@&amp;*]*\\[?\\]?$'" language="SQL"/>
   </components>
   <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_DVfAyAMtEd6stMai_3cDIQ" expressionType="REGEXP">
     <expression xmi:id="_DVfAyQMtEd6stMai_3cDIQ" body="'^[-+&lt;>[:alnum:]._@&amp;*]*\\\\[?\\\\]?$'" language="Mysql"/>
