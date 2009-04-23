@@ -182,7 +182,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage
 
 		createDataFilterSection(form, topComp);
 
-		createAnalysisParamSection(form, topComp);
+        if (false) { // FIXME scorreia 2009-04-23 analysis parameter section removed because not all indicators can be
+            // computed with the Java engine.
+            createAnalysisParamSection(form, topComp);
+        }
 
 		Composite previewComp = toolkit.createComposite(sForm);
 		previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
