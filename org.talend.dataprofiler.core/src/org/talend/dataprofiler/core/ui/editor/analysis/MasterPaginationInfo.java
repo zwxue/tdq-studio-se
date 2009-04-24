@@ -41,72 +41,67 @@ import org.talend.dq.indicators.preview.EIndicatorChartType;
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
 public class MasterPaginationInfo extends PaginationInfo {
-	private List<ExpandableComposite> previewChartList;
 
-	public MasterPaginationInfo(ScrolledForm form,
-			List<ExpandableComposite> previewChartList,
-			List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
-		super(form, columnIndicatores, uiPagination);
-		this.previewChartList = previewChartList;
-	}
+    private List<ExpandableComposite> previewChartList;
 
-	@Override
-	protected void render() {
-		previewChartList.clear();
-		for (final ColumnIndicator columnIndicator : columnIndicatores) {
-			ExpandableComposite exComp = uiPagination.getToolkit()
-					.createExpandableComposite(
-							uiPagination.getComposite(),
-							ExpandableComposite.TREE_NODE
-									| ExpandableComposite.CLIENT_INDENT);
-			needDispostWidgets.add(exComp);
-			TdColumn column = columnIndicator.getTdColumn();
-			exComp.setText(DefaultMessagesImpl.getString(
-					"ColumnMasterDetailsPage.column", column.getName())); //$NON-NLS-1$
-			exComp.setLayout(new GridLayout());
-			exComp.setData(columnIndicator);
-			previewChartList.add(exComp);
+    public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
+            List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
+        super(form, columnIndicatores, uiPagination);
+        this.previewChartList = previewChartList;
+    }
 
-			Composite comp = uiPagination.getToolkit().createComposite(exComp);
-			comp.setLayout(new GridLayout());
-			comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+    @Override
+    protected void render() {
+        previewChartList.clear();
+        for (final ColumnIndicator columnIndicator : columnIndicatores) {
+            ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getComposite(),
+                    ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
+            needDispostWidgets.add(exComp);
+            TdColumn column = columnIndicator.getTdColumn();
+            exComp.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.column", column.getName())); //$NON-NLS-1$
+            exComp.setLayout(new GridLayout());
+            exComp.setData(columnIndicator);
+            previewChartList.add(exComp);
 
-			Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator
-					.getInstance().getIndicatorComposite(columnIndicator);
-			for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
-				List<IndicatorUnit> units = indicatorComposite.get(chartType);
-				if (!units.isEmpty()) {
-					final IChartTypeStates chartTypeState = ChartTypeStatesOperator
-							.getChartState(chartType, units);
-					JFreeChart chart = chartTypeState.getChart();
-					ChartDecorator.decorate(chart);
+            Composite comp = uiPagination.getToolkit().createComposite(exComp);
+            comp.setLayout(new GridLayout());
+            comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-					if (chart != null) {
-						final ChartComposite chartComp = new ChartComposite(
-								comp, SWT.NONE, chart, true);
+            Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
+                    .getIndicatorComposite(columnIndicator);
+            for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
+                List<IndicatorUnit> units = indicatorComposite.get(chartType);
+                if (!units.isEmpty()) {
+                    final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+                    JFreeChart chart = chartTypeState.getChart();
+                    ChartDecorator.decorate(chart);
 
-						GridData gd = new GridData();
-						gd.widthHint = 550;
-						gd.heightHint = 250;
-						chartComp.setLayoutData(gd);
+                    if (chart != null) {
+                        final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
 
-						addListenerToChartComp(chartComp, chartTypeState);
-					}
-				}
-			}
+                        GridData gd = new GridData();
+                        gd.widthHint = 550;
+                        gd.heightHint = 250;
+                        chartComp.setLayoutData(gd);
 
-			exComp.addExpansionListener(new ExpansionAdapter() {
+                        addListenerToChartComp(chartComp, chartTypeState);
+                    }
+                }
+            }
 
-				@Override
-				public void expansionStateChanged(ExpansionEvent e) {
-					form.reflow(true);
-				}
+            exComp.addExpansionListener(new ExpansionAdapter() {
 
-			});
-			exComp.setExpanded(true);
-			exComp.setClient(comp);
-		}
+                @Override
+                public void expansionStateChanged(ExpansionEvent e) {
+                    uiPagination.getComposite().layout();
+                    form.reflow(true);
+                }
 
-	}
+            });
+            exComp.setExpanded(true);
+            exComp.setClient(comp);
+        }
+
+    }
 
 }
