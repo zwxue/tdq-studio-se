@@ -25,7 +25,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.i18n.Messages;
 import org.talend.utils.collections.MultiMapHelper;
@@ -47,25 +46,19 @@ public abstract class Evaluator<T> {
 
     protected Map<T, List<Indicator>> elementToIndicators = new HashMap<T, List<Indicator>>();
 
-    private Set<Indicator> allIndicators = new HashSet<Indicator>();
+    protected Set<Indicator> allIndicators = new HashSet<Indicator>();
 
     /**
-     * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators.
+     * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators. if needed, this
+     * method must be called on the Child indicators of the given indicator.
      * 
      * @param elementToAnalyze the element to analyze (column, data provider...)
      * @param indicator the indicator for the given element
      * @return true if ok
      */
     public boolean storeIndicator(T elementToAnalyze, Indicator indicator) {
-        boolean ok = true;
-        final List<Indicator> indicatorLeaves = IndicatorHelper.getIndicatorLeaves(indicator);
-        this.allIndicators.addAll(indicatorLeaves);
-        for (Indicator leaf : indicatorLeaves) {
-            if (!MultiMapHelper.addUniqueObjectToListMap(elementToAnalyze, leaf, elementToIndicators)) {
-                ok = false;
-            }
-        }
-        return ok;
+        this.allIndicators.add(indicator);
+        return MultiMapHelper.addUniqueObjectToListMap(elementToAnalyze, indicator, elementToIndicators);
     }
 
     /**

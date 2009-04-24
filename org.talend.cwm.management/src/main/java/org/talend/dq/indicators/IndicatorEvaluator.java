@@ -19,14 +19,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.i18n.Messages;
+import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author scorreia
  * 
- * Computes indicators on columns.
+ * Computes indicators on columns with java engine. It means that we call indicator.handle(object) method.
  */
 public class IndicatorEvaluator extends Evaluator<String> {
 
@@ -87,6 +89,27 @@ public class IndicatorEvaluator extends Evaluator<String> {
         resultSet.close();
         // --- close
         connection.close();
+        return ok;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.indicators.Evaluator#storeIndicator(java.lang.Object,
+     * org.talend.dataquality.indicators.Indicator)
+     * 
+     * MOD scorreia 2009-04-24 overrided to solve bug 7093
+     */
+    @Override
+    public boolean storeIndicator(String elementToAnalyze, Indicator indicator) {
+        boolean ok = true;
+        final List<Indicator> indicatorLeaves = IndicatorHelper.getIndicatorLeaves(indicator);
+        this.allIndicators.addAll(indicatorLeaves);
+        for (Indicator leaf : indicatorLeaves) {
+            if (!MultiMapHelper.addUniqueObjectToListMap(elementToAnalyze, leaf, elementToIndicators)) {
+                ok = false;
+            }
+        }
         return ok;
     }
 
