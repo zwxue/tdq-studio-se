@@ -43,7 +43,7 @@ import org.talend.utils.sql.Java2SqlType;
  */
 public class SummaryStatisticsState extends AbstractChartTypeStates {
 
-    public static final int FULL_FLAG = 6;
+    public static final int FULL_FLAG = 8;
 
     private int sqltype;
 
@@ -82,24 +82,9 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
-            entity.setLabel(unit.getIndicatorName());
+            entity.setLabel(unit.getType().getLabel());
             entity.setValue(String.valueOf(unit.getValue()));
 
-            customerdataset.addDataEntity(entity);
-        }
-
-        // add more data entity for summary
-        if (map.containsKey(IndicatorEnum.MaxValueIndicatorEnum) && map.containsKey(IndicatorEnum.MinValueIndicatorEnum)) {
-            Double range = map.get(IndicatorEnum.MaxValueIndicatorEnum) - map.get(IndicatorEnum.MinValueIndicatorEnum);
-            ChartDataEntity entity = new ChartDataEntity(null, IndicatorEnum.RangeIndicatorEnum.getLabel(), range.toString());
-            customerdataset.addDataEntity(entity);
-        }
-
-        if (map.containsKey(IndicatorEnum.UpperQuartileIndicatorEnum)
-                && map.containsKey(IndicatorEnum.LowerQuartileIndicatorEnum)) {
-            Double quartile = map.get(IndicatorEnum.UpperQuartileIndicatorEnum)
-                    - map.get(IndicatorEnum.LowerQuartileIndicatorEnum);
-            ChartDataEntity entity = new ChartDataEntity(null, IndicatorEnum.IQRIndicatorEnum.getLabel(), quartile.toString());
             customerdataset.addDataEntity(entity);
         }
 

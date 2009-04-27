@@ -22,6 +22,7 @@ import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
+import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
@@ -34,6 +35,7 @@ import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
@@ -60,7 +62,15 @@ public class IndicatorCommonUtil {
         IndicatorEnum type = indicatorUnit.getType();
         Indicator indicator = indicatorUnit.getIndicator();
 
-        if (indicatorUnit.isExcuted()) {
+        if (indicatorUnit.getType() == IndicatorEnum.RangeIndicatorEnum) {
+            RangeIndicator rangeIndicator = (RangeIndicator) indicator;
+            double range = rangeIndicator.getUpperValue().getRealValue() - rangeIndicator.getLowerValue().getRealValue();
+            indicatorUnit.setValue(range);
+        } else if (indicatorUnit.getType() == IndicatorEnum.IQRIndicatorEnum) {
+            IQRIndicator iqrIndicator = (IQRIndicator) indicator;
+            double range = iqrIndicator.getUpperValue().getRealValue() - iqrIndicator.getLowerValue().getRealValue();
+            indicatorUnit.setValue(range);
+        } else if (indicatorUnit.isExcuted()) {
 
             switch (type) {
             case RowCountIndicatorEnum:

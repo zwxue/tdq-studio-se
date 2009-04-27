@@ -50,9 +50,13 @@ public abstract class DataExplorer implements IDataExplorer {
 
     protected static final String MENU_VIEW_VALID_ROWS = Messages.getString("DataExplorer.ViewValidRows"); //$NON-NLS-1$
 
-    private static final String SELECT_ALL = "SELECT * "; //$NON-NLS-1$
+    protected static final String MENU_ROWS_IN_RANGE = Messages.getString("DataExplorer.RowsInRange"); //$NON-NLS-1$
 
-    private static final String SELECT = "SELECT"; //$NON-NLS-1$
+    protected static final String MENU_ROWS_OUTSIDE_RANGE = Messages.getString("DataExplorer.RowsOutsideRange"); //$NON-NLS-1$
+
+    protected static final String SELECT_ALL = "SELECT * "; //$NON-NLS-1$
+
+    private static final String SELECT = "SELECT "; //$NON-NLS-1$
 
     private static final String SELECT_DISTINCT = "SELECT DISTINCT "; //$NON-NLS-1$
 

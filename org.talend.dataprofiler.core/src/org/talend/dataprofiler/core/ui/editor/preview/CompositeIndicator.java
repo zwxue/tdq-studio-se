@@ -101,11 +101,10 @@ public final class CompositeIndicator {
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit unit : indicatorUnits) {
+            tempList.add(unit);
             if (unit.getChildren() != null) {
-                initChildIndicatorUnits(tempList, unit.getChildren());
-            } else {
-                tempList.add(unit);
-            }
+                               initChildIndicatorUnits(tempList, unit.getChildren());
+            } 
         }
 
         return tempList.toArray(new IndicatorUnit[tempList.size()]);
@@ -152,6 +151,8 @@ public final class CompositeIndicator {
             case PatternLowFreqIndicatorEnum:
                 patternLowFrequencyList.add(one);
                 break;
+            case IQRIndicatorEnum:
+            case RangeIndicatorEnum:
             case MeanIndicatorEnum:
             case MinValueIndicatorEnum:
             case MaxValueIndicatorEnum:

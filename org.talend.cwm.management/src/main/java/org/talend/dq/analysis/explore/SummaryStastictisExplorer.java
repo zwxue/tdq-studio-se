@@ -19,7 +19,9 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.RangeIndicator;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -35,7 +37,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         double value = Double.valueOf(entity.getValue());
         String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + value;
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-        return "select * from " + getFullyQualifiedTableName(column) + whereClause; //$NON-NLS-1$
+        return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
     }
 
     /**
@@ -74,7 +76,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         }
 
         // add the data filter where clause
-        return whereClause != null ? "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() //$NON-NLS-1$
+        return whereClause != null ? SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + dbmsLanguage.where() //$NON-NLS-1$
                 + inBrackets(whereClause) + andDataFilterClause() : null;
     }
 
@@ -114,6 +116,11 @@ public class SummaryStastictisExplorer extends DataExplorer {
         switch (indicatorEnum) {
         case MeanIndicatorEnum:
             break;
+        case IQRIndicatorEnum:
+        case RangeIndicatorEnum:
+            map.put(MENU_ROWS_IN_RANGE, getInRangeRowsStatement());
+            map.put(MENU_ROWS_OUTSIDE_RANGE, getOutRangeRowsStatement());
+            break;
         default:
             if (entity.isOutOfRange(entity.getValue())) {
                 map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement());
@@ -122,6 +129,50 @@ public class SummaryStastictisExplorer extends DataExplorer {
         }
 
         return map;
+    }
+
+    /**
+     * DOC hcheng Comment method "getOutRangeRowsStatement".
+     * 
+     * @return
+     */
+    private String getOutRangeRowsStatement() {
+        Double upperValue = null;
+        Double lowerValue = null;
+        if (indicator instanceof RangeIndicator) {
+            upperValue = ((RangeIndicator) indicator).getUpperValue().getRealValue();
+            lowerValue = ((RangeIndicator) indicator).getLowerValue().getRealValue();
+        } else if (indicator instanceof IQRIndicator) {
+            upperValue = ((IQRIndicator) indicator).getUpperValue().getRealValue();
+            lowerValue = ((IQRIndicator) indicator).getLowerValue().getRealValue();
+        }
+        String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.less() + lowerValue + dbmsLanguage.or()
+                + this.columnName + dbmsLanguage.greater() + upperValue;
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
+    }
+
+    /**
+     * DOC hcheng Comment method "getInRangeRowsStatement".
+     * 
+     * @return
+     */
+    private String getInRangeRowsStatement() {
+        Double upperValue = null;
+        Double lowerValue = null;
+        if (indicator instanceof RangeIndicator) {
+            upperValue = ((RangeIndicator) indicator).getUpperValue().getRealValue();
+            lowerValue = ((RangeIndicator) indicator).getLowerValue().getRealValue();
+        } else if (indicator instanceof IQRIndicator) {
+            upperValue = ((IQRIndicator) indicator).getUpperValue().getRealValue();
+            lowerValue = ((IQRIndicator) indicator).getLowerValue().getRealValue();
+        }
+
+        String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.greaterOrEqual() + lowerValue
+                + dbmsLanguage.and() + this.columnName + dbmsLanguage.lessOrEqual() + upperValue;
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
+
     }
 
 }
