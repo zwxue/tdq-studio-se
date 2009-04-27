@@ -21,12 +21,14 @@ import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * @author rli
@@ -99,10 +101,18 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
                     provider.getName());
 
             if (catalog != null) {
-                ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, catalog, null, true));
+            	// MOD xqliu 2009-04-27 bug 6507
+                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VIEW_FILTER, catalog.getTaggedValue());
+                String viewFilter = tv == null ? null : tv.getValue();
+                ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, catalog, viewFilter, true));
+                // ~
             }
             if (schema != null) {
-                ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, schema, null, true));
+            	// MOD xqliu 2009-04-27 bug 6507
+                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VIEW_FILTER, schema.getTaggedValue());
+                String viewFilter = tv == null ? null : tv.getValue();
+                ok = columnSets.addAll(DqRepositoryViewService.getViews(provider, schema, viewFilter, true));
+                // ~
             }
             return ok;
         } catch (TalendException e) {

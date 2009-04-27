@@ -18,14 +18,17 @@ import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -48,12 +51,19 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
      */
     @Override
     public void loadChildren() {
+        // MOD xqliu 2009-04-27 bug 6507
         // get columns from either tables or views.
         ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(this.getParent());
         if (columnSet != null) {
-            List<TdColumn> columnList = ColumnSetHelper.getColumns(columnSet);
+            List<TdColumn> columnList = ColumnSetHelper.getColumns(columnSet, true);
             if (columnList.size() > 0) {
-                this.setChildren(columnList.toArray());
+                if (columnList.size() == 1 && columnList.get(0).getName().equals(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG)) {
+                    this.setChildren(null);
+                    MessageUI
+                            .openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", TaggedValueHelper.COLUMN_MAX));
+                } else {
+                    this.setChildren(columnList.toArray());
+                }
                 return;
             }
             Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
@@ -65,7 +75,16 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                 return;
             }
             try {
-                columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
+                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.COLUMN_FILTER, columnSet.getTaggedValue());
+                String columnFilter = tv == null ? null : tv.getValue();
+                columnList = DqRepositoryViewService.getColumns(provider, columnSet, columnFilter, true);
+                if (columnList.size() == 1 && columnList.get(0).getName().equals(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG)) {
+                    // if (columnList.size() > TaggedValueHelper.COLUMN_MAX) {
+                    this.setChildren(null);
+                    MessageUI
+                            .openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", TaggedValueHelper.COLUMN_MAX));
+                    return;
+                }
             } catch (TalendException e) {
                 MessageBoxExceptionHandler.process(e);
             }
@@ -76,6 +95,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             NeedSaveDataProviderHelper.register(provider.eResource().getURI().path(), provider);
         }
         super.loadChildren();
+        // ~
     }
 
     public int getFolderNodeType() {

@@ -75,6 +75,22 @@ public class ColumnSetHelper {
     }
 
     /**
+     * DOC xqliu Comment method "getColumns". ADD xqliu 2009-04-27 bug 6507
+     * 
+     * @param columnSet
+     * @param filter
+     * @return
+     */
+    public static List<TdColumn> getColumns(ColumnSet columnSet, boolean filter) {
+        if (filter) {
+            return ColumnHelper.getColumnsWithFilter(columnSet, filter);
+        } else {
+            return getColumns(columnSet);
+        }
+
+    }
+
+    /**
      * Method "addColumns".
      * 
      * @param columnSet the column set in which to add the columns (must not be null)

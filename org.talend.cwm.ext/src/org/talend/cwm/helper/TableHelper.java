@@ -57,6 +57,31 @@ public final class TableHelper {
     }
 
     /**
+     * DOC xqliu Comment method "getTables". ADD xqliu 2009-04-27 bug 6507
+     * 
+     * @param elements
+     * @param tableFilter
+     * @return
+     */
+    public static List<TdTable> getTables(Collection<? extends EObject> elements, String tableFilter) {
+        List<TdTable> tables = new ArrayList<TdTable>();
+        boolean filter = (tableFilter == null || "".equals(tableFilter)) ? false : true;
+        for (EObject elt : elements) {
+            TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(elt);
+            if (table != null) {
+                if (filter) {
+                    if (table.getName().toLowerCase().indexOf(tableFilter.toLowerCase()) > -1) {
+                        tables.add(table);
+                    }
+                } else {
+                    tables.add(table);
+                }
+            }
+        }
+        return tables;
+    }
+
+    /**
      * Method "getColumns" returns the columns of a table.
      * 
      * @param table a table
@@ -198,4 +223,5 @@ public final class TableHelper {
         Namespace namespace = element.getNamespace();
         return PackageHelper.getCatalogOrSchema(namespace);
     }
+
 }

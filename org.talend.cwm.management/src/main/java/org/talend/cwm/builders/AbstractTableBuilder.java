@@ -53,7 +53,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
     }
 
     /**
-     * Method "getColumnSets" returns tables or views.
+     * Method "getColumnSets" returns tables or views. MOD xqliu 2009-04-27 bug 6507
      * 
      * @param catalogName a catalog name; must match the catalog name as it is stored in the database; "" retrieves
      * those without a catalog; null means that the catalog name should not be used to narrow the search
@@ -66,11 +66,31 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
     public List<T> getColumnSets(String catalogName, String schemaPattern, String tablePattern) throws SQLException {
         List<T> tables = new ArrayList<T>();
 
-        ResultSet tablesSet = getConnectionMetadata(connection).getTables(catalogName, schemaPattern, tablePattern,
-                this.tableType);
+        ResultSet tablesSet = getConnectionMetadata(connection).getTables(catalogName, schemaPattern, null, this.tableType);
+        boolean filter = (tablePattern == null || "".equals(tablePattern)) ? false : true;
+        int size = 0;
         while (tablesSet.next()) {
-            T table = createTable(catalogName, schemaPattern, tablesSet);
-            tables.add(table);
+            if (filter) {
+                String tableName = tablesSet.getString(GetTable.TABLE_NAME.name()).toLowerCase();
+                tablePattern = tablePattern.toLowerCase();
+                if (tableName.indexOf(tablePattern) > -1) {
+                    T table = createTable(catalogName, schemaPattern, tablesSet);
+                    tables.add(table);
+                    size++;
+                }
+            } else {
+                T table = createTable(catalogName, schemaPattern, tablesSet);
+                tables.add(table);
+                size++;
+            }
+            if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
+                tables.clear();
+                // add a special table because the table/view number is to big
+                T table = createTable();
+                table.setName(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG);
+                tables.add(table);
+                break;
+            }
         }
         // release JDBC resources
         tablesSet.close();

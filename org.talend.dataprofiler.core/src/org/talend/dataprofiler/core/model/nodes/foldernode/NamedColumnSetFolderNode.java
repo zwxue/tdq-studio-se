@@ -16,9 +16,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -43,7 +46,15 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         assert pack != null;
         columnSets.addAll(getColumnSets(catalog, schema));
         if (columnSets.size() > 0) {
-            this.setChildren(columnSets.toArray());
+            // MOD xqliu 2009-04-27 bug 6507
+            if (columnSets.size() == 1 && columnSets.get(0).getName().equals(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG)) {
+                this.setChildren(null);
+                MessageUI.openWarning(DefaultMessagesImpl.getString("NamedColumnSetFolderNode.warnMsg",
+                        TaggedValueHelper.TABLE_VIEW_MAX));
+            } else {
+                this.setChildren(columnSets.toArray());
+            }
+            // ~
             return;
         }
 

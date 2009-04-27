@@ -48,7 +48,7 @@ public class ColumnBuilder extends CwmBuilder {
     }
 
     /**
-     * Method "getColumns".
+     * Method "getColumns". MOD xqliu 2009-04-27 bug 6507
      * 
      * @param catalogName a catalog name; must match the catalog name as it is stored in the database; "" retrieves
      * those without a catalog; null means that the catalog name should not be used to narrow the search
@@ -65,35 +65,32 @@ public class ColumnBuilder extends CwmBuilder {
         List<TdColumn> tableColumns = new ArrayList<TdColumn>();
 
         // --- add columns to table
-        ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
+        ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, null);
+        boolean filter = (columnPattern == null || "".equals(columnPattern)) ? false : true;
+        int size = 0;
+        TdColumn column = null;
         while (columns.next()) {
-            // TODO scorreia other informations for columns can be retrieved here
-            // get the default value
-            // MOD mzhao 2009-04-09,Bug 6840: fetch LONG or LONG RAW column first , as these kind of columns are read as
-            // stream,if not read by select order, there will be "Stream has already been closed" error.
-            Object defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
-            String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
-            Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
+            if (filter) {
+                String columnName = columns.getString(GetColumn.COLUMN_NAME.name()).toLowerCase();
+                columnPattern = columnPattern.toLowerCase();
+                if (columnName.indexOf(columnPattern) > -1) {
+                    column = initColumn(columns);
+                    tableColumns.add(column);
+                    size++;
+                }
+            } else {
+                column = initColumn(columns);
+                tableColumns.add(column);
+                size++;
+            }
 
-            String colName = columns.getString(GetColumn.COLUMN_NAME.name());
-            TdColumn column = ColumnHelper.createTdColumn(colName);
-            column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
-            column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
-            column.setJavaType(columns.getInt(GetColumn.DATA_TYPE.name()));
-            // TODO columns.getString(GetColumn.TYPE_NAME.name());
-
-            // get column description (comment)
-            String colComment = getComment(colName, columns);
-            TaggedValueHelper.setComment(colComment, column);
-
-            // --- create and set type of column
-            // TODO scorreia get type of column on demand, not on creation of column
-            TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);
-            column.setSqlDataType(sqlDataType);
-            // column.setType(sqlDataType); // it's only reference to previous sql data type
-
-            column.setInitialValue(defExpression);
-            tableColumns.add(column);
+            if (size > TaggedValueHelper.COLUMN_MAX) {
+                tableColumns.clear();
+                // add a special column because the column number is to big
+                column.setName(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG);
+                tableColumns.add(column);
+                break;
+            }
         }
 
         // release JDBC resources
@@ -101,6 +98,43 @@ public class ColumnBuilder extends CwmBuilder {
 
         return tableColumns;
 
+    }
+
+    /**
+     * DOC xqliu Comment method "initColumn". ADD xqliu 2009-04-27 bug 6507
+     * 
+     * @param columns
+     * @return
+     * @throws SQLException
+     */
+    private TdColumn initColumn(ResultSet columns) throws SQLException {
+        // TODO scorreia other informations for columns can be retrieved here
+        // get the default value
+        // MOD mzhao 2009-04-09,Bug 6840: fetch LONG or LONG RAW column first , as these kind of columns are read as
+        // stream,if not read by select order, there will be "Stream has already been closed" error.
+        Object defaultvalue = columns.getObject(GetColumn.COLUMN_DEF.name());
+        String defaultStr = (defaultvalue != null) ? String.valueOf(defaultvalue) : null;
+        Expression defExpression = BooleanExpressionHelper.createExpression(GetColumn.COLUMN_DEF.name(), defaultStr);
+
+        String colName = columns.getString(GetColumn.COLUMN_NAME.name());
+        TdColumn column = ColumnHelper.createTdColumn(colName);
+        column.setLength(columns.getInt(GetColumn.COLUMN_SIZE.name()));
+        column.setIsNullable(NullableType.get(columns.getInt(GetColumn.NULLABLE.name())));
+        column.setJavaType(columns.getInt(GetColumn.DATA_TYPE.name()));
+        // TODO columns.getString(GetColumn.TYPE_NAME.name());
+
+        // get column description (comment)
+        String colComment = getComment(colName, columns);
+        TaggedValueHelper.setComment(colComment, column);
+
+        // --- create and set type of column
+        // TODO scorreia get type of column on demand, not on creation of column
+        TdSqlDataType sqlDataType = DatabaseContentRetriever.createDataType(columns);
+        column.setSqlDataType(sqlDataType);
+        // column.setType(sqlDataType); // it's only reference to previous sql data type
+
+        column.setInitialValue(defExpression);
+        return column;
     }
 
     /**

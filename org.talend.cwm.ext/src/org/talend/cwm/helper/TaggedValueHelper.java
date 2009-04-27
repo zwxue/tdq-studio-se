@@ -67,6 +67,21 @@ public final class TaggedValueHelper {
      */
     public static final String VALID_STATUS = "Validation_Status"; //$NON-NLS-1$
 
+    // ADD xqliu 2009-04-27 bug 6507
+    public static final String TABLE_FILTER = "Table Filter"; //$NON-NLS-1$
+
+    public static final String VIEW_FILTER = "View Filter"; //$NON-NLS-1$
+
+    public static final String COLUMN_FILTER = "Column Filter"; //$NON-NLS-1$
+
+    public static final int TABLE_VIEW_MAX = 5000; //$NON-NLS-1$
+
+    public static final int COLUMN_MAX = 2500; //$NON-NLS-1$
+
+    public static final String TABLE_VIEW_COLUMN_OVER_FLAG = "$TABLE_VIEW_COLUMN_OVER_FLAG$"; //$NON-NLS-1$
+
+    // ~
+
     /**
      * Method "setVersion" sets the version of the given element.
      * 
@@ -115,7 +130,7 @@ public final class TaggedValueHelper {
         }
         return Boolean.valueOf(value);
     }
-    
+
     /**
      * Method "setValidStatus" sets the status on the given element.
      * 
@@ -137,7 +152,7 @@ public final class TaggedValueHelper {
     public static Boolean getValidStatus(ModelElement element) {
         return Boolean.valueOf(getValue(VALID_STATUS, element));
     }
-    
+
     /**
      * Method "setIdentifierQuoteString" sets a comment on the given element.
      * 
