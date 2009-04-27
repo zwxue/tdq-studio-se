@@ -16,7 +16,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -37,6 +39,12 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
     private String[] tableType;
 
     private boolean columnsRequested = false;
+    
+    /**
+     * MOD scorreia 2009-04-27 for debug purpose only.
+     */
+    private static final Map<String, Integer> catalog2NumberOfCalls = new HashMap<String, Integer>();
+    private static final boolean debug = true;
 
     /**
      * DOC scorreia AbstractTableBuilder constructor comment.
@@ -52,6 +60,14 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
         this.tableType = new String[] { type.toString() };
     }
 
+    private static void incrementCount(String catalog, String schema) {
+        String key = (catalog != null) ? catalog + "." + schema : schema;
+        Integer count = catalog2NumberOfCalls.get(key);
+        count = (count != null) ? count + 1 : 1;
+        System.err.println(key + ": " + count);
+        catalog2NumberOfCalls.put(key, count);
+    }
+
     /**
      * Method "getColumnSets" returns tables or views. MOD xqliu 2009-04-27 bug 6507
      * 
@@ -59,34 +75,53 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
      * those without a catalog; null means that the catalog name should not be used to narrow the search
      * @param schemaPattern a schema name pattern; must match the schema name as it is stored in the database; ""
      * retrieves those without a schema; null means that the schema name should not be used to narrow the search
-     * @param tablePattern a table name pattern; must match the table name as it is stored in the database
+     * @param tablePattern table name patterns separated by a comma; must match the table name as it is stored in the
+     * database
      * @return the tables with for the given catalog, schemas, table name pattern.
      * @throws SQLException
      */
     public List<T> getColumnSets(String catalogName, String schemaPattern, String tablePattern) throws SQLException {
+        // MOD scorreia 2009-04-27 the following is only for debug purpose
+        if (debug)
+            incrementCount(catalogName, schemaPattern);
+        // FIXME xqliu: this method seems to be called recursively
         List<T> tables = new ArrayList<T>();
+        if (tablePattern == null) { // no pattern
+            addMatchingColumnSets(catalogName, schemaPattern, tablePattern, tables);
+        } else { // multiple patterns
+            String[] patterns = tablePattern.split(",");
+            for (String pattern : patterns) {
+                addMatchingColumnSets(catalogName, schemaPattern, pattern, tables);
+            }
+        }
+        return tables;
+    }
 
-        ResultSet tablesSet = getConnectionMetadata(connection).getTables(catalogName, schemaPattern, null, this.tableType);
-        boolean filter = (tablePattern == null || "".equals(tablePattern)) ? false : true;
+    /**
+     * Method "addMatchingColumnSets" creates new tables and add them into the given list of tables. A limit in the
+     * number of tables is set to {@value TaggedValueHelper#TABLE_VIEW_MAX}
+     * 
+     * @param catalogName
+     * @param schemaPattern
+     * @param tablePattern
+     * @param tables
+     * @return the number of added tables
+     * @throws SQLException
+     */
+    private int addMatchingColumnSets(String catalogName, String schemaPattern, String tablePattern, List<T> tables)
+            throws SQLException {
+        // MOD scorreia 2009-04-27. Bug 6507: table pattern is an SQL like used to get the table result set.
+        ResultSet tablesSet = getConnectionMetadata(connection).getTables(catalogName, schemaPattern, tablePattern,
+                this.tableType);
         int size = 0;
         while (tablesSet.next()) {
-            if (filter) {
-                String tableName = tablesSet.getString(GetTable.TABLE_NAME.name()).toLowerCase();
-                tablePattern = tablePattern.toLowerCase();
-                if (tableName.indexOf(tablePattern) > -1) {
-                    T table = createTable(catalogName, schemaPattern, tablesSet);
-                    tables.add(table);
-                    size++;
-                }
-            } else {
-                T table = createTable(catalogName, schemaPattern, tablesSet);
-                tables.add(table);
-                size++;
-            }
+            T table = createTable(catalogName, schemaPattern, tablesSet);
+            tables.add(table);
+            size++;
             if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
                 tables.clear();
                 // add a special table because the table/view number is to big
-                T table = createTable();
+                table = createTable();
                 table.setName(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG);
                 tables.add(table);
                 break;
@@ -94,8 +129,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
         }
         // release JDBC resources
         tablesSet.close();
-
-        return tables;
+        return size;
     }
 
     /**

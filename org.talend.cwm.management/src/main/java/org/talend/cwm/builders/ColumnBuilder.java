@@ -65,24 +65,16 @@ public class ColumnBuilder extends CwmBuilder {
         List<TdColumn> tableColumns = new ArrayList<TdColumn>();
 
         // --- add columns to table
-        ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, null);
-        boolean filter = (columnPattern == null || "".equals(columnPattern)) ? false : true;
+        // MOD scorreia 2009-04-27. Bug 6507: column pattern is an SQL like used to get the column result set.
+        // TODO xqliu handle multiple column pattern as it has been done for the table patterns in the
+        // AbstractTableBuilder class.
+        ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         int size = 0;
         TdColumn column = null;
         while (columns.next()) {
-            if (filter) {
-                String columnName = columns.getString(GetColumn.COLUMN_NAME.name()).toLowerCase();
-                columnPattern = columnPattern.toLowerCase();
-                if (columnName.indexOf(columnPattern) > -1) {
-                    column = initColumn(columns);
-                    tableColumns.add(column);
-                    size++;
-                }
-            } else {
-                column = initColumn(columns);
-                tableColumns.add(column);
-                size++;
-            }
+            column = initColumn(columns);
+            tableColumns.add(column);
+            size++;
 
             if (size > TaggedValueHelper.COLUMN_MAX) {
                 tableColumns.clear();
