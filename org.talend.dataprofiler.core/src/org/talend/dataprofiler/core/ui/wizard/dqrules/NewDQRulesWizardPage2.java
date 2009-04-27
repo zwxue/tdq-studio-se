@@ -61,10 +61,10 @@ public class NewDQRulesWizardPage2 extends AbstractWizardPage {
 
             public void modifyText(ModifyEvent e) {
                 String whereExpression = whereText.getText();
-                if (whereExpression != null && !"".equals(whereExpression)) {
-                    setPageComplete(checkFieldsValue());
 
+                if (whereExpression != null && !"".equals(whereExpression)) {
                     ((DQRulesParameter) getParameter()).setWhereClause(whereExpression);
+                    setPageComplete(checkFieldsValue());
                 }
             }
         });
