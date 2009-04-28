@@ -52,11 +52,11 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             // Create one project.
             IProject rootProject = DQStructureManager.getInstance().createNewProject(
                     org.talend.dataquality.PluginConstant.getRootProjectName());
-            // Delete first if dq structure has already constructed.
-            rootProject.delete(true, true, new NullProgressMonitor());
-            // create brandly new one.
-            rootProject = DQStructureManager.getInstance().createNewProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName());
+            // // Delete first if dq structure has already constructed.
+            // rootProject.delete(true, true, new NullProgressMonitor());
+            // // create brandly new one.
+            // rootProject = DQStructureManager.getInstance().createNewProject(
+            // org.talend.dataquality.PluginConstant.getRootProjectName());
             // Copy "top level" folders already as projects in TOP/TDQ into this
             // project.
             IResource[] resources = ResourcesPlugin.getWorkspace().getRoot().members();
@@ -64,17 +64,21 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
                 for (IResource resource : resources) {
                     if (resource instanceof IProject
                             && !resource.getName().equals(org.talend.dataquality.PluginConstant.getRootProjectName())) {
-                        IPath destination = null;
-                        IFolder prefixFolder = rootProject.getFolder(DQStructureManager.PREFIX_TDQ + resource.getName());
-                        prefixFolder.create(IResource.FORCE, true, new NullProgressMonitor());
-                        for (IResource rs : ((IProject) resource).members()) {
-                            if (rs.getName().equals(".project")) {
-                                continue;
+                        // Only copy three folders:
+                        if (resource.getName().equals("Data Profiling") || resource.getName().equals("Libraries")
+                                || resource.getName().equals("Metadata")) {
+                            IPath destination = null;
+                            IFolder prefixFolder = rootProject.getFolder(DQStructureManager.PREFIX_TDQ + resource.getName());
+                            prefixFolder.create(IResource.FORCE, true, new NullProgressMonitor());
+                            for (IResource rs : ((IProject) resource).members()) {
+                                if (rs.getName().equals(".project")) {
+                                    continue;
+                                }
+                                destination = prefixFolder.getFolder(rs.getName()).getFullPath();
+                                rs.copy(destination, IResource.FORCE, new NullProgressMonitor());
                             }
-                            destination = prefixFolder.getFolder(rs.getName()).getFullPath();
-                            rs.copy(destination, IResource.FORCE, new NullProgressMonitor());
+                            resource.delete(true, new NullProgressMonitor());
                         }
-                        resource.delete(true, new NullProgressMonitor());
                     }
 
                 }
