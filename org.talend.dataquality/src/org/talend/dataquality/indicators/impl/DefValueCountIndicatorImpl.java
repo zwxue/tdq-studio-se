@@ -179,5 +179,23 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getIntegerValue()
+     * 
+     * ADDED scorreia 2009-04-28 getIntegerValue()
+     */
+    @Override
+    public Long getIntegerValue() {
+        return this.getDefaultValCount();
+    }
+
+    @Override
+    public boolean reset() {
+        this.defaultValCount = DEFAULT_VAL_COUNT_EDEFAULT;
+        return super.reset();
+    }
+
     
 } //DefValueCountIndicatorImpl
