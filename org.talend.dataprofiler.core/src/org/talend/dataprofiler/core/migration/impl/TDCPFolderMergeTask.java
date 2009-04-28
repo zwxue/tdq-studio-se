@@ -12,10 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -24,8 +29,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataquality.PluginConstant;
 
 /**
  * 
@@ -71,7 +79,9 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
 
                 }
             }
-
+            // ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
+            fileContentUpgrade(rootProject);
+            // ~
         } catch (InvocationTargetException e) {
             logger.error(e, e);
         } catch (InterruptedException e) {
@@ -80,6 +90,31 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             logger.error(e, e);
         }
         return false;
+    }
+
+    private void fileContentUpgrade(IProject rootProject) throws CoreException {
+        String[] extensions = { FactoriesUtil.ANA, FactoriesUtil.PROV, FactoriesUtil.REP, "softwaredeployment" };
+        boolean recursive = true;
+        Collection<?> files = FileUtils.listFiles(new File(rootProject.getLocation().toOSString()), extensions, recursive);
+        for (Iterator<?> iterator = files.iterator(); iterator.hasNext();) {
+            File file = (File) iterator.next();
+            if (file != null) {
+                try {
+                    String content = FileUtils.readFileToString(file);
+                    content = StringUtils.replace(content, "/Metadata/", "/" + DQStructureManager.getMetaData() + "/");
+                    content = StringUtils.replace(content, "/Libraries/", "/" + DQStructureManager.getLibraries() + "/");
+                    content = StringUtils.replace(content, "/resource/" + DQStructureManager.getLibraries() + "/", "/resource/"
+                            + PluginConstant.getRootProjectName() + "/" + DQStructureManager.getLibraries() + "/");
+                    content = StringUtils.replace(content, "/Data Profiling/", "/" + DQStructureManager.getDataProfiling() + "/");
+
+                    FileUtils.writeStringToFile(file, content);
+                } catch (IOException e) {
+                    logger.error(e);
+                } catch (Throwable e) {
+                    logger.error(e);
+                }
+            }
+        }
     }
 
     public Date getOrder() {
