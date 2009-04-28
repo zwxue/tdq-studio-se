@@ -198,7 +198,7 @@ public class IndicatorCommonUtil {
                 tempObject = ((RowCountIndicator) indicator).getCount();
                 break;
             case WhereRuleIndicatorEnum:
-                tempObject = ((WhereRuleIndicator) indicator).getCount();
+                tempObject = ((WhereRuleIndicator) indicator).getUserCount();
             default:
             }
             indicatorUnit.setValue(tempObject);
