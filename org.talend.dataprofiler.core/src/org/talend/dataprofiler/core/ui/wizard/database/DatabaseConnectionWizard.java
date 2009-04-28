@@ -50,8 +50,6 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
     private ManagedDriver driver;
 
-    private String driverPathes;
-
     /**
      * Constructor for DatabaseWizard. Analyse Iselection to extract DatabaseConnection and the pathToSave. Start the
      * Lock Strategy.
@@ -61,7 +59,6 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      */
     public DatabaseConnectionWizard(DBConnectionParameter connectionParam) {
         this.connectionParam = connectionParam;
-        this.driverPathes = connectionParam.getDriverPath();
     }
 
     /**
@@ -104,9 +101,10 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     public ModelElement initCWMResourceBuilder() {
         DataProviderBuilder dpBuilder = new DataProviderBuilder();
 
-        if (driverPathes != null) {
+        String driverPath = connectionParam.getDriverPath();
+        if (driverPath != null) {
             LinkedList<String> jars = new LinkedList<String>();
-            for (String driverpath : driverPathes.split(";")) { //$NON-NLS-1$
+            for (String driverpath : driverPath.split(";")) { //$NON-NLS-1$
                 jars.add(driverpath);
             }
 
