@@ -19,6 +19,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
 import org.talend.dq.dqrule.DqRuleBuilder;
@@ -73,6 +74,12 @@ public class NewDQRulesWizard extends AbstractWizard {
         whereRule.setWhereExpression(parameter.getWhereClause());
         whereRule.setCriticalityLevel(CRITICALITY_LEVEL_DEFAULT);
         whereRule.getSqlGenericExpression().add(getExpression());
+        
+        // MOD scorreia 2009-04-29 bug 7151: add the category
+        IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
+        if (ruleIndicatorCategory != null && !whereRule.getCategories().contains(ruleIndicatorCategory)) {
+            whereRule.getCategories().add(ruleIndicatorCategory);
+        }
 
         IFolder folder = parameter.getFolderProvider().getFolderResource();
         return DqRuleWriter.getInstance().createDqRuleFile(whereRule, folder);
