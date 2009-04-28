@@ -26,6 +26,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -103,6 +104,10 @@ public class DuplicateCWMResourceAction extends Action {
         // MOD 2009-01-03 mzhao Support duplicate report files.
         if (file.getFileExtension().equals(FactoriesUtil.REP)) {
             object = RepResourceFileHelper.getInstance().findReport(file);
+        }
+        // MOD 2009-04-28 mzhao Support duplicate dq rules files.
+        if (file.getFileExtension().equals(FactoriesUtil.DQRULE)) {
+            object = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
         }
         return object;
     }
