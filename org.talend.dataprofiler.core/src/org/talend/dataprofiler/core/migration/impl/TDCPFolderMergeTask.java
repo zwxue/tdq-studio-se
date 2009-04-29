@@ -60,28 +60,34 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             // Copy "top level" folders already as projects in TOP/TDQ into this
             // project.
             IResource[] resources = ResourcesPlugin.getWorkspace().getRoot().members();
+
             if (resources != null && resources.length > 0) {
                 for (IResource resource : resources) {
-                    if (resource instanceof IProject
-                            && !resource.getName().equals(org.talend.dataquality.PluginConstant.getRootProjectName())) {
-                        // Only copy three folders:
-                        if (resource.getName().equals("Data Profiling") || resource.getName().equals("Libraries")
-                                || resource.getName().equals("Metadata")) {
-                            IPath destination = null;
-                            IFolder prefixFolder = rootProject.getFolder(DQStructureManager.PREFIX_TDQ + resource.getName());
-                            prefixFolder.create(IResource.FORCE, true, new NullProgressMonitor());
-                            for (IResource rs : ((IProject) resource).members()) {
-                                if (rs.getName().equals(".project")) {
-                                    continue;
-                                }
-                                destination = prefixFolder.getFolder(rs.getName()).getFullPath();
-                                rs.copy(destination, IResource.FORCE, new NullProgressMonitor());
+                    // copy three folders:
+                    if (resource.getName().equals("Data Profiling") || resource.getName().equals("Libraries")
+                            || resource.getName().equals("Metadata")) {
+                        IPath destination = null;
+                        IFolder prefixFolder = rootProject.getFolder(DQStructureManager.PREFIX_TDQ + resource.getName());
+                        prefixFolder.create(IResource.FORCE, true, new NullProgressMonitor());
+                        for (IResource rs : ((IProject) resource).members()) {
+                            if (rs.getName().equals(".project")) {
+                                continue;
                             }
-                            resource.delete(true, new NullProgressMonitor());
+                            destination = prefixFolder.getFolder(rs.getName()).getFullPath();
+                            rs.copy(destination, IResource.FORCE, new NullProgressMonitor());
                         }
+                        resource.delete(true, new NullProgressMonitor());
                     }
-
                 }
+            }
+            // Reporting_db
+            File repPath = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/");
+            if (repPath.exists()) {
+                FileUtils.copyDirectory(repPath, new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString()
+                        + "/" + org.talend.dataquality.PluginConstant.getRootProjectName() + "/" + DQStructureManager.PREFIX_TDQ
+                        + "reporting_db/"));
+                FileUtils.forceDelete(new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString()
+                        + "/reporting_db/"));
             }
             // ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
             fileContentUpgrade(rootProject);
@@ -92,6 +98,10 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             logger.error(e, e);
         } catch (CoreException e) {
             logger.error(e, e);
+        } catch (IOException e) {
+            logger.error(e, e);
+        } catch (Throwable e) {
+            logger.error(e);
         }
         return false;
     }
