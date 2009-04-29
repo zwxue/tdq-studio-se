@@ -17,7 +17,9 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -36,6 +38,13 @@ import orgomg.cwm.resource.relational.enumerations.NullableType;
  * closed by the ColumnBuilder.
  */
 public class ColumnBuilder extends CwmBuilder {
+
+    /**
+     * MOD xqliu 2009-04-29 for debug purpose only.
+     */
+    private static final Map<String, Integer> catalog2NumberOfCalls = new HashMap<String, Integer>();
+
+    private static final boolean debug = false;
 
     /**
      * DOC scorreia ColumnBuilder constructor comment.
@@ -61,13 +70,55 @@ public class ColumnBuilder extends CwmBuilder {
      */
     public List<TdColumn> getColumns(String catalogName, String schemaPattern, String tablePattern, String columnPattern)
             throws SQLException {
-
         List<TdColumn> tableColumns = new ArrayList<TdColumn>();
+        // MOD xqliu 2009-04-29 the following is only for debug purpose
+        if (debug)
+            incrementCount(catalogName, schemaPattern, tablePattern);
+        // ~
 
         // --- add columns to table
-        // MOD scorreia 2009-04-27. Bug 6507: column pattern is an SQL like used to get the column result set.
-        // TODO xqliu handle multiple column pattern as it has been done for the table patterns in the
-        // AbstractTableBuilder class.
+        // MOD xqliu 2009-04-27. Bug 6507: column pattern is an SQL like used to get the column result set.
+        if (columnPattern == null) {
+            addMatchingColumns(catalogName, schemaPattern, tablePattern, columnPattern, tableColumns);
+        } else {
+            String[] patterns = cleanPatterns(columnPattern.split(","));
+            for (String pattern : patterns) {
+                addMatchingColumns(catalogName, schemaPattern, tablePattern, pattern, tableColumns);
+            }
+        }
+        return tableColumns;
+    }
+
+    /**
+     * DOC xqliu Comment method "cleanPatterns". remove the duplicate patterns
+     * 
+     * @param split
+     * @return
+     */
+    private String[] cleanPatterns(String[] split) {
+        ArrayList<String> ret = new ArrayList<String>();
+        for (String s : split) {
+            if (!ret.contains(s)) {
+                ret.add(s);
+            }
+        }
+        return ret.toArray(new String[ret.size()]);
+    }
+
+    /**
+     * Method "addMatchingColumns" creates new columns and add them into the given list of columns. A limit in the
+     * number of column is set to {@value TaggedValueHelper#COLUMN_MAX}
+     * 
+     * @param catalogName
+     * @param schemaPattern
+     * @param tablePattern
+     * @param columnPattern
+     * @param tableColumns
+     * @return the number of added columns
+     * @throws SQLException
+     */
+    private int addMatchingColumns(String catalogName, String schemaPattern, String tablePattern, String columnPattern,
+            List<TdColumn> tableColumns) throws SQLException {
         ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
         int size = 0;
         TdColumn column = null;
@@ -78,7 +129,7 @@ public class ColumnBuilder extends CwmBuilder {
 
             if (size > TaggedValueHelper.COLUMN_MAX) {
                 tableColumns.clear();
-                // add a special column because the column number is to big
+                // add a special column because the column number is too big
                 column.setName(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG);
                 tableColumns.add(column);
                 break;
@@ -87,9 +138,7 @@ public class ColumnBuilder extends CwmBuilder {
 
         // release JDBC resources
         columns.close();
-
-        return tableColumns;
-
+        return size;
     }
 
     /**
@@ -149,4 +198,11 @@ public class ColumnBuilder extends CwmBuilder {
         return colComment;
     }
 
+    private static void incrementCount(String catalog, String schema, String table) {
+        String key = catalog + "." + schema + "." + table;
+        Integer count = catalog2NumberOfCalls.get(key);
+        count = (count != null) ? count + 1 : 1;
+        System.err.println(key + ": " + count);
+        catalog2NumberOfCalls.put(key, count);
+    }
 }

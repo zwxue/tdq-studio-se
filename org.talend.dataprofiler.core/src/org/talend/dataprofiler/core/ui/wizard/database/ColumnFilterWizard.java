@@ -18,7 +18,6 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -119,25 +118,14 @@ public class ColumnFilterWizard extends AbstractWizard {
 
         String columnFilter = this.columnFilterWizardPage.getColumnFilterText().getText();
         if (!this.getOldColumnFilter().equals(columnFilter)) {
-            clearOwnedColumns(this.namedColumnSet);
+            this.namedColumnSet.getFeature().clear();
+            this.namedColumnSet.getOwnedElement().clear();
             clearTaggedValue(tvs, TaggedValueHelper.COLUMN_FILTER);
             addTaggedValue(tvs, TaggedValueHelper.COLUMN_FILTER, columnFilter);
+            return PrvResourceFileHelper.getInstance().save(tdDataProvider).isOk();
         }
 
-        return PrvResourceFileHelper.getInstance().save(tdDataProvider).isOk();
-    }
-
-    private void clearOwnedColumns(NamedColumnSet namedColumnSet) {
-        EList<ModelElement> mes = namedColumnSet.getOwnedElement();
-        int size = mes.size();
-        for (int i = 0; i < size; ++i) {
-            ModelElement me = mes.get(i);
-            if (me instanceof TdColumn) {
-                mes.remove(me);
-                i--;
-                size--;
-            }
-        }
+        return true;
     }
 
     private void addTaggedValue(EList<TaggedValue> taggedValues, String tag, String value) {

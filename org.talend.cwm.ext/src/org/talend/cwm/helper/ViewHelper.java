@@ -61,28 +61,4 @@ public final class ViewHelper {
         return views;
     }
 
-    /**
-     * DOC xqliu Comment method "getViews". ADD xqliu 2009-04-27 bug 6507
-     * 
-     * @param elements
-     * @param viewFilter
-     * @return
-     */
-    public static List<TdView> getViews(Collection<? extends EObject> elements, String viewFilter) {
-        List<TdView> views = new ArrayList<TdView>();
-        boolean filter = (viewFilter == null || "".equals(viewFilter)) ? false : true;
-        for (EObject elt : elements) {
-            TdView view = SwitchHelpers.VIEW_SWITCH.doSwitch(elt);
-            if (view != null) {
-                if (filter) {
-                    if (view.getName().toLowerCase().indexOf(viewFilter.toLowerCase()) > -1) {
-                        views.add(view);
-                    }
-                } else {
-                    views.add(view);
-                }
-            }
-        }
-        return views;
-    }
 }

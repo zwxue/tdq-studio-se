@@ -39,12 +39,13 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
     private String[] tableType;
 
     private boolean columnsRequested = false;
-    
+
     /**
      * MOD scorreia 2009-04-27 for debug purpose only.
      */
     private static final Map<String, Integer> catalog2NumberOfCalls = new HashMap<String, Integer>();
-    private static final boolean debug = true;
+
+    private static final boolean debug = false;
 
     /**
      * DOC scorreia AbstractTableBuilder constructor comment.
@@ -84,17 +85,33 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
         // MOD scorreia 2009-04-27 the following is only for debug purpose
         if (debug)
             incrementCount(catalogName, schemaPattern);
-        // FIXME xqliu: this method seems to be called recursively
+        // ~
         List<T> tables = new ArrayList<T>();
         if (tablePattern == null) { // no pattern
             addMatchingColumnSets(catalogName, schemaPattern, tablePattern, tables);
         } else { // multiple patterns
-            String[] patterns = tablePattern.split(",");
+            String[] patterns = cleanPatterns(tablePattern.split(","));
             for (String pattern : patterns) {
                 addMatchingColumnSets(catalogName, schemaPattern, pattern, tables);
             }
         }
         return tables;
+    }
+
+    /**
+     * DOC xqliu Comment method "cleanPatterns". remove the duplicate patterns
+     * 
+     * @param split
+     * @return
+     */
+    private String[] cleanPatterns(String[] split) {
+        ArrayList<String> ret = new ArrayList<String>();
+        for (String s : split) {
+            if (!ret.contains(s)) {
+                ret.add(s);
+            }
+        }
+        return ret.toArray(new String[ret.size()]);
     }
 
     /**
@@ -118,9 +135,10 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
             T table = createTable(catalogName, schemaPattern, tablesSet);
             tables.add(table);
             size++;
+
             if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
                 tables.clear();
-                // add a special table because the table/view number is to big
+                // add a special table because the table/view number is too big
                 table = createTable();
                 table.setName(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG);
                 tables.add(table);

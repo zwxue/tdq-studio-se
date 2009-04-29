@@ -55,7 +55,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         // get columns from either tables or views.
         ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(this.getParent());
         if (columnSet != null) {
-            List<TdColumn> columnList = ColumnSetHelper.getColumns(columnSet, true);
+            List<TdColumn> columnList = ColumnSetHelper.getColumns(columnSet);
             if (columnList.size() > 0) {
                 if (columnList.size() == 1 && columnList.get(0).getName().equals(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG)) {
                     this.setChildren(null);

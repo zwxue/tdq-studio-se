@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.database;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -25,6 +28,11 @@ import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
  * DOC xqliu class global comment. Detailled comment
  */
 public class ColumnFilterWizardPage extends AbstractWizardPage {
+
+    private static final String MSG_FILTER_VALID = DefaultMessagesImpl.getString("TableViewColumnFilterWizardPage.filterValid");
+
+    private static final String MSG_FILTER_INVALID = DefaultMessagesImpl
+            .getString("TableViewColumnFilterWizardPage.filterInvalid");
 
     private ColumnFilterWizard parent;
 
@@ -85,7 +93,30 @@ public class ColumnFilterWizardPage extends AbstractWizardPage {
         columnFilterText.setText(temp);
         columnFilterText.setLayoutData(gd);
 
-        this.setControl(comp);
+        addFieldsListeners();
 
+        this.setControl(comp);
+    }
+
+    @Override
+    public boolean checkFieldsValue() {
+        String columnFilter = this.columnFilterText.getText();
+        if (columnFilter.indexOf("\\") > -1 || columnFilter.indexOf("/") > -1) {
+            return false;
+        }
+        return true;
+    }
+
+    private void addFieldsListeners() {
+        columnFilterText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                if (checkFieldsValue()) {
+                    updateStatus(IStatus.OK, MSG_FILTER_VALID);
+                } else {
+                    updateStatus(IStatus.ERROR, MSG_FILTER_INVALID);
+                }
+            }
+        });
     }
 }

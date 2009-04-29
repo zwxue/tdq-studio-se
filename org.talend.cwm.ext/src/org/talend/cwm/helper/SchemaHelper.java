@@ -22,7 +22,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -47,19 +46,21 @@ public final class SchemaHelper {
     }
 
     public static List<TdTable> getTables(Schema schema) {
-	    //MOD xqliu 2009-04-27 bug 6507
-        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TABLE_FILTER, schema.getTaggedValue());
-        String tableFilter = tv == null ? null : tv.getValue();
-        return TableHelper.getTables(schema.getOwnedElement(), tableFilter);
+        // MOD xqliu 2009-04-27 bug 6507
+        // TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TABLE_FILTER, schema.getTaggedValue());
+        // String tableFilter = tv == null ? null : tv.getValue();
+        // return TableHelper.getTables(schema.getOwnedElement(), tableFilter);
         // ~
+        return TableHelper.getTables(schema.getOwnedElement());
     }
 
     public static List<TdView> getViews(Schema schema) {
-    	//MOD xqliu 2009-04-27 bug 6507
-        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VIEW_FILTER, schema.getTaggedValue());
-        String viewFilter = tv == null ? null : tv.getValue();
-        return ViewHelper.getViews(schema.getOwnedElement(), viewFilter);
+        // MOD xqliu 2009-04-27 bug 6507
+        // TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VIEW_FILTER, schema.getTaggedValue());
+        // String viewFilter = tv == null ? null : tv.getValue();
+        // return ViewHelper.getViews(schema.getOwnedElement(), viewFilter);
         // ~
+        return ViewHelper.getViews(schema.getOwnedElement());
     }
 
     public static boolean addTables(Collection<TdTable> tables, Schema schema) {

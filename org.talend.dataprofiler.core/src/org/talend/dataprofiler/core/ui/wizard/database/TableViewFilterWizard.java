@@ -95,13 +95,14 @@ public class TableViewFilterWizard extends AbstractWizard {
     @Override
     public boolean performFinish() {
         EList<TaggedValue> tvs = this.packageObj.getTaggedValue();
+        boolean needSave = false;
 
         String tableFilter = this.tableViewFilterWizardPage.getTableFilterText().getText();
         if (!this.getOldTableFilter().equals(tableFilter)) {
             clearOwnedTables(this.packageObj);
             clearTaggedValue(tvs, TaggedValueHelper.TABLE_FILTER);
             addTaggedValue(tvs, TaggedValueHelper.TABLE_FILTER, tableFilter);
-
+            needSave = true;
         }
 
         String viewFilter = this.tableViewFilterWizardPage.getViewFilterText().getText();
@@ -109,9 +110,13 @@ public class TableViewFilterWizard extends AbstractWizard {
             clearOwnedViews(this.packageObj);
             clearTaggedValue(tvs, TaggedValueHelper.VIEW_FILTER);
             addTaggedValue(tvs, TaggedValueHelper.VIEW_FILTER, viewFilter);
+            needSave = true;
         }
 
-        return PrvResourceFileHelper.getInstance().save(tdDataProvider).isOk();
+        if (needSave) {
+            return PrvResourceFileHelper.getInstance().save(tdDataProvider).isOk();
+        }
+        return true;
     }
 
     private void clearOwnedViews(Package pckg) {
