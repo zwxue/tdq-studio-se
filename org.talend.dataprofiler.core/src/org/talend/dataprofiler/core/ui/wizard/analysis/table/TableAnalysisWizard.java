@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IFile;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
-import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
@@ -40,7 +39,7 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  */
 public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
-    private AnalysisMetadataWizardPage analysisMetadataWizardPage = null;
+    private TableAnalysisMetadataWizardPage analysisMetadataWizardPage = null;
 
     private TableAnalysisDPSelectionPage tableAnalysisDPSelectionPage = null;
 
@@ -91,8 +90,10 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     }
 
     public void addPages() {
-        analysisMetadataWizardPage = new AnalysisMetadataWizardPage();
-        addPage(analysisMetadataWizardPage);
+        this.getParameter().setName("");
+
+        analysisMetadataWizardPage = new TableAnalysisMetadataWizardPage();
+        this.addPage(analysisMetadataWizardPage);
 
         if (isShowTableSelectPage()) {
             tableAnalysisDPSelectionPage = new TableAnalysisDPSelectionPage();
@@ -112,8 +113,9 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     @Override
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
-        DependenciesHandler.getInstance().setDependencyOn(analysis, analysis.getContext().getConnection());
-
+        if (analysis.getContext().getConnection() != null) {
+            DependenciesHandler.getInstance().setDependencyOn(analysis, analysis.getContext().getConnection());
+        }
         return super.createAndSaveCWMFile(analysis);
     }
 

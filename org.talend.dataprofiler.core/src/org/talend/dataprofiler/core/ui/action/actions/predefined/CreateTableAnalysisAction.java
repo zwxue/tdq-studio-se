@@ -30,7 +30,7 @@ public class CreateTableAnalysisAction extends AbstractPredefinedTableAnalysisAc
     @Override
     protected TableIndicator[] getPredefinedTableIndicator() {
         IndicatorEnum[] allwedEnumes = new IndicatorEnum[1];
-        allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
+        allwedEnumes[0] = IndicatorEnum.WhereRuleIndicatorEnum;
 
         return composePredefinedTableIndicator(allwedEnumes);
     }
