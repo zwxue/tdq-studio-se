@@ -217,7 +217,7 @@ public final class DQStructureManager {
     }
 
     // MOD mzhao 2009-04-07
-    private static IFolder checkJRXMLFolderExist() {
+    public static IFolder checkJRXMLFolderExist() {
         IFolder folder = ResourceManager.getLibrariesFolder().getFolder(JRXML_REPORT_FOLDER);
         try {
             if (!folder.exists()) {
