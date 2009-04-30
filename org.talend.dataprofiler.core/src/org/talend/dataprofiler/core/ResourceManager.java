@@ -33,6 +33,8 @@ public final class ResourceManager {
 
     public static final String METADATA_FOLDER_NAME = "TDQ_Metadata";
 
+    public static final String REPORTING_DB_FOLDER_NAME = "TDQ_reporting_db";
+
     private ResourceManager() {
     }
 
@@ -84,5 +86,14 @@ public final class ResourceManager {
      */
     public static IFolder getMetadataFolder() {
         return getRootProject().getFolder(METADATA_FOLDER_NAME);
+    }
+
+    /**
+     * DOC bZhou Comment method "getReportingDBFolder".
+     * 
+     * @return
+     */
+    public static IFolder getReportingDBFolder() {
+        return getRootProject().getFolder(REPORTING_DB_FOLDER_NAME);
     }
 }

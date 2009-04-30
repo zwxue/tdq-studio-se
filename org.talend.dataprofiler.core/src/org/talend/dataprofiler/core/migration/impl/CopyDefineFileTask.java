@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -47,6 +48,7 @@ public class CopyDefineFileTask extends AbstractMigrationTask {
 
                 file.copy(bakfile.getFullPath(), true, null);
                 file.delete(true, null);
+                DefinitionHandler.getInstance().setNeedCopy(true);
 
                 return true;
             } catch (Exception e) {

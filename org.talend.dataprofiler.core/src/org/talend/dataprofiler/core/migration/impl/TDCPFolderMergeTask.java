@@ -34,7 +34,6 @@ import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
-import org.talend.dataquality.PluginConstant;
 
 /**
  * 
@@ -84,13 +83,11 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
                 }
             }
             // Reporting_db
-            File repPath = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/");
-            if (repPath.exists()) {
-                FileUtils.copyDirectory(repPath, new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString()
-                        + "/" + org.talend.dataquality.PluginConstant.getRootProjectName() + "/" + DQStructureManager.PREFIX_TDQ
-                        + "reporting_db/"));
-                FileUtils.forceDelete(new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString()
-                        + "/reporting_db/"));
+            String pathName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/";
+            File repFolder = new File(pathName);
+            if (repFolder.exists()) {
+                FileUtils.copyDirectory(repFolder, ResourceManager.getDataProfilingFolder().getLocation().toFile());
+                FileUtils.forceDelete(new File(pathName));
             }
             // ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
             fileContentUpgrade(rootProject);
@@ -121,7 +118,7 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
                     content = StringUtils.replace(content, "/Metadata/", "/" + ResourceManager.METADATA_FOLDER_NAME + "/");
                     content = StringUtils.replace(content, "/Libraries/", "/" + ResourceManager.LIBRARIES_FOLDER_NAME + "/");
                     content = StringUtils.replace(content, "/resource/" + ResourceManager.LIBRARIES_FOLDER_NAME + "/",
-                            "/resource/" + PluginConstant.getRootProjectName() + "/" + ResourceManager.LIBRARIES_FOLDER_NAME
+                            "/resource/" + ResourceManager.getRootProjectName() + "/" + ResourceManager.LIBRARIES_FOLDER_NAME
                                     + "/");
                     content = StringUtils.replace(content, "/Data Profiling/", "/" + ResourceManager.DATA_PROFILING_FOLDER_NAME
                             + "/");
