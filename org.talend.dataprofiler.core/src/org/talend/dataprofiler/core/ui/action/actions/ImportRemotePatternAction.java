@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -33,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
@@ -140,9 +140,7 @@ public class ImportRemotePatternAction extends Action {
     }
 
     private IFolder getFolder(String dest) {
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName())
-                .getFolder(DQStructureManager.getLibraries()).getFolder(dest);
+        return ResourceManager.getLibrariesFolder().getFolder(dest);
     }
 
     /**

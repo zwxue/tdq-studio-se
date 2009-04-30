@@ -22,6 +22,8 @@ public final class PluginChecker {
 
     private static final String TDQ_ID = "org.talend.dataprofiler.core.tdq"; //$NON-NLS-1$
 
+    private static final String TDCP_ID = "org.talend.datacleansing.core"; //$NON-NLS-1$
+
     private PluginChecker() {
 
     }
@@ -40,7 +42,25 @@ public final class PluginChecker {
         return isLoaded;
     }
 
+    /**
+     * DOC bZhou Comment method "isTDQLoaded".
+     * 
+     * use it to test if the platform start by TDQ.
+     * 
+     * @return
+     */
     public static boolean isTDQLoaded() {
         return isPluginLoaded(TDQ_ID);
+    }
+
+    /**
+     * DOC bZhou Comment method "isTDCPLoaded".
+     * 
+     * use it to test if the platform start by TDCP.
+     * 
+     * @return
+     */
+    public static boolean isTDCPLoaded() {
+        return isPluginLoaded(TDCP_ID);
     }
 }

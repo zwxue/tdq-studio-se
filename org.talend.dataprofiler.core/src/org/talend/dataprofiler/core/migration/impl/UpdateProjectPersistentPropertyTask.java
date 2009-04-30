@@ -15,9 +15,9 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
@@ -33,9 +33,10 @@ public class UpdateProjectPersistentPropertyTask extends AbstractMigrationTask {
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#execute()
      */
     public boolean execute() {
-        String[] projects = { DQStructureManager.getDataProfiling(), DQStructureManager.getLibraries(), DQStructureManager.getMetaData() };
+        String[] folderNames = { ResourceManager.DATA_PROFILING_FOLDER_NAME, ResourceManager.LIBRARIES_FOLDER_NAME,
+                ResourceManager.METADATA_FOLDER_NAME };
         try {
-            checkProjectPersistentProperty(projects);
+            checkProjectPersistentProperty(folderNames);
         } catch (CoreException e) {
             ExceptionHandler.process(e);
         }
@@ -49,12 +50,12 @@ public class UpdateProjectPersistentPropertyTask extends AbstractMigrationTask {
      * @param projects
      * @throws CoreException
      */
-    private void checkProjectPersistentProperty(String[] projects) throws CoreException {
-        IProject prjct;
-        for (String project : projects) {
-            prjct = ResourcesPlugin.getWorkspace().getRoot().getProject(project);
-            if (prjct != null && prjct.getPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY) == null) {
-                prjct.setPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY, DQStructureManager.PROJECT_TDQ_PROPERTY);
+    private void checkProjectPersistentProperty(String[] folderNames) throws CoreException {
+        IFolder folder;
+        for (String folderName : folderNames) {
+            folder = ResourceManager.getRootProject().getFolder(folderName);
+            if (folder != null && folder.getPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY) == null) {
+                folder.setPersistentProperty(DQStructureManager.PROJECT_TDQ_KEY, DQStructureManager.PROJECT_TDQ_PROPERTY);
             }
         }
     }

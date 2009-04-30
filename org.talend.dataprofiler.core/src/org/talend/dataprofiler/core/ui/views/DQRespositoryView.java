@@ -58,7 +58,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
@@ -97,10 +97,8 @@ public class DQRespositoryView extends CommonNavigator {
 
     public DQRespositoryView() {
         super();
-        // MOD mzhao 2009-04-09, TDCP do not need structure migration.
-        if (org.talend.dataquality.PluginConstant.isNeedDQStructureChangedMigration()) {
-            CorePlugin.getDefault().doMigrationTaskDQStructureChange();
-        }
+
+        CorePlugin.getDefault().doMigrationTaskDQStructureChange();
         CorePlugin.getDefault().checkDQStructure();
         CorePlugin.getDefault().doMigrationTask();
         CorePlugin.getDefault().setRespositoryView(this);
@@ -192,11 +190,8 @@ public class DQRespositoryView extends CommonNavigator {
                         Analysis analysis = (Analysis) obj;
                         List<RenderedObject> tempList = new ArrayList<RenderedObject>();
                         tempList.add(analysis);
-                        // MOD mzhao 2009-03-13 Feature 6066 Move all folders
-                        // into one project.
-                        IFolder analysesFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
-                                PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
+
+                        IFolder analysesFolder = ResourceManager.getDataProfilingFolder().getFolder(DQStructureManager.ANALYSIS);
                         IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList, analysesFolder).get(0);
 
                         CorePlugin.getDefault()

@@ -23,7 +23,6 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.commands.ActionHandler;
@@ -57,6 +56,7 @@ import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -148,10 +148,7 @@ public class PatternTestView extends ViewPart {
         data.widthHint = 100;
         // data.heightHint = 100;
         dbCombo.setLayoutData(data);
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getMetaData())
-                .getFolder(DQStructureManager.DB_CONNECTIONS);
+        IFolder folder = ResourceManager.getMetadataFolder().getFolder(DQStructureManager.DB_CONNECTIONS);
         listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder, true);
         List<String> items = new ArrayList<String>();
         for (TdDataProvider tdDataProvider : listTdDataProviders) {
@@ -256,9 +253,8 @@ public class PatternTestView extends ViewPart {
                 }
                 // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
                 // project.
-                new CreatePatternAction(ResourcesPlugin.getWorkspace().getRoot().getProject(
-                        org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getLibraries())
-                        .getFolder(DQStructureManager.PATTERNS), ExpressionType.REGEXP, regularText.getText(), language).run();
+                new CreatePatternAction(ResourceManager.getMetadataFolder().getFolder(DQStructureManager.PATTERNS),
+                        ExpressionType.REGEXP, regularText.getText(), language).run();
             }
         });
         createPatternButton.setEnabled(false);
@@ -395,10 +391,7 @@ public class PatternTestView extends ViewPart {
      * DOC rli Comment method "openSQLEditor".
      */
     private void openSQLEditor() {
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        IFolder sourceFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getLibraries())
-                .getFolder(DQStructureManager.SOURCE_FILES);
+        IFolder sourceFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.SOURCE_FILES);
         IFile sqlFile = sourceFolder.getFile("SQL Editor.sql"); //$NON-NLS-1$
         int i = 0;
         while (sqlFile.exists()) {

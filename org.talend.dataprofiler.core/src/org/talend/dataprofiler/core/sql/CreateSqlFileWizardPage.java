@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
@@ -143,7 +144,7 @@ public class CreateSqlFileWizardPage extends WizardPage {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                openFolderSelectionDialog(DQStructureManager.getLibraries(), DQStructureManager.SOURCE_FILES);
+                openFolderSelectionDialog(ResourceManager.LIBRARIES_FOLDER_NAME, DQStructureManager.SOURCE_FILES);
             }
         });
     }

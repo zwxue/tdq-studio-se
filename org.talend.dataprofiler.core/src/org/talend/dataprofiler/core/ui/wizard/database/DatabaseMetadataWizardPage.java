@@ -13,12 +13,10 @@
 package org.talend.dataprofiler.core.ui.wizard.database;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 
@@ -70,7 +68,7 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                openFolderSelectionDialog(DQStructureManager.getMetaData(), DQStructureManager.DB_CONNECTIONS);
+                openFolderSelectionDialog(ResourceManager.METADATA_FOLDER_NAME, DQStructureManager.DB_CONNECTIONS);
             }
         });
 
@@ -79,9 +77,7 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
 
     @Override
     protected IFolder getStoredFolder() {
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into single project.
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
-                PluginConstant.METADATA_PROJECTNAME).getFolder(DQStructureManager.DB_CONNECTIONS);
+        return ResourceManager.getMetadataFolder().getFolder(DQStructureManager.DB_CONNECTIONS);
     }
 
 }

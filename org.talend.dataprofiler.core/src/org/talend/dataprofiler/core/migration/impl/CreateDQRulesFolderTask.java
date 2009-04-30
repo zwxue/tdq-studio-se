@@ -17,9 +17,8 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 
@@ -38,12 +37,7 @@ public class CreateDQRulesFolderTask extends AbstractMigrationTask {
     public boolean execute() {
         try {
             DQStructureManager manager = DQStructureManager.getInstance();
-            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-            // project.
-            IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName());
-            IFolder folder = project.getFolder(DQStructureManager.getLibraries());
-            IFolder createNewFoler = manager.createNewFoler(folder, DQStructureManager.DQ_RULES);
+            IFolder createNewFoler = manager.createNewFoler(ResourceManager.getLibrariesFolder(), DQStructureManager.DQ_RULES);
             createNewFoler.setPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY,
                     DQStructureManager.DQRULES_FOLDER_PROPERTY);
             manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.DQ_RULES_PATH, true, createNewFoler, null);

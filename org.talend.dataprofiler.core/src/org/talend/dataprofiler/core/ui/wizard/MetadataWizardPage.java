@@ -18,8 +18,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -41,7 +39,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
@@ -200,15 +198,14 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     protected void openFolderSelectionDialog(String projectName, String folderName) {
 
         final Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         ArrayList rejectedElements = new ArrayList();
 
         if (projectName != null) {
             // MOD mzhao 2009-03-13 Move all folders into one single project {@link CorePlugin#ROOTPROJECTNAME}
-            IFolder theFolder = root.getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(projectName);
+            IFolder theFolder = ResourceManager.getRootProject().getFolder(projectName);
             IResource[] allFolders = null;
             try {
-                allFolders = root.getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).members();
+                allFolders = ResourceManager.getRootProject().members();
             } catch (CoreException e) {
                 log.error(e, e);
             }
@@ -241,7 +238,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         // dialog.setValidator(validator);
         dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
-        dialog.setInput(root);
+        dialog.setInput(ResourceManager.getRootProject());
         dialog.addFilter(filter);
         dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 

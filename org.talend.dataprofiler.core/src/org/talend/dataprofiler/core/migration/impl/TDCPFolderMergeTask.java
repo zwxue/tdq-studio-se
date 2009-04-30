@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 import org.talend.dataquality.PluginConstant;
@@ -50,8 +51,10 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
     public boolean execute() {
         try {
             // Create one project.
-            IProject rootProject = DQStructureManager.getInstance().createNewProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName());
+            IProject rootProject = ResourceManager.getRootProject();
+            if (!rootProject.exists()) {
+                rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.DEFAULT_PROJECT_NAME);
+            }
             // // Delete first if dq structure has already constructed.
             // rootProject.delete(true, true, new NullProgressMonitor());
             // // create brandly new one.
@@ -115,11 +118,13 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             if (file != null) {
                 try {
                     String content = FileUtils.readFileToString(file);
-                    content = StringUtils.replace(content, "/Metadata/", "/" + DQStructureManager.getMetaData() + "/");
-                    content = StringUtils.replace(content, "/Libraries/", "/" + DQStructureManager.getLibraries() + "/");
-                    content = StringUtils.replace(content, "/resource/" + DQStructureManager.getLibraries() + "/", "/resource/"
-                            + PluginConstant.getRootProjectName() + "/" + DQStructureManager.getLibraries() + "/");
-                    content = StringUtils.replace(content, "/Data Profiling/", "/" + DQStructureManager.getDataProfiling() + "/");
+                    content = StringUtils.replace(content, "/Metadata/", "/" + ResourceManager.METADATA_FOLDER_NAME + "/");
+                    content = StringUtils.replace(content, "/Libraries/", "/" + ResourceManager.LIBRARIES_FOLDER_NAME + "/");
+                    content = StringUtils.replace(content, "/resource/" + ResourceManager.LIBRARIES_FOLDER_NAME + "/",
+                            "/resource/" + PluginConstant.getRootProjectName() + "/" + ResourceManager.LIBRARIES_FOLDER_NAME
+                                    + "/");
+                    content = StringUtils.replace(content, "/Data Profiling/", "/" + ResourceManager.DATA_PROFILING_FOLDER_NAME
+                            + "/");
 
                     FileUtils.writeStringToFile(file, content);
                 } catch (IOException e) {

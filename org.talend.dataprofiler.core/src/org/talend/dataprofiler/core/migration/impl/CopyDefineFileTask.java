@@ -17,10 +17,8 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.eclipse.core.resources.IFolder;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
 
 /**
@@ -35,11 +33,10 @@ public class CopyDefineFileTask extends AbstractMigrationTask {
     private static final String TALEND_DEFINITION_BAK_FILENAME = ".Talend.definition.bak"; //$NON-NLS-1$
 
     public boolean execute() {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        IProject project = root.getProject(DQStructureManager.getLibraries());
+        IFolder libFolder = ResourceManager.getLibrariesFolder();
 
-        IFile file = project.getFile(TALEND_DEFINITION_FILENAME);
-        IFile bakfile = project.getFile(TALEND_DEFINITION_BAK_FILENAME);
+        IFile file = libFolder.getFile(TALEND_DEFINITION_FILENAME);
+        IFile bakfile = libFolder.getFile(TALEND_DEFINITION_BAK_FILENAME);
 
         if (file.exists()) {
             try {
@@ -49,6 +46,7 @@ public class CopyDefineFileTask extends AbstractMigrationTask {
                 }
 
                 file.copy(bakfile.getFullPath(), true, null);
+                file.delete(true, null);
 
                 return true;
             } catch (Exception e) {

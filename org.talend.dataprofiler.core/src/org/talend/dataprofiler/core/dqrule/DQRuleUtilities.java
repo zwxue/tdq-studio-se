@@ -15,11 +15,9 @@ package org.talend.dataprofiler.core.dqrule;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
@@ -77,9 +75,7 @@ public final class DQRuleUtilities {
      */
     public static boolean isLibraiesSubfolder(IFolder folder, String... subs) {
         for (String sub : subs) {
-            IProject defaultRootProjectFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName());
-            IPath path = defaultRootProjectFolder.getFolder(DQStructureManager.getLibraries()).getFullPath();
+            IPath path = ResourceManager.getLibrariesFolder().getFullPath();
             path = path.append(sub);
             IPath fullPath = folder.getFullPath();
             boolean prefixOf = path.isPrefixOf(fullPath);

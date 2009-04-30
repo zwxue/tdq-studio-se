@@ -16,12 +16,12 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -65,7 +65,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-                openFolderSelectionDialog(DQStructureManager.getLibraries(), DQStructureManager.PATTERNS);
+                openFolderSelectionDialog(ResourceManager.LIBRARIES_FOLDER_NAME, DQStructureManager.PATTERNS);
             }
         });
         if (getControl() != null) {
@@ -100,9 +100,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
     @Override
     protected IFolder getStoredFolder() {
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName())
-                .getFolder(DQStructureManager.getLibraries()).getFolder(DQStructureManager.PATTERNS);
+        return ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.PATTERNS);
     }
 
 }

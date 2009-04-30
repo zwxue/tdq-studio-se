@@ -15,11 +15,11 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
@@ -49,9 +49,7 @@ public class TableContentProvider extends DQRepositoryViewContentProvider {
             } catch (CoreException e) {
                 log.error("Can't get the children of container:" + container.getLocation());
             }
-            if (container.equals(ResourcesPlugin.getWorkspace().getRoot().getProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getMetaData())
-                    .getFolder(DQStructureManager.DB_CONNECTIONS))) {
+            if (container.equals(ResourceManager.getMetadataFolder().getFolder(DQStructureManager.DB_CONNECTIONS))) {
                 ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
             }
             return members;

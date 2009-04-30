@@ -21,44 +21,32 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.utils.ProductVersion;
 
 /**
  * DOC bzhou class global comment. Detailled comment
  */
-public class WorkspaceVersionHelper {
+public final class WorkspaceVersionHelper {
 
     protected static Logger log = Logger.getLogger(WorkspaceVersionHelper.class);
 
     public static final String VERSION = "version"; //$NON-NLS-1$
 
+    private WorkspaceVersionHelper() {
+
+    }
+
     /**
-     * 
-     * MOD mzhao Get version file
+     * DOC bZhou Comment method "getVersionFile".
      * 
      * @return
      */
     public static IFile getVersionFile() {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        // Try to find from /Libraries/.version.txt
-        IPath versionFilePath = Path.fromOSString(root.getFullPath() + File.separator + "Libaries" + File.separator
-                + PluginConstant.VERSION_FILE_PATH);
-        IFile versionFile = root.getFile(versionFilePath);
-        if (!versionFile.exists()) {
-            versionFilePath = Path.fromOSString(root.getFullPath() + File.separator
-                    + org.talend.dataquality.PluginConstant.getRootProjectName() + File.separator
-                    + DQStructureManager.getLibraries() + File.separator + PluginConstant.VERSION_FILE_PATH);
-            versionFile = root.getFile(versionFilePath);
-        }
-        return versionFile;
+        return ResourceManager.getLibrariesFolder().getFile(PluginConstant.VERSION_FILE_PATH);
     }
 
     /**

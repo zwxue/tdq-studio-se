@@ -19,6 +19,7 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -70,10 +71,11 @@ public final class ColumnIndicatorRule {
             // if (dataminingType == DataminingType.NOMINAL) {
             return true;
         case DefValueCountIndicatorEnum:
-            if (column.getInitialValue().getBody() != null) {
+            Expression initialValue = column.getInitialValue();
+            if (initialValue != null && initialValue.getBody() != null) {
                 // MOD scorreia 2009-04-21 bug 6979
                 // non nullable numeric column give a non null default value as ''
-                return column.getInitialValue().getBody().length() != 0 || Java2SqlType.isTextInSQL(javaType);
+                return initialValue.getBody().length() != 0 || Java2SqlType.isTextInSQL(javaType);
             }
 
             break;

@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
 import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
@@ -47,7 +48,7 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
-                IPath path = new Path(DQStructureManager.getLibraries());
+                IPath path = new Path(ResourceManager.LIBRARIES_FOLDER_NAME);
                 path = path.append(DQStructureManager.SOURCE_FILES);
                 IPath fullPath = ((IFolder) obj).getFullPath();
                 if (path.isPrefixOf(fullPath)) {

@@ -30,7 +30,6 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -49,6 +48,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -147,11 +147,8 @@ public class ChangePerspectiveAction extends Action {
     public void activeData() {
         // PTODO qzhang switch to DB Discovery
         if (SE_ID.equals(perspectiveId)) {
-            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-            // project.
-            IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getMetaData())
-                    .getFolder(DQStructureManager.DB_CONNECTIONS);
+
+            IFolder folder = ResourceManager.getMetadataFolder().getFolder(DQStructureManager.DB_CONNECTIONS);
             List<TdDataProvider> listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder, true);
             SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
             AliasManager aliasManager = default1.getAliasManager();

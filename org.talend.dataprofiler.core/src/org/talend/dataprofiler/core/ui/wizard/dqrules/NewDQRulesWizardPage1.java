@@ -16,11 +16,11 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -51,7 +51,7 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                openFolderSelectionDialog(DQStructureManager.getLibraries(), DQStructureManager.DQ_RULES);
+                openFolderSelectionDialog(ResourceManager.LIBRARIES_FOLDER_NAME, DQStructureManager.DQ_RULES);
             }
         });
         if (getControl() != null) {
@@ -72,8 +72,7 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
 
     @Override
     protected IFolder getStoredFolder() {
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(DQStructureManager.getLibraries()).getFolder(
-                DQStructureManager.DQ_RULES);
+        return ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.DQ_RULES);
     }
 
 }

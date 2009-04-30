@@ -50,6 +50,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
@@ -234,7 +235,7 @@ public class RenameSqlFileAction extends Action {
                     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
                     ArrayList rejectedElements = new ArrayList();
 
-                    IProject theProject = root.getProject(DQStructureManager.getLibraries());
+                    IProject theProject = root.getProject(ResourceManager.LIBRARIES_FOLDER_NAME);
                     IProject[] allProjects = root.getProjects();
                     for (int i = 0; i < allProjects.length; i++) {
                         if (!allProjects[i].equals(theProject)) {

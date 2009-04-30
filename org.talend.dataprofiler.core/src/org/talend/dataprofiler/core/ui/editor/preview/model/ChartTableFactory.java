@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -37,6 +36,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
@@ -220,9 +220,7 @@ public final class ChartTableFactory {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
         String query = itemEntity.getQuery();
         String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getLibraries())
-                .getFolder(DQStructureManager.PATTERNS);
+        IFolder folder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.PATTERNS);
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 

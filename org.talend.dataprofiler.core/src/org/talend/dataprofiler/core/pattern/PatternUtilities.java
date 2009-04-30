@@ -23,7 +23,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -37,6 +36,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -82,8 +82,7 @@ public final class PatternUtilities {
     public static boolean isLibraiesSubfolder(IFolder folder, String... subs) {
         for (String sub : subs) {
             // MOD mzhao 2009-04-02,DQ repository structure changed.
-            IPath path = new Path(org.talend.dataquality.PluginConstant.getRootProjectName() + File.separator
-                    + DQStructureManager.getLibraries());
+            IPath path = new Path(ResourceManager.getRootProjectName() + File.separator + ResourceManager.LIBRARIES_FOLDER_NAME);
             path = path.append(sub);
             IPath fullPath = folder.getFullPath();
             boolean prefixOf = path.isPrefixOf(fullPath);
@@ -287,12 +286,9 @@ public final class PatternUtilities {
 
     private static List<IFile> getAllPatternFiles() {
         List<IFile> patternFiles = new ArrayList<IFile>();
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        IProject libProject = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName());
 
-        IFolder pfolder = libProject.getFolder(DQStructureManager.getLibraries()).getFolder(DQStructureManager.PATTERNS);
-        IFolder sfolder = libProject.getFolder(DQStructureManager.getLibraries()).getFolder(DQStructureManager.SQL_PATTERNS);
+        IFolder pfolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.PATTERNS);
+        IFolder sfolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.SQL_PATTERNS);
 
         Set<IFile> list = new HashSet<IFile>();
         patternFiles.addAll(getNestedPatternFiles(list, pfolder));

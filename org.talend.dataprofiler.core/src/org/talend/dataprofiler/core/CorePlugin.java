@@ -24,6 +24,7 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -58,14 +59,6 @@ import org.talend.utils.sugars.TypedReturnCode;
 public class CorePlugin extends AbstractUIPlugin {
 
     protected static Logger log = Logger.getLogger(CorePlugin.class);
-
-    private static final String DRIVERPATHS = "DRIVERPATHS"; //$NON-NLS-1$
-
-    private static final String DRIVERNAME = "DRIVERNAME"; //$NON-NLS-1$
-
-    private static final String DRIVERURL = "DRIVERURL"; //$NON-NLS-1$
-
-    public static final String DEFAULT_PROJECT_NAME = "TOP_DEFAULT_PRJ";
 
     private DQRespositoryView respositoryView;
 
@@ -154,34 +147,6 @@ public class CorePlugin extends AbstractUIPlugin {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
 
-    /**
-     * DOC Zqin Comment method "setUsed". MOD zhao 2009-03-20 feture 6066
-     * 
-     * @param isUsed
-     */
-    public void setUsed(boolean isUsed, String projectName) {
-        this.getPreferenceStore().setValue(PluginConstant.PROJECTCREATED_FLAG + projectName, isUsed);
-
-    }
-
-    /**
-     * DOC Zqin Comment method "isUsed". MOD mzhao 2009-03-20 feature 6066
-     * 
-     * @return
-     */
-    public boolean isUsed(String projectName) {
-        return this.getPreferenceStore().getBoolean(PluginConstant.PROJECTCREATED_FLAG + projectName);
-    }
-
-    /**
-     * DOC bZhou Comment method "isRunStandalone".
-     * 
-     * @return
-     */
-    public boolean isRunStandalone() {
-        return DEFAULT_PROJECT_NAME.equals(org.talend.dataquality.PluginConstant.getRootProjectName());
-    }
-
     // public void loadExternalDriver(String driverPaths, String driverName,
     // String url) {
     // String[] driverJarPath = driverPaths.split(";");
@@ -199,11 +164,32 @@ public class CorePlugin extends AbstractUIPlugin {
     // }
 
     public void checkDQStructure() {
-        // MOD mzhao 2009-03-20,Feature 6066, Check weather project created or not by project name.
-        if (!getDefault().isUsed(org.talend.dataquality.PluginConstant.getRootProjectName())) {
+
+        if (isNeedCreateStructure()) {
             DQStructureManager manager = DQStructureManager.getInstance();
-            getDefault().setUsed(manager.createDQStructure(), org.talend.dataquality.PluginConstant.getRootProjectName());
+            if (!manager.createDQStructure()) {
+                log.error("Failed to create structure of TDQ!");
+            }
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "isNeedCreateStructure".
+     * 
+     * @return false if not needed.
+     */
+    public boolean isNeedCreateStructure() {
+        IProject rootProject = ResourceManager.getRootProject();
+        if (!rootProject.exists()) {
+            return true;
+        } else {
+            if (!ResourceManager.getDataProfilingFolder().exists() || !ResourceManager.getLibrariesFolder().exists()
+                    || !ResourceManager.getMetadataFolder().exists()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -344,6 +330,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 // MOD mzhao 2009-04-02, Do migration for dq structure before CREATE DQStructure and before other
                 // migrations.
                 if (!(task instanceof TDCPFolderMergeTask)) {
+                    log.warn("now exectuting the task: " + task.getClass().getName());
                     task.execute();
                 }
             }

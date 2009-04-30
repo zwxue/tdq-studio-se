@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -55,6 +54,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -83,8 +83,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private List<ColumnSet> currentCheckedColumnSet = new ArrayList<ColumnSet>();
 
-    private IFolder metadataFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-            org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(PluginConstant.METADATA_PROJECTNAME);
+    private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
     public ColumnsSelectionDialog(Shell parent, String title, List<Column> columnList, String message) {
         super(parent, message);
@@ -527,11 +526,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 } catch (CoreException e) {
                     log.error("Can't get the children of container:" + container.getLocation());
                 }
-                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-                // project.
-                if (container.equals(ResourcesPlugin.getWorkspace().getRoot().getProject(
-                        org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getMetaData())
-                        .getFolder(DQStructureManager.DB_CONNECTIONS))) {
+
+                if (container.equals(metadataFolder.getFolder(DQStructureManager.DB_CONNECTIONS))) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
                 return members;

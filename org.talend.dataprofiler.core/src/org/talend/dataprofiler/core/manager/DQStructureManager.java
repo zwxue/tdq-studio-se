@@ -44,6 +44,7 @@ import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
@@ -84,26 +85,6 @@ public final class DQStructureManager {
 
     // MOD xqliu 2009-02-14 bug 6015
     public static final String DQ_RULES = DefaultMessagesImpl.getString("DQStructureManager.dqRules"); //$NON-NLS-1$
-
-    private static String libraries = DefaultMessagesImpl.getString("DQStructureManager.libraries"); //$NON-NLS-1$
-
-    public static String getLibraries() {
-        return PREFIX_TDQ + libraries;
-    }
-
-    private static String metaData = DefaultMessagesImpl.getString("DQStructureManager.metadata"); //$NON-NLS-1$
-
-    public static String getMetaData() {
-        // MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-        return PREFIX_TDQ + metaData;
-    }
-
-    // Not set final for later add prefix when started as TDCP.
-    private static String dataProfiling = DefaultMessagesImpl.getString("DQStructureManager.data_Profiling"); //$NON-NLS-1$
-
-    public static String getDataProfiling() {
-        return PREFIX_TDQ + dataProfiling;
-    }
 
     public static final String ANALYSIS = DefaultMessagesImpl.getString("DQStructureManager.analyses"); //$NON-NLS-1$
 
@@ -172,20 +153,21 @@ public final class DQStructureManager {
 
         Plugin plugin = CorePlugin.getDefault();
         try {
-            // ~ MOD mzhao 2009-03-13 Feature:6066, Put TDQ/TOP folders in one
-            // project.
-            IProject rootProject = createNewProject(org.talend.dataquality.PluginConstant.getRootProjectName());
+
+            IProject rootProject = ResourceManager.getRootProject();
+            if (!rootProject.exists()) {
+                rootProject = createNewProject(ResourceManager.DEFAULT_PROJECT_NAME);
+            }
+
             // create "Data Profiling" project
-            // MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-            IFolder dataProfilingFolder = this.createNewFoler(rootProject, getDataProfiling());
+            IFolder dataProfilingFolder = this.createNewFoler(rootProject, ResourceManager.DATA_PROFILING_FOLDER_NAME);
             IFolder createNewFoler = this.createNewFoler(dataProfilingFolder, ANALYSIS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, ANALYSIS_FOLDER_PROPERTY);
             createNewFoler = this.createNewFoler(dataProfilingFolder, REPORTS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, REPORT_FOLDER_PROPERTY);
 
             // create "Libraries" project
-            // MOD mzhao 2009-3-17 Add tdq prefix when launch as TDCP.
-            IFolder librariesFoler = this.createNewFoler(rootProject, getLibraries());
+            IFolder librariesFoler = this.createNewFoler(rootProject, ResourceManager.LIBRARIES_FOLDER_NAME);
             createNewFoler = this.createNewFoler(librariesFoler, PATTERNS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, PATTERNS_FOLDER_PROPERTY);
             // check version File
@@ -222,7 +204,7 @@ public final class DQStructureManager {
             // MOD mzhao 2009-04-07, create jrxml folder.
             checkJRXMLFolderExist();
             // create "Metadata" project
-            IFolder metadataFolder = this.createNewFoler(rootProject, getMetaData());
+            IFolder metadataFolder = this.createNewFoler(rootProject, ResourceManager.METADATA_FOLDER_NAME);
             createNewFoler = this.createNewFoler(metadataFolder, DB_CONNECTIONS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DBCONNECTION_FOLDER_PROPERTY);
             // ~
@@ -236,9 +218,7 @@ public final class DQStructureManager {
 
     // MOD mzhao 2009-04-07
     private static IFolder checkJRXMLFolderExist() {
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getLibraries())
-                .getFolder(JRXML_REPORT_FOLDER);
+        IFolder folder = ResourceManager.getLibrariesFolder().getFolder(JRXML_REPORT_FOLDER);
         try {
             if (!folder.exists()) {
                 folder.create(false, true, null);

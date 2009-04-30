@@ -21,7 +21,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -53,6 +52,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -232,11 +232,7 @@ public final class DQStructureComparer {
      * @return IFile
      */
     private static IFile getFile(String fileName) {
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one single
-        // project.
-        IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getMetaData())
-                .getFolder(DQStructureManager.DB_CONNECTIONS);
+        IFolder folder = ResourceManager.getMetadataFolder().getFolder(DQStructureManager.DB_CONNECTIONS);
         IFile file = folder.getFile(fileName);
         return file;
     }

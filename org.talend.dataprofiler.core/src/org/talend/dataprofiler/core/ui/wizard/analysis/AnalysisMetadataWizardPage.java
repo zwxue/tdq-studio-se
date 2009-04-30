@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -22,8 +21,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
@@ -94,7 +92,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                openFolderSelectionDialog(DQStructureManager.getDataProfiling(), DQStructureManager.ANALYSIS);
+                openFolderSelectionDialog(ResourceManager.DATA_PROFILING_FOLDER_NAME, DQStructureManager.ANALYSIS);
             }
         });
 
@@ -113,9 +111,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     @Override
     protected IFolder getStoredFolder() {
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into single project.
-        return ResourcesPlugin.getWorkspace().getRoot().getProject(org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(
-                PluginConstant.DATA_PROFILING_PROJECTNAME).getFolder(DQStructureManager.ANALYSIS);
+        return ResourceManager.getDataProfilingFolder().getFolder(DQStructureManager.ANALYSIS);
     }
 
 }

@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -24,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -61,9 +61,7 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
         cViewer = new ContainerCheckedTreeViewer(container, SWT.NONE);
         cViewer.setLabelProvider(new DQRuleLabelProvider());
         cViewer.setContentProvider(new WorkbenchContentProvider());
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        cViewer.setInput(ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getLibraries()));
+        cViewer.setInput(ResourceManager.getLibrariesFolder());
         cViewer.addFilter(new ViewerFilter() {
 
             @Override

@@ -18,8 +18,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -63,6 +61,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -372,10 +371,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
         CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
                 new WorkbenchContentProvider());
-        // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one project.
-        IProject defaultPatternFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                org.talend.dataquality.PluginConstant.getRootProjectName());
-        dialog.setInput(defaultPatternFolder.getFolder(DQStructureManager.getLibraries()));
+
+        dialog.setInput(ResourceManager.getLibrariesFolder());
         dialog.setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
@@ -993,11 +990,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 WhereRuleIndicator indicator = (WhereRuleIndicator) indicatorUnit.getIndicator();
                 WhereRule whereRule = (WhereRule) indicator.getIndicatorDefinition();
-                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-                // project.
-                IFolder whereRuleFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                        org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getLibraries())
-                        .getFolder(DQStructureManager.DQ_RULES);
+                IFolder whereRuleFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.DQ_RULES);
                 IFile file = DQRuleResourceFileHelper.getInstance()
                         .getWhereRuleFile(whereRule, new IFolder[] { whereRuleFolder });
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

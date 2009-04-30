@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -27,7 +26,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 
@@ -46,8 +45,7 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
 
     private boolean multiSelect;
 
-    private IFolder metadataFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-            org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(PluginConstant.METADATA_PROJECTNAME);
+    private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
     public AnalysisDPSelectionPage(String labText, AdapterFactoryContentProvider contentProvider) {
         init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$

@@ -15,35 +15,29 @@ package org.talend.dataquality;
 
 /**
  * 
- * DOC mzhao Plugin constants. This class is originally developed for handle
- * TDCP launch issues. As root project name must defined at "low level plugin".
+ * DOC mzhao Plugin constants. This class is originally developed for handle TDCP launch issues. As root project name
+ * must defined at "low level plugin".
  */
 public final class PluginConstant {
-	// MOD mzhao 2009-03-13 TDQ/TOP root project
-	private static String rootProjectName;
-	// MOD mzhao 2009-04-09
-	private static boolean isNeedDQStructureChangedMigration = true;
-	
-	/**
+
+    // MOD mzhao 2009-03-13 TDQ/TOP root project
+    private static String rootProjectName;
+
+    /**
      * Default value used in frequency tables.
      */
     public static final int DEFAULT_TOP_N = 10;
 
-	public static boolean isNeedDQStructureChangedMigration() {
-		return isNeedDQStructureChangedMigration;
-	}
+    private PluginConstant() {
 
-	public static void setNeedDQStructureChangedMigration(
-			boolean isNeedDQStructureChangedMigration) {
-		PluginConstant.isNeedDQStructureChangedMigration = isNeedDQStructureChangedMigration;
-	}
+    }
 
-	public static String getRootProjectName() {
-		return rootProjectName;
-	}
+    public static String getRootProjectName() {
+        return rootProjectName;
+    }
 
-	public static void setRootProjectName(String rootProjectName) {
-		PluginConstant.rootProjectName = rootProjectName;
-	}
+    public static void setRootProjectName(String rootProjectName) {
+        PluginConstant.rootProjectName = rootProjectName;
+    }
 
 }

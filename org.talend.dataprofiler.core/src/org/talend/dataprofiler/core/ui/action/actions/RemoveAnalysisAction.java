@@ -21,7 +21,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
@@ -32,6 +31,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -109,11 +109,8 @@ public class RemoveAnalysisAction extends Action {
 
                 RepResourceFileHelper.getInstance().save(report);
             }
-            // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
-            // project.
-            IFolder reportsFolder = ResourcesPlugin.getWorkspace().getRoot().getProject(
-                    org.talend.dataquality.PluginConstant.getRootProjectName()).getFolder(DQStructureManager.getDataProfiling())
-                    .getFolder(DQStructureManager.REPORTS);
+
+            IFolder reportsFolder = ResourceManager.getDataProfilingFolder().getFolder(DQStructureManager.REPORTS);
             try {
                 reportsFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {
