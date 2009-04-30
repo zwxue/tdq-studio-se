@@ -452,10 +452,14 @@ public final class DomainHelper {
         pattern.setName(type.label);
         pattern.getComponents().add(tableFilter);
         domain.getPatterns().add(pattern);
-        if (PatternType.EXPECTED_VALUE.compareTo(type) == 0) {
-            // store the pattern within the domain
-            domain.getOwnedElement().add(pattern);
-        }
+
+        // if (PatternType.EXPECTED_VALUE.compareTo(type) == 0) {
+        // // store the pattern within the domain
+        // domain.getOwnedElement().add(pattern);
+        // }
+
+        // FIXME for 7081, please check I let all pattern to store, is right or not?
+        domain.getOwnedElement().add(pattern);
     }
 
     /**
