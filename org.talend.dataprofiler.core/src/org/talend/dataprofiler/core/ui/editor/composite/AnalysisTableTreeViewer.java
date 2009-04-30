@@ -268,8 +268,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
-                TreeItem item = tree.getSelection()[0];
-                if (item != null) {
+                TreeItem[] treeSelection = tree.getSelection();
+
+                if (treeSelection.length > 0) {
+                    TreeItem item = treeSelection[0];
                     Object indicatorobj = item.getData(INDICATOR_UNIT_KEY);
                     Object tableobj = item.getData(TABLE_INDICATOR_KEY);
                     if (tableobj != null && indicatorobj == null) {
