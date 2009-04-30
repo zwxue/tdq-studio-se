@@ -5,7 +5,6 @@
  */
 package org.talend.dataquality.indicators;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -332,9 +331,11 @@ public interface Indicator extends ModelElement {
     /**
      * <!-- begin-user-doc -->
      * 
-     * Returns the integer value if the indicator is an integer valued indicator. Can return null.
+     * Returns the integer value if the indicator is an integer valued indicator. Can return null. This method must be
+     * implemented in order to store the value in the datamart.
      * 
      * <!-- end-user-doc -->
+     * 
      * @model kind="operation"
      * @generated
      */
@@ -343,9 +344,11 @@ public interface Indicator extends ModelElement {
     /**
      * <!-- begin-user-doc -->
      * 
-     * Returns the real value if the indicator is a real valued indicator. Can return null.
+     * Returns the real value if the indicator is a real valued indicator. Can return null. This method must be
+     * implemented in order to store the value in the datamart.
      * 
      * <!-- end-user-doc -->
+     * 
      * @model kind="operation"
      * @generated
      */

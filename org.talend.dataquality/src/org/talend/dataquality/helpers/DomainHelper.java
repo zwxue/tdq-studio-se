@@ -441,37 +441,20 @@ public final class DomainHelper {
     }
 
     /**
-     * DOC scorreia Comment method "addPatternToDomain".
+     * Method "addPatternToDomain" creates a Pattern object with the given expression and stores it in the given domain.
+     * Beware that it is also added to the owned elements of the Domain. This means that is contained in the domain and
+     * cannot be shared among several domains.
      * 
      * @param domain
      * @param tableFilter
      * @param tablePattern
      */
     private static void addPatternToDomain(Domain domain, RegularExpression tableFilter, String tablePattern, PatternType type) {
-        Pattern pattern = createPattern(tablePattern);
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         pattern.setName(type.label);
         pattern.getComponents().add(tableFilter);
         domain.getPatterns().add(pattern);
-
-        // if (PatternType.EXPECTED_VALUE.compareTo(type) == 0) {
-        // // store the pattern within the domain
-        // domain.getOwnedElement().add(pattern);
-        // }
-
-        // FIXME for 7081, please check I let all pattern to store, is right or not?
         domain.getOwnedElement().add(pattern);
-    }
-
-    /**
-     * DOC scorreia Comment method "createPattern".
-     * 
-     * @param tablePattern
-     * @return
-     */
-    private static Pattern createPattern(String tablePattern) {
-        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
-        pattern.getComponents().add(BooleanExpressionHelper.createRegularExpression(null, tablePattern));
-        return pattern;
     }
 
     /**

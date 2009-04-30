@@ -25,9 +25,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
-import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.i18n.Messages;
@@ -75,17 +73,6 @@ public class AnalysisWriter {
             for (Domain domain : dataFilter) {
                 if (!resourceContents.contains(domain)) {
                     resourceContents.add(domain);
-
-                    // --- save pattern filters
-                    if (AnalysisType.CONNECTION.compareTo(AnalysisHelper.getAnalysisType(analysis)) == 0) {
-                        List<Pattern> oldPatterns = DomainHelper.getPatterns(resourceContents);
-                        resourceContents.removeAll(oldPatterns);
-
-                        EList<Pattern> patterns = domain.getPatterns();
-                        for (Pattern pattern : patterns) {
-                            domain.getOwnedElement().add(pattern);
-                        }
-                    }
                 }
             }
         }
