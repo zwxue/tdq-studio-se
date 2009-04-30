@@ -13,7 +13,10 @@
 package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -45,7 +48,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -68,6 +70,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
+import org.talend.dataprofiler.core.ui.dialog.IndicatorCheckedTreeSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -90,6 +93,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -125,6 +129,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     private TableIndicator[] tableIndicators;
 
+    // ADD xqliu 2009-04-30 bug 6808
+    private Map<Object, TreeItem> indicatorTreeItemMap;
+
     /**
      * DOC xqliu AnalysisTableTreeViewer constructor comment.
      * 
@@ -133,6 +140,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     public AnalysisTableTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
+        // ADD xqliu 2009-04-30 bug 6808
+        indicatorTreeItemMap = new HashMap<Object, TreeItem>();
     }
 
     /**
@@ -342,6 +351,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                         setElements(tableIndicators);
                     } else {
                         removeItemBranch(treeItem);
+                        indicatorTreeItemMap.remove(tableIndicator);
                     }
                 }
             });
@@ -353,6 +363,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 createIndicatorItems(treeItem, tableIndicator.getIndicatorUnits());
             }
             treeItem.setExpanded(true);
+            // ADD xqliu 2009-04-30 bug 6808
+            this.indicatorTreeItemMap.put(tableIndicator, treeItem);
         }
         this.setDirty(true);
     }
@@ -368,10 +380,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         //            addDQRuleBtn.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.addDQRule")); //$NON-NLS-1$
         // addDQRuleBtn.pack();
         // addDQRuleBtn.addSelectionListener(new SelectionAdapter() {
-
-        CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
+        // MOD xqliu 2009-04-30 bug 6808
+        IndicatorCheckedTreeSelectionDialog dialog = new IndicatorCheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
                 new WorkbenchContentProvider());
-
         dialog.setInput(ResourceManager.getLibrariesFolder());
         dialog.setValidator(new ISelectionStatusValidator() {
 
@@ -415,8 +426,14 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         dialog.setMessage(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqrules")); //$NON-NLS-1$
         dialog.setSize(80, 30);
         dialog.create();
+        // MOD xqliu 2009-04-30 bug 6808
+        IFolder whereRuleFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.DQ_RULES);
+        Object[] ownedWhereRuleFiles = getOwnedWhereRuleFiles(tableIndicator, whereRuleFolder);
+        dialog.setCheckedElements(ownedWhereRuleFiles);
         if (dialog.open() == Window.OK) {
-            for (Object obj : dialog.getResult()) {
+            removeUncheckedWhereRuleIndicator(ownedWhereRuleFiles, dialog.getResult(), tableIndicator, whereRuleFolder);
+            Object[] results = clearAddedResult(ownedWhereRuleFiles, dialog.getResult());
+            for (Object obj : results) {
                 if (obj instanceof IFile) {
                     IFile file = (IFile) obj;
                     TableIndicatorUnit addIndicatorUnit = DQRuleUtilities
@@ -426,12 +443,99 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                         setDirty(true);
                     } else {
                         WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-                        MessageUI.openError("WhereRule: " + whereRule.getName()
-                                + "\n\nThis indicator is already selected for this table.");
+                        MessageUI.openError("Error occurred when add WhereRule: " + whereRule.getName());
                     }
                 }
             }
         }
+        // ~
+    }
+
+    /**
+     * DOC xqliu Comment method "removeUncheckedWhereRuleIndicator". ADD xqliu 2009-04-30 bug 6808
+     * 
+     * @param ownedWhereRuleFiles
+     * @param results
+     * @param tableIndicator
+     * @param whereRuleFolder
+     */
+    private void removeUncheckedWhereRuleIndicator(Object[] ownedWhereRuleFiles, Object[] results, TableIndicator tableIndicator,
+            IFolder whereRuleFolder) {
+        ArrayList removeList = new ArrayList();
+        for (Object file : ownedWhereRuleFiles) {
+            boolean remove = true;
+            for (Object result : results) {
+                if (file.equals(result)) {
+                    remove = false;
+                    break;
+                }
+            }
+            if (remove) {
+                removeList.add(file);
+            }
+        }
+        TableIndicatorUnit[] indicatorUnits = tableIndicator.getIndicatorUnits();
+        for (TableIndicatorUnit unit : indicatorUnits) {
+            IndicatorDefinition indicatorDefinition = unit.getIndicator().getIndicatorDefinition();
+            if (indicatorDefinition instanceof WhereRule) {
+                WhereRule wr = (WhereRule) indicatorDefinition;
+                IFile whereRuleFile = DQRuleResourceFileHelper.getInstance().getWhereRuleFile(wr,
+                        new IFolder[] { whereRuleFolder });
+                for (Object obj : removeList) {
+                    IFile file = (IFile) obj;
+                    if (whereRuleFile.equals(file)) {
+                        tableIndicator.removeIndicatorUnit(unit);
+                        removeItemBranch(this.indicatorTreeItemMap.get(unit));
+                        this.indicatorTreeItemMap.remove(unit);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "clearAddedResult". ADD xqliu 2009-04-30 bug 6808
+     * 
+     * @param addedResults
+     * @param result
+     * @return
+     */
+    private Object[] clearAddedResult(Object[] addedResults, Object[] results) {
+        ArrayList ret = new ArrayList();
+        for (Object result : results) {
+            boolean add = true;
+            for (Object addedResult : addedResults) {
+                if (result.equals(addedResult)) {
+                    add = false;
+                    break;
+                }
+            }
+            if (add) {
+                ret.add(result);
+            }
+        }
+        return ret.toArray();
+    }
+
+    /**
+     * DOC xqliu Comment method "getOwnedWhereRuleFiles". ADD xqliu 2009-04-30 bug 6808
+     * 
+     * @param tableIndicator
+     * @param whereRuleFolder
+     * @return
+     */
+    private Object[] getOwnedWhereRuleFiles(TableIndicator tableIndicator, IFolder whereRuleFolder) {
+        ArrayList ret = new ArrayList();
+        Indicator[] indicators = tableIndicator.getIndicators();
+        for (Indicator indicator : indicators) {
+            Object obj = indicator.getIndicatorDefinition();
+            if (obj != null && obj instanceof WhereRule) {
+                WhereRule wr = (WhereRule) obj;
+                ret.add(DQRuleResourceFileHelper.getInstance().getWhereRuleFile(wr, new IFolder[] { whereRuleFolder }));
+            }
+        }
+        return ret.toArray();
     }
 
     private void createIndicatorItems(TreeItem treeItem, TableIndicatorUnit[] indicatorUnits) {
@@ -492,6 +596,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                         setElements(tableIndicators);
                     } else {
                         removeItemBranch(indicatorItem);
+                        indicatorTreeItemMap.remove(unit);
                     }
                 }
 
@@ -512,6 +617,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
         }
         createIndicatorParameters(indicatorItem, indicatorUnit);
+        // ADD xqliu 2009-04-30 bug 6808
+        this.indicatorTreeItemMap.put(unit, indicatorItem);
     }
 
     public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
@@ -639,9 +746,29 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         TreeItem[] items = item.getItems();
         for (int i = 0; i < items.length; i++) {
             removeItemBranch(items[i]);
+            removeTreeItem(items[i]);
         }
         item.dispose();
         this.setDirty(true);
+    }
+
+    /**
+     * DOC xqliu Comment method "removeTreeItem". ADD xqliu 2009-04-30 bug 6808
+     * 
+     * @param treeItem
+     */
+    private void removeTreeItem(TreeItem treeItem) {
+        ArrayList removeList = new ArrayList();
+        Iterator<Object> iterator = this.indicatorTreeItemMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            if (treeItem.equals(indicatorTreeItemMap.get(obj))) {
+                removeList.add(obj);
+            }
+        }
+        for (Object obj : removeList) {
+            this.indicatorTreeItemMap.remove(obj);
+        }
     }
 
     private void deleteTableItems(TableIndicator deleteTableIndiciator) {
@@ -821,18 +948,14 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     i++;
                     j = 0;
                     String name = tiu.getIndicator().getIndicatorDefinition().getName();
-                    // System.out.println("" + i + "::name=" + name);
                     for (IFile file : files) {
                         j++;
-                        // System.out.println("" + i + "::name=" + name + "|" + j + "::"
-                        // + DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName());
                         if (DQRuleResourceFileHelper.getInstance().findWhereRule(file).getName().equals(name)) {
                             return false;
                         }
                     }
                 }
             }
-            System.out.println("111111111111111111::true");
             return true;
         }
         return false;
@@ -840,6 +963,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     private void deleteIndicatorItems(TableIndicator tableIndicator, TableIndicatorUnit inidicatorUnit) {
         tableIndicator.removeIndicatorUnit(inidicatorUnit);
+        this.indicatorTreeItemMap.remove(inidicatorUnit);
     }
 
     private void removeSelectedElements(Tree newTree) {
@@ -861,6 +985,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 continue;
             } else {
                 removeItemBranch(item);
+                removeTreeItem(item);
             }
 
         }
@@ -990,6 +1115,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 WhereRuleIndicator indicator = (WhereRuleIndicator) indicatorUnit.getIndicator();
                 WhereRule whereRule = (WhereRule) indicator.getIndicatorDefinition();
+                // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
+                // project.
                 IFolder whereRuleFolder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.DQ_RULES);
                 IFile file = DQRuleResourceFileHelper.getInstance()
                         .getWhereRuleFile(whereRule, new IFolder[] { whereRuleFolder });
