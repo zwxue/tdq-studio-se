@@ -86,7 +86,7 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             String pathName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/";
             File repFolder = new File(pathName);
             if (repFolder.exists()) {
-                FileUtils.copyDirectory(repFolder, ResourceManager.getDataProfilingFolder().getLocation().toFile());
+                FileUtils.copyDirectory(repFolder, ResourceManager.getReportingDBFolder().getLocation().toFile());
                 FileUtils.forceDelete(new File(pathName));
             }
             // ~MOD mzhao 2009-04-28, upgrade .prv,.ana,rep files.
