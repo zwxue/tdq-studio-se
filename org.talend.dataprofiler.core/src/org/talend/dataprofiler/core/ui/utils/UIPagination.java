@@ -290,12 +290,12 @@ public class UIPagination {
             goNo = Integer.parseInt(pageGoText.getText().trim());
         } catch (Exception exc) {
             MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error",
-                    "Page number not in an invalid range.");
+                    "Page number not in an valid range.");
             return;
         }
         if (goNo < 1 || goNo > totalPages) {
             MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Error",
-                    "Page number not in an invalid range.");
+                    "Page number not in an valid range.");
             return;
         }
         pageCache.get(currentPage).dispose();
