@@ -182,10 +182,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage
 
 		createDataFilterSection(form, topComp);
 
-        if (false) { // FIXME scorreia 2009-04-23 analysis parameter section removed because not all indicators can be
-            // computed with the Java engine.
-            createAnalysisParamSection(form, topComp);
-        }
+		if (false) { // FIXME scorreia 2009-04-23 analysis parameter section
+			// removed because not all indicators can be
+			// computed with the Java engine.
+			createAnalysisParamSection(form, topComp);
+		}
 
 		Composite previewComp = toolkit.createComposite(sForm);
 		previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -210,6 +211,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage
 
 		Composite topComp = toolkit.createComposite(analysisColumnSection);
 		topComp.setLayout(new GridLayout());
+		// ~ MOD mzhao 2009-05-05,Bug 6587.
+		createConnBindWidget(topComp);
+		// ~
 
 		Hyperlink clmnBtn = toolkit
 				.createHyperlink(
@@ -285,7 +289,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage
 		treeViewer.setDirty(false);
 		treeViewer.addPropertyChangeListener(this);
 		analysisColumnSection.setClient(topComp);
-
 	}
 
 	/**
@@ -326,6 +329,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage
 			columnList.add(columnIndicator.getTdColumn());
 		}
 		ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
+				this,
 				null,
 				DefaultMessagesImpl
 						.getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl //$NON-NLS-1$
