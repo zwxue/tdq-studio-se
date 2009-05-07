@@ -118,8 +118,6 @@ public class ColumnFilterWizard extends AbstractWizard {
 
         String columnFilter = this.columnFilterWizardPage.getColumnFilterText().getText();
         if (!this.getOldColumnFilter().equals(columnFilter)) {
-            this.namedColumnSet.getFeature().clear();
-            this.namedColumnSet.getOwnedElement().clear();
             clearTaggedValue(tvs, TaggedValueHelper.COLUMN_FILTER);
             addTaggedValue(tvs, TaggedValueHelper.COLUMN_FILTER, columnFilter);
             return PrvResourceFileHelper.getInstance().save(tdDataProvider).isOk();

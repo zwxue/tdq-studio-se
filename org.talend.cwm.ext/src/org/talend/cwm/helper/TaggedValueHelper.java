@@ -74,11 +74,9 @@ public final class TaggedValueHelper {
 
     public static final String COLUMN_FILTER = "Column Filter"; //$NON-NLS-1$
 
-    public static final int TABLE_VIEW_MAX = 5000; //$NON-NLS-1$
+    public static final int TABLE_VIEW_MAX = 2000; //$NON-NLS-1$
 
     public static final int COLUMN_MAX = 2500; //$NON-NLS-1$
-
-    public static final String TABLE_VIEW_COLUMN_OVER_FLAG = "$TABLE_VIEW_COLUMN_OVER_FLAG$"; //$NON-NLS-1$
 
     // ~
 

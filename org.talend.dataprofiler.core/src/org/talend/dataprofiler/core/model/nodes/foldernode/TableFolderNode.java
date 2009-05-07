@@ -28,7 +28,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * @author rli
@@ -69,10 +68,12 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
     @Override
     protected List<TdTable> getColumnSets(TdCatalog catalog, TdSchema schema) {
         if (catalog != null) {
-            return CatalogHelper.getTables(catalog);
+            String tableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, catalog.getTaggedValue());
+            return filterColumnSets(CatalogHelper.getTables(catalog), tableFilter);
         }
         if (schema != null) {
-            return SchemaHelper.getTables(schema);
+            String tableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, schema.getTaggedValue());
+            return filterColumnSets(SchemaHelper.getTables(schema), tableFilter);
         }
         return Collections.emptyList();
     }
@@ -94,18 +95,10 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
                     provider.getName());
 
             if (catalog != null) {
-            	// MOD xqliu 2009-04-27 bug 6507
-                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TABLE_FILTER, catalog.getTaggedValue());
-                String tableFilter = tv == null ? null : tv.getValue();
-                ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, catalog, tableFilter, true));
-                // ~
+                ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, catalog, null, true));
             }
             if (schema != null) {
-	            // MOD xqliu 2009-04-27 bug 6507
-                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TABLE_FILTER, schema.getTaggedValue());
-                String tableFilter = tv == null ? null : tv.getValue();
-                ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, schema, tableFilter, true));
-                // ~
+                ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, schema, null, true));
             }
             return ok;
         } catch (TalendException e) {

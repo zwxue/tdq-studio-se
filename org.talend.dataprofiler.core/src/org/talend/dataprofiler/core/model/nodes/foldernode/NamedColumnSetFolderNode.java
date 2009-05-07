@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -22,6 +23,8 @@ import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dq.CWMPlugin;
+import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -33,6 +36,9 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> extends AbstractDatabaseFolderNode {
 
     private static Logger log = Logger.getLogger(NamedColumnSetFolderNode.class);
+
+    private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences().getBoolean(
+            PluginConstant.FILTER_TABLE_VIEW_COLUMN);
 
     /**
      * @param name
@@ -47,7 +53,8 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         columnSets.addAll(getColumnSets(catalog, schema));
         if (columnSets.size() > 0) {
             // MOD xqliu 2009-04-27 bug 6507
-            if (columnSets.size() == 1 && columnSets.get(0).getName().equals(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG)) {
+            if (FILTER_FLAG && columnSets.size() > TaggedValueHelper.TABLE_VIEW_MAX) {
+                columnSets.clear();
                 this.setChildren(null);
                 MessageUI.openWarning(DefaultMessagesImpl.getString("NamedColumnSetFolderNode.warnMsg",
                         TaggedValueHelper.TABLE_VIEW_MAX));
@@ -90,4 +97,78 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
      */
     protected abstract <T extends List<COLSET>> boolean loadColumnSets(TdCatalog catalog, TdSchema schema,
             TdDataProvider provider, final T columnSets);
+
+    /**
+     * DOC xqliu Comment method "filterColumnSets". ADD xqliu 2009-05-07 bug 7234
+     * 
+     * @param <T>
+     * @param columnSets
+     * @param columnSetPattern
+     */
+    protected <T extends NamedColumnSet> List<T> filterColumnSets(List<T> columnSets, String columnSetPattern) {
+        if (needFilter(columnSetPattern)) {
+            String[] patterns = cleanPatterns(columnSetPattern.split(","));
+            return filterMatchingColumnSets(columnSets, patterns);
+        }
+        return columnSets;
+    }
+
+    /**
+     * DOC xqliu Comment method "filterMatchingColumnSets". ADD xqliu 2009-05-07 bug 7234
+     * 
+     * @param <T>
+     * @param columnSets
+     * @param patterns
+     */
+    private <T extends NamedColumnSet> List<T> filterMatchingColumnSets(List<T> columnSets, String[] patterns) {
+        List<T> retColumnSets = new ArrayList<T>();
+        int size = 0;
+        for (T t : columnSets) {
+            for (String pattern : patterns) {
+                if (pattern.equalsIgnoreCase(t.getName())) {
+                    retColumnSets.add(t);
+                    size++;
+                    if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
+                        return retColumnSets;
+                    }
+                    break;
+                }
+            }
+        }
+        return retColumnSets;
+    }
+
+    /**
+     * DOC xqliu Comment method "cleanPatterns". ADD xqliu 2009-05-07 bug 7234
+     * 
+     * @param split
+     * @return
+     */
+    private String[] cleanPatterns(String[] split) {
+        ArrayList<String> ret = new ArrayList<String>();
+        for (String s : split) {
+            if (s != null && !"".equals(s) && !ret.contains(s)) {
+                ret.add(s);
+            }
+        }
+        return ret.toArray(new String[ret.size()]);
+    }
+
+    /**
+     * DOC xqliu Comment method "needFilter". ADD xqliu 2009-05-07 bug 7234
+     * 
+     * @param columnSetPattern
+     * @return
+     */
+    private boolean needFilter(String columnSetPattern) {
+        if (FILTER_FLAG) {
+            if (columnSetPattern != null && !columnSetPattern.equals("")) {
+                String[] patterns = cleanPatterns(columnSetPattern.split(","));
+                if (patterns != null && patterns.length > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

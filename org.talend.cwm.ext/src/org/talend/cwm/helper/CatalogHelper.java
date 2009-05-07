@@ -85,11 +85,6 @@ public final class CatalogHelper {
     }
 
     public static List<TdTable> getTables(Catalog catalog) {
-        // MOD xqliu 2009-04-27 bug 6507
-        // TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TABLE_FILTER, catalog.getTaggedValue());
-        // String tableFilter = tv == null ? null : tv.getValue();
-        // return TableHelper.getTables(catalog.getOwnedElement(), tableFilter);
-        // ~
         return TableHelper.getTables(catalog.getOwnedElement());
     }
 
@@ -103,11 +98,6 @@ public final class CatalogHelper {
     }
 
     public static List<TdView> getViews(Catalog catalog) {
-        // MOD xqliu 2009-04-27 bug 6507
-        // TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VIEW_FILTER, catalog.getTaggedValue());
-        // String viewFilter = tv == null ? null : tv.getValue();
-        // return ViewHelper.getViews(catalog.getOwnedElement(), viewFilter);
-        // ~
         return ViewHelper.getViews(catalog.getOwnedElement());
     }
 }

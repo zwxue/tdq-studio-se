@@ -76,6 +76,7 @@ public class TableViewFilterWizardPage extends AbstractWizardPage {
 
         GridData gd = new GridData();
         gd.widthHint = 280;
+        gd.heightHint = 15;
 
         Label l1 = new Label(comp, SWT.NONE);
         l1.setText(DefaultMessagesImpl.getString("TableViewFilterWizardPage.conn"));

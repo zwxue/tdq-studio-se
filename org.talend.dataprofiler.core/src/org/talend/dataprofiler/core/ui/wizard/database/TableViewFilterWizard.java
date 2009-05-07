@@ -17,8 +17,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -99,7 +97,6 @@ public class TableViewFilterWizard extends AbstractWizard {
 
         String tableFilter = this.tableViewFilterWizardPage.getTableFilterText().getText();
         if (!this.getOldTableFilter().equals(tableFilter)) {
-            clearOwnedTables(this.packageObj);
             clearTaggedValue(tvs, TaggedValueHelper.TABLE_FILTER);
             addTaggedValue(tvs, TaggedValueHelper.TABLE_FILTER, tableFilter);
             needSave = true;
@@ -107,7 +104,6 @@ public class TableViewFilterWizard extends AbstractWizard {
 
         String viewFilter = this.tableViewFilterWizardPage.getViewFilterText().getText();
         if (!this.getOldViewFilter().equals(viewFilter)) {
-            clearOwnedViews(this.packageObj);
             clearTaggedValue(tvs, TaggedValueHelper.VIEW_FILTER);
             addTaggedValue(tvs, TaggedValueHelper.VIEW_FILTER, viewFilter);
             needSave = true;
@@ -117,32 +113,6 @@ public class TableViewFilterWizard extends AbstractWizard {
             return PrvResourceFileHelper.getInstance().save(tdDataProvider).isOk();
         }
         return true;
-    }
-
-    private void clearOwnedViews(Package pckg) {
-        EList<ModelElement> mes = pckg.getOwnedElement();
-        int size = mes.size();
-        for (int i = 0; i < size; ++i) {
-            ModelElement me = mes.get(i);
-            if (me instanceof TdView) {
-                mes.remove(me);
-                i--;
-                size--;
-            }
-        }
-    }
-
-    private void clearOwnedTables(Package pckg) {
-        EList<ModelElement> mes = pckg.getOwnedElement();
-        int size = mes.size();
-        for (int i = 0; i < size; ++i) {
-            ModelElement me = mes.get(i);
-            if (me instanceof TdTable) {
-                mes.remove(me);
-                i--;
-                size--;
-            }
-        }
     }
 
     private void addTaggedValue(EList<TaggedValue> taggedValues, String tag, String value) {

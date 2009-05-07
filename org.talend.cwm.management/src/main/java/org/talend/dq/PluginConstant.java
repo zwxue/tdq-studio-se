@@ -44,4 +44,6 @@ public final class PluginConstant {
     public static final String PATTERN_SUFFIX = "*.pattern"; //$NON-NLS-1$
 
     public static final String CONNECTION_TIMEOUT = "CONNECTION_TIMEOUT"; //$NON-NLS-1$
+
+    public static final String FILTER_TABLE_VIEW_COLUMN = "FILTER_TABLE_VIEW_COLUMN"; //$NON-NLS-1$
 }

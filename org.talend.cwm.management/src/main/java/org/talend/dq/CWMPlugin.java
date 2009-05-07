@@ -39,6 +39,7 @@ public class CWMPlugin extends Plugin {
     private void initPreferences(CWMPlugin cwm) {
         Preferences prefs = cwm.getPluginPreferences();
         prefs.setDefault(PluginConstant.CONNECTION_TIMEOUT, false);
+        prefs.setDefault(PluginConstant.FILTER_TABLE_VIEW_COLUMN, true);
     }
 
     public static CWMPlugin getDefault() {

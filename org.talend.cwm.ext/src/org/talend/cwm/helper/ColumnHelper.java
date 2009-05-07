@@ -26,7 +26,6 @@ import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Expression;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.PrimaryKey;
@@ -228,44 +227,5 @@ public final class ColumnHelper {
             columnSets.add(columnSetOwner);
         }
         return columnSets.size() == 1;
-    }
-
-    /**
-     * DOC xqliu Comment method "getColumnsWithFilter". ADD xqliu 2009-04-27 bug 6507
-     * 
-     * @param columnSet
-     * @param filter
-     * @return
-     */
-    public static List<TdColumn> getColumnsWithFilter(ColumnSet columnSet, boolean filter) {
-        EList<? extends EObject> elements = columnSet.getFeature();
-        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.COLUMN_FILTER, columnSet.getTaggedValue());
-        filter = filter && tv == null ? false : (tv.getValue() == null || "".equals(tv.getValue())) ? false : true;
-        List<TdColumn> columns = new ArrayList<TdColumn>();
-        int size = 0;
-        for (EObject elt : elements) {
-            if (elt != null) {
-                TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
-                if (col != null) {
-                    if (filter) {
-                        if (col.getName().toLowerCase().indexOf(tv.getValue().toLowerCase()) > -1) {
-                            columns.add(col);
-                            size++;
-                        }
-                    } else {
-                        columns.add(col);
-                        size++;
-                    }
-                    if (size > TaggedValueHelper.COLUMN_MAX) {
-                        columns.clear();
-                        // add a special column because the column number is to big
-                        col.setName(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG);
-                        columns.add(col);
-                        break;
-                    }
-                }
-            }
-        }
-        return columns;
     }
 }

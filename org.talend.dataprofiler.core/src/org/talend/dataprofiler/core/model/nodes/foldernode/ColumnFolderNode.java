@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.cwm.exception.TalendException;
@@ -25,10 +26,11 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dq.CWMPlugin;
+import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.NeedSaveDataProviderHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -44,6 +46,9 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         super(DefaultMessagesImpl.getString("ColumnFolderNode.columns")); //$NON-NLS-1$
     }
 
+    private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences().getBoolean(
+            PluginConstant.FILTER_TABLE_VIEW_COLUMN);
+
     /*
      * (non-Javadoc)
      * 
@@ -55,9 +60,10 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         // get columns from either tables or views.
         ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(this.getParent());
         if (columnSet != null) {
-            List<TdColumn> columnList = ColumnSetHelper.getColumns(columnSet);
+            String columnFilter = TaggedValueHelper.getValue(TaggedValueHelper.COLUMN_FILTER, columnSet.getTaggedValue());
+            List<TdColumn> columnList = filterColumns(ColumnSetHelper.getColumns(columnSet), columnFilter);
             if (columnList.size() > 0) {
-                if (columnList.size() == 1 && columnList.get(0).getName().equals(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG)) {
+                if (columnList.size() > TaggedValueHelper.COLUMN_MAX) {
                     this.setChildren(null);
                     MessageUI
                             .openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", TaggedValueHelper.COLUMN_MAX));
@@ -75,11 +81,8 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                 return;
             }
             try {
-                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.COLUMN_FILTER, columnSet.getTaggedValue());
-                String columnFilter = tv == null ? null : tv.getValue();
-                columnList = DqRepositoryViewService.getColumns(provider, columnSet, columnFilter, true);
-                if (columnList.size() == 1 && columnList.get(0).getName().equals(TaggedValueHelper.TABLE_VIEW_COLUMN_OVER_FLAG)) {
-                    // if (columnList.size() > TaggedValueHelper.COLUMN_MAX) {
+                columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
+                if (columnList.size() > TaggedValueHelper.COLUMN_MAX) {
                     this.setChildren(null);
                     MessageUI
                             .openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", TaggedValueHelper.COLUMN_MAX));
@@ -102,4 +105,79 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         return COLUMNFOLDER_NODE_TYPE;
     }
 
+    /**
+     * DOC xqliu Comment method "filterColumns". ADD xqliu 2009-05-07 bug 7234
+     * 
+     * @param <T>
+     * @param columns
+     * @param columnPattern
+     * @return
+     */
+    private <T extends TdColumn> List<T> filterColumns(List<T> columns, String columnPattern) {
+        if (needFilter(columnPattern)) {
+            String[] patterns = cleanPatterns(columnPattern.split(","));
+            return filterMatchingColumns(columns, patterns);
+        }
+        return columns;
+    }
+
+    /**
+     * DOC xqliu Comment method "filterMatchingColumns". ADD xqliu 2009-05-07 bug 7234
+     * 
+     * @param <T>
+     * @param columns
+     * @param patterns
+     * @return
+     */
+    private <T extends TdColumn> List<T> filterMatchingColumns(List<T> columns, String[] patterns) {
+        List<T> retColumns = new ArrayList<T>();
+        int size = 0;
+        for (T t : columns) {
+            for (String pattern : patterns) {
+                if (pattern.equalsIgnoreCase(t.getName())) {
+                    retColumns.add(t);
+                    size++;
+                    if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
+                        return retColumns;
+                    }
+                    break;
+                }
+            }
+        }
+        return retColumns;
+    }
+
+    /**
+     * DOC xqliu Comment method "cleanPatterns". ADD xqliu 2009-05-07 bug 7234
+     * 
+     * @param split
+     * @return
+     */
+    private String[] cleanPatterns(String[] split) {
+        ArrayList<String> ret = new ArrayList<String>();
+        for (String s : split) {
+            if (s != null && !"".equals(s) && !ret.contains(s)) {
+                ret.add(s);
+            }
+        }
+        return ret.toArray(new String[ret.size()]);
+    }
+
+    /**
+     * DOC xqliu Comment method "needFilter". ADD xqliu 2009-05-07 bug 7234
+     * 
+     * @param columnSetPattern
+     * @return
+     */
+    private boolean needFilter(String columnSetPattern) {
+        if (FILTER_FLAG) {
+            if (columnSetPattern != null && !columnSetPattern.equals("")) {
+                String[] patterns = cleanPatterns(columnSetPattern.split(","));
+                if (patterns != null && patterns.length > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
