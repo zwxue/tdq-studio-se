@@ -92,9 +92,13 @@ public class DatabaseConnectionWizard extends AbstractWizard {
 
         IFolder folder = connectionParam.getFolderProvider().getFolderResource();
         TypedReturnCode<IFile> save = DataProviderWriter.getInstance().createDataProviderFile(dataProvider, folder);
-        if (save.isOk() && driver != null) {
-            storeInfoToPerference(dataProvider);
+        if (save.isOk()) {
+            if (driver != null) {
+                storeInfoToPerference(dataProvider);
+            }
+            CorePlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
         }
+
         return save;
     }
 

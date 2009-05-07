@@ -12,10 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
-import java.util.Collection;
 import java.util.List;
 
+import net.sourceforge.sqlexplorer.EDriverName;
+import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
+import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
+import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
+import net.sourceforge.sqlexplorer.dbproduct.Session;
+import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
@@ -29,6 +34,7 @@ import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -47,11 +53,11 @@ import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask;
-import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -209,65 +215,126 @@ public class CorePlugin extends AbstractUIPlugin {
      */
     public void runInDQViewer(TdDataProvider tdDataProvider, String query, String editorName) {
         SQLEditor sqlEditor = openInSqlEditor(tdDataProvider, query, editorName);
-        if (sqlEditor != null) {
-            ExecSQLAction execSQLAction = new ExecSQLAction(sqlEditor);
-            execSQLAction.run();
+        Session session = sqlEditor.getSession();
+        if (sqlEditor != null && session != null) {
+            new ExecSQLAction(sqlEditor).run();
         }
     }
 
     /**
-     * 
-     * DOC mzhao Comment method "openInSqlEditor".
+     * DOC bZhou Comment method "openInSqlEditor".
      * 
      * @param tdDataProvider
      * @param query
      * @param editorName
+     * @return the specified sql editor.
      */
     public SQLEditor openInSqlEditor(TdDataProvider tdDataProvider, String query, String editorName) {
         if (editorName == null) {
             editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
 
-        TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-        TdProviderConnection providerConnection = tdPc.getObject();
-        String url = providerConnection.getConnectionString();
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        AliasManager aliasManager = sqlPlugin.getAliasManager();
 
-        SQLExplorerPlugin sqlexplorer = SQLExplorerPlugin.getDefault();
-        Collection<Alias> aliases = sqlexplorer.getAliasManager().getAliases();
-
-        boolean isExisted = false;
-        for (Alias alias : aliases) {
-            if (alias.getUrl().equals(url)) {
-                isExisted = true;
-            }
-        }
-
-        if (!isExisted) {
-            new ChangePerspectiveAction(PluginConstant.SE_ID).run();
-        }
-
-        SQLEditor editorPart = null;
-        for (Alias alias : aliases) {
-            if (alias.getUrl().equals(url)) {
+        Alias alias = aliasManager.getAlias(tdDataProvider.getName());
+        if (alias != null) {
+            try {
                 SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
                 input.setUser(alias.getDefaultUser());
-                try {
-                    IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-                            .getActivePage();
-                    editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
-                    editorPart.setText(query);
-                    // MOD scorreia 2008-12-12 avoid to execute several times
-                    // the same query when several connections
-                    // with the same url exist
-                    break;
-                } catch (PartInitException e) {
-                    ExceptionHandler.process(e);
-                }
+                IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
+                SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+                editorPart.setText(query);
+                return editorPart;
+            } catch (PartInitException e) {
+                log.error(e, e);
             }
         }
-        return editorPart;
+
+        return null;
     }
 
+    /**
+     * DOC bZhou Comment method "addConnetionAliasToSQLPlugin".
+     * 
+     * @param dataproviders
+     */
+    public void addConnetionAliasToSQLPlugin(DataProvider... dataproviders) {
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        AliasManager aliasManager = sqlPlugin.getAliasManager();
+
+        for (DataProvider dataProvider : dataproviders) {
+            try {
+                TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(dataProvider);
+                TdProviderConnection providerConnection = tdPc.getObject();
+
+                Alias alias = new Alias(dataProvider.getName());
+
+                String clearTextUser = DataProviderHelper.getClearTextUser(providerConnection);
+                String user = "".equals(clearTextUser) ? "root" : clearTextUser;
+                String password = DataProviderHelper.getClearTextPassword(providerConnection);
+
+                String url = providerConnection.getConnectionString();
+
+                User previousUser = new User(user, password);
+                alias.setDefaultUser(previousUser);
+
+                alias.setAutoLogon(false);
+                alias.setConnectAtStartup(true);
+                alias.setUrl(url);
+                ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
+                        EDriverName.getId(providerConnection.getDriverClassName()));
+                alias.setDriver(manDr);
+                aliasManager.addAlias(alias);
+
+            } catch (ExplorerException e) {
+                log.error(e, e);
+            }
+        }
+
+        aliasManager.modelChanged();
+    }
+
+    /**
+     * DOC bZhou Comment method "removeConnetionAliasFromSQLPlugin".
+     * 
+     * @param dataproviders
+     */
+    public void removeConnetionAliasFromSQLPlugin(DataProvider... dataproviders) {
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        AliasManager aliasManager = sqlPlugin.getAliasManager();
+
+        for (DataProvider dataProvider : dataproviders) {
+            try {
+                String aliasName = dataProvider.getName();
+                Alias alias = aliasManager.getAlias(aliasName);
+
+                for (IEditorReference editorRef : sqlPlugin.getActivePage().getEditorReferences()) {
+                    IEditorPart editor = editorRef.getEditor(false);
+                    if (editor instanceof SQLEditor) {
+                        SQLEditor sqlEditor = (SQLEditor) editor;
+                        if (sqlEditor.getSession().getUser().getAlias() == alias) {
+                            sqlPlugin.getActivePage().closeEditor(sqlEditor, true);
+                        }
+                    }
+                }
+
+                if (alias != null) {
+                    aliasManager.removeAlias(aliasName);
+                }
+            } catch (Exception e) {
+                log.error(e, e);
+            }
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "openEditor".
+     * 
+     * @param file
+     * @param editorId
+     * @return
+     */
     public IEditorPart openEditor(IFile file, String editorId) {
         FileEditorInput input = new FileEditorInput(file);
         // input.setUser(alias.getDefaultUser());

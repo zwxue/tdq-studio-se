@@ -40,7 +40,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -108,8 +107,8 @@ public class DeleteCWMResourceAction extends Action {
                 log.error(e, e);
             }
         }
-        DQRespositoryView findView = (DQRespositoryView) CorePlugin.getDefault().findView(DQRespositoryView.ID);
-        findView.getCommonViewer().refresh();
+
+        CorePlugin.getDefault().refreshDQView();
     }
 
     public boolean isFilesDeleted() {
@@ -195,6 +194,10 @@ public class DeleteCWMResourceAction extends Action {
                 TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(findProvider.getObject());
                 EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(softwareSystem);
                 EMFSharedResources.getInstance().saveSoftwareDeploymentResource();
+
+                // remove the alias from SQL Plugin
+                CorePlugin.getDefault().removeConnetionAliasFromSQLPlugin(findProvider.getObject());
+
                 continue;
             } else {
                 continue;

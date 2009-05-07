@@ -49,8 +49,7 @@ public final class SqlExplorerBridge {
     public static TypedReturnCode<TableNode> findSqlExplorerTableNode(TdProviderConnection providerConnection,
             Package parentPackageElement, String tableName, String activeTabName) {
         // Open data explore perspective.
-        ChangePerspectiveAction perspectiveAction = new ChangePerspectiveAction(PluginConstant.SE_ID);
-        perspectiveAction.run();
+        new ChangePerspectiveAction(PluginConstant.SE_ID).run();
         SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
         Collection<Alias> aliases = default1.getAliasManager().getAliases();
         String url = providerConnection.getConnectionString();

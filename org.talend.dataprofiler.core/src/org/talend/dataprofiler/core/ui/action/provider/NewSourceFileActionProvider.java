@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
@@ -48,14 +47,14 @@ public class NewSourceFileActionProvider extends CommonActionProvider {
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
-                IPath path = new Path(ResourceManager.LIBRARIES_FOLDER_NAME);
-                path = path.append(DQStructureManager.SOURCE_FILES);
                 IPath fullPath = ((IFolder) obj).getFullPath();
-                if (path.isPrefixOf(fullPath)) {
+                IPath sourceFileFolderPath = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.SOURCE_FILES)
+                        .getFullPath();
+                if (fullPath.equals(sourceFileFolderPath)) {
                     menu.add(new AddSqlFileAction((IFolder) obj));
                     // rli Modification: 2008-7-16. for the feature 0004366
                     // menu.add(new CreateSourceFolderAction((IFolder) obj));
-                    if (fullPath.segmentCount() > path.segmentCount()) {
+                    if (fullPath.segmentCount() > sourceFileFolderPath.segmentCount()) {
                         // menu.add(new DeleteFolderAction((IFolder) obj));
                         menu.add(new RenameFolderAction((IFolder) obj));
                     }

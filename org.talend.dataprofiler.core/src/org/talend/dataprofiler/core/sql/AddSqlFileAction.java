@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.sql;
 
-import static org.talend.dataprofiler.core.PluginConstant.SE_ID;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 
 import org.apache.log4j.Logger;
@@ -28,7 +27,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 
 /**
@@ -73,8 +71,7 @@ public class AddSqlFileAction extends Action {
             } catch (CoreException e) {
                 log.error(e, e);
             }
-            ChangePerspectiveAction action = new ChangePerspectiveAction(SE_ID);
-            action.run();
+
             try {
                 ap
                         .openEditor(new SQLEditorInput(fileWizard.getSqlFile()),

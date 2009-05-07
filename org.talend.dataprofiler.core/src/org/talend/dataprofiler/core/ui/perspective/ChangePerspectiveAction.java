@@ -16,20 +16,7 @@ import static org.talend.dataprofiler.core.PluginConstant.CHEAT_SHEET_VIEW;
 import static org.talend.dataprofiler.core.PluginConstant.PERSPECTIVE_ID;
 import static org.talend.dataprofiler.core.PluginConstant.SE_ID;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.sqlexplorer.EDriverName;
-import net.sourceforge.sqlexplorer.ExplorerException;
-import net.sourceforge.sqlexplorer.dbproduct.Alias;
-import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
-import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
-import net.sourceforge.sqlexplorer.dbproduct.User;
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
@@ -42,15 +29,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ResourceManager;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * Changes the active perspective. <br/>
@@ -110,7 +90,7 @@ public class ChangePerspectiveAction extends Action {
                 CorePlugin.getDefault().getLog().log(status);
             }
         }
-        activeData();
+
         IPreferenceStore preferenceStore = CorePlugin.getDefault().getPreferenceStore();
         IViewPart findView = page.findView(CHEAT_SHEET_VIEW);
         if (PERSPECTIVE_ID.equals(perspectiveId)) {
@@ -138,66 +118,6 @@ public class ChangePerspectiveAction extends Action {
             if (fp != null) {
                 action.setImageDescriptor(fp.getImageDescriptor());
             }
-        }
-    }
-
-    /**
-     * DOC qzhang Comment method "activeData".
-     */
-    public void activeData() {
-        // PTODO qzhang switch to DB Discovery
-        if (SE_ID.equals(perspectiveId)) {
-
-            IFolder folder = ResourceManager.getMetadataFolder().getFolder(DQStructureManager.DB_CONNECTIONS);
-            List<TdDataProvider> listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder, true);
-            SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
-            AliasManager aliasManager = default1.getAliasManager();
-            aliasManager.getAliases().clear();
-            Set<User> users = new HashSet<User>();
-            try {
-                aliasManager.closeAllConnections();
-            } catch (ExplorerException e1) {
-                log.error(e1, e1);
-            }
-            for (TdDataProvider tdDataProvider : listTdDataProviders) {
-                try {
-                    TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(tdDataProvider);
-                    TdProviderConnection providerConnection = tdPc.getObject();
-                    String url = providerConnection.getConnectionString();
-                    Alias alias = new Alias(tdDataProvider.getName());
-                    String user = DataProviderHelper.getClearTextUser(providerConnection); //$NON-NLS-1$
-                    // MOD scorreia 2009-01-09 password decryption
-                    String password = DataProviderHelper.getClearTextPassword(providerConnection);
-
-                    if ("".equals(user)) { //$NON-NLS-1$
-                        user = "root"; //$NON-NLS-1$
-                    }
-
-                    User previousUser = new User(user, password);
-                    alias.setDefaultUser(previousUser);
-                    users.add(previousUser);
-
-                    alias.setAutoLogon(false);
-                    alias.setConnectAtStartup(true);
-                    alias.setUrl(url);
-                    ManagedDriver manDr = default1.getDriverModel().getDriver(
-                            EDriverName.getId(providerConnection.getDriverClassName()));
-                    alias.setDriver(manDr);
-                    aliasManager.addAlias(alias);
-
-                } catch (ExplorerException e) {
-                    log.error(e, e);
-                }
-            }
-            aliasManager.modelChanged();
-            // SQLExplorerPlugin.getDefault().getPluginPreferences().setValue(
-            // IConstants.AUTO_OPEN_EDITOR, false);
-            // for (User user : users) {
-            // OpenPasswordConnectDialogAction openDlgAction = new
-            // OpenPasswordConnectDialogAction(user.getAlias(),
-            // user, false);
-            // openDlgAction.run();
-            // }
         }
     }
 

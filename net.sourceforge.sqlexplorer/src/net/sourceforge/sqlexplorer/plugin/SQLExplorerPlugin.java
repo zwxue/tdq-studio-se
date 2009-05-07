@@ -348,7 +348,12 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
         }
     }
 
-    private IWorkbenchPage getActivePage() {
+    /**
+     * DOC bZhou Comment method "getActivePage".
+     * 
+     * @return the current actived page.
+     */
+    public IWorkbenchPage getActivePage() {
         if (getWorkbench() != null && getWorkbench().getActiveWorkbenchWindow() != null)
             return getWorkbench().getActiveWorkbenchWindow().getActivePage();
         return null;
