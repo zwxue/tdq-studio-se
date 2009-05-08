@@ -35,6 +35,7 @@ import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -80,6 +81,8 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
 
     // Cached database structure view
     private DatabaseStructureView databaseStructureView;
+
+    private IProject rootProject;
 
     /**
      * The constructor. Moved previous logic to the start method.
@@ -414,5 +417,23 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      */
     public static boolean isEditorSerialName(String name) {
         return name.endsWith(SQL) && name.startsWith(SQL_EDITOR);
+    }
+
+    /**
+     * Getter for rootProject.
+     * 
+     * @return the rootProject
+     */
+    public IProject getRootProject() {
+        return rootProject;
+    }
+
+    /**
+     * Sets the rootProject.
+     * 
+     * @param rootProject the rootProject to set
+     */
+    public void setRootProject(IProject rootProject) {
+        this.rootProject = rootProject;
     }
 }

@@ -15,10 +15,8 @@ package org.talend.dataprofiler.core;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.jfree.util.Log;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IProjectAdapterService;
-import org.talend.dataquality.PluginConstant;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -48,11 +46,8 @@ public final class ResourceManager {
                 rootProject = projectAdapter.getRootProject();
             }
         } catch (RuntimeException e) {
-            Log.warn(e, e);
             rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(DEFAULT_PROJECT_NAME);
         }
-
-        PluginConstant.setRootProjectName(rootProject.getName());
 
         return rootProject;
     }

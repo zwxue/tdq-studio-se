@@ -117,6 +117,8 @@ public class CorePlugin extends AbstractUIPlugin {
             log.error(e, e);
         }
 
+        org.talend.dataquality.PluginConstant.setRootProjectName(ResourceManager.getRootProjectName());
+        SQLExplorerPlugin.getDefault().setRootProject(ResourceManager.getRootProject());
     }
 
     /*

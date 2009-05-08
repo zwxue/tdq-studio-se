@@ -30,14 +30,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -159,14 +157,16 @@ public class SQLTextEditor extends TextEditor {
         }
 
         // PTODO qzhang fixed bug 3907
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        IProject rootProject = SQLExplorerPlugin.getDefault().getRootProject();
+        final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
+
         ILabelProvider lp = new WorkbenchLabelProvider();
         ITreeContentProvider cp = new WorkbenchContentProvider();
         FolderSelectionDialog dialog = new FolderSelectionDialog(shell, lp, cp);
         // dialog.setValidator(validator);
         dialog.setTitle("Select folder");
         dialog.setMessage("Select the folder in which the item will be created");
-        dialog.setInput(root);
+        dialog.setInput(rootProject);
         dialog.addFilter(new ViewerFilter() {
 
             /*
@@ -177,12 +177,13 @@ public class SQLTextEditor extends TextEditor {
              */
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (IProject.class.isInstance(element)) {
-                    return "Libraries".equals(((IProject) element).getName());
-                } else if (IFolder.class.isInstance(element)) {
-                    IPath path = new Path("Source Files");
-                    IPath projectRelativePath = ((IFolder) element).getProjectRelativePath();
-                    return path.isPrefixOf(projectRelativePath);
+                if (element instanceof IFolder) {
+                    IFolder folder = (IFolder) element;
+                    if ("Source Files".equals(folder.getName()) || "TDQ_Libraries".equals(folder.getName())) {
+                        return true;
+                    } else {
+                        return defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath());
+                    }
                 }
                 return false;
             }

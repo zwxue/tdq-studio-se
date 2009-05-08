@@ -15,9 +15,9 @@ package net.sourceforge.sqlexplorer.plugin.editors;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -48,6 +48,10 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
      */
     public FolderSelectionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
         super(parent, labelProvider, contentProvider);
+
+        IProject rootProject = SQLExplorerPlugin.getDefault().getRootProject();
+        final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
+
         setComparator(new ResourceComparator(ResourceComparator.NAME));
         setValidator(new ISelectionStatusValidator() {
 
@@ -56,11 +60,9 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
                     if (selection[0] instanceof IFolder) {
                         IFolder folder = (IFolder) selection[0];
                         IPath projectRelativePath = folder.getProjectRelativePath();
-                        if ("Libraries".equals(folder.getProject().getName())) {
-                            IPath path = new Path("Source Files");
-                            if (path.isPrefixOf(projectRelativePath)) {
-                                return Status.OK_STATUS;
-                            }
+                        if ("Source Files".equals(folder.getName())
+                                || defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath())) {
+                            return Status.OK_STATUS;
                         }
                     }
                 }
@@ -88,7 +90,9 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+     * @see
+     * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent
+     * )
      */
     public void selectionChanged(SelectionChangedEvent event) {
 
