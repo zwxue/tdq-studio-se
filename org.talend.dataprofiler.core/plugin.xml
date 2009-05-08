@@ -856,32 +856,38 @@
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.CopyDefineFileTask"
            id="org.talend.dataprofiler.core.migration.impl.CopyDefineFileTask"
-           name="org.talend.dataprofiler.core.migration.impl.CopyDefineFileTask"
+           name="Copy Define File"
            version="1.2.0">
      </workspacetask>
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
-           name="org.talend.dataprofiler.core.migration.impl.UpdateProjectPersistentPropertyTask"
+           name="Update Project Persistent Property"
            version="1.2.0">
      </workspacetask>
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
            id="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
-           name="org.talend.dataprofiler.core.migration.impl.CreateDQRulesFolderTask"
+           name="Create DQRules Folder"
            version="1.2.0">
      </workspacetask>
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.EncryptAndDecryptPasswordTask"
            id="org.talend.dataprofiler.core.migration.impl.EncryptAndDecryptPasswordTask"
-           name="org.talend.dataprofiler.core.migration.impl.EncryptAndDecryptPasswordTask"
+           name="Encrypt And Decrypt Password"
            version="1.2.0">
      </workspacetask>
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
            id="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
-           name="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
+           name="TDCP Folder Merge"
            version="1.2.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.CreateExchangeFolderTask"
+           id="org.talend.dataprofiler.core.migration.impl.CreateExchangeFolderTask"
+           name="Create Exchange Folder"
+           version="3.1.0">
      </workspacetask>
   </extension>
 
