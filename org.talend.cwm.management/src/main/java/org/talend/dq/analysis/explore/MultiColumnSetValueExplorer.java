@@ -79,9 +79,9 @@ public class MultiColumnSetValueExplorer extends DataExplorer {
     private String buildWhereClause(String queryString, final TdColumn tdColumn, String name, String value, String where) {
         if (tdColumn.getName().equals(name) && !value.equals("null")) { //$NON-NLS-1$
             if (Java2SqlType.isTextInSQL(tdColumn.getJavaType())) {
-                queryString += where + name + dbmsLanguage.equal() + "'" + value + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+                queryString += where + dbmsLanguage.quote(name) + dbmsLanguage.equal() + "'" + value + "'"; //$NON-NLS-1$ //$NON-NLS-2$
             } else {
-                queryString += where + name + dbmsLanguage.equal() + value;
+                queryString += where + dbmsLanguage.quote(name) + dbmsLanguage.equal() + value;
             }
         } else if (tdColumn.getName().equals(name) && value.equals("null")) { //$NON-NLS-1$
             queryString += where + name + dbmsLanguage.isNull();
