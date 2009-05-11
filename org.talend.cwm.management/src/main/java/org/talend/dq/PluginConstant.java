@@ -33,7 +33,8 @@ public final class PluginConstant {
 
     public static final String DBTYPE_PROPERTY = "dbtype"; //$NON-NLS-1$
 
-    public static final String DEFAULT_PARAMETERS = "zeroDateTimeBehavior=convertToNull&noDatetimeStringSync=true"; //$NON-NLS-1$
+    // MOD mzhao 2009-05-11 bug:7280, Default charset UTF-8
+    public static final String DEFAULT_PARAMETERS = "zeroDateTimeBehavior=convertToNull&noDatetimeStringSync=true&characterEncoding=UTF-8"; //$NON-NLS-1$
 
     public static final String PRV_SUFFIX = "." + FactoriesUtil.PROV; //$NON-NLS-1$
 
