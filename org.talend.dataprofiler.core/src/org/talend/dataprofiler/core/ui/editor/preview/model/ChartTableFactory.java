@@ -67,6 +67,11 @@ public final class ChartTableFactory {
 
             @Override
             public void mouseDown(MouseEvent e) {
+                // MOD xqliu 2009-05-11 bug 6561
+                if (table.getMenu() != null) {
+                    table.getMenu().setVisible(false);
+                }
+                // ~
                 ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
 
                 if (e.button == 3 && ExecutionLanguage.JAVA != currentEngine) {
