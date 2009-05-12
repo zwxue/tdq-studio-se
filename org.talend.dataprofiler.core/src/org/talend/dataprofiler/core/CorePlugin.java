@@ -55,6 +55,7 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -241,7 +242,17 @@ public class CorePlugin extends AbstractUIPlugin {
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
         Alias alias = aliasManager.getAlias(tdDataProvider.getName());
-        if (alias != null) {
+
+        if (alias == null) {
+            List<TdDataProvider> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(
+                    ResourceManager.getMetadataFolder());
+            for (TdDataProvider dataProvider : allDataProviders) {
+                if (dataProvider == tdDataProvider) {
+                    addConnetionAliasToSQLPlugin(dataProvider);
+                    openInSqlEditor(tdDataProvider, query, editorName);
+                }
+            }
+        } else {
             try {
                 SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
                 input.setUser(alias.getDefaultUser());
