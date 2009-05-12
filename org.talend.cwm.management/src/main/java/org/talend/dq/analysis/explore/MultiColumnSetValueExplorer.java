@@ -84,7 +84,7 @@ public class MultiColumnSetValueExplorer extends DataExplorer {
                 queryString += where + dbmsLanguage.quote(name) + dbmsLanguage.equal() + value;
             }
         } else if (tdColumn.getName().equals(name) && value.equals("null")) { //$NON-NLS-1$
-            queryString += where + name + dbmsLanguage.isNull();
+            queryString += where + dbmsLanguage.quote(name) + dbmsLanguage.isNull();
         }
         return queryString;
     }
