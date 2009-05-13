@@ -9,5 +9,7 @@ The groups of indicators are:</description>
         <topic label="Text statistics" href="html/wizard/indicator_select/text_statistics.html"/>
         <topic label="Summary statistics" href="html/wizard/indicator_select/summary_statistics.html"/>
         <topic label="Advanced statistics" href="html/wizard/indicator_select/advanced_statistics.html"/>
+        <topic label="Pattern frequency statistics" href="html/wizard/indicator_select/pattern_statistics.html"/>
+        <topic label="Soundex frequency statistics" href="html/wizard/indicator_select/soundex_statistics.html"/>
     </context>
 </contexts>
