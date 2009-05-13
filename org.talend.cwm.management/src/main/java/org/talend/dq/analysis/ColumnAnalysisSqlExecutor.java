@@ -89,7 +89,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     private static Logger log = Logger.getLogger(ColumnAnalysisSqlExecutor.class);
 
-
     /*
      * (non-Javadoc)
      * 
@@ -331,8 +330,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return true;
     }
 
- 
-
     /**
      * Method "duplicateForCrossJoin". For some SQL queries, auto-joins are used in subqueries. This means that the
      * table has two differents aliases and the columns must be prefixed with the alias of the table. Each where clause
@@ -375,8 +372,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         return duplicatedWhereExpressions;
     }
-
- 
 
     /**
      * DOC scorreia Comment method "getTableTableAliasA".
@@ -559,7 +554,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     private String getAlias(String colName, DateGrain dateAggregationType) {
         if (dbms().supportAliasesInGroupBy()) {
-            return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " "; //$NON-NLS-1$ //$NON-NLS-2$
+            // return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
+            // MOD by hcheng for 7338 SQL syntax error if the name of column has invalid char.
+            return " TDAL_" + dateAggregationType.getName() + " ";
         } else {
             return ""; //$NON-NLS-1$
         }
@@ -863,8 +860,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return Long.valueOf(String.valueOf(myResultSet.get(0)[0]));
     }
 
-
-
     /**
      * 
      * 
@@ -890,7 +885,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private String surroundSingleQuotes(String sqlGenericString) {
         return sqlGenericString.replaceAll("'", "''"); //$NON-NLS-1$ //$NON-NLS-2$
     }
-
 
     /**
      * Method "traceError".
@@ -968,6 +962,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "setRowCountAndNullCount".
+     * 
      * @param elementToIndicator
      */
     protected void setRowCountAndNullCount(Map<ModelElement, List<Indicator>> elementToIndicator) {
