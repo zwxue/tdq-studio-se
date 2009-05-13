@@ -143,6 +143,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         int size = 0;
         for (T t : columnSets) {
             for (String pattern : patterns) {
+                // MOD scorreia 2009-05-13 use SQL patterns for filter
                 String regex = pattern.replaceAll("%", ".*");
                 if (t.getName().matches(regex)) {
                     retColumnSets.add(t);

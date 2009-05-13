@@ -146,7 +146,9 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         int size = 0;
         for (T t : columns) {
             for (String pattern : patterns) {
-                if (pattern.equalsIgnoreCase(t.getName())) {
+                // MOD scorreia 2009-05-13 use SQL patterns for filter
+                String regex = pattern.replaceAll("%", ".*");
+                if (t.getName().matches(regex)) {
                     retColumns.add(t);
                     size++;
                     if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
