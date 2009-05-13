@@ -94,6 +94,9 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                         }
                     }
                 }
+            } else { // MOD scorreia 2009-05-13. Bug 7235
+                // no parameter set: handle as textual data
+                clause = getInstantiatedClause();
             }
         } else {
             clause = getDefaultQuotedStatement(""); // no quote here //$NON-NLS-1$
