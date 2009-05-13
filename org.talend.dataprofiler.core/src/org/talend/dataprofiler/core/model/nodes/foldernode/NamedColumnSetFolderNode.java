@@ -143,7 +143,8 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         int size = 0;
         for (T t : columnSets) {
             for (String pattern : patterns) {
-                if (pattern.equalsIgnoreCase(t.getName())) {
+                String regex = pattern.replaceAll("%", ".*");
+                if (t.getName().matches(regex)) {
                     retColumnSets.add(t);
                     size++;
                     if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
