@@ -68,12 +68,10 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
     @Override
     protected List<TdTable> getColumnSets(TdCatalog catalog, TdSchema schema) {
         if (catalog != null) {
-            String tableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, catalog.getTaggedValue());
-            return filterColumnSets(CatalogHelper.getTables(catalog), tableFilter);
+            return CatalogHelper.getTables(catalog);
         }
         if (schema != null) {
-            String tableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, schema.getTaggedValue());
-            return filterColumnSets(SchemaHelper.getTables(schema), tableFilter);
+            return SchemaHelper.getTables(schema);
         }
         return Collections.emptyList();
     }
@@ -109,6 +107,19 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
 
     public int getFolderNodeType() {
         return TABLEFOLDER_NODE_TYPE;
+    }
+
+    @Override
+    protected List<TdTable> getColumnSetsWithFilter(TdCatalog catalog, TdSchema schema) {
+        if (catalog != null) {
+            String tableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, catalog.getTaggedValue());
+            return filterColumnSets(CatalogHelper.getTables(catalog), tableFilter);
+        }
+        if (schema != null) {
+            String tableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, schema.getTaggedValue());
+            return filterColumnSets(SchemaHelper.getTables(schema), tableFilter);
+        }
+        return Collections.emptyList();
     }
 
 }

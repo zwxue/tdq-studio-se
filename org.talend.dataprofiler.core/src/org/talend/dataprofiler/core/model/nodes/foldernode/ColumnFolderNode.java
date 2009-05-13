@@ -60,8 +60,13 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         // get columns from either tables or views.
         ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(this.getParent());
         if (columnSet != null) {
-            String columnFilter = TaggedValueHelper.getValue(TaggedValueHelper.COLUMN_FILTER, columnSet.getTaggedValue());
-            List<TdColumn> columnList = filterColumns(ColumnSetHelper.getColumns(columnSet), columnFilter);
+            List<TdColumn> columnList = null;
+            if (FILTER_FLAG) {
+                String columnFilter = TaggedValueHelper.getValue(TaggedValueHelper.COLUMN_FILTER, columnSet.getTaggedValue());
+                columnList = filterColumns(ColumnSetHelper.getColumns(columnSet), columnFilter);
+            } else {
+                columnList = ColumnSetHelper.getColumns(columnSet);
+            }
             if (columnList.size() > 0) {
                 if (columnList.size() > TaggedValueHelper.COLUMN_MAX) {
                     this.setChildren(null);
@@ -71,6 +76,13 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                     this.setChildren(columnList.toArray());
                 }
                 return;
+            } else {
+                if (FILTER_FLAG) {
+                    this.setChildren(null);
+                    if (ColumnSetHelper.getColumns(columnSet).size() > 0) {
+                        return;
+                    }
+                }
             }
             Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
             if (parentCatalogOrSchema == null) {

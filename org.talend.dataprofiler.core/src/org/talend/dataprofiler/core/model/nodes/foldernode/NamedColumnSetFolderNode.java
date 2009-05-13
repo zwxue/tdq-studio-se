@@ -50,9 +50,13 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
     protected <T extends List<COLSET>> void loadChildrenLow(orgomg.cwm.objectmodel.core.Package pack, TdCatalog catalog,
             TdSchema schema, final T columnSets) {
         assert pack != null;
-        columnSets.addAll(getColumnSets(catalog, schema));
+        // MOD xqliu 2009-04-27 bug 6507
+        if (FILTER_FLAG) {
+            columnSets.addAll(getColumnSetsWithFilter(catalog, schema));
+        } else {
+            columnSets.addAll(getColumnSets(catalog, schema));
+        }
         if (columnSets.size() > 0) {
-            // MOD xqliu 2009-04-27 bug 6507
             if (FILTER_FLAG && columnSets.size() > TaggedValueHelper.TABLE_VIEW_MAX) {
                 columnSets.clear();
                 this.setChildren(null);
@@ -61,9 +65,16 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
             } else {
                 this.setChildren(columnSets.toArray());
             }
-            // ~
             return;
+        } else {
+            if (FILTER_FLAG) {
+                this.setChildren(null);
+                if (getColumnSets(catalog, schema).size() > 0) {
+                    return;
+                }
+            }
         }
+        // ~
 
         TdDataProvider provider = DataProviderHelper.getTdDataProvider(pack);
         if (provider == null) {
@@ -84,6 +95,13 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
      * @return the Tables or Views in the given catalog or schema.
      */
     protected abstract List<COLSET> getColumnSets(TdCatalog catalog, TdSchema schema);
+
+    /**
+     * @param catalog
+     * @param schema
+     * @return the Tables or Views in the given catalog or schema.
+     */
+    protected abstract List<COLSET> getColumnSetsWithFilter(TdCatalog catalog, TdSchema schema);
 
     /**
      * Loads columnsets (table or view) from database.
