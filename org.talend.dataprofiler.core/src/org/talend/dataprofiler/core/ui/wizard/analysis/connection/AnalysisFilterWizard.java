@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.relational.TdSchema;
+import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
@@ -27,8 +28,10 @@ import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -53,9 +56,17 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
     @Override
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
-        DependenciesHandler.getInstance().setDependencyOn(analysis, analysis.getContext().getConnection());
+        DataManager connection = analysis.getContext().getConnection();
+        DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
 
-        return super.createAndSaveCWMFile(analysis);
+        TypedReturnCode<IFile> saveCWMFile = super.createAndSaveCWMFile(analysis);
+
+        // MOD by hcheng for 7173:Broken dependency between analyses and connection
+        if (saveCWMFile.isOk()) {
+            PrvResourceFileHelper.getInstance().save((TdDataProvider) connection);
+        }
+
+        return saveCWMFile;
     }
 
     @Override
