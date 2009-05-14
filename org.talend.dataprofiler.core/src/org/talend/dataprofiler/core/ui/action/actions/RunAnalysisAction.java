@@ -41,6 +41,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -116,6 +117,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             }
         }
 
+        if (analysis != null) {
+            if (AnalysisType.COLUMNS_COMPARISON.equals(analysis.getParameters().getAnalysisType())) {
+                if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"),
+                        DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) {
+                    return;
+                }
+            }
+        }
         final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
 
             @Override
