@@ -116,12 +116,14 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
         DataManager connection = analysis.getContext().getConnection();
-        DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+        if (connection != null) {
+            DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+        }
 
         // MOD by hcheng for 7173:Broken dependency between analyses and connection
         TypedReturnCode<IFile> saveCWMFile = super.createAndSaveCWMFile(analysis);
 
-        if (saveCWMFile.isOk()) {
+        if (saveCWMFile.isOk() && connection != null) {
             PrvResourceFileHelper.getInstance().save((TdDataProvider) connection);
         }
 
