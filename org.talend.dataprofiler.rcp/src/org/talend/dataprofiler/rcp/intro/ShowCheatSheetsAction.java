@@ -16,6 +16,7 @@ package org.talend.dataprofiler.rcp.intro;
 import java.util.Properties;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -32,12 +33,17 @@ import org.eclipse.ui.intro.config.IIntroAction;
  */
 public class ShowCheatSheetsAction extends Action implements IIntroAction {
 
+    private static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
+
     /*
      * (non-Javadoc)
      * 
      * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
      */
     public void run(IIntroSite site, Properties params) {
+        IPerspectiveDescriptor persDescription1 = PlatformUI.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(
+                PERSPECTIVE_ID);
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setPerspective(persDescription1);
         String property = params.getProperty("id"); //$NON-NLS-1$
         OpenCheatSheetAction action = new OpenCheatSheetAction(property);
         action.run();
@@ -47,5 +53,4 @@ public class ShowCheatSheetsAction extends Action implements IIntroAction {
             activePage.hideView(findView);
         }
     }
-
 }
