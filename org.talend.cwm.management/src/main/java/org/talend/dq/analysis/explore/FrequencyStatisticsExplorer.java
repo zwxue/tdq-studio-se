@@ -93,6 +93,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                             break;
                         }
                     }
+                } else {// MOD hcheng 2009-05-18.Bug 7377,Frequency indicator,when bins is null,handle as textual data
+                    clause = getInstantiatedClause();
                 }
             } else { // MOD scorreia 2009-05-13. Bug 7235
                 // no parameter set: handle as textual data
@@ -106,7 +108,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 + andDataFilterClause();
     }
 
- 
+    
     /**
      * DOC scorreia Comment method "createWhereClause".
      * 
@@ -120,7 +122,6 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 + dbmsLanguage.less() + max;
         return whereClause;
     }
-
 
     private String getDefaultQuotedStatement(String quote) {
         return entity.isLabelNull() ? dbmsLanguage.quote(this.columnName) + dbmsLanguage.isNull() : dbmsLanguage
@@ -214,8 +215,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
         return map;
     }
-    
-    
+
     /**
      * Method "getInstantiatedClause".
      * 
@@ -229,7 +229,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 + dbmsLanguage.equal() + "'" + entity.getLabel() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
         return clause;
     }
-    
+
     private String getFunction() {
         Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
         final String body = instantiatedExpression.getBody();
@@ -239,6 +239,5 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         String group = matcher.group(1);
         return group;
     }
-
 
 }

@@ -167,21 +167,31 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFieldsListeners() {
-
+        // MOD hcheng for 7377,only when minValue,maxValue,numbOfBins are set, the wizard can finish
         minValue.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 String mintxt = minValue.getText();
                 String maxtxt = maxValue.getText();
+                String bintxt = numbOfBins.getText();
 
-                if (mintxt == "") { //$NON-NLS-1$
-                    updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isRealNumberValue(mintxt)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
-                } else if (!maxtxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) { //$NON-NLS-1$
-                    updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                if (mintxt != "") { //$NON-NLS-1$
+                    if (!CheckValueUtils.isRealNumberValue(mintxt)) {
+                        updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                    } else if (!maxtxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) { //$NON-NLS-1$
+                        updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                    } else if (!maxtxt.equals("") && !bintxt.equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+                        updateStatus(IStatus.OK, MSG_OK);
+                    } else {
+                        updateStatus(IStatus.ERROR, MSG_EMPTY);
+                    }
+
                 } else {
-                    updateStatus(IStatus.OK, MSG_OK);
+                    if (!maxtxt.equals("") || !bintxt.equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+                        updateStatus(IStatus.ERROR, MSG_EMPTY);
+                    } else {
+                        updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
+                    }
                 }
             }
 
@@ -192,15 +202,23 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
             public void modifyText(ModifyEvent e) {
                 String mintxt = minValue.getText();
                 String maxtxt = maxValue.getText();
-
-                if (maxtxt == "") { //$NON-NLS-1$
-                    updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isRealNumberValue(maxtxt)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
-                } else if (!mintxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) { //$NON-NLS-1$
-                    updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                String bintxt = numbOfBins.getText();
+                if (maxtxt != "") { //$NON-NLS-1$
+                    if (!CheckValueUtils.isRealNumberValue(maxtxt)) {
+                        updateStatus(IStatus.ERROR, MSG_ONLY_REAL_NUMBER);
+                    } else if (!mintxt.equals("") && CheckValueUtils.isAoverB(mintxt, maxtxt)) { //$NON-NLS-1$
+                        updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
+                    } else if (!mintxt.equals("") && !bintxt.equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+                        updateStatus(IStatus.OK, MSG_OK);
+                    } else {
+                        updateStatus(IStatus.ERROR, MSG_EMPTY);
+                    }
                 } else {
-                    updateStatus(IStatus.OK, MSG_OK);
+                    if (!mintxt.equals("") || !bintxt.equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+                        updateStatus(IStatus.ERROR, MSG_EMPTY);
+                    } else {
+                        updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
+                    }
                 }
             }
 
@@ -209,15 +227,25 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         numbOfBins.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-
+                String mintxt = minValue.getText();
+                String maxtxt = maxValue.getText();
                 String numbtxt = numbOfBins.getText();
 
-                if (numbtxt == "") { //$NON-NLS-1$
-                    updateStatus(IStatus.ERROR, MSG_EMPTY);
-                } else if (!CheckValueUtils.isNumberValue(numbtxt)) {
-                    updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                if (numbtxt != "") { //$NON-NLS-1$
+                    if (!CheckValueUtils.isNumberValue(numbtxt)) {
+                        updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
+                    } else if (!mintxt.equals("") && !maxtxt.equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+                        updateStatus(IStatus.OK, MSG_OK);
+                    } else {
+                        updateStatus(IStatus.ERROR, MSG_EMPTY);
+                    }
                 } else {
-                    updateStatus(IStatus.OK, MSG_OK);
+                    if (!mintxt.equals("") || !maxtxt.equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+                        updateStatus(IStatus.ERROR, MSG_EMPTY);
+                    } else {
+                        updateStatus(IStatus.OK, UIMessages.MSG_INDICATOR_WIZARD);
+                    }
+
                 }
             }
 
@@ -334,9 +362,11 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     @Override
     public boolean performFinish() {
 
-        if (minValue.getText().equals("") || maxValue.getText().equals("") || numbOfBins.getText().equals("0")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        if (minValue.getText().equals("") || maxValue.getText().equals("") || numbOfBins.getText().equals("0") || numbOfBins.getText().equals("")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             parameters.setBins(null);
-        } else {
+
+        } else if (!minValue.getText().equals("") && !maxValue.getText().equals("") && !numbOfBins.getText().equals("") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                && !numbOfBins.getText().equals("0")) { //$NON-NLS-1$
             double min = Double.parseDouble(minValue.getText());
             double max = Double.parseDouble(maxValue.getText());
             int numb = Integer.parseInt(numbOfBins.getText());

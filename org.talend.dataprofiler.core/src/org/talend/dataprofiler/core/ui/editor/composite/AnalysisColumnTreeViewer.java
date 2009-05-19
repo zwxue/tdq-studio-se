@@ -567,6 +567,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         TreeItem iParamItem;
         if (indicatorUnit.getIndicator() instanceof FrequencyIndicator) {
+            // MOD hcheng bug 7377,2009-05-18,when bins is null,parameters not set on tree
+            if (parameters.getBins() == null) {
+                return;
+            }
+            // ~
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
             iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.resultsShown") + parameters.getTopN()); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
