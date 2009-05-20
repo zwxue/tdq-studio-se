@@ -22,7 +22,7 @@ public enum PatternToExcelEnum {
     Description(2, "Description"), //$NON-NLS-1$
     Author(3, "Author"), //$NON-NLS-1$
     RelativePath(4, "Relative Path"), //$NON-NLS-1$
-    AllDBRegularexpression(5, "All DB Regular expression"), //$NON-NLS-1$
+    AllDBRegexp(5, "All DB Regexp"), //$NON-NLS-1$
     DB2Regexp(6, "DB2 Regexp"), //$NON-NLS-1$
     MySQLRegexp(7, "MySQL Regexp"), //$NON-NLS-1$
     OracleRegexp(8, "Oracle Regexp"), //$NON-NLS-1$
