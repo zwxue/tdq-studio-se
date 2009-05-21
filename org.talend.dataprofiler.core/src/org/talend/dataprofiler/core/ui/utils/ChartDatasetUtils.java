@@ -104,7 +104,7 @@ public final class ChartDatasetUtils {
 
         final int nbNominalColumns = nominalColumns.size();
 
-        return fillDataset(nominalColumns, listRows, nbNominalColumns + indexOfNumericCol * 3);
+        return fillDataset(nominalColumns, listRows, nbNominalColumns + nbNumericFunctions * indexOfNumericCol);
     }
 
     public static Map<String, DateValueAggregate> createGanttDatasets(ColumnSetMultiValueIndicator indicator, Column dateColumn) {
