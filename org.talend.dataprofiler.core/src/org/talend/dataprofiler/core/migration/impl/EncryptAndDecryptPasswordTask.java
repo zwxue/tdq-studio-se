@@ -123,4 +123,12 @@ public class EncryptAndDecryptPasswordTask extends AbstractMigrationTask {
         return calender.getTime();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
+     */
+    public MigrationTaskType getMigrationTaskType() {
+        return MigrationTaskType.FILE;
+    }
 }

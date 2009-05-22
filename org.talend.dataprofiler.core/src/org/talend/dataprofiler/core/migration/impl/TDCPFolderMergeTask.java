@@ -54,11 +54,7 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             if (!rootProject.exists()) {
                 rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.DEFAULT_PROJECT_NAME);
             }
-            // // Delete first if dq structure has already constructed.
-            // rootProject.delete(true, true, new NullProgressMonitor());
-            // // create brandly new one.
-            // rootProject = DQStructureManager.getInstance().createNewProject(
-            // org.talend.dataquality.PluginConstant.getRootProjectName());
+
             // Copy "top level" folders already as projects in TOP/TDQ into this
             // project.
             IResource[] resources = ResourcesPlugin.getWorkspace().getRoot().members();
@@ -137,6 +133,15 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
         Calendar calender = Calendar.getInstance();
         calender.set(1949, 10, 1);
         return calender.getTime();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
+     */
+    public MigrationTaskType getMigrationTaskType() {
+        return MigrationTaskType.STUCTRUE;
     }
 
 }

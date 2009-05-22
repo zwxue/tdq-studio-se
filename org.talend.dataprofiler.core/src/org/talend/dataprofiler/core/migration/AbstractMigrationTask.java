@@ -21,13 +21,16 @@ public abstract class AbstractMigrationTask implements IWorkspaceMigrationTask {
 
     private String name;
 
+    private String version;
+
     public AbstractMigrationTask() {
         super();
     }
 
-    public AbstractMigrationTask(String id, String name) {
+    public AbstractMigrationTask(String id, String name, String version) {
         this.id = id;
         this.name = name;
+        this.version = version;
     }
 
     /*
@@ -70,4 +73,21 @@ public abstract class AbstractMigrationTask implements IWorkspaceMigrationTask {
         this.name = name;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getVersion()
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#setVersion(java.lang.String)
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
 }

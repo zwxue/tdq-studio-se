@@ -20,6 +20,15 @@ import java.util.Date;
 public interface IWorkspaceMigrationTask {
 
     /**
+     * DOC bZhou AbstractMigrationTask class global comment. Detailled comment
+     */
+    public enum MigrationTaskType {
+        STUCTRUE,
+        DATABASE,
+        FILE;
+    }
+
+    /**
      * DOC bzhou Comment method "getId".
      * 
      * @return
@@ -48,6 +57,20 @@ public interface IWorkspaceMigrationTask {
     public void setName(String name);
 
     /**
+     * DOC bZhou Comment method "getVersion".
+     * 
+     * @return
+     */
+    public String getVersion();
+
+    /**
+     * DOC bZhou Comment method "setVersion".
+     * 
+     * @param version
+     */
+    public void setVersion(String version);
+
+    /**
      * DOC bzhou Comment method "execute".
      * 
      * @return
@@ -62,4 +85,11 @@ public interface IWorkspaceMigrationTask {
      * @return
      */
     public Date getOrder();
+
+    /**
+     * DOC bZhou Comment method "getMigrationTaskType".
+     * 
+     * @return
+     */
+    public MigrationTaskType getMigrationTaskType();
 }

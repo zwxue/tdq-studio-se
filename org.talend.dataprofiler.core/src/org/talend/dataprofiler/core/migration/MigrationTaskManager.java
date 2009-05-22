@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,15 +21,19 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.utils.ProductVersion;
 
 /**
  * DOC bzhou class global comment. Detailled comment
  */
-public class MigrationTaskManager {
+public final class MigrationTaskManager {
 
     protected static Logger log = Logger.getLogger(MigrationTaskManager.class);
 
@@ -38,41 +43,58 @@ public class MigrationTaskManager {
 
     public static final String ATTR_VERSION = "version"; //$NON-NLS-1$
 
-    public static final String ATTR_PID = "pluginId"; //$NON-NLS-1$
+    public static final String ATTR_NAME = "name"; //$NON-NLS-1$
 
+    public static final String ATTR_PID = "id"; //$NON-NLS-1$
+
+    private MigrationTaskManager() {
+    }
+
+    /**
+     * DOC bZhou Comment method "findValidMigrationTasks".
+     * 
+     * @return
+     */
     public static List<IWorkspaceMigrationTask> findValidMigrationTasks() {
         List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
 
-        IConfigurationElement[] elems = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
         ProductVersion workspaceVersion = WorkspaceVersionHelper.getVesion();
         ProductVersion currentVersion = CorePlugin.getDefault().getProductVersion();
 
-        for (IConfigurationElement elem : elems) {
-            String attribute = elem.getAttribute(ATTR_VERSION);
-            ProductVersion taskVersion = ProductVersion.fromString(attribute);
-
+        List<IWorkspaceMigrationTask> allTasks = findAllMigrationTasks();
+        for (IWorkspaceMigrationTask task : allTasks) {
+            ProductVersion taskVersion = ProductVersion.fromString(task.getVersion());
             if (taskVersion.compareTo(workspaceVersion) > 0 && taskVersion.compareTo(currentVersion) <= 0) {
-                try {
-                    validTasks.add((IWorkspaceMigrationTask) elem.createExecutableExtension(ATTR_CLASS));
-                } catch (CoreException e) {
-                    log.error(e, e);
-                }
+                validTasks.add(task);
             }
         }
-
-        sortTasks(validTasks);
 
         return validTasks;
     }
 
+    /**
+     * DOC bZhou Comment method "findAllMigrationTasks".
+     * 
+     * @return
+     */
     public static List<IWorkspaceMigrationTask> findAllMigrationTasks() {
         List<IWorkspaceMigrationTask> allTasks = new ArrayList<IWorkspaceMigrationTask>();
 
         IConfigurationElement[] elems = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
         for (IConfigurationElement elem : elems) {
             try {
-                allTasks.add((IWorkspaceMigrationTask) elem.createExecutableExtension(ATTR_CLASS));
+                String taskName = elem.getAttribute(ATTR_NAME);
+                String taskID = elem.getAttribute(ATTR_PID);
+                String version = elem.getAttribute(ATTR_VERSION);
+
+                IWorkspaceMigrationTask migrationTask = (IWorkspaceMigrationTask) elem.createExecutableExtension(ATTR_CLASS);
+                migrationTask.setName(taskName);
+                migrationTask.setId(taskID);
+                migrationTask.setVersion(version);
+
+                allTasks.add(migrationTask);
             } catch (CoreException e) {
+                e.printStackTrace();
                 log.error(e, e);
             }
         }
@@ -82,22 +104,47 @@ public class MigrationTaskManager {
         return allTasks;
     }
 
-    public static IWorkspaceMigrationTask findMigrationTaskFromPID(String pid) {
-        IConfigurationElement[] elems = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
-        for (IConfigurationElement elem : elems) {
-            String attribute = elem.getAttribute(ATTR_PID);
-            if (attribute.equals(pid)) {
-                try {
-                    return (IWorkspaceMigrationTask) elem.createExecutableExtension(ATTR_CLASS);
-                } catch (CoreException e) {
-                    log.error(e, e);
-                }
+    /**
+     * DOC bZhou Comment method "findMigrationTaskByPID".
+     * 
+     * @param pid
+     * @return
+     */
+    public static IWorkspaceMigrationTask findMigrationTaskByPID(String pid) {
+        List<IWorkspaceMigrationTask> allTasks = findAllMigrationTasks();
+        for (IWorkspaceMigrationTask task : allTasks) {
+            if (pid != null && pid.equals(task.getId())) {
+                return task;
             }
         }
 
         return null;
     }
 
+    /**
+     * DOC bZhou Comment method "findMigrationTaskByType".
+     * 
+     * @param type
+     * @return
+     */
+    public static List<IWorkspaceMigrationTask> findMigrationTaskByType(MigrationTaskType type) {
+        List<IWorkspaceMigrationTask> allTasks = findAllMigrationTasks();
+        List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
+
+        for (IWorkspaceMigrationTask task : allTasks) {
+            if (task.getMigrationTaskType() == type) {
+                validTasks.add(task);
+            }
+        }
+
+        return validTasks;
+    }
+
+    /**
+     * DOC bZhou Comment method "sortTasks".
+     * 
+     * @param tasks
+     */
     private static void sortTasks(List<IWorkspaceMigrationTask> tasks) {
         Collections.sort(tasks, new Comparator<IWorkspaceMigrationTask>() {
 
@@ -110,5 +157,52 @@ public class MigrationTaskManager {
             }
 
         });
+    }
+
+    /**
+     * DOC bZhou Comment method "doMigrationTask".
+     * 
+     * @param tasks
+     */
+    public static void doMigrationTask(final List<IWorkspaceMigrationTask> tasks) {
+
+        if (!tasks.isEmpty()) {
+            IRunnableWithProgress op = new IRunnableWithProgress() {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+                 */
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    monitor.beginTask("Migration Task Job", tasks.size());
+
+                    for (IWorkspaceMigrationTask task : tasks) {
+
+                        if (monitor.isCanceled()) {
+                            break;
+                        }
+
+                        monitor.subTask(task.getName());
+
+                        task.execute();
+
+                        monitor.worked(1);
+                    }
+
+                    monitor.done();
+
+                    WorkspaceVersionHelper.storeVersion();
+                }
+            };
+
+            try {
+                ProgressUI.popProgressDialog(op);
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

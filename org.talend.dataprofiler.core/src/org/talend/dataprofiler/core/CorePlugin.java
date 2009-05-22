@@ -48,11 +48,6 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask;
-import org.talend.dataprofiler.core.migration.MigrationTaskManager;
-import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
-import org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -172,35 +167,6 @@ public class CorePlugin extends AbstractUIPlugin {
     // driver.setUrl(url);
     // SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
     // }
-
-    public void checkDQStructure() {
-
-        if (isNeedCreateStructure()) {
-            DQStructureManager manager = DQStructureManager.getInstance();
-            if (!manager.createDQStructure()) {
-                log.error("Failed to create structure of TDQ!");
-            }
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "isNeedCreateStructure".
-     * 
-     * @return false if not needed.
-     */
-    public boolean isNeedCreateStructure() {
-        IProject rootProject = ResourceManager.getRootProject();
-        if (!rootProject.exists()) {
-            return true;
-        } else {
-            if (!ResourceManager.getDataProfilingFolder().exists() || !ResourceManager.getLibrariesFolder().exists()
-                    || !ResourceManager.getMetadataFolder().exists()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * DOC Zqin Comment method "getCurrentActiveEditor".
@@ -400,43 +366,6 @@ public class CorePlugin extends AbstractUIPlugin {
 
     public void refreshDQView() {
         ((DQRespositoryView) findView(DQRespositoryView.ID)).getCommonViewer().refresh();
-    }
-
-    public void doMigrationTask() {
-
-        List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
-
-        if (!tasks.isEmpty()) {
-            for (IWorkspaceMigrationTask task : tasks) {
-                // MOD mzhao 2009-04-02, Do migration for dq structure before CREATE DQStructure and before other
-                // migrations.
-                if (!(task instanceof TDCPFolderMergeTask)) {
-                    log.warn("now exectuting the task: " + task.getClass().getName());
-                    task.execute();
-                }
-            }
-
-            WorkspaceVersionHelper.storeVersion();
-        }
-    }
-
-    /**
-     * 
-     * DOC mzhao 2009-04-02, Do migration for dq structure before CREATE DQStructure and before other migrations.
-     */
-    public void doMigrationTaskDQStructureChange() {
-
-        List<IWorkspaceMigrationTask> tasks = MigrationTaskManager.findValidMigrationTasks();
-
-        if (!tasks.isEmpty()) {
-            for (IWorkspaceMigrationTask task : tasks) {
-                if (task instanceof TDCPFolderMergeTask) {
-                    task.execute();
-                    break;
-                }
-
-            }
-        }
     }
 
     /**
