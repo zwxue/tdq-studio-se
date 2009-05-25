@@ -111,18 +111,23 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      */
     private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, EList<Column> columnSetA,
             EList<Column> columnSetB, boolean useNulls) {
-        String tableNameA = getTableName(columnSetA);
-        String tableNameB = getTableName(columnSetB);
+        // MOD scorreia 2009-05-25 allow to compare elements from the same table
+        // aliases of tables
+        String aliasA = "A";
+        String aliasB = "B";
+
+        String tableNameA = getTableName(columnSetA) + " " + aliasA;
+        String tableNameB = getTableName(columnSetB) + " " + aliasB;
 
         // Generic SQL expression is something like:
-        // SELECT COUNT(*) FROM <%=__COLUMN_NAMES__%> LEFT JOIN <%=__TABLE_NAME__%> ON (<%=__JOIN_CLAUSE__%>) WHERE
+        // SELECT COUNT(*) FROM <%=__TABLE_NAME__%> LEFT JOIN <%=__TABLE_NAME_2__%> ON (<%=__JOIN_CLAUSE__%>) WHERE
         // (<%=__WHERE_CLAUSE__%>)
         String genericSQL = sqlGenericExpression.getBody();        
-        String joinClause = createJoinClause(tableNameA, columnSetA, tableNameB, columnSetB, useNulls);
-        String whereClause = createWhereClause(tableNameB, columnSetB);
+        String joinClause = createJoinClause(aliasA, columnSetA, aliasB, columnSetB, useNulls);
+        String whereClause = createWhereClause(aliasB, columnSetB);
         if (useNulls) {
             // add a where clause to avoid the equality of rows fully null (i.e. rows like "null,null,null"
-            whereClause += dbms().and() + '(' + createNotNullCondition(tableNameA, columnSetA) + ')';
+            whereClause += dbms().and() + '(' + createNotNullCondition(aliasA, columnSetA) + ')';
         }
         
         String instantiatedSQL = dbms().fillGenericQueryWithJoin(genericSQL, tableNameA, tableNameB, joinClause, whereClause);

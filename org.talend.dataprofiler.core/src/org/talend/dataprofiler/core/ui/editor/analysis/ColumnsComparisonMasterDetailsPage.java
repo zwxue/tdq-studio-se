@@ -694,7 +694,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                     return new ReturnCode(
                             DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
                 }
-
                 if (!ColumnSetHelper.isFromSamePackage(ownerA, ownerB)) {
                     return new ReturnCode(
                             DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.schemaSameMessage"), false); //$NON-NLS-1$
@@ -705,9 +704,10 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             allColumns.addAll(columnListA);
             allColumns.addAll(columnListB);
 
-            if (ColumnHelper.isFromSameTable(allColumns)) {
-                return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.TwoSideColumns"), false); //$NON-NLS-1$
-            }
+            // MOD scorreia 2009-05-25 allow to compare elements from the same table
+            // if (ColumnHelper.isFromSameTable(allColumns)) {
+            //                return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.TwoSideColumns"), false); //$NON-NLS-1$
+            // }
         }
 
         return new ReturnCode(true);

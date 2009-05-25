@@ -41,7 +41,10 @@ import orgomg.cwm.resource.relational.View;
  * 
  * Utility class for handling ColumnSets.
  */
-public class ColumnSetHelper {
+public final class ColumnSetHelper {
+
+    private ColumnSetHelper() {
+    }
 
     /**
      * Method "addColumn" adds the given column to the given column set.
