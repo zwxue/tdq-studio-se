@@ -19,7 +19,6 @@ import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
-import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
@@ -185,8 +184,7 @@ public class CorePlugin extends AbstractUIPlugin {
      */
     public void runInDQViewer(TdDataProvider tdDataProvider, String query, String editorName) {
         SQLEditor sqlEditor = openInSqlEditor(tdDataProvider, query, editorName);
-        Session session = sqlEditor.getSession();
-        if (sqlEditor != null && session != null) {
+        if (sqlEditor != null) {
             new ExecSQLAction(sqlEditor).run();
         }
     }
