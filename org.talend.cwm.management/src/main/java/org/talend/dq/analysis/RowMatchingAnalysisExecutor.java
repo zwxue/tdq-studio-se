@@ -22,7 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -33,7 +33,6 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
-import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -122,14 +121,14 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         // Generic SQL expression is something like:
         // SELECT COUNT(*) FROM <%=__TABLE_NAME__%> LEFT JOIN <%=__TABLE_NAME_2__%> ON (<%=__JOIN_CLAUSE__%>) WHERE
         // (<%=__WHERE_CLAUSE__%>)
-        String genericSQL = sqlGenericExpression.getBody();        
+        String genericSQL = sqlGenericExpression.getBody();
         String joinClause = createJoinClause(aliasA, columnSetA, aliasB, columnSetB, useNulls);
         String whereClause = createWhereClause(aliasB, columnSetB);
         if (useNulls) {
             // add a where clause to avoid the equality of rows fully null (i.e. rows like "null,null,null"
             whereClause += dbms().and() + '(' + createNotNullCondition(aliasA, columnSetA) + ')';
         }
-        
+
         String instantiatedSQL = dbms().fillGenericQueryWithJoin(genericSQL, tableNameA, tableNameB, joinClause, whereClause);
         Expression instantiatedExpression = CoreFactory.eINSTANCE.createExpression();
         instantiatedExpression.setLanguage(sqlGenericExpression.getLanguage());
@@ -230,19 +229,16 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private String getTableName(EList<Column> columnSetA) {
         String tableName = null;
         for (Column column : columnSetA) {
-            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
-            if (columnSetOwner == null) {
-                log.error("ColumnSet Owner of column " + column.getName() + " is null");
-                continue;
-            } else {
-                tableName = columnSetOwner.getName();
-                Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
-                if (pack == null) {
-                    log.error("No Catalog or Schema found for column set owner: " + tableName);
-                    continue; // do not break until we find the owner
+            if (belongToSameSchemata((TdColumn) column)) {
+                ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+                if (columnSetOwner == null) {
+                    log.error("ColumnSet Owner of column " + column.getName() + " is null");
+                    continue;
+                } else {
+                    tableName = columnSetOwner.getName();
+                    this.catalogOrSchema = getCatalogOrSchemaName(column);
+                    break; // all columns should belong to the same table
                 }
-                this.catalogOrSchema = pack.getName();
-                break; // all columns should belong to the same table
             }
         }
         return quote(tableName);
@@ -284,7 +280,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 } else {
                     indicator.setComputed(true);
                 }
-               
+
             }
 
             connection.close();
@@ -314,7 +310,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         try {
             List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
             String tableName = getAnalyzedTable(indicator);
-            
+
             // set data filter here
             final String stringDataFilter = AnalysisHelper.getStringDataFilter(this.cachedAnalysis);
             List<String> whereClauses = new ArrayList<String>();
@@ -327,7 +323,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             Long count = getCount(cachedAnalysis, "*", tableName, catalogOrSchema, whereClauses); //$NON-NLS-1$
             ok = ok && count != null;
             indicator.setCount(count);
-            
+
             // compute matching count
             if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator().equals(indicator.eClass())) {
                 RowMatchingIndicator rowMatchingIndicator = (RowMatchingIndicator) indicator;
@@ -337,7 +333,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     rowMatchingIndicator.setMatchingValueCount(count - notMatchingValueCount);
                 }
             }
-            
+
             return ok;
         } catch (SQLException e) {
             log.error(e, e);
