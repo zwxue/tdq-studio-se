@@ -44,26 +44,6 @@ public abstract class PaginationInfo {
 
     private static Logger log = Logger.getLogger(PaginationInfo.class);
 
-    private int gdWidth = 550;
-
-    private int gdHeight = 275;
-
-    public int getGdWidth() {
-        return gdWidth;
-    }
-
-    public void setGdWidth(int gdWidth) {
-        this.gdWidth = gdWidth;
-    }
-
-    public int getGdHeight() {
-        return gdHeight;
-    }
-
-    public void setGdHeight(int gdHeight) {
-        this.gdHeight = gdHeight;
-    }
-
     protected ScrolledForm form;
 
     protected List<ColumnIndicator> columnIndicatores;

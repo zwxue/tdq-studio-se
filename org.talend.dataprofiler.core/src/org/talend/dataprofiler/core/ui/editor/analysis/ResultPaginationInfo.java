@@ -39,6 +39,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
@@ -147,8 +148,8 @@ public class ResultPaginationInfo extends PaginationInfo {
                         ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
                         GridData gd = new GridData();
-                        gd.widthHint = getGdWidth();
-                        gd.heightHint = getGdHeight();
+                        gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+                        gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
                         cc.setLayoutData(gd);
 
                         addMouseListenerForChart(cc, dataExplorer, analysis);
