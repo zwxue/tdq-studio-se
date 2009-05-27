@@ -89,7 +89,7 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         GridData gd = new GridData();
-        gd.heightHint = 220;
+        gd.heightHint = 253;
         gd.widthHint = 500;
         gd.verticalAlignment = SWT.BEGINNING;
         table.setLayoutData(gd);
