@@ -147,8 +147,8 @@ public class ResultPaginationInfo extends PaginationInfo {
                         ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
                         GridData gd = new GridData();
-                        gd.widthHint = 550;
-                        gd.heightHint = 250;
+                        gd.widthHint = getGdWidth();
+                        gd.heightHint = getGdHeight();
                         cc.setLayoutData(gd);
 
                         addMouseListenerForChart(cc, dataExplorer, analysis);

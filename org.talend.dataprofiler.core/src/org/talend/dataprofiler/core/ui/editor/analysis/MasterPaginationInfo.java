@@ -80,8 +80,8 @@ public class MasterPaginationInfo extends PaginationInfo {
                         final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
 
                         GridData gd = new GridData();
-                        gd.widthHint = 550;
-                        gd.heightHint = 250;
+                        gd.widthHint = getGdWidth();
+                        gd.heightHint = getGdHeight();
                         chartComp.setLayoutData(gd);
 
                         addListenerToChartComp(chartComp, chartTypeState);

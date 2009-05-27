@@ -41,79 +41,99 @@ import org.talend.dataprofiler.core.ui.utils.UIPagination;
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
 public abstract class PaginationInfo {
-	private static Logger log = Logger.getLogger(PaginationInfo.class);
-	protected ScrolledForm form;
-	protected List<ColumnIndicator> columnIndicatores;
-	protected List<Widget> needDispostWidgets = new ArrayList<Widget>();
 
-	protected UIPagination uiPagination = null;
+    private static Logger log = Logger.getLogger(PaginationInfo.class);
 
-	public PaginationInfo(ScrolledForm form,
-			List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
-		this.columnIndicatores = columnIndicatores;
-		this.uiPagination = uiPagination;
-		this.form = form;
-	}
+    private int gdWidth = 550;
 
-	public void renderContents() {
-		IRunnableWithProgress rwp = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
-				monitor.beginTask("Analysising...", columnIndicatores.size());
-				uiPagination.notifyPageNavigator();
-				render();
-				uiPagination.updatePageInfoLabel();
-				monitor.done();
-				uiPagination.pack();
-				form.reflow(true);
-			}
-		};
-		try {
-			ProgressUI.popProgressDialog(rwp, false, true);
-		} catch (Exception ex) {
-			log.error(ex, ex);
-		}
-	}
+    private int gdHeight = 275;
 
-	protected abstract void render();
+    public int getGdWidth() {
+        return gdWidth;
+    }
 
-	protected void addListenerToChartComp(final ChartComposite chartComp,
-			final IChartTypeStates chartTypeState) {
-		chartComp.addChartMouseListener(new ChartMouseListener() {
+    public void setGdWidth(int gdWidth) {
+        this.gdWidth = gdWidth;
+    }
 
-			public void chartMouseClicked(ChartMouseEvent event) {
-				final String referenceLink = chartTypeState.getReferenceLink();
-				if (event.getTrigger().getButton() == 1
-						&& referenceLink != null) {
-					Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
-					chartComp.setMenu(menu);
+    public int getGdHeight() {
+        return gdHeight;
+    }
 
-					MenuItem item = new MenuItem(menu, SWT.PUSH);
-					item.setText(DefaultMessagesImpl
-							.getString("ColumnMasterDetailsPage.what")); //$NON-NLS-1$
-					item.addSelectionListener(new SelectionAdapter() {
+    public void setGdHeight(int gdHeight) {
+        this.gdHeight = gdHeight;
+    }
 
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							ChartUtils.openReferenceLink(referenceLink);
-						}
-					});
+    protected ScrolledForm form;
 
-					menu.setVisible(true);
-				}
-			}
+    protected List<ColumnIndicator> columnIndicatores;
 
-			public void chartMouseMoved(ChartMouseEvent event) {
+    protected List<Widget> needDispostWidgets = new ArrayList<Widget>();
 
-			}
+    protected UIPagination uiPagination = null;
 
-		});
-	}
+    public PaginationInfo(ScrolledForm form, List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
+        this.columnIndicatores = columnIndicatores;
+        this.uiPagination = uiPagination;
+        this.form = form;
+    }
 
-	public void dispose() {
-		for (Widget widget : needDispostWidgets) {
-			widget.dispose();
-		}
-		needDispostWidgets.clear();
-	}
+    public void renderContents() {
+        IRunnableWithProgress rwp = new IRunnableWithProgress() {
+
+            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                monitor.beginTask("Analysising...", columnIndicatores.size());
+                uiPagination.notifyPageNavigator();
+                render();
+                uiPagination.updatePageInfoLabel();
+                monitor.done();
+                uiPagination.pack();
+                form.reflow(true);
+            }
+        };
+        try {
+            ProgressUI.popProgressDialog(rwp, false, true);
+        } catch (Exception ex) {
+            log.error(ex, ex);
+        }
+    }
+
+    protected abstract void render();
+
+    protected void addListenerToChartComp(final ChartComposite chartComp, final IChartTypeStates chartTypeState) {
+        chartComp.addChartMouseListener(new ChartMouseListener() {
+
+            public void chartMouseClicked(ChartMouseEvent event) {
+                final String referenceLink = chartTypeState.getReferenceLink();
+                if (event.getTrigger().getButton() == 1 && referenceLink != null) {
+                    Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
+                    chartComp.setMenu(menu);
+
+                    MenuItem item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.what")); //$NON-NLS-1$
+                    item.addSelectionListener(new SelectionAdapter() {
+
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            ChartUtils.openReferenceLink(referenceLink);
+                        }
+                    });
+
+                    menu.setVisible(true);
+                }
+            }
+
+            public void chartMouseMoved(ChartMouseEvent event) {
+
+            }
+
+        });
+    }
+
+    public void dispose() {
+        for (Widget widget : needDispostWidgets) {
+            widget.dispose();
+        }
+        needDispostWidgets.clear();
+    }
 }
