@@ -34,33 +34,40 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class PreviewColumnAction extends Action {
 
-    private TdColumn[] columns;
+	private TdColumn[] columns;
 
-    public PreviewColumnAction(TdColumn[] columns) {
-        super(DefaultMessagesImpl.getString("PreviewColumnAction.Preview")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE));
-        this.columns = columns;
-    }
+	public PreviewColumnAction(TdColumn[] columns) {
+		super(DefaultMessagesImpl.getString("PreviewColumnAction.Preview")); //$NON-NLS-1$
+		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE));
+		this.columns = columns;
+	}
 
-    @Override
-    public void run() {
-        if (ColumnHelper.isFromSameTable(Arrays.asList((Column[]) columns))) {
-            TdColumn oneColumn = columns[0];
-            TdDataProvider dataprovider = DataProviderHelper.getTdDataProvider(oneColumn);
-            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(oneColumn);
-            String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
-            DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
-
-            String columnClause = ""; //$NON-NLS-1$
-            for (TdColumn column : columns) {
-                columnClause += language.quote(column.getName()) + ","; //$NON-NLS-1$
-            }
-            columnClause = columnClause.substring(0, columnClause.length() - 1);
-
-            String query = "select " + columnClause + " from " + tableName; //$NON-NLS-1$ //$NON-NLS-2$
-            CorePlugin.getDefault().runInDQViewer(dataprovider, query, tableName);
-        } else {
-            MessageDialogWithToggle.openWarning(null, DefaultMessagesImpl.getString("PreviewColumnAction.Warning"), DefaultMessagesImpl.getString("PreviewColumnAction.previewColumns")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-    }
+	@Override
+	public void run() {
+		if (ColumnHelper.isFromSameTable(Arrays.asList((Column[]) columns))) {
+			TdColumn oneColumn = columns[0];
+			TdDataProvider dataprovider = DataProviderHelper
+					.getTdDataProvider(oneColumn);
+			ColumnSet columnSetOwner = ColumnHelper
+					.getColumnSetOwner(oneColumn);
+			String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(
+					dataprovider, columnSetOwner);
+			DbmsLanguage language = DbmsLanguageFactory
+					.createDbmsLanguage(dataprovider);
+			String columnClause = ""; //$NON-NLS-1$
+			for (TdColumn column : columns) {
+				columnClause += language.quote(column.getName()) + ","; //$NON-NLS-1$
+			}
+			columnClause = columnClause.substring(0, columnClause.length() - 1);
+			String query = "select " + tableName + "." + columnClause + " from " + tableName; //$NON-NLS-1$ //$NON-NLS-2$
+			CorePlugin.getDefault().runInDQViewer(dataprovider, query,
+					tableName);
+		} else {
+			MessageDialogWithToggle
+					.openWarning(
+							null,
+							DefaultMessagesImpl
+									.getString("PreviewColumnAction.Warning"), DefaultMessagesImpl.getString("PreviewColumnAction.previewColumns")); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
 }
