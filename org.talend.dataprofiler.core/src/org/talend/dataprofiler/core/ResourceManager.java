@@ -14,16 +14,12 @@ package org.talend.dataprofiler.core;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.talend.dataprofiler.core.service.GlobalServiceRegister;
-import org.talend.dataprofiler.core.service.IProjectAdapterService;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public final class ResourceManager {
-
-    public static final String DEFAULT_PROJECT_NAME = "TOP_DEFAULT_PRJ";
 
     public static final String DATA_PROFILING_FOLDER_NAME = "TDQ_Data Profiling";
 
@@ -36,24 +32,23 @@ public final class ResourceManager {
     private ResourceManager() {
     }
 
+    /**
+     * DOC bZhou Comment method "getRootProject".
+     * 
+     * @return
+     */
     public static IProject getRootProject() {
 
-        IProject rootProject = null;
-        try {
-            IProjectAdapterService projectAdapter = (IProjectAdapterService) GlobalServiceRegister.getDefault().getService(
-                    IProjectAdapterService.class);
-            if (projectAdapter != null) {
-                rootProject = projectAdapter.getRootProject();
-            }
-        } catch (RuntimeException e) {
-            rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(DEFAULT_PROJECT_NAME);
-        }
-
-        return rootProject;
+        return ReponsitoryContextBridge.getRootProject();
     }
 
+    /**
+     * DOC bZhou Comment method "getRootProjectName".
+     * 
+     * @return
+     */
     public static String getRootProjectName() {
-        return getRootProject().exists() ? getRootProject().getName() : "./";
+        return ReponsitoryContextBridge.getProjectName();
     }
 
     /**

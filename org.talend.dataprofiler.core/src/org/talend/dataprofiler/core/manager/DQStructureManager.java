@@ -156,7 +156,7 @@ public final class DQStructureManager {
 
             IProject rootProject = ResourceManager.getRootProject();
             if (!rootProject.exists()) {
-                rootProject = createNewProject(ResourceManager.DEFAULT_PROJECT_NAME);
+                rootProject = createNewProject(ResourceManager.getRootProjectName());
             }
 
             // create "Data Profiling" project

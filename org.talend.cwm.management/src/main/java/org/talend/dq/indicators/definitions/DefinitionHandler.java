@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
@@ -114,7 +115,7 @@ public final class DefinitionHandler {
 
     // MOD mzhao 2009-03-13 Feature:6066 Move all folders into one single
     // project.
-    private static final String WORKSPACE_PATH = org.talend.dataquality.PluginConstant.getRootProjectName() + "/TDQ_Libraries/"; //$NON-NLS-1$
+    private static final String WORKSPACE_PATH = ReponsitoryContextBridge.getProjectName() + "/TDQ_Libraries/"; //$NON-NLS-1$
 
     private DefinitionHandler() {
         this.indicatorDefinitions = loadFromFile();

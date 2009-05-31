@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ResourceManager;
@@ -130,6 +131,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
         authorText = new Text(container, SWT.BORDER);
         authorText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        authorText.setText(ReponsitoryContextBridge.getAuthor());
 
         // Version
         // Label versionLab = new Label(container, SWT.NONE);

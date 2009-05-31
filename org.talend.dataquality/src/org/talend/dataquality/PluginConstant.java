@@ -20,9 +20,6 @@ package org.talend.dataquality;
  */
 public final class PluginConstant {
 
-    // MOD mzhao 2009-03-13 TDQ/TOP root project
-    private static String rootProjectName;
-
     /**
      * Default value used in frequency tables.
      */
@@ -31,13 +28,4 @@ public final class PluginConstant {
     private PluginConstant() {
 
     }
-
-    public static String getRootProjectName() {
-        return rootProjectName;
-    }
-
-    public static void setRootProjectName(String rootProjectName) {
-        PluginConstant.rootProjectName = rootProjectName;
-    }
-
 }

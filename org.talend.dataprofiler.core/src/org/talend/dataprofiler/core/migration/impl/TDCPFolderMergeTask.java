@@ -52,7 +52,7 @@ public class TDCPFolderMergeTask extends AbstractMigrationTask {
             // Create one project.
             IProject rootProject = ResourceManager.getRootProject();
             if (!rootProject.exists()) {
-                rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.DEFAULT_PROJECT_NAME);
+                rootProject = DQStructureManager.getInstance().createNewProject(ResourceManager.getRootProjectName());
             }
 
             // Copy "top level" folders already as projects in TOP/TDQ into this

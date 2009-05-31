@@ -28,7 +28,6 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -43,6 +42,7 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
@@ -112,9 +112,7 @@ public class CorePlugin extends AbstractUIPlugin {
             log.error(e, e);
         }
 
-        IProject rootProject = ResourceManager.getRootProject();
-        org.talend.dataquality.PluginConstant.setRootProjectName(rootProject.getName());
-        SQLExplorerPlugin.getDefault().setRootProject(rootProject);
+        SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
     }
 
     /*
