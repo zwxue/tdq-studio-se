@@ -124,7 +124,7 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
         }
         if (schema != null) {
             String viewFilter = TaggedValueHelper.getValue(TaggedValueHelper.VIEW_FILTER, schema.getTaggedValue());
-            return filterColumnSets(CatalogHelper.getViews(schema), viewFilter);
+            return filterColumnSets(SchemaHelper.getViews(schema), viewFilter);
         }
         return Collections.emptyList();
     }

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdTable;
 import org.talend.utils.sql.metadata.constants.GetForeignKey;
@@ -121,17 +122,23 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
 
     public List<ForeignKey> getForeignKeys(String catalogName, String schemaPattern, String tableName) throws SQLException {
         List<ForeignKey> pks = new ArrayList<ForeignKey>();
-        ResultSet foreignKeys = connection.getMetaData().getImportedKeys(catalogName, schemaPattern, tableName);
-        try {
-            while (foreignKeys.next()) {
-                ForeignKey pk = createForeignKey(foreignKeys);
-                pks.add(pk);
+        // MOD xqliu 2009-05-26 bug 5669: the method getImportedKeys() not yet implemented in SQLiteJDBC
+        String driverName = connection.getMetaData().getDriverName();
+        String dbLanguage = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
+        if (!driverName.toLowerCase().contains(dbLanguage.toLowerCase())) {
+            ResultSet foreignKeys = connection.getMetaData().getImportedKeys(catalogName, schemaPattern, tableName);
+            try {
+                while (foreignKeys.next()) {
+                    ForeignKey pk = createForeignKey(foreignKeys);
+                    pks.add(pk);
+                }
+            } catch (SQLException e) {
+                throw e;
+            } finally {
+                foreignKeys.close();
             }
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            foreignKeys.close();
         }
+        // ~
         return pks;
     }
 
