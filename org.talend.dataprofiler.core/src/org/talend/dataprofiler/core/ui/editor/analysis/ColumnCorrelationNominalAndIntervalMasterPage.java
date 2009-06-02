@@ -30,6 +30,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -156,7 +158,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         Composite body = form.getBody();
 
         body.setLayout(new GridLayout());
-        SashForm sForm = new SashForm(body, SWT.NULL);
+        final SashForm sForm = new SashForm(body, SWT.NULL);
         sForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         topComp = toolkit.createComposite(sForm);
@@ -189,7 +191,22 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         Composite previewComp = toolkit.createComposite(sForm);
         previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         previewComp.setLayout(new GridLayout());
+        // add by hcheng for 0007290: Chart cannot auto compute it's size in DQRule analsyis Editor
+        previewComp.addControlListener(new ControlAdapter() {
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+             */
+            @Override
+            public void controlResized(ControlEvent e) {
+                super.controlResized(e);
+                sForm.redraw();
+                form.reflow(true);
+            }
+        });
+        // ~
         createPreviewSection(form, previewComp);
 
         // MOD 2009-01-12 mzhao, for register sections that would be collapse or
