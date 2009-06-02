@@ -103,6 +103,37 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             { new SchemaViewSorter(SchemaViewSorter.VIEW), new SchemaViewSorter(-SchemaViewSorter.VIEW) },
             { new SchemaViewSorter(SchemaViewSorter.ROWS), new SchemaViewSorter(-SchemaViewSorter.ROWS) } };
 
+    private SchemaSorter[][] schemaSorters = { { new SchemaSorter(SchemaSorter.SCHEMA), new SchemaSorter(-SchemaSorter.SCHEMA) },
+            { new SchemaSorter(SchemaSorter.ROWS), new SchemaSorter(-SchemaSorter.ROWS) },
+            { new SchemaSorter(SchemaSorter.TABLES), new SchemaSorter(-SchemaSorter.TABLES) },
+            { new SchemaSorter(SchemaSorter.ROWS_TABLES), new SchemaSorter(-SchemaSorter.ROWS_TABLES) },
+            { new SchemaSorter(SchemaSorter.VIEWS), new SchemaSorter(-SchemaSorter.VIEWS) },
+            { new SchemaSorter(SchemaSorter.ROWS_VIEWS), new SchemaSorter(-SchemaSorter.ROWS_VIEWS) },
+            { new SchemaSorter(SchemaSorter.KEYS), new SchemaSorter(-SchemaSorter.KEYS) },
+            { new SchemaSorter(SchemaSorter.INDEXES), new SchemaSorter(-SchemaSorter.INDEXES) } };
+
+    private CatalogWithSchemaSorter[][] catalogWithSchemaSorters = {
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.CATALOG),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.CATALOG) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.SCHEMAS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.SCHEMAS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS_SCHEMAS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS_SCHEMAS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.TABLES),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.TABLES) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS_TABLES),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS_TABLES) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.VIEWS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.VIEWS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.ROWS_VIEWS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.ROWS_VIEWS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.KEYS),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.KEYS) },
+            { new CatalogWithSchemaSorter(CatalogWithSchemaSorter.INDEXES),
+                    new CatalogWithSchemaSorter(-CatalogWithSchemaSorter.INDEXES) } };
+
     private static final int VIEW_COLUMN_INDEX = 2;
 
     private static final int VIEW_COLUMN_INDEXES = 3;
@@ -463,6 +494,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         if (catalogs.size() > 0 && containSubSchema) {
             createCatalogSchemaColumns(table);
             provider = new CatalogSchemaViewerProvier();
+            addColumnSorters(catalogTableViewer, catalogTableViewer.getTable().getColumns(), catalogWithSchemaSorters);
             final TableViewer schemaTableViewer = createSecondStatisticalTable(sectionClient);
             schemaTableViewer.addSelectionChangedListener(new DisplayTableAndViewListener());
             catalogTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -472,6 +504,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     CatalogIndicator firstElement = (CatalogIndicator) selection.getFirstElement();
                     schemaTableViewer.setInput(firstElement.getSchemaIndicators());
                     schemaTableViewer.getTable().setVisible(true);
+                    addColumnSorters(schemaTableViewer, schemaTableViewer.getTable().getColumns(), schemaSorters);
                 }
 
             });
@@ -483,6 +516,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 createSchemaTableColumns(table);
                 provider = new SchemaViewerProvier();
             }
+            addColumnSorters(catalogTableViewer, catalogTableViewer.getTable().getColumns(), schemaSorters);
             catalogTableViewer.addSelectionChangedListener(new DisplayTableAndViewListener());
         }
         catalogTableViewer.setLabelProvider(provider);
@@ -500,6 +534,19 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         sectionClient.layout();
         statisticalSection.setClient(sectionClient);
 
+    }
+
+    /**
+     * DOC xqliu Comment method "addColumnSorters".
+     * 
+     * @param tableViewer
+     * @param tableColumns
+     * @param sorters
+     */
+    protected void addColumnSorters(TableViewer tableViewer, TableColumn[] tableColumns, ViewerSorter[][] sorters) {
+        for (int i = 0; i < tableColumns.length; ++i) {
+            tableColumns[i].addSelectionListener(new ColumnSortListener(tableColumns, i, tableViewer, sorters));
+        }
     }
 
     /**
