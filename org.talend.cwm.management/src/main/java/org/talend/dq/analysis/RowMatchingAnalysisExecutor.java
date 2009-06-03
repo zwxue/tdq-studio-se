@@ -239,6 +239,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     this.catalogOrSchema = getCatalogOrSchemaName(column);
                     break; // all columns should belong to the same table
                 }
+            } else {
+                log.error(this.errorMessage);
             }
         }
         return quote(tableName);

@@ -121,11 +121,10 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "belongToSameSchemata".
+     * Method "belongToSameSchemata" fills in the map this{@link #schemata}.
      * 
-     * @param tdColumn
-     * @param schemata
-     * @return
+     * @param tdColumn a column
+     * @return false when the given column has an owner different from the one registered in the map.
      */
     protected boolean belongToSameSchemata(final TdColumn tdColumn) {
         assert tdColumn != null;
