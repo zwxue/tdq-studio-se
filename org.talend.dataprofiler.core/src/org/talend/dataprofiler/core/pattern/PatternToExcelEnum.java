@@ -21,18 +21,18 @@ public enum PatternToExcelEnum {
     Purpose(1, "Purpose"), //$NON-NLS-1$
     Description(2, "Description"), //$NON-NLS-1$
     Author(3, "Author"), //$NON-NLS-1$
-    RelativePath(4, "Relative Path"), //$NON-NLS-1$
-    AllDBRegexp(5, "All DB Regexp"), //$NON-NLS-1$
-    DB2Regexp(6, "DB2 Regexp"), //$NON-NLS-1$
-    MySQLRegexp(7, "MySQL Regexp"), //$NON-NLS-1$
-    OracleRegexp(8, "Oracle Regexp"), //$NON-NLS-1$
-    PostgreSQLRegexp(9, "PostgreSQL Regexp"), //$NON-NLS-1$
-    SQLServerRegexp(10, "SQL Server Regexp"), //$NON-NLS-1$
-    SybaseRegexp(11, "Sybase Regexp"), //$NON-NLS-1$
-    IngresRegexp(12, "Ingres Regexp"), //$NON-NLS-1$
-    InformixRegexp(13, "Informix Regexp"), //$NON-NLS-1$
-    SQLite3Regexp(14, "SQLite3 Regexp"), //$NON-NLS-1$
-    Teradata(15, "Teradata Regexp"); //$NON-NLS-1$
+    RelativePath(4, "Relative_Path"), //$NON-NLS-1$
+    AllDBRegexp(5, "All_DB_Regexp"), //$NON-NLS-1$
+    DB2Regexp(6, "DB2_Regexp"), //$NON-NLS-1$
+    MySQLRegexp(7, "MySQL_Regexp"), //$NON-NLS-1$
+    OracleRegexp(8, "Oracle_Regexp"), //$NON-NLS-1$
+    PostgreSQLRegexp(9, "PostgreSQL_Regexp"), //$NON-NLS-1$
+    SQLServerRegexp(10, "SQL_Server_Regexp"), //$NON-NLS-1$
+    SybaseRegexp(11, "Sybase_Regexp"), //$NON-NLS-1$
+    IngresRegexp(12, "Ingres_Regexp"), //$NON-NLS-1$
+    InformixRegexp(13, "Informix_Regexp"), //$NON-NLS-1$
+    SQLite3Regexp(14, "SQLite3_Regexp"), //$NON-NLS-1$
+    Teradata(15, "Teradata_Regexp"); //$NON-NLS-1$
 
     private String literal;
 
