@@ -606,26 +606,28 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         if (!columnSetMultiValueList.isEmpty()) {
             if (!ColumnHelper.isFromSameTable(columnSetMultiValueList)) {
                 message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
-            }
 
-            List<Column> columns = treeViewer.getColumnSetMultiValueList();
+            } else {
 
-            if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()
-                    || ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
-                message = verifyColumn(columns, columnSetMultiIndicator.eClass());
+                List<Column> columns = treeViewer.getColumnSetMultiValueList();
 
-            } else if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
-                for (int i = 0; i < columns.size(); i++) {
-                    TdColumn tdColumn = (TdColumn) columns.get(i);
+                if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()
+                        || ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
+                    message = verifyColumn(columns, columnSetMultiIndicator.eClass());
 
-                    if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
-                        message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
-                        break;
+                } else if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
+                    for (int i = 0; i < columns.size(); i++) {
+                        TdColumn tdColumn = (TdColumn) columns.get(i);
+
+                        if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
+                            message = DefaultMessagesImpl
+                                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
+                            break;
+                        }
                     }
                 }
             }
         }
-
         if (message == null) {
             return new ReturnCode(true);
         }
