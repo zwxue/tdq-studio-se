@@ -24,7 +24,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
-import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 
 /**
@@ -98,13 +97,7 @@ public final class CatalogHelper {
         return catalog.getOwnedElement().addAll(views);
     }
 
-    /**
-     * DOC bZhou Comment method "getViews".
-     * 
-     * @param pack
-     * @return
-     */
-    public static List<TdView> getViews(Package pack) {
-        return ViewHelper.getViews(pack.getOwnedElement());
+    public static List<TdView> getViews(Catalog catalog) {
+        return ViewHelper.getViews(catalog.getOwnedElement());
     }
 }
