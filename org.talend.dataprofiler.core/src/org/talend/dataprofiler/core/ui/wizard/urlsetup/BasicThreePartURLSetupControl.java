@@ -55,8 +55,6 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
     private Text urlText;
 
-    public static Driver driver;
-
     protected AbstractWizardPage abstractWizardPage;
 
     public BasicThreePartURLSetupControl(Composite parent, SupportDBUrlType dbType) {
@@ -97,6 +95,9 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                         filenameAll.append(filename + ";"); //$NON-NLS-1$
                         // filenameAll.deleteCharAt(0);
                         jarText.setText(filenameAll.toString());
+                        int length = filenameAll.length();
+                        filenameAll.delete(0, length);
+
                     } else {
                         jarText.setText(""); //$NON-NLS-1$
                     }
