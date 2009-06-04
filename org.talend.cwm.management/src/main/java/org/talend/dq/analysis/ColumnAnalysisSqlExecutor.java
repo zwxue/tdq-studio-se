@@ -60,6 +60,7 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.i18n.Messages;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
@@ -976,7 +977,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             List<Indicator> list = elementToIndicator.get(modelElement);
             for (Indicator ind : list) {
                 // set row count value to each indicator
-                if (rowCount != null) {
+                if (rowCount != null && needPercentage(ind)) {
                     ind.setCount(rowCount.getCount());
                 }
                 // set null count value to each indicator
@@ -985,6 +986,19 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 }
             }
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "needPercentage".
+     * 
+     * @param ind
+     * @return
+     */
+    private boolean needPercentage(Indicator ind) {
+        IndicatorEnum indType = IndicatorEnum.findIndicatorEnum(ind.eClass());
+
+        return indType != IndicatorEnum.ModeIndicatorEnum && !indType.isAChildOf(IndicatorEnum.TextIndicatorEnum)
+                && !indType.isAChildOf(IndicatorEnum.BoxIIndicatorEnum);
     }
 
     /**
