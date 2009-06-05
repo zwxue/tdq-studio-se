@@ -11,7 +11,7 @@ public class HelpPlugin extends AbstractUIPlugin {
     // The plug-in ID
     public static final String PLUGIN_ID = "org.talend.dataprofiler.help"; //$NON-NLS-1$
 
-    public static final String HELP_FILE_SUFFIX = "html";
+    public static final String HELP_FILE_SUFFIX = "html"; //$NON-NLS-1$
 
     // The shared instance
     private static HelpPlugin plugin;
@@ -65,5 +65,9 @@ public class HelpPlugin extends AbstractUIPlugin {
 
     public String getDQRulesHelpContextID() {
         return PLUGIN_ID + ".helpDQRulesContext"; //$NON-NLS-1$
+    }
+
+    public String getAnalysisHelpContextID() {
+        return PLUGIN_ID + ".helpAnalysisContext"; //$NON-NLS-1$
     }
 }

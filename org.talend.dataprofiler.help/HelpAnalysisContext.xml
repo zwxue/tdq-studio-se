@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.contexts"?>
+<contexts>
+   <context id="helpAnalysisContext">
+      <topic label="Connection Analysis" href="html/wizard/analysis/connectionAnalysis.html"/>
+      <topic label="Catalog Analysis" href="html/wizard/analysis/catalogAnalysis.html"/>
+      <topic label="Schema Analysis" href="html/wizard/analysis/schemaAnalysis.html"/>
+      <topic label="Table Analysis" href="html/wizard/analysis/tableAnalysis.html"/>
+      <topic label="Column Analysis" href="html/wizard/analysis/columnAnalysis.html"/>
+      <topic label="Redundancy Analysis" href="html/wizard/analysis/redundancyAnalysis.html"/>
+      <topic label="Column Correlation Analysis" href="html/wizard/analysis/columnCorrelationAnalysis.html"/>
+   </context>
+</contexts>

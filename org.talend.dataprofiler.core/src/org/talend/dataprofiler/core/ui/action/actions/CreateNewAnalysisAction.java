@@ -22,6 +22,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -60,8 +61,8 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard();
         wizard.setCurrentFolderProvider(currentFolderProvider);
         wizard.setForcePreviousAndNextButtons(true);
-        WizardDialog dialog = new WizardDialog(null, wizard);
-
+        WizardDialog dialog = new OpeningHelpWizardDialog(null, wizard, null);
+        wizard.setContainer(dialog);
         dialog.open();
     }
 

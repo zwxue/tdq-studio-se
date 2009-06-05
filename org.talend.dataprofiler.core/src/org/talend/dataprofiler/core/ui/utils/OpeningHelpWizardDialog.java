@@ -101,19 +101,31 @@ public class OpeningHelpWizardDialog extends WizardDialog {
         }
     }
 
-    private void showHelp() {
+    public void showHelp() {
         getShell().setFocus();
 
-        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorHelpContextID());
-        IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+        if (href != null) {
+            IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorHelpContextID());
+            IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
 
-        if (href.endsWith(HelpPlugin.HELP_FILE_SUFFIX)) {
-            helpSystem.displayHelp(context);
+            if (href.endsWith(HelpPlugin.HELP_FILE_SUFFIX)) {
+                helpSystem.displayHelp(context);
 
-            ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
-            if (lastActiveInstance != null) {
-                lastActiveInstance.showURL(href);
+                ReusableHelpPart lastActiveInstance = ReusableHelpPart.getLastActiveInstance();
+                if (lastActiveInstance != null) {
+                    lastActiveInstance.showURL(href);
+                }
             }
         }
+
+    }
+
+    /**
+     * Sets the href.
+     * 
+     * @param href the href to set
+     */
+    public void setHref(String href) {
+        this.href = href;
     }
 }

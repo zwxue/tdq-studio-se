@@ -15,6 +15,10 @@
             file="HelpPatternContext.xml"
             plugin="org.talend.dataprofiler.help">
       </contexts>
+      <contexts
+            file="HelpAnalysisContext.xml"
+            plugin="org.talend.dataprofiler.help">
+      </contexts>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">

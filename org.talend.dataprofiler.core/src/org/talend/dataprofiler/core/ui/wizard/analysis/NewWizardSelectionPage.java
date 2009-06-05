@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
+import org.eclipse.help.HelpSystem;
+import org.eclipse.help.IContext;
+import org.eclipse.help.IHelpResource;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -29,8 +32,10 @@ import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeLabelProvider;
+import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
@@ -91,9 +96,38 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     return;
                 }
                 AnalysisTypeNode parent = (AnalysisTypeNode) node.getParent();
+                IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getAnalysisHelpContextID());
+                IHelpResource[] relatedTopics = context.getRelatedTopics();
+                String href = null;
                 if (parent == null) {
                     setPageComplete(false);
-                    return;
+
+                    // MOD hcheng 2009-06-05 add help in analysis wizard
+                    AnalysisType type = AnalysisType.get(node.getLiteral());
+                    switch (type) {
+                    case CONNECTION:
+                        href = relatedTopics[0].getHref();
+                        break;
+                    case CATALOG:
+                        href = relatedTopics[1].getHref();
+                        break;
+                    case SCHEMA:
+                        href = relatedTopics[2].getHref();
+                        break;
+                    case TABLE:
+                        href = relatedTopics[3].getHref();
+                        break;
+                    case MULTIPLE_COLUMN:
+                        href = relatedTopics[4].getHref();
+                        break;
+                    case COLUMNS_COMPARISON:
+                        href = relatedTopics[5].getHref();
+                        break;
+                    case COLUMN_CORRELATION:
+                        href = relatedTopics[6].getHref();
+                        break;
+                    default:
+                    }
                 } else {
                     String literal = parent.getLiteral();
 
@@ -108,37 +142,44 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         ((AnalysisLabelParameter) correlationColumnParam).setCategoryLabel(node.getName());
                         correlationColumnParam.setFolderProvider(currentFolderProvider);
                         parameter = correlationColumnParam;
+                        href = relatedTopics[6].getHref();
                         break;
                     case MULTIPLE_COLUMN:
                         AnalysisParameter correlationParam = new AnalysisParameter();
                         correlationParam.setFolderProvider(currentFolderProvider);
                         parameter = correlationParam;
+                        href = relatedTopics[4].getHref();
                         break;
                     case COLUMNS_COMPARISON:
                         AnalysisParameter anaParam = new AnalysisParameter();
                         anaParam.setFolderProvider(currentFolderProvider);
                         parameter = anaParam;
+                        href = relatedTopics[5].getHref();
                         break;
                     case CONNECTION:
                         AnalysisFilterParameter connParam = new AnalysisFilterParameter();
                         connParam.setFolderProvider(currentFolderProvider);
                         parameter = connParam;
+                        href = relatedTopics[0].getHref();
                         break;
                     // MOD mzhao 2008-12-31 CATALOG and SCHEMA added here.
                     case CATALOG:
                         PackagesAnalyisParameter catalogParam = new PackagesAnalyisParameter();
                         catalogParam.setFolderProvider(currentFolderProvider);
                         parameter = catalogParam;
+                        href = relatedTopics[1].getHref();
                         break;
                     case SCHEMA:
                         PackagesAnalyisParameter schemaParam = new PackagesAnalyisParameter();
                         schemaParam.setFolderProvider(currentFolderProvider);
                         parameter = schemaParam;
+                        href = relatedTopics[2].getHref();
                         break;
                     case TABLE:
                         NamedColumnSetAnalysisParameter tableParam = new NamedColumnSetAnalysisParameter();
                         tableParam.setFolderProvider(currentFolderProvider);
                         parameter = tableParam;
+                        href = relatedTopics[3].getHref();
                         break;
                     default:
                         parameter = new AnalysisParameter();
@@ -147,6 +188,10 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     selectedWizard = WizardFactory.createAnalysisWizard(type, parameter);
                     setPageComplete(true);
                 }
+                // MOD by hcheng,0007483: Add help in analysis wizard
+                OpeningHelpWizardDialog dialog = (OpeningHelpWizardDialog) getWizard().getContainer();
+                dialog.setHref(href);
+                dialog.showHelp();
             }
 
         });
