@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -35,6 +36,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.analysis.PaginationInfo;
+import org.talend.dataprofiler.core.ui.pref.PerformancePreferencePage;
 
 /**
  * 
@@ -42,7 +44,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.PaginationInfo;
  */
 public class UIPagination {
 
-    public static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 5;
 
     private int totalPages;
 
@@ -351,4 +353,14 @@ public class UIPagination {
     private static final Image IMG_LNK_NAV_PREV = ImageLib.getImage(ImageLib.ICON_PAGE_PREV_LNK);
 
     private static final Image IMG_LNK_NAV_FIRST = ImageLib.getImage(ImageLib.ICON_PAGE_FIRST_LNK);
+
+    public static int getPageSize() {
+        try {
+            return Integer.parseInt(ResourcesPlugin.getPlugin().getPluginPreferences().getString(
+                    PerformancePreferencePage.ANALYZED_ITEMS_PER_PAGE));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return PAGE_SIZE;
+    }
 }

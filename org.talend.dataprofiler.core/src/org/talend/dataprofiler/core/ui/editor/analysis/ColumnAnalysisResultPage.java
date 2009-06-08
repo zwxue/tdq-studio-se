@@ -34,128 +34,114 @@ import org.talend.dq.analysis.AnalysisHandler;
 /**
  * DOC zqin class global comment. Detailled comment
  */
-public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage
-		implements PropertyChangeListener {
+public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
-	private static Logger log = Logger
-			.getLogger(ColumnAnalysisResultPage.class);
+    private static Logger log = Logger.getLogger(ColumnAnalysisResultPage.class);
 
-	private Composite resultComp;
+    private Composite resultComp;
 
-	ColumnMasterDetailsPage masterPage;
+    ColumnMasterDetailsPage masterPage;
 
-	private Section resultSection = null;
+    private Section resultSection = null;
 
-	/**
-	 * DOC zqin ColumnAnalysisResultPage constructor comment.
-	 * 
-	 * @param editor
-	 * @param id
-	 * @param title
-	 */
-	public ColumnAnalysisResultPage(FormEditor editor, String id, String title) {
-		super(editor, id, title);
-		AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-		this.masterPage = (ColumnMasterDetailsPage) analysisEditor
-				.getMasterPage();
-	}
+    /**
+     * DOC zqin ColumnAnalysisResultPage constructor comment.
+     * 
+     * @param editor
+     * @param id
+     * @param title
+     */
+    public ColumnAnalysisResultPage(FormEditor editor, String id, String title) {
+        super(editor, id, title);
+        AnalysisEditor analysisEditor = (AnalysisEditor) editor;
+        this.masterPage = (ColumnMasterDetailsPage) analysisEditor.getMasterPage();
+    }
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		super.createFormContent(managedForm);
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        super.createFormContent(managedForm);
 
-		resultComp = toolkit.createComposite(topComposite);
-		resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
-				| GridData.VERTICAL_ALIGN_BEGINNING));
-		resultComp.setLayout(new GridLayout());
-		createResultSection(resultComp);
+        resultComp = toolkit.createComposite(topComposite);
+        resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+        resultComp.setLayout(new GridLayout());
+        createResultSection(resultComp);
 
-		// MOD 2009-01-10 mzhao, for register sections that would be collapse or
-		// expand later.
-		currentEditor.registerSections(new Section[] { resultSection });
-		form.reflow(true);
-	}
+        // MOD 2009-01-10 mzhao, for register sections that would be collapse or
+        // expand later.
+        currentEditor.registerSections(new Section[] { resultSection });
+        form.reflow(true);
+    }
 
-	@Override
-	protected AnalysisHandler getAnalysisHandler() {
-		return this.masterPage.getAnalysisHandler();
-	}
+    @Override
+    protected AnalysisHandler getAnalysisHandler() {
+        return this.masterPage.getAnalysisHandler();
+    }
 
-	protected void createResultSection(Composite parent) {
-		resultSection = createSection(
-				form,
-				parent,
-				DefaultMessagesImpl
-						.getString("ColumnAnalysisResultPage.analysisResult"), true, null); //$NON-NLS-1$
-		final Composite sectionClient = toolkit.createComposite(resultSection);
-		sectionClient.setLayout(new GridLayout());
-		sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+    protected void createResultSection(Composite parent) {
+        resultSection = createSection(form, parent,
+                DefaultMessagesImpl.getString("ColumnAnalysisResultPage.analysisResult"), true, null); //$NON-NLS-1$
+        final Composite sectionClient = toolkit.createComposite(resultSection);
+        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		final ColumnIndicator[] columnIndicatores = masterPage.getTreeViewer()
-				.getColumnIndicator();
+        final ColumnIndicator[] columnIndicatores = masterPage.getTreeViewer().getColumnIndicator();
 
-		// ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
-		UIPagination uiPagination = new UIPagination(toolkit, sectionClient);
-		int pageSize = UIPagination.PAGE_SIZE;
-		int totalPages = columnIndicatores.length / pageSize;
-		List<ColumnIndicator> columnIndLs = null;
-		for (int index = 0; index < totalPages; index++) {
-			columnIndLs = new ArrayList<ColumnIndicator>();
-			for (int idx = 0; idx < pageSize; idx++) {
-				columnIndLs.add(columnIndicatores[index * pageSize + idx]);
-			}
-			PaginationInfo pginfo = new ResultPaginationInfo(form, columnIndLs,
-					masterPage, uiPagination);
-			uiPagination.addPage(pginfo);
+        // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
+        UIPagination uiPagination = new UIPagination(toolkit, sectionClient);
+        int pageSize = UIPagination.getPageSize();
+        int totalPages = columnIndicatores.length / pageSize;
+        List<ColumnIndicator> columnIndLs = null;
+        for (int index = 0; index < totalPages; index++) {
+            columnIndLs = new ArrayList<ColumnIndicator>();
+            for (int idx = 0; idx < pageSize; idx++) {
+                columnIndLs.add(columnIndicatores[index * pageSize + idx]);
+            }
+            PaginationInfo pginfo = new ResultPaginationInfo(form, columnIndLs, masterPage, uiPagination);
+            uiPagination.addPage(pginfo);
 
-		}
-		int left = columnIndicatores.length % pageSize;
-		if (left != 0) {
-			columnIndLs = new ArrayList<ColumnIndicator>();
-			for (int leftIdx = 0; leftIdx < left; leftIdx++) {
-				columnIndLs.add(columnIndicatores[totalPages * pageSize
-						+ leftIdx]);
-			}
-			PaginationInfo pginfo = new ResultPaginationInfo(form, columnIndLs,
-					masterPage, uiPagination);
-			uiPagination.addPage(pginfo);
-			totalPages++;
-		}
-		uiPagination.init();
-		// ~
+        }
+        int left = columnIndicatores.length % pageSize;
+        if (left != 0) {
+            columnIndLs = new ArrayList<ColumnIndicator>();
+            for (int leftIdx = 0; leftIdx < left; leftIdx++) {
+                columnIndLs.add(columnIndicatores[totalPages * pageSize + leftIdx]);
+            }
+            PaginationInfo pginfo = new ResultPaginationInfo(form, columnIndLs, masterPage, uiPagination);
+            uiPagination.addPage(pginfo);
+            totalPages++;
+        }
+        uiPagination.init();
+        // ~
 
-		resultSection.setClient(sectionClient);
-	}
+        resultSection.setClient(sectionClient);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
-	 */
-	@Override
-	public void setDirty(boolean isDirty) {
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
+     */
+    @Override
+    public void setDirty(boolean isDirty) {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seejava.beans.PropertyChangeListener#propertyChange(java.beans.
-	 * PropertyChangeEvent)
-	 */
-	public void propertyChange(PropertyChangeEvent evt) {
-		if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-			((AnalysisEditor) this.getEditor())
-					.firePropertyChange(IEditorPart.PROP_DIRTY);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @seejava.beans.PropertyChangeListener#propertyChange(java.beans. PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
+            ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+        }
+    }
 
-	public void refresh(ColumnMasterDetailsPage masterPage) {
-		this.masterPage = masterPage;
-		this.summaryComp.dispose();
-		this.resultComp.dispose();
+    public void refresh(ColumnMasterDetailsPage masterPage) {
+        this.masterPage = masterPage;
+        this.summaryComp.dispose();
+        this.resultComp.dispose();
 
-		createFormContent(getManagedForm());
-	}
+        createFormContent(getManagedForm());
+    }
 
 }

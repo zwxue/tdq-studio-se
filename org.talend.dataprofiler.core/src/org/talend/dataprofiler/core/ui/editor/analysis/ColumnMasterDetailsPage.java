@@ -435,7 +435,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         final ColumnIndicator[] columnIndicatores = treeViewer.getColumnIndicator();
         // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
         UIPagination uiPagination = new UIPagination(toolkit, composite);
-        int pageSize = UIPagination.PAGE_SIZE;
+        int pageSize = UIPagination.getPageSize();
         int totalPages = columnIndicatores.length / pageSize;
         List<ColumnIndicator> columnIndLs = null;
         for (int index = 0; index < totalPages; index++) {
