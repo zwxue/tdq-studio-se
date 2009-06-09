@@ -108,6 +108,10 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
             dataset.addDataEntity(customerdataset.getDataEntities());
             return dataset;
         } else {
+            // MOD hcheng,Range indicator value should not appear in bar chart
+            map.remove(IndicatorEnum.RangeIndicatorEnum);
+            map.remove(IndicatorEnum.IQRIndicatorEnum);
+
             for (IndicatorEnum indicatorEnum : map.keySet()) {
                 customerdataset.addValue(map.get(indicatorEnum), "", indicatorEnum.getLabel()); //$NON-NLS-1$
             }

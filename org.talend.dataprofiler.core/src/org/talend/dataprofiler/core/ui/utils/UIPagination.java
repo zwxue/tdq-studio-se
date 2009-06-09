@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -43,6 +44,8 @@ import org.talend.dataprofiler.core.ui.pref.PerformancePreferencePage;
  * DOC mzhao 2009-04-20,UI pagination.
  */
 public class UIPagination {
+
+    private static Logger log = Logger.getLogger(UIPagination.class);
 
     private static final int PAGE_SIZE = 5;
 
@@ -356,10 +359,13 @@ public class UIPagination {
 
     public static int getPageSize() {
         try {
-            return Integer.parseInt(ResourcesPlugin.getPlugin().getPluginPreferences().getString(
-                    PerformancePreferencePage.ANALYZED_ITEMS_PER_PAGE));
+            String defaultPageSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(
+                    PerformancePreferencePage.ANALYZED_ITEMS_PER_PAGE);
+            if (!"".equals(defaultPageSize)) {
+                return Integer.parseInt(defaultPageSize);
+            }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
         return PAGE_SIZE;
     }
