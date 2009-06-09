@@ -79,6 +79,7 @@ public final class SupportDBUrlStore {
         supportDBUrlMap.put(SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey(), SupportDBUrlType.SQLITE3DEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey(), SupportDBUrlType.GENERICJDBCDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.TERADATADEFAULTURL.getDBKey(), SupportDBUrlType.TERADATADEFAULTURL);
+        supportDBUrlMap.put(SupportDBUrlType.AS400DEFAULTURL.getDBKey(), SupportDBUrlType.AS400DEFAULTURL);
     }
 
     public void changeAllDBNmae(String dbName) {
