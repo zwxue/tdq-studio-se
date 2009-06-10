@@ -105,6 +105,8 @@ public enum FormEnum {
         case RowCountIndicatorEnum:
         case NullCountIndicatorEnum:
         case BlankCountIndicatorEnum:
+        case DefValueCountIndicatorEnum:
+
             forms = new FormEnum[] { IndicatorThresholdsForm };
 
             break;
