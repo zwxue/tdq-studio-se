@@ -17,7 +17,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,7 +54,13 @@ public final class ImportFactory {
 
     protected static Logger log = Logger.getLogger(ImportFactory.class);
 
-    private static final char CURRENT_SEPARATOR = '\t';
+    public static final boolean USE_TEXT_QUAL = true;
+
+    public static final char TEXT_QUAL = '"';
+
+    public static final int ESCAPE_MODE_BACKSLASH = CsvReader.ESCAPE_MODE_BACKSLASH;
+
+    public static final char CURRENT_SEPARATOR = '\t';
 
     private ImportFactory() {
 
@@ -73,9 +78,9 @@ public final class ImportFactory {
             try {
 
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
-                reader.setTextQualifier('"');
-                reader.setUseTextQualifier(true);
+                reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+                reader.setTextQualifier(TEXT_QUAL);
+                reader.setUseTextQualifier(USE_TEXT_QUAL);
 
                 reader.readHeaders();
 
@@ -238,26 +243,25 @@ public final class ImportFactory {
         return name.substring(index + 1);
     }
 
-    private static Set<String> list = new HashSet<String>();
 
     /**
      * DOC zqin ImportFactory class global comment. Detailled comment
      */
     private class PatternParameters {
 
-        public String name;
+        String name;
 
-        public String auther;
+        String auther;
 
-        public String description;
+        String description;
 
-        public String purpose;
+        String purpose;
 
-        public String status;
+        String status;
 
-        public String relativePath;
+        String relativePath;
 
-        public Map<String, String> regex;
+        Map<String, String> regex;
 
         public PatternParameters() {
 

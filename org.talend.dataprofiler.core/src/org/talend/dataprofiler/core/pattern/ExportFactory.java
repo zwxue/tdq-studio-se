@@ -41,7 +41,13 @@ public final class ExportFactory {
 
     private static Logger log = Logger.getLogger(ExportFactory.class);
 
-    private static final char CURRENT_SEPARATOR = '\t';
+    private static final boolean USE_TEXT_QUAL = ImportFactory.USE_TEXT_QUAL;
+
+    private static final char TEXT_QUAL = ImportFactory.TEXT_QUAL;
+
+    private static final int ESCAPE_MODE_BACKSLASH = ImportFactory.ESCAPE_MODE_BACKSLASH;
+
+    private static final char CURRENT_SEPARATOR = ImportFactory.CURRENT_SEPARATOR;
 
     private ExportFactory() {
     }
@@ -62,9 +68,9 @@ public final class ExportFactory {
             try {
 
                 CsvWriter out = new CsvWriter(new FileOutputStream(exportFile), CURRENT_SEPARATOR, Charset.defaultCharset());
-                out.setEscapeMode(CsvWriter.ESCAPE_MODE_BACKSLASH);
-                out.setTextQualifier('"');
-                out.setForceQualifier(true);
+                out.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+                out.setTextQualifier(TEXT_QUAL);
+                out.setForceQualifier(USE_TEXT_QUAL);
 
                 PatternToExcelEnum[] values = PatternToExcelEnum.values();
                 String[] temp = new String[values.length];
