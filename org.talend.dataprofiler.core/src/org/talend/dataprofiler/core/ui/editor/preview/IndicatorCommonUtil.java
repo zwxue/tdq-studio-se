@@ -22,7 +22,6 @@ import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
-import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
@@ -49,9 +48,9 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  * 
  */
-public class IndicatorCommonUtil {
+public final class IndicatorCommonUtil {
 
-    public IndicatorCommonUtil() {
+    private IndicatorCommonUtil() {
 
     }
 
@@ -62,14 +61,8 @@ public class IndicatorCommonUtil {
         IndicatorEnum type = indicatorUnit.getType();
         Indicator indicator = indicatorUnit.getIndicator();
 
-        if (indicatorUnit.getType() == IndicatorEnum.RangeIndicatorEnum) {
-            RangeIndicator rangeIndicator = (RangeIndicator) indicator;
-            double range = rangeIndicator.getUpperValue().getRealValue() - rangeIndicator.getLowerValue().getRealValue();
-            indicatorUnit.setValue(range);
-        } else if (indicatorUnit.getType() == IndicatorEnum.IQRIndicatorEnum) {
-            IQRIndicator iqrIndicator = (IQRIndicator) indicator;
-            double range = iqrIndicator.getUpperValue().getRealValue() - iqrIndicator.getLowerValue().getRealValue();
-            indicatorUnit.setValue(range);
+        if (type == IndicatorEnum.RangeIndicatorEnum || type == IndicatorEnum.IQRIndicatorEnum) {
+            indicatorUnit.setValue(((RangeIndicator) indicator).getRange());
         } else if (indicatorUnit.isExcuted()) {
 
             switch (type) {
@@ -117,7 +110,6 @@ public class IndicatorCommonUtil {
             case LowFrequencyIndicatorEnum:
             case PatternFreqIndicatorEnum:
             case PatternLowFreqIndicatorEnum:
-                // MOD mzhao 2009-03-23,Feature 6307
             case SoundexIndicatorEnum:
             case SoundexLowIndicatorEnum:
                 FrequencyIndicator frequency = (FrequencyIndicator) indicator;

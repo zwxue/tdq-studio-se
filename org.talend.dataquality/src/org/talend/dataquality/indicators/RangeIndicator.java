@@ -107,6 +107,7 @@ public interface RangeIndicator extends CompositeIndicator {
 
     /**
      * Returns the value of the '<em><b>Range</b></em>' attribute.
+     * The default value is <code>""</code>.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Range</em>' attribute isn't clear,
@@ -116,7 +117,7 @@ public interface RangeIndicator extends CompositeIndicator {
      * @return the value of the '<em>Range</em>' attribute.
      * @see #setRange(String)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getRangeIndicator_Range()
-     * @model
+     * @model default="" transient="true" volatile="true"
      * @generated
      */
     String getRange();
