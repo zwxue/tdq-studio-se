@@ -62,6 +62,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
+import org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
@@ -100,10 +101,7 @@ public class DQRespositoryView extends CommonNavigator {
     public DQRespositoryView() {
         super();
 
-        IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-        if (projects.length != 0) {
-            MigrationTaskManager.doMigrationTask(MigrationTaskManager.findValidMigrationTasks());
-        }
+        new TDCPFolderMergeTask().execute();
 
         if (isNeedCreateStructure()) {
             DQStructureManager manager = DQStructureManager.getInstance();
@@ -111,6 +109,8 @@ public class DQRespositoryView extends CommonNavigator {
                 log.error("Failed to create structure of TDQ!");
             }
         }
+
+        MigrationTaskManager.doMigrationTask(MigrationTaskManager.findValidMigrationTasks());
 
         CorePlugin.getDefault().setRespositoryView(this);
     }

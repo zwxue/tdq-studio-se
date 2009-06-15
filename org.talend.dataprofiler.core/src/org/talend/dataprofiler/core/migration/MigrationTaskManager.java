@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
+import org.talend.dataprofiler.core.migration.helper.DataBaseVersionHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.utils.ProductVersion;
@@ -127,13 +128,15 @@ public final class MigrationTaskManager {
      * @param type
      * @return
      */
-    public static List<IWorkspaceMigrationTask> findMigrationTaskByType(MigrationTaskType type) {
+    public static List<IWorkspaceMigrationTask> findMigrationTaskByType(MigrationTaskType... types) {
         List<IWorkspaceMigrationTask> allTasks = findAllMigrationTasks();
         List<IWorkspaceMigrationTask> validTasks = new ArrayList<IWorkspaceMigrationTask>();
 
         for (IWorkspaceMigrationTask task : allTasks) {
-            if (task.getMigrationTaskType() == type) {
-                validTasks.add(task);
+            for (MigrationTaskType type : types) {
+                if (task.getMigrationTaskType() == type) {
+                    validTasks.add(task);
+                }
             }
         }
 
@@ -185,6 +188,8 @@ public final class MigrationTaskManager {
 
                         monitor.subTask(task.getName());
 
+                        log.warn("now executing " + task.getName());
+
                         task.execute();
 
                         monitor.worked(1);
@@ -193,6 +198,8 @@ public final class MigrationTaskManager {
                     monitor.done();
 
                     WorkspaceVersionHelper.storeVersion();
+
+                    DataBaseVersionHelper.storeVersion();
                 }
             };
 

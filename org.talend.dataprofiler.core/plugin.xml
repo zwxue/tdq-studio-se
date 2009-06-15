@@ -899,12 +899,6 @@
            version="1.2.0">
      </workspacetask>
      <workspacetask
-           class="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
-           id="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
-           name="TDCP Folder Merge"
-           version="1.2.0">
-     </workspacetask>
-     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.CreateExchangeFolderTask"
            id="org.talend.dataprofiler.core.migration.impl.CreateExchangeFolderTask"
            name="Create Exchange Folder"
