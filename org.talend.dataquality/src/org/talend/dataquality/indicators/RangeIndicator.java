@@ -115,21 +115,10 @@ public interface RangeIndicator extends CompositeIndicator {
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Range</em>' attribute.
-     * @see #setRange(String)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getRangeIndicator_Range()
-     * @model default="" transient="true" volatile="true"
+     * @model default="" transient="true" changeable="false" volatile="true"
      * @generated
      */
     String getRange();
-
-    /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.RangeIndicator#getRange <em>Range</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Range</em>' attribute.
-     * @see #getRange()
-     * @generated
-     */
-    void setRange(String value);
 
 } // RangeIndicator

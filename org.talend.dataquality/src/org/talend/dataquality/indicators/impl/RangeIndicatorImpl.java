@@ -232,21 +232,12 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
      * @generated NOT
      */
     public String getRange() {
-        // TODO: implement this method to return the 'Range' attribute
-        // Ensure that you remove @generated or mark it @generated NOT
-        double range = upperValue.getRealValue() - lowerValue.getRealValue();
-        return String.valueOf(range);
-    }
+        if (upperValue != null && lowerValue != null) {
+            double range = upperValue.getRealValue() - lowerValue.getRealValue();
+            return String.valueOf(range);
+        }
 
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
-     * @generated
-     */
-    public void setRange(String newRange) {
-        // TODO: implement this method to set the 'Range' attribute
-        // Ensure that you remove @generated or mark it @generated NOT
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     /**
@@ -302,9 +293,6 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
         case IndicatorsPackage.RANGE_INDICATOR__DATATYPE:
             setDatatype(((Integer) newValue).intValue());
             return;
-        case IndicatorsPackage.RANGE_INDICATOR__RANGE:
-            setRange((String) newValue);
-            return;
         }
         super.eSet(featureID, newValue);
     }
@@ -325,9 +313,6 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
             return;
         case IndicatorsPackage.RANGE_INDICATOR__DATATYPE:
             setDatatype(DATATYPE_EDEFAULT);
-            return;
-        case IndicatorsPackage.RANGE_INDICATOR__RANGE:
-            setRange(RANGE_EDEFAULT);
             return;
         }
         super.eUnset(featureID);
