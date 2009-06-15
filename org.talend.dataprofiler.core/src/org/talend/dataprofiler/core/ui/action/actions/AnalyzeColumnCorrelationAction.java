@@ -24,6 +24,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
@@ -36,6 +37,10 @@ import org.talend.utils.sql.Java2SqlType;
  * 
  */
 public class AnalyzeColumnCorrelationAction extends Action {
+
+    boolean hasNumberColumn;
+
+    boolean hasDateColumn;
 
     TreeSelection selection;
 
@@ -52,6 +57,8 @@ public class AnalyzeColumnCorrelationAction extends Action {
     @SuppressWarnings("unchecked")
     @Override
     public void run() {
+        hasDateColumn = false;
+        hasNumberColumn = false;
 
         if (openStandardAnalysisDialog(AnalysisType.COLUMN_CORRELATION) == Window.OK) {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
@@ -81,10 +88,16 @@ public class AnalyzeColumnCorrelationAction extends Action {
     private int openStandardAnalysisDialog(AnalysisType type) {
         AnalysisLabelParameter parameter = new AnalysisLabelParameter();
 
-        if (isContainNumber()) {
+        checkSelectedColumn();
+        if (hasNumberColumn && hasDateColumn) {
+            MessageUI.openError("invalid operation.");
+            return Window.CANCEL;
+        } else if (hasNumberColumn && !hasDateColumn) {
             parameter.setCategoryLabel(AnalysisLabelParameter.NUMBERIC_CORRELATION);
-        } else {
+        } else if (!hasNumberColumn && hasDateColumn) {
             parameter.setCategoryLabel(AnalysisLabelParameter.DATE_CORRELATION);
+        } else {
+            parameter.setCategoryLabel(AnalysisLabelParameter.NOMINAL_CORRELATION);
         }
 
         Wizard wizard = WizardFactory.createAnalysisWizard(type, parameter);
@@ -95,18 +108,18 @@ public class AnalyzeColumnCorrelationAction extends Action {
         return dialog.open();
     }
 
-    private boolean isContainNumber() {
+    private void checkSelectedColumn() {
         if (!selection.isEmpty()) {
             Iterator it = selection.iterator();
 
             while (it.hasNext()) {
                 TdColumn column = (TdColumn) it.next();
                 if (Java2SqlType.isNumbericInSQL(column.getJavaType())) {
-                    return true;
+                    hasNumberColumn = true;
+                } else if (Java2SqlType.isDateInSQL(column.getJavaType()) || Java2SqlType.isDateTimeSQL(column.getJavaType())) {
+                    hasDateColumn = true;
                 }
             }
         }
-
-        return false;
     }
 }
