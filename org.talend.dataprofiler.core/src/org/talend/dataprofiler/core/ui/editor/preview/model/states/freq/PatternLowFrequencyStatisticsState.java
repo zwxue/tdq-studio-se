@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 
 import java.util.List;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 
 /**
@@ -26,4 +27,9 @@ public class PatternLowFrequencyStatisticsState extends LowFrequencyStatisticsSt
         // TODO Auto-generated constructor stub
     }
 
+    @Override
+    protected String getTitle() {
+        // MOD hcheng 2009-06-16,0007725: missed indicator name in pattern graphics.
+        return DefaultMessagesImpl.getString("FrequencyTypeStates.PatternLowFreqyebctStatistics");
+    }
 }
