@@ -34,6 +34,10 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public final class AnalysisHelper {
 
+    public static final int DATA_FILTER_A = 0;
+
+    public static final int DATA_FILTER_B = 1;
+
     private AnalysisHelper() {
     }
 
@@ -78,6 +82,7 @@ public final class AnalysisHelper {
         // else
         return parameters.getExecutionLanguage();
     }
+
     /**
      * Method "setAnalysisType".
      * 
@@ -144,6 +149,50 @@ public final class AnalysisHelper {
         return null;
     }
 
+    /**
+     * DOC xqliu Comment method "getStringDataFilter".
+     * 
+     * @param analysis
+     * @param index 0 for DataFilterA, 1 for DataFilterB
+     * @return
+     */
+    public static String getStringDataFilter(Analysis analysis, int index) {
+        AnalysisParameters parameters = analysis.getParameters();
+        if (parameters == null) {
+            return null;
+        }
+        EList<Domain> dataFilters = parameters.getDataFilter();
+        // remove existing filters
+        if (dataFilters.isEmpty()) {
+            return null;
+        }
+
+        int i = 0;
+        for (Domain domain : dataFilters) {
+            if (domain == null) {
+                continue;
+            }
+            EList<RangeRestriction> ranges = domain.getRanges();
+            for (RangeRestriction rangeRestriction : ranges) {
+                BooleanExpressionNode expressions = rangeRestriction.getExpressions();
+                if (expressions == null) {
+                    continue;
+                }
+                Expression expression = expressions.getExpression();
+                if (expression == null) {
+                    continue;
+                }
+                if (i == index) {
+                    return expression.getBody();
+                } else if (i > index) {
+                    return null;
+                }
+            }
+            i++;
+        }
+        return null;
+    }
+
     public static boolean setStringDataFilter(Analysis analysis, String datafilterString) {
         EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
         // update existing filters
@@ -172,6 +221,51 @@ public final class AnalysisHelper {
     }
 
     /**
+     * DOC xqliu Comment method "setStringDataFilter".
+     * 
+     * @param analysis
+     * @param datafilterString
+     * @param index 0 for DataFilterA, 1 for DataFilterB
+     * @return
+     */
+    public static boolean setStringDataFilter(Analysis analysis, String datafilterString, int index) {
+        if (index == 1) {
+            EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
+            int size = dataFilters.size();
+            if (size == 0) {
+                dataFilters.add(createDomain(analysis, ""));
+                return dataFilters.add(createDomain(analysis, datafilterString, "1"));
+            } else if (size == 1) {
+                return dataFilters.add(createDomain(analysis, datafilterString, "1"));
+            } else if (size == 2) {
+                Domain domain = dataFilters.get(1);
+                EList<RangeRestriction> ranges = domain.getRanges();
+                RangeRestriction rangeRestriction = (ranges.isEmpty()) ? DomainHelper.addRangeRestriction(domain) : ranges.get(0);
+                BooleanExpressionNode expressions = rangeRestriction.getExpressions();
+                if (expressions == null) {
+                    expressions = BooleanExpressionHelper.createBooleanExpressionNode(datafilterString);
+                    rangeRestriction.setExpressions(expressions);
+                } else {
+                    Expression expression = expressions.getExpression();
+                    if (expression == null) {
+                        expression = BooleanExpressionHelper.createExpression(BooleanExpressionHelper.DEFAULT_LANGUAGE,
+                                datafilterString);
+                        expressions.setExpression(expression);
+                    } else {
+                        expression.setBody(datafilterString);
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
+        } else {
+            return setStringDataFilter(analysis, datafilterString);
+        }
+
+    }
+
+    /**
      * Method "containsRowCount".
      * 
      * @param analysis
@@ -196,10 +290,19 @@ public final class AnalysisHelper {
         }
         return false;
     }
-    
+
     private static Domain createDomain(Analysis analysis, String datafilterString) {
         // by default use same name as the analysis. This is ok as long as there is only one datafilter.
         Domain domain = DomainHelper.createDomain(analysis.getName());
+        RangeRestriction rangeRestriction = DomainHelper.addRangeRestriction(domain);
+        BooleanExpressionNode expressionNode = BooleanExpressionHelper.createBooleanExpressionNode(datafilterString);
+        rangeRestriction.setExpressions(expressionNode);
+        return domain;
+    }
+
+    private static Domain createDomain(Analysis analysis, String datafilterString, String alias) {
+        // by default use same name as the analysis. This is ok as long as there is only one datafilter.
+        Domain domain = DomainHelper.createDomain(analysis.getName() + alias);
         RangeRestriction rangeRestriction = DomainHelper.addRangeRestriction(domain);
         BooleanExpressionNode expressionNode = BooleanExpressionHelper.createBooleanExpressionNode(datafilterString);
         rangeRestriction.setExpressions(expressionNode);

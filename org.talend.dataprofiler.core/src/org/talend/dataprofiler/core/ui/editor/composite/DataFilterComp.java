@@ -62,4 +62,7 @@ public class DataFilterComp extends AbstractPagePart {
         return dataFilterText.getText();
     }
 
+    public void addModifyListener(ModifyListener listener) {
+        dataFilterText.addModifyListener(listener);
+    }
 }

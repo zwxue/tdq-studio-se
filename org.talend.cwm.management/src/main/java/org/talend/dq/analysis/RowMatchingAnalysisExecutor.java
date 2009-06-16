@@ -43,6 +43,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
+    private static Integer STATIC_COUNT = 1;
+
     private static Logger log = Logger.getLogger(RowMatchingAnalysisExecutor.class);
 
     private String catalogOrSchema = null;
@@ -115,8 +117,18 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String aliasA = "A";
         String aliasB = "B";
 
-        String tableNameA = getTableName(columnSetA) + " " + aliasA;
-        String tableNameB = getTableName(columnSetB) + " " + aliasB;
+        // MOD xqliu 2009-06-16 bug 7334
+        boolean reversion = STATIC_COUNT % 2 == 0 ? true : false;
+        STATIC_COUNT++;
+        String dataFilterA = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
+        String dataFilterB = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
+        if (reversion) {
+            dataFilterA = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
+            dataFilterB = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
+        }
+        String tableNameA = addDataFilterWithTableName(getTableName(columnSetA), dataFilterA) + " " + aliasA;
+        String tableNameB = addDataFilterWithTableName(getTableName(columnSetB), dataFilterB) + " " + aliasB;
+        // ~
 
         // Generic SQL expression is something like:
         // SELECT COUNT(*) FROM <%=__TABLE_NAME__%> LEFT JOIN <%=__TABLE_NAME_2__%> ON (<%=__JOIN_CLAUSE__%>) WHERE
@@ -135,6 +147,13 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         instantiatedExpression.setBody(instantiatedSQL);
 
         return instantiatedExpression;
+    }
+
+    private String addDataFilterWithTableName(String tableName, String dataFilter) {
+        if (dataFilter == null || dataFilter.trim().equals("")) {
+            return tableName;
+        }
+        return "(SELECT * FROM " + tableName + " WHERE ( " + dataFilter + " ))";
     }
 
     /**
@@ -313,12 +332,18 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             List<Object[]> myResultSet = executeQuery(catalogOrSchema, connection, query.getBody());
             String tableName = getAnalyzedTable(indicator);
 
+            // MOD xqliu 2009-06-16 bug 7334
+            boolean reversion = STATIC_COUNT % 2 == 0 ? true : false;
+            STATIC_COUNT++;
             // set data filter here
-            final String stringDataFilter = AnalysisHelper.getStringDataFilter(this.cachedAnalysis);
+            final String stringDataFilter = reversion ? AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
+                    AnalysisHelper.DATA_FILTER_B) : AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
+                    AnalysisHelper.DATA_FILTER_A);
             List<String> whereClauses = new ArrayList<String>();
-            if (stringDataFilter != null) {
+            if (stringDataFilter != null && !stringDataFilter.trim().equals("")) {
                 whereClauses.add(stringDataFilter);
             }
+            // ~
             // give result to indicator so that it handles the results
             boolean ok = indicator.storeSqlResults(myResultSet);
             // get row count and store it in indicator

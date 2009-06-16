@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +32,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -43,6 +47,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
@@ -61,9 +66,11 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
+import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.TableViewerDNDDecorate;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
@@ -84,7 +91,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * DOC Administrator class global comment. Detailled comment
  */
-public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadataPage {
+public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnsComparisonMasterDetailsPage.class);
 
@@ -103,6 +110,18 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private Button checkComputeButton;
 
     private Section columnsComparisonSection = null;
+
+    Analysis analysis;
+
+    DataFilterComp dataFilterCompA;
+
+    DataFilterComp dataFilterCompB;
+
+    private Section dataFilterSection = null;
+
+    private String stringDataFilterA;
+
+    private String stringDataFilterB;
 
     // ADD mzhao 2009-02-03 Tableviewer creation stack that remember left or
     // right position.
@@ -141,7 +160,11 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     // }
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        Analysis analysis = (Analysis) this.currentModelElement;
+        analysis = (Analysis) this.currentModelElement;
+        // MOD xqliu 2009-06-10 bug7334
+        stringDataFilterA = AnalysisHelper.getStringDataFilter(analysis, 0);
+        stringDataFilterB = AnalysisHelper.getStringDataFilter(analysis, 1);
+        // ~
         columnListA = new ArrayList<Column>();
         columnListB = new ArrayList<Column>();
         if (analysis.getResults().getIndicators().size() == 0) {
@@ -181,6 +204,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         this.metadataSection.setDescription(DefaultMessagesImpl
                 .getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
         createAnalyzedColumnSetsSection(topComp);
+
+        createDataFilterSection(form, topComp);
 
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or
         // expand later.
@@ -735,6 +760,59 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             } catch (Exception e) {
                 log.error(e, e);
             }
+        }
+    }
+
+    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
+        dataFilterSection = createSection(
+                form,
+                anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.dataFilter"), false, DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
+        Composite sectionClient = toolkit.createComposite(dataFilterSection);
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+        sectionClient.setLayout(new GridLayout());
+
+        SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
+        sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Composite leftComp = toolkit.createComposite(sashForm);
+        leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        leftComp.setLayout(new GridLayout());
+        dataFilterCompA = new DataFilterComp(leftComp, stringDataFilterA);
+        dataFilterCompA.addPropertyChangeListener(this);
+        dataFilterCompA.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                AnalysisHelper.setStringDataFilter(analysis, dataFilterCompA.getDataFilterString(), 0);
+            }
+        });
+
+        Composite rightComp = toolkit.createComposite(sashForm);
+        rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        rightComp.setLayout(new GridLayout());
+        dataFilterCompB = new DataFilterComp(rightComp, stringDataFilterB);
+        dataFilterCompB.addPropertyChangeListener(this);
+        dataFilterCompB.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                AnalysisHelper.setStringDataFilter(analysis, dataFilterCompB.getDataFilterString(), 1);
+            }
+        });
+
+        dataFilterSection.setClient(sectionClient);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
+            currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
+            currentEditor.setRefreshResultPage(true);
+        } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
+            this.setDirty(true);
         }
     }
 }
