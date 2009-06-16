@@ -82,4 +82,8 @@ public final class PluginConstant {
     public static final int CHART_STANDARD_WIDHT = 550;
 
     public static final int CHART_STANDARD_HEIGHT = 275;
+
+    public static final String NULL_FIELD = "Null field";
+
+    public static final String EMPTY_FIELD = "Empty field";
 }

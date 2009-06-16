@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
@@ -25,9 +26,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates;
-import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
-import org.talend.dataquality.indicators.FrequencyIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.FrequencyLabelProvider;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
@@ -67,6 +67,13 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
                     String keyLabel = String.valueOf(freqExt.getKey());
+                    if ("null".equals(keyLabel)) {
+                        keyLabel = PluginConstant.NULL_FIELD;
+                    }
+                    if ("".equals(keyLabel)) {
+                        keyLabel = PluginConstant.EMPTY_FIELD;
+                    }
+
                     customerdataset.addValue(freqExt.getValue(), "", keyLabel); //$NON-NLS-1$
 
                     ChartDataEntity entity = new ChartDataEntity();
@@ -113,7 +120,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     @Override
     protected ITableLabelProvider getLabelProvider() {
         // TODO Auto-generated method stub
-        return new BaseChartTableLabelProvider();
+        return new FrequencyLabelProvider();
     }
 
     @Override
@@ -126,29 +133,4 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
     protected abstract String getTitle();
 
-    /**
-     * 
-     * DOC mzhao FrequencyTypeStates, soundex frequency label provider.Feature: 6307
-     */
-    protected class SoundexBaseChartTableLabelProvider extends BaseChartTableLabelProvider {
-
-        @Override
-        public String getColumnText(Object element, int columnIndex) {
-            ChartDataEntity entity = (ChartDataEntity) element;
-
-            switch (columnIndex) {
-            case 0:
-                return entity.getLabel();
-            case 1:
-                return entity.getValue();
-            case 2:
-                return String.valueOf(((FrequencyIndicator) entity.getIndicator()).getCount(entity.getKey()));
-            case 3:
-                return entity.getPersent();
-            default:
-                return ""; //$NON-NLS-1$
-            }
-        }
-
-    }
 }

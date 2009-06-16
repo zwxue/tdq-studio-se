@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
@@ -51,6 +52,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.TextAnchor;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils;
 import org.talend.dataprofiler.core.ui.utils.ChartDatasetUtils.DateValueAggregate;
@@ -346,8 +348,15 @@ public final class TopChartFactory {
      */
     public static JFreeChart createBarChart(String titile, CategoryDataset dataset) {
 
-        return ChartFactory.createBarChart(null, titile,
-                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
+        JFreeChart createBarChart = ChartFactory.createBarChart(null, titile, DefaultMessagesImpl
+                .getString("TopChartFactory.Value"), dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
+
+        CategoryPlot plot = createBarChart.getCategoryPlot();
+
+        CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setTickLabelPaint(PluginConstant.NULL_FIELD, Color.RED);
+        domainAxis.setTickLabelPaint(PluginConstant.EMPTY_FIELD, Color.RED);
+        return createBarChart;
     }
 
     /**

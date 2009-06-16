@@ -49,7 +49,7 @@ public class ModeStatisticsState extends AbstractChartTypeStates {
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
             entity.setLabel(label);
-            entity.setValue(unit.getValue().toString());
+            entity.setValue(String.valueOf(unit.getValue()));
 
             customerdataset.addDataEntity(entity);
         }

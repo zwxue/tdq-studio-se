@@ -22,7 +22,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 
@@ -50,7 +52,6 @@ public class ChartTableProviderClassSet {
 
         public String getColumnText(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
-
             switch (columnIndex) {
             case 0:
                 return entity.getLabel();
@@ -104,6 +105,98 @@ public class ChartTableProviderClassSet {
                 return ""; //$NON-NLS-1$
             }
         }
+    }
+
+    /**
+     * DOC zqin ChartTableFactory class global comment. Detailled comment
+     */
+    public static class FrequencyLabelProvider extends BaseChartTableLabelProvider {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @seeorg.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.
+         * BaseChartTableLabelProvider#getColumnText(java.lang.Object, int)
+         */
+        @Override
+        public String getColumnText(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+            switch (columnIndex) {
+            case 0:
+                return entity.getLabel();
+            case 1:
+                return entity.getValue();
+            case 2:
+                return entity.getPersent();
+            default:
+                return ""; //$NON-NLS-1$
+            }
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @seeorg.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.
+         * BaseChartTableLabelProvider#getForeground(java.lang.Object, int)
+         */
+        @Override
+        public Color getForeground(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+            String label = entity.getLabel();
+            switch (columnIndex) {
+            case 0:
+                if (PluginConstant.NULL_FIELD.equals(label) || PluginConstant.EMPTY_FIELD.equals(label)) {
+                    return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                }
+            default:
+                return null;
+            }
+        }
+    }
+
+    /**
+     * DOC mzhao FrequencyTypeStates, soundex frequency label provider.Feature: 6307.
+     */
+    public static class SoundexBaseChartTableLabelProvider extends BaseChartTableLabelProvider {
+
+        @Override
+        public String getColumnText(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+
+            switch (columnIndex) {
+            case 0:
+                return entity.getLabel();
+            case 1:
+                return entity.getValue();
+            case 2:
+                return String.valueOf(((FrequencyIndicator) entity.getIndicator()).getCount(entity.getKey()));
+            case 3:
+                return entity.getPersent();
+            default:
+                return ""; //$NON-NLS-1$
+            }
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @seeorg.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.
+         * BaseChartTableLabelProvider#getForeground(java.lang.Object, int)
+         */
+        @Override
+        public Color getForeground(Object element, int columnIndex) {
+            ChartDataEntity entity = (ChartDataEntity) element;
+            String label = entity.getLabel();
+            switch (columnIndex) {
+            case 0:
+                if (PluginConstant.NULL_FIELD.equals(label) || PluginConstant.EMPTY_FIELD.equals(label)) {
+                    return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                }
+            default:
+                return null;
+            }
+        }
+
     }
 
     /**

@@ -40,7 +40,7 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         String function = getFunction();
 
         String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : function
-                + dbmsLanguage.equal() + "'" + entity.getLabel() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+                + dbmsLanguage.equal() + "'" + entity.getKey() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
         return clause;
     }
 
