@@ -17,8 +17,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataquality.exception.ExceptionHandler;
 
 /**
  * DOC rli class global comment. Detailled comment

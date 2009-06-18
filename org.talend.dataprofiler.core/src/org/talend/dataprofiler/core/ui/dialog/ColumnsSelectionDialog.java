@@ -54,16 +54,15 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ResourceManager;
-import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
+import org.talend.dataquality.ResourceManager;
+import org.talend.dataquality.exception.MessageBoxExceptionHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -573,8 +572,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 							+ container.getLocation());
 				}
 
-				if (container.equals(metadataFolder
-						.getFolder(DQStructureManager.DB_CONNECTIONS))) {
+				if (container
+						.equals(metadataFolder
+								.getFolder(org.talend.dataquality.PluginConstant.DB_CONNECTIONS))) {
 					ComparatorsFactory.sort(members,
 							ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
 				}

@@ -18,8 +18,8 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
+import org.talend.dataquality.ResourceManager;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
@@ -27,50 +27,51 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
  */
 public class CopyDefineFileTask extends AbstractMigrationTask {
 
-    protected static Logger log = Logger.getLogger(CopyDefineFileTask.class);
+	protected static Logger log = Logger.getLogger(CopyDefineFileTask.class);
 
-    private static final String TALEND_DEFINITION_FILENAME = ".Talend.definition"; //$NON-NLS-1$
+	private static final String TALEND_DEFINITION_FILENAME = ".Talend.definition"; //$NON-NLS-1$
 
-    private static final String TALEND_DEFINITION_BAK_FILENAME = ".Talend.definition.bak"; //$NON-NLS-1$
+	private static final String TALEND_DEFINITION_BAK_FILENAME = ".Talend.definition.bak"; //$NON-NLS-1$
 
-    public boolean execute() {
-        IFolder libFolder = ResourceManager.getLibrariesFolder();
+	public boolean execute() {
+		IFolder libFolder = ResourceManager.getLibrariesFolder();
 
-        IFile file = libFolder.getFile(TALEND_DEFINITION_FILENAME);
-        IFile bakfile = libFolder.getFile(TALEND_DEFINITION_BAK_FILENAME);
+		IFile file = libFolder.getFile(TALEND_DEFINITION_FILENAME);
+		IFile bakfile = libFolder.getFile(TALEND_DEFINITION_BAK_FILENAME);
 
-        if (file.exists()) {
-            try {
+		if (file.exists()) {
+			try {
 
-                if (bakfile.exists()) {
-                    bakfile.delete(true, null);
-                }
+				if (bakfile.exists()) {
+					bakfile.delete(true, null);
+				}
 
-                file.copy(bakfile.getFullPath(), true, null);
-                file.delete(true, null);
-                DefinitionHandler.getInstance().setNeedCopy(true);
+				file.copy(bakfile.getFullPath(), true, null);
+				file.delete(true, null);
+				DefinitionHandler.getInstance().setNeedCopy(true);
 
-                return true;
-            } catch (Exception e) {
-                log.error(e, e);
-                return false;
-            }
-        }
-        return false;
-    }
+				return true;
+			} catch (Exception e) {
+				log.error(e, e);
+				return false;
+			}
+		}
+		return false;
+	}
 
-    public Date getOrder() {
-        Calendar calender = Calendar.getInstance();
-        calender.set(2009, 1, 29);
-        return calender.getTime();
-    }
+	public Date getOrder() {
+		Calendar calender = Calendar.getInstance();
+		calender.set(2009, 1, 29);
+		return calender.getTime();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
-     */
-    public MigrationTaskType getMigrationTaskType() {
-        return MigrationTaskType.FILE;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#
+	 * getMigrationTaskType()
+	 */
+	public MigrationTaskType getMigrationTaskType() {
+		return MigrationTaskType.FILE;
+	}
 }

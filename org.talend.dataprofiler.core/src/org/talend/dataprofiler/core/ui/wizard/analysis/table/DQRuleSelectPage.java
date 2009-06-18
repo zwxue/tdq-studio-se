@@ -23,78 +23,82 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
+import org.talend.dataquality.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
 
-    private CheckboxTreeViewer cViewer;
+	private CheckboxTreeViewer cViewer;
 
-    public CheckboxTreeViewer getCViewer() {
-        return cViewer;
-    }
+	public CheckboxTreeViewer getCViewer() {
+		return cViewer;
+	}
 
-    public void setCViewer(CheckboxTreeViewer viewer) {
-        cViewer = viewer;
-    }
+	public void setCViewer(CheckboxTreeViewer viewer) {
+		cViewer = viewer;
+	}
 
-    private final String pageTitle = DefaultMessagesImpl.getString("DQRuleSelectPage.newAnalysis"); //$NON-NLS-1$
+	private final String pageTitle = DefaultMessagesImpl
+			.getString("DQRuleSelectPage.newAnalysis"); //$NON-NLS-1$
 
-    private final String pageMessage = DefaultMessagesImpl.getString("DQRuleSelectPage.selectDQRule"); //$NON-NLS-1$
+	private final String pageMessage = DefaultMessagesImpl
+			.getString("DQRuleSelectPage.selectDQRule"); //$NON-NLS-1$
 
-    public DQRuleSelectPage() {
-        setTitle(pageTitle);
-        setDescription(pageMessage);
-    }
+	public DQRuleSelectPage() {
+		setTitle(pageTitle);
+		setDescription(pageMessage);
+	}
 
-    public void createControl(Composite parent) {
-        Composite container = new Composite(parent, SWT.NONE);
-        FillLayout layout = new FillLayout();
-        container.setLayout(layout);
+	public void createControl(Composite parent) {
+		Composite container = new Composite(parent, SWT.NONE);
+		FillLayout layout = new FillLayout();
+		container.setLayout(layout);
 
-        cViewer = new ContainerCheckedTreeViewer(container, SWT.NONE);
-        cViewer.setLabelProvider(new DQRuleLabelProvider());
-        cViewer.setContentProvider(new WorkbenchContentProvider());
-        cViewer.setInput(ResourceManager.getLibrariesFolder());
-        cViewer.addFilter(new ViewerFilter() {
+		cViewer = new ContainerCheckedTreeViewer(container, SWT.NONE);
+		cViewer.setLabelProvider(new DQRuleLabelProvider());
+		cViewer.setContentProvider(new WorkbenchContentProvider());
+		cViewer.setInput(ResourceManager.getLibrariesFolder());
+		cViewer.addFilter(new ViewerFilter() {
 
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFile) {
-                    IFile file = (IFile) element;
-                    if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                        return true;
-                    }
-                } else if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    return DQRuleUtilities.isLibraiesSubfolder(folder, DQStructureManager.DQ_RULES);
-                }
-                return false;
-            }
-        });
+			@Override
+			public boolean select(Viewer viewer, Object parentElement,
+					Object element) {
+				if (element instanceof IFile) {
+					IFile file = (IFile) element;
+					if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
+						return true;
+					}
+				} else if (element instanceof IFolder) {
+					IFolder folder = (IFolder) element;
+					return DQRuleUtilities.isLibraiesSubfolder(folder,
+							DQStructureManager.DQ_RULES);
+				}
+				return false;
+			}
+		});
 
-        setControl(container);
-    }
+		setControl(container);
+	}
 
-    @Override
-    public boolean canFlipToNextPage() {
-        return false;
-    }
+	@Override
+	public boolean canFlipToNextPage() {
+		return false;
+	}
 
-    @Override
-    public boolean isCanFinishEarly() {
-        return true;
-    }
+	@Override
+	public boolean isCanFinishEarly() {
+		return true;
+	}
 
-    @Override
-    public boolean isHasPages() {
-        return false;
-    }
+	@Override
+	public boolean isHasPages() {
+		return false;
+	}
 
 }

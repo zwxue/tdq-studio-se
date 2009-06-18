@@ -20,59 +20,62 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
+import org.talend.dataquality.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class NewDQRulesWizardPage1 extends MetadataWizardPage {
 
-    protected static Logger log = Logger.getLogger(NewDQRulesWizardPage1.class);
+	protected static Logger log = Logger.getLogger(NewDQRulesWizardPage1.class);
 
-    protected HashMap<String, String> metadata;
+	protected HashMap<String, String> metadata;
 
-    /**
-     * DOC xqliu NewDQRulesWizardPage1 constructor comment.
-     */
-    public NewDQRulesWizardPage1() {
-        metadata = new HashMap<String, String>();
-        setPageComplete(false);
-    }
+	/**
+	 * DOC xqliu NewDQRulesWizardPage1 constructor comment.
+	 */
+	public NewDQRulesWizardPage1() {
+		metadata = new HashMap<String, String>();
+		setPageComplete(false);
+	}
 
-    public void createControl(Composite parent) {
+	public void createControl(Composite parent) {
 
-        super.createControl(parent);
-        pathText.setText(getParameter().getFolderProvider().getFolderURI());
+		super.createControl(parent);
+		pathText.setText(getParameter().getFolderProvider().getFolderURI());
 
-        button.addSelectionListener(new SelectionAdapter() {
+		button.addSelectionListener(new SelectionAdapter() {
 
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                openFolderSelectionDialog(ResourceManager.LIBRARIES_FOLDER_NAME, DQStructureManager.DQ_RULES);
-            }
-        });
-        if (getControl() != null) {
-            try {
-                PlatformUI.getWorkbench().getHelpSystem()
-                        .setHelp(getControl(), HelpPlugin.getDefault().getDQRulesHelpContextID());
-            } catch (Exception e) {
-                log.error(e, e);
-            }
-        }
-    }
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openFolderSelectionDialog(
+						ResourceManager.LIBRARIES_FOLDER_NAME,
+						DQStructureManager.DQ_RULES);
+			}
+		});
+		if (getControl() != null) {
+			try {
+				PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+						HelpPlugin.getDefault().getDQRulesHelpContextID());
+			} catch (Exception e) {
+				log.error(e, e);
+			}
+		}
+	}
 
-    @Override
-    protected void createExtendedControl(Composite container) {
-        // TODO Auto-generated method stub
+	@Override
+	protected void createExtendedControl(Composite container) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    @Override
-    protected IFolder getStoredFolder() {
-        return ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.DQ_RULES);
-    }
+	@Override
+	protected IFolder getStoredFolder() {
+		return ResourceManager.getLibrariesFolder().getFolder(
+				DQStructureManager.DQ_RULES);
+	}
 
 }

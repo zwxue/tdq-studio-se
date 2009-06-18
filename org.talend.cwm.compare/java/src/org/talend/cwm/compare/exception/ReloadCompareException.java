@@ -12,24 +12,24 @@
 // ============================================================================
 package org.talend.cwm.compare.exception;
 
-import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
+import org.talend.dataquality.exception.DataprofilerCoreException;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
 public class ReloadCompareException extends DataprofilerCoreException {
 
-    /**
+	/**
      * 
      */
-    private static final long serialVersionUID = -6647762192837141336L;
+	private static final long serialVersionUID = -6647762192837141336L;
 
-    public ReloadCompareException(String message) {
-        super(message);
-    }
+	public ReloadCompareException(String message) {
+		super(message);
+	}
 
-    public ReloadCompareException(Throwable cause) {
-        super(cause);
-    }
+	public ReloadCompareException(Throwable cause) {
+		super(cause);
+	}
 
 }

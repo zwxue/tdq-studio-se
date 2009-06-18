@@ -53,7 +53,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -63,6 +62,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalA
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -158,7 +158,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends
 			protected void handleRemove() {
 				removeSelectedElements(newTree);
 				// MOD mzhao 2005-05-05 bug 6587.
-				updateBindConnection(masterPage, tree);
+				// MOD mzhao 2009-06-8, bug 5887.
+				// updateBindConnection(masterPage, tree);
 			}
 
 		};
@@ -254,7 +255,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends
 			public void widgetSelected(SelectionEvent e) {
 				removeSelectedElements(newTree);
 				// MOD mzhao 2005-05-05 bug 6587.
-				updateBindConnection(masterPage, tree);
+				// MOD mzhao 2009-06-8, bug 5887.
+				// updateBindConnection(masterPage, tree);
 			}
 
 		});
@@ -361,11 +363,11 @@ public class AnalysisColumnNominalIntervalTreeViewer extends
 		this.setElements(columnList);
 	}
 
-	public void setElements(final List<Column> columns) {
+	public void setElements(final Object columns) {
 		this.tree.dispose();
 		this.tree = createTree(this.parentComp);
 		tree.setData(this);
-		addItemElements(columns, 0);
+		addItemElements((List<Column>) columns, 0);
 		// addItemElements(columns);
 		// MOD mzhao 2005-05-05 bug 6587.
 		updateBindConnection(masterPage, tree);
@@ -447,7 +449,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends
 					deleteColumnItems(column);
 					removeItemBranch(treeItem);
 					// MOD mzhao 2005-05-05 bug 6587.
-					updateBindConnection(masterPage, tree);
+					// MOD mzhao 2009-06-8, bug 5887.
+					// updateBindConnection(masterPage, tree);
 				}
 
 			});
@@ -653,5 +656,19 @@ public class AnalysisColumnNominalIntervalTreeViewer extends
 	public void dropColumns(List<Column> columns, int index) {
 		this.addElements(columns, index);
 		// this.setElements(columnSetMultiValueList);
+	}
+
+	@Override
+	public void updateModelViewer() {
+		masterPage.recomputeIndicators();
+		// columnSetMultiValueList =
+		// masterPage.getColumnSetMultiValueIndicator()
+		// .getAnalyzedColumns().subList(
+		// 0,
+		// masterPage.getColumnSetMultiValueIndicator()
+		// .getAnalyzedColumns().size());
+		columnSetMultiValueList.clear();
+		this.setElements(masterPage.getColumnSetMultiValueIndicator()
+				.getAnalyzedColumns());
 	}
 }

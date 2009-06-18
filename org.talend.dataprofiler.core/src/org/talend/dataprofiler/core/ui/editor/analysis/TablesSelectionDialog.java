@@ -53,10 +53,7 @@ import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.ResourceManager;
-import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
@@ -64,6 +61,9 @@ import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
+import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.ResourceManager;
+import org.talend.dataquality.exception.MessageBoxExceptionHandler;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -467,7 +467,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 				// MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
 				// project.
 				if (container.equals(ResourceManager.getMetadataFolder()
-						.getFolder(DQStructureManager.DB_CONNECTIONS))) {
+						.getFolder(PluginConstant.DB_CONNECTIONS))) {
 					ComparatorsFactory.sort(members,
 							ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
 				}

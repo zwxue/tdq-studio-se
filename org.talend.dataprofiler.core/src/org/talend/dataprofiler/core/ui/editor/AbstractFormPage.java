@@ -27,49 +27,53 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public abstract class AbstractFormPage extends FormPage {
 
-    protected boolean isDirty = false;
+	protected boolean isDirty = false;
 
-    protected FormToolkit toolkit;
+	protected FormToolkit toolkit;
 
-    public AbstractFormPage(FormEditor editor, String id, String title) {
-        super(editor, id, title);
-        this.toolkit = this.getEditor().getToolkit();
-    }
+	public AbstractFormPage(FormEditor editor, String id, String title) {
+		super(editor, id, title);
+		this.toolkit = this.getEditor().getToolkit();
+	}
 
-    /**
-     * @param form
-     * @param toolkit
-     * @param anasisDataComp
-     * @param title
-     * @param expanded
-     * @param discription
-     * @return
-     */
-    protected Section createSection(final ScrolledForm form, Composite parent, String title, boolean expanded, String description) {
-        final int style = (description == null) ? (Section.TWISTIE | Section.TITLE_BAR)
-                : (Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR);
-        Section section = toolkit.createSection(parent, style);
+	/**
+	 * MOD mzhao 2009-06-17 feature 5887
+	 * 
+	 * @param form
+	 * @param toolkit
+	 * @param anasisDataComp
+	 * @param title
+	 * @param expanded
+	 * @param discription
+	 * @return
+	 */
+	public Section createSection(final ScrolledForm form, Composite parent,
+			String title, boolean expanded, String description) {
+		final int style = (description == null) ? (Section.TWISTIE | Section.TITLE_BAR)
+				: (Section.DESCRIPTION | Section.TWISTIE | Section.TITLE_BAR);
+		Section section = toolkit.createSection(parent, style);
 
-        section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
+				| GridData.VERTICAL_ALIGN_BEGINNING));
 
-        section.addExpansionListener(new ExpansionAdapter() {
+		section.addExpansionListener(new ExpansionAdapter() {
 
-            public void expansionStateChanged(ExpansionEvent e) {
-                form.reflow(true);
-            }
+			public void expansionStateChanged(ExpansionEvent e) {
+				form.reflow(true);
+			}
 
-        });
+		});
 
-        section.setText(title);
-        section.setDescription(description);
-        section.setExpanded(expanded);
-        return section;
-    }
+		section.setText(title);
+		section.setDescription(description);
+		section.setExpanded(expanded);
+		return section;
+	}
 
-    public abstract void setDirty(boolean isDirty);
+	public abstract void setDirty(boolean isDirty);
 
-    @Override
-    public boolean isDirty() {
-        return super.isDirty() || isDirty;
-    }
+	@Override
+	public boolean isDirty() {
+		return super.isDirty() || isDirty;
+	}
 }

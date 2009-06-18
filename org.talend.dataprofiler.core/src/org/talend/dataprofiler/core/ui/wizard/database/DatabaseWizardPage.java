@@ -57,446 +57,491 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public class DatabaseWizardPage extends AbstractWizardPage {
 
-    protected static Logger log = Logger.getLogger(DatabaseWizardPage.class);
+	protected static Logger log = Logger.getLogger(DatabaseWizardPage.class);
 
-    /* use this to paint a more helpful UI for the JDBC URL */
-    private SupportDBUrlType lastTimeDBType;
+	/* use this to paint a more helpful UI for the JDBC URL */
+	private SupportDBUrlType lastTimeDBType;
 
-    private String userid;
+	private String userid;
 
-    private String password;
+	private String password;
 
-    private String connectionURL = null;
+	private String connectionURL = null;
 
-    private Label jdbcLabel;
+	private Label jdbcLabel;
 
-    private Text jdbcUrl;
+	private Text jdbcUrl;
 
-    private URLSetupControl urlSetupControl;
+	private URLSetupControl urlSetupControl;
 
-    private Composite container;
+	private Composite container;
 
-    private Button checkButton;
+	private Button checkButton;
 
-    private DBConnectionParameter connectionParam;
+	private DBConnectionParameter connectionParam;
 
-    private boolean dbTypeSwitchFlag = false;
+	private boolean dbTypeSwitchFlag = false;
 
-    private Text username;
+	private Text username;
 
-    private Text passwordText;
+	private Text passwordText;
 
-    private PropertyChangeListener listener = new PropertyChangeListener() {
+	private PropertyChangeListener listener = new PropertyChangeListener() {
 
-        public void propertyChange(PropertyChangeEvent event) {
-            if (PluginConstant.CONNECTION_URL_PROPERTY.equals(event.getPropertyName())) {
-                DatabaseWizardPage.this.setConnectionURL((String) event.getNewValue());
-                DatabaseWizardPage.this.updateButtonState();
-            }
-        }
-    };
+		public void propertyChange(PropertyChangeEvent event) {
+			if (PluginConstant.CONNECTION_URL_PROPERTY.equals(event
+					.getPropertyName())) {
+				DatabaseWizardPage.this.setConnectionURL((String) event
+						.getNewValue());
+				DatabaseWizardPage.this.updateButtonState();
+			}
+		}
+	};
 
-    public void createControl(Composite parent) {
-        connectionParam = (DBConnectionParameter) getParameter();
-        setPageComplete(false);
+	public void createControl(Composite parent) {
+		connectionParam = (DBConnectionParameter) getParameter();
+		setPageComplete(false);
 
-        Composite comp = new Composite(parent, SWT.NULL);
+		Composite comp = new Composite(parent, SWT.NULL);
 
-        comp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        GridLayout layout = new GridLayout();
-        comp.setLayout(layout);
-        layout.numColumns = 2;
-        layout.verticalSpacing = 9;
+		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridLayout layout = new GridLayout();
+		comp.setLayout(layout);
+		layout.numColumns = 2;
+		layout.verticalSpacing = 9;
 
-        GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-        data.horizontalSpan = 1;
-        Composite tempComp = new Composite(comp, SWT.NULL);
-        tempComp.setLayoutData(data);
-        GridLayout tempLayout = new GridLayout();
-        tempComp.setLayout(tempLayout);
-        tempLayout.numColumns = 2;
+		GridData data = new GridData(GridData.FILL_HORIZONTAL
+				| GridData.VERTICAL_ALIGN_BEGINNING);
+		data.horizontalSpan = 1;
+		Composite tempComp = new Composite(comp, SWT.NULL);
+		tempComp.setLayoutData(data);
+		GridLayout tempLayout = new GridLayout();
+		tempComp.setLayout(tempLayout);
+		tempLayout.numColumns = 2;
 
-        Label label = new Label(tempComp, SWT.NULL);
-        label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.login")); //$NON-NLS-1$
-        username = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
+		Label label = new Label(tempComp, SWT.NULL);
+		label
+				.setText(DefaultMessagesImpl
+						.getString("DatabaseWizardPage.login")); //$NON-NLS-1$
+		username = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
 
-        GridData fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
-        username.setLayoutData(fullHorizontal);
-        username.addModifyListener(new ModifyListener() {
+		GridData fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
+		username.setLayoutData(fullHorizontal);
+		username.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent event) {
-                String userId = ((Text) event.getSource()).getText();
-                setUserid(userId);
-                updateButtonState();
-            }
-        });
+			public void modifyText(ModifyEvent event) {
+				String userId = ((Text) event.getSource()).getText();
+				setUserid(userId);
+				updateButtonState();
+			}
+		});
 
-        label = new Label(tempComp, SWT.NULL);
-        label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.password")); //$NON-NLS-1$
-        passwordText = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
-        passwordText.setEchoChar('*');
-        fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
-        passwordText.setLayoutData(fullHorizontal);
-        passwordText.addModifyListener(new ModifyListener() {
+		label = new Label(tempComp, SWT.NULL);
+		label.setText(DefaultMessagesImpl
+				.getString("DatabaseWizardPage.password")); //$NON-NLS-1$
+		passwordText = new Text(tempComp, SWT.BORDER | SWT.SINGLE);
+		passwordText.setEchoChar('*');
+		fullHorizontal = new GridData(GridData.FILL_HORIZONTAL);
+		passwordText.setLayoutData(fullHorizontal);
+		passwordText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent event) {
-                String passwordStr = ((Text) event.getSource()).getText();
-                setPassword(passwordStr);
-                updateButtonState();
-            }
-        });
+			public void modifyText(ModifyEvent event) {
+				String passwordStr = ((Text) event.getSource()).getText();
+				setPassword(passwordStr);
+				updateButtonState();
+			}
+		});
 
-        label = new Label(tempComp, SWT.NULL);
-        label.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.DBType")); //$NON-NLS-1$
-        final Combo dbTypeCombo = new Combo(tempComp, SWT.READ_ONLY);
-        dbTypeCombo.setItems(SupportDBUrlStore.getInstance().getDBTypes());
-        dbTypeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        dbTypeCombo.addSelectionListener(new SelectionAdapter() {
+		label = new Label(tempComp, SWT.NULL);
+		label.setText(DefaultMessagesImpl
+				.getString("DatabaseWizardPage.DBType")); //$NON-NLS-1$
+		final Combo dbTypeCombo = new Combo(tempComp, SWT.READ_ONLY);
+		dbTypeCombo.setItems(SupportDBUrlStore.getInstance().getDBTypes());
+		dbTypeCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		dbTypeCombo.addSelectionListener(new SelectionAdapter() {
 
-            public void widgetSelected(SelectionEvent e) {
-                if (dbTypeCombo.getText().trim().equals("Generic JDBC")) { //$NON-NLS-1$
-                    updateStatus(IStatus.WARNING, UIMessages.MSG_SELECT_GENERIC_JDBC);
-                }
-                if (dbTypeCombo.getText().trim().equals("SQLite3")) { //$NON-NLS-1$
-                    username.setEnabled(false);
-                    passwordText.setEnabled(false);
-                } else {
-                    username.setEnabled(true);
-                    passwordText.setEnabled(true);
-                }
-                String selectedItem = ((Combo) e.getSource()).getText();
-                setDBType(selectedItem);
-                dbTypeSwitchFlag = true;
+			public void widgetSelected(SelectionEvent e) {
+				if (dbTypeCombo.getText().trim().equals("Generic JDBC")) { //$NON-NLS-1$
+					updateStatus(IStatus.WARNING,
+							UIMessages.MSG_SELECT_GENERIC_JDBC);
+				}
+				if (dbTypeCombo.getText().trim().equals("SQLite3")) { //$NON-NLS-1$
+					username.setEnabled(false);
+					passwordText.setEnabled(false);
+				} else {
+					username.setEnabled(true);
+					passwordText.setEnabled(true);
+				}
+				String selectedItem = ((Combo) e.getSource()).getText();
+				setDBType(selectedItem);
+				dbTypeSwitchFlag = true;
 
-                rebuildJDBCControls(SupportDBUrlStore.getInstance().getDBUrlType(selectedItem));
-            }
+				rebuildJDBCControls(SupportDBUrlStore.getInstance()
+						.getDBUrlType(selectedItem));
+			}
 
-        });
+		});
 
-        String defalutItem = SupportDBUrlType.MYSQLDEFAULTURL.getDBKey();
-        dbTypeCombo.setText(defalutItem);
-        setDBType(defalutItem);
-        lastTimeDBType = SupportDBUrlStore.getInstance().getDBUrlType(dbTypeCombo.getText());
+		String defalutItem = SupportDBUrlType.MYSQLDEFAULTURL.getDBKey();
+		dbTypeCombo.setText(defalutItem);
+		setDBType(defalutItem);
+		lastTimeDBType = SupportDBUrlStore.getInstance().getDBUrlType(
+				dbTypeCombo.getText());
 
-        checkButton = new Button(comp, SWT.NULL);
-        GridData buttonData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
-        buttonData.heightHint = 25;
-        buttonData.widthHint = 100;
-        checkButton.setLayoutData(buttonData);
-        checkButton.setText(DefaultMessagesImpl.getString("DatabaseWizardPage.check")); //$NON-NLS-1$
-        checkButton.setToolTipText(DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnection")); //$NON-NLS-1$
-        checkButton.addSelectionListener(new SelectionAdapter() {
+		checkButton = new Button(comp, SWT.NULL);
+		GridData buttonData = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+		buttonData.heightHint = 25;
+		buttonData.widthHint = 100;
+		checkButton.setLayoutData(buttonData);
+		checkButton.setText(DefaultMessagesImpl
+				.getString("DatabaseWizardPage.check")); //$NON-NLS-1$
+		checkButton.setToolTipText(DefaultMessagesImpl
+				.getString("DatabaseWizardPage.checkConnection")); //$NON-NLS-1$
+		checkButton.addSelectionListener(new SelectionAdapter() {
 
-            public void widgetSelected(SelectionEvent e) {
-                ReturnCode code = checkDBConnection();
-                if (code.isOk()) {
-                    MessageDialog
-                            .openInformation(
-                                    getShell(),
-                                    DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnections"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
-                } else {
-                    MessageDialog
-                            .openInformation(
-                                    getShell(),
-                                    DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
-                                            + code.getMessage());
-                }
-            }
+			public void widgetSelected(SelectionEvent e) {
+				ReturnCode code = checkDBConnection();
+				if (code.isOk()) {
+					MessageDialog
+							.openInformation(
+									getShell(),
+									DefaultMessagesImpl
+											.getString("DatabaseWizardPage.checkConnections"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
+				} else {
+					MessageDialog
+							.openInformation(
+									getShell(),
+									DefaultMessagesImpl
+											.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
+											+ code.getMessage());
+				}
+			}
 
-        });
+		});
 
-        this.container = comp;
-        setControl(comp);
+		this.container = comp;
+		setControl(comp);
 
-        rebuildJDBCControls(SupportDBUrlType.MYSQLDEFAULTURL);
+		rebuildJDBCControls(SupportDBUrlType.MYSQLDEFAULTURL);
 
-        String tempUserid = connectionParam.getParameters().getProperty(PluginConstant.USER_PROPERTY);
-        if (tempUserid != null) {
-            userid = tempUserid;
-            username.setText(userid);
-        }
-        String tempPassword = connectionParam.getParameters().getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
-        if (tempPassword != null) {
-            password = tempPassword;
-            passwordText.setText(password);
-        }
-        String tempURL = connectionParam.getJdbcUrl();
-        if (tempURL != null) {
-            connectionURL = tempURL;
-            // passwordText.setText(password);
-        } else {
-            // System.out.println("NULL URL");
-        }
-    }
+		String tempUserid = connectionParam.getParameters().getProperty(
+				org.talend.dataquality.PluginConstant.USER_PROPERTY);
+		if (tempUserid != null) {
+			userid = tempUserid;
+			username.setText(userid);
+		}
+		String tempPassword = connectionParam.getParameters().getProperty(
+				org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
+		if (tempPassword != null) {
+			password = tempPassword;
+			passwordText.setText(password);
+		}
+		String tempURL = connectionParam.getJdbcUrl();
+		if (tempURL != null) {
+			connectionURL = tempURL;
+			// passwordText.setText(password);
+		} else {
+			// System.out.println("NULL URL");
+		}
+	}
 
-    /**
-     * @param container
-     */
-    private void createStandardJDBCWidgets(Composite container) {
-        setConnectionURL(""); //$NON-NLS-1$
+	/**
+	 * @param container
+	 */
+	private void createStandardJDBCWidgets(Composite container) {
+		setConnectionURL(""); //$NON-NLS-1$
 
-        this.jdbcLabel = new Label(container, SWT.NULL);
-        this.jdbcLabel.setText("url"); //$NON-NLS-1$
+		this.jdbcLabel = new Label(container, SWT.NULL);
+		this.jdbcLabel.setText("url"); //$NON-NLS-1$
 
-        this.jdbcUrl = new Text(container, SWT.BORDER | SWT.SINGLE);
-        this.jdbcUrl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        this.jdbcUrl.addModifyListener(new ModifyListener() {
+		this.jdbcUrl = new Text(container, SWT.BORDER | SWT.SINGLE);
+		this.jdbcUrl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		this.jdbcUrl.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent event) {
-                setConnectionURL(((Text) event.getSource()).getText());
-                updateButtonState();
-            }
-        });
+			public void modifyText(ModifyEvent event) {
+				setConnectionURL(((Text) event.getSource()).getText());
+				updateButtonState();
+			}
+		});
 
-        updateButtonState();
-    }
+		updateButtonState();
+	}
 
-    private ReturnCode checkDBConnection() {
-        if (this.connectionParam.getDriverPath() != null) {
-            CorePlugin corePlugin = CorePlugin.getDefault();
-            ReturnCode rc = new ReturnCode();
-            // String[] driverpaths = this.connectionParam.getDriverPath().split(";");
-            Driver externalDriver = null;
-            String errorMsg = "";
-            try {
-                externalDriver = createGenericJDBC(this.connectionParam.getDriverPath(), this.connectionParam
-                        .getDriverClassName());
-            } catch (Exception e1) {
-                errorMsg = e1.getLocalizedMessage();
-            }
-            if (externalDriver != null) {
-                try {
-                    DriverManager.registerDriver(externalDriver);
-                    // MOD xqliu 2009-02-03 bug 5261
-                    Connection connection = ConnectionUtils.createConnectionWithTimeout(externalDriver, this.connectionParam
-                            .getJdbcUrl(), this.connectionParam.getParameters());
-                    if (connection == null) {
-                        rc.setOk(false);
-                        rc.setMessage(DefaultMessagesImpl.getString("DatabaseWizardPage.connIsNULL"));
-                    }
-                } catch (Exception e) {
-                    rc.setOk(false);
-                    rc.setMessage(e.getLocalizedMessage());
-                    log.error(e, e);
-                }
-            } else {
-                rc.setOk(false);
-                rc.setMessage(errorMsg);
-            }
-            return rc;
-        } else {
-            ReturnCode returnCode = ConnectionService.checkConnection(this.connectionParam.getJdbcUrl(), this.connectionParam
-                    .getDriverClassName(), this.connectionParam.getParameters());
-            return returnCode;
-        }
-    }
+	private ReturnCode checkDBConnection() {
+		if (this.connectionParam.getDriverPath() != null) {
+			CorePlugin corePlugin = CorePlugin.getDefault();
+			ReturnCode rc = new ReturnCode();
+			// String[] driverpaths =
+			// this.connectionParam.getDriverPath().split(";");
+			Driver externalDriver = null;
+			String errorMsg = "";
+			try {
+				externalDriver = createGenericJDBC(this.connectionParam
+						.getDriverPath(), this.connectionParam
+						.getDriverClassName());
+			} catch (Exception e1) {
+				errorMsg = e1.getLocalizedMessage();
+			}
+			if (externalDriver != null) {
+				try {
+					DriverManager.registerDriver(externalDriver);
+					// MOD xqliu 2009-02-03 bug 5261
+					Connection connection = ConnectionUtils
+							.createConnectionWithTimeout(externalDriver,
+									this.connectionParam.getJdbcUrl(),
+									this.connectionParam.getParameters());
+					if (connection == null) {
+						rc.setOk(false);
+						rc.setMessage(DefaultMessagesImpl
+								.getString("DatabaseWizardPage.connIsNULL"));
+					}
+				} catch (Exception e) {
+					rc.setOk(false);
+					rc.setMessage(e.getLocalizedMessage());
+					log.error(e, e);
+				}
+			} else {
+				rc.setOk(false);
+				rc.setMessage(errorMsg);
+			}
+			return rc;
+		} else {
+			ReturnCode returnCode = ConnectionService.checkConnection(
+					this.connectionParam.getJdbcUrl(), this.connectionParam
+							.getDriverClassName(), this.connectionParam
+							.getParameters());
+			return returnCode;
+		}
+	}
 
-    private Driver createGenericJDBC(String driverJars, String driverName) throws Exception {
-        Driver driver = null;
-        String[] driverJarPath = driverJars.split(";"); //$NON-NLS-1$
-        try {
-            int driverCount = 0;
-            URL[] driverUrl = new URL[driverJarPath.length];
-            for (String dirverpath : driverJarPath) {
-                driverUrl[driverCount++] = new File(dirverpath).toURL();
-            }
-            URLClassLoader cl = URLClassLoader.newInstance(driverUrl, Thread.currentThread().getContextClassLoader());
-            Class c = cl.loadClass(driverName);
-            driver = (Driver) c.newInstance();
-        } catch (Exception ex) {
-            log.error(ex, ex);
-            throw ex;
-        }
-        return driver;
-    }
+	private Driver createGenericJDBC(String driverJars, String driverName)
+			throws Exception {
+		Driver driver = null;
+		String[] driverJarPath = driverJars.split(";"); //$NON-NLS-1$
+		try {
+			int driverCount = 0;
+			URL[] driverUrl = new URL[driverJarPath.length];
+			for (String dirverpath : driverJarPath) {
+				driverUrl[driverCount++] = new File(dirverpath).toURL();
+			}
+			URLClassLoader cl = URLClassLoader.newInstance(driverUrl, Thread
+					.currentThread().getContextClassLoader());
+			Class c = cl.loadClass(driverName);
+			driver = (Driver) c.newInstance();
+		} catch (Exception ex) {
+			log.error(ex, ex);
+			throw ex;
+		}
+		return driver;
+	}
 
-    /**
+	/**
      * 
      */
-    private void rebuildJDBCControls(SupportDBUrlType dbType) {
-        Point windowSize = getShell().getSize();
-        Point oldSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+	private void rebuildJDBCControls(SupportDBUrlType dbType) {
+		Point windowSize = getShell().getSize();
+		Point oldSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 
-        if (URLSetupControlFactory.hasControl(dbType)) {
+		if (URLSetupControlFactory.hasControl(dbType)) {
 
-            disposeOfCurrentJDBCControls();
+			disposeOfCurrentJDBCControls();
 
-            this.urlSetupControl = URLSetupControlFactory.create(dbType, this.container, connectionParam, this);
-            GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-            data.horizontalSpan = 2;
-            this.urlSetupControl.setLayoutData(data);
+			this.urlSetupControl = URLSetupControlFactory.create(dbType,
+					this.container, connectionParam, this);
+			GridData data = new GridData(GridData.FILL_HORIZONTAL
+					| GridData.VERTICAL_ALIGN_BEGINNING);
+			data.horizontalSpan = 2;
+			this.urlSetupControl.setLayoutData(data);
 
-            if (connectionURL != null && !dbTypeSwitchFlag) {
-                urlSetupControl.setConnectionURL(connectionURL);
-            } else {
-                setConnectionURL(this.urlSetupControl.getConnectionURL());
-            }
+			if (connectionURL != null && !dbTypeSwitchFlag) {
+				urlSetupControl.setConnectionURL(connectionURL);
+			} else {
+				setConnectionURL(this.urlSetupControl.getConnectionURL());
+			}
 
-            this.urlSetupControl.addPropertyChangeListener(this.listener);
+			this.urlSetupControl.addPropertyChangeListener(this.listener);
 
-            resizeWindow(windowSize, oldSize);
+			resizeWindow(windowSize, oldSize);
 
-        } else if (this.jdbcLabel == null || this.jdbcUrl == null) {
+		} else if (this.jdbcLabel == null || this.jdbcUrl == null) {
 
-            disposeOfCurrentJDBCControls();
-            createStandardJDBCWidgets(this.container);
+			disposeOfCurrentJDBCControls();
+			createStandardJDBCWidgets(this.container);
 
-            resizeWindow(windowSize, oldSize);
+			resizeWindow(windowSize, oldSize);
 
-        }
+		}
 
-        this.container.layout();
-        this.container.setVisible(true);
-        this.container.redraw();
-        if (dbType.getLanguage().trim().equals("Generic JDBC")) { //$NON-NLS-1$
-            // updateEditableState();
-        } else {
-            updateButtonState();
-        }
-    }
+		this.container.layout();
+		this.container.setVisible(true);
+		this.container.redraw();
+		if (dbType.getLanguage().trim().equals("Generic JDBC")) { //$NON-NLS-1$
+			// updateEditableState();
+		} else {
+			updateButtonState();
+		}
+	}
 
-    /**
-     * @param windowSize
-     * @param oldSize
-     */
-    private void resizeWindow(Point windowSize, Point oldSize) {
-        Point newSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        if (newSize.y > windowSize.y) {
-            getShell().setSize(new Point(windowSize.x, windowSize.y + (newSize.y - oldSize.y)));
-        }
-    }
+	/**
+	 * @param windowSize
+	 * @param oldSize
+	 */
+	private void resizeWindow(Point windowSize, Point oldSize) {
+		Point newSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		if (newSize.y > windowSize.y) {
+			getShell().setSize(
+					new Point(windowSize.x, windowSize.y
+							+ (newSize.y - oldSize.y)));
+		}
+	}
 
-    private void disposeOfCurrentJDBCControls() {
-        if (this.jdbcUrl != null) {
-            this.jdbcUrl.dispose();
-            this.jdbcUrl = null;
-        }
-        if (this.jdbcLabel != null) {
-            this.jdbcLabel.dispose();
-            this.jdbcLabel = null;
-        }
-        if (this.urlSetupControl != null) {
-            this.urlSetupControl.removePropertyChangeListener(this.listener);
-            this.urlSetupControl.dispose();
-            this.urlSetupControl = null;
-        }
-        // if (this.checkButton != null) {
-        // this.checkButton.dispose();
-        // this.checkButton = null;
-        // }
-    }
+	private void disposeOfCurrentJDBCControls() {
+		if (this.jdbcUrl != null) {
+			this.jdbcUrl.dispose();
+			this.jdbcUrl = null;
+		}
+		if (this.jdbcLabel != null) {
+			this.jdbcLabel.dispose();
+			this.jdbcLabel = null;
+		}
+		if (this.urlSetupControl != null) {
+			this.urlSetupControl.removePropertyChangeListener(this.listener);
+			this.urlSetupControl.dispose();
+			this.urlSetupControl = null;
+		}
+		// if (this.checkButton != null) {
+		// this.checkButton.dispose();
+		// this.checkButton = null;
+		// }
+	}
 
-    /**
-     * 
-     * DOC zhaoxinyi Comment method "updateEditableState".
-     */
+	/**
+	 * 
+	 * DOC zhaoxinyi Comment method "updateEditableState".
+	 */
 
-    private void updateEditableState() {
-        String user = connectionParam.getParameters().getProperty(PluginConstant.USER_PROPERTY);
-        String password = connectionParam.getParameters().getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
-        boolean isPasswordBlank = password != null && !password.trim().equals(""); //$NON-NLS-1$
-        boolean isUserBlank = user != null && !user.trim().equals(""); //$NON-NLS-1$
-        boolean isUrlBlank = connectionParam.getJdbcUrl() != null && !connectionParam.getJdbcUrl().trim().equals(""); //$NON-NLS-1$
-        boolean isDriverNameBlank = connectionParam.getDriverClassName() != null
-                && !connectionParam.getDriverClassName().trim().equals(""); //$NON-NLS-1$
-        boolean isDriverFileBlank = connectionParam.getDriverPath() != null && !connectionParam.getDriverPath().equals(""); //$NON-NLS-1$
-        boolean isComplete = isPasswordBlank && isUserBlank && isDriverNameBlank && isUrlBlank && isDriverFileBlank;
-        if (isComplete) {
-            checkButton.setEnabled(!isComplete);
-            setPageComplete(!isComplete);
-        }
-        setPageComplete(isComplete);
-    }
+	private void updateEditableState() {
+		String user = connectionParam.getParameters().getProperty(
+				org.talend.dataquality.PluginConstant.USER_PROPERTY);
+		String password = connectionParam.getParameters().getProperty(
+				org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
+		boolean isPasswordBlank = password != null
+				&& !password.trim().equals(""); //$NON-NLS-1$
+		boolean isUserBlank = user != null && !user.trim().equals(""); //$NON-NLS-1$
+		boolean isUrlBlank = connectionParam.getJdbcUrl() != null
+				&& !connectionParam.getJdbcUrl().trim().equals(""); //$NON-NLS-1$
+		boolean isDriverNameBlank = connectionParam.getDriverClassName() != null
+				&& !connectionParam.getDriverClassName().trim().equals(""); //$NON-NLS-1$
+		boolean isDriverFileBlank = connectionParam.getDriverPath() != null
+				&& !connectionParam.getDriverPath().equals(""); //$NON-NLS-1$
+		boolean isComplete = isPasswordBlank && isUserBlank
+				&& isDriverNameBlank && isUrlBlank && isDriverFileBlank;
+		if (isComplete) {
+			checkButton.setEnabled(!isComplete);
+			setPageComplete(!isComplete);
+		}
+		setPageComplete(isComplete);
+	}
 
-    public void updateButtonState() {
-        boolean complete = true;
-        String dbTypeName = this.connectionParam.getSqlTypeName();
-        if (!SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(dbTypeName)) {
-            if (SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey().equals(dbTypeName)) {
-                // deal with generic jdbc;
-                String driverName = this.connectionParam.getDriverClassName() == null ? "" : this.connectionParam
-                        .getDriverClassName();
-                String connURL = this.connectionParam.getJdbcUrl() == null ? "" : this.connectionParam.getJdbcUrl();
-                String userName = this.userid == null ? "" : this.userid;
-                if ("".equals(driverName) || "".equals(connURL)) {
-                    complete = false;
-                } else {
-                    complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver().equals(driverName) ? true : !"".equals(userName);
-                }
-            } else if (SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbTypeName)) {
-                // deal with sqlite;
-                String filename = this.connectionParam.getFilePath();
-                complete &= filename != null && !filename.trim().equals(""); //$NON-NLS-1$
-            } else {
-                complete &= this.userid != null && !this.userid.trim().equals(""); //$NON-NLS-1$
-            }
-        }
-        if (checkButton != null) {
-            checkButton.setEnabled(complete);
-        }
-        setPageComplete(complete);
-    }
+	public void updateButtonState() {
+		boolean complete = true;
+		String dbTypeName = this.connectionParam.getSqlTypeName();
+		if (!SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(dbTypeName)) {
+			if (SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey().equals(
+					dbTypeName)) {
+				// deal with generic jdbc;
+				String driverName = this.connectionParam.getDriverClassName() == null ? ""
+						: this.connectionParam.getDriverClassName();
+				String connURL = this.connectionParam.getJdbcUrl() == null ? ""
+						: this.connectionParam.getJdbcUrl();
+				String userName = this.userid == null ? "" : this.userid;
+				if ("".equals(driverName) || "".equals(connURL)) {
+					complete = false;
+				} else {
+					complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver()
+							.equals(driverName) ? true : !"".equals(userName);
+				}
+			} else if (SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(
+					dbTypeName)) {
+				// deal with sqlite;
+				String filename = this.connectionParam.getFilePath();
+				complete &= filename != null && !filename.trim().equals(""); //$NON-NLS-1$
+			} else {
+				complete &= this.userid != null
+						&& !this.userid.trim().equals(""); //$NON-NLS-1$
+			}
+		}
+		if (checkButton != null) {
+			checkButton.setEnabled(complete);
+		}
+		setPageComplete(complete);
+	}
 
-    /**
-     * @return Returns the userid.
-     */
-    public String getUserid() {
-        return this.userid;
-    }
+	/**
+	 * @return Returns the userid.
+	 */
+	public String getUserid() {
+		return this.userid;
+	}
 
-    /**
-     * @param userid The userid to set.
-     */
-    public void setUserid(String userid) {
-        if (userid != null && !userid.equals(this.userid)) {
-            this.userid = userid;
-            this.connectionParam.getParameters().setProperty("user", userid); //$NON-NLS-1$
-        }
-    }
+	/**
+	 * @param userid
+	 *            The userid to set.
+	 */
+	public void setUserid(String userid) {
+		if (userid != null && !userid.equals(this.userid)) {
+			this.userid = userid;
+			this.connectionParam.getParameters().setProperty("user", userid); //$NON-NLS-1$
+		}
+	}
 
-    public void setDBType(String dbType) {
-        this.connectionParam.setSqlTypeName(dbType);
-        this.connectionParam.setDriverClassName(SupportDBUrlStore.getInstance().getDBUrlType(dbType).getDbDriver());
-    }
+	public void setDBType(String dbType) {
+		this.connectionParam.setSqlTypeName(dbType);
+		this.connectionParam.setDriverClassName(SupportDBUrlStore.getInstance()
+				.getDBUrlType(dbType).getDbDriver());
+	}
 
-    /**
-     * @param connectionURL The connectionURL to set.
-     */
-    private void setConnectionURL(String connectionURL) {
-        if (connectionURL != null && !connectionURL.equals(this.connectionURL)) {
-            this.connectionURL = connectionURL;
-            this.connectionParam.setJdbcUrl(connectionURL);
-        }
-    }
+	/**
+	 * @param connectionURL
+	 *            The connectionURL to set.
+	 */
+	private void setConnectionURL(String connectionURL) {
+		if (connectionURL != null && !connectionURL.equals(this.connectionURL)) {
+			this.connectionURL = connectionURL;
+			this.connectionParam.setJdbcUrl(connectionURL);
+		}
+	}
 
-    /**
-     * @return Returns the password.
-     */
-    public String getPassword() {
-        return this.password;
-    }
+	/**
+	 * @return Returns the password.
+	 */
+	public String getPassword() {
+		return this.password;
+	}
 
-    /**
-     * @param password The password to set.
-     */
-    public void setPassword(String password) {
-        if (password != null && !password.equals(this.password)) {
-            this.password = password;
-            this.connectionParam.getParameters().setProperty("password", password); //$NON-NLS-1$
-        }
-    }
+	/**
+	 * @param password
+	 *            The password to set.
+	 */
+	public void setPassword(String password) {
+		if (password != null && !password.equals(this.password)) {
+			this.password = password;
+			this.connectionParam.getParameters().setProperty(
+					"password", password); //$NON-NLS-1$
+		}
+	}
 
-    @Override
-    public void dispose() {
-        if (this.checkButton != null) {
-            this.checkButton.dispose();
-            this.checkButton = null;
-        }
-    }
+	@Override
+	public void dispose() {
+		if (this.checkButton != null) {
+			this.checkButton.dispose();
+			this.checkButton = null;
+		}
+	}
 
-    public boolean updateLoginPassEnable(boolean enable) {
-        username.setEnabled(enable);
-        passwordText.setEnabled(enable);
-        return enable;
-    }
+	public boolean updateLoginPassEnable(boolean enable) {
+		username.setEnabled(enable);
+		passwordText.setEnabled(enable);
+		return enable;
+	}
 }

@@ -14,7 +14,7 @@ package org.talend.cwm.compare.i18n;
 
 import java.util.ResourceBundle;
 
-import org.talend.dataprofiler.core.i18n.MessagesCore;
+import org.talend.i18n.MessagesCore;
 
 /**
  * Default implementation of MessageCore from org.talend.commons plug-in.<br/>
@@ -24,37 +24,43 @@ import org.talend.dataprofiler.core.i18n.MessagesCore;
  * <li>the BUNDLE_NAME constant</li>
  * </ul>
  * 
- * $Id: DefaultMessagesImpl.java 3351 2007-05-04 12:14:00 +0000 (星期�? 04 五月 2007) plegall $
+ * $Id: DefaultMessagesImpl.java 3351 2007-05-04 12:14:00 +0000 (星期�? 04 五月
+ * 2007) plegall $
  * 
  */
 public class DefaultMessagesImpl extends MessagesCore {
 
-    private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
-    private static final String PLUGIN_ID = "org.talend.cwm.compare"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.talend.cwm.compare"; //$NON-NLS-1$
 
-    private static ResourceBundle resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
+	private static ResourceBundle resourceBundle = ResourceBundle
+			.getBundle(BUNDLE_NAME);
 
-    /**
-     * Returns the i18n formatted message for <i>key</i> in the class bundle.
-     * 
-     * @param key - the key for the desired string
-     * @return the string for the given key in the class resource bundle
-     * @see MessagesCore#getString(String, ResourceBundle)
-     */
-    public static String getString(String key) {
-        return getString(key, PLUGIN_ID, resourceBundle);
-    }
+	/**
+	 * Returns the i18n formatted message for <i>key</i> in the class bundle.
+	 * 
+	 * @param key
+	 *            - the key for the desired string
+	 * @return the string for the given key in the class resource bundle
+	 * @see MessagesCore#getString(String, ResourceBundle)
+	 */
+	public static String getString(String key) {
+		return getString(key, PLUGIN_ID, resourceBundle);
+	}
 
-    /**
-     * Returns the i18n formatted message for <i>key</i> and <i>args</i> in the specified bundle.
-     * 
-     * @param key - the key for the desired string
-     * @param args - arg to include in the string
-     * @return the string for the given key in the given resource bundle
-     * @see MessagesCore#getString(String, ResourceBundle, Object[])
-     */
-    public static String getString(String key, Object... args) {
-        return getString(key, PLUGIN_ID, resourceBundle, args);
-    }
+	/**
+	 * Returns the i18n formatted message for <i>key</i> and <i>args</i> in the
+	 * specified bundle.
+	 * 
+	 * @param key
+	 *            - the key for the desired string
+	 * @param args
+	 *            - arg to include in the string
+	 * @return the string for the given key in the given resource bundle
+	 * @see MessagesCore#getString(String, ResourceBundle, Object[])
+	 */
+	public static String getString(String key, Object... args) {
+		return getString(key, PLUGIN_ID, resourceBundle, args);
+	}
 }

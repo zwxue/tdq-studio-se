@@ -23,6 +23,7 @@ Export-Package: org.talend.commons.emf,
  org.talend.dataquality.domain.sql,
  org.talend.dataquality.domain.sql.impl,
  org.talend.dataquality.domain.util,
+ org.talend.dataquality.exception,
  org.talend.dataquality.expressions,
  org.talend.dataquality.expressions.impl,
  org.talend.dataquality.expressions.util,
@@ -45,7 +46,8 @@ Export-Package: org.talend.commons.emf,
  org.talend.dataquality.reports.impl,
  org.talend.dataquality.reports.util,
  org.talend.dataquality.rules,
- org.talend.dataquality.rules.util
+ org.talend.dataquality.rules.util,
+ org.talend.i18n
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.talend.cwm.mip;visibility:=reexport,
@@ -53,6 +55,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.talend.utils,
  org.eclipse.emf.ecore.xmi,
  org.apache.log4j;bundle-version="1.2.13",
- org.talend.commons
+ org.talend.commons,
+ org.eclipse.core.resources;bundle-version="3.4.2",
+ org.eclipse.ui;bundle-version="3.4.2"
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.apache.log4j

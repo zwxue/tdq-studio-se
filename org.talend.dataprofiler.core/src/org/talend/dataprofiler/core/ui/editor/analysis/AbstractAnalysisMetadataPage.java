@@ -28,14 +28,14 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dataprofiler.core.ResourceManager;
-import org.talend.dataprofiler.core.exception.DataprofilerCoreException;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dataquality.exception.ExceptionHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -57,6 +57,10 @@ public abstract class AbstractAnalysisMetadataPage extends
 
 	public CCombo getConnCombo() {
 		return connCombo;
+	}
+
+	public Analysis getAnalysis() {
+		return analysis;
 	}
 
 	public AbstractAnalysisMetadataPage(FormEditor editor, String id,
@@ -119,7 +123,13 @@ public abstract class AbstractAnalysisMetadataPage extends
 		}
 	}
 
-	protected void createConnBindWidget(Composite parentComp) {
+	/**
+	 * 
+	 * MOD mzhao 2009-06-17 feature 5887
+	 * 
+	 * @param parentComp
+	 */
+	public void createConnBindWidget(Composite parentComp) {
 		// ~ MOD mzhao 2009-05-05,Bug 6587.
 		Composite labelButtonClient = toolkit.createComposite(parentComp);
 		GridLayout labelButtonClientLayout = new GridLayout();
@@ -140,7 +150,7 @@ public abstract class AbstractAnalysisMetadataPage extends
 	// MOD mzhao 2009-05-05, bug 6587.
 	protected void reloadDataproviderAndFillConnCombo() {
 		IFolder connFolder = ResourceManager.getMetadataFolder().getFolder(
-				DQStructureManager.DB_CONNECTIONS);
+				PluginConstant.DB_CONNECTIONS);
 		List<TdDataProvider> dataProviders = PrvResourceFileHelper
 				.getInstance().getAllDataProviders(connFolder);
 
@@ -151,6 +161,7 @@ public abstract class AbstractAnalysisMetadataPage extends
 			String prvFileName = PrvResourceFileHelper.getInstance()
 					.findCorrespondingFile(prov).getName();
 			connCombo.setData(prvFileName, index);
+			connCombo.setData(index + "", prov);
 			index++;
 		}
 		if (index > 0) {

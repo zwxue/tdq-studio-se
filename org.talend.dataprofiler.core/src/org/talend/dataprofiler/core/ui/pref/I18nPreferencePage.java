@@ -44,8 +44,8 @@ import org.talend.commons.i18n.BabiliTool;
 import org.talend.commons.i18n.BabiliUpdateUtil;
 import org.talend.commons.i18n.ImportBabiliCancelException;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.exception.ExceptionHandler;
 
 /**
  * DOC hcheng class global comment. Detailled comment

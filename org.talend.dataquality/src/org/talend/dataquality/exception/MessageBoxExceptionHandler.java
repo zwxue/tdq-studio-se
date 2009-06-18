@@ -10,13 +10,13 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.exception;
+package org.talend.dataquality.exception;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Priority;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.i18n.Messages;
 
 /**
  * Exception handling via message box.<br/>
@@ -70,8 +70,8 @@ public final class MessageBoxExceptionHandler {
         }
         lastShowedAction = ex;
 
-        String title = DefaultMessagesImpl.getString("MessageBoxExceptionHandler.common.error"); //$NON-NLS-1$
-        String msg = DefaultMessagesImpl.getString("MessageBoxExceptionHandler.exception.errorOcured", ex.getMessage()); //$NON-NLS-1$
+        String title = Messages.getString("MessageBoxExceptionHandler.common.error"); //$NON-NLS-1$
+        String msg = Messages.getString("MessageBoxExceptionHandler.exception.errorOcured", ex.getMessage()); //$NON-NLS-1$
         Priority priority = Level.ERROR;
 
         if (priority == Level.FATAL || priority == Level.ERROR) {

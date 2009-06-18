@@ -40,10 +40,10 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
+import org.talend.dataquality.ResourceManager;
 
 /**
  * @author zqin
@@ -51,287 +51,308 @@ import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
  */
 public abstract class MetadataWizardPage extends AbstractWizardPage {
 
-    private static Logger log = Logger.getLogger(MetadataWizardPage.class);
+	private static Logger log = Logger.getLogger(MetadataWizardPage.class);
 
-    // protected members
-    protected Text nameText;
+	// protected members
+	protected Text nameText;
 
-    protected Text purposeText;
+	protected Text purposeText;
 
-    protected Text descriptionText;
+	protected Text descriptionText;
 
-    protected Text authorText;
+	protected Text authorText;
 
-    protected Text versionText;
+	protected Text versionText;
 
-    protected Button button;
+	protected Button button;
 
-    protected CCombo statusText;
+	protected CCombo statusText;
 
-    protected Text pathText;
+	protected Text pathText;
 
-    // private members
-    private Button versionMajorBtn;
+	// private members
+	private Button versionMajorBtn;
 
-    private Button versionMinorBtn;
+	private Button versionMinorBtn;
 
-    private boolean editPath = true;
+	private boolean editPath = true;
 
-    public MetadataWizardPage() {
+	public MetadataWizardPage() {
 
-        this.setPageComplete(false);
-    }
+		this.setPageComplete(false);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.PropertiesWizardPage#createControl(org.eclipse.swt.widgets.Composite)
-     */
-    public void createControl(Composite parent) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.talend.dataprofiler.core.ui.wizard.PropertiesWizardPage#createControl
+	 * (org.eclipse.swt.widgets.Composite)
+	 */
+	public void createControl(Composite parent) {
 
-        if (getParameter().getFolderProvider() == null || getParameter().getFolderProvider().isNull()) {
-            FolderProvider defaultFolder = new FolderProvider();
-            defaultFolder.setFolderResource(getStoredFolder());
-            getParameter().setFolderProvider(defaultFolder);
-        }
+		if (getParameter().getFolderProvider() == null
+				|| getParameter().getFolderProvider().isNull()) {
+			FolderProvider defaultFolder = new FolderProvider();
+			defaultFolder.setFolderResource(getStoredFolder());
+			getParameter().setFolderProvider(defaultFolder);
+		}
 
-        Composite container = new Composite(parent, SWT.NONE);
-        GridLayout gdLayout = new GridLayout(2, false);
-        container.setLayout(gdLayout);
+		Composite container = new Composite(parent, SWT.NONE);
+		GridLayout gdLayout = new GridLayout(2, false);
+		container.setLayout(gdLayout);
 
-        GridData data;
+		GridData data;
 
-        // Name
-        Label nameLab = new Label(container, SWT.NONE);
-        nameLab.setText(DefaultMessagesImpl.getString("MetadataWizardPage.name")); //$NON-NLS-1$
+		// Name
+		Label nameLab = new Label(container, SWT.NONE);
+		nameLab.setText(DefaultMessagesImpl
+				.getString("MetadataWizardPage.name")); //$NON-NLS-1$
 
-        nameText = new Text(container, SWT.BORDER);
-        nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		nameText = new Text(container, SWT.BORDER);
+		nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        // Purpose
-        Label purposeLab = new Label(container, SWT.NONE);
-        purposeLab.setText(DefaultMessagesImpl.getString("MetadataWizardPage.purpose")); //$NON-NLS-1$
+		// Purpose
+		Label purposeLab = new Label(container, SWT.NONE);
+		purposeLab.setText(DefaultMessagesImpl
+				.getString("MetadataWizardPage.purpose")); //$NON-NLS-1$
 
-        purposeText = new Text(container, SWT.BORDER);
-        purposeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		purposeText = new Text(container, SWT.BORDER);
+		purposeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        // Description
-        Label descriptionLab = new Label(container, SWT.NONE);
-        descriptionLab.setText(DefaultMessagesImpl.getString("MetadataWizardPage.description")); //$NON-NLS-1$
-        descriptionLab.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+		// Description
+		Label descriptionLab = new Label(container, SWT.NONE);
+		descriptionLab.setText(DefaultMessagesImpl
+				.getString("MetadataWizardPage.description")); //$NON-NLS-1$
+		descriptionLab.setLayoutData(new GridData(
+				GridData.VERTICAL_ALIGN_BEGINNING));
 
-        descriptionText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        data.heightHint = 60;
-        descriptionText.setLayoutData(data);
+		descriptionText = new Text(container, SWT.BORDER | SWT.MULTI | SWT.WRAP
+				| SWT.V_SCROLL);
+		data = new GridData(GridData.FILL_HORIZONTAL);
+		data.heightHint = 60;
+		descriptionText.setLayoutData(data);
 
-        // Author
-        Label authorLab = new Label(container, SWT.NONE);
-        authorLab.setText(DefaultMessagesImpl.getString("MetadataWizardPage.author")); //$NON-NLS-1$
+		// Author
+		Label authorLab = new Label(container, SWT.NONE);
+		authorLab.setText(DefaultMessagesImpl
+				.getString("MetadataWizardPage.author")); //$NON-NLS-1$
 
-        authorText = new Text(container, SWT.BORDER);
-        authorText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        authorText.setText(ReponsitoryContextBridge.getAuthor());
+		authorText = new Text(container, SWT.BORDER);
+		authorText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		authorText.setText(ReponsitoryContextBridge.getAuthor());
 
-        // Version
-        // Label versionLab = new Label(container, SWT.NONE);
-        // versionLab.setText("Version");
-        //
-        // Composite versionContainer = new Composite(container, SWT.NONE);
-        // versionContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        // GridLayout versionLayout = new GridLayout(3, false);
-        // versionLayout.marginHeight = 0;
-        // versionLayout.marginWidth = 0;
-        // versionLayout.horizontalSpacing = 0;
-        // versionContainer.setLayout(versionLayout);
-        //
-        // versionText = new Text(versionContainer, SWT.BORDER);
-        // versionText.setEnabled(false);
-        // versionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        //
-        // versionMajorBtn = new Button(versionContainer, SWT.PUSH);
-        // versionMajorBtn.setText("M");
-        // versionMajorBtn.setEnabled(!readOnly);
-        //
-        // versionMinorBtn = new Button(versionContainer, SWT.PUSH);
-        // versionMinorBtn.setText("m"); //$NON-NLS-1$
-        // versionMinorBtn.setEnabled(!readOnly);
+		// Version
+		// Label versionLab = new Label(container, SWT.NONE);
+		// versionLab.setText("Version");
+		//
+		// Composite versionContainer = new Composite(container, SWT.NONE);
+		// versionContainer.setLayoutData(new
+		// GridData(GridData.FILL_HORIZONTAL));
+		// GridLayout versionLayout = new GridLayout(3, false);
+		// versionLayout.marginHeight = 0;
+		// versionLayout.marginWidth = 0;
+		// versionLayout.horizontalSpacing = 0;
+		// versionContainer.setLayout(versionLayout);
+		//
+		// versionText = new Text(versionContainer, SWT.BORDER);
+		// versionText.setEnabled(false);
+		// versionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		//
+		// versionMajorBtn = new Button(versionContainer, SWT.PUSH);
+		// versionMajorBtn.setText("M");
+		// versionMajorBtn.setEnabled(!readOnly);
+		//
+		// versionMinorBtn = new Button(versionContainer, SWT.PUSH);
+		// versionMinorBtn.setText("m"); //$NON-NLS-1$
+		// versionMinorBtn.setEnabled(!readOnly);
 
-        // Status
-        Label statusLab = new Label(container, SWT.NONE);
-        statusLab.setText("Status"); //$NON-NLS-1$
+		// Status
+		Label statusLab = new Label(container, SWT.NONE);
+		statusLab.setText("Status"); //$NON-NLS-1$
 
-        statusText = new CCombo(container, SWT.BORDER);
-        statusText.setText(DevelopmentStatus.DRAFT.getLiteral());
-        statusText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        statusText.setEditable(false);
+		statusText = new CCombo(container, SWT.BORDER);
+		statusText.setText(DevelopmentStatus.DRAFT.getLiteral());
+		statusText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		statusText.setEditable(false);
 
-        for (DevelopmentStatus status : DevelopmentStatus.values()) {
+		for (DevelopmentStatus status : DevelopmentStatus.values()) {
 
-            statusText.add(status.getLiteral());
-        }
+			statusText.add(status.getLiteral());
+		}
 
-        // Path:
-        Label pathLab = new Label(container, SWT.NONE);
-        pathLab.setText("Path"); //$NON-NLS-1$
+		// Path:
+		Label pathLab = new Label(container, SWT.NONE);
+		pathLab.setText("Path"); //$NON-NLS-1$
 
-        Composite pathContainer = new Composite(container, SWT.NONE);
-        pathContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        GridLayout pathLayout = new GridLayout(2, false);
-        pathLayout.marginHeight = 0;
-        pathLayout.marginWidth = 0;
-        pathLayout.horizontalSpacing = 0;
-        pathContainer.setLayout(pathLayout);
+		Composite pathContainer = new Composite(container, SWT.NONE);
+		pathContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridLayout pathLayout = new GridLayout(2, false);
+		pathLayout.marginHeight = 0;
+		pathLayout.marginWidth = 0;
+		pathLayout.horizontalSpacing = 0;
+		pathContainer.setLayout(pathLayout);
 
-        pathText = new Text(pathContainer, SWT.BORDER);
-        pathText.setEnabled(false);
-        pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		pathText = new Text(pathContainer, SWT.BORDER);
+		pathText.setEnabled(false);
+		pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        button = new Button(pathContainer, SWT.PUSH);
-        button.setText(DefaultMessagesImpl.getString("MetadataWizardPage.select")); //$NON-NLS-1$
+		button = new Button(pathContainer, SWT.PUSH);
+		button.setText(DefaultMessagesImpl
+				.getString("MetadataWizardPage.select")); //$NON-NLS-1$
 
-        createExtendedControl(container);
-        addListeners();
+		createExtendedControl(container);
+		addListeners();
 
-        setControl(container);
-    }
+		setControl(container);
+	}
 
-    @SuppressWarnings("unchecked")
-    protected void openFolderSelectionDialog(String projectName, String folderName) {
+	@SuppressWarnings("unchecked")
+	protected void openFolderSelectionDialog(String projectName,
+			String folderName) {
 
-        final Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
-        ArrayList rejectedElements = new ArrayList();
+		final Class[] acceptedClasses = new Class[] { IProject.class,
+				IFolder.class };
+		ArrayList rejectedElements = new ArrayList();
 
-        if (projectName != null) {
-            // MOD mzhao 2009-03-13 Move all folders into one single project {@link CorePlugin#ROOTPROJECTNAME}
-            IFolder theFolder = ResourceManager.getRootProject().getFolder(projectName);
-            IResource[] allFolders = null;
-            try {
-                allFolders = ResourceManager.getRootProject().members();
-            } catch (CoreException e) {
-                log.error(e, e);
-            }
-            for (int i = 0; i < allFolders.length; i++) {
-                if (!allFolders[i].equals(theFolder)) {
-                    rejectedElements.add(allFolders[i]);
-                }
-            }
+		if (projectName != null) {
+			// MOD mzhao 2009-03-13 Move all folders into one single project
+			// {@link CorePlugin#ROOTPROJECTNAME}
+			IFolder theFolder = ResourceManager.getRootProject().getFolder(
+					projectName);
+			IResource[] allFolders = null;
+			try {
+				allFolders = ResourceManager.getRootProject().members();
+			} catch (CoreException e) {
+				log.error(e, e);
+			}
+			for (int i = 0; i < allFolders.length; i++) {
+				if (!allFolders[i].equals(theFolder)) {
+					rejectedElements.add(allFolders[i]);
+				}
+			}
 
-            if (folderName != null) {
-                try {
-                    IResource[] resourse = theFolder.members();
-                    for (IResource one : resourse) {
-                        if (one.getType() == IResource.FOLDER && !one.getName().equals(folderName)) {
-                            rejectedElements.add(one);
-                        }
-                    }
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
-            }
-        }
+			if (folderName != null) {
+				try {
+					IResource[] resourse = theFolder.members();
+					for (IResource one : resourse) {
+						if (one.getType() == IResource.FOLDER
+								&& !one.getName().equals(folderName)) {
+							rejectedElements.add(one);
+						}
+					}
+				} catch (Exception e) {
+					log.error(e, e);
+				}
+			}
+		}
 
-        ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
+		ViewerFilter filter = new TypedViewerFilter(acceptedClasses,
+				rejectedElements.toArray());
 
-        ILabelProvider lp = new WorkbenchLabelProvider();
-        ITreeContentProvider cp = new WorkbenchContentProvider();
+		ILabelProvider lp = new WorkbenchLabelProvider();
+		ITreeContentProvider cp = new WorkbenchContentProvider();
 
-        FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(), lp, cp);
-        // dialog.setValidator(validator);
-        dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
-        dialog.setMessage(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
-        dialog.setInput(ResourceManager.getRootProject());
-        dialog.addFilter(filter);
-        dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
+		FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(),
+				lp, cp);
+		// dialog.setValidator(validator);
+		dialog.setTitle(DefaultMessagesImpl
+				.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
+		dialog.setMessage(DefaultMessagesImpl
+				.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
+		dialog.setInput(ResourceManager.getRootProject());
+		dialog.addFilter(filter);
+		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
-        if (dialog.open() == Window.OK) {
-            if (dialog.getResult() == null || dialog.getResult().length == 0) {
-                return;
-            }
-            Object elements = dialog.getResult()[0];
-            IResource elem = (IResource) elements;
-            if (elem instanceof IFolder) {
-                pathText.setText(elem.getFullPath().toString());
+		if (dialog.open() == Window.OK) {
+			if (dialog.getResult() == null || dialog.getResult().length == 0) {
+				return;
+			}
+			Object elements = dialog.getResult()[0];
+			IResource elem = (IResource) elements;
+			if (elem instanceof IFolder) {
+				pathText.setText(elem.getFullPath().toString());
 
-                getParameter().getFolderProvider().setFolderResource((IFolder) elem);
-            }
-        }
-    }
+				getParameter().getFolderProvider().setFolderResource(
+						(IFolder) elem);
+			}
+		}
+	}
 
-    protected void addListeners() {
+	protected void addListeners() {
 
-        nameText.addModifyListener(new ModifyListener() {
+		nameText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent e) {
-                getParameter().setName(nameText.getText());
-                setPageComplete(true);
-            }
-        });
+			public void modifyText(ModifyEvent e) {
+				getParameter().setName(nameText.getText());
+				setPageComplete(true);
+			}
+		});
 
-        purposeText.addModifyListener(new ModifyListener() {
+		purposeText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent e) {
-                getParameter().setPurpose(purposeText.getText());
-            }
-        });
+			public void modifyText(ModifyEvent e) {
+				getParameter().setPurpose(purposeText.getText());
+			}
+		});
 
-        descriptionText.addModifyListener(new ModifyListener() {
+		descriptionText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent e) {
-                getParameter().setDescription(descriptionText.getText());
-            }
-        });
+			public void modifyText(ModifyEvent e) {
+				getParameter().setDescription(descriptionText.getText());
+			}
+		});
 
-        authorText.addModifyListener(new ModifyListener() {
+		authorText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent e) {
-                getParameter().setAuthor(authorText.getText());
-            }
+			public void modifyText(ModifyEvent e) {
+				getParameter().setAuthor(authorText.getText());
+			}
 
-        });
-        // versionMajorBtn.addSelectionListener(new SelectionAdapter() {
-        //
-        // @Override
-        // public void widgetSelected(SelectionEvent e) {
-        //
-        // }
-        // });
-        //
-        // versionMinorBtn.addSelectionListener(new SelectionAdapter() {
-        //
-        // @Override
-        // public void widgetSelected(SelectionEvent e) {
-        //
-        // }
-        // });
+		});
+		// versionMajorBtn.addSelectionListener(new SelectionAdapter() {
+		//
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		//
+		// }
+		// });
+		//
+		// versionMinorBtn.addSelectionListener(new SelectionAdapter() {
+		//
+		// @Override
+		// public void widgetSelected(SelectionEvent e) {
+		//
+		// }
+		// });
 
-        statusText.addModifyListener(new ModifyListener() {
+		statusText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent e) {
-                String selected = ((CCombo) e.getSource()).getText();
-                getParameter().setStatus(selected);
-            }
+			public void modifyText(ModifyEvent e) {
+				String selected = ((CCombo) e.getSource()).getText();
+				getParameter().setStatus(selected);
+			}
 
-        });
-    }
+		});
+	}
 
-    @Override
-    public boolean checkFieldsValue() {
-        if (nameText.getText().trim() == "") { //$NON-NLS-1$
-            updateStatus(IStatus.ERROR, MSG_EMPTY);
-            return false;
-        }
+	@Override
+	public boolean checkFieldsValue() {
+		if (nameText.getText().trim() == "") { //$NON-NLS-1$
+			updateStatus(IStatus.ERROR, MSG_EMPTY);
+			return false;
+		}
 
-        if (nameText.getText().contains(" ")) { //$NON-NLS-1$
-            updateStatus(IStatus.ERROR, MSG_INVALID);
-            return false;
-        }
+		if (nameText.getText().contains(" ")) { //$NON-NLS-1$
+			updateStatus(IStatus.ERROR, MSG_INVALID);
+			return false;
+		}
 
-        updateStatus(IStatus.OK, MSG_OK);
-        return super.checkFieldsValue();
-    }
+		updateStatus(IStatus.OK, MSG_OK);
+		return super.checkFieldsValue();
+	}
 
-    protected abstract void createExtendedControl(Composite container);
+	protected abstract void createExtendedControl(Composite container);
 
-    protected abstract IFolder getStoredFolder();
+	protected abstract IFolder getStoredFolder();
 }

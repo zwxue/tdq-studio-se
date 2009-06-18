@@ -18,7 +18,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
@@ -26,6 +25,7 @@ import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.exception.ExceptionHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 
 /**

@@ -13,6 +13,8 @@
 
 package org.talend.dataquality;
 
+import org.talend.i18n.Messages;
+
 /**
  * 
  * DOC mzhao Plugin constants. This class is originally developed for handle TDCP launch issues. As root project name
@@ -24,6 +26,13 @@ public final class PluginConstant {
      * Default value used in frequency tables.
      */
     public static final int DEFAULT_TOP_N = 10;
+
+    public static final String USER_PROPERTY = "user"; //$NON-NLS-1$
+
+    /**
+     * String for the DB connections folder.
+     */
+    public static final String DB_CONNECTIONS = Messages.getString("DQStructureManager.dbConnections"); //$NON-NLS-1$
 
     private PluginConstant() {
 

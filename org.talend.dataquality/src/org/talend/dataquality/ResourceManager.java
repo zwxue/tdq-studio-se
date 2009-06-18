@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core;
+package org.talend.dataquality;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;

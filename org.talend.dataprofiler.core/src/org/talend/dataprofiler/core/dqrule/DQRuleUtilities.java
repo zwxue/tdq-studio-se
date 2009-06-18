@@ -17,9 +17,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
+import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
@@ -33,56 +33,62 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  */
 public final class DQRuleUtilities {
 
-    private static Logger log = Logger.getLogger(DQRuleUtilities.class);
+	private static Logger log = Logger.getLogger(DQRuleUtilities.class);
 
-    private DQRuleUtilities() {
-    }
+	private DQRuleUtilities() {
+	}
 
-    /**
-     * DOC xqliu Comment method "createIndicatorUnit".
-     * 
-     * @param fe
-     * @param tableIndicator
-     * @param analysis
-     * @return
-     */
-    public static TableIndicatorUnit createIndicatorUnit(IFile fe, TableIndicator tableIndicator, Analysis analysis) {
-        WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
+	/**
+	 * DOC xqliu Comment method "createIndicatorUnit".
+	 * 
+	 * @param fe
+	 * @param tableIndicator
+	 * @param analysis
+	 * @return
+	 */
+	public static TableIndicatorUnit createIndicatorUnit(IFile fe,
+			TableIndicator tableIndicator, Analysis analysis) {
+		WhereRule whereRule = DQRuleResourceFileHelper.getInstance()
+				.findWhereRule(fe);
 
-        for (Indicator indicator : tableIndicator.getIndicators()) {
-            if (whereRule.getName().equals(indicator.getName())) {
-                return null;
-            }
-        }
+		for (Indicator indicator : tableIndicator.getIndicators()) {
+			if (whereRule.getName().equals(indicator.getName())) {
+				return null;
+			}
+		}
 
-        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
-        wrIndicator.setAnalyzedElement(tableIndicator.getTdTable());
-        wrIndicator.setIndicatorDefinition(whereRule);
+		WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE
+				.createWhereRuleIndicator();
+		wrIndicator.setAnalyzedElement(tableIndicator.getTdTable());
+		wrIndicator.setIndicatorDefinition(whereRule);
 
-        IndicatorEnum type = IndicatorEnum.findIndicatorEnum(wrIndicator.eClass());
-        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, wrIndicator);
-        DependenciesHandler.getInstance().setUsageDependencyOn(analysis, whereRule);
-        return addIndicatorUnit;
-    }
+		IndicatorEnum type = IndicatorEnum.findIndicatorEnum(wrIndicator
+				.eClass());
+		TableIndicatorUnit addIndicatorUnit = tableIndicator
+				.addSpecialIndicator(fe, type, wrIndicator);
+		DependenciesHandler.getInstance().setUsageDependencyOn(analysis,
+				whereRule);
+		return addIndicatorUnit;
+	}
 
-    /**
-     * 
-     * DOC xqliu Comment method "isLibraiesSubfolder".
-     * 
-     * @param folder
-     * @param subs
-     * @return
-     */
-    public static boolean isLibraiesSubfolder(IFolder folder, String... subs) {
-        for (String sub : subs) {
-            IPath path = ResourceManager.getLibrariesFolder().getFullPath();
-            path = path.append(sub);
-            IPath fullPath = folder.getFullPath();
-            boolean prefixOf = path.isPrefixOf(fullPath);
-            if (prefixOf) {
-                return prefixOf;
-            }
-        }
-        return false;
-    }
+	/**
+	 * 
+	 * DOC xqliu Comment method "isLibraiesSubfolder".
+	 * 
+	 * @param folder
+	 * @param subs
+	 * @return
+	 */
+	public static boolean isLibraiesSubfolder(IFolder folder, String... subs) {
+		for (String sub : subs) {
+			IPath path = ResourceManager.getLibrariesFolder().getFullPath();
+			path = path.append(sub);
+			IPath fullPath = folder.getFullPath();
+			boolean prefixOf = path.isPrefixOf(fullPath);
+			if (prefixOf) {
+				return prefixOf;
+			}
+		}
+		return false;
+	}
 }

@@ -23,9 +23,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.ResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 
@@ -34,40 +34,43 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
  */
 public class DeleteDQRuleAction extends Action {
 
-    protected static Logger log = Logger.getLogger(DeleteDQRuleAction.class);
+	protected static Logger log = Logger.getLogger(DeleteDQRuleAction.class);
 
-    private List<IFile> folder;
+	private List<IFile> folder;
 
-    public DeleteDQRuleAction(List<IFile> selectedFiles) {
-        setText(DefaultMessagesImpl.getString("DeleteDQRuleAction.delete")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
-        this.folder = selectedFiles;
-    }
+	public DeleteDQRuleAction(List<IFile> selectedFiles) {
+		setText(DefaultMessagesImpl.getString("DeleteDQRuleAction.delete")); //$NON-NLS-1$
+		setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
+		this.folder = selectedFiles;
+	}
 
-    @Override
-    public void run() {
-        IFolder sourceFiles = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.DQ_RULES);
-        for (IFile file : folder) {
-            WhereRule wr = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-            String fileName = wr == null ? file.getName() : wr.getName();
-            if (MessageDialog
-                    .openConfirm(
-                            new Shell(),
-                            DefaultMessagesImpl.getString("DeleteDQRuleAction.deleteDQRule"), DefaultMessagesImpl.getString("DeleteDQRuleAction.areYouDeleteDQRule", fileName))) { //$NON-NLS-1$ //$NON-NLS-2$
-                try {
-                    if (file.exists()) {
-                        file.delete(true, null);
-                    }
-                } catch (CoreException e) {
-                    log.error(e, e);
-                }
-            }
-        }
-        try {
-            sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
-        } catch (CoreException e) {
-            log.error(e, e);
-        }
-    }
+	@Override
+	public void run() {
+		IFolder sourceFiles = ResourceManager.getLibrariesFolder().getFolder(
+				DQStructureManager.DQ_RULES);
+		for (IFile file : folder) {
+			WhereRule wr = DQRuleResourceFileHelper.getInstance()
+					.findWhereRule(file);
+			String fileName = wr == null ? file.getName() : wr.getName();
+			if (MessageDialog
+					.openConfirm(
+							new Shell(),
+							DefaultMessagesImpl
+									.getString("DeleteDQRuleAction.deleteDQRule"), DefaultMessagesImpl.getString("DeleteDQRuleAction.areYouDeleteDQRule", fileName))) { //$NON-NLS-1$ //$NON-NLS-2$
+				try {
+					if (file.exists()) {
+						file.delete(true, null);
+					}
+				} catch (CoreException e) {
+					log.error(e, e);
+				}
+			}
+		}
+		try {
+			sourceFiles.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+			log.error(e, e);
+		}
+	}
 
 }

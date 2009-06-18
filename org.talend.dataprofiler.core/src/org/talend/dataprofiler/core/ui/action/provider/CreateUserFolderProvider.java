@@ -22,10 +22,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
+import org.talend.dataquality.exception.ExceptionHandler;
 
 /**
  * This provider for creating a user folder.

@@ -30,39 +30,50 @@ import org.talend.dataprofiler.core.ui.views.DataFilterDND;
  */
 public class DataFilterComp extends AbstractPagePart {
 
-    private final String stringDataFilter;
+	private final String stringDataFilter;
 
-    private Text dataFilterText;
+	private Text dataFilterText;
 
-    public DataFilterComp(Composite parent, String stringDataFilter) {
-        this.stringDataFilter = stringDataFilter;
-        this.createContent(parent);
-    }
+	public DataFilterComp(Composite parent, String stringDataFilter) {
+		this.stringDataFilter = stringDataFilter;
+		this.createContent(parent);
+	}
 
-    public void createContent(Composite parent) {
-        parent.setLayout(new GridLayout());
+	public void createContent(Composite parent) {
+		parent.setLayout(new GridLayout());
 
-        dataFilterText = new Text(parent, SWT.BORDER | SWT.MULTI);
-        DataFilterDND.installDND(dataFilterText);
-        dataFilterText.setToolTipText(DefaultMessagesImpl.getString("DataFilterComp.here")); //$NON-NLS-1$
-        dataFilterText.setText(stringDataFilter == null ? PluginConstant.EMPTY_STRING : stringDataFilter);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(dataFilterText);
-        ((GridData) dataFilterText.getLayoutData()).heightHint = 150;
-        dataFilterText.addModifyListener(new ModifyListener() {
+		dataFilterText = new Text(parent, SWT.BORDER | SWT.MULTI);
+		DataFilterDND.installDND(dataFilterText);
+		dataFilterText.setToolTipText(DefaultMessagesImpl
+				.getString("DataFilterComp.here")); //$NON-NLS-1$
+		dataFilterText
+				.setText(stringDataFilter == null ? PluginConstant.EMPTY_STRING
+						: stringDataFilter);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(dataFilterText);
+		((GridData) dataFilterText.getLayoutData()).heightHint = 150;
+		dataFilterText.addModifyListener(new ModifyListener() {
 
-            public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                propertyChangeSupport.firePropertyChange(PluginConstant.DATAFILTER_PROPERTY, null, dataFilterText.getText());
-            }
+			public void modifyText(ModifyEvent e) {
+				setDirty(true);
+				propertyChangeSupport.firePropertyChange(
+						PluginConstant.DATAFILTER_PROPERTY, null,
+						dataFilterText.getText());
+			}
 
-        });
-    }
+		});
+	}
 
-    public String getDataFilterString() {
-        return dataFilterText.getText();
-    }
+	public String getDataFilterString() {
+		return dataFilterText.getText();
+	}
 
-    public void addModifyListener(ModifyListener listener) {
-        dataFilterText.addModifyListener(listener);
-    }
+	public void addModifyListener(ModifyListener listener) {
+		dataFilterText.addModifyListener(listener);
+	}
+
+	@Override
+	public void updateModelViewer() {
+		// TODO Auto-generated method stub
+
+	}
 }

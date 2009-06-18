@@ -146,6 +146,7 @@ public final class ImageLib {
 	public static final String ICON_PAGE_FIRST_LNK = "topb.gif";
 	public static final String ICON_PAGE_PREV_LNK = "prevb.gif";
 	public static final String ICON_PAGE_NEXT_LNK = "nextb.gif";
+	public static final String ICON_INFO = "info.gif";
 
 	/**
 	 * DOC bzhou ImageLib constructor comment.
