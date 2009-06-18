@@ -43,12 +43,6 @@
       </index>
    </extension>
    <extension
-         point="org.eclipse.ui.helpSupport">
-      <config
-            class="org.talend.dataprofiler.help.TdAbstractHelpUI">
-      </config>
-   </extension>
-   <extension
          point="org.eclipse.ui.views">
       <view
             category="org.eclipse.help.ui"
