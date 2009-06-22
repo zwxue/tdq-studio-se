@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2006 Davy Vanherbergen
- * dvanherbergen@users.sourceforge.net
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2006 Davy Vanherbergen dvanherbergen@users.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package net.sourceforge.sqlexplorer.plugin.views;
 
@@ -78,21 +74,22 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 /**
- * Database Structure View. Shows the database outline. Selections made in this
- * view are shown in the DatabaseDetailView.
+ * Database Structure View. Shows the database outline. Selections made in this view are shown in the
+ * DatabaseDetailView.
  * 
  * @author Davy Vanherbergen
  */
 public class DatabaseStructureView extends ViewPart {
-	
-	/*
-	 * Contains state data for each tab
-	 */
-	private static class TabData {
-		private TreeViewer treeViewer;
-		private MetaDataSession session;
-	}
-	
+
+    /*
+     * Contains state data for each tab
+     */
+    private static class TabData {
+
+        private TreeViewer treeViewer;
+
+        private MetaDataSession session;
+    }
 
     private Map<MetaDataSession, ISelection> sessionSelectionMap = new HashMap<MetaDataSession, ISelection>();
 
@@ -106,28 +103,28 @@ public class DatabaseStructureView extends ViewPart {
     private List<MetaDataSession> _allSessions = new ArrayList<MetaDataSession>();
 
     public DatabaseStructureView() {
-		super();
-		SQLExplorerPlugin.getDefault().setDatabaseStructureView(this);
-	}
+        super();
+        SQLExplorerPlugin.getDefault().setDatabaseStructureView(this);
+    }
 
-	/**
+    /**
      * Adds a new user
+     * 
      * @param user
      */
     public void addUser(final User user) throws SQLCannotConnectException {
-    	// Make sure we list each user only once
-    	for (Session session : _allSessions)
-    		if (session.getUser() == user)
-    			return;
-    	
-		MetaDataSession session = user.getMetaDataSession();
-		if (session != null)
-			addSession(user.getMetaDataSession());
+        // Make sure we list each user only once
+        for (Session session : _allSessions)
+            if (session.getUser() == user)
+                return;
+
+        MetaDataSession session = user.getMetaDataSession();
+        if (session != null)
+            addSession(user.getMetaDataSession());
     }
-    	
+
     /**
-     * Add a new session to the database structure view. This will create a new
-     * tab for the session.
+     * Add a new session to the database structure view. This will create a new tab for the session.
      * 
      * @param session
      */
@@ -135,20 +132,20 @@ public class DatabaseStructureView extends ViewPart {
         if (_allSessions.contains(session))
             return;
         try {
-        	session.getMetaData();
-        	session.setAutoCommit(true);
-        } catch(SQLCannotConnectException e) {
-        	SQLExplorerPlugin.error(e);
-        	throw e;
-        }catch(SQLException e) {
-        	SQLExplorerPlugin.error(e);
-        	MessageDialog.openError(getSite().getShell(), "Cannot connect", e.getMessage());
+            session.getMetaData();
+            session.setAutoCommit(true);
+        } catch (SQLCannotConnectException e) {
+            SQLExplorerPlugin.error(e);
+            throw e;
+        } catch (SQLException e) {
+            SQLExplorerPlugin.error(e);
+            MessageDialog.openError(getSite().getShell(), "Cannot connect", e.getMessage());
         }
         DatabaseNode rootNode = session.getRoot();
         if (rootNode == null)
-        	return;
+            return;
         _allSessions.add(session);
-        
+
         if (_filterAction != null) {
             _filterAction.setEnabled(true);
         }
@@ -173,29 +170,23 @@ public class DatabaseStructureView extends ViewPart {
 
             });
 
-    		// Set up a gradient background for the selected tab
-    		Display display = getSite().getShell().getDisplay();
-    	    _tabFolder.setSelectionBackground(
-    	    		new Color[] {
-    				        display.getSystemColor(SWT.COLOR_WHITE),
-    		                new Color(null, 211, 225, 250),
-    		                new Color(null, 175, 201, 246),
-    		                IConstants.TAB_BORDER_COLOR
-    	    		},
-    	    		new int[] {25, 50, 75},
-    	    		true
-    	    	);
-    		
-    	    // Add a listener to handle the close button on each tab
-    	    _tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
-    			public void close(CTabFolderEvent event) {
-    				CTabItem tabItem = (CTabItem)event.item;
-    				TabData tabData = (TabData)tabItem.getData();
-    				_allSessions.remove(tabData.session);
-    				event.doit = true;
-    			}
-    	    });
-    	    
+            // Set up a gradient background for the selected tab
+            Display display = getSite().getShell().getDisplay();
+            _tabFolder.setSelectionBackground(new Color[] { display.getSystemColor(SWT.COLOR_WHITE),
+                    new Color(null, 211, 225, 250), new Color(null, 175, 201, 246), IConstants.TAB_BORDER_COLOR }, new int[] {
+                    25, 50, 75 }, true);
+
+            // Add a listener to handle the close button on each tab
+            _tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
+
+                public void close(CTabFolderEvent event) {
+                    CTabItem tabItem = (CTabItem) event.item;
+                    TabData tabData = (TabData) tabItem.getData();
+                    _allSessions.remove(tabData.session);
+                    event.doit = true;
+                }
+            });
+
             _parent.layout();
             _parent.redraw();
 
@@ -222,7 +213,7 @@ public class DatabaseStructureView extends ViewPart {
 
         // add drag support
         // TODO improve drag support options
-        Transfer[] transfers = new Transfer[] {TableNodeTransfer.getInstance()};
+        Transfer[] transfers = new Transfer[] { TableNodeTransfer.getInstance() };
         treeViewer.addDragSupport(DND.DROP_COPY, transfers, new DragSourceListener() {
 
             public void dragFinished(DragSourceEvent event) {
@@ -231,13 +222,11 @@ public class DatabaseStructureView extends ViewPart {
                 TableNodeTransfer.getInstance().setSelection(null);
             }
 
-
             public void dragSetData(DragSourceEvent event) {
 
                 Object sel = ((IStructuredSelection) treeViewer.getSelection()).getFirstElement();
                 event.data = sel;
             }
-
 
             public void dragStart(DragSourceEvent event) {
 
@@ -312,7 +301,6 @@ public class DatabaseStructureView extends ViewPart {
                 viewer.update(node, null);
             }
 
-
             public void treeExpanded(TreeExpansionEvent event) {
 
                 // refresh the node to change image
@@ -362,19 +350,28 @@ public class DatabaseStructureView extends ViewPart {
                 actionGroup.fillContextMenu(manager);
             }
         });
-        
-        if(sessionSelectionMap.containsKey(tabData.session)){
-            tabData.treeViewer.setSelection( sessionSelectionMap.get(tabData.session));
+
+        if (sessionSelectionMap.containsKey(tabData.session)) {
+            tabData.treeViewer.setSelection(sessionSelectionMap.get(tabData.session));
             sessionSelectionMap.remove(tabData.session);
+            _allSessions.remove(tabData.session);
         }
     }
-    
 
-
+    /**
+     * DOC bZhou Comment method "setSessionSelectionNode".
+     * 
+     * @param metadataSession
+     * @param selection
+     */
     public void setSessionSelectionNode(MetaDataSession metadataSession, ISelection selection) {
         sessionSelectionMap.put(metadataSession, selection);
+        try {
+            addSession(metadataSession);
+        } catch (SQLCannotConnectException e) {
+            e.printStackTrace();
+        }
     }
-
 
     /**
      * Remove all items from parent
@@ -389,29 +386,23 @@ public class DatabaseStructureView extends ViewPart {
         }
     }
 
-
     /**
-     * Initializes the view and creates the root tabfolder that holds all the
-     * sessions.
+     * Initializes the view and creates the root tabfolder that holds all the sessions.
      * 
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
     public void createPartControl(Composite parent) {
 
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-                SQLExplorerPlugin.PLUGIN_ID + ".DatabaseStructureView");
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".DatabaseStructureView");
 
         _parent = parent;
 
         // load all open sessions
         /*
-        for (Alias alias : SQLExplorerPlugin.getDefault().getAliasManager().getAliases())
-        	for (User user: alias.getUsers()) {
-        		MetaDataSession session = user.getMetaDataSession();
-        		if (session != null)
-        			addSession(session);
-        	}
-        	*/
+         * for (Alias alias : SQLExplorerPlugin.getDefault().getAliasManager().getAliases()) for (User user:
+         * alias.getUsers()) { MetaDataSession session = user.getMetaDataSession(); if (session != null)
+         * addSession(session); }
+         */
 
         // set default message
         if (_allSessions.isEmpty()) {
@@ -423,7 +414,6 @@ public class DatabaseStructureView extends ViewPart {
         IToolBarManager toolBarMgr = getViewSite().getActionBars().getToolBarManager();
         toolBarMgr.add(_filterAction);
     }
-
 
     /**
      * Cleanup and reset detail view.
@@ -446,7 +436,7 @@ public class DatabaseStructureView extends ViewPart {
             return null;
 
         CTabItem item = _tabFolder.getItem(_tabFolder.getSelectionIndex());
-        TabData tabData = (TabData)item.getData();
+        TabData tabData = (TabData) item.getData();
         return tabData.session;
     }
 
@@ -459,20 +449,18 @@ public class DatabaseStructureView extends ViewPart {
 
         CTabItem[] items = _tabFolder.getItems();
         if (items != null) {
-        	for (CTabItem item : items) {
-        		TabData tabData = (TabData)item.getData();
-        		if (tabData.session.getUser() == session.getUser()) {
-        			tabData.session.getRoot().refresh();
-        			tabData.treeViewer.refresh();
-        		}
-        	}
+            for (CTabItem item : items) {
+                TabData tabData = (TabData) item.getData();
+                if (tabData.session.getUser() == session.getUser()) {
+                    tabData.session.getRoot().refresh();
+                    tabData.treeViewer.refresh();
+                }
+            }
         }
     }
 
-
     /**
-     * Set a default message, this method is called when no sessions are
-     * available for viewing.
+     * Set a default message, this method is called when no sessions are available for viewing.
      */
     private void setDefaultMessage() {
 
@@ -488,7 +476,6 @@ public class DatabaseStructureView extends ViewPart {
         _parent.redraw();
     }
 
-
     /**
      * Set focus on our database structure view..
      * 
@@ -498,7 +485,6 @@ public class DatabaseStructureView extends ViewPart {
 
         // we don't need to do anything here..
     }
-
 
     /**
      * Update the detail view with the selection in the active treeviewer.
@@ -517,13 +503,12 @@ public class DatabaseStructureView extends ViewPart {
                     return;
                 }
 
-                TabData tabData = (TabData)_tabFolder.getItem(_tabFolder.getSelectionIndex()).getData();
+                TabData tabData = (TabData) _tabFolder.getItem(_tabFolder.getSelectionIndex()).getData();
                 INode selectedNode = null;
 
                 if (tabData.treeViewer != null) {
-                        // find our target node..
-                    IStructuredSelection  selection  = (IStructuredSelection) tabData.treeViewer.getSelection();
-
+                    // find our target node..
+                    IStructuredSelection selection = (IStructuredSelection) tabData.treeViewer.getSelection();
 
                     // check if we have a valid selection
                     if (selection != null && (selection.getFirstElement() instanceof INode)) {
@@ -546,11 +531,11 @@ public class DatabaseStructureView extends ViewPart {
         });
 
     }
-    
+
     public boolean isConnectedToUser(User user) {
-    	for (Session session : _allSessions)
-    		if (session.getUser().compareTo(user) == 0)
-    			return true;
-    	return false;
+        for (Session session : _allSessions)
+            if (session.getUser().compareTo(user) == 0)
+                return true;
+        return false;
     }
 }
