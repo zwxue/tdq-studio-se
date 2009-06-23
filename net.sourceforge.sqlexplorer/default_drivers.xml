@@ -146,4 +146,9 @@
   <url>jdbc:sqlite:&lt;DBNAME&gt;</url>
   <jars></jars>
   </driver>
+    <driver id="-51">
+    <name>AS400</name>
+    <url>jdbc:as400://&lt;host&gt;/&lt;DBNAME&gt;</url>
+    <jars/>
+  </driver>
 </drivers>

@@ -64,7 +64,8 @@ public enum EDriverName {
 			"com.ncr.teradata.TeraDriver", "-50", "lib/terajdbc4.jar",
 			"lib/tdgssconfig.jar", "lib/tdgssjava.jar"), SQLITE3DEFAULTURL(
 			"SQLite3", "org.sqlite.JDBC", "-30",
-			"lib/sqlitejdbc_v037_nested.jar");
+			"lib/sqlitejdbc_v037_nested.jar"),
+    AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar");
 
 	private final String dbKey;
 
@@ -142,6 +143,9 @@ public enum EDriverName {
 		case SQLITE3DEFAULTURL:
 			plugins = "org.talend.libraries.jdbc.sqlite3";
 			break;
+		case AS400DEFAULTURL:
+            plugins = "org.talend.libraries.jdbc.as400";
+            break;
 		default:
 			return linkedList;
 		}
