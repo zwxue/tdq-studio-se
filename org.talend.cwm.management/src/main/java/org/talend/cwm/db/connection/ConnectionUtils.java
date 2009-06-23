@@ -34,9 +34,9 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
-import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 
 /**

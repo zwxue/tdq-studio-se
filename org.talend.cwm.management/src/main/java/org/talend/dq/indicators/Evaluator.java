@@ -25,8 +25,8 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.i18n.Messages;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 

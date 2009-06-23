@@ -12,9 +12,9 @@
 // ============================================================================
 package org.talend.dq.nodes.indicator;
 
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.nodes.indicator.impl.IndicatorCategoryNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.i18n.Messages;
 
 /**
  * This class for the indicator tree building.

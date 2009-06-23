@@ -17,9 +17,9 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
-import org.talend.i18n.Messages;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.Table;
 

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
@@ -76,7 +77,6 @@ import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.GenericSQLHandler;
-import org.talend.i18n.Messages;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**

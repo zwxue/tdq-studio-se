@@ -62,7 +62,7 @@ public final class SupportDBUrlStore {
 
     private void fillDbUrlMap() {
         // PTODO scorreia choose here which Database types to enable
-        // supportDBUrlMap.put(SupportDBUrlType.ODBCDEFAULTURL.getDBKey(), SupportDBUrlType.ODBCDEFAULTURL);
+        supportDBUrlMap.put(SupportDBUrlType.ODBCDEFAULTURL.getDBKey(), SupportDBUrlType.ODBCDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.MYSQLDEFAULTURL.getDBKey(), SupportDBUrlType.MYSQLDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getDBKey(), SupportDBUrlType.ORACLEWITHSIDDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL.getDBKey(),

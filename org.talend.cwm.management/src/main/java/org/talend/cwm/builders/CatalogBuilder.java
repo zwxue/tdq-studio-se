@@ -26,9 +26,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
-import org.talend.i18n.Messages;
 import org.talend.utils.sql.metadata.constants.MetaDataConstants;
 
 /**

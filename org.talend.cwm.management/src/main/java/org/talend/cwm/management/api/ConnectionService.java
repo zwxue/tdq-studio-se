@@ -22,9 +22,9 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 

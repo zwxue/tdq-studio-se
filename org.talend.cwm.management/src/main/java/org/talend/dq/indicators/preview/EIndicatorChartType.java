@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.indicators.preview;
 
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
 import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
@@ -20,7 +21,6 @@ import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
 import org.talend.dq.analysis.explore.SoundexFrequencyExplorer;
 import org.talend.dq.analysis.explore.SummaryStastictisExplorer;
 import org.talend.dq.analysis.explore.TextStatisticsExplorer;
-import org.talend.i18n.Messages;
 
 /**
  * DOC zqin class global comment. Detailled comment

@@ -16,12 +16,12 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
-import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 
 /**

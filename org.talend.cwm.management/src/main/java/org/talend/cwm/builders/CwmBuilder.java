@@ -19,9 +19,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.i18n.Messages;
 
 /**
  * @author scorreia
