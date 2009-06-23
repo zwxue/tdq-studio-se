@@ -179,6 +179,11 @@ public class ColumnsComparisonMasterDetailsPage extends
 		anaColumnCompareViewer.addPropertyChangeListener(this);
 
 		createDataFilterSection(form, topComp);
+		
+        // MOD mzhao 2009-06-17 feature 5887.
+        foldingSections(new Section[] { metadataSection, columnsComparisonSection, dataFilterSection });
+        // ~
+		
 		// MOD 2009-01-10 mzhao, for register sections that would be collapse or
 		// expand later.
 		currentEditor

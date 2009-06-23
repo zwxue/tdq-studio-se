@@ -357,6 +357,10 @@ public abstract class AbstractFilterMetadataPage extends
 		createAnalysisParamSection(topComp);
 		createAnalysisSummarySection(topComp);
 		createStatisticalSection(topComp);
+		
+        // MOD xqliu 2009-06-23 bug 7481
+		foldingSections(new Section[] { metadataSection, analysisParamSection, statisticalSection, summarySection });
+		// ~
 
 		// MOD 2009-01-10 mzhao, for register sections that would be collapse or
 		// expand later.

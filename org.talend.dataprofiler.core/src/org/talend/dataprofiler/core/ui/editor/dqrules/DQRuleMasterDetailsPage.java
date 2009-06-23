@@ -139,11 +139,15 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         metadataSection.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.DQRuleMetadata")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.setProperties")); //$NON-NLS-1$
-
+        
         resetJoinElements();
 
         createDQRuleDefinitionSection(topComp);
         createJoinConditionSection(topComp);
+        
+        // MOD xqliu 2009-06-23 bug 7481
+        foldingSections(new Section[] { metadataSection, dqRuleDefinitionSection, joinConditionSection });
+        // ~
 
         currentEditor.registerSections(new Section[] { dqRuleDefinitionSection, joinConditionSection });
 

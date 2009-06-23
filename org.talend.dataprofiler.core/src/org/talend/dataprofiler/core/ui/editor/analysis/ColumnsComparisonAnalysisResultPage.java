@@ -138,6 +138,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         // createResultSection(resultComp);
 
         form.reflow(true);
+        
+        // MOD xqliu 2009-06-23 bug 7481
+        foldingSections(new Section[] { summarySection, columnSetSection, resultSection });
+        // ~
+
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
         currentEditor.registerSections(new Section[] { resultSection, columnSetSection });
     }

@@ -122,6 +122,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 			}
 
 		});
+        // MOD xqliu 2009-06-23 bug 7481
+        foldingSections(new Section[] { metadataSection, infomatioinSection });
+        // ~
 		currentEditor.registerSections(new Section[] { infomatioinSection });
 	}
 

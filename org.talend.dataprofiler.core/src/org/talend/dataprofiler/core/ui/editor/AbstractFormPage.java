@@ -21,6 +21,7 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -76,4 +77,29 @@ public abstract class AbstractFormPage extends FormPage {
 	public boolean isDirty() {
 		return super.isDirty() || isDirty;
 	}
+	
+	protected int foldingSections(Section[] sections) {
+        int foldType = EditorPreferencePage.getCurrentFolding();
+        if (sections != null && sections.length > 0) {
+            for (int i = 0; i < sections.length; ++i) {
+                switch (foldType) {
+                case EditorPreferencePage.FOLDING_1:
+                    sections[i].setExpanded(true);
+                    break;
+                case EditorPreferencePage.FOLDING_2:
+                    sections[i].setExpanded(false);
+                    break;
+                default: // EditorPreferencePage.FOLDING_3
+                    if (i == 0) {
+                        sections[i].setExpanded(true);
+                    } else {
+                        sections[i].setExpanded(false);
+                    }
+                }
+            }
+            return foldType;
+        }
+        return 0;
+    }
+	
 }

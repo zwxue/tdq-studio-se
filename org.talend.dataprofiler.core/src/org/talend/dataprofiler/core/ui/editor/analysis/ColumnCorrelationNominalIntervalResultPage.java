@@ -113,6 +113,11 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         graphicsAndTableComp.setLayout(new GridLayout());
         createResultSection(graphicsAndTableComp);
         form.reflow(true);
+        
+        // MOD xqliu 2009-06-23 bug 7481
+        foldingSections(new Section[] { summarySection, graphicsAndTableSection });
+        // ~
+
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
         currentEditor.registerSections(new Section[] { graphicsAndTableSection });
     }

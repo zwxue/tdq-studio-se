@@ -51,6 +51,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataprofiler.core.ui.utils.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
@@ -90,6 +91,10 @@ public class ResultPaginationInfo extends PaginationInfo {
                     "ColumnAnalysisResultPage.Column", columnIndicator.getTdColumn().getName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+            
+            // MOD xqliu 2009-06-23 bug 7481
+            exComp.setExpanded(EditorPreferencePage.isCurrentAnalyzedElements());
+            // ~
 
             final Composite comp = uiPagination.getToolkit().createComposite(exComp);
             comp.setLayout(new GridLayout());
@@ -127,6 +132,10 @@ public class ResultPaginationInfo extends PaginationInfo {
                             ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
                     subComp.setText(chartData.getChartType().getLiteral());
                     subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+                    
+                    // MOD xqliu 2009-06-23 bug 7481
+                    subComp.setExpanded(EditorPreferencePage.isCurrentIndicators());
+                    // ~
 
                     final Composite composite = uiPagination.getToolkit().createComposite(subComp, SWT.NULL);
                     composite.setLayout(new GridLayout(2, false));

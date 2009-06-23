@@ -126,6 +126,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         metadataSection.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternMetadata")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("PatternMasterDetailsPage.setProperties")); //$NON-NLS-1$
         creatPatternDefinitionSection(topComp);
+        // MOD xqliu 2009-06-23 bug 7481
+        foldingSections(new Section[] { metadataSection, patternDefinitionSection });
+        // ~
         currentEditor.registerSections(new Section[] { patternDefinitionSection });
     }
 

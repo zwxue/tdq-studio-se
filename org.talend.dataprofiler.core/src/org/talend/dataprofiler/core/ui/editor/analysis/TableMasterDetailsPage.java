@@ -241,6 +241,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage
 		});
 		// ~
 		createPreviewSection(form, previewComp);
+		
+        // MOD xqliu 2009-06-23 bug 7481
+        foldingSections(new Section[] { metadataSection, analysisTableSection, dataFilterSection });
+        // ~
 
 		currentEditor.registerSections(new Section[] { analysisTableSection,
 				metadataSection, dataFilterSection, previewSection });

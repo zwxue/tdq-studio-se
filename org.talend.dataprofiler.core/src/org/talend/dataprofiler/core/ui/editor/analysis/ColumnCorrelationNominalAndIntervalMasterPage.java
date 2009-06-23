@@ -232,6 +232,10 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends
 		});
 		// ~
 		createPreviewSection(form, previewComp);
+		
+		// MOD xqliu 2009-06-23 bug 7481
+		foldingSections(new Section[] { metadataSection, analysisColSection, dataFilterSection });
+		// ~
 
 		// MOD 2009-01-12 mzhao, for register sections that would be collapse or
 		// expand later.

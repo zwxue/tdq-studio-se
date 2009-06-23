@@ -217,7 +217,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage
 		});
 		// ~
 		createPreviewSection(form, previewComp);
-
+		
+        // MOD xqliu 2009-06-23 bug 7481
+        foldingSections(new Section[] { metadataSection, analysisColumnSection, dataFilterSection });
+        // ~
+		
 		// MOD 2009-01-10 mzhao, for register sections that would be collapse or
 		// expand later.
 		currentEditor.registerSections(new Section[] { analysisColumnSection,
