@@ -161,7 +161,8 @@ public class AnalysisEditor extends CommonFormEditor {
 
     protected void firePropertyChange(final int propertyId) {
         if (masterPage.isActive()) {
-            setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
+            // setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
+            setRunActionButtonState(true);
         }
         super.firePropertyChange(propertyId);
     }
@@ -205,7 +206,8 @@ public class AnalysisEditor extends CommonFormEditor {
         }
 
         if (masterPage != null) {
-            setRunActionButtonState(masterPage.canRun().isOk());
+            // setRunActionButtonState(masterPage.canRun().isOk());
+            setRunActionButtonState(true);
         }
     }
 

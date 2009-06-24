@@ -245,12 +245,14 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     public EList<Column> getNumericColumns() {
         EList<Column> computedColumns = new BasicEList<Column>();
+         if (analyzedColumns != null) {
         for (Column column : analyzedColumns) {
             final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
             final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
             if (DataminingType.INTERVAL.equals(dmType) && Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
                 computedColumns.add(tdColumn);
             }
+        }
         }
         return computedColumns;
     }

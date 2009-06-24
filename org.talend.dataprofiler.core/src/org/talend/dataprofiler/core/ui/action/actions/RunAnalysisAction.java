@@ -88,9 +88,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     @Override
     public void run() {
-
+        IEditorPart editor = null;
         if (getSelectionFile() == null) {
-            IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             if (editor != null && editor instanceof AnalysisEditor) {
                 AnalysisEditor anaEditor = (AnalysisEditor) editor;
                 IFormPage masterPage = anaEditor.getMasterPage();
@@ -116,68 +116,69 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 }
             }
         }
-
-        if (analysis != null) {
+        if (analysis != null && !editor.isDirty()) {
             if (AnalysisType.COLUMNS_COMPARISON.equals(analysis.getParameters().getAnalysisType())) {
                 if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"),
                         DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) {
                     return;
                 }
             }
-        }
-        final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
+            // }
+            final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
 
-            @Override
-            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                @Override
+                public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
-                monitor.beginTask(
-                        DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
+                    monitor
+                            .beginTask(
+                                    DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
 
-                Display.getDefault().asyncExec(new Runnable() {
+                    Display.getDefault().asyncExec(new Runnable() {
 
-                    public void run() {
-                        if (listener != null) {
-                            listener.fireRuningItemChanged(false);
+                        public void run() {
+                            if (listener != null) {
+                                listener.fireRuningItemChanged(false);
+                            }
+                        }
+
+                    });
+                    // MOD xqliu 2009-02-09 bug 6237
+                    ReturnCode executed = null;
+                    AnalysisExecutorThread aet = new AnalysisExecutorThread(analysis, monitor);
+                    // aet.run();
+                    // executed = aet.getExecuted();
+                    new Thread(aet).start();
+                    while (true) {
+                        if (aet.getExecuted() != null) {
+                            executed = aet.getExecuted();
+                            break;
+                        }
+                        if (monitor.isCanceled()) {
+                            executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
+                            break;
                         }
                     }
+                    aet = null;
+                    monitor.done();
+                    // ~
+                    Display.getDefault().asyncExec(new Runnable() {
 
-                });
-                // MOD xqliu 2009-02-09 bug 6237
-                ReturnCode executed = null;
-                AnalysisExecutorThread aet = new AnalysisExecutorThread(analysis, monitor);
-                // aet.run();
-                // executed = aet.getExecuted();
-                new Thread(aet).start();
-                while (true) {
-                    if (aet.getExecuted() != null) {
-                        executed = aet.getExecuted();
-                        break;
-                    }
-                    if (monitor.isCanceled()) {
-                        executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
-                        break;
-                    }
+                        public void run() {
+                            if (listener != null) {
+                                listener.fireRuningItemChanged(true);
+                            }
+                        }
+
+                    });
+
+                    return getResultStatus(executed);
                 }
-                aet = null;
-                monitor.done();
-                // ~
-                Display.getDefault().asyncExec(new Runnable() {
 
-                    public void run() {
-                        if (listener != null) {
-                            listener.fireRuningItemChanged(true);
-                        }
-                    }
+            };
 
-                });
-
-                return getResultStatus(executed);
-            }
-
-        };
-
-        job.setUser(true);
-        job.schedule();
+            job.setUser(true);
+            job.schedule();
+        }
 
         DQRespositoryView view = (DQRespositoryView) CorePlugin.getDefault().findView(PluginConstant.DQ_VIEW_ID);
         view.getCommonViewer().refresh();
