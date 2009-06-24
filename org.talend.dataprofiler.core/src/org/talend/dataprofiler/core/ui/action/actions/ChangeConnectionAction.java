@@ -186,7 +186,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 										throws InvocationTargetException,
 										InterruptedException {
 									try {
-										reloadByColumnFolderLevel(treeModelLs,
+									    reloadByColumnFolderLevel(treeModelLs,
 												anaEleSynDialog,
 												newDataProvider);
 									} catch (ReloadCompareException e) {
@@ -239,12 +239,20 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 	private void reloadByColumnSetFolderLevel(List<SynTreeModel> treeModelLs,
 			AnalyzedElementSynDialog anaEleSynDialog, TdDataProvider newDataProv)
 			throws ReloadCompareException {
-		ModelElement newDataProviderModel = treeModelLs.get(0)
-				.getNewDataProvElement();
+		ModelElement oldDataProviderModel = treeModelLs.get(0).getOldDataProvElement();
 		// Reload columnSet folder
+        ColumnSet columnset = null;
+        if (oldDataProviderModel instanceof ColumnSet) {
+            columnset = (ColumnSet) oldDataProviderModel;
+        } else if (oldDataProviderModel instanceof Column) {
+            columnset = ColumnHelper.getColumnSetOwner((Column) oldDataProviderModel);
+        } else {
+            return;
+        }
+		
 		IFolderNode reloadFolder = FolderNodeHelper.getFolderNode(
-				newDataProviderModel, (ColumnSet) treeModelLs.get(0)
-						.getOldDataProvElement());
+		        treeModelLs.get(0).getNewDataProvElement(),
+		        columnset);
 		if (reloadFolder != null) {
 			IComparisonLevel creatComparisonLevel = ComparisonLevelFactory
 					.creatComparisonLevel(reloadFolder);
@@ -260,9 +268,18 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 			throws ReloadCompareException {
 		ModelElement newDataProviderModel = treeModelLs.get(0)
 				.getNewDataProvElement();
+		// If schema or catalog changed, we did not load anymore.
 		// Reload column folder
+        ColumnSet columnset = null;
+        if(newDataProviderModel instanceof ColumnSet){
+            columnset=(ColumnSet)newDataProviderModel;
+        } else if (newDataProviderModel instanceof Column) {
+            columnset = ColumnHelper.getColumnSetOwner((Column) newDataProviderModel);
+        } else {
+            return;
+        }
 		IFolderNode reloadFolder = FolderNodeHelper.getFolderNode(
-				newDataProviderModel, (ColumnSet) newDataProviderModel);
+				 newDataProviderModel, columnset);
 
 		if (reloadFolder != null) {
 			IComparisonLevel creatComparisonLevel = ComparisonLevelFactory
