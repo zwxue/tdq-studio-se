@@ -351,11 +351,11 @@ public class DatabaseStructureView extends ViewPart {
             }
         });
 
-        if (sessionSelectionMap.containsKey(tabData.session)) {
-            tabData.treeViewer.setSelection(sessionSelectionMap.get(tabData.session));
-            sessionSelectionMap.remove(tabData.session);
-            _allSessions.remove(tabData.session);
-        }
+        // if (sessionSelectionMap.containsKey(tabData.session)) {
+        // tabData.treeViewer.setSelection(sessionSelectionMap.get(tabData.session));
+        // sessionSelectionMap.remove(tabData.session);
+        // _allSessions.remove(tabData.session);
+        // }
     }
 
     /**
@@ -364,12 +364,20 @@ public class DatabaseStructureView extends ViewPart {
      * @param metadataSession
      * @param selection
      */
-    public void setSessionSelectionNode(MetaDataSession metadataSession, ISelection selection) {
-        sessionSelectionMap.put(metadataSession, selection);
-        try {
-            addSession(metadataSession);
-        } catch (SQLCannotConnectException e) {
-            e.printStackTrace();
+    public void setSessionSelectionNode(MetaDataSession session, ISelection selection) {
+        if (_tabFolder == null) {
+            try {
+                addSession(session);
+            } catch (SQLCannotConnectException e) {
+                e.printStackTrace();
+            }
+        }
+        CTabItem item = _tabFolder.getSelection();
+        if (item != null) {
+            TabData tabData = (TabData) item.getData();
+            if (tabData != null) {
+                tabData.treeViewer.setSelection(selection);
+            }
         }
     }
 

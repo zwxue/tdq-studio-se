@@ -50,8 +50,7 @@ public final class SqlExplorerBridge {
             Package parentPackageElement, String tableName, String activeTabName) {
         // Open data explore perspective.
         new ChangePerspectiveAction(PluginConstant.SE_ID).run();
-        SQLExplorerPlugin default1 = SQLExplorerPlugin.getDefault();
-        Collection<Alias> aliases = default1.getAliasManager().getAliases();
+        Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
         String url = providerConnection.getConnectionString();
         User currentUser = null;
         for (Alias alias : aliases) {
@@ -104,9 +103,11 @@ public final class SqlExplorerBridge {
             if (tableName.equalsIgnoreCase(node.getName())) {
                 TypedReturnCode<TableNode> typedReturnCode = new TypedReturnCode<TableNode>(null, true);
                 typedReturnCode.setObject((TableNode) node);
+
+                DetailTabManager.setActiveTabName(activeTabName);
                 DatabaseStructureView dsView = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
                 dsView.setSessionSelectionNode(currentUser.getMetaDataSession(), new StructuredSelection(node));
-                DetailTabManager.setActiveTabName(activeTabName);
+
                 return typedReturnCode;
             }
         }
