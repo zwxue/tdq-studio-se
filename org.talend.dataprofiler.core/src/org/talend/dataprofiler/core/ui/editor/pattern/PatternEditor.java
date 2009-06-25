@@ -45,7 +45,13 @@ public class PatternEditor extends CommonFormEditor {
 
     }
 
-    protected void firePropertyChange(final int propertyId) {
+    public void firePropertyChange(final int propertyId) {
+        // MOD xqliu 2009-06-25 bug 7687
+        IFormPage temp = this.getMasterPage();
+        if (temp instanceof PatternMasterDetailsPage) {
+            ((PatternMasterDetailsPage) temp).updateSaveButtonState();
+        }
+        // ~
         super.firePropertyChange(propertyId);
     }
 

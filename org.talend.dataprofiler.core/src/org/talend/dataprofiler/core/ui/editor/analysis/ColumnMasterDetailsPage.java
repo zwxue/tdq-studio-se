@@ -188,7 +188,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage
 
 		createDataFilterSection(form, topComp);
 
-		if (false) { // FIXME scorreia 2009-04-23 analysis parameter section
+        // MOD xqliu 2009-06-25 bug 7687
+        setSaveButton(createSaveButton(topComp));
+        // ~
+
+        if (false) { // FIXME scorreia 2009-04-23 analysis parameter section
 			// removed because not all indicators can be
 			// computed with the Java engine.
 			createAnalysisParamSection(form, topComp);

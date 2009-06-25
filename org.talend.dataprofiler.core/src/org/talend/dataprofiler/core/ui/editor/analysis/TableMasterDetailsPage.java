@@ -218,6 +218,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage
 
 		createDataFilterSection(form, topComp);
 
+        // MOD xqliu 2009-06-25 bug 7687
+        setSaveButton(createSaveButton(topComp));
+        // ~
+
 		Composite previewComp = toolkit.createComposite(sForm);
 		previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 		previewComp.setLayout(new GridLayout());

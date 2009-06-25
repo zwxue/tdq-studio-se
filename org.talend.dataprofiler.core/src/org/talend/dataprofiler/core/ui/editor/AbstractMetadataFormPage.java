@@ -18,13 +18,17 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -33,6 +37,9 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -61,6 +68,74 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected ModelElement currentModelElement;
 
     protected CommonFormEditor currentEditor = null;
+
+    
+    // MOD xqliu 2009-06-25 bug 7687
+    private Button saveButton = null;
+
+    public Button getSaveButton() {
+        return saveButton;
+    }
+
+    public void setSaveButton(Button saveButton) {
+        this.saveButton = saveButton;
+    }
+
+    /**
+     * DOC xqliu Comment method "createSaveButton".
+     * 
+     * @param topComp
+     */
+    protected Button createSaveButton(Composite topComp) {
+        Composite comp = toolkit.createComposite(topComp);
+        GridLayout gridLayout1 = new GridLayout();
+        comp.setLayout(gridLayout1);
+        GridData gridData1 = new GridData(GridData.FILL_HORIZONTAL);
+        comp.setLayoutData(gridData1);
+
+        Button button = new Button(comp, SWT.NONE);
+        GridData gridData2 = new GridData(SWT.CENTER, SWT.CENTER, true, true);
+        gridData2.widthHint = 100;
+        button.setLayoutData(gridData2);
+        button.setText(DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.Save"));
+        button.setEnabled(this.isDirty);
+        button.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                doSave(null);
+                setDirty(false);
+                FormEditor editor = getEditor();
+                if (editor instanceof AnalysisEditor) {
+                    ((AnalysisEditor) editor).firePropertyChange(IEditorPart.PROP_DIRTY);
+                } else if (editor instanceof DQRuleEditor) {
+                    ((DQRuleEditor) editor).firePropertyChange(IEditorPart.PROP_DIRTY);
+                } else if (editor instanceof PatternEditor) {
+                    ((PatternEditor) editor).firePropertyChange(IEditorPart.PROP_DIRTY);
+                } 
+                firePropertyChange(IEditorPart.PROP_DIRTY);
+            }
+        });
+        return button;
+    }
+
+    /**
+     * DOC xqliu Comment method "updateSaveButtonState".
+     */
+    public void updateSaveButtonState() {
+        if (this.saveButton != null) {
+            this.saveButton.setEnabled(this.isDirty());
+        }
+    }
+
+    @Override
+    protected void firePropertyChange(int propertyId) {
+        if (this.saveButton != null) {
+            this.saveButton.setEnabled(this.isDirty);
+        }
+        super.firePropertyChange(propertyId);
+    }
+
+    // ~
 
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);

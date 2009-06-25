@@ -159,11 +159,14 @@ public class AnalysisEditor extends CommonFormEditor {
         super.doSave(monitor);
     }
 
-    protected void firePropertyChange(final int propertyId) {
+    public void firePropertyChange(final int propertyId) {
         if (masterPage.isActive()) {
             // setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
             setRunActionButtonState(true);
         }
+        // MOD xqliu 2009-06-25 bug 7687
+        this.getMasterPage().updateSaveButtonState();
+        // ~
         super.firePropertyChange(propertyId);
     }
 
