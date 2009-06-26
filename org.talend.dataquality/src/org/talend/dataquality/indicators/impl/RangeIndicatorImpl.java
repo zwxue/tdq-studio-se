@@ -233,8 +233,12 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
      */
     public String getRange() {
         if (upperValue != null && lowerValue != null) {
-            double range = upperValue.getRealValue() - lowerValue.getRealValue();
-            return String.valueOf(range);
+            Double upper = upperValue.getRealValue();
+            Double lower = lowerValue.getRealValue();
+            if (upper != null && lower != null) {
+                double range = upper - lower;
+                return String.valueOf(range);
+            }
         }
 
         return null;
