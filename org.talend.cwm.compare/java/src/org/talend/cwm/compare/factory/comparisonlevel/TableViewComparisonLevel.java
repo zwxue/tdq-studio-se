@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
@@ -126,6 +127,20 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         if (columnSetSwitch != null) {
             ColumnSet columnSet = (ColumnSet) selectedObj;
             ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
+        }
+    }
+
+    @Override
+    // MOD hcheng 2006-06-26.For 7772,error reload column list.
+    protected void handleUpdateElement(UpdateAttribute updateAttribute) {
+        EObject leftElement = updateAttribute.getLeftElement();
+        TdColumn columnSetSwitchLeft = SwitchHelpers.COLUMN_SWITCH.doSwitch(leftElement);
+        EObject rightElement = updateAttribute.getRightElement();
+        TdColumn columnSetSwitchRight = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement);
+        if (columnSetSwitchLeft != null && columnSetSwitchRight != null) {
+            ColumnSet columnSet = (ColumnSet) selectedObj;
+            ColumnSetHelper.removeColumn(columnSetSwitchLeft, columnSet);
+            ColumnSetHelper.addColumn(columnSetSwitchRight, columnSet);
         }
     }
 

@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
@@ -246,6 +247,20 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
             throw new ReloadCompareException(e1);
         }
         return columnSetList;
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#handleUpdateElement(org.eclipse.emf.compare
+     * .diff.metamodel.UpdateModelElement)
+     */
+    @Override
+    protected void handleUpdateElement(UpdateAttribute updateAttribute) {
+        // TODO Auto-generated method stub
+
     }
 
 }

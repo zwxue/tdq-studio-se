@@ -23,6 +23,8 @@ import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
+import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
@@ -50,257 +52,257 @@ import orgomg.cwm.resource.relational.util.RelationalSwitch;
  */
 public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
-	private static Logger log = Logger.getLogger(AbstractComparisonLevel.class);
+    private static Logger log = Logger.getLogger(AbstractComparisonLevel.class);
 
-	protected DiffSwitch<AddModelElement> addModelSwitch;
+    protected DiffSwitch<AddModelElement> addModelSwitch;
 
-	protected DiffSwitch<RemoveModelElement> removeModelSwitch;
+    protected DiffSwitch<UpdateModelElement> updateModelSwitch;
 
-	protected RelationalSwitch<Package> packageSwitch;
+    protected DiffSwitch<RemoveModelElement> removeModelSwitch;
 
-	private boolean removeElementConfirm = false;
+    protected RelationalSwitch<Package> packageSwitch;
 
-	protected Object selectedObj;
+    private boolean removeElementConfirm = false;
 
-	private AbstractDatabaseFolderNode dbFolderNode = null;
+    protected Object selectedObj;
 
-	protected TdDataProvider oldDataProvider;
+    private AbstractDatabaseFolderNode dbFolderNode = null;
 
-	protected TdDataProvider tempReloadProvider;
+    protected TdDataProvider oldDataProvider;
 
-	protected Map<String, Object> options;
+    protected TdDataProvider tempReloadProvider;
 
-	protected TdDataProvider copyedDataProvider;
+    protected Map<String, Object> options;
 
-	protected IUIHandler guiHandler;
+    protected TdDataProvider copyedDataProvider;
 
-	public AbstractComparisonLevel(Object selObj) {
-		if (selObj instanceof AbstractDatabaseFolderNode) {
-			AbstractDatabaseFolderNode fNode = (AbstractDatabaseFolderNode) selObj;
-			Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(fNode
-					.getParent());
-			ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
-					.doSwitch(fNode.getParent());
-			if (ctatlogSwtich != null) {
-				this.selectedObj = ctatlogSwtich;
-			} else if (columnSet != null) {
+    protected IUIHandler guiHandler;
 
-				this.selectedObj = columnSet;
-			}
-			this.dbFolderNode = fNode;
-		} else {
-			selectedObj = selObj;
-		}
+    public AbstractComparisonLevel(Object selObj) {
+        if (selObj instanceof AbstractDatabaseFolderNode) {
+            AbstractDatabaseFolderNode fNode = (AbstractDatabaseFolderNode) selObj;
+            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(fNode.getParent());
+            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(fNode.getParent());
+            if (ctatlogSwtich != null) {
+                this.selectedObj = ctatlogSwtich;
+            } else if (columnSet != null) {
 
-		initSwitchValue();
-		options = new HashMap<String, Object>();
-		options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-	}
+                this.selectedObj = columnSet;
+            }
+            this.dbFolderNode = fNode;
+        } else {
+            selectedObj = selObj;
+        }
 
-	private void initSwitchValue() {
+        initSwitchValue();
+        options = new HashMap<String, Object>();
+        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+    }
 
-		addModelSwitch = new DiffSwitch<AddModelElement>() {
+    private void initSwitchValue() {
 
-			public AddModelElement caseAddModelElement(AddModelElement object) {
-				return object;
-			}
-		};
-		removeModelSwitch = new DiffSwitch<RemoveModelElement>() {
+        addModelSwitch = new DiffSwitch<AddModelElement>() {
 
-			public RemoveModelElement caseRemoveModelElement(
-					RemoveModelElement object) {
-				return object;
-			}
-		};
+            public AddModelElement caseAddModelElement(AddModelElement object) {
+                return object;
+            }
+        };
 
-		packageSwitch = new RelationalSwitch<Package>() {
+        updateModelSwitch = new DiffSwitch<UpdateModelElement>() {
 
-			public Package casePackage(Package object) {
-				return object;
-			}
-		};
-	}
+            public UpdateModelElement caseUpdateModelElement(UpdateModelElement object) {
+                return object;
+            }
+        };
+        removeModelSwitch = new DiffSwitch<RemoveModelElement>() {
 
-	public TdDataProvider reloadCurrentLevelElement()
-			throws ReloadCompareException {
-		if (!isValid()) {
-			return null;
-		}
-		DQStructureComparer.deleteCopiedResourceFile();
-		oldDataProvider = findDataProvider();
-		if (oldDataProvider == null) {
-			return null;
-		}
-		createTempConnectionFile();
+            public RemoveModelElement caseRemoveModelElement(RemoveModelElement object) {
+                return object;
+            }
+        };
 
-		if (compareWithReloadObject()) {
-			saveReloadResult();
-		}
-		return oldDataProvider;
-	}
+        packageSwitch = new RelationalSwitch<Package>() {
 
-	public void popComparisonUI(IUIHandler uiHandler)
-			throws ReloadCompareException {
-		this.guiHandler = uiHandler;
-		if (!isValid()) {
-			return;
-		}
-		oldDataProvider = findDataProvider();
-		if (oldDataProvider == null) {
-			return;
-		}
-		DQStructureComparer.deleteCopiedResourceFile();
-		DQStructureComparer.deleteNeedReloadElementFile();
-		createTempConnectionFile();
-		createCopyedProvider();
-		// MOD mzhao 2009-01-20 Extract method openDiffCompareEditor to class
-		// DQStructureComparer.
-		// MOD mzhao 2009-03-09 add param dbname for displaying datasource(db
-		// name) in compare
-		// editor.
+            public Package casePackage(Package object) {
+                return object;
+            }
+        };
+    }
 
-		Object needReloadObject = dbFolderNode == null ? selectedObj
-				: dbFolderNode;
-		DQStructureComparer.openDiffCompareEditor(getLeftResource(),
-				getRightResource(), options, guiHandler, DQStructureComparer
-						.getDiffResourceFile(), oldDataProvider.getName(),
-				needReloadObject);
+    public TdDataProvider reloadCurrentLevelElement() throws ReloadCompareException {
+        if (!isValid()) {
+            return null;
+        }
+        DQStructureComparer.deleteCopiedResourceFile();
+        oldDataProvider = findDataProvider();
+        if (oldDataProvider == null) {
+            return null;
+        }
+        createTempConnectionFile();
 
-		// testInit();
+        if (compareWithReloadObject()) {
+            saveReloadResult();
+        }
+        return oldDataProvider;
+    }
 
-	}
+    public void popComparisonUI(IUIHandler uiHandler) throws ReloadCompareException {
+        this.guiHandler = uiHandler;
+        if (!isValid()) {
+            return;
+        }
+        oldDataProvider = findDataProvider();
+        if (oldDataProvider == null) {
+            return;
+        }
+        DQStructureComparer.deleteCopiedResourceFile();
+        DQStructureComparer.deleteNeedReloadElementFile();
+        createTempConnectionFile();
+        createCopyedProvider();
+        // MOD mzhao 2009-01-20 Extract method openDiffCompareEditor to class
+        // DQStructureComparer.
+        // MOD mzhao 2009-03-09 add param dbname for displaying datasource(db
+        // name) in compare
+        // editor.
 
-	private void createCopyedProvider() {
-		IFile selectedFile = PrvResourceFileHelper.getInstance()
-				.findCorrespondingFile(oldDataProvider);
-		IFile createNeedReloadElementsFile = DQStructureComparer
-				.getNeedReloadElementsFile();
-		IFile copyedFile = DQStructureComparer.copyedToDestinationFile(
-				selectedFile, createNeedReloadElementsFile);
-		TypedReturnCode<TdDataProvider> returnValue = DqRepositoryViewService
-				.readFromFile(copyedFile);
-		copyedDataProvider = returnValue.getObject();
+        Object needReloadObject = dbFolderNode == null ? selectedObj : dbFolderNode;
+        DQStructureComparer.openDiffCompareEditor(getLeftResource(), getRightResource(), options, guiHandler, DQStructureComparer
+                .getDiffResourceFile(), oldDataProvider.getName(), needReloadObject);
 
-	}
+        // testInit();
 
-	/**
-	 * DOC rli Comment method "createTempConnectionFile".
-	 * 
-	 * @throws ReloadCompareException
-	 */
-	protected void createTempConnectionFile() throws ReloadCompareException {
-		IFile tempConnectionFile = DQStructureComparer.getTempRefreshFile();
-		// MOD mzhao ,Extract method getRefreshedDataProvider to class
-		// DQStructureComparer for common use.
-		TypedReturnCode<TdDataProvider> returnProvider = DQStructureComparer
-				.getRefreshedDataProvider(oldDataProvider);
-		if (!returnProvider.isOk()) {
-			throw new ReloadCompareException(returnProvider.getMessage());
-		}
-		tempReloadProvider = returnProvider.getObject();
-		tempReloadProvider.setComponent(oldDataProvider.getComponent());
-		DataProviderWriter.getInstance().saveDataProviderResource(
-				tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
-				tempConnectionFile);
-		tempReloadProvider.setComponent(null);
-	}
+    }
 
-	// private void testInit() throws ReloadCompareException {
-	//
-	// URI uri =
-	//URI.createPlatformResourceURI(DQStructureComparer.getNeedReloadElementsFile
-	// ().getFullPath().toString(),
-	// false);
-	// Resource leftResource = EMFSharedResources.getInstance().getResource(uri,
-	// true);
-	// uri =
-	// URI.createPlatformResourceURI(DQStructureComparer.getTempRefreshFile
-	// ().getFullPath().toString(), false);
-	// Resource rightResource =
-	// EMFSharedResources.getInstance().getResource(uri, true);
-	//
-	// openDiffCompareEditor(leftResource, rightResource, options);
-	// }
+    private void createCopyedProvider() {
+        IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
+        IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
+        IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
+        TypedReturnCode<TdDataProvider> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
+        copyedDataProvider = returnValue.getObject();
 
-	protected abstract EObject getSavedReloadObject()
-			throws ReloadCompareException;
+    }
 
-	protected abstract Resource getRightResource()
-			throws ReloadCompareException;
+    /**
+     * DOC rli Comment method "createTempConnectionFile".
+     * 
+     * @throws ReloadCompareException
+     */
+    protected void createTempConnectionFile() throws ReloadCompareException {
+        IFile tempConnectionFile = DQStructureComparer.getTempRefreshFile();
+        // MOD mzhao ,Extract method getRefreshedDataProvider to class
+        // DQStructureComparer for common use.
+        TypedReturnCode<TdDataProvider> returnProvider = DQStructureComparer.getRefreshedDataProvider(oldDataProvider);
+        if (!returnProvider.isOk()) {
+            throw new ReloadCompareException(returnProvider.getMessage());
+        }
+        tempReloadProvider = returnProvider.getObject();
+        tempReloadProvider.setComponent(oldDataProvider.getComponent());
+        DataProviderWriter.getInstance().saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
+                tempConnectionFile);
+        tempReloadProvider.setComponent(null);
+        oldDataProvider.getComponent();
+    }
 
-	protected void saveReloadResult() {
-		PrvResourceFileHelper.getInstance().save(oldDataProvider);
-	}
+    // private void testInit() throws ReloadCompareException {
+    //
+    // URI uri =
+    // URI.createPlatformResourceURI(DQStructureComparer.getNeedReloadElementsFile
+    // ().getFullPath().toString(),
+    // false);
+    // Resource leftResource = EMFSharedResources.getInstance().getResource(uri,
+    // true);
+    // uri =
+    // URI.createPlatformResourceURI(DQStructureComparer.getTempRefreshFile
+    // ().getFullPath().toString(), false);
+    // Resource rightResource =
+    // EMFSharedResources.getInstance().getResource(uri, true);
+    //
+    // openDiffCompareEditor(leftResource, rightResource, options);
+    // }
 
-	/**
-	 * Method "findDataProvider".
-	 * 
-	 * @return the data provider of the selected object
-	 */
-	protected abstract TdDataProvider findDataProvider();
+    protected abstract EObject getSavedReloadObject() throws ReloadCompareException;
 
-	protected boolean isValid() {
-		return true;
-	}
+    protected abstract Resource getRightResource() throws ReloadCompareException;
 
-	/**
-	 * Compare the old selected object with reload object(rightResource), and
-	 * updated the content of old selected object.
-	 * 
-	 * @param rightResource
-	 * @return
-	 * @throws ReloadCompareException
-	 */
-	protected boolean compareWithReloadObject() throws ReloadCompareException {
-		// options.put(MatchOptions.OPTION_SEARCH_WINDOW, 500);
+    protected void saveReloadResult() {
+        PrvResourceFileHelper.getInstance().save(oldDataProvider);
+    }
 
-		MatchModel match = null;
-		try {
-			match = MatchService.doMatch(oldDataProvider,
-					getSavedReloadObject(), options);
-		} catch (InterruptedException e) {
-			log.error(e, e);
-			return false;
-		}
-		final DiffModel diff = DiffService.doDiff(match);
+    /**
+     * Method "findDataProvider".
+     * 
+     * @return the data provider of the selected object
+     */
+    protected abstract TdDataProvider findDataProvider();
 
-		EList<DiffElement> ownedElements = diff.getOwnedElements();
-		for (DiffElement de : ownedElements) {
-			EList<DiffElement> subDiffElements = de.getSubDiffElements();
-			for (DiffElement difElement : subDiffElements) {
-				handleDiffPackageElement(difElement);
-			}
-		}
-		return true;
-	}
+    protected boolean isValid() {
+        return true;
+    }
 
-	protected abstract Resource getLeftResource() throws ReloadCompareException;
+    /**
+     * Compare the old selected object with reload object(rightResource), and updated the content of old selected
+     * object.
+     * 
+     * @param rightResource
+     * @return
+     * @throws ReloadCompareException
+     */
+    protected boolean compareWithReloadObject() throws ReloadCompareException {
+        // options.put(MatchOptions.OPTION_SEARCH_WINDOW, 500);
 
-	protected void handleDiffPackageElement(DiffElement difElement) {
-		AddModelElement addElement = addModelSwitch.doSwitch(difElement);
-		if (addElement != null) {
-			handleAddElement(addElement);
-			return;
-		}
-		RemoveModelElement removeElement = removeModelSwitch
-				.doSwitch(difElement);
-		if (removeElement != null) {
-			handleRemoveElement(removeElement);
-		}
-	}
+        MatchModel match = null;
+        try {
+            match = MatchService.doMatch(oldDataProvider, getSavedReloadObject(), options);
+        } catch (InterruptedException e) {
+            log.error(e, e);
+            return false;
+        }
+        final DiffModel diff = DiffService.doDiff(match);
 
-	protected abstract void handleRemoveElement(RemoveModelElement removeElement);
+        EList<DiffElement> ownedElements = diff.getOwnedElements();
+        for (DiffElement de : ownedElements) {
+            EList<DiffElement> subDiffElements = de.getSubDiffElements();
+            for (DiffElement difElement : subDiffElements) {
+                handleDiffPackageElement(difElement);
+            }
+        }
+        return true;
+    }
 
-	protected abstract void handleAddElement(AddModelElement addElement);
+    protected abstract Resource getLeftResource() throws ReloadCompareException;
 
-	protected void popRemoveElementConfirm() {
-		if (!removeElementConfirm) {
-			final TdDataProvider provider = oldDataProvider;
-			if (guiHandler != null) {
-				guiHandler.popRemoveElement(provider);
-			}
-			removeElementConfirm = true;
-		}
-	}
+    protected void handleDiffPackageElement(DiffElement difElement) {
+        AddModelElement addElement = addModelSwitch.doSwitch(difElement);
+        if (addElement != null) {
+            handleAddElement(addElement);
+            return;
+        }
+        RemoveModelElement removeElement = removeModelSwitch.doSwitch(difElement);
+        if (removeElement != null) {
+            handleRemoveElement(removeElement);
+        }
+        // If attribute changes. MOD hcheng 2009-06-26,for 7772,error reload column list.
+        if (difElement instanceof UpdateAttribute) {
+            handleUpdateElement((UpdateAttribute) difElement);
+            return;
+        }
+
+    }
+
+    protected abstract void handleRemoveElement(RemoveModelElement removeElement);
+
+    protected abstract void handleAddElement(AddModelElement addElement);
+
+    protected abstract void handleUpdateElement(UpdateAttribute updateAttribute);
+
+    protected void popRemoveElementConfirm() {
+        if (!removeElementConfirm) {
+            final TdDataProvider provider = oldDataProvider;
+            if (guiHandler != null) {
+                guiHandler.popRemoveElement(provider);
+            }
+            removeElementConfirm = true;
+        }
+    }
 
 }
