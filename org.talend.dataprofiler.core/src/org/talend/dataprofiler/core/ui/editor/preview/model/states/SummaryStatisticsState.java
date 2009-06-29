@@ -76,7 +76,9 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
         for (IndicatorUnit unit : units) {
             if (Java2SqlType.isNumbericInSQL(sqltype)) {
-                String value = unit.getValue().toString();
+                // MOD xqliu 2009-06-29 bug 7068
+                String value = unit.getValue() == null ? "0" : unit.getValue().toString();
+                // ~
                 map.put(unit.getType(), Double.parseDouble(value));
             }
 

@@ -48,7 +48,9 @@ public class PatternLowFreqIndicatorImpl extends LowFrequencyIndicatorImpl imple
 
     @Override
     public boolean prepare() {
-        final TextParameters textParameter = this.getParameters().getTextParameter();
+        // MOD xqliu 2009-06-29 bug 7068
+        final TextParameters textParameter = this.getParameters() == null ? null : this.getParameters().getTextParameter();
+        // ~
         if (textParameter != null) {
             this.replacementChars = textParameter.getReplacementCharacters();
             this.charsToReplace = textParameter.getCharactersToReplace();

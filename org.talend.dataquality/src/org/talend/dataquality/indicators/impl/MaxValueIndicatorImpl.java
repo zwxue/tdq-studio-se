@@ -68,8 +68,14 @@ public class MaxValueIndicatorImpl extends ValueIndicatorImpl implements MaxValu
      * @return
      */
     private boolean isGreater(Object data) {
-        // FIXME scorreia implement me
-        throw new UnsupportedOperationException("Don't know how to compare this data yet " + data);
+        // MOD xqliu 2009-06-29 bug 7068
+        try {
+            double thisValue = Double.valueOf(this.value);
+            double dataValue = Double.valueOf(data.toString());
+            return thisValue < dataValue;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     

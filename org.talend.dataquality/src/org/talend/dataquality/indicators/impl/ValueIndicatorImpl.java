@@ -251,7 +251,8 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
     @Override
     public Double getRealValue() {
         if (IndicatorValueType.REAL_VALUE.equals(this.getValueType())) {
-            return Double.valueOf(value);
+            // MOD xqliu 2009-06-29 bug 7068
+            return value == null ? null : Double.valueOf(value);
         }
         return null;
     }

@@ -46,7 +46,14 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
             // displaying a chart with 0.
             throw new RuntimeException("Invalid mean!!");
         }
-        Double sum = Double.valueOf(getSumStr());
+        // MOD xqliu 2009-06-29 bug 7068
+        Double sum = null;
+        try {
+            sum = Double.valueOf(getSumStr());
+        } catch (Exception e) {
+            sum = Double.valueOf(0);
+        }
+        // ~
         if (sum == null) {
             throw new RuntimeException("Invalid sum in mean computation!!");
         }
