@@ -38,7 +38,7 @@
    </item>
       <item title="Refresh the graphics" dialog="true" skip="false">
       <description>
-        
+          To generate the graphics of the analysis, click on the <b>&quot;Refresh the graphics&quot;</b>  hyperlink (<b>or click the link below</b>). &quot;Refresh the graphics&quot; means that graphics are displayed with the last computed data.  
       </description>
       <action class="org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="8">
       </action>

@@ -804,7 +804,7 @@
      </cheatsheet>
           <cheatsheet
            category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
-           contentFile="cheatsheets/CatalogAnalysis_cheat.xml"
+           contentFile="cheatsheets/TimeColumnCorrelationAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet.timeCorrelationColumnAnalysis.analysis"
            name="Time Column Correlation Analysis Creation">
      </cheatsheet>
