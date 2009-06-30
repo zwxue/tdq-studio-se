@@ -50,7 +50,7 @@ public final class ReportHelper {
 
     private static final TypedProperties PROPS = PropertiesLoader
             .getProperties(ReportHelper.class, "predefined_jrxml.properties");
-    
+
     /**
      * The report types.
      * 
@@ -78,6 +78,10 @@ public final class ReportHelper {
         // Analysis: column comparison
         BASIC_COLUMNS_COMPARISON(BASIC, PROPS.getProperty("BASIC_COLUMNS_COMPARISON")), //$NON-NLS-1$
         EVOLUTION_COLUMNS_COMPARISON(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_COMPARISON")), //$NON-NLS-1$
+
+        // Analysis: column correation
+        BASIC_COLUMNS_CORRELATION(BASIC, PROPS.getProperty("BASIC_COLUMNS_CORRELATION")), //$NON-NLS-1$
+        EVOLUTION_COLUMNS_CORRELATION(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_CORRELATION")), //$NON-NLS-1$
 
         USER_MADE(USER_DEFINED, null); // for the user to set his own file path
 
@@ -173,6 +177,12 @@ public final class ReportHelper {
                     return BASIC_COLUMNS_COMPARISON;
                 } else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
                     return EVOLUTION_COLUMNS_COMPARISON;
+                }
+            } else if (anaType.getName().equals(AnalysisType.COLUMN_CORRELATION.getName())) {
+                if (BASIC_COLUMNS_CORRELATION.getLabel().equals(text)) {
+                    return BASIC_COLUMNS_CORRELATION;
+                } else if (EVOLUTION_COLUMNS_CORRELATION.getLabel().equals(text)) {
+                    return EVOLUTION_COLUMNS_CORRELATION;
                 }
             }
 
