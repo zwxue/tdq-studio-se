@@ -144,7 +144,7 @@ public class AnalysisEditor extends CommonFormEditor {
 
         TdEditorToolBar toolbar = getToolBar();
         if (toolbar != null && masterPage != null) {
-            runAction = new RunAnalysisAction(masterPage);
+            runAction = new RunAnalysisAction();
             refreshAction = new RefreshChartAction();
             toolbar.addActions(runAction, refreshAction);
         }

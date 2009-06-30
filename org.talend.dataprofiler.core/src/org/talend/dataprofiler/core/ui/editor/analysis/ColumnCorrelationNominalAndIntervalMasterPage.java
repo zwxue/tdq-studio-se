@@ -324,7 +324,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                             DefaultMessagesImpl.getString("ColumnMasterDetailsPage.RunOrSeeSampleData")); //$NON-NLS-1$
 
                     if (returnCode) {
-                        new RunAnalysisAction(ColumnCorrelationNominalAndIntervalMasterPage.this).run();
+                        new RunAnalysisAction().run();
                         message.setVisible(false);
                     } else {
                         createPreviewCharts(form, chartComposite, false);

@@ -138,7 +138,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         // createResultSection(resultComp);
 
         form.reflow(true);
-        
+
         // MOD xqliu 2009-06-23 bug 7481
         foldingSections(new Section[] { summarySection, columnSetSection, resultSection });
         // ~
@@ -515,8 +515,16 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         // ~
     }
 
-    public void refresh(ColumnsComparisonMasterDetailsPage masterPage) {
-        this.masterPage = masterPage;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
+     * .ui.editor.analysis.AbstractAnalysisMetadataPage)
+     */
+    @Override
+    public void refresh(AbstractAnalysisMetadataPage masterPage) {
+        this.masterPage = (ColumnsComparisonMasterDetailsPage) masterPage;
         this.summaryComp.dispose();
         this.analyzedColumnSetsComp.dispose();
         this.analysisResultsComp.dispose();

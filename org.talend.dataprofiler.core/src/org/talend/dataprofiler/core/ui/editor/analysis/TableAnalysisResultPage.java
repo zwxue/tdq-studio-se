@@ -133,7 +133,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
             exComp.setText(DefaultMessagesImpl.getString("TableAnalysisResultPage.table", tableIndicator.getTdTable().getName())); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-            
+
             // MOD xqliu 2009-06-23 bug 7481
             exComp.setExpanded(EditorPreferencePage.isCurrentAnalyzedElements());
             // ~
@@ -266,8 +266,16 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         }
     }
 
-    public void refresh(TableMasterDetailsPage masterPage) {
-        this.masterPage = masterPage;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
+     * .ui.editor.analysis.AbstractAnalysisMetadataPage)
+     */
+    @Override
+    public void refresh(AbstractAnalysisMetadataPage masterPage) {
+        this.masterPage = (TableMasterDetailsPage) masterPage;
         this.summaryComp.dispose();
         this.resultComp.dispose();
 

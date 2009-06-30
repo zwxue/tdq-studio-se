@@ -74,11 +74,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
     }
 
-    public RunAnalysisAction(IRuningStatusListener listener) {
-        this();
-        this.listener = listener;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -97,16 +92,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 return;
             }
 
+            AnalysisEditor anaEditor = (AnalysisEditor) editor;
             if (selectionFile != null) {
                 analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
-            } else {
-                AnalysisEditor anaEditor = (AnalysisEditor) editor;
-                IFormPage masterPage = anaEditor.getMasterPage();
-                IFile afile = ((FileEditorInput) masterPage.getEditorInput()).getFile();
-                analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
-            }
 
-            if (listener == null) {
                 IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                         .getEditorReferences();
 
@@ -115,13 +104,24 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     try {
                         finput = (FileEditorInput) reference.getEditorInput();
                         if (finput.getFile().equals(selectionFile)) {
-                            this.listener = ((AnalysisEditor) reference.getEditor(true)).getMasterPage();
+                            IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true)).getActivePageInstance();
+                            if (reference instanceof IRuningStatusListener) {
+                                listener = (IRuningStatusListener) activePageInstance;
+                            }
                         }
                     } catch (PartInitException e) {
                         log.error(e, e);
                     }
                 }
+            } else {
+                IFile afile = ((FileEditorInput) anaEditor.getEditorInput()).getFile();
+                analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
+                IFormPage activePageInstance = anaEditor.getActivePageInstance();
+                if (activePageInstance instanceof IRuningStatusListener) {
+                    listener = (IRuningStatusListener) activePageInstance;
+                }
             }
+
         }
 
         if (analysis == null) {

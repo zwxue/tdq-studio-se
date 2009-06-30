@@ -113,7 +113,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         graphicsAndTableComp.setLayout(new GridLayout());
         createResultSection(graphicsAndTableComp);
         form.reflow(true);
-        
+
         // MOD xqliu 2009-06-23 bug 7481
         foldingSections(new Section[] { summarySection, graphicsAndTableSection });
         // ~
@@ -481,8 +481,16 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
     }
 
-    public void refresh(ColumnCorrelationNominalAndIntervalMasterPage masterPage) {
-        this.masterPage = masterPage;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
+     * .ui.editor.analysis.AbstractAnalysisMetadataPage)
+     */
+    @Override
+    public void refresh(AbstractAnalysisMetadataPage masterPage) {
+        this.masterPage = (ColumnCorrelationNominalAndIntervalMasterPage) masterPage;
         this.summaryComp.dispose();
         this.graphicsAndTableComp.dispose();
         createFormContent(getManagedForm());

@@ -69,7 +69,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         // MOD xqliu 2009-06-23 bug 7481
         foldingSections(new Section[] { summarySection, resultSection });
         // ~
-        
+
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or
         // expand later.
         currentEditor.registerSections(new Section[] { resultSection });
@@ -140,12 +140,19 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         }
     }
 
-    public void refresh(ColumnMasterDetailsPage masterPage) {
-        this.masterPage = masterPage;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
+     * .ui.editor.analysis.AbstractAnalysisMetadataPage)
+     */
+    @Override
+    public void refresh(AbstractAnalysisMetadataPage masterPage) {
+        this.masterPage = (ColumnMasterDetailsPage) masterPage;
         this.summaryComp.dispose();
         this.resultComp.dispose();
 
         createFormContent(getManagedForm());
     }
-
 }

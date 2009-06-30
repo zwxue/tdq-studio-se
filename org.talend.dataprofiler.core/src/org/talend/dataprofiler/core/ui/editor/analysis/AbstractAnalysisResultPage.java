@@ -17,11 +17,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dq.analysis.AnalysisHandler;
@@ -29,7 +32,7 @@ import org.talend.dq.analysis.AnalysisHandler;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public abstract class AbstractAnalysisResultPage extends AbstractFormPage {
+public abstract class AbstractAnalysisResultPage extends AbstractFormPage implements IRuningStatusListener {
 
     protected ScrolledForm form;
 
@@ -117,6 +120,20 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage {
 
         summarySection.setClient(sectionClient);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.IRuningStatusListener#fireRuningItemChanged(boolean)
+     */
+    public void fireRuningItemChanged(boolean status) {
+        IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
+        if (editor instanceof AnalysisEditor) {
+            refresh(((AnalysisEditor) editor).getMasterPage());
+        }
+    }
+
+    public abstract void refresh(AbstractAnalysisMetadataPage masterPage);
 
     protected abstract void createResultSection(Composite parent);
 
