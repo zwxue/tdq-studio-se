@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -45,237 +44,203 @@ import common.Logger;
  * DOC rli class global comment. Detailled comment
  */
 public abstract class AbstractPagePart {
-	private static Logger log = Logger.getLogger(AbstractPagePart.class);
-	private boolean isDirty;
-	protected PropertyChangeSupport propertyChangeSupport;
-	private SelectionListener selectionListener;
 
-	public AbstractPagePart() {
-		propertyChangeSupport = new PropertyChangeSupport(this);
-	}
+    private static Logger log = Logger.getLogger(AbstractPagePart.class);
 
-	public void setDirty(boolean dirty) {
-		if (isDirty != dirty) {
-			this.isDirty = dirty;
-			propertyChangeSupport.firePropertyChange(
-					PluginConstant.ISDIRTY_PROPERTY, null, Boolean
-							.valueOf(dirty));
-		}
-	}
+    private boolean isDirty;
 
-	public boolean isDirty() {
-		return isDirty;
-	}
+    protected PropertyChangeSupport propertyChangeSupport;
 
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.addPropertyChangeListener(listener);
-	}
+    private SelectionListener selectionListener;
 
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.removePropertyChangeListener(listener);
-	}
+    public AbstractPagePart() {
+        propertyChangeSupport = new PropertyChangeSupport(this);
+    }
 
-	/**
-	 * 
-	 * ADD mzhao 2009-05-05 bug:6587.
-	 */
-	protected void updateBindConnection(
-			AbstractAnalysisMetadataPage masterPage,
-			ColumnIndicator[] indicators, Tree tree) {
-		// MOD mzhao 2009-06-09 feature 5887
-		// if (!isAnalyzedColumnsEmpty(tree)) {
-		// List<TdDataProvider> providerList = new
-		// ArrayList<TdDataProvider>();
-		TdDataProvider tdProvider = null;
-		if (indicators != null && indicators.length != 0) {
-			tdProvider = DataProviderHelper.getTdDataProvider(indicators[0]
-					.getTdColumn());
-			setConnectionState(masterPage, tdProvider);
-		}
-		// }
-	}
+    public void setDirty(boolean dirty) {
+        if (isDirty != dirty) {
+            this.isDirty = dirty;
+            propertyChangeSupport.firePropertyChange(PluginConstant.ISDIRTY_PROPERTY, null, Boolean.valueOf(dirty));
+        }
+    }
 
-	/**
-	 * 
-	 * ADD mzhao 2009-05-05 bug:6587.
-	 */
-	protected void updateBindConnection(
-			AbstractAnalysisMetadataPage masterPage,
-			TableIndicator[] indicators, Tree tree) {
-		// MOD mzhao 2009-06-09 feature 5887
-		// if (!isAnalyzedColumnsEmpty(tree)) {
-		// List<TdDataProvider> providerList = new
-		// ArrayList<TdDataProvider>();
-		TdDataProvider tdProvider = null;
-		if (indicators != null && indicators.length != 0) {
-			tdProvider = DataProviderHelper
-					.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH
-							.doSwitch(indicators[0].getTdTable()));
+    public boolean isDirty() {
+        return isDirty;
+    }
 
-			setConnectionState(masterPage, tdProvider);
-		}
-		// }
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
 
-	/**
-	 * 
-	 * ADD mzhao 2009-05-05 bug:6587.
-	 */
-	protected void updateBindConnection(
-			AbstractAnalysisMetadataPage masterPage, Tree tree) {
-		// MOD mzhao 2009-06-09 feature 5887
-		if (!isAnalyzedColumnsEmpty(tree)) {
-			Object columnValue = tree
-					.getItem(0)
-					.getData(
-							AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
-			TdColumn tdColumn = null;
-			if (columnValue instanceof TdColumn) {
-				tdColumn = (TdColumn) columnValue;
-			} else if (columnValue instanceof ColumnIndicator) {
-				tdColumn = ((ColumnIndicator) columnValue).getTdColumn();
-			}
-			TdDataProvider tdProvider = null;
-			if (tdColumn != null) {
-				tdProvider = DataProviderHelper.getTdDataProvider(tdColumn);
-				setConnectionState(masterPage, tdProvider);
-			}
-		}
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
 
-	/**
-	 * 
-	 * ADD mzhao 2009-05-05 bug:6587.
-	 */
-	protected void updateBindConnection(
-			AbstractAnalysisMetadataPage masterPage,
-			List<TableViewer> tableViewerPosStack) {
-		boolean isEmpty1 = tableViewerPosStack.get(0) == null
-				|| tableViewerPosStack.get(0).getInput() == null
-				|| ((List<Column>) tableViewerPosStack.get(0).getInput())
-						.size() == 0;
-		boolean isEmpty2 = tableViewerPosStack.get(1) == null
-				|| tableViewerPosStack.get(1).getInput() == null
-				|| ((List<Column>) tableViewerPosStack.get(1).getInput())
-						.size() == 0;
-		if (isEmpty1 && isEmpty2) {
-			return;
-		} else {
+    /**
+     * 
+     * ADD mzhao 2009-05-05 bug:6587.
+     */
+    protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ColumnIndicator[] indicators, Tree tree) {
+        // MOD mzhao 2009-06-09 feature 5887
+        // if (!isAnalyzedColumnsEmpty(tree)) {
+        // List<TdDataProvider> providerList = new
+        // ArrayList<TdDataProvider>();
+        TdDataProvider tdProvider = null;
+        if (indicators != null && indicators.length != 0) {
+            tdProvider = DataProviderHelper.getTdDataProvider(indicators[0].getTdColumn());
+            setConnectionState(masterPage, tdProvider);
+        }
+        // }
+    }
 
-			TableViewer columnsElementViewer = null;
-			if (!isEmpty1) {
-				columnsElementViewer = tableViewerPosStack.get(0);
-			} else {
-				columnsElementViewer = tableViewerPosStack.get(1);
-			}
-			TdDataProvider tdProvider = null;
-			Object input = columnsElementViewer.getInput();
-			List<Column> columnSet = (List<Column>) input;
-			if (columnSet != null && columnSet.size() != 0) {
-				tdProvider = DataProviderHelper.getTdDataProvider(columnSet
-						.get(0));
-				setConnectionState(masterPage, tdProvider);
-			}
-		}
-	}
+    /**
+     * 
+     * ADD mzhao 2009-05-05 bug:6587.
+     */
+    protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, TableIndicator[] indicators, Tree tree) {
+        // MOD mzhao 2009-06-09 feature 5887
+        // if (!isAnalyzedColumnsEmpty(tree)) {
+        // List<TdDataProvider> providerList = new
+        // ArrayList<TdDataProvider>();
+        TdDataProvider tdProvider = null;
+        if (indicators != null && indicators.length != 0) {
+            tdProvider = DataProviderHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicators[0].getTdTable()));
 
-	private void setConnectionState(
-			final AbstractAnalysisMetadataPage masterPage,
-			final TdDataProvider tdProvider) {
-		final IFile prvFile = PrvResourceFileHelper.getInstance()
-				.findCorrespondingFile(tdProvider);
-		String prvFileName = prvFile.getName();
+            setConnectionState(masterPage, tdProvider);
+        }
+        // }
+    }
 
-		Object value = masterPage.getConnCombo().getData(prvFileName);
-		Integer index = 0;
-		if (value != null && value instanceof Integer) {
-			index = (Integer) value;
-		}
-		masterPage.getConnCombo().select(index);
-		// MOD mzhao 2009-06-09 feature 5887
-		if (selectionListener == null) {
-			selectionListener = new SelectionListener() {
-				private int prevSelect = masterPage.getConnCombo()
-						.getSelectionIndex();
-				private TdDataProvider dataProvider = tdProvider;
+    /**
+     * 
+     * ADD mzhao 2009-05-05 bug:6587.
+     */
+    protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, Tree tree) {
+        if (!isAnalyzedColumnsEmpty(tree)) {
+            TdDataProvider tdProvider = (TdDataProvider) masterPage.getAnalysis().getContext().getConnection();
+            setConnectionState(masterPage, tdProvider);
+        }
+    }
 
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
+    /**
+     * 
+     * ADD mzhao 2009-05-05 bug:6587.
+     */
+    protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, List<TableViewer> tableViewerPosStack) {
+        boolean isEmpty1 = tableViewerPosStack.get(0) == null || tableViewerPosStack.get(0).getInput() == null
+                || ((List<Column>) tableViewerPosStack.get(0).getInput()).size() == 0;
+        boolean isEmpty2 = tableViewerPosStack.get(1) == null || tableViewerPosStack.get(1).getInput() == null
+                || ((List<Column>) tableViewerPosStack.get(1).getInput()).size() == 0;
+        if (isEmpty1 && isEmpty2) {
+            return;
+        } else {
 
-				public void widgetSelected(SelectionEvent e) {
-					dataProvider = callChangeConnectionAction(masterPage,
-							prevSelect, dataProvider);
-					prevSelect = masterPage.getConnCombo().getSelectionIndex();
-				}
+            TableViewer columnsElementViewer = null;
+            if (!isEmpty1) {
+                columnsElementViewer = tableViewerPosStack.get(0);
+            } else {
+                columnsElementViewer = tableViewerPosStack.get(1);
+            }
+            TdDataProvider tdProvider = null;
+            Object input = columnsElementViewer.getInput();
+            List<Column> columnSet = (List<Column>) input;
+            if (columnSet != null && columnSet.size() != 0) {
+                tdProvider = DataProviderHelper.getTdDataProvider(columnSet.get(0));
+                setConnectionState(masterPage, tdProvider);
+            }
+        }
+    }
 
-			};
-			masterPage.getConnCombo().addSelectionListener(selectionListener);
-		}
+    private void setConnectionState(final AbstractAnalysisMetadataPage masterPage, final TdDataProvider tdProvider) {
+        final IFile prvFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(tdProvider);
+        String prvFileName = prvFile.getName();
 
-		// MOD mzhao 2009-06-09 feature 5887
-		// masterPage.getConnCombo().setEnabled(false);
-	}
+        Object value = masterPage.getConnCombo().getData(prvFileName);
+        Integer index = 0;
+        if (value != null && value instanceof Integer) {
+            index = (Integer) value;
+        }
+        masterPage.getConnCombo().select(index);
+        // MOD mzhao 2009-06-09 feature 5887
+        if (selectionListener == null) {
+            selectionListener = new SelectionListener() {
 
-	// MOD mzhao 2009-06-09 feature 5887
-	private TdDataProvider callChangeConnectionAction(
-			AbstractAnalysisMetadataPage masterPage, final int oldSelect,
-			TdDataProvider tdProvider) {
-		ChangeConnectionAction changeConnAction = new ChangeConnectionAction(
-				masterPage, tdProvider);
-		changeConnAction.run();
-		ReturnCode ret = changeConnAction.getStatus();
-		if (ret.isOk()) {
-			IRunnableWithProgress op = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
-					Display.getDefault().asyncExec(new Runnable() {
+                private int prevSelect = masterPage.getConnCombo().getSelectionIndex();
 
-						public void run() {
-							updateModelViewer();
-						}
+                private TdDataProvider dataProvider = tdProvider;
 
-					});
+                public void widgetDefaultSelected(SelectionEvent e) {
+                }
 
-				}
+                public void widgetSelected(SelectionEvent e) {
+                    dataProvider = callChangeConnectionAction(masterPage, prevSelect, dataProvider);
+                    prevSelect = masterPage.getConnCombo().getSelectionIndex();
+                }
 
-			};
+            };
+            masterPage.getConnCombo().addSelectionListener(selectionListener);
+        }
 
-			try {
-				ProgressUI.popProgressDialog(op);
-			} catch (InvocationTargetException e) {
-				log.error(e, e);
-			} catch (InterruptedException e) {
-				log.error(e, e);
-			}
+        // MOD mzhao 2009-06-09 feature 5887
+        // masterPage.getConnCombo().setEnabled(false);
+    }
 
-			// The newest dataprovider now would be the old one for next
-			// time connection changes.
-			tdProvider = (TdDataProvider) masterPage.getConnCombo().getData(
-					masterPage.getConnCombo().getSelectionIndex() + "");
-		} else {
-			cancelSelection(masterPage, oldSelect);
-		}
-		return tdProvider;
-	}
+    // MOD mzhao 2009-06-09 feature 5887
+    private TdDataProvider callChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, final int oldSelect,
+            TdDataProvider tdProvider) {
+        ChangeConnectionAction changeConnAction = new ChangeConnectionAction(masterPage, tdProvider);
+        changeConnAction.run();
+        ReturnCode ret = changeConnAction.getStatus();
+        if (ret.isOk()) {
+            IRunnableWithProgress op = new IRunnableWithProgress() {
 
-	private void cancelSelection(AbstractAnalysisMetadataPage masterPage,
-			final int oldSelect) {
-		masterPage.getConnCombo().removeSelectionListener(selectionListener);
-		masterPage.getConnCombo().select(oldSelect);
-		masterPage.getConnCombo().addSelectionListener(selectionListener);
-	}
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    Display.getDefault().asyncExec(new Runnable() {
 
-	public abstract void updateModelViewer();
+                        public void run() {
+                            updateModelViewer();
+                        }
 
-	/**
-	 * 
-	 * ADD mzhao 2009-05-05 bug:6587
-	 */
-	private boolean isAnalyzedColumnsEmpty(Tree tree) {
-		boolean isEmpty = false;
-		if (tree == null || tree.getItemCount() == 0) {
-			isEmpty = true;
-		}
-		return isEmpty;
-	}
+                    });
+
+                }
+
+            };
+
+            try {
+                ProgressUI.popProgressDialog(op);
+            } catch (InvocationTargetException e) {
+                log.error(e, e);
+            } catch (InterruptedException e) {
+                log.error(e, e);
+            }
+
+            // The newest dataprovider now would be the old one for next
+            // time connection changes.
+            tdProvider = (TdDataProvider) masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + "");
+        } else {
+            cancelSelection(masterPage, oldSelect);
+        }
+        return tdProvider;
+    }
+
+    private void cancelSelection(AbstractAnalysisMetadataPage masterPage, final int oldSelect) {
+        masterPage.getConnCombo().removeSelectionListener(selectionListener);
+        masterPage.getConnCombo().select(oldSelect);
+        masterPage.getConnCombo().addSelectionListener(selectionListener);
+    }
+
+    public abstract void updateModelViewer();
+
+    /**
+     * 
+     * ADD mzhao 2009-05-05 bug:6587
+     */
+    private boolean isAnalyzedColumnsEmpty(Tree tree) {
+        boolean isEmpty = false;
+        if (tree == null || tree.getItemCount() == 0) {
+            isEmpty = true;
+        }
+        return isEmpty;
+    }
 }
