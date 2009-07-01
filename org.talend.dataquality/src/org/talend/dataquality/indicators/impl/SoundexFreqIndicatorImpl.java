@@ -96,7 +96,9 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      * @generated NOT getDistinctCount(Object dataValue)
      */
     public Long getDistinctCount(Object dataValue) {
-        Long freq = this.valueToDistinctFreq.get(dataValue);
+        // MOD xqliu 2009-07-01 bug 7068
+        Long freq = this.valueToDistinctFreq == null ? null : this.valueToDistinctFreq.get(dataValue);
+        // ~
         return (freq == null) ? 0L : freq;
 
     }
