@@ -943,6 +943,12 @@
            name="Create Exchange Folder"
            version="3.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.ReorderingLibraryFoldersTask"
+           id="org.talend.dataprofiler.core.migration.impl.ReorderingLibraryFoldersTask"
+           name="Reordering library folders"
+           version="3.2.0">
+     </workspacetask>     
   </extension>
 
 </plugin>

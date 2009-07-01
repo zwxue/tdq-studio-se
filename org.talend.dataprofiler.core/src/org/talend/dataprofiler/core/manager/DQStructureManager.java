@@ -125,7 +125,11 @@ public final class DQStructureManager {
     public static final String PROJECT_TDQ_PROPERTY = "PROJECT_TDQ_PROPERTY"; //$NON-NLS-1$
 
     public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
+    
+    public static final String RULES = DefaultMessagesImpl.getString("DQStructureManager.rules"); //$NON-NLS-1$
 
+    public static final String SQL = DefaultMessagesImpl.getString("DQStructureManager.sqls"); //$NON-NLS-1$
+    public static final String REGEX = DefaultMessagesImpl.getString("DQStructureManager.regex"); //$NON-NLS-1$
     private List<String> modleElementSuffixs = null;
 
     private static DQStructureManager manager = new DQStructureManager();
@@ -168,7 +172,10 @@ public final class DQStructureManager {
 
             // create "Libraries" project
             IFolder librariesFoler = this.createNewFoler(rootProject, ResourceManager.LIBRARIES_FOLDER_NAME);
-            createNewFoler = this.createNewFoler(librariesFoler, PATTERNS);
+            // ~ MOD mzhao 2009-07-01 feature 7482.
+            IFolder patternFoler = this.createNewFoler(librariesFoler, PATTERNS);
+            createNewFoler = this.createNewFoler(patternFoler, REGEX);
+
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, PATTERNS_FOLDER_PROPERTY);
             // check version File
             WorkspaceVersionHelper.storeVersion();
@@ -176,7 +183,9 @@ public final class DQStructureManager {
             // 'org.talend.dataprofiler.core/patterns' to folder
             // "Libraries/Patterns".
             this.copyFilesToFolder(plugin, PATTERN_PATH, true, createNewFoler, null);
-            createNewFoler = this.createNewFoler(librariesFoler, SQL_PATTERNS);
+            // ~ MOD mzhao 2009-07-01 feature 7482.
+            createNewFoler = this.createNewFoler(patternFoler, SQL);
+            // ~
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, SQLPATTERNS_FOLDER_PROPERTY);
 
             // Copy the internet folder from
@@ -189,8 +198,10 @@ public final class DQStructureManager {
             // Copy the .sql files from 'org.talend.dataprofiler.core/demo' to
             // folder "Libraries/Source Files".
             this.copyFilesToFolder(plugin, DEMO_PATH, true, createNewFoler, null);
-            // MOD xqliu 2009-02-14 bug 6015
-            createNewFoler = this.createNewFoler(librariesFoler, DQ_RULES);
+            // MOD xqliu 2009-02-14 bug 6015 MOD mzhao 2009-07-01 feature 7482.
+            createNewFoler = this.createNewFoler(librariesFoler, RULES);
+
+            createNewFoler = this.createNewFoler(createNewFoler, SQL);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, DQRULES_FOLDER_PROPERTY);
             // Copy the .sql files from 'org.talend.dataprofiler.core/dqrules'
             // to folder "Libraries/DQ Rules".
