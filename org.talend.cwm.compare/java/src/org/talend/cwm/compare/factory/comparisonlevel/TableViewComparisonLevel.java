@@ -134,9 +134,17 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     // MOD hcheng 2006-06-26.For 7772,error reload column list.
     protected void handleUpdateElement(UpdateAttribute updateAttribute) {
         EObject leftElement = updateAttribute.getLeftElement();
+        // If column name change.
         TdColumn columnSetSwitchLeft = SwitchHelpers.COLUMN_SWITCH.doSwitch(leftElement);
+        // If column attribute change.
+        if (columnSetSwitchLeft == null) {
+            columnSetSwitchLeft = (TdColumn) leftElement.eContainer();
+        }
         EObject rightElement = updateAttribute.getRightElement();
         TdColumn columnSetSwitchRight = SwitchHelpers.COLUMN_SWITCH.doSwitch(rightElement);
+        if (columnSetSwitchRight == null) {
+            columnSetSwitchRight = (TdColumn) rightElement.eContainer();
+        }
         if (columnSetSwitchLeft != null && columnSetSwitchRight != null) {
             ColumnSet columnSet = (ColumnSet) selectedObj;
             ColumnSetHelper.removeColumn(columnSetSwitchLeft, columnSet);
