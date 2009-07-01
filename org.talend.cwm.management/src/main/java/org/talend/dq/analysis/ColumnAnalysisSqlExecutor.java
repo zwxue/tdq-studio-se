@@ -284,7 +284,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternFreqIndicator())
                         || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPatternLowFreqIndicator())) {
                     // TODO scorreia get user defined functions for pattern finder
-                    colName = dbms().getPatternFinderDefaultFunction(colName);
+                    // MOD xqliu 2009-07-01 bug 7818
+                    if (!Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
+                        colName = dbms().getPatternFinderDefaultFunction(colName);
+                    }
+                    // ~
                 }
 
                 completedSqlString = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), colName,
