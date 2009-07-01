@@ -19,8 +19,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.exception.ExceptionHandler;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment

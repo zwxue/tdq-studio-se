@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
-import org.talend.dataquality.ResourceManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC mzhao class global comment. This class provide abstract methods for

@@ -20,6 +20,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 
@@ -29,47 +30,50 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
  */
 public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
-	public DQRepositoryViewLabelProvider() {
-		super(MNComposedAdapterFactory.getAdapterFactory());
-	}
+    public DQRepositoryViewLabelProvider() {
+        super(MNComposedAdapterFactory.getAdapterFactory());
+    }
 
-	public Image getImage(Object element) {
-		if (element instanceof IFolderNode) {
-			return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-		} else if (element instanceof TdDataProvider) {
-			return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-		} else if (element instanceof TdColumn) {
-			if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
-				// get the icon for primary key
-				return ImageLib.getImage(ImageLib.PK_COLUMN);
-			}
-		} else if (element instanceof IEcosComponent) {
-			return ImageLib.getImage(ImageLib.EXCHANGE);
-		}
-		return super.getImage(element);
-	}
+    public Image getImage(Object element) {
+        if (element instanceof IFolderNode) {
+            return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+        } else if (element instanceof TdDataProvider) {
+            return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+        } else if (element instanceof TdColumn) {
+            if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
+                // get the icon for primary key
+                return ImageLib.getImage(ImageLib.PK_COLUMN);
+            }
+        } else if (element instanceof IEcosComponent) {
+            return ImageLib.getImage(ImageLib.EXCHANGE);
+        } else if (element instanceof IndicatorDefinition) {
+            return ImageLib.getImage(ImageLib.OPTION);
+        }
+        return super.getImage(element);
+    }
 
-	public String getText(Object element) {
+    public String getText(Object element) {
 
-		if (element instanceof AbstractFolderNode) {
-			if (((IFolderNode) element).getChildren() != null) {
-				return ((IFolderNode) element).getName()
-						+ "(" + ((IFolderNode) element).getChildren().length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-			}
+        if (element instanceof AbstractFolderNode) {
+            if (((IFolderNode) element).getChildren() != null) {
+                return ((IFolderNode) element).getName() + "(" + ((IFolderNode) element).getChildren().length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+            }
 
-			return ((IFolderNode) element).getName();
-		} else if (element instanceof IEcosComponent) {
-			return ((IEcosComponent) element).getName();
-		}
+            return ((IFolderNode) element).getName();
+        } else if (element instanceof IEcosComponent) {
+            return ((IEcosComponent) element).getName();
+        } else if (element instanceof IndicatorDefinition) {
+            return ((IndicatorDefinition) element).getName();
+        }
 
-		// PTODO qzhang fixed bug 4176: Display expressions as children of the
-		// patterns
-		if (element instanceof RegularExpression) {
-			RegularExpression regExp = (RegularExpression) element;
-			return regExp.getExpression().getLanguage();
-		} else if (element instanceof TdDataProvider) {
-			return ((TdDataProvider) element).getName();
-		}
-		return super.getText(element);
-	}
+        // PTODO qzhang fixed bug 4176: Display expressions as children of the
+        // patterns
+        if (element instanceof RegularExpression) {
+            RegularExpression regExp = (RegularExpression) element;
+            return regExp.getExpression().getLanguage();
+        } else if (element instanceof TdDataProvider) {
+            return ((TdDataProvider) element).getName();
+        }
+        return super.getText(element);
+    }
 }

@@ -23,7 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
-import org.talend.dataquality.ResourceManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment

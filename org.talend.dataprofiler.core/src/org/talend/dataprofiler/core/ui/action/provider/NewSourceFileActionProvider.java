@@ -28,7 +28,7 @@ import org.talend.dataprofiler.core.sql.DeleteSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.sql.RenameFolderAction;
 import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
-import org.talend.dataquality.ResourceManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>

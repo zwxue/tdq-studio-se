@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.model.nodes.foldernode;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -58,7 +59,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
     public void loadChildren() {
         // MOD xqliu 2009-04-27 bug 6507
         // get columns from either tables or views.
-        ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(this.getParent());
+        ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch((EObject) getParent());
         if (columnSet != null) {
             List<TdColumn> columnList = null;
             if (FILTER_FLAG) {

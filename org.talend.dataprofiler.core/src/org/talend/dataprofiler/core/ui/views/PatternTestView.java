@@ -63,7 +63,6 @@ import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -74,6 +73,7 @@ import org.talend.dataquality.exception.MessageBoxExceptionHandler;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**

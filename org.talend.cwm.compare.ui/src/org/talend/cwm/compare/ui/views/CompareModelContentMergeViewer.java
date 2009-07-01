@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -50,141 +51,123 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 @SuppressWarnings("restriction")
 public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
-	private static Logger log = Logger
-			.getLogger(CompareModelContentMergeViewer.class);
-	private Object selectedOjbect = null;
 
-	public CompareModelContentMergeViewer(Composite parent,
-			CompareConfiguration config, Object selObj) {
-		super(parent, config);
-		selectedOjbect = selObj;
-	}
+    private static Logger log = Logger.getLogger(CompareModelContentMergeViewer.class);
 
-	@Override
-	protected void createToolItems(ToolBarManager tbm) {
+    private Object selectedOjbect = null;
 
-		// NEXT DIFF
-		final Action nextDiff = new AbstractCompareAction(ResourceBundle
-				.getBundle(BUNDLE_NAME), "action.NextDiff.") { //$NON-NLS-1$
+    public CompareModelContentMergeViewer(Composite parent, CompareConfiguration config, Object selObj) {
+        super(parent, config);
+        selectedOjbect = selObj;
+    }
 
-			@Override
-			public void run() {
-				navigate(true);
-			}
-		};
-		final ActionContributionItem nextDiffContribution = new ActionContributionItem(
-				nextDiff);
-		nextDiffContribution.setVisible(true);
-		tbm.appendToGroup("navigation", nextDiffContribution); //$NON-NLS-1$
-		// PREVIOUS DIFF
-		final Action previousDiff = new AbstractCompareAction(ResourceBundle
-				.getBundle(BUNDLE_NAME), "action.PrevDiff.") { //$NON-NLS-1$
+    @Override
+    protected void createToolItems(ToolBarManager tbm) {
 
-			@Override
-			public void run() {
-				navigate(false);
-			}
-		};
-		final ActionContributionItem previousDiffContribution = new ActionContributionItem(
-				previousDiff);
-		previousDiffContribution.setVisible(true);
-		tbm.appendToGroup("navigation", previousDiffContribution); //$NON-NLS-1$
+        // NEXT DIFF
+        final Action nextDiff = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME), "action.NextDiff.") { //$NON-NLS-1$
 
-		// ~ MOD mzhao 2009-03-09 remove no necessity actions.
-		IContributionItem[] icItems = tbm.getItems();
-		for (IContributionItem conbItem : icItems) {
+            @Override
+            public void run() {
+                navigate(true);
+            }
+        };
+        final ActionContributionItem nextDiffContribution = new ActionContributionItem(nextDiff);
+        nextDiffContribution.setVisible(true);
+        tbm.appendToGroup("navigation", nextDiffContribution); //$NON-NLS-1$
+        // PREVIOUS DIFF
+        final Action previousDiff = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME), "action.PrevDiff.") { //$NON-NLS-1$
 
-			if (conbItem instanceof ActionContributionItem) {
-				// ChangePropertyAction
-				IAction a = ((ActionContributionItem) conbItem).getAction();
-				if (a != null && a instanceof ChangePropertyAction) {
-					tbm.remove(conbItem);
-					conbItem.dispose();
-					continue;
-				}
-				// Action
-				if (((ActionContributionItem) conbItem).getAction() != null
-						&& ((ActionContributionItem) conbItem).getAction()
-								.getActionDefinitionId() != null) {
-					if (((ActionContributionItem) conbItem).getAction()
-							.getActionDefinitionId().equals(
-									COPY_LEFT_TO_RIGHT_ID)) {
-						tbm.remove(conbItem);
-						conbItem.dispose();
-					}
-				}
-			}
+            @Override
+            public void run() {
+                navigate(false);
+            }
+        };
+        final ActionContributionItem previousDiffContribution = new ActionContributionItem(previousDiff);
+        previousDiffContribution.setVisible(true);
+        tbm.appendToGroup("navigation", previousDiffContribution); //$NON-NLS-1$
 
-		}
-		tbm.update(true);
-		// ~
+        // ~ MOD mzhao 2009-03-09 remove no necessity actions.
+        IContributionItem[] icItems = tbm.getItems();
+        for (IContributionItem conbItem : icItems) {
 
-	}
+            if (conbItem instanceof ActionContributionItem) {
+                // ChangePropertyAction
+                IAction a = ((ActionContributionItem) conbItem).getAction();
+                if (a != null && a instanceof ChangePropertyAction) {
+                    tbm.remove(conbItem);
+                    conbItem.dispose();
+                    continue;
+                }
+                // Action
+                if (((ActionContributionItem) conbItem).getAction() != null
+                        && ((ActionContributionItem) conbItem).getAction().getActionDefinitionId() != null) {
+                    if (((ActionContributionItem) conbItem).getAction().getActionDefinitionId().equals(COPY_LEFT_TO_RIGHT_ID)) {
+                        tbm.remove(conbItem);
+                        conbItem.dispose();
+                    }
+                }
+            }
 
-	@Override
-	protected void copy(boolean leftToRight) {
-		// First check dependencies.
-		ModelElement modelElement = null;
-		IFile resourceFile = null;
-		// File
-		if (selectedOjbect instanceof IFile) {
-			TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper
-					.getInstance().findProvider((IFile) selectedOjbect);
-			modelElement = returnValue.getObject();
-		} else {
-			// Folder
-			Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH
-					.doSwitch(((AbstractDatabaseFolderNode) selectedOjbect)
-							.getParent());
+        }
+        tbm.update(true);
+        // ~
 
-			if (ctatlogSwtich != null) {
-				resourceFile = PrvResourceFileHelper.getInstance()
-						.findCorrespondingFile(
-								DataProviderHelper
-										.getTdDataProvider(ctatlogSwtich));
-				modelElement = DataProviderHelper
-						.getTdDataProvider(ctatlogSwtich);
-			}
-			ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
-					.doSwitch(((AbstractDatabaseFolderNode) selectedOjbect)
-							.getParent());
-			if (columnSet != null) {
-				resourceFile = PrvResourceFileHelper.getInstance()
-						.findCorrespondingFile(
-								DataProviderHelper.getDataProvider(columnSet));
-				modelElement = DataProviderHelper.getDataProvider(columnSet);
-			}
-		}
-		if (modelElement != null && resourceFile != null) {
-			String titleMessage = DefaultMessagesImpl
-					.getString("CompareModelContentMergeViewer.ImpactAnalyses");
+    }
 
-			int showDialog = DeleteModelElementConfirmDialog
-					.showElementImpactDialog(null,
-							new ModelElement[] { modelElement }, titleMessage,
-							titleMessage);
-			if (showDialog == Window.OK) {
-				EObjectHelper
-						.removeDependencys(new IResource[] { resourceFile });
-			} else {
-				return;
-			}
-		}
+    @Override
+    protected void copy(boolean leftToRight) {
+        // First check dependencies.
+        ModelElement modelElement = null;
+        IFile resourceFile = null;
+        // File
+        if (selectedOjbect instanceof IFile) {
+            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance()
+                    .findProvider((IFile) selectedOjbect);
+            modelElement = returnValue.getObject();
+        } else {
+            // Folder
+            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect)
+                    .getParent());
 
-		int diffItemsCount = ((ModelCompareInput) getInput()).getDiffAsList()
-				.size();
-		try {
-			super.copy(leftToRight);
-			// MOD mzhao 2009-03-11 copy from right to left.need reload the
-			// currently selected element.
-			if (!leftToRight && diffItemsCount > 0) {
-				new ReloadDatabaseAction(selectedOjbect, null).run();
-			}
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-		}
+            if (ctatlogSwtich != null) {
+                resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
+                        DataProviderHelper.getTdDataProvider(ctatlogSwtich));
+                modelElement = DataProviderHelper.getTdDataProvider(ctatlogSwtich);
+            }
+            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
+                    .doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect).getParent());
+            if (columnSet != null) {
+                resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
+                        DataProviderHelper.getDataProvider(columnSet));
+                modelElement = DataProviderHelper.getDataProvider(columnSet);
+            }
+        }
+        if (modelElement != null && resourceFile != null) {
+            String titleMessage = DefaultMessagesImpl.getString("CompareModelContentMergeViewer.ImpactAnalyses");
 
-	}
+            int showDialog = DeleteModelElementConfirmDialog.showElementImpactDialog(null, new ModelElement[] { modelElement },
+                    titleMessage, titleMessage);
+            if (showDialog == Window.OK) {
+                EObjectHelper.removeDependencys(new IResource[] { resourceFile });
+            } else {
+                return;
+            }
+        }
 
-	private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight";
+        int diffItemsCount = ((ModelCompareInput) getInput()).getDiffAsList().size();
+        try {
+            super.copy(leftToRight);
+            // MOD mzhao 2009-03-11 copy from right to left.need reload the
+            // currently selected element.
+            if (!leftToRight && diffItemsCount > 0) {
+                new ReloadDatabaseAction(selectedOjbect, null).run();
+            }
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
+        }
+
+    }
+
+    private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight";
 }

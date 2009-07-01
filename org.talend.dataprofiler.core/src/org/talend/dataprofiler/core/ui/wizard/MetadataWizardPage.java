@@ -43,7 +43,7 @@ import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.filter.TypedViewerFilter;
-import org.talend.dataquality.ResourceManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * @author zqin

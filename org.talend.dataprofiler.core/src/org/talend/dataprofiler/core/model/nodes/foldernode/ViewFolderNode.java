@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
@@ -52,11 +53,11 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
     @Override
     public void loadChildren() {
         // MODSCA 2008-03-14 load children also when no catalog is given, but a schema exists (e.g. for DB2 database)
-        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(this.getParent());
+        TdCatalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch((EObject) getParent());
         if (catalog != null) {
             loadChildrenLow(catalog, catalog, null, new ArrayList<TdView>());
         } else {
-            TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(this.getParent());
+            TdSchema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch((EObject) getParent());
             if (schema != null) {
                 loadChildrenLow(schema, null, schema, new ArrayList<TdView>());
             }

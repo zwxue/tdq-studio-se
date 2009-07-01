@@ -73,11 +73,12 @@ import org.talend.dataprofiler.core.ui.views.filters.AbstractViewerFilter;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.views.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.views.filters.ReportingFilter;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
 /**

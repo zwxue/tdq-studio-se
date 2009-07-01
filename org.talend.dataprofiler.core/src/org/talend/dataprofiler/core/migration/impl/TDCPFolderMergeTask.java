@@ -33,7 +33,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractMigrationTask;
-import org.talend.dataquality.ResourceManager;
+import org.talend.resource.ResourceManager;
 
 /**
  * 

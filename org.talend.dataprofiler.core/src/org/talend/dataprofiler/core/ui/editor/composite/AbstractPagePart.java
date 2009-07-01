@@ -81,16 +81,10 @@ public abstract class AbstractPagePart {
      * ADD mzhao 2009-05-05 bug:6587.
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ColumnIndicator[] indicators, Tree tree) {
-        // MOD mzhao 2009-06-09 feature 5887
-        // if (!isAnalyzedColumnsEmpty(tree)) {
-        // List<TdDataProvider> providerList = new
-        // ArrayList<TdDataProvider>();
-        TdDataProvider tdProvider = null;
         if (indicators != null && indicators.length != 0) {
-            tdProvider = DataProviderHelper.getTdDataProvider(indicators[0].getTdColumn());
+            TdDataProvider tdProvider = (TdDataProvider) masterPage.getAnalysis().getContext().getConnection();
             setConnectionState(masterPage, tdProvider);
         }
-        // }
     }
 
     /**

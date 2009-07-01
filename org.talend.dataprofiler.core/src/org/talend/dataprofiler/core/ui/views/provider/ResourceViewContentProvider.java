@@ -27,140 +27,129 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.model.nodes.foldernode.IndicatorFolderNode;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataquality.PluginConstant;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
 public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
-	private static Logger log = Logger
-			.getLogger(ResourceViewContentProvider.class);
+    private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
 
-	// private static Logger log =
-	// Logger.getLogger(ResourceViewContentProvider.class);
+    // private static Logger log =
+    // Logger.getLogger(ResourceViewContentProvider.class);
 
-	private List<IContainer> needSortContainers;
+    private List<IContainer> needSortContainers;
 
-	/**
-	 * DOC rli ResourceViewContentProvider constructor comment.
-	 */
-	public ResourceViewContentProvider() {
-		super();
-		needSortContainers = new ArrayList<IContainer>();
-		needSortContainers.add(ResourceManager.getDataProfilingFolder()
-				.getFolder(DQStructureManager.ANALYSIS));
-		needSortContainers.add(ResourceManager.getDataProfilingFolder()
-				.getFolder(DQStructureManager.REPORTS));
-		needSortContainers.add(ResourceManager.getMetadataFolder().getFolder(
-				PluginConstant.DB_CONNECTIONS));
-	}
+    /**
+     * DOC rli ResourceViewContentProvider constructor comment.
+     */
+    public ResourceViewContentProvider() {
+        super();
+        needSortContainers = new ArrayList<IContainer>();
+        needSortContainers.add(ResourceManager.getDataProfilingFolder().getFolder(DQStructureManager.ANALYSIS));
+        needSortContainers.add(ResourceManager.getDataProfilingFolder().getFolder(DQStructureManager.REPORTS));
+        needSortContainers.add(ResourceManager.getMetadataFolder().getFolder(PluginConstant.DB_CONNECTIONS));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.ui.internal.navigator.resources.workbench.
-	 * ResourceExtensionContentProvider#getChildren(java.lang.Object)
-	 */
-	@Override
-	public Object[] getChildren(Object element) {
-		if (element instanceof IWorkspaceRoot) {
-			Object currentOpenProject = null;
-			for (Object child : super.getChildren(element)) {
-				if (child instanceof IProject) {
-					if (((IProject) child).getName().equals(
-							ResourceManager.getRootProjectName())) {
-						currentOpenProject = child;
-						break;
-					}
-				}
-			}
-			List<Object> folders = new ArrayList<Object>();
-			try {
-				Object[] rootFolders = new Object[0];
-				rootFolders = ((IProject) currentOpenProject).members(false);
-				for (Object folder : rootFolders) {
-					if (folder instanceof IFolder
-							&& ((IFolder) folder).getName().startsWith(
-									DQStructureManager.PREFIX_TDQ)) {
-						// ~ MOD mzhao 2009-04-13, Move reporting db folder into
-						// project folder.
-						if (((IFolder) folder).getName().trim().equals(
-								"TDQ_reporting_db")) {
-							continue;
-						}
-						// ~
-						folders.add(folder);
-					}
-				}
-			} catch (CoreException e) {
-				log.error(e);
-			}
-			return folders.toArray();
-		} else if (element instanceof IFile) {
-			IFile file = (IFile) element;
-			if (file.getName().endsWith(
-					NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
-				// MOD mzhao 2009-04-20,Bug 6349.
-				Pattern pattern = PatternResourceFileHelper.getInstance()
-						.findPattern(file);
-				RegularExpression[] regularExp = new RegularExpression[pattern
-						.getComponents().size()];
-				int peIdx = 0;
-				for (PatternComponent patCom : pattern.getComponents()) {
-					regularExp[peIdx] = (RegularExpression) patCom;
-					peIdx++;
-				}
-				return regularExp;
-			}
-		} else if (element instanceof IFolder) {
-			IFolder folder = (IFolder) element;
-			if (folder.getName().equals(DQStructureManager.EXCHANGE)) {
-				String category = "1";
-				String version = CorePlugin.getDefault().getProductVersion()
-						.toString();
-				return ComponentSearcher.getAvailableComponentExtensions(
-						version, category).toArray();
-			}
-		}
-		if (needSortContainers.contains(element)) {
-			return sort(super.getChildren(element));
-		}
-		return super.getChildren(element);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.eclipse.ui.internal.navigator.resources.workbench.
+     * ResourceExtensionContentProvider#getChildren(java.lang.Object)
+     */
+    @Override
+    public Object[] getChildren(Object element) {
+        if (element instanceof IWorkspaceRoot) {
+            Object currentOpenProject = null;
+            for (Object child : super.getChildren(element)) {
+                if (child instanceof IProject) {
+                    if (((IProject) child).getName().equals(ResourceManager.getRootProjectName())) {
+                        currentOpenProject = child;
+                        break;
+                    }
+                }
+            }
+            List<Object> folders = new ArrayList<Object>();
+            try {
+                Object[] rootFolders = new Object[0];
+                rootFolders = ((IProject) currentOpenProject).members(false);
+                for (Object folder : rootFolders) {
+                    if (folder instanceof IFolder && ((IFolder) folder).getName().startsWith(DQStructureManager.PREFIX_TDQ)) {
+                        // ~ MOD mzhao 2009-04-13, Move reporting db folder into
+                        // project folder.
+                        if (((IFolder) folder).getName().trim().equals("TDQ_reporting_db")) {
+                            continue;
+                        }
+                        // ~
+                        folders.add(folder);
+                    }
+                }
+            } catch (CoreException e) {
+                log.error(e);
+            }
+            return folders.toArray();
+        } else if (element instanceof IFile) {
+            IFile file = (IFile) element;
+            if (file.getName().endsWith(NewSourcePatternActionProvider.EXTENSION_PATTERN)) {
+                // MOD mzhao 2009-04-20,Bug 6349.
+                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                RegularExpression[] regularExp = new RegularExpression[pattern.getComponents().size()];
+                int peIdx = 0;
+                for (PatternComponent patCom : pattern.getComponents()) {
+                    regularExp[peIdx] = (RegularExpression) patCom;
+                    peIdx++;
+                }
+                return regularExp;
+            }
+        } else if (element instanceof IFolder) {
+            IFolder folder = (IFolder) element;
+            if (folder.getName().equals(DQStructureManager.EXCHANGE)) {
+                String category = "1";
+                String version = CorePlugin.getDefault().getProductVersion().toString();
+                return ComponentSearcher.getAvailableComponentExtensions(version, category).toArray();
+            } else if (folder.getName().equals(DQStructureManager.INDICATORS)) {
+                return new Object[] { new IndicatorFolderNode("System") };
+            }
+        }
+        if (needSortContainers.contains(element)) {
+            return sort(super.getChildren(element));
+        }
+        return super.getChildren(element);
+    }
 
-	/**
-	 * Sort the parameter objects, and return the sorted array.
-	 * 
-	 * @param elements
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	protected Object[] sort(Object[] elements) {
-		if (elements == null) {
-			return elements;
-		}
-		List<IResource> list = new ArrayList<IResource>();
-		for (Object element : elements) {
-			list.add((IResource) element);
-			// if (element instanceof IFile) {
-			// list.add((IFile) element);
-			// } else {
-			// log.error("The elemnt:" + ((IFolder) element).getFullPath() +
-			// " can't display on the workspace!");
-			// }
-		}
+    /**
+     * Sort the parameter objects, and return the sorted array.
+     * 
+     * @param elements
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    protected Object[] sort(Object[] elements) {
+        if (elements == null) {
+            return elements;
+        }
+        List<IResource> list = new ArrayList<IResource>();
+        for (Object element : elements) {
+            list.add((IResource) element);
+            // if (element instanceof IFile) {
+            // list.add((IFile) element);
+            // } else {
+            // log.error("The elemnt:" + ((IFolder) element).getFullPath() +
+            // " can't display on the workspace!");
+            // }
+        }
 
-		Collections.sort(list, ComparatorsFactory
-				.buildComparator(ComparatorsFactory.FILEMODEL_COMPARATOR_ID));
-		return list.toArray();
-	}
+        Collections.sort(list, ComparatorsFactory.buildComparator(ComparatorsFactory.FILEMODEL_COMPARATOR_ID));
+        return list.toArray();
+    }
 }

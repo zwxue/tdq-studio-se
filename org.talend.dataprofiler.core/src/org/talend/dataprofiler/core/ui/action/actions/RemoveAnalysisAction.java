@@ -34,12 +34,12 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC rli RemoveAnalysisActionProvider class global comment. Detailled comment

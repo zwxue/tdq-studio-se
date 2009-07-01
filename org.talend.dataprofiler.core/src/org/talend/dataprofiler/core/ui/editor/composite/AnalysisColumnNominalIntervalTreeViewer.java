@@ -62,7 +62,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalA
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -70,6 +69,8 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.resource.relational.Column;
 
 /**

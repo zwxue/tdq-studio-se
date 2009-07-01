@@ -24,7 +24,8 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
 import org.talend.dataquality.PluginConstant;
-import org.talend.dataquality.ResourceManager;
+import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 

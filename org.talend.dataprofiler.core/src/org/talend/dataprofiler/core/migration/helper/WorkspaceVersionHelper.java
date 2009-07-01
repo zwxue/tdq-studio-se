@@ -24,7 +24,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataquality.ResourceManager;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
 
 /**

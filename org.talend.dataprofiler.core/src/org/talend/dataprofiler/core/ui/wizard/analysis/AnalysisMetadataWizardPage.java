@@ -24,8 +24,8 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC zqin class global comment. Detailled comment

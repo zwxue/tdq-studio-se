@@ -81,8 +81,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     public AbstractComparisonLevel(Object selObj) {
         if (selObj instanceof AbstractDatabaseFolderNode) {
             AbstractDatabaseFolderNode fNode = (AbstractDatabaseFolderNode) selObj;
-            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(fNode.getParent());
-            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(fNode.getParent());
+            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch((EObject) fNode.getParent());
+            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch((EObject) fNode.getParent());
             if (ctatlogSwtich != null) {
                 this.selectedObj = ctatlogSwtich;
             } else if (columnSet != null) {

@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.nodes.foldernode;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author rli
@@ -46,9 +45,9 @@ public interface IFolderNode {
      */
     public void setChildren(Object[] children);
 
-    public void setParent(EObject parent);
+    public void setParent(Object parent);
 
-    public EObject getParent();
+    public Object getParent();
 
     public abstract void loadChildren();
 

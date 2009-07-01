@@ -40,7 +40,7 @@ public final class ComparisonLevelFactory {
         if (selectedObject instanceof AbstractDatabaseFolderNode) {
             // MOD mzhao FolderNode param need to pass for later reloading from this folder.
             AbstractDatabaseFolderNode dbFolderNode = (AbstractDatabaseFolderNode) selectedObject;
-            EObject parentEObject = dbFolderNode.getParent();
+            EObject parentEObject = (EObject) dbFolderNode.getParent();
             Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(parentEObject);
             if (ctatlogSwtich != null) {
                 comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);

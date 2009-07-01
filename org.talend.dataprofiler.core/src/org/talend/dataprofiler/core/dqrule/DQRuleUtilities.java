@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IPath;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
@@ -27,6 +26,7 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment

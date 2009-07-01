@@ -40,9 +40,9 @@ import org.talend.dataprofiler.ecos.jobs.ComponentInstaller;
 import org.talend.dataprofiler.ecos.jobs.DownloadListener;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataprofiler.ecos.service.JobService;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.exception.ExceptionHandler;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment

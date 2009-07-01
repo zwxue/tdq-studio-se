@@ -62,10 +62,11 @@ import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
 import org.talend.dataquality.PluginConstant;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.exception.MessageBoxExceptionHandler;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;

@@ -305,32 +305,6 @@
          </enablement>
       </actionProvider> 
       
-       <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.ModelElementTaskProvider"
-            id="org.talend.dataprofiler.core.ui.action.provider.ModelElementTaskProvider">
-         <enablement>
-            <or>
-               <instanceof
-                     value="orgomg.cwm.objectmodel.core.ModelElement">
-               </instanceof>
-               <and>
-                  <instanceof
-                        value="org.eclipse.core.resources.IFile">
-                  </instanceof>
-                  <or>
-                     <test
-                           property="org.eclipse.core.resources.name"
-                           value="*.rep">
-                     </test>
-                     <test
-                           property="org.eclipse.core.resources.name"
-                           value="*.ana">
-                     </test>
-                  </or></and>
-            </or>
-         </enablement>
-      </actionProvider> 
-      
       
       <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider"
@@ -635,6 +609,50 @@
                      value="*.ana">
                </test>
             </and>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.ImportExportIndicatorProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.ImportExportIndicatorProvider">
+         <enablement>
+            <instanceof
+                  value="org.talend.dataprofiler.core.model.nodes.foldernode.IndicatorFolderNode">
+            </instanceof>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.IndicatorDefinitionActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.IndicatorDefinitionActionProvider">
+         <enablement>
+            <instanceof
+                  value="org.talend.dataquality.indicators.definition.IndicatorDefinition">
+            </instanceof>
+         </enablement>
+      </actionProvider> 
+      
+       <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.ModelElementTaskProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.ModelElementTaskProvider">
+         <enablement>
+            <or>
+               <instanceof
+                     value="orgomg.cwm.objectmodel.core.ModelElement">
+               </instanceof>
+               <and>
+                  <instanceof
+                        value="org.eclipse.core.resources.IFile">
+                  </instanceof>
+                  <or>
+                     <test
+                           property="org.eclipse.core.resources.name"
+                           value="*.rep">
+                     </test>
+                     <test
+                           property="org.eclipse.core.resources.name"
+                           value="*.ana">
+                     </test>
+                  </or></and>
+            </or>
          </enablement>
       </actionProvider>
   </extension>

@@ -81,7 +81,6 @@ import org.talend.dataprofiler.core.ui.views.TableViewerDND;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.DQRuleLabelProvider;
 import org.talend.dataprofiler.core.ui.wizard.indicator.TableIndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -98,6 +97,8 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Table;

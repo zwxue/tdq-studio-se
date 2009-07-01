@@ -39,7 +39,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
-import org.talend.dataquality.ResourceManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -50,6 +49,7 @@ import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC zqin class global comment. Detailled comment

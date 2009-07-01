@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.nodes.foldernode;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author rli
@@ -24,7 +23,7 @@ public abstract class AbstractFolderNode implements IFolderNode {
 
     private Object[] children;
 
-    private EObject parent;
+    private Object parent;
 
     public AbstractFolderNode(String name) {
         this.name = name;
@@ -51,11 +50,11 @@ public abstract class AbstractFolderNode implements IFolderNode {
         this.children = children;
     }
 
-    public void setParent(EObject parent) {
+    public void setParent(Object parent) {
         this.parent = parent;
     }
 
-    public EObject getParent() {
+    public Object getParent() {
         return parent;
     }
 
