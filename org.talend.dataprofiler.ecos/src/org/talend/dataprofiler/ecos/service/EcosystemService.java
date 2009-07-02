@@ -90,7 +90,7 @@ public abstract class EcosystemService {
             getVersionList();
         }
         Collection<String> branch = versionMap.getCollection(version);
-        return branch.toArray(new String[branch.size()]);
+        return branch == null ? null : branch.toArray(new String[branch.size()]);
     }
 
     public static String getMainVersion(String version) {
@@ -203,10 +203,14 @@ public abstract class EcosystemService {
         StringBuffer url = new StringBuffer();
         url.append(REVISION_LIST_URL).append("?categories=").append(category).append("&version="); //$NON-NLS-1$ //$NON-NLS-2$
         String[] branch = getBranch(version);
-        url.append(StringUtils.join(branch, ",")); //$NON-NLS-1$
-        String jsonContent = sendGetRequest(url.toString());
-        System.out.println(url);
-        return parseJsonObject(jsonContent, RevisionInfo.class);
+        if (branch != null) {
+            url.append(StringUtils.join(branch, ",")); //$NON-NLS-1$
+            String jsonContent = sendGetRequest(url.toString());
+            System.out.println(url);
+            return parseJsonObject(jsonContent, RevisionInfo.class);
+        }
+
+        return Collections.EMPTY_LIST;
     }
 
     /**
