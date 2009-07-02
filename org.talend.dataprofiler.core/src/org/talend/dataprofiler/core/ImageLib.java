@@ -118,7 +118,9 @@ public final class ImageLib {
 
 	public static final String ADD_PATTERN = "add_pattern.png"; //$NON-NLS-1$
 
-	/** PK icon from SQL Explorer. */
+    public static final String SAVE = "save.gif";
+
+    /** PK icon from SQL Explorer. */
 	public static final String PK_DECORATE = "pk_decorate.gif"; //$NON-NLS-1$
 
 	public static final String EDIT_COPY = "copy.gif"; //$NON-NLS-1$

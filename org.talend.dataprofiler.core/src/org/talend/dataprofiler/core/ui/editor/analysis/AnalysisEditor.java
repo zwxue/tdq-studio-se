@@ -21,6 +21,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
+import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.analysis.Analysis;
@@ -55,6 +56,10 @@ public class AnalysisEditor extends CommonFormEditor {
     private RunAnalysisAction runAction;
 
     private RefreshChartAction refreshAction;
+
+    // MOD xqliu 2009-07-02 bug 7687
+    private DefaultSaveAction saveAction;
+    // ~
 
     private boolean isRefreshResultPage = false;
 
@@ -144,9 +149,12 @@ public class AnalysisEditor extends CommonFormEditor {
 
         TdEditorToolBar toolbar = getToolBar();
         if (toolbar != null && masterPage != null) {
+            // MOD xqliu 2009-07-02 bug 7687
+            saveAction = new DefaultSaveAction(this);
             runAction = new RunAnalysisAction();
             refreshAction = new RefreshChartAction();
-            toolbar.addActions(runAction, refreshAction);
+            toolbar.addActions(saveAction, runAction, refreshAction);
+            // ~
         }
 
     }
@@ -159,14 +167,14 @@ public class AnalysisEditor extends CommonFormEditor {
         super.doSave(monitor);
     }
 
-    public void firePropertyChange(final int propertyId) {
+    protected void firePropertyChange(final int propertyId) {
         if (masterPage.isActive()) {
             // setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
             setRunActionButtonState(true);
+            // MOD xqliu 2009-07-02 bug 7687
+            setSaveActionButtonState(masterPage.isDirty());
+            // ~
         }
-        // MOD xqliu 2009-06-25 bug 7687
-        this.getMasterPage().updateSaveButtonState();
-        // ~
         super.firePropertyChange(propertyId);
     }
 
@@ -211,6 +219,8 @@ public class AnalysisEditor extends CommonFormEditor {
         if (masterPage != null) {
             // setRunActionButtonState(masterPage.canRun().isOk());
             setRunActionButtonState(true);
+            // ADD xqliu 2009-07-02 bug 7686
+            setSaveActionButtonState(false);
         }
     }
 
@@ -243,6 +253,17 @@ public class AnalysisEditor extends CommonFormEditor {
     public void setRunActionButtonState(boolean state) {
         if (runAction != null) {
             runAction.setEnabled(state);
+        }
+    }
+
+    /**
+     * DOC xqliu 2009-07-02 bug 7687.
+     * 
+     * @param state
+     */
+    public void setSaveActionButtonState(boolean state) {
+        if (saveAction != null) {
+            saveAction.setEnabled(state);
         }
     }
 }

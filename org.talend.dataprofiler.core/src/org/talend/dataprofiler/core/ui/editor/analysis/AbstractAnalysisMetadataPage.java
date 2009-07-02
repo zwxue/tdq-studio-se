@@ -111,9 +111,6 @@ public abstract class AbstractAnalysisMetadataPage extends
 			this.isDirty = isDirty;
 			((AnalysisEditor) this.getEditor())
 					.firePropertyChange(IEditorPart.PROP_DIRTY);
-			// MOD xqliu 2009-06-25 bug 7687
-			this.firePropertyChange(IEditorPart.PROP_DIRTY);
-			// ~
 		}
 	}
 

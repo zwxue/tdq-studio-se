@@ -180,10 +180,6 @@ public class ColumnsComparisonMasterDetailsPage extends
 
 		createDataFilterSection(form, topComp);
 		
-        // MOD xqliu 2009-06-25 bug 7687
-        setSaveButton(createSaveButton(topComp));
-        // ~
-
         // MOD mzhao 2009-06-17 feature 5887.
         foldingSections(new Section[] { metadataSection, columnsComparisonSection, dataFilterSection });
         // ~

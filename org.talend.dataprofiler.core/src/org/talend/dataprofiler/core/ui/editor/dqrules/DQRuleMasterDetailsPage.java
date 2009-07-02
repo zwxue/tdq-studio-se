@@ -148,10 +148,6 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         createDQRuleDefinitionSection(topComp);
         createJoinConditionSection(topComp);
         
-        // MOD xqliu 2009-06-25 bug 7687
-        setSaveButton(createSaveButton(topComp));
-        // ~
-
         // MOD xqliu 2009-06-23 bug 7481
         foldingSections(new Section[] { metadataSection, dqRuleDefinitionSection, joinConditionSection });
         // ~

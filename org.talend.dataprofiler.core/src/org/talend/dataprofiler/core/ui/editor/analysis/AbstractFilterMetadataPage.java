@@ -312,9 +312,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         createAnalysisParamSection(topComp);
         createAnalysisSummarySection(topComp);
         createStatisticalSection(topComp);
-        // MOD xqliu 2009-06-25 bug 7687
-        setSaveButton(createSaveButton(topComp));
-        // ~
 
         // MOD xqliu 2009-06-23 bug 7481
         foldingSections(new Section[] { metadataSection, analysisParamSection, statisticalSection, summarySection });

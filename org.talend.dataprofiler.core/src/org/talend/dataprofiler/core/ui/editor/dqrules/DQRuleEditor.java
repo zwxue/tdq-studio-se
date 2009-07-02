@@ -17,7 +17,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
+import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.exception.ExceptionHandler;
 
 /**
@@ -27,6 +29,11 @@ public class DQRuleEditor extends CommonFormEditor {
 
     private IFormPage masterPage;
 
+    // MOD xqliu 2009-07-02 bug 7687
+    private DefaultSaveAction saveAction;
+
+    // ~
+    
     protected void addPages() {
         masterPage = new DQRuleMasterDetailsPage(
                 this,
@@ -37,6 +44,14 @@ public class DQRuleEditor extends CommonFormEditor {
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
+        
+        // ADD xqliu 2009-07-02 bug 7687
+        TdEditorToolBar toolbar = getToolBar();
+        if (toolbar != null && masterPage != null) {
+            saveAction = new DefaultSaveAction(this);
+            toolbar.addActions(saveAction);
+        }
+        // ~
     }
 
     public void doSave(IProgressMonitor monitor) {
@@ -47,12 +62,9 @@ public class DQRuleEditor extends CommonFormEditor {
 
     }
 
-    public void firePropertyChange(final int propertyId) {
-        // MOD xqliu 2009-06-25 bug 7687
-        IFormPage temp = this.getMasterPage();
-        if (temp instanceof DQRuleMasterDetailsPage) {
-            ((DQRuleMasterDetailsPage) temp).updateSaveButtonState();
-        }
+    protected void firePropertyChange(final int propertyId) {
+        // ADD xqliu 2009-07-02 bug 7687
+        setSaveActionButtonState(isDirty());
         // ~
         super.firePropertyChange(propertyId);
     }
@@ -64,5 +76,25 @@ public class DQRuleEditor extends CommonFormEditor {
      */
     public IFormPage getMasterPage() {
         return this.masterPage;
+    }
+    
+    @Override
+    protected void pageChange(int newPageIndex) {
+        super.pageChange(newPageIndex);
+        // ADD xqliu 2009-07-02 bug 7686
+        if (masterPage != null) {
+            setSaveActionButtonState(false);
+        }
+    }
+
+    /**
+     * DOC xqliu 2009-07-02 bug 7687.
+     * 
+     * @param state
+     */
+    public void setSaveActionButtonState(boolean state) {
+        if (saveAction != null) {
+            saveAction.setEnabled(state);
+        }
     }
 }
