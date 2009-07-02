@@ -83,6 +83,9 @@ public abstract class AbstractPagePart {
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ColumnIndicator[] indicators, Tree tree) {
         if (indicators != null && indicators.length != 0) {
             TdDataProvider tdProvider = (TdDataProvider) masterPage.getAnalysis().getContext().getConnection();
+            if (tdProvider == null) {
+                tdProvider = DataProviderHelper.getTdDataProvider(indicators[0].getTdColumn());
+            }
             setConnectionState(masterPage, tdProvider);
         }
     }
@@ -112,6 +115,11 @@ public abstract class AbstractPagePart {
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, Tree tree) {
         if (!isAnalyzedColumnsEmpty(tree)) {
             TdDataProvider tdProvider = (TdDataProvider) masterPage.getAnalysis().getContext().getConnection();
+            if (tdProvider == null) {
+                AnalysisColumnNominalIntervalTreeViewer treeViewer = (AnalysisColumnNominalIntervalTreeViewer) tree.getData();
+                Column column = treeViewer.getColumnSetMultiValueList().get(0);
+                tdProvider = DataProviderHelper.getTdDataProvider(column);
+            }
             setConnectionState(masterPage, tdProvider);
         }
     }
