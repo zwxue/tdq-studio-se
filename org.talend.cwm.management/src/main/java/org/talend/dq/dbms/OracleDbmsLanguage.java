@@ -219,6 +219,11 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     }
 
     @Override
+    public String getSelectRegexp(String regexLikeExpression) {
+        return "SELECT '1' FROM dual WHERE " + regexLikeExpression; //$NON-NLS-1$ 
+    }
+
+    @Override
     public boolean supportRegexp() {
         ProductVersion dbVersion = getDbVersion();
         if (dbVersion != null) {
