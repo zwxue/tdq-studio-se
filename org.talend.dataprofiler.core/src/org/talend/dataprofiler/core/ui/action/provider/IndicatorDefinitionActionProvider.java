@@ -13,8 +13,10 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.ui.action.actions.OpenIndicatorDefinitionAction;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -28,6 +30,16 @@ public class IndicatorDefinitionActionProvider extends CommonActionProvider {
      */
     @Override
     public void fillContextMenu(IMenuManager menu) {
-        menu.add(new OpenIndicatorDefinitionAction());
+        TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
+        IndicatorDefinition[] definitiones = new IndicatorDefinition[currentSelection.size()];
+        Object[] objs = currentSelection.toArray();
+
+        for (int i = 0; i < objs.length; i++) {
+            if (objs[i] instanceof IndicatorDefinition) {
+                definitiones[i] = (IndicatorDefinition) objs[i];
+            }
+        }
+
+        menu.add(new OpenIndicatorDefinitionAction(definitiones));
     }
 }

@@ -12,18 +12,30 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.SharedImages;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
+import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditorInput;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class OpenIndicatorDefinitionAction extends Action {
 
-    public OpenIndicatorDefinitionAction() {
+    private static Logger log = Logger.getLogger(OpenIndicatorDefinitionAction.class);
+
+    private IndicatorDefinition[] definitiones;
+
+    public OpenIndicatorDefinitionAction(IndicatorDefinition[] definitiones) {
         super("Edit");
-        setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(SharedImages.IMG_TOOL_PASTE));
+        setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
+
+        this.definitiones = definitiones;
     }
 
     /*
@@ -33,7 +45,18 @@ public class OpenIndicatorDefinitionAction extends Action {
      */
     @Override
     public void run() {
-        // TODO Auto-generated method stub
-        super.run();
+        if (definitiones == null) {
+            return;
+        }
+
+        for (IndicatorDefinition definition : definitiones) {
+            IndicatorEditorInput input = new IndicatorEditorInput(definition);
+            try {
+                CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,
+                        IndicatorEditor.class.getName());
+            } catch (PartInitException e) {
+                log.error(e, e);
+            }
+        }
     }
 }

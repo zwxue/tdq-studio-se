@@ -62,6 +62,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected CommonFormEditor currentEditor = null;
 
+    protected ScrolledForm form;
+
+    private String formTitle;
+
+    private String metadataTitle;
+
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (CommonFormEditor) editor;
@@ -74,7 +80,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        final ScrolledForm form = managedForm.getForm();
+        form = managedForm.getForm();
+        form.setText(getFormTitle());
         Composite body = form.getBody();
 
         // TableWrapLayout layout = new TableWrapLayout();
@@ -93,7 +100,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {
-        Section section = createSection(form, topComp, DefaultMessagesImpl.getString("AbstractMetadataFormPage.title"), true, ""); //$NON-NLS-1$ //$NON-NLS-2$
+        Section section = createSection(form, topComp, getMetadataTitle(), true, ""); //$NON-NLS-1$ //$NON-NLS-2$
         Composite labelButtonClient = toolkit.createComposite(section);
         labelButtonClient.setLayout(new GridLayout(2, false));
         Label label = toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.name")); //$NON-NLS-1$
@@ -243,4 +250,39 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         return targetPart;
     }
 
+    /**
+     * Sets the formTitle.
+     * 
+     * @param formTitle the formTitle to set
+     */
+    public void setFormTitle(String formTitle) {
+        this.formTitle = formTitle;
+    }
+
+    /**
+     * Getter for formTitle.
+     * 
+     * @return the formTitle
+     */
+    public String getFormTitle() {
+        return formTitle == null ? "" : formTitle;
+    }
+
+    /**
+     * Sets the metadataTitle.
+     * 
+     * @param metadataTitle the metadataTitle to set
+     */
+    protected void setMetadataTitle(String metadataTitle) {
+        this.metadataTitle = metadataTitle;
+    }
+
+    /**
+     * Getter for metadataTitle.
+     * 
+     * @return the metadataTitle
+     */
+    protected String getMetadataTitle() {
+        return metadataTitle == null ? "" : metadataTitle;
+    }
 }

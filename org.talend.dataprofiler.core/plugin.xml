@@ -749,6 +749,13 @@
             id="org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"
             name="%editor.name.DQRuleEditor">
       </editor>
+      <editor
+            class="org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"
+            extensions="definition"
+            icon="icons/option.png"
+            id="org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"
+            name="%editor.name.IndicatorEditor">
+      </editor>
    </extension>
   <extension
         point="org.eclipse.ui.cheatsheets.cheatSheetContent">

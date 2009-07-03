@@ -184,11 +184,14 @@ public abstract class CommonFormEditor extends FormEditor {
      * DOC qzhang Comment method "refreshDQView".
      */
     protected void refreshDQView() {
-        IFile node = ((FileEditorInput) getEditorInput()).getFile();
-        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IViewPart findView = activePage.findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
-        DQRespositoryView view = (DQRespositoryView) findView;
-        view.getCommonViewer().refresh(node);
+        IEditorInput editorInput = getEditorInput();
+        if (editorInput instanceof FileEditorInput) {
+            IFile node = ((FileEditorInput) editorInput).getFile();
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            IViewPart findView = activePage.findView("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
+            DQRespositoryView view = (DQRespositoryView) findView;
+            view.getCommonViewer().refresh(node);
+        }
     }
 
     public void doSaveAs() {
