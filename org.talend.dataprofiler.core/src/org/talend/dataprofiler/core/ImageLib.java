@@ -142,6 +142,9 @@ public final class ImageLib {
 
 	/** Icon for Talend Exchange folder. */
 	public static final String EXCHANGE = "ecosystem_view.gif";
+	
+	/** Icon of indicator's definition. */
+    public static final String IND_DEFINITION = "IndicatorDefinition.gif";
 
 	/** Icon for Pagination. */
 	public static final String ICON_PAGE_LAST_LNK = "bottomb.gif";

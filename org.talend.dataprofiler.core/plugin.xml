@@ -752,7 +752,7 @@
       <editor
             class="org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"
             extensions="definition"
-            icon="icons/option.png"
+            icon="icons/IndicatorDefinition.gif"
             id="org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor"
             name="%editor.name.IndicatorEditor">
       </editor>
