@@ -54,6 +54,9 @@ public class AnalyzedColumnSetsSynDialog extends AnalyzedElementSynDialog {
 
 				Package anaPackage = ColumnSetHelper
 						.getParentCatalogOrSchema(anaColumnSet);
+				if (anaPackage == null) {
+                    return;
+                }
 				Package connPackage = null;
 				for (Package pk : newDataProvider.getDataPackage()) {
 					if (pk.getName().equalsIgnoreCase(anaPackage.getName())) {

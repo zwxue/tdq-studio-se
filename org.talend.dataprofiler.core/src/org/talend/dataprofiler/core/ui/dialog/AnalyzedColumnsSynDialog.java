@@ -56,8 +56,10 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
 				synedEleMap.put(column, null);
 
 				ColumnSet anaColumnSet = ColumnHelper.getColumnSetOwner(column);
-				Package anaPackage = ColumnSetHelper
-						.getParentCatalogOrSchema(anaColumnSet);
+				Package anaPackage = ColumnSetHelper.getParentCatalogOrSchema(anaColumnSet);
+                if (anaPackage == null) {
+                    return;
+                }
 				Package connPackage = null;
 
 				for (Package pk : newDataProvider.getDataPackage()) {
