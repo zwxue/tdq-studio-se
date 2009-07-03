@@ -5,6 +5,9 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.text.ParseException;
+import java.util.Date;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
@@ -17,6 +20,9 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
+import org.talend.utils.dates.DateUtils;
+import org.talend.utils.dates.ElapsedTime;
+import org.talend.utils.sql.Java2SqlType;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Range Indicator</b></em>'. <!-- end-user-doc
@@ -233,12 +239,28 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
      */
     public String getRange() {
         if (upperValue != null && lowerValue != null) {
-            Double upper = upperValue.getRealValue();
-            Double lower = lowerValue.getRealValue();
-            if (upper != null && lower != null) {
-                double range = upper - lower;
-                return String.valueOf(range);
+            
+            if (Java2SqlType.isNumbericInSQL(upperValue.getDatatype())) {
+                Double upper = upperValue.getRealValue();
+                Double lower = lowerValue.getRealValue();
+                if (upper != null && lower != null) {
+                    double range = upper - lower;
+                    return String.valueOf(range);
+                }
+            } else if (Java2SqlType.isDateTimeSQL(upperValue.getDatatype())) {
+                Date upper = null;
+                Date lower = null;
+                try {
+                    upper = DateUtils.parse(DateUtils.PATTERN_2, upperValue.getValue());
+                    lower = DateUtils.parse(DateUtils.PATTERN_2, lowerValue.getValue());
+                } catch (ParseException e) {
+                }
+                if (upper != null && lower != null) {
+                    return String.valueOf(ElapsedTime.getNbDays(upper, lower));
+                } 
             }
+            
+   
         }
 
         return null;
