@@ -8,6 +8,7 @@ package org.talend.dataquality.indicators.impl;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.BasicEList;
@@ -40,7 +41,8 @@ import org.talend.utils.sql.Java2SqlType;
  * @generated
  */
 public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeIndicator {
-
+    private static Logger log = Logger.getLogger(RangeIndicatorImpl.class);
+    
     /**
      * The cached value of the '{@link #getLowerValue() <em>Lower Value</em>}' containment reference. <!--
      * begin-user-doc --> <!-- end-user-doc -->
@@ -251,10 +253,11 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
                 Date upper = null;
                 Date lower = null;
                 try {
+                    // FIXME we need to know the format in order to parse the dates.
                     upper = DateUtils.parse(DateUtils.PATTERN_3, upperValue.getValue());
                     lower = DateUtils.parse(DateUtils.PATTERN_3, lowerValue.getValue());
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    log.error("Parsing exception when trying to compute range of dates.", e);
                 }
                 if (upper != null && lower != null) {
                     return String.valueOf(ElapsedTime.getNbDays(upper, lower));
