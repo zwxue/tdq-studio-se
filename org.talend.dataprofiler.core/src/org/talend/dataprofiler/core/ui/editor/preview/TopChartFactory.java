@@ -136,6 +136,11 @@ public final class TopChartFactory {
                     // MOD scorreia +2L avoid points: minimal size of circle must be 1
                     // z = z * transX + 1;
 
+                    // ADD xqliu 2009-07-06 bug 8035
+                    double zSize = getBubbleSize(z); // calculate the multiple of bubble's default size
+                    z = 0; // use bubble's default size
+                    // ~
+
                     switch (getScaleType()) {
                     case SCALE_ON_DOMAIN_AXIS:
                         zero = domainAxis.valueToJava2D(0.0, dataArea, domainAxisLocation);
@@ -163,6 +168,11 @@ public final class TopChartFactory {
                     transRange += diag / 100;
 
                     Ellipse2D circle = null;
+                    
+                    // ADD xqliu 2009-07-06 bug 8035
+                    transDomain *= zSize;
+                    transRange *= zSize;
+                    // ~
 
                     if (orientation == PlotOrientation.VERTICAL) {
                         circle = new Ellipse2D.Double(transX - transDomain / 2.0, transY - transRange / 2.0, transDomain,
@@ -199,6 +209,23 @@ public final class TopChartFactory {
                     updateCrosshairValues(crosshairState, x, y, domainAxisIndex, rangeAxisIndex, transX, transY, orientation);
                 }
 
+            }
+
+            /**
+             * DOC xqliu : calculate the size of bubble. for bug 8035 2009-07-06.
+             * 
+             * @param z multiple of bubble's default size
+             * @return
+             */
+            private double getBubbleSize(double z) {
+                 if (z > 0 && z <= 10) {
+                     return 2;
+                } else if (z > 10 && z <= 100) {
+                    return 3;
+                } else if (z > 100) {
+                    return 4;
+                }
+                return 1;
             }
 
         };
