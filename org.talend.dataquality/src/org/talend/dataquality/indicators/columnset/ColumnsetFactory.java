@@ -80,6 +80,15 @@ public interface ColumnsetFactory extends EFactory {
     WeakCorrelationIndicator createWeakCorrelationIndicator();
 
     /**
+     * Returns a new object of class '<em>Column Dependency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Column Dependency Indicator</em>'.
+     * @generated
+     */
+    ColumnDependencyIndicator createColumnDependencyIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

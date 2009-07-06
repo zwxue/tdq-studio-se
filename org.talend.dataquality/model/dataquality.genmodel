@@ -465,6 +465,15 @@
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/CountAvgNullIndicator"/>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/MinMaxDateIndicator"/>
         <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/WeakCorrelationIndicator"/>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/columnset/ColumnDependencyIndicator">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnDependencyIndicator/columnA"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference dataquality.ecore#//indicators/columnset/ColumnDependencyIndicator/columnB"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnDependencyIndicator/aCount"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnDependencyIndicator/distinctACount"/>
+          <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/columnset/ColumnDependencyIndicator/dependencyFactor"/>
+        </genClasses>
       </nestedGenPackages>
     </nestedGenPackages>
     <nestedGenPackages prefix="Expressions" basePackage="org.talend.dataquality" disposableProviderFactory="true"

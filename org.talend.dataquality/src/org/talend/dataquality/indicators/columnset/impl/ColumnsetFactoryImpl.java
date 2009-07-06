@@ -68,6 +68,7 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
             case ColumnsetPackage.COUNT_AVG_NULL_INDICATOR: return createCountAvgNullIndicator();
             case ColumnsetPackage.MIN_MAX_DATE_INDICATOR: return createMinMaxDateIndicator();
             case ColumnsetPackage.WEAK_CORRELATION_INDICATOR: return createWeakCorrelationIndicator();
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR: return createColumnDependencyIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -161,6 +162,16 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
     public WeakCorrelationIndicator createWeakCorrelationIndicator() {
         WeakCorrelationIndicatorImpl weakCorrelationIndicator = new WeakCorrelationIndicatorImpl();
         return weakCorrelationIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public ColumnDependencyIndicator createColumnDependencyIndicator() {
+        ColumnDependencyIndicatorImpl columnDependencyIndicator = new ColumnDependencyIndicatorImpl();
+        return columnDependencyIndicator;
     }
 
     /**

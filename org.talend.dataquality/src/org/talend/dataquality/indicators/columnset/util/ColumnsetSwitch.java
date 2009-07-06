@@ -169,6 +169,15 @@ public class ColumnsetSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR: {
+                ColumnDependencyIndicator columnDependencyIndicator = (ColumnDependencyIndicator)theEObject;
+                T result = caseColumnDependencyIndicator(columnDependencyIndicator);
+                if (result == null) result = caseIndicator(columnDependencyIndicator);
+                if (result == null) result = caseModelElement(columnDependencyIndicator);
+                if (result == null) result = caseElement(columnDependencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -275,6 +284,21 @@ public class ColumnsetSwitch<T> {
      * @generated
      */
     public T caseWeakCorrelationIndicator(WeakCorrelationIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Column Dependency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Column Dependency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseColumnDependencyIndicator(ColumnDependencyIndicator object) {
         return null;
     }
 

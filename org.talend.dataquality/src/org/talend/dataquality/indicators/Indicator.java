@@ -335,7 +335,6 @@ public interface Indicator extends ModelElement {
      * implemented in order to store the value in the datamart.
      * 
      * <!-- end-user-doc -->
-     * 
      * @model kind="operation"
      * @generated
      */
@@ -348,7 +347,6 @@ public interface Indicator extends ModelElement {
      * implemented in order to store the value in the datamart.
      * 
      * <!-- end-user-doc -->
-     * 
      * @model kind="operation"
      * @generated
      */

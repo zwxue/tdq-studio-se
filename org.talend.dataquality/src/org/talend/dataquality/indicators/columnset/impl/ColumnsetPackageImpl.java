@@ -26,6 +26,7 @@ import org.talend.dataquality.domain.sql.SQLPackage;
 import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
@@ -132,6 +133,13 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * @generated
      */
     private EClass weakCorrelationIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass columnDependencyIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -464,6 +472,60 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getColumnDependencyIndicator() {
+        return columnDependencyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getColumnDependencyIndicator_ColumnA() {
+        return (EReference)columnDependencyIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getColumnDependencyIndicator_ColumnB() {
+        return (EReference)columnDependencyIndicatorEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getColumnDependencyIndicator_ACount() {
+        return (EAttribute)columnDependencyIndicatorEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getColumnDependencyIndicator_DistinctACount() {
+        return (EAttribute)columnDependencyIndicatorEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getColumnDependencyIndicator_DependencyFactor() {
+        return (EAttribute)columnDependencyIndicatorEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EDataType getListObject() {
         return listObjectEDataType;
     }
@@ -523,6 +585,13 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
 
         weakCorrelationIndicatorEClass = createEClass(WEAK_CORRELATION_INDICATOR);
 
+        columnDependencyIndicatorEClass = createEClass(COLUMN_DEPENDENCY_INDICATOR);
+        createEReference(columnDependencyIndicatorEClass, COLUMN_DEPENDENCY_INDICATOR__COLUMN_A);
+        createEReference(columnDependencyIndicatorEClass, COLUMN_DEPENDENCY_INDICATOR__COLUMN_B);
+        createEAttribute(columnDependencyIndicatorEClass, COLUMN_DEPENDENCY_INDICATOR__ACOUNT);
+        createEAttribute(columnDependencyIndicatorEClass, COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT);
+        createEAttribute(columnDependencyIndicatorEClass, COLUMN_DEPENDENCY_INDICATOR__DEPENDENCY_FACTOR);
+
         // Create data types
         listObjectEDataType = createEDataType(LIST_OBJECT);
     }
@@ -566,6 +635,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         countAvgNullIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         minMaxDateIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         weakCorrelationIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
+        columnDependencyIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(columnsCompareIndicatorEClass, ColumnsCompareIndicator.class, "ColumnsCompareIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -595,8 +665,35 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
 
         initEClass(weakCorrelationIndicatorEClass, WeakCorrelationIndicator.class, "WeakCorrelationIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+        initEClass(columnDependencyIndicatorEClass, ColumnDependencyIndicator.class, "ColumnDependencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getColumnDependencyIndicator_ColumnA(), theRelationalPackage.getColumn(), null, "columnA", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getColumnDependencyIndicator_ColumnB(), theRelationalPackage.getColumn(), null, "columnB", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getColumnDependencyIndicator_ACount(), ecorePackage.getELongObject(), "aCount", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getColumnDependencyIndicator_DistinctACount(), ecorePackage.getELongObject(), "distinctACount", null, 0, 1, ColumnDependencyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getColumnDependencyIndicator_DependencyFactor(), ecorePackage.getEDoubleObject(), "dependencyFactor", null, 0, 1, ColumnDependencyIndicator.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
         // Initialize data types
         initEDataType(listObjectEDataType, List.class, "ListObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<Object>");
+
+        // Create annotations
+        // http:///org/eclipse/emf/ecore/util/ExtendedMetaData
+        createExtendedMetaDataAnnotations();
+    }
+
+    /**
+     * Initializes the annotations for <b>http:///org/eclipse/emf/ecore/util/ExtendedMetaData</b>.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void createExtendedMetaDataAnnotations() {
+        String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";				
+        addAnnotation
+          (columnDependencyIndicatorEClass, 
+           source, 
+           new String[] {
+             "name", "ColumnDependencyIndicator"
+           });
     }
 
 } //ColumnsetPackageImpl

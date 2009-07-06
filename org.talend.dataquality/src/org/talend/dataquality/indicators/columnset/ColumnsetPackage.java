@@ -2467,6 +2467,322 @@ public interface ColumnsetPackage extends EPackage {
     int WEAK_CORRELATION_INDICATOR_FEATURE_COUNT = COLUMN_SET_MULTI_VALUE_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.columnset.impl.ColumnDependencyIndicatorImpl <em>Column Dependency Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.columnset.impl.ColumnDependencyIndicatorImpl
+     * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getColumnDependencyIndicator()
+     * @generated
+     */
+    int COLUMN_DEPENDENCY_INDICATOR = 7;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__NAME = IndicatorsPackage.INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__VISIBILITY = IndicatorsPackage.INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__CLIENT_DEPENDENCY = IndicatorsPackage.INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__SUPPLIER_DEPENDENCY = IndicatorsPackage.INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__CONSTRAINT = IndicatorsPackage.INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__NAMESPACE = IndicatorsPackage.INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__IMPORTER = IndicatorsPackage.INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__STEREOTYPE = IndicatorsPackage.INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__TAGGED_VALUE = IndicatorsPackage.INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__DOCUMENT = IndicatorsPackage.INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__DESCRIPTION = IndicatorsPackage.INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__RESPONSIBLE_PARTY = IndicatorsPackage.INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__ELEMENT_NODE = IndicatorsPackage.INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__SET = IndicatorsPackage.INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__RENDERED_OBJECT = IndicatorsPackage.INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__VOCABULARY_ELEMENT = IndicatorsPackage.INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__MEASUREMENT = IndicatorsPackage.INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__CHANGE_REQUEST = IndicatorsPackage.INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__DASDL_PROPERTY = IndicatorsPackage.INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__COUNT = IndicatorsPackage.INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__NULL_COUNT = IndicatorsPackage.INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__PARAMETERS = IndicatorsPackage.INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__ANALYZED_ELEMENT = IndicatorsPackage.INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__DATAMINING_TYPE = IndicatorsPackage.INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__INDICATOR_DEFINITION = IndicatorsPackage.INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__INSTANTIATED_EXPRESSIONS = IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__COMPUTED = IndicatorsPackage.INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__JOIN_CONDITIONS = IndicatorsPackage.INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Column A</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__COLUMN_A = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Column B</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__COLUMN_B = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The feature id for the '<em><b>ACount</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__ACOUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 2;
+
+    /**
+     * The feature id for the '<em><b>Distinct ACount</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 3;
+
+    /**
+     * The feature id for the '<em><b>Dependency Factor</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR__DEPENDENCY_FACTOR = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 4;
+
+    /**
+     * The number of structural features of the '<em>Column Dependency Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN_DEPENDENCY_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 5;
+
+    /**
      * The meta object id for the '<em>List Object</em>' data type.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2474,7 +2790,7 @@ public interface ColumnsetPackage extends EPackage {
      * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getListObject()
      * @generated
      */
-    int LIST_OBJECT = 7;
+    int LIST_OBJECT = 8;
 
 
     /**
@@ -2691,6 +3007,71 @@ public interface ColumnsetPackage extends EPackage {
     EClass getWeakCorrelationIndicator();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator <em>Column Dependency Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Column Dependency Indicator</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator
+     * @generated
+     */
+    EClass getColumnDependencyIndicator();
+
+    /**
+     * Returns the meta object for the reference '{@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getColumnA <em>Column A</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Column A</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getColumnA()
+     * @see #getColumnDependencyIndicator()
+     * @generated
+     */
+    EReference getColumnDependencyIndicator_ColumnA();
+
+    /**
+     * Returns the meta object for the reference '{@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getColumnB <em>Column B</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Column B</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getColumnB()
+     * @see #getColumnDependencyIndicator()
+     * @generated
+     */
+    EReference getColumnDependencyIndicator_ColumnB();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getACount <em>ACount</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>ACount</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getACount()
+     * @see #getColumnDependencyIndicator()
+     * @generated
+     */
+    EAttribute getColumnDependencyIndicator_ACount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getDistinctACount <em>Distinct ACount</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Distinct ACount</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getDistinctACount()
+     * @see #getColumnDependencyIndicator()
+     * @generated
+     */
+    EAttribute getColumnDependencyIndicator_DistinctACount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getDependencyFactor <em>Dependency Factor</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Dependency Factor</em>'.
+     * @see org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getDependencyFactor()
+     * @see #getColumnDependencyIndicator()
+     * @generated
+     */
+    EAttribute getColumnDependencyIndicator_DependencyFactor();
+
+    /**
      * Returns the meta object for data type '{@link java.util.List <em>List Object</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2896,6 +3277,56 @@ public interface ColumnsetPackage extends EPackage {
          * @generated
          */
         EClass WEAK_CORRELATION_INDICATOR = eINSTANCE.getWeakCorrelationIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.columnset.impl.ColumnDependencyIndicatorImpl <em>Column Dependency Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.columnset.impl.ColumnDependencyIndicatorImpl
+         * @see org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl#getColumnDependencyIndicator()
+         * @generated
+         */
+        EClass COLUMN_DEPENDENCY_INDICATOR = eINSTANCE.getColumnDependencyIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Column A</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference COLUMN_DEPENDENCY_INDICATOR__COLUMN_A = eINSTANCE.getColumnDependencyIndicator_ColumnA();
+
+        /**
+         * The meta object literal for the '<em><b>Column B</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference COLUMN_DEPENDENCY_INDICATOR__COLUMN_B = eINSTANCE.getColumnDependencyIndicator_ColumnB();
+
+        /**
+         * The meta object literal for the '<em><b>ACount</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute COLUMN_DEPENDENCY_INDICATOR__ACOUNT = eINSTANCE.getColumnDependencyIndicator_ACount();
+
+        /**
+         * The meta object literal for the '<em><b>Distinct ACount</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT = eINSTANCE.getColumnDependencyIndicator_DistinctACount();
+
+        /**
+         * The meta object literal for the '<em><b>Dependency Factor</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute COLUMN_DEPENDENCY_INDICATOR__DEPENDENCY_FACTOR = eINSTANCE.getColumnDependencyIndicator_DependencyFactor();
 
         /**
          * The meta object literal for the '<em>List Object</em>' data type.

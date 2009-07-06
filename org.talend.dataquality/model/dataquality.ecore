@@ -765,6 +765,17 @@
       <eClassifiers xsi:type="ecore:EDataType" name="ListObject" instanceClassName="java.util.List&lt;Object>"/>
       <eClassifiers xsi:type="ecore:EClass" name="MinMaxDateIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
       <eClassifiers xsi:type="ecore:EClass" name="WeakCorrelationIndicator" eSuperTypes="#//indicators/columnset/ColumnSetMultiValueIndicator"/>
+      <eClassifiers xsi:type="ecore:EClass" name="ColumnDependencyIndicator" eSuperTypes="#//indicators/Indicator">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="name" value="ColumnDependencyIndicator"/>
+        </eAnnotations>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="columnA" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="columnB" eType="ecore:EClass ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/resource/relational/Column"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="aCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="distinctACount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="dependencyFactor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject"
+            changeable="false" volatile="true" transient="true"/>
+      </eClassifiers>
     </eSubpackages>
   </eSubpackages>
   <eSubpackages name="expressions" nsURI="http://dataquality.expressions" nsPrefix="dataquality.expressions">
