@@ -247,13 +247,14 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
                     double range = upper - lower;
                     return String.valueOf(range);
                 }
-            } else if (Java2SqlType.isDateTimeSQL(upperValue.getDatatype())) {
+            } else if (Java2SqlType.isDateInSQL(upperValue.getDatatype())) {
                 Date upper = null;
                 Date lower = null;
                 try {
-                    upper = DateUtils.parse(DateUtils.PATTERN_2, upperValue.getValue());
-                    lower = DateUtils.parse(DateUtils.PATTERN_2, lowerValue.getValue());
+                    upper = DateUtils.parse(DateUtils.PATTERN_3, upperValue.getValue());
+                    lower = DateUtils.parse(DateUtils.PATTERN_3, lowerValue.getValue());
                 } catch (ParseException e) {
+                    e.printStackTrace();
                 }
                 if (upper != null && lower != null) {
                     return String.valueOf(ElapsedTime.getNbDays(upper, lower));
