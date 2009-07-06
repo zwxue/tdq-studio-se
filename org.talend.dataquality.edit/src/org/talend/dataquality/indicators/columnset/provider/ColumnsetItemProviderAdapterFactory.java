@@ -214,6 +214,29 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected ColumnDependencyIndicatorItemProvider columnDependencyIndicatorItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createColumnDependencyIndicatorAdapter() {
+        if (columnDependencyIndicatorItemProvider == null) {
+            columnDependencyIndicatorItemProvider = new ColumnDependencyIndicatorItemProvider(this);
+        }
+
+        return columnDependencyIndicatorItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -318,6 +341,7 @@ public class ColumnsetItemProviderAdapterFactory extends ColumnsetAdapterFactory
         if (countAvgNullIndicatorItemProvider != null) countAvgNullIndicatorItemProvider.dispose();
         if (minMaxDateIndicatorItemProvider != null) minMaxDateIndicatorItemProvider.dispose();
         if (weakCorrelationIndicatorItemProvider != null) weakCorrelationIndicatorItemProvider.dispose();
+        if (columnDependencyIndicatorItemProvider != null) columnDependencyIndicatorItemProvider.dispose();
     }
 
 }
