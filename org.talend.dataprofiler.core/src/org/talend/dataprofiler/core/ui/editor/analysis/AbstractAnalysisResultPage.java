@@ -128,7 +128,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
      */
     public void fireRuningItemChanged(boolean status) {
         IEditorPart editor = CorePlugin.getDefault().getCurrentActiveEditor();
-        if (editor instanceof AnalysisEditor) {
+        if (editor instanceof AnalysisEditor && status) {
             refresh(((AnalysisEditor) editor).getMasterPage());
         }
     }
