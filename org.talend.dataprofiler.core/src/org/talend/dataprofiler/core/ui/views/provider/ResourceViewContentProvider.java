@@ -31,6 +31,8 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.IndicatorFolderNode;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
+import org.talend.dataprofiler.ecos.model.IEcosCategory;
+import org.talend.dataprofiler.ecos.service.EcosystemService;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -112,14 +114,17 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 return regularExp;
             }
         } else if (element instanceof IFolder) {
+        	//
             IFolder folder = (IFolder) element;
             if (folder.getName().equals(DQStructureManager.EXCHANGE)) {
-                String category = "1";
-                String version = CorePlugin.getDefault().getProductVersion().toString();
-                return ComponentSearcher.getAvailableComponentExtensions(version, category).toArray();
+            	//Mod gyichao 2009-07-07, feature 8109
+            	return ComponentSearcher.getAvailableCategory().toArray();
+                
             } else if (folder.getName().equals(DQStructureManager.INDICATORS)) {
                 return new Object[] { new IndicatorFolderNode("System") };
             }
+        }else if(element instanceof IEcosCategory){
+        	return ((IEcosCategory)element).getComponent().toArray();
         }
         if (needSortContainers.contains(element)) {
             return sort(super.getChildren(element));
@@ -152,4 +157,15 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         Collections.sort(list, ComparatorsFactory.buildComparator(ComparatorsFactory.FILEMODEL_COMPARATOR_ID));
         return list.toArray();
     }
+
+	@Override
+	public boolean hasChildren(Object element) {
+
+		if(element instanceof IEcosCategory){
+			return true;
+		}
+		return super.hasChildren(element);
+	}
+    
+    
 }

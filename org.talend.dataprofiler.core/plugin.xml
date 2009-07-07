@@ -182,6 +182,9 @@
                 <instanceof value="org.eclipse.emf.ecore.EObject"/>
                 <instanceof
                       value="org.talend.dataprofiler.ecos.model.IEcosComponent">
+                </instanceof>
+                <instanceof
+                      value="org.talend.dataprofiler.ecos.model.IEcosCategory">
                 </instanceof>  
               </or> 
            </possibleChildren>   

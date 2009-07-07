@@ -18,6 +18,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -46,7 +47,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             }
         } else if (element instanceof IEcosComponent) {
             return ImageLib.getImage(ImageLib.EXCHANGE);
-        } else if (element instanceof IndicatorDefinition) {
+        }else if(element instanceof IEcosCategory){
+        	 return ImageLib.getImage(ImageLib.EXCHANGE);
+        }else if (element instanceof IndicatorDefinition) {
             return ImageLib.getImage(ImageLib.IND_DEFINITION);
         }
         return super.getImage(element);
@@ -62,7 +65,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ((IFolderNode) element).getName();
         } else if (element instanceof IEcosComponent) {
             return ((IEcosComponent) element).getName();
-        } else if (element instanceof IndicatorDefinition) {
+        } else if(element instanceof IEcosCategory){
+        	return ((IEcosCategory) element).getName();
+        }
+        else if (element instanceof IndicatorDefinition) {
             return ((IndicatorDefinition) element).getName();
         }
 
