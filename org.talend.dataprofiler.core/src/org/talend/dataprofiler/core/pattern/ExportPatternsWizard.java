@@ -19,6 +19,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
@@ -68,6 +69,11 @@ public class ExportPatternsWizard extends Wizard {
 
         File file = new File(targetFile);
 
+        // MOD mzhao bug 8041
+        if (!file.exists()) {
+            MessageDialog.openError(getShell(), "Empty folder", "Please specify a valid folder!");
+            return false;
+        }
         boolean isContinue = true;
 
         if (file.exists() && !isForExchange) {
