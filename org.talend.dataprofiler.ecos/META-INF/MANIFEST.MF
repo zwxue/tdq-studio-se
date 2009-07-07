@@ -21,4 +21,3 @@ Export-Package: org.talend.dataprofiler.ecos,
  org.talend.dataprofiler.ecos.model,
  org.talend.dataprofiler.ecos.service
 Bundle-Vendor: .Talend SA.
-Import-Package: org.talend.dataprofiler.core

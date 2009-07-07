@@ -6,7 +6,6 @@ import java.util.List;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
-import org.talend.dataprofiler.core.CorePlugin;
 
 /**
  * @author jet
@@ -16,6 +15,26 @@ public class EcosCategory implements IEcosCategory{
 	
 	String id;
 	
+	String name;
+	
+	int counter;
+	
+	String version;
+
+	public String getVersion() {
+		return version;
+	}
+
+
+	
+	
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+
+
+	
 	public String getId() {
 		return id;
 	}
@@ -24,9 +43,7 @@ public class EcosCategory implements IEcosCategory{
 		this.id = id;
 	}
 
-	String name;
 	
-	int counter;
 	
 	List<IEcosComponent> components = Collections.EMPTY_LIST;
 	
@@ -47,7 +64,7 @@ public class EcosCategory implements IEcosCategory{
 	 */
 	public List<IEcosComponent> getComponent() {
 		if(components.isEmpty() || isReload() ){
-			components = ComponentSearcher.getAvailableComponentExtensions(CorePlugin.getDefault().getProductVersion().toString(), getId(), reload);
+			components = ComponentSearcher.getAvailableComponentExtensions(version, getId(), reload);
 		}
 		return components;
 	}

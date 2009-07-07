@@ -44,11 +44,11 @@ public class ComponentSearcher {
 
     private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
 
-    public static List<IEcosCategory> getAvailableCategory(){
+    public static List<IEcosCategory> getAvailableCategory(String version){
     	
     	List<IEcosCategory> categorys = null;
 		try {
-			categorys = EcosystemService.getCategoryList();
+			categorys = EcosystemService.getCategoryList(version);
 			return categorys;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

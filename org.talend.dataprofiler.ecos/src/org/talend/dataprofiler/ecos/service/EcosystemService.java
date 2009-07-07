@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -203,10 +204,15 @@ public abstract class EcosystemService {
         return rev1.length > rev2.length;
     }
 
-    public static List<IEcosCategory> getCategoryList() throws Exception{
+    public static List<IEcosCategory> getCategoryList(String version) throws Exception{
     	
     	String jsonContent = sendGetRequest(CATEGORY_LIST_URL);
-    	return parseJsonObject(jsonContent,EcosCategory.class);
+    	List<IEcosCategory> categorys = parseJsonObject(jsonContent,EcosCategory.class);
+    	for (Iterator iterator = categorys.iterator(); iterator.hasNext();) {
+    		EcosCategory iEcosCategory = (EcosCategory) iterator.next();
+			iEcosCategory.setVersion(version);
+		}
+    	return categorys;
     }
     
     public static List<RevisionInfo> getRevisionList(String category, String version) throws Exception {
