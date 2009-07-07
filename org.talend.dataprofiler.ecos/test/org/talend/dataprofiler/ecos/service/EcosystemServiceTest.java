@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
+import org.talend.dataprofiler.ecos.model.impl.EcosCategory;
 
 public class EcosystemServiceTest {
 
@@ -13,10 +14,10 @@ public class EcosystemServiceTest {
 	public void testGetCategoryList() {
 		List list;
 		try {
-			list = EcosystemService.getCategoryList();
+			list = EcosystemService.getCategoryList("3.1.2");
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-				Object object = (Object) iterator.next();
-				System.out.println(object);
+				EcosCategory object = (EcosCategory) iterator.next();
+				System.out.println(object.getVersion());
 				
 			}
 			assertNotNull(list);
