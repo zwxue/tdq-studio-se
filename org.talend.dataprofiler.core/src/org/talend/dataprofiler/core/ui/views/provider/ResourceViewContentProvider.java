@@ -118,7 +118,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             IFolder folder = (IFolder) element;
             if (folder.getName().equals(DQStructureManager.EXCHANGE)) {
             	//Mod gyichao 2009-07-07, feature 8109
-            	return ComponentSearcher.getAvailableCategory().toArray();
+            	return ComponentSearcher.getAvailableCategory(CorePlugin.getDefault().getProductVersion().toString()).toArray();
                 
             } else if (folder.getName().equals(DQStructureManager.INDICATORS)) {
                 return new Object[] { new IndicatorFolderNode("System") };
