@@ -16,11 +16,16 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.help.HelpSystem;
+import org.eclipse.help.IContext;
+import org.eclipse.help.IHelpResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ExportPatternsWizard;
+import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -52,7 +57,16 @@ public class ExportPatternsAction extends Action {
     public void run() {
 
         ExportPatternsWizard wizard = new ExportPatternsWizard(folder, isForExchange);
-        WizardDialog dialog = new WizardDialog(null, wizard);
+        WizardDialog dialog = null;
+        // MOD hcheng 2009-07-07,for 8122.Add an help file in the "Export patterns for Talend exchange wizard".
+        if (isForExchange) {
+            IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getPatternHelpContextID());
+            IHelpResource[] relatedTopics = context.getRelatedTopics();
+            String href = relatedTopics[3].getHref();
+            dialog = new OpeningHelpWizardDialog(null, wizard, href);
+        } else {
+            dialog = new WizardDialog(null, wizard);
+        }
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
             try {

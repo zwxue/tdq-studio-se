@@ -6,5 +6,6 @@
         <topic label="Regular Expressions" href="html/wizard/pattern/reg_experession.html"/>
         <topic label="SQL Expressions" href="html/wizard/pattern/sql_experession.html"/>
         <topic href="html/wizard/pattern/importPattern.html" label="Import Pattern"/>
+        <topic label="Export for Talend Exchange" href="html/wizard/pattern/export_exchange.html"/>
     </context>
 </contexts>
