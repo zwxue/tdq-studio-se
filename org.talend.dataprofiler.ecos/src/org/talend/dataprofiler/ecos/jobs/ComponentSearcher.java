@@ -16,11 +16,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataprofiler.ecos.model.IRevision;
 import org.talend.dataprofiler.ecos.model.RevisionInfo;
@@ -41,6 +44,18 @@ public class ComponentSearcher {
 
     private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
 
+    public static List<IEcosCategory> getAvailableCategory(){
+    	
+    	List<IEcosCategory> categorys = null;
+		try {
+			categorys = EcosystemService.getCategoryList();
+			return categorys;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+    	
+    	return Collections.EMPTY_LIST;
+    }
     /**
      * Find available components.
      * 

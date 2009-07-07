@@ -38,8 +38,10 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Version;
 import org.talend.dataprofiler.ecos.EcosPlugin;
+import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.RevisionInfo;
 import org.talend.dataprofiler.ecos.model.VersionInfo;
+import org.talend.dataprofiler.ecos.model.impl.EcosCategory;
 import org.talend.dataprofiler.ecos.model.impl.Revision;
 import org.talend.dataprofiler.ecos.proxy.EcosystemSocketFactory;
 
@@ -57,6 +59,8 @@ public abstract class EcosystemService {
     private static Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(RC|M)\\d+)?_r\\d+"); //$NON-NLS-1$
 
     private static Pattern DEFAULT_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.*(\\d*)"); //$NON-NLS-1$
+    
+    private static String CATEGORY_LIST_URL = "http://talendforge.org/exchange/top/api/get_category_list.php";
 
     private static MultiValueMap versionMap = new MultiValueMap();
 
@@ -199,6 +203,12 @@ public abstract class EcosystemService {
         return rev1.length > rev2.length;
     }
 
+    public static List<IEcosCategory> getCategoryList() throws Exception{
+    	
+    	String jsonContent = sendGetRequest(CATEGORY_LIST_URL);
+    	return parseJsonObject(jsonContent,EcosCategory.class);
+    }
+    
     public static List<RevisionInfo> getRevisionList(String category, String version) throws Exception {
         StringBuffer url = new StringBuffer();
         url.append(REVISION_LIST_URL).append("?categories=").append(category).append("&version="); //$NON-NLS-1$ //$NON-NLS-2$
