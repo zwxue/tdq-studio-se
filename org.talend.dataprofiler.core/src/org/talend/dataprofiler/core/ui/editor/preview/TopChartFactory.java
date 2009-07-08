@@ -434,7 +434,7 @@ public final class TopChartFactory {
         renderer.setBaseItemLabelsVisible(true);
         renderer.setRenderAsPercentages(true);
         renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(), //$NON-NLS-1$
-                new DecimalFormat("0.0%"))); //$NON-NLS-1$
+                new DecimalFormat("0.00%"))); //$NON-NLS-1$
         renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
 
         NumberAxis axis = (NumberAxis) plot.getRangeAxis();
