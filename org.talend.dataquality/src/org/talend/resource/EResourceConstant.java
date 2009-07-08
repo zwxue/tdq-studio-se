@@ -29,7 +29,7 @@ public enum EResourceConstant {
     // Folder in libraries
     DQ_RULES("DQ Rules", "DQRULES_FOLDER_PROPERTY", "TDQ_Libraries", "/dqrules"),
     EXCHANGE("Exchange", "FOLDER_EXCHANGE_PROPERTY", "TDQ_Libraries", ""),
-    JRXML_REPORTS("JRXML Reports", "JRXML_FOLDER_PROPERTY", "TDQ_Libraries", ""),
+    JRXML_REPORTS("JRXML Template", "JRXML_FOLDER_PROPERTY", "TDQ_Libraries", ""),
     PATTERNS("Patterns", "FOLDER_PATTERNS_PROPERTY", "TDQ_Libraries", "/patterns"),
     SOURCE_FILES("Source Files", "SOURCEFILES_FOLDER_PROPERTY", "TDQ_Libraries", "/demo"),
     SQL_PATTERNS("SQL Patterns", "SQLPATTERNS_FOLDER_PROPERTY", "TDQ_Libraries", "/sql_like"),

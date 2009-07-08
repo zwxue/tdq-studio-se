@@ -70,7 +70,7 @@ public final class DQStructureManager {
 
     private static final String EXCHANGE_PATH = "/exchange";//$NON-NLS-1$
 
-    public static final String JRXML_REPORT_FOLDER = "JRXML Reports";//$NON-NLS-1$
+    public static final String JRXML_REPORT_FOLDER = "JRXML Template";//$NON-NLS-1$
 
     public static final String JRXML_FOLDER_PROPERTY = "JRXML_FOLDER_PROPERTY"; //$NON-NLS-1$
 
@@ -125,11 +125,13 @@ public final class DQStructureManager {
     public static final String PROJECT_TDQ_PROPERTY = "PROJECT_TDQ_PROPERTY"; //$NON-NLS-1$
 
     public static final String PREFIX_TDQ = "TDQ_"; //$NON-NLS-1$
-    
+
     public static final String RULES = DefaultMessagesImpl.getString("DQStructureManager.rules"); //$NON-NLS-1$
 
     public static final String SQL = DefaultMessagesImpl.getString("DQStructureManager.sqls"); //$NON-NLS-1$
+
     public static final String REGEX = DefaultMessagesImpl.getString("DQStructureManager.regex"); //$NON-NLS-1$
+
     private List<String> modleElementSuffixs = null;
 
     private static DQStructureManager manager = new DQStructureManager();
