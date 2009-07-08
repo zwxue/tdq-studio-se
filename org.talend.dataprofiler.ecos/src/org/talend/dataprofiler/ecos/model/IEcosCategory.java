@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface IEcosCategory {
 	
+	String getId();
 	/**
 	 * The name for Category. can not be null.
 	 * @return <code>String</code> name of the category.

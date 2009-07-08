@@ -21,6 +21,14 @@ public class EcosCategory implements IEcosCategory{
 	
 	String version;
 
+	public EcosCategory() {
+		super();
+	}
+	
+	public EcosCategory(String id) {
+		this.id = id;
+	}
+
 	public String getVersion() {
 		return version;
 	}
@@ -64,7 +72,7 @@ public class EcosCategory implements IEcosCategory{
 	 */
 	public List<IEcosComponent> getComponent() {
 		if(components.isEmpty() || isReload() ){
-			components = ComponentSearcher.getAvailableComponentExtensions(version, getId(), reload);
+			components = ComponentSearcher.getAvailableComponentExtensions(version, this, reload);
 		}
 		return components;
 	}

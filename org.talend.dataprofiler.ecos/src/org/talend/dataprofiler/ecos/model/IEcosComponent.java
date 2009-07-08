@@ -52,14 +52,14 @@ public interface IEcosComponent {
      * 
      * @return
      */
-    String getCategry();
+    IEcosCategory getCategry();
 
     /**
      * DOC bZhou Comment method "setCategory".
      * 
      * @param category
      */
-    void setCategry(String category);
+    void setCategry(IEcosCategory category);
 
     /**
      * DOC bZhou Comment method "getRevisions".

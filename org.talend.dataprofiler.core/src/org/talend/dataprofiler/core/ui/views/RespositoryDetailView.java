@@ -249,13 +249,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         newLabelAndText(gContainer, "Name:", component.getName());
         newLabelAndText(gContainer, "Author:", component.getAuthor());
         newLabelAndText(gContainer, "Description:", component.getDescription());
+        newLabelAndText(gContainer, "Type:", component.getCategry().getName());
 
-        ExpressionType expressionType = ExpressionType.get(Integer.parseInt(component.getCategry()));
-        String type = "unknown";
-        if (expressionType != null) {
-            type = expressionType.getLiteral();
-        }
-        newLabelAndText(gContainer, "Type:", type);
     }
 
     private void createRegularExpression(RegularExpression regularExpression) {

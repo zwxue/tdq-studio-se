@@ -15,6 +15,7 @@ package org.talend.dataprofiler.ecos.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataprofiler.ecos.model.IRevision;
 
@@ -29,7 +30,7 @@ public class EcosComponent implements IEcosComponent {
 
     private String description;
 
-    private String categry;
+    private IEcosCategory categry;
 
     private String installedLocation;
 
@@ -130,7 +131,7 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getCategory()
      */
-    public String getCategry() {
+    public IEcosCategory getCategry() {
         return categry;
     }
 
@@ -139,7 +140,7 @@ public class EcosComponent implements IEcosComponent {
      * 
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setCategory(java.lang.String)
      */
-    public void setCategry(String categry) {
+    public void setCategry(IEcosCategory categry) {
         this.categry = categry;
     }
 

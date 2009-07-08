@@ -42,7 +42,7 @@ public class ComponentSearcher {
 
     private static DateFormat formatter = new SimpleDateFormat(RELEASE_DATE_FORMAT);
 
-    private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
+//    private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
 
     public static List<IEcosCategory> getAvailableCategory(String version){
     	
@@ -63,7 +63,7 @@ public class ComponentSearcher {
      * @param language The project language.
      * @return
      */
-    public static List<IEcosComponent> getAvailableComponentExtensions(String version, String categry) {
+    public static List<IEcosComponent> getAvailableComponentExtensions(String version, IEcosCategory categry) {
         return getAvailableComponentExtensions(version, categry, false);
     }
 
@@ -75,38 +75,40 @@ public class ComponentSearcher {
      * @param reload
      * @return
      */
-    public static List<IEcosComponent> getAvailableComponentExtensions(String version, String categry, boolean reload) {
-        if (extensions.isEmpty() || reload) {
-            try {
-                List<RevisionInfo> revisions = EcosystemService.getRevisionList(categry, version);
+    public static List<IEcosComponent> getAvailableComponentExtensions(String version, IEcosCategory categry, boolean reload) {
+    	 
+    		List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();
+            
+    		try {
+                 List<RevisionInfo> revisions = EcosystemService.getRevisionList(categry.getId(), version);
 
-                Map<String, IEcosComponent> extensionsMap = new HashMap<String, IEcosComponent>();
+                 Map<String, IEcosComponent> extensionsMap = new HashMap<String, IEcosComponent>();
 
-                for (RevisionInfo revision : revisions) {
-                    IEcosComponent extension = extensionsMap.get(revision.getExtension_name());
-                    if (extension == null) {
-                        extension = new EcosComponent();
-                        extension.setName(revision.getExtension_name());
-                        extension.setAuthor(revision.getAuthor_name());
-                        extension.setCategry(categry);
-                        extension.setDescription(revision.getExtension_description());
+                 for (RevisionInfo revision : revisions) {
+                     IEcosComponent extension = extensionsMap.get(revision.getExtension_name());
+                     if (extension == null) {
+                         extension = new EcosComponent();
+                         extension.setName(revision.getExtension_name());
+                         extension.setAuthor(revision.getAuthor_name());
+                         extension.setCategry(categry);
+                         extension.setDescription(revision.getExtension_description());
 
-                        extensionsMap.put(extension.getName(), extension);
-                        extensions.add(extension);
-                    }
+                         extensionsMap.put(extension.getName(), extension);
+                         extensions.add(extension);
+                     }
 
-                    IRevision rev = convertRevision(revision);
-                    extension.getRevisions().add(rev);
-                    if (extension.getLatestRevision() == null || extension.getLatestRevision().getDate().before(rev.getDate())) {
-                        // assumes that the revision with latest release date is the newest one.
-                        extension.setLatestRevision(rev);
-                    }
-                }
-            } catch (Exception e) {
-                log.error(e, e);
-            }
-        }
-        return extensions;
+                     IRevision rev = convertRevision(revision);
+                     extension.getRevisions().add(rev);
+                     if (extension.getLatestRevision() == null || extension.getLatestRevision().getDate().before(rev.getDate())) {
+                         // assumes that the revision with latest release date is the newest one.
+                         extension.setLatestRevision(rev);
+                     }
+                 }
+             } catch (Exception e) {
+                 log.error(e, e);
+             }
+             
+         return extensions;
 
     }
 

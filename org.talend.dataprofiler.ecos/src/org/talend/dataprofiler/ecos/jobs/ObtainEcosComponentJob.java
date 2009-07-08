@@ -24,7 +24,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.talend.dataprofiler.ecos.EcosConstants;
 import org.talend.dataprofiler.ecos.i18n.DefaultMessagesImpl;
+import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
+import org.talend.dataprofiler.ecos.model.impl.EcosCategory;
 import org.talend.dataprofiler.ecos.service.EcosystemService;
 
 /**
@@ -60,7 +62,9 @@ public class ObtainEcosComponentJob extends Job {
 
             public List<IEcosComponent> call() throws Exception {
                 EcosystemService.getVersionList();
-                return ComponentSearcher.getAvailableComponentExtensions(version, category);
+                IEcosCategory ecosCategory = new EcosCategory(category);
+               
+                return ComponentSearcher.getAvailableComponentExtensions(version, ecosCategory);
             }
 
         });
