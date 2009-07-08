@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -85,14 +86,24 @@ public class ExportPatternsWizard extends Wizard {
             ExportFactory.export(file, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
 
             if (isForExchange && file.isDirectory()) {
-                for (File patternFile : file.listFiles()) {
-                    try {
-                        FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
-                        patternFile.delete();
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
-                    }
-                }
+            	
+            	//MOD gyichao Just zip exported file. bug 8042
+            	for (Iterator iterator = seletedPatterns.iterator(); iterator
+						.hasNext();) {
+					Pattern pattern = (Pattern) iterator.next();
+					File patternFile = new File(file, pattern.getName() + ".csv");
+					if(patternFile.isFile() && patternFile.exists()){
+						 try {
+							FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
+							patternFile.delete();
+							
+						} catch (Exception e) {
+							log.error(e.getMessage(), e);
+						}
+						 
+					}
+				}
+
             }
             return true;
         }
