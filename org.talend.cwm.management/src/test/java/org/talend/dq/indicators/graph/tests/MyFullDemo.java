@@ -273,8 +273,7 @@ public class MyFullDemo extends JApplet implements ActionListener {
         // init variables
         edge_weight = graphBuilder.getEdgeWeight();
         vertexWeights = graphBuilder.getVertexWeight();
-        
-        
+
         final GraphRenderer graphRenderer = new GraphRenderer();
         // pr = graphRenderer.createPluggableRenderer();
         pr = new PluggableRenderer();
@@ -414,7 +413,7 @@ public class MyFullDemo extends JApplet implements ActionListener {
         v_size.setSelected(true);
         v_aspect = new JCheckBox("vertex degree ratio stretch");
         v_aspect.addActionListener(this);
-        v_small = new JCheckBox("filter vertices of degree < " + VertexDisplayPredicate.MIN_DEGREE);
+        v_small = new JCheckBox("filter vertices of degree < " + VertexDisplayPredicate.DEFAULT_DEGREE);
         v_small.addActionListener(this);
 
         vertex_panel.add(v_color);
@@ -754,6 +753,5 @@ public class MyFullDemo extends JApplet implements ActionListener {
             return edge.toString();
         }
     }
-    
-}
 
+}

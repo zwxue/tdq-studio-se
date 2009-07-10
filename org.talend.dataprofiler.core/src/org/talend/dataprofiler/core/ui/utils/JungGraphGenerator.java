@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -24,19 +23,25 @@ import java.awt.Graphics;
 import java.awt.MenuItem;
 import java.awt.Paint;
 import java.awt.PopupMenu;
-import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -45,7 +50,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dq.indicators.graph.EdgeWeightStrokeFunction;
 import org.talend.dq.indicators.graph.GraphBuilder;
+import org.talend.dq.indicators.graph.VertexDisplayPredicate;
 import org.talend.utils.color.AWTColorUtils;
 
 import edu.uci.ics.jung.graph.ArchetypeEdge;
@@ -57,12 +64,12 @@ import edu.uci.ics.jung.graph.decorators.DefaultToolTipFunction;
 import edu.uci.ics.jung.graph.decorators.EdgePaintFunction;
 import edu.uci.ics.jung.graph.decorators.EdgeShape;
 import edu.uci.ics.jung.graph.decorators.EdgeStringer;
-import edu.uci.ics.jung.graph.decorators.EdgeStrokeFunction;
 import edu.uci.ics.jung.graph.decorators.VertexPaintFunction;
 import edu.uci.ics.jung.graph.decorators.VertexStringer;
+import edu.uci.ics.jung.visualization.FRLayout;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
-import edu.uci.ics.jung.visualization.ISOMLayout;
-import edu.uci.ics.jung.visualization.Layout;
+import edu.uci.ics.jung.visualization.PersistentLayout;
+import edu.uci.ics.jung.visualization.PersistentLayoutImpl;
 import edu.uci.ics.jung.visualization.PluggableRenderer;
 import edu.uci.ics.jung.visualization.ShapePickSupport;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -81,9 +88,15 @@ public class JungGraphGenerator {
 
     private static final int DOUBLE_CLICK_COUNT = 2;
 
+    private static final String PERSIST_LAYOUT_FILE_NAME = "persistLayout.out";
+
     private Graph graph;
 
     private GraphBuilder graphbuilder;
+
+    private PluggableRenderer pr;
+
+    private VisualizationViewer vv;
 
     /**
      * DOC bzhou JungGraphGenerator constructor comment.
@@ -99,16 +112,119 @@ public class JungGraphGenerator {
         Frame frame = SWT_AWT.new_Frame(frameComp);
         frame.setTitle("Nominal Analysis");
 
-        PluggableRenderer pr = new PluggableRenderer();
+        pr = new PluggableRenderer();
         configurePlugableRender(pr);
 
-        Layout layout = new ISOMLayout(graph);
-        final VisualizationViewer vv = new VisualizationViewer(layout, pr);
+        PersistentLayout layout = new PersistentLayoutImpl(new FRLayout(graph));
+        vv = new VisualizationViewer(layout, pr);
+
         configureVViewer(vv);
 
-        // create a frome to hold the graph
+        // create a form to hold the graph
+        JPanel controllers = createToolControllers(vv);
+
+        JPanel panel = null;
+        if (isWithHelp) {
+            VisualizationViewer satellite = new SatelliteVisualizationViewer(vv, layout, pr, new Dimension(200, 200));
+
+            panel = new JPanel(new BorderLayout());
+            final JDesktopPane desktop = new JDesktopPane();
+
+            JInternalFrame vvFrame = new JInternalFrame();
+            vvFrame.setTitle("Desktop");
+            vvFrame.setMaximizable(true);
+            vvFrame.getContentPane().add(vv);
+            vvFrame.pack();
+            vvFrame.setVisible(true); // necessary as of 1.3
+            try {
+                vvFrame.setSelected(true);
+            } catch (java.beans.PropertyVetoException ex) {
+                log.error(ex, ex);
+            }
+            desktop.add(vvFrame);
+
+            final JInternalFrame dialog = createSatelliteDialog(vv, satellite);
+
+            JButton showSatellite = new JButton("Show Satellite View");
+            showSatellite.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    dialog.pack();
+                    dialog.setLocation(desktop.getWidth() - dialog.getWidth(), 0);
+                    dialog.show();
+                    try {
+                        dialog.setSelected(true);
+                    } catch (java.beans.PropertyVetoException ex) {
+                        log.error(ex, ex);
+                    }
+                }
+            });
+            controllers.add(showSatellite);
+            desktop.add(dialog);
+
+            panel.add(desktop);
+        } else {
+            panel = new GraphZoomScrollPane(vv);
+        }
+
+        frame.add(panel);
+        frame.add(controllers, BorderLayout.SOUTH);
+        frame.validate();
+
+        addListeners(vv);
+
+        return frameComp;
+    }
+
+    /**
+     * DOC bZhou Comment method "createToolControllers".
+     * 
+     * @param vv
+     * @return
+     */
+    private JPanel createToolControllers(final VisualizationViewer vv) {
         final GraphMouse graphMouse = new DefaultModalGraphMouse();
         vv.setGraphMouse(graphMouse);
+
+        JPanel pSlider = new JPanel();
+        pSlider.setLayout(new BoxLayout(pSlider, BoxLayout.Y_AXIS));
+        pSlider.setBorder(new TitledBorder("Filter edge weight"));
+
+        final JSlider slider = new JSlider(0, 10, 0);
+        slider.setMajorTickSpacing(2);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.setSnapToTicks(true);
+        slider.addChangeListener(new ChangeListener() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+             */
+            public void stateChanged(ChangeEvent e) {
+                int degree = slider.getValue();
+                ((VertexDisplayPredicate) pr.getVertexIncludePredicate()).filterSmall(true, degree);
+                // log.info("sliding..." + degree);
+            }
+        });
+        pSlider.add(slider);
+
+        final JCheckBox inverse = new JCheckBox("inverse edge weight");
+        inverse.addActionListener(new ActionListener() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+             */
+            public void actionPerformed(ActionEvent e) {
+                ((EdgeWeightStrokeFunction) pr.getEdgeStrokeFunction()).setInverse(inverse.isSelected());
+                vv.repaint();
+                log.info("inverse...");
+            }
+        });
 
         final ScalingControl scaler = new CrossoverScalingControl();
 
@@ -139,63 +255,70 @@ public class JungGraphGenerator {
         // set mode seleciton box
         JComboBox modeBox = ((DefaultModalGraphMouse) graphMouse).getModeComboBox();
 
+        JButton persist = new JButton("Save Layout");
+        persist.addActionListener(new ActionListener() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+             */
+            public void actionPerformed(ActionEvent e) {
+                // FIXME open file select dialog.
+                // JFileChooser fileChooser = new JFileChooser();
+                // fileChooser.setDialogTitle("Choose a file");
+                // int result = fileChooser.showOpenDialog((JButton) e.getSource());
+                //
+                // if (result == JFileChooser.APPROVE_OPTION) {
+                // File file = fileChooser.getSelectedFile();
+                // }
+
+                try {
+                    PersistentLayout pl = (PersistentLayout) vv.getGraphLayout();
+                    pl.persist(PERSIST_LAYOUT_FILE_NAME);
+                } catch (IOException e1) {
+                    log.error(e1, e1);
+                }
+            }
+        });
+
+        JButton restore = new JButton("Restore Layout");
+        restore.addActionListener(new ActionListener() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+             */
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    PersistentLayout pl = (PersistentLayout) vv.getGraphLayout();
+                    pl.restore(PERSIST_LAYOUT_FILE_NAME);
+                    vv.repaint();
+                } catch (Exception e1) {
+                    log.error(e1, e1);
+                }
+            }
+        });
+
+        JPanel jp2 = new JPanel();
+        jp2.setLayout(new java.awt.GridLayout(2, 1));
+        jp2.add(inverse);
+        jp2.add(modeBox);
+
+        JPanel jp3 = new JPanel();
+        jp3.setLayout(new java.awt.GridLayout(2, 1));
+        jp3.add(persist);
+        jp3.add(restore);
+
         JPanel controls = new JPanel();
         controls.add(plus);
         controls.add(minus);
         controls.add(reset);
-        controls.add(modeBox);
+        controls.add(jp2);
+        controls.add(jp3);
 
-        JPanel panel = null;
-        if (isWithHelp) {
-            VisualizationViewer satellite = new SatelliteVisualizationViewer(vv, layout, pr, new Dimension(200, 200));
-
-            panel = new JPanel(new BorderLayout());
-            final JDesktopPane desktop = new JDesktopPane();
-
-            JInternalFrame vvFrame = new JInternalFrame();
-            vvFrame.setTitle("Desktop");
-            vvFrame.setMaximizable(true);
-            vvFrame.getContentPane().add(vv);
-            vvFrame.pack();
-            vvFrame.setVisible(true); // necessary as of 1.3
-            try {
-                vvFrame.setSelected(true);
-            } catch (java.beans.PropertyVetoException ex) {
-                log.error(ex, ex);
-            }
-            desktop.add(vvFrame);
-
-            final JInternalFrame dialog = createSatelliteDialog(vv, satellite);
-
-            JButton zoomer = new JButton("Show Satellite View");
-            zoomer.addActionListener(new ActionListener() {
-
-                public void actionPerformed(ActionEvent e) {
-                    dialog.pack();
-                    dialog.setLocation(desktop.getWidth() - dialog.getWidth(), 0);
-                    dialog.show();
-                    try {
-                        dialog.setSelected(true);
-                    } catch (java.beans.PropertyVetoException ex) {
-                        log.error(ex, ex);
-                    }
-                }
-            });
-            controls.add(zoomer);
-            desktop.add(dialog);
-
-            panel.add(desktop);
-        } else {
-            panel = new GraphZoomScrollPane(vv);
-        }
-
-        frame.add(panel);
-        frame.add(controls, BorderLayout.SOUTH);
-        frame.validate();
-
-        addListeners(vv);
-
-        return frameComp;
+        return controls;
     }
 
     /**
@@ -342,17 +465,17 @@ public class JungGraphGenerator {
             }
         });
 
-        pr.setEdgeStrokeFunction(new EdgeStrokeFunction() {
-
-            public Stroke getStroke(Edge e) {
-                Integer weight = graphbuilder.getEdgeWeight().getNumber(e).intValue();
-                // (Integer) e.getUserDatum(GraphBuilder.E_WEIGHT_KEY);
-                // enlarge edges with small weight
-
-                // return new BasicStroke(10 * weight / graphbuilder.getTotalWeight());
-                return new BasicStroke(10.0f / weight);
-            }
-        });
+        // pr.setEdgeStrokeFunction(new EdgeStrokeFunction() {
+        //
+        // public Stroke getStroke(Edge e) {
+        // Integer weight = graphbuilder.getEdgeWeight().getNumber(e).intValue();
+        // // (Integer) e.getUserDatum(GraphBuilder.E_WEIGHT_KEY);
+        // // enlarge edges with small weight
+        //
+        // // return new BasicStroke(10 * weight / graphbuilder.getTotalWeight());
+        // return new BasicStroke(10.0f / weight);
+        // }
+        // });
 
         pr.setEdgePaintFunction(new EdgePaintFunction() {
 
@@ -385,6 +508,10 @@ public class JungGraphGenerator {
                 // return null;
             }
         });
+
+        pr.setEdgeStrokeFunction(new EdgeWeightStrokeFunction(graphbuilder));
+
+        pr.setVertexIncludePredicate(new VertexDisplayPredicate(false));
     }
 
     private Composite createAWTSWTComposite(Composite parent) {

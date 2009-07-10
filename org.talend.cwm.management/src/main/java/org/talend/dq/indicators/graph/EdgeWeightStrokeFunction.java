@@ -28,26 +28,55 @@ public final class EdgeWeightStrokeFunction implements EdgeStrokeFunction {
 
     protected static final Stroke dotted = PluggableRenderer.DOTTED;
 
-    protected boolean weighted = false;
+    protected Boolean weighted;
 
     protected NumberEdgeValue edge_weight;
 
+    protected Boolean inverse;
+
+    private GraphBuilder builder;
+
     public EdgeWeightStrokeFunction(NumberEdgeValue edge_weight) {
         this.edge_weight = edge_weight;
+    }
+
+    public EdgeWeightStrokeFunction(GraphBuilder builder) {
+        this.builder = builder;
     }
 
     public void setWeighted(boolean weighted) {
         this.weighted = weighted;
     }
 
+    /**
+     * Sets the inverse.
+     * 
+     * @param inverse the inverse to set
+     */
+    public void setInverse(boolean inverse) {
+        this.inverse = inverse;
+    }
+
     public Stroke getStroke(Edge e) {
-        if (weighted) {
-            if (drawHeavy(e))
-                return heavy;
-            else
-                return dotted;
-        } else
-            return basic;
+        if (inverse != null) {
+            int weight = builder.getEdgeWeight().getNumber(e).intValue();
+            if (inverse) {
+                return new BasicStroke(10 * (weight / builder.getTotalWeight()) ^ (1 / 2));
+            } else {
+                return new BasicStroke(10.0f / weight);
+            }
+        }
+
+        if (weighted != null) {
+            if (weighted) {
+                if (drawHeavy(e))
+                    return heavy;
+                else
+                    return dotted;
+            }
+        }
+
+        return basic;
     }
 
     protected boolean drawHeavy(Edge e) {

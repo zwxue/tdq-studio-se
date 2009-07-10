@@ -18,23 +18,51 @@ import edu.uci.ics.jung.graph.Vertex;
 
 public final class VertexDisplayPredicate implements Predicate {
 
+    public final static int DEFAULT_DEGREE = 0;
+
     protected boolean filter_small;
 
-    public final static int MIN_DEGREE = 4;
+    protected int degree;
 
     public VertexDisplayPredicate(boolean filter) {
         this.filter_small = filter;
     }
 
-    public void filterSmall(boolean b) {
-        filter_small = b;
+    /**
+     * DOC bZhou Comment method "filterSmall".
+     * 
+     * @param isFilter
+     */
+    public void filterSmall(boolean isFilter) {
+        this.filter_small = isFilter;
     }
 
-    public boolean evaluate(Object arg0) {
-        Vertex v = (Vertex) arg0;
-        if (filter_small)
-            return (v.degree() >= MIN_DEGREE);
-        else
-            return true;
+    /**
+     * DOC bZhou Comment method "filterSmall".
+     * 
+     * @param isFilter
+     * @param degree
+     */
+    public void filterSmall(boolean isFilter, int degree) {
+        this.filter_small = isFilter;
+        this.degree = degree;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.commons.collections.Predicate#evaluate(java.lang.Object)
+     */
+    public boolean evaluate(Object object) {
+        Vertex v = (Vertex) object;
+        if (filter_small) {
+            if (degree == 0) {
+                return (v.degree() >= DEFAULT_DEGREE);
+            }
+
+            return (v.degree() >= degree);
+        }
+
+        return true;
     }
 }
