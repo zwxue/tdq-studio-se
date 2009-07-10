@@ -95,7 +95,6 @@ public final class MigrationTaskManager {
 
                 allTasks.add(migrationTask);
             } catch (CoreException e) {
-                e.printStackTrace();
                 log.error(e, e);
             }
         }
@@ -188,7 +187,9 @@ public final class MigrationTaskManager {
 
                         monitor.subTask(task.getName());
 
-                        log.warn("now executing " + task.getName());
+                        if (log.isInfoEnabled()) {
+                            log.info("Migration - now executing " + task.getName());
+                        }
 
                         task.execute();
 
