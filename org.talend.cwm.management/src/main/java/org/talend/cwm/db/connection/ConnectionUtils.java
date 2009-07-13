@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -34,6 +35,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.log4j.Logger;
+import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.PluginConstant;
@@ -281,4 +283,31 @@ public final class ConnectionUtils {
 	public static ReturnCode closeConnection(final Connection connection) {
 		return org.talend.utils.sql.ConnectionUtils.closeConnection(connection);
 	}
+	/**
+     * DOC xqliu Comment method "getConnectionMetadata". 2009-07-13 bug 7888.
+     * 
+     * @param conn
+     * @return
+     * @throws SQLException
+     */
+
+    public static DatabaseMetaData getConnectionMetadata(Connection conn) throws SQLException {
+        DatabaseMetaData dbMetaData = conn.getMetaData();
+        if (dbMetaData == null || dbMetaData.getConnection() == null
+                || dbMetaData.getConnection() != conn) {
+            dbMetaData = createFakeDatabaseMetaData(conn);
+        }
+        return dbMetaData;
+    }
+
+    /**
+     * only for db2 on z/os right now. 2009-07-13 bug 7888.
+     * 
+     * @param conn2
+     * @return
+     */
+    private static DatabaseMetaData createFakeDatabaseMetaData(Connection conn) {
+        DB2ForZosDataBaseMetadata dmd = new DB2ForZosDataBaseMetadata(conn);
+        return dmd;
+    }
 }

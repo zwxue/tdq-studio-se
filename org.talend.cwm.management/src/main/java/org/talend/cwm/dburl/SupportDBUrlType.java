@@ -65,6 +65,14 @@ public enum SupportDBUrlType {
                   "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
                   null,
                   "DB2"), //$NON-NLS-1$
+    DB2ZOSDEFAULTURL("DB2 ZOS", //$NON-NLS-1$
+                     "localhost", //$NON-NLS-1$
+                     "557", //$NON-NLS-1$
+                     "dbname", //$NON-NLS-1$
+                     null,
+                     "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
+                     null,
+                     "DB2"), //$NON-NLS-1$
     POSTGRESQLEFAULTURL("PostgreSQL", //$NON-NLS-1$
                         "localhost", //$NON-NLS-1$
                         "5432", //$NON-NLS-1$

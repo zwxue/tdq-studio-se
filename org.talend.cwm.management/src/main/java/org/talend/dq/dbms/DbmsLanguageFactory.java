@@ -17,6 +17,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
@@ -121,17 +122,20 @@ public final class DbmsLanguageFactory {
      */
     public static DbmsLanguage createDbmsLanguage(Connection connection) {
         assert connection != null;
-        String databaseProductName;
+        // MOD xqliu 2009-07-13 bug 7888
+        String databaseProductName = null;
         try {
-            databaseProductName = connection.getMetaData().getDatabaseProductName();
+            databaseProductName = ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductName();
+            databaseProductName = databaseProductName == null ? "" : databaseProductName;
             String databaseProductVersion = null;
             try {
-                databaseProductVersion = connection.getMetaData().getDatabaseProductVersion();
+                databaseProductVersion = ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductVersion();
+                databaseProductVersion = databaseProductVersion == null ? "0" : databaseProductVersion;
             } catch (Exception e) {
                 log.warn("Exception when retrieving database product version of " + databaseProductName, e);
             }
             DbmsLanguage dbmsLanguage = createDbmsLanguage(databaseProductName, databaseProductVersion);
-            dbmsLanguage.setDbQuoteString(connection.getMetaData().getIdentifierQuoteString());
+            dbmsLanguage.setDbQuoteString(ConnectionUtils.getConnectionMetadata(connection).getIdentifierQuoteString());
             return dbmsLanguage;
         } catch (SQLException e) {
             log.warn("Exception when retrieving database informations:" + e + ". Creating a default DbmsLanguage.", e);

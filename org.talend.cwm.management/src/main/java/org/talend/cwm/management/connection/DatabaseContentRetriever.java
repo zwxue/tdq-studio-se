@@ -34,6 +34,7 @@ import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.constants.SoftwareSystemConstants;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
@@ -113,7 +114,9 @@ public final class DatabaseContentRetriever {
             if (schemas != null) {
 
                 // --- check whether the result set has two columns (Oracle and Sybase only return 1 column)
-                final int columnCount = schemas.getMetaData().getColumnCount();
+                // MOD xqliu 2009-07-13 bug 7888
+                final int columnCount = schemas.getMetaData() == null ? 0 : schemas.getMetaData().getColumnCount();
+                // ~
                 boolean hasSchema = false;
                 while (schemas.next()) {
 
@@ -345,7 +348,9 @@ public final class DatabaseContentRetriever {
     }
 
     public static TdSoftwareSystem getSoftwareSystem(Connection connection) throws SQLException {
-        DatabaseMetaData databaseMetadata = connection.getMetaData();
+        // MOD xqliu 2009-07-13 bug 7888
+        DatabaseMetaData databaseMetadata = ConnectionUtils.getConnectionMetadata(connection);
+        // ~
         // --- get informations
         String databaseProductName = databaseMetadata.getDatabaseProductName();
         String databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
@@ -379,7 +384,9 @@ public final class DatabaseContentRetriever {
     }
 
     public static TypeSystem getTypeSystem(Connection connection) throws SQLException {
-        DatabaseMetaData databaseMetadata = connection.getMetaData();
+        // MOD xqliu 2009-07-13 bug 7888
+        DatabaseMetaData databaseMetadata = ConnectionUtils.getConnectionMetadata(connection);
+        // ~
         // --- get the types supported by the system
         ResultSet typeInfo = databaseMetadata.getTypeInfo();
         // int columnCount = typeInfo.getMetaData().getColumnCount();
@@ -476,7 +483,8 @@ public final class DatabaseContentRetriever {
     private static DatabaseMetaData getConnectionMetadata(Connection connection) throws SQLException {
         assert connection != null : "Connection should not be null in DatabaseContentRetriever.getConnectionMetadata() "
                 + getConnectionInformations(connection);
-        return connection.getMetaData();
+        // MOD xqliu 2009-07-13 bug 7888
+        return ConnectionUtils.getConnectionMetadata(connection);
     }
 
     public static TdSqlDataType createDataType(ResultSet columns) throws SQLException {

@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -53,7 +54,8 @@ abstract class CwmBuilder {
     protected DatabaseMetaData getConnectionMetadata(Connection conn) throws SQLException {
         assert conn != null : Messages.getString("CwmBuilder.ConnectionNotNull", getClass().getName(), //$NON-NLS-1$
                 getConnectionInformations(conn));
-        return conn.getMetaData();
+        // MOD xqliu 2009-07-13 bug 7888
+        return ConnectionUtils.getConnectionMetadata(conn);
     }
 
     protected String getConnectionInformations(Connection conn) {
@@ -102,4 +104,5 @@ abstract class CwmBuilder {
         }
         return comment;
     }
+
 }

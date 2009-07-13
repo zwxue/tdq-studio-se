@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.cwm.builders.TableBuilder;
 import org.talend.cwm.builders.ViewBuilder;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -198,7 +199,10 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         int idxCount = 0;
         ResultSet idx = null;
         try {
-            idx = getConnection().getMetaData().getIndexInfo(catalog, schema, table, false, false);
+            // MOD xqliu 2009-07-13 bug 7888
+            idx = ConnectionUtils.getConnectionMetadata(getConnection()).getIndexInfo(catalog, schema, table, false,
+                    false);
+            // ~
         } catch (SQLException e) {
             log.warn("Exception while getting indexes on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
                     + e.getLocalizedMessage(), e);
@@ -229,7 +233,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         int pkCount = 0;
         ResultSet pk = null;
         try {
-            pk = getConnection().getMetaData().getPrimaryKeys(catalog, schema, table);
+            // MOD xqliu 2009-07-13 bug 7888
+            pk = ConnectionUtils.getConnectionMetadata(getConnection()).getPrimaryKeys(catalog, schema, table);
+            // ~
         } catch (SQLException e1) {
             log.warn("Exception while getting primary keys on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
                     + e1.getLocalizedMessage(), e1);

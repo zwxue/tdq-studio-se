@@ -17,6 +17,7 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -41,7 +42,9 @@ public class DataProviderBuilder extends CwmBuilder {
             throws SQLException {
         super(conn);
         this.dataProvider = DatabaseContentRetriever.getDataProvider(driver, databaseUrl, driverProperties);
-        String identifierQuote = conn.getMetaData().getIdentifierQuoteString();
+        // MOD xqliu 2009-07-13 bug 7888
+        String identifierQuote = ConnectionUtils.getConnectionMetadata(conn).getIdentifierQuoteString();
+        // ~
         DataProviderHelper.setIdentifierQuoteString(identifierQuote, dataProvider);
     }
 

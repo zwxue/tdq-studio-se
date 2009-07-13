@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdTable;
@@ -42,7 +43,7 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
     private Map<String, PrimaryKey> column2pk = new HashMap<String, PrimaryKey>();
 
     private Map<String, ForeignKey> column2foreign = new HashMap<String, ForeignKey>();
-
+    
     /**
      * TableBuilder constructor.
      * 
@@ -84,7 +85,10 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
      */
     public List<PrimaryKey> getPrimaryKeys(String catalogName, String schemaPattern, String tableName) throws SQLException {
         List<PrimaryKey> pks = new ArrayList<PrimaryKey>();
-        ResultSet primaryKeys = connection.getMetaData().getPrimaryKeys(catalogName, schemaPattern, tableName);
+        // MOD xqliu 2009-07-13 bug 7888
+        ResultSet primaryKeys = ConnectionUtils.getConnectionMetadata(connection).getPrimaryKeys(catalogName,
+                schemaPattern, tableName);
+        // ~
         try {
             while (primaryKeys.next()) {
                 PrimaryKey pk = createPrimaryKey(primaryKeys);
@@ -123,10 +127,15 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
     public List<ForeignKey> getForeignKeys(String catalogName, String schemaPattern, String tableName) throws SQLException {
         List<ForeignKey> pks = new ArrayList<ForeignKey>();
         // MOD xqliu 2009-05-26 bug 5669: the method getImportedKeys() not yet implemented in SQLiteJDBC
-        String driverName = connection.getMetaData().getDriverName();
+        // MOD xqliu 2009-07-13 bug 7888
+        String driverName = ConnectionUtils.getConnectionMetadata(connection).getDriverName();
+        // ~
         String dbLanguage = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
         if (!driverName.toLowerCase().contains(dbLanguage.toLowerCase())) {
-            ResultSet foreignKeys = connection.getMetaData().getImportedKeys(catalogName, schemaPattern, tableName);
+            // MOD xqliu 2009-07-13 bug 7888
+            ResultSet foreignKeys = ConnectionUtils.getConnectionMetadata(connection).getImportedKeys(catalogName,
+                    schemaPattern, tableName);
+            // ~
             try {
                 while (foreignKeys.next()) {
                     ForeignKey pk = createForeignKey(foreignKeys);
