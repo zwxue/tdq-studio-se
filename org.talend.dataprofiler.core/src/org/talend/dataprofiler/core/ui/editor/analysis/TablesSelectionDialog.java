@@ -496,6 +496,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             if (inputElement instanceof Package) {
                 EObject eObj = (EObject) inputElement;
                 Package pckg = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObj);
+                
                 if (pckg != null) {
                     Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg);
                     Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(pckg);
@@ -515,6 +516,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                                 tableList = DqRepositoryViewService.getTables(provider, schema, null, true);
                             }
                             tables = tableList.toArray(new TdTable[tableList.size()]);
+                            //save the Table from db into EMF Object.
+                            pckg.getOwnedElement().addAll(tableList);
                         } catch (TalendException e) {
                             MessageBoxExceptionHandler.process(e);
                         }
