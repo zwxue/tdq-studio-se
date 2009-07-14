@@ -95,7 +95,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         return readFromFile(file);
     }
 
-    private Analysis readFromFile(IFile file) {
+    public Analysis readFromFile(IFile file) {
         this.remove(file);
         Resource fileResource = getFileResource(file);
         Iterator<IFile> fileIterator = allAnalysisMap.keySet().iterator();
@@ -142,7 +142,7 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
      * @param fileResource
      * @return
      */
-    private Analysis retireAnalysis(Resource fileResource) {
+    public Analysis retireAnalysis(Resource fileResource) {
         EList<EObject> contents = fileResource.getContents();
         if (contents.isEmpty()) {
             log.error("No content in " + fileResource);
