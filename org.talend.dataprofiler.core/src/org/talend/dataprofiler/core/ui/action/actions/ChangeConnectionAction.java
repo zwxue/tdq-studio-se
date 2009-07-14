@@ -110,7 +110,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 		final EList<ModelElement> analyzedElements = synAnalysis.getContext()
 				.getAnalysedElements();
 		if (analyzedElements == null || analyzedElements.size() == 0) {
-			return new ReturnCode(Boolean.FALSE);
+			return new ReturnCode(Boolean.TRUE);
 		}
 
 		// Open synchronized dialog.
