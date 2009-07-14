@@ -37,7 +37,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.analysis.PaginationInfo;
-import org.talend.dataprofiler.core.ui.pref.PerformancePreferencePage;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 
 /**
  * 
@@ -360,7 +360,7 @@ public class UIPagination {
     public static int getPageSize() {
         try {
             String defaultPageSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(
-                    PerformancePreferencePage.ANALYZED_ITEMS_PER_PAGE);
+                    EditorPreferencePage.ANALYZED_ITEMS_PER_PAGE);
             if (!"".equals(defaultPageSize)) {
                 return Integer.parseInt(defaultPageSize);
             }

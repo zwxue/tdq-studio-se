@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.pref;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -25,11 +26,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -44,13 +45,19 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     public static final String EDITOR_RESULT_PAGE_INDICATORS = "EDITOR_RESULT_PAGE_INDICATORS"; //$NON-NLS-1$
 
+    public static final String ANALYZED_ITEMS_PER_PAGE = "ANALYZED_ITEMS_PER_PAGE"; //$NON-NLS-1$
+
     // 1:Unfold all sections, 2:Fold all sections, 3:Unfold first section
     public static final int FOLDING_1 = 1;
 
     public static final int FOLDING_2 = 2;
 
     public static final int FOLDING_3 = 3;
-    // ~
+
+    // default element count in per page
+    public static final String DEFAULT_PAGE_SIZE = "5";
+
+    private Text pageSizeText;
 
     private static int currentFolding;
 
@@ -61,7 +68,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS = true;
 
     public static final boolean DEFAULT_EDITOR_RESULT_PAGE_INDICATORS = false;
-    
+
     public static int getCurrentFolding() {
         return currentFolding;
     }
@@ -88,7 +95,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     @Override
     protected Control createContents(Composite parent) {
-        
+
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(new GridLayout());
         mainComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -187,11 +194,26 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             }
         });
 
+        Composite pageSizeComp = new Composite(mainComposite, SWT.NONE);
+        pageSizeComp.setLayout(new GridLayout(2, false));
+
+        Label dfofLable = new Label(pageSizeComp, SWT.NONE);
+        dfofLable.setText("Analyzed Items Per Page");
+
+        pageSizeText = new Text(pageSizeComp, SWT.BORDER);
+        String pageSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(ANALYZED_ITEMS_PER_PAGE);
+        if (pageSize == null || pageSize.equals("")) {
+            pageSize = DEFAULT_PAGE_SIZE;
+        }
+        pageSizeText.setText(pageSize);
+        pageSizeText.setLayoutData(new GridData());
+        ((GridData) pageSizeText.getLayoutData()).widthHint = 100;
+
         return mainComposite;
     }
 
     public void init(IWorkbench workbench) {
-        
+
     }
 
     public EditorPreferencePage() {
@@ -207,8 +229,28 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS,
                 isCurrentAnalyzedElements() ? 0 : 1);
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(EDITOR_RESULT_PAGE_INDICATORS, isCurrentIndicators());
-        DefinitionHandler.getInstance().saveResource();
-        return super.performOk();
+
+        if (checkPageSize()) {
+            ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ANALYZED_ITEMS_PER_PAGE, pageSizeText.getText());
+            ResourcesPlugin.getPlugin().savePluginPreferences();
+            return super.performOk();
+        } else {
+            MessageDialogWithToggle.openInformation(getShell(), DefaultMessagesImpl
+                    .getString("PerformancePreferencePage.information"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("PerformancePreferencePage.pageSizeMsg")); //$NON-NLS-1$ //$NON-NLS-2$
+            return false;
+        }
     }
 
+    private boolean checkPageSize() {
+        try {
+            int pageSize = Integer.parseInt(this.pageSizeText.getText());
+            if (pageSize < 1) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
 }
