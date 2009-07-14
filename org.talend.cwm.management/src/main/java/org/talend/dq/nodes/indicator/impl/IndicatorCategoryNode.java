@@ -24,13 +24,13 @@ public class IndicatorCategoryNode extends AbstractIndicatorNode {
 
     public IndicatorCategoryNode(IndicatorEnum indicatorEnum) {
         super(indicatorEnum);
-         createChildren(indicatorEnum);
+        createChildren(indicatorEnum);
     }
 
     public IndicatorCategoryNode(String label, IndicatorEnum[] indicatorEnums) {
         super(null);
         this.label = label;
-         this.creatChildren(indicatorEnums);
+        this.creatChildren(indicatorEnums);
     }
 
     private void createChildren(IndicatorEnum indicatorEnum) {
@@ -43,7 +43,7 @@ public class IndicatorCategoryNode extends AbstractIndicatorNode {
         for (int i = 0; i < indicatorEnums.length; i++) {
             if (indicatorEnums[i].hasChildren()) {
                 childrenNodes[i] = new IndicatorCategoryNode(indicatorEnums[i]);
-//                ((IndicatorCategoryNode) childrenNodes[i]).createChildren(indicatorEnums[i]);
+                // ((IndicatorCategoryNode) childrenNodes[i]).createChildren(indicatorEnums[i]);
             } else {
 
                 childrenNodes[i] = new IndicatorNode(indicatorEnums[i]);

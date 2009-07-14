@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core Plug-in
 Bundle-SymbolicName: org.talend.dataprofiler.core; singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.1.2.qualifier
 Bundle-Activator: org.talend.dataprofiler.core.CorePlugin
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.eclipse.ui,
@@ -49,7 +49,6 @@ Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.model,
  org.talend.dataprofiler.core.model.nodes.analysis,
  org.talend.dataprofiler.core.model.nodes.foldernode,
- org.talend.dataprofiler.core.model.nodes.indicator.impl,
  org.talend.dataprofiler.core.pattern,
  org.talend.dataprofiler.core.service,
  org.talend.dataprofiler.core.sql,

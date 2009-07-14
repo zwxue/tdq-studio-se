@@ -63,7 +63,7 @@ public abstract class AbstractIndicatorNode implements IIndicatorNode {
     }
 
     public String getLabel() {
-        return this.indicatorEnum.getLabel();
+        return getIndicatorInstance().getIndicatorDefinition().getLabel();
     }
 
     /*

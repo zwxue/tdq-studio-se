@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -114,6 +115,7 @@ public class IndicatorSelectDialog extends TrayDialog {
 
         public TreeItemContainer(TreeItemContainer parentItem, int style, int initialCapacity) {
             super(parentItem, style);
+            setImage(ImageLib.getImage(ImageLib.IND_DEFINITION));
             this.initialCapacity = initialCapacity;
         }
 
