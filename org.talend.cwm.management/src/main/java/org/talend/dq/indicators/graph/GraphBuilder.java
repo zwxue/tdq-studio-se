@@ -69,7 +69,7 @@ public class GraphBuilder {
     private Graph graph;
 
     protected NumberEdgeValue edgeWeight;
-    
+
     private long totalWeight;
 
     /**
@@ -200,7 +200,6 @@ public class GraphBuilder {
         return verticesInRow;
     }
 
-
     /**
      * DOC scorreia Comment method "getIntegerValue".
      * 
@@ -246,7 +245,7 @@ public class GraphBuilder {
     private void updateEdge(Edge edge, Object[] row, int rowIdx, int countColumnIndex, Vertex vi, Vertex vj) {
         edgeWeight.setNumber(edge, edgeWeight.getNumber(edge).intValue() + getIntegerValue(row[countColumnIndex]));
     }
-    
+
     /**
      * DOC scorreia Comment method "newVertex".
      * 
@@ -266,4 +265,12 @@ public class GraphBuilder {
         return myVertex;
     }
 
+    /**
+     * Getter for graph.
+     * 
+     * @return the graph
+     */
+    public Graph getGraph() {
+        return graph;
+    }
 }

@@ -50,9 +50,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dq.indicators.graph.EdgeDisplayPredicate;
 import org.talend.dq.indicators.graph.EdgeWeightStrokeFunction;
 import org.talend.dq.indicators.graph.GraphBuilder;
-import org.talend.dq.indicators.graph.VertexDisplayPredicate;
 import org.talend.utils.color.AWTColorUtils;
 
 import edu.uci.ics.jung.graph.ArchetypeEdge;
@@ -204,8 +204,10 @@ public class JungGraphGenerator {
              * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
              */
             public void stateChanged(ChangeEvent e) {
-                int degree = slider.getValue();
-                ((VertexDisplayPredicate) pr.getVertexIncludePredicate()).filterSmall(true, degree);
+                int weight = slider.getValue();
+                EdgeDisplayPredicate edgePredicate = (EdgeDisplayPredicate) pr.getEdgeIncludePredicate();
+                edgePredicate.filterSmall(weight);
+                // ((VertexDisplayPredicate) pr.getVertexIncludePredicate()).filterSmall(true, weight);
                 // log.info("sliding..." + degree);
             }
         });
@@ -312,6 +314,7 @@ public class JungGraphGenerator {
         jp3.add(restore);
 
         JPanel controls = new JPanel();
+        controls.add(pSlider);
         controls.add(plus);
         controls.add(minus);
         controls.add(reset);
@@ -511,7 +514,9 @@ public class JungGraphGenerator {
 
         pr.setEdgeStrokeFunction(new EdgeWeightStrokeFunction(graphbuilder));
 
-        pr.setVertexIncludePredicate(new VertexDisplayPredicate(false));
+        pr.setEdgeIncludePredicate(new EdgeDisplayPredicate(graphbuilder));
+
+        // pr.setVertexIncludePredicate(new VertexDisplayPredicate(false));
     }
 
     private Composite createAWTSWTComposite(Composite parent) {
