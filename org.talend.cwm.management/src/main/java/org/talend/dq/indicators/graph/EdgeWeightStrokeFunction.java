@@ -32,8 +32,6 @@ public final class EdgeWeightStrokeFunction implements EdgeStrokeFunction {
 
     protected NumberEdgeValue edge_weight;
 
-    protected Boolean inverse;
-
     private GraphBuilder builder;
 
     public EdgeWeightStrokeFunction(NumberEdgeValue edge_weight) {
@@ -48,35 +46,22 @@ public final class EdgeWeightStrokeFunction implements EdgeStrokeFunction {
         this.weighted = weighted;
     }
 
-    /**
-     * Sets the inverse.
-     * 
-     * @param inverse the inverse to set
-     */
-    public void setInverse(boolean inverse) {
-        this.inverse = inverse;
-    }
 
     public Stroke getStroke(Edge e) {
-        if (inverse != null) {
             int weight = builder.getEdgeWeight().getNumber(e).intValue();
-            if (inverse) {
-                return new BasicStroke(10 * (weight / builder.getTotalWeight()) ^ (1 / 2));
-            } else {
-                return new BasicStroke(10.0f / weight);
-            }
-        }
+            float width = builder.getEdgeWidth(weight);
+            return new BasicStroke(width);
 
-        if (weighted != null) {
-            if (weighted) {
-                if (drawHeavy(e))
-                    return heavy;
-                else
-                    return dotted;
-            }
-        }
+        // if (weighted != null) {
+        // if (weighted) {
+        // if (drawHeavy(e))
+        // return heavy;
+        // else
+        // return dotted;
+        // }
+        // }
 
-        return basic;
+        // return basic;
     }
 
     protected boolean drawHeavy(Edge e) {

@@ -57,6 +57,6 @@ public class EdgeDisplayPredicate implements Predicate {
     public boolean evaluate(Object object) {
         Edge edge = (Edge) object;
 
-        return builder != null && builder.getEdgeWeight().getNumber(edge).intValue() > degree;
+        return builder != null && builder.getEdgeWidth(builder.getEdgeWeight().getNumber(edge).intValue()) > degree;
     }
 }

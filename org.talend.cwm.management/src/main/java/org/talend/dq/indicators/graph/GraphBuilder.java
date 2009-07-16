@@ -71,6 +71,12 @@ public class GraphBuilder {
     protected NumberEdgeValue edgeWeight;
 
     private long totalWeight;
+    
+    boolean proportionalWidth = false;
+
+    public void setProportionalWidth(boolean proportionalWidth) {
+        this.proportionalWidth = proportionalWidth;
+    }
 
     /**
      * Getter for totalWeight.
@@ -272,5 +278,16 @@ public class GraphBuilder {
      */
     public Graph getGraph() {
         return graph;
+    }
+    
+    /**
+     * Method "computeEdgeWidth".
+     * 
+     * @param weight the weight of an edge
+     * @return the width to be used for the edge
+     */
+    public float getEdgeWidth(int weight) {
+        return (proportionalWidth) ? (float) (10 * Math.pow((double) weight / this.getTotalWeight(), 1.0d / 2))
+                : 10.0f / weight;
     }
 }
