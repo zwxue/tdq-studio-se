@@ -14,6 +14,8 @@ package org.talend.resource;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 
 /**
@@ -84,6 +86,7 @@ public final class ResourceManager {
      * @return
      */
     public static IFolder getReportingDBFolder() {
-        return getRootProject().getFolder(REPORTING_DB_FOLDER_NAME);
+        // MOD xqliu 2009-07-15 bug 7820
+        return ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(REPORTING_DB_FOLDER_NAME));
     }
 }
