@@ -193,8 +193,8 @@ public class JungGraphGenerator {
         final JSlider slider = new JSlider(0, 10, 0);
         slider.setMajorTickSpacing(2);
         slider.setMinorTickSpacing(1);
-        slider.setPaintTicks(true);
-        slider.setPaintLabels(true);
+        slider.setPaintTicks(false);
+        slider.setPaintLabels(false);
         slider.setSnapToTicks(true);
         slider.addChangeListener(new ChangeListener() {
 
@@ -222,7 +222,7 @@ public class JungGraphGenerator {
              * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
              */
             public void actionPerformed(ActionEvent e) {
-                ((EdgeWeightStrokeFunction) pr.getEdgeStrokeFunction()).setInverse(inverse.isSelected());
+                graphbuilder.setProportionalWidth(inverse.isSelected());
                 vv.repaint();
                 log.info("inverse...");
             }
