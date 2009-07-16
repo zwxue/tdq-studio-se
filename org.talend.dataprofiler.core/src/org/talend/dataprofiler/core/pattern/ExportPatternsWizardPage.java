@@ -22,10 +22,12 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -167,6 +169,7 @@ public class ExportPatternsWizardPage extends WizardPage {
             log.error(e1, e1);
         }
 
+        Control buttonComposite = createSelectionButtons(container);
         Composite monitorComp = new Composite(container, SWT.NONE);
         monitorComp.setLayout(new GridLayout());
         monitorComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -176,6 +179,59 @@ public class ExportPatternsWizardPage extends WizardPage {
         bar.setVisible(false);
 
         setControl(container);
+    }
+
+    /**
+     * Adds the selection and deselection buttons on the dialog.for 8116.
+     * 
+     * @param composite
+     * @return
+     */
+    protected Composite createSelectionButtons(Composite composite) {
+        Composite buttonComposite = new Composite(composite, SWT.RIGHT);
+        GridLayout layout = new GridLayout(2, false);
+        buttonComposite.setLayout(layout);
+        buttonComposite.setFont(composite.getFont());
+        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL);
+        data.grabExcessHorizontalSpace = true;
+        composite.setData(data);
+
+        Button selectButton = new Button(buttonComposite, SWT.PUSH);
+        selectButton.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.selectAll"));
+
+        Button deselectButton = new Button(buttonComposite, SWT.PUSH);
+        deselectButton.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.deselectAll"));
+
+        addSelectionButtonListener(selectButton, deselectButton);
+        return buttonComposite;
+    }
+
+    /**
+     * Add the listeners for all select(deselect) button.
+     * 
+     * @param selectButton
+     * @param deselectButton
+     */
+    protected void addSelectionButtonListener(Button selectButton, Button deselectButton) {
+        SelectionListener listener = new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                try {
+                    selectedPatternsTree.setCheckedElements(folder.members());
+                } catch (CoreException e1) {
+                    log.error(e1, e1);
+                }
+            }
+        };
+        selectButton.addSelectionListener(listener);
+
+        listener = new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                selectedPatternsTree.setCheckedElements(new Object[0]);
+            }
+        };
+        deselectButton.addSelectionListener(listener);
     }
 
     public ProgressBar getProgressBar() {
