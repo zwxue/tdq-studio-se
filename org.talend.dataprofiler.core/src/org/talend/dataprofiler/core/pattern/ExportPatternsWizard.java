@@ -75,34 +75,24 @@ public class ExportPatternsWizard extends Wizard {
             File resource = new File(targetFile);
 
             if (isForExchange) {
+                ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
 
-                if (resource.isDirectory()) {
-                    ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
+                for (Iterator iterator = seletedPatterns.iterator(); iterator.hasNext();) {
+                    Pattern pattern = (Pattern) iterator.next();
+                    File patternFile = new File(resource, pattern.getName() + ".csv");
+                    if (patternFile.isFile() && patternFile.exists()) {
+                        try {
+                            FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
+                            patternFile.delete();
 
-                    for (Iterator iterator = seletedPatterns.iterator(); iterator.hasNext();) {
-                        Pattern pattern = (Pattern) iterator.next();
-                        File patternFile = new File(resource, pattern.getName() + ".csv");
-                        if (patternFile.isFile() && patternFile.exists()) {
-                            try {
-                                FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
-                                patternFile.delete();
-
-                            } catch (Exception e) {
-                                log.error(e.getMessage(), e);
-                            }
+                        } catch (Exception e) {
+                            log.error(e.getMessage(), e);
                         }
                     }
-
-                    return true;
                 }
 
-                MessageDialog.openError(getShell(), "Error", "Please specify a valid folder!");
-                return false;
+                return true;
             } else {
-                if (!resource.getName().endsWith(".csv")) {
-                    MessageDialog.openError(getShell(), "Error", "Please specify a valid file!");
-                    return false;
-                }
 
                 boolean isContinue = true;
                 if (resource.exists()) {
