@@ -68,47 +68,57 @@ public class ExportPatternsWizard extends Wizard {
             }
         }
 
-        File file = new File(targetFile);
-
-        // MOD mzhao bug 8041
-        if (!file.exists()) {
-            MessageDialog.openError(getShell(), "Empty folder", "Please specify a valid folder!");
+        if ("".equals(targetFile)) {
+            MessageDialog.openError(getShell(), "Error", "Please specify a valid resource!");
             return false;
-        }
-        boolean isContinue = true;
+        } else {
+            File resource = new File(targetFile);
 
-        if (file.exists() && !isForExchange) {
-            isContinue = MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("ExportPatternsWizard.fileAlreadyExist")); //$NON-NLS-1$
-        }
+            if (isForExchange) {
 
-        if (isContinue) {
-            ExportFactory.export(file, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
+                if (resource.isDirectory()) {
+                    ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
 
-            if (isForExchange && file.isDirectory()) {
-            	
-            	//MOD gyichao Just zip exported file. bug 8042
-            	for (Iterator iterator = seletedPatterns.iterator(); iterator
-						.hasNext();) {
-					Pattern pattern = (Pattern) iterator.next();
-					File patternFile = new File(file, pattern.getName() + ".csv");
-					if(patternFile.isFile() && patternFile.exists()){
-						 try {
-							FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
-							patternFile.delete();
-							
-						} catch (Exception e) {
-							log.error(e.getMessage(), e);
-						}
-						 
-					}
-				}
+                    for (Iterator iterator = seletedPatterns.iterator(); iterator.hasNext();) {
+                        Pattern pattern = (Pattern) iterator.next();
+                        File patternFile = new File(resource, pattern.getName() + ".csv");
+                        if (patternFile.isFile() && patternFile.exists()) {
+                            try {
+                                FilesUtils.zip(patternFile, patternFile.getPath() + ".zip");
+                                patternFile.delete();
 
+                            } catch (Exception e) {
+                                log.error(e.getMessage(), e);
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+
+                MessageDialog.openError(getShell(), "Error", "Please specify a valid folder!");
+                return false;
+            } else {
+                if (!resource.getName().endsWith(".csv")) {
+                    MessageDialog.openError(getShell(), "Error", "Please specify a valid file!");
+                    return false;
+                }
+
+                boolean isContinue = true;
+                if (resource.exists()) {
+                    isContinue = MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl
+                            .getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ExportPatternsWizard.fileAlreadyExist")); //$NON-NLS-1$
+                }
+
+                if (isContinue) {
+                    ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
+                    return true;
+                }
+
+                return false;
             }
-            return true;
         }
-
-        return false;
     }
 
     @Override
