@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -96,6 +97,10 @@ public abstract class AbstractAnalysisMetadataPage extends
 				log.error(e, e);
 			}
 		}
+	}
+	
+	public ScrolledForm getScrolledForm(){
+	    return null;
 	}
 
 	protected abstract ReturnCode canSave();

@@ -176,6 +176,8 @@ public class ColumnsComparisonMasterDetailsPage extends
 				topComp, (Analysis) this.currentModelElement);
 		columnsComparisonSection = anaColumnCompareViewer
 				.getColumnsComparisonSection();
+		
+		anaColumnCompareViewer.refreash();
 		anaColumnCompareViewer.addPropertyChangeListener(this);
 
 		createDataFilterSection(form, topComp);

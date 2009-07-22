@@ -40,6 +40,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.analysis.parameters.FuncationDependencyParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 
@@ -126,6 +127,9 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     case COLUMN_CORRELATION:
                         href = relatedTopics[6].getHref();
                         break;
+                    case TABLE_FUNCTIONAL_DEPENDENCY:
+                        href = null;
+                        break;
                     default:
                     }
                 } else {
@@ -134,6 +138,8 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     AnalysisParameter parameter = null;
 
                     AnalysisType type = AnalysisType.get(literal);
+                    
+                    AnalysisType currentType = AnalysisType.get(node.getLiteral());
 
                     FolderProvider currentFolderProvider = ((CreateNewAnalysisWizard) getWizard()).getCurrentFolderProvider();
                     switch (type) {
@@ -176,6 +182,14 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         href = relatedTopics[2].getHref();
                         break;
                     case TABLE:
+                       if(currentType == AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY){
+                           FuncationDependencyParameter funcationDependency = new FuncationDependencyParameter();
+                           funcationDependency.setFolderProvider(currentFolderProvider);
+                           parameter = funcationDependency;
+                           href = relatedTopics[7].getHref();
+                           type = currentType;
+                           break;
+                       }
                         NamedColumnSetAnalysisParameter tableParam = new NamedColumnSetAnalysisParameter();
                         tableParam.setFolderProvider(currentFolderProvider);
                         parameter = tableParam;

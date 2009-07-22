@@ -56,6 +56,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnsComparisonMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
@@ -71,7 +72,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 	private static Logger log = Logger
 			.getLogger(AnalysisColumnCompareTreeViewer.class);
-	private ColumnsComparisonMasterDetailsPage masterPage;
+	private AbstractAnalysisMetadataPage masterPage;
 	private Composite parentComp;
 	private ScrolledForm form = null;
 	private List<Column> columnListA;
@@ -83,43 +84,78 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 	private List<TableViewer> tableViewerPosStack = null;
 
 	private List<Column> columnListB;
+	
 	private Section columnsComparisonSection = null;
+	
 	private FormToolkit toolkit;
+	
 	private Button checkComputeButton;
+	
+	private TableViewer rightTable = null;
+	
+	private TableViewer leftTable = null;
+	
+	private String mainTitle;
+	
+	private String titleDescription;
 
 	private Analysis analysis = null;
+	
+	private boolean showCheckButton = true;
+	
+	private boolean checkComputButton = false;
+	
+	
+	
 
+	public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp,
+            List<Column> columnSetA , List<Column> columnSetB,String mainTitle,String description,boolean showCheckButton){
+	    this.masterPage = masterPage;
+        form = masterPage.getScrolledForm();
+        toolkit = masterPage.getEditor().getToolkit();
+        this.parentComp = topComp;
+        
+        columnListA = new ArrayList<Column>();
+        columnListB = new ArrayList<Column>();
+        tableViewerPosStack = new ArrayList<TableViewer>();
+        
+        columnListA.addAll(columnSetA);
+        columnListB.addAll(columnSetB);
+        
+        this.showCheckButton = showCheckButton;
+        createAnalyzedColumnSetsSection(mainTitle,description);
+	}
+	
 	public AnalysisColumnCompareTreeViewer(
-			ColumnsComparisonMasterDetailsPage masterPage, Composite topComp,
+	        AbstractAnalysisMetadataPage masterPage, Composite topComp,
 			Analysis analysis) {
-		this.masterPage = masterPage;
-		form = masterPage.getScrolledForm();
-		toolkit = masterPage.getEditor().getToolkit();
-		this.parentComp = topComp;
+	    
+	    this(masterPage,topComp,new ArrayList<Column>(),new ArrayList<Column>(),DefaultMessagesImpl
+                .getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"),DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare"),true);
+		
+	    if (analysis.getResults().getIndicators().size() >0) {
+            EList<Indicator> indicators = analysis.getResults().getIndicators();
+            RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators
+                    .get(0);
+            columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
+             RowMatchingIndicator rowMatchingIndicatorB =  (RowMatchingIndicator) indicators.get(1);
+            columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
+            
+        }
+	  
 		this.analysis = analysis;
-		columnListA = new ArrayList<Column>();
-		columnListB = new ArrayList<Column>();
-		if (analysis.getResults().getIndicators().size() != 0) {
-			EList<Indicator> indicators = analysis.getResults().getIndicators();
-			RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators
-					.get(0);
-			columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
-			// RowMatchingIndicator rowMatchingIndicatorB =
-			// (RowMatchingIndicator) indicators
-			// .get(1);
-			columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
-		}
-		tableViewerPosStack = new ArrayList<TableViewer>();
-		createAnalyzedColumnSetsSection();
+		checkComputButton = analysis.getParameters().getDeactivatedIndicators().size() != 0;
+		
 	}
 
-	private void createAnalyzedColumnSetsSection() {
+	
+
+    private void createAnalyzedColumnSetsSection(String mainTitle,String description) {
 		columnsComparisonSection = masterPage
 				.createSection(
 						form,
 						parentComp,
-						DefaultMessagesImpl
-								.getString("ColumnsComparisonMasterDetailsPage.analyzedColumnSets"), false, DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.SelectTableOrColumnsCompare")); //$NON-NLS-1$ //$NON-NLS-2$
+						mainTitle, false, description); //$NON-NLS-1$ //$NON-NLS-2$
 		Composite sectionClient = toolkit
 				.createComposite(columnsComparisonSection);
 		sectionClient.setLayout(new GridLayout());
@@ -127,23 +163,24 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 		// this.createSectionPart(form, sectionClient, "left Columns");
 		// this.createSectionPart(form, sectionClient, "Right Columns");
 
-		checkComputeButton = new Button(sectionClient, SWT.CHECK);
-		GridData layoutData = new GridData(GridData.FILL_BOTH);
-		layoutData.horizontalAlignment = SWT.CENTER;
-		checkComputeButton.setLayoutData(layoutData);
-		checkComputeButton.setText(DefaultMessagesImpl
-				.getString("ColumnsComparisonMasterDetailsPage.Compute")); //$NON-NLS-1$
-		checkComputeButton.setToolTipText(DefaultMessagesImpl
-				.getString("ColumnsComparisonMasterDetailsPage.WhenUnchecked")); //$NON-NLS-1$
-		checkComputeButton.addSelectionListener(new SelectionAdapter() {
-
-			public void widgetSelected(SelectionEvent e) {
-				setDirty(true);
-			}
-
-		});
-		checkComputeButton.setSelection(analysis.getParameters()
-				.getDeactivatedIndicators().size() != 0);
+		if(showCheckButton){
+    		checkComputeButton = new Button(sectionClient, SWT.CHECK);
+    		GridData layoutData = new GridData(GridData.FILL_BOTH);
+    		layoutData.horizontalAlignment = SWT.CENTER;
+    		checkComputeButton.setLayoutData(layoutData);
+    		checkComputeButton.setText(DefaultMessagesImpl
+    				.getString("ColumnsComparisonMasterDetailsPage.Compute")); //$NON-NLS-1$
+    		checkComputeButton.setToolTipText(DefaultMessagesImpl
+    				.getString("ColumnsComparisonMasterDetailsPage.WhenUnchecked")); //$NON-NLS-1$
+    		checkComputeButton.addSelectionListener(new SelectionAdapter() {
+    
+    			public void widgetSelected(SelectionEvent e) {
+    				setDirty(true);
+    			}
+    
+    		});
+    		checkComputeButton.setSelection(checkComputButton);
+		}
 
 		Composite columnComp = toolkit.createComposite(sectionClient);
 		columnComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -157,7 +194,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 		Composite leftComp = toolkit.createComposite(sashForm);
 		leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 		leftComp.setLayout(new GridLayout());
-		this
+		leftTable = this
 				.createSectionPart(
 						leftComp,
 						columnListA,
@@ -167,7 +204,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 		Composite rightComp = toolkit.createComposite(sashForm);
 		rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 		rightComp.setLayout(new GridLayout());
-		this
+		rightTable = this
 				.createSectionPart(
 						rightComp,
 						columnListB,
@@ -178,7 +215,16 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 		columnsComparisonSection.setClient(sectionClient);
 	}
 
-	private Section createSectionPart(Composite parentComp,
+    /**
+     * DOC jet Comment method "refreash".
+     * redraw selected content.
+     */
+    public void refreash(){
+        rightTable.refresh();
+        leftTable.refresh();
+    }
+    
+	private TableViewer createSectionPart(Composite parentComp,
 			final List<Column> columnList, String title, String hyperlinkText) {
 		Section columnSetElementSection = masterPage.createSection(form,
 				parentComp, title, true, null);
@@ -247,6 +293,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 						.getSelection()).getFirstElement());
 				columnsElementViewer.setInput(columnList);
 				enabledButtons(buttons, false);
+				masterPage.setDirty(true);
 				// MOD mzhao 2009-05-05 bug:6587.
 				// MOD mzhao feature 5887 2009-06-17
 				// updateBindConnection(masterPage);
@@ -295,7 +342,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 		});
 
 		columnSetElementSection.setClient(sectionComp);
-		return columnSetElementSection;
+		return columnsElementViewer;
 
 	}
 

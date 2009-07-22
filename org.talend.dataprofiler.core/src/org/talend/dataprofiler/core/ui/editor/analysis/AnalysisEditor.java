@@ -143,6 +143,17 @@ public class AnalysisEditor extends CommonFormEditor {
                 ExceptionHandler.process(e, Level.ERROR);
             }
             break;
+        case TABLE_FUNCTIONAL_DEPENDENCY:
+            masterPage = new ColumnDependencyMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.ColumnDependencyAnalysisEditor")); //$NON-NLS-1$
+            resultPage = new ColumnDependencyResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
+            try {
+                addPage(masterPage);
+                addPage(resultPage);
+            } catch (PartInitException e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
+            break;
         default:
 
         }
@@ -210,6 +221,13 @@ public class AnalysisEditor extends CommonFormEditor {
             ((ColumnsComparisonAnalysisResultPage) resultPage).refresh((ColumnsComparisonMasterDetailsPage) masterPage);
             isRefreshResultPage = false;
         }
+        
+        if (isRefreshResultPage && resultPage != null && newPageIndex == resultPage.getIndex()
+                && resultPage instanceof ColumnDependencyResultPage) {
+            ((ColumnDependencyResultPage) resultPage).refresh((ColumnDependencyMasterDetailsPage) masterPage);
+            isRefreshResultPage = false;
+        }
+        
         if (isRefreshResultPage && resultPage != null && newPageIndex == resultPage.getIndex()
                 && resultPage instanceof TableAnalysisResultPage) {
             ((TableAnalysisResultPage) resultPage).refresh((TableMasterDetailsPage) masterPage);

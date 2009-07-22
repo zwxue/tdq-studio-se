@@ -954,5 +954,45 @@
            version="3.2.0">
      </workspacetask>     
   </extension>
+  <extension
+        point="org.eclipse.emf.validation.constraintProviders">
+     <category
+           id="org.talend.dataprofiler.core.constraint.analysis"
+           name="%validator.analysis.name">
+     </category>
+     <constraintProvider
+           cache="true"
+           mode="Batch">
+        <package
+              namespaceUri="http://dataquality.analysis">
+        </package>
+        <constraints
+              categories="org.talend.dataprofiler.core.constraint.analysis">
+           <constraint
+                 class="org.talend.dataprofiler.core.model.nodes.analysis.validator.ContainIndicatorConstraint"
+                 id="org.talend.dataprofiler.core.noresults"
+                 lang="Java"
+                 mode="Batch"
+                 name="%validator.analysis.noresult.name"
+                 severity="ERROR"
+                 statusCode="101">
+              <message>
+                 %validator.analysis.noresult.msg
+              </message>
+              <description>
+                 description body text
+              </description>
+              <target
+                    class="Analysis">
+              </target>
+              
+               <!-- Analysis should include one or more indicator. -->
+               <![CDATA[
+                  self.results.indicators->size() > 0
+               ]]>
+           </constraint>
+        </constraints>
+     </constraintProvider>
+  </extension>
 
 </plugin>
