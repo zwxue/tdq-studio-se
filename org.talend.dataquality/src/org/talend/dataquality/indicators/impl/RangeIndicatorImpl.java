@@ -272,7 +272,7 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
             case IndicatorsPackage.RANGE_INDICATOR__UPPER_VALUE:
                 return getUpperValue();
             case IndicatorsPackage.RANGE_INDICATOR__DATATYPE:
-                return new Integer(getDatatype());
+                return getDatatype();
             case IndicatorsPackage.RANGE_INDICATOR__RANGE:
                 return getRange();
         }
@@ -293,7 +293,7 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
                 setUpperValue((MaxValueIndicator)newValue);
                 return;
             case IndicatorsPackage.RANGE_INDICATOR__DATATYPE:
-                setDatatype(((Integer)newValue).intValue());
+                setDatatype((Integer)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

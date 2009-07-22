@@ -687,7 +687,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             case IndicatorsPackage.INDICATOR__INSTANTIATED_EXPRESSIONS:
                 return getInstantiatedExpressions();
             case IndicatorsPackage.INDICATOR__COMPUTED:
-                return isComputed() ? Boolean.TRUE : Boolean.FALSE;
+                return isComputed();
             case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
                 return getJoinConditions();
         }
@@ -725,7 +725,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 getInstantiatedExpressions().addAll((Collection<? extends Expression>)newValue);
                 return;
             case IndicatorsPackage.INDICATOR__COMPUTED:
-                setComputed(((Boolean)newValue).booleanValue());
+                setComputed((Boolean)newValue);
                 return;
             case IndicatorsPackage.INDICATOR__JOIN_CONDITIONS:
                 getJoinConditions().clear();

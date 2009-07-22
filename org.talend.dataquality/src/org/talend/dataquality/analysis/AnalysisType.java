@@ -57,6 +57,14 @@ public enum AnalysisType implements Enumerator {
     TABLE_COMPARISON(3, "TABLE_COMPARISON", "Table Comparison"),
 
     /**
+     * The '<em><b>TABLE FUNCTIONAL DEPENDENCY</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #TABLE_FUNCTIONAL_DEPENDENCY_VALUE
+     * @generated
+     * @ordered
+     */
+    TABLE_FUNCTIONAL_DEPENDENCY(9, "TABLE_FUNCTIONAL_DEPENDENCY", "Functional Dependency"), /**
      * The '<em><b>CONNECTION</b></em>' literal object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -163,6 +171,21 @@ public enum AnalysisType implements Enumerator {
     public static final int TABLE_COMPARISON_VALUE = 3;
 
     /**
+     * The '<em><b>TABLE FUNCTIONAL DEPENDENCY</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>TABLE FUNCTIONAL DEPENDENCY</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #TABLE_FUNCTIONAL_DEPENDENCY
+     * @model literal="Functional Dependency"
+     * @generated
+     * @ordered
+     */
+    public static final int TABLE_FUNCTIONAL_DEPENDENCY_VALUE = 9;
+
+    /**
      * The '<em><b>CONNECTION</b></em>' literal value.
      * <!-- begin-user-doc -->
      * <p>
@@ -249,6 +272,7 @@ public enum AnalysisType implements Enumerator {
             COLUMNS_COMPARISON,
             TABLE,
             TABLE_COMPARISON,
+            TABLE_FUNCTIONAL_DEPENDENCY,
             CONNECTION,
             SCHEMA,
             MULTIPLE_COLUMN,
@@ -308,6 +332,7 @@ public enum AnalysisType implements Enumerator {
             case COLUMNS_COMPARISON_VALUE: return COLUMNS_COMPARISON;
             case TABLE_VALUE: return TABLE;
             case TABLE_COMPARISON_VALUE: return TABLE_COMPARISON;
+            case TABLE_FUNCTIONAL_DEPENDENCY_VALUE: return TABLE_FUNCTIONAL_DEPENDENCY;
             case CONNECTION_VALUE: return CONNECTION;
             case SCHEMA_VALUE: return SCHEMA;
             case MULTIPLE_COLUMN_VALUE: return MULTIPLE_COLUMN;

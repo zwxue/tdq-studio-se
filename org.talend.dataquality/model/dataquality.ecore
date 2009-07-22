@@ -95,6 +95,7 @@
       <eLiterals name="COLUMNS_COMPARISON" value="1" literal="Columns Comparison Analysis"/>
       <eLiterals name="TABLE" value="2" literal="Table Analysis"/>
       <eLiterals name="TABLE_COMPARISON" value="3" literal="Table Comparison"/>
+      <eLiterals name="TABLE_FUNCTIONAL_DEPENDENCY" value="9" literal="Functional Dependency"/>
       <eLiterals name="CONNECTION" value="4" literal="Connection Analysis"/>
       <eLiterals name="SCHEMA" value="5" literal="Schema Analysis"/>
       <eLiterals name="MULTIPLE_COLUMN" value="6" literal="Multiple Column Analysis"/>

@@ -98,7 +98,7 @@ public class IntegerValueImpl extends NumericValueImpl implements IntegerValue {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DomainPackage.INTEGER_VALUE__VALUE:
-                return new Integer(getValue());
+                return getValue();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -112,7 +112,7 @@ public class IntegerValueImpl extends NumericValueImpl implements IntegerValue {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DomainPackage.INTEGER_VALUE__VALUE:
-                setValue(((Integer)newValue).intValue());
+                setValue((Integer)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

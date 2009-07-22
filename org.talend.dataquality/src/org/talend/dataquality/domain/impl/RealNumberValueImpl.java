@@ -98,7 +98,7 @@ public class RealNumberValueImpl extends NumericValueImpl implements RealNumberV
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DomainPackage.REAL_NUMBER_VALUE__VALUE:
-                return new Double(getValue());
+                return getValue();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -112,7 +112,7 @@ public class RealNumberValueImpl extends NumericValueImpl implements RealNumberV
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DomainPackage.REAL_NUMBER_VALUE__VALUE:
-                setValue(((Double)newValue).doubleValue());
+                setValue((Double)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

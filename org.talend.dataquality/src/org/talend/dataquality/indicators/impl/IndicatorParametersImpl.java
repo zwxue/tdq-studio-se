@@ -400,7 +400,7 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
             case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
                 return getDateParameters();
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
-                return new Integer(getTopN());
+                return getTopN();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -428,7 +428,7 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
                 setDateParameters((DateParameters)newValue);
                 return;
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
-                setTopN(((Integer)newValue).intValue());
+                setTopN((Integer)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

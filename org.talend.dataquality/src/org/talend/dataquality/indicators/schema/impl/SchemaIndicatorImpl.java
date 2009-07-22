@@ -414,21 +414,21 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_COUNT:
-                return new Integer(getTableCount());
+                return getTableCount();
             case SchemaPackage.SCHEMA_INDICATOR__KEY_COUNT:
-                return new Integer(getKeyCount());
+                return getKeyCount();
             case SchemaPackage.SCHEMA_INDICATOR__INDEX_COUNT:
-                return new Integer(getIndexCount());
+                return getIndexCount();
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_COUNT:
-                return new Integer(getViewCount());
+                return getViewCount();
             case SchemaPackage.SCHEMA_INDICATOR__TRIGGER_COUNT:
-                return new Integer(getTriggerCount());
+                return getTriggerCount();
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_ROW_COUNT:
-                return new Long(getTableRowCount());
+                return getTableRowCount();
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_INDICATORS:
                 return getTableIndicators();
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_ROW_COUNT:
-                return new Long(getViewRowCount());
+                return getViewRowCount();
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS:
                 return getViewIndicators();
         }
@@ -444,29 +444,29 @@ public class SchemaIndicatorImpl extends CompositeIndicatorImpl implements Schem
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_COUNT:
-                setTableCount(((Integer)newValue).intValue());
+                setTableCount((Integer)newValue);
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__KEY_COUNT:
-                setKeyCount(((Integer)newValue).intValue());
+                setKeyCount((Integer)newValue);
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__INDEX_COUNT:
-                setIndexCount(((Integer)newValue).intValue());
+                setIndexCount((Integer)newValue);
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_COUNT:
-                setViewCount(((Integer)newValue).intValue());
+                setViewCount((Integer)newValue);
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__TRIGGER_COUNT:
-                setTriggerCount(((Integer)newValue).intValue());
+                setTriggerCount((Integer)newValue);
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_ROW_COUNT:
-                setTableRowCount(((Long)newValue).longValue());
+                setTableRowCount((Long)newValue);
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__TABLE_INDICATORS:
                 getTableIndicators().clear();
                 getTableIndicators().addAll((Collection<? extends TableIndicator>)newValue);
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_ROW_COUNT:
-                setViewRowCount(((Long)newValue).longValue());
+                setViewRowCount((Long)newValue);
                 return;
             case SchemaPackage.SCHEMA_INDICATOR__VIEW_INDICATORS:
                 getViewIndicators().clear();

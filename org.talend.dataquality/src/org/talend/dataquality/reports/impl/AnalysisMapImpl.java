@@ -238,7 +238,7 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
                 if (resolve) return getAnalysis();
                 return basicGetAnalysis();
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
-                return isMustRefresh() ? Boolean.TRUE : Boolean.FALSE;
+                return isMustRefresh();
             case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
                 return getReportType();
             case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
@@ -259,7 +259,7 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
                 setAnalysis((Analysis)newValue);
                 return;
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
-                setMustRefresh(((Boolean)newValue).booleanValue());
+                setMustRefresh((Boolean)newValue);
                 return;
             case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
                 setReportType((String)newValue);

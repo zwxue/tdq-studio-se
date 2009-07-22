@@ -6,7 +6,10 @@
  */
 package org.talend.dataquality.indicators.columnset.impl;
 
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -18,6 +21,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
 
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -245,15 +249,23 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
             eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR__DISTINCT_ACOUNT, oldDistinctACount, distinctACount));
     }
 
+    @Override
+    public boolean storeSqlResults(List<Object[]> objects) {
+        
+        return true;
+    }
+
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
+     * @generated not
      */
     public Double getDependencyFactor() {
-        // TODO: implement this method to return the 'Dependency Factor' attribute
-        // Ensure that you remove @generated or mark it @generated NOT
-        throw new UnsupportedOperationException();
+    
+        if(getACount() != null && getDistinctACount() != null){
+            return getDistinctACount().doubleValue() / getACount().doubleValue();
+        }
+        return null;
     }
 
     /**
@@ -367,5 +379,17 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
         result.append(')');
         return result.toString();
     }
+
+    @Override
+    public Expression getInstantiatedExpressions(String language) {
+
+        //i think this place is good place to create expression
+        
+        return super.getInstantiatedExpressions(language);
+    }
+
+   
+    
+    
 
 } //ColumnDependencyIndicatorImpl

@@ -141,7 +141,7 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
             case IndicatorsPackage.VALUE_INDICATOR__VALUE:
                 return getValue();
             case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
-                return new Integer(getDatatype());
+                return getDatatype();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -157,7 +157,7 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
                 setValue((String)newValue);
                 return;
             case IndicatorsPackage.VALUE_INDICATOR__DATATYPE:
-                setDatatype(((Integer)newValue).intValue());
+                setDatatype((Integer)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

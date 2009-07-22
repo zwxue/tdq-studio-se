@@ -140,7 +140,7 @@ public class CatalogIndicatorImpl extends SchemaIndicatorImpl implements Catalog
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
-                return new Integer(getSchemaCount());
+                return getSchemaCount();
             case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
                 return getSchemaIndicators();
         }
@@ -156,7 +156,7 @@ public class CatalogIndicatorImpl extends SchemaIndicatorImpl implements Catalog
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case SchemaPackage.CATALOG_INDICATOR__SCHEMA_COUNT:
-                setSchemaCount(((Integer)newValue).intValue());
+                setSchemaCount((Integer)newValue);
                 return;
             case SchemaPackage.CATALOG_INDICATOR__SCHEMA_INDICATORS:
                 getSchemaIndicators().clear();
