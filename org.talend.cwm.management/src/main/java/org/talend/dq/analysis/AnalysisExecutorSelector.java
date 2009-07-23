@@ -70,6 +70,9 @@ public final class AnalysisExecutorSelector {
         case TABLE:
             exec = ExecutionLanguage.SQL.equals(executionEngine) ? new TableAnalysisSqlExecutor() : new TableAnalysisExecutor();
             break;
+        case TABLE_FUNCTIONAL_DEPENDENCY:
+            exec = new FunctionalDependencyExecutor();
+            break;
         default:
             // this should not happen. This executor has not been tested for a long time.
             exec = null;

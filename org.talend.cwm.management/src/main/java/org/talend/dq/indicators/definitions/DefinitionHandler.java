@@ -98,6 +98,8 @@ public final class DefinitionHandler {
     private static final String DQ_RULE_CATEGORY = "_8i9eQBI5Ed6TWL6NwMMHzQ";
 
     private static final String DQ_RULE_DEFINITION = "_UUIyoCOMEd6YB57jaCfKaA";
+    
+    private static final String FD_RULE_DEFINITION="_YqcX0XHpEd6udst2R2sgpA";
 
     private IndicatorsDefinitions indicatorDefinitions;
 
@@ -772,6 +774,14 @@ public final class DefinitionHandler {
         return null;
     }
 
+    public IndicatorDefinition getFDRuleDefaultIndicatorDefinition() {
+        CwmResource resource = (CwmResource) this.indicatorDefinitions.eResource();
+        EObject object = resource.getEObject(FD_RULE_DEFINITION);
+        if (object != null && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(object.eClass())) {
+            return (IndicatorDefinition) object;
+        }
+        return null;
+    }
     /**
      * Sets the needCopy.
      * 

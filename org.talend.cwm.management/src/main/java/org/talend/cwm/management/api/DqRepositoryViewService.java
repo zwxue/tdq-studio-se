@@ -537,7 +537,8 @@ public final class DqRepositoryViewService {
         try {
             AbstractTableBuilder<? extends NamedColumnSet> tableBuilder = getBuilder(connection, classifierID);
             // tableBuilder.setColumnsRequested(true);
-            tables.addAll(tableBuilder.getColumnSets(catalogName, schemaName, tablePattern));
+            List loadedTables = tableBuilder.getColumnSets(catalogName, schemaName, tablePattern);
+            tables.addAll(loadedTables);
             ok = true;
         } catch (SQLException e) {
             log.error(e);

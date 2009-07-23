@@ -11,6 +11,7 @@
   </categories>
   <categories analysisType="Table Analysis" label="Table Analysis">
     <subCategories analysisType="Table Analysis" label="DQ Rule Analysis"/>
+    <subCategories analysisType="Functional Dependency" label="Functional Dependency"/>
     <!-- subCategories analysisType="Table Analysis" label="Duplicate Analysis"/ -->
   </categories>
   <categories analysisType="Multiple Column Analysis" label="Column Analysis">
