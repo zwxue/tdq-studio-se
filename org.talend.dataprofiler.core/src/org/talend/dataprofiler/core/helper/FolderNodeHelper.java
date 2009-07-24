@@ -74,6 +74,27 @@ public final class FolderNodeHelper {
 	}
 
 	/**
+	 * 
+	 * DOC mzhao Comment method "getFolderNode".
+	 * 
+	 * @param eObject
+	 * @return
+	 */
+	public static IFolderNode getTableFolderNode(EObject eObject) {
+		IFolderNode[] folderNodes = catalogFolderNodeMap.get(eObject);
+		if (folderNodes == null) {
+			folderNodes = createTableViewNodes(eObject);
+		}
+		return folderNodes[0];
+	}
+	public static IFolderNode getViewFolderNode(EObject eObject) {
+		IFolderNode[] folderNodes = catalogFolderNodeMap.get(eObject);
+		if (folderNodes == null) {
+			folderNodes = createTableViewNodes(eObject);
+		}
+		return folderNodes[1];
+	}
+	/**
 	 * @param catalog
 	 * @return
 	 */
@@ -96,5 +117,9 @@ public final class FolderNodeHelper {
 		folderNodes = new IFolderNode[] { columnFolderNode };
 		catalogFolderNodeMap.put(eObject, folderNodes);
 		return folderNodes;
+	}
+
+	public static Map<EObject, IFolderNode[]> getCatalogFolderNodeMap() {
+		return catalogFolderNodeMap;
 	}
 }

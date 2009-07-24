@@ -99,13 +99,19 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                     }
 
                 });
-                CompareUI.openCompareEditor(new ModelElementCompareEditorInput((ModelInputSnapshot) snapshot,
-                        comapreConfiguration, selectedObject));
+                ModelElementCompareEditorInput compEditorInput = new ModelElementCompareEditorInput((ModelInputSnapshot) snapshot,
+                        comapreConfiguration, selectedObject);
+				CompareUI.openCompareEditor(compEditorInput);
+             // MOD mzhao feature 8227
+				compEditorInput.hookLeftPanelContextMenu();
+                
+                
             }
         } catch (IOException e) {
             // Fichier non lisible
             assert false;
         }
     }
-
+    
+  
 }

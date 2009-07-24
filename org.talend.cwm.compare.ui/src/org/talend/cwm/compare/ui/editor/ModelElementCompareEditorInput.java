@@ -84,6 +84,9 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
             }
         };
     }
+    public void hookLeftPanelContextMenu() {
+    	contentMergeViewer.hookContextMenu();
+	}
 
     /**
      * {@inheritDoc}
@@ -98,7 +101,8 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
         final CompareViewerPane pane = new CompareViewerPane(fComposite, SWT.NONE);
 
-        contentMergeViewer = new CompareModelContentMergeViewer(pane, getCompareConfiguration(), selectedObject);
+        contentMergeViewer = new CompareModelContentMergeViewer(pane,
+				getCompareConfiguration(), selectedObject);
         pane.setContent(contentMergeViewer.getControl());
 
         contentMergeViewer.setInput(inputSnapshot);

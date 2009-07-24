@@ -63,7 +63,14 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     public TableViewComparisonLevel(AbstractDatabaseFolderNode dbFolderNode) {
         super(dbFolderNode);
     }
+    
+    public TableViewComparisonLevel(ColumnSet columnSet) {
+		super(null);
+		selectedObj = columnSet;
 
+	}
+
+    
     protected void createTempConnectionFile() throws ReloadCompareException {
         IFile findCorrespondingFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
         if (findCorrespondingFile == null) {

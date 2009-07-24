@@ -37,7 +37,14 @@ public class PopComparisonUIAction extends Action {
 
     private Object selectedObject;
 
-    public PopComparisonUIAction(Object selectedNode, String menuText) {
+    public void setSelectedObject(Object selectedObject) {
+		this.selectedObject = selectedObject;
+	}
+	public PopComparisonUIAction(String menuText) {
+		this(null, menuText);
+
+    }
+	public PopComparisonUIAction(Object selectedNode, String menuText) {
         super(menuText);
         this.selectedObject = selectedNode;
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.COMPARE_IMAGE));
