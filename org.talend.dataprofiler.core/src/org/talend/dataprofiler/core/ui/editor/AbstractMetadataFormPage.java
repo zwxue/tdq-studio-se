@@ -30,9 +30,9 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.constants.DevelopmentStatus;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.helpers.MetadataHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -180,14 +180,14 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected void initMetaTextFied() {
         nameText.setText(currentModelElement.getName() == null ? PluginConstant.EMPTY_STRING : currentModelElement.getName());
-        purposeText.setText(TaggedValueHelper.getPurpose(currentModelElement) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getPurpose(currentModelElement));
-        descriptionText.setText(TaggedValueHelper.getDescription(currentModelElement) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getDescription(currentModelElement));
-        authorText.setText(TaggedValueHelper.getAuthor(currentModelElement) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getAuthor(currentModelElement));
-        statusCombo.setText(TaggedValueHelper.getDevStatus(currentModelElement) == null ? PluginConstant.EMPTY_STRING
-                : TaggedValueHelper.getDevStatus(currentModelElement).getLiteral());
+        purposeText.setText(MetadataHelper.getPurpose(currentModelElement) == null ? PluginConstant.EMPTY_STRING : MetadataHelper
+                .getPurpose(currentModelElement));
+        descriptionText.setText(MetadataHelper.getDescription(currentModelElement) == null ? PluginConstant.EMPTY_STRING
+                : MetadataHelper.getDescription(currentModelElement));
+        authorText.setText(MetadataHelper.getAuthor(currentModelElement) == null ? PluginConstant.EMPTY_STRING : MetadataHelper
+                .getAuthor(currentModelElement));
+        statusCombo.setText(MetadataHelper.getDevStatus(currentModelElement) == null ? PluginConstant.EMPTY_STRING
+                : MetadataHelper.getDevStatus(currentModelElement).getLiteral());
     }
 
     public void doSave(IProgressMonitor monitor) {
@@ -197,10 +197,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected void saveTextChange() {
         currentModelElement.setName(nameText.getText());
-        TaggedValueHelper.setPurpose(purposeText.getText(), currentModelElement);
-        TaggedValueHelper.setDescription(descriptionText.getText(), currentModelElement);
-        TaggedValueHelper.setAuthor(currentModelElement, authorText.getText());
-        TaggedValueHelper.setDevStatus(currentModelElement, DevelopmentStatus.get(statusCombo.getText()));
+        MetadataHelper.setPurpose(purposeText.getText(), currentModelElement);
+        MetadataHelper.setDescription(descriptionText.getText(), currentModelElement);
+        MetadataHelper.setAuthor(currentModelElement, authorText.getText());
+        MetadataHelper.setDevStatus(currentModelElement, DevelopmentStatus.get(statusCombo.getText()));
     }
 
     public boolean performGlobalAction(String actionId) {

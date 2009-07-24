@@ -25,8 +25,6 @@ public final class PluginConstant {
 
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
-    public static final String PASSWORD_PROPERTY = "password"; //$NON-NLS-1$
-
     public static final String HOSTNAME_PROPERTY = "hostname"; //$NON-NLS-1$
 
     public static final String PORT_PROPERTY = "port"; //$NON-NLS-1$

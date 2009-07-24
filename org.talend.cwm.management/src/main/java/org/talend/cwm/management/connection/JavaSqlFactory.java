@@ -83,17 +83,18 @@ public final class JavaSqlFactory {
         }
         String driverClassName = providerConnection.getDriverClassName();
         Collection<TaggedValue> taggedValues = providerConnection.getTaggedValue();
-        Properties props = TaggedValueHelper.createProperties(taggedValues);
+        Properties props = new Properties();
+        props.put(TaggedValueHelper.USER, DataProviderHelper.getUser(providerConnection));
+        props.put(TaggedValueHelper.PASSWORD, DataProviderHelper.getClearTextPassword(providerConnection));
         // hcheng decrypt password here and update props object
-        String pass = props.getProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY);
+        String pass = props.getProperty(TaggedValueHelper.PASSWORD);
         if (pass != null) {
             String clearTextPassword = DataProviderHelper.getClearTextPassword(providerConnection);
             if (clearTextPassword == null) {
-                rc
-                        .setMessage(Messages.getString("JavaSqlFactory.UnableDecryptPassword")); //$NON-NLS-1$
+                rc.setMessage(Messages.getString("JavaSqlFactory.UnableDecryptPassword")); //$NON-NLS-1$
                 rc.setOk(false);
             } else {
-                props.setProperty(org.talend.dq.PluginConstant.PASSWORD_PROPERTY, clearTextPassword);
+                props.setProperty(TaggedValueHelper.PASSWORD, clearTextPassword);
             }
         }
         try {

@@ -27,7 +27,7 @@ public final class PluginConstant {
      */
     public static final int DEFAULT_TOP_N = 10;
 
-    public static final String USER_PROPERTY = "user"; //$NON-NLS-1$
+    public static final String EMPTY_STRING = "";
 
     /**
      * String for the DB connections folder.

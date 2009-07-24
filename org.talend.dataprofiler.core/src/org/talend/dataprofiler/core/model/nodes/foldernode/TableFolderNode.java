@@ -19,9 +19,9 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
@@ -113,11 +113,11 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
     @Override
     protected List<TdTable> getColumnSetsWithFilter(TdCatalog catalog, TdSchema schema) {
         if (catalog != null) {
-            String tableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, catalog.getTaggedValue());
+            String tableFilter = ColumnSetHelper.getTableFilter(catalog);
             return filterColumnSets(CatalogHelper.getTables(catalog), tableFilter);
         }
         if (schema != null) {
-            String tableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, schema.getTaggedValue());
+            String tableFilter = ColumnSetHelper.getTableFilter(schema);
             return filterColumnSets(SchemaHelper.getTables(schema), tableFilter);
         }
         return Collections.emptyList();

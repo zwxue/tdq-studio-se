@@ -24,11 +24,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -126,9 +126,9 @@ public final class ExportFactory {
 
             // get the basic information
             patternMap.put(PatternToExcelEnum.Label, pattern.getName());
-            patternMap.put(PatternToExcelEnum.Purpose, TaggedValueHelper.getPurpose(pattern));
-            patternMap.put(PatternToExcelEnum.Description, TaggedValueHelper.getDescription(pattern));
-            patternMap.put(PatternToExcelEnum.Author, TaggedValueHelper.getAuthor(pattern));
+            patternMap.put(PatternToExcelEnum.Purpose, MetadataHelper.getPurpose(pattern));
+            patternMap.put(PatternToExcelEnum.Description, MetadataHelper.getDescription(pattern));
+            patternMap.put(PatternToExcelEnum.Author, MetadataHelper.getAuthor(pattern));
             patternMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
 
             for (PatternLanguageType languagetype : PatternLanguageType.values()) {

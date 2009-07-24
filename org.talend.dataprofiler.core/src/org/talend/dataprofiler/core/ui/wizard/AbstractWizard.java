@@ -21,12 +21,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.constants.DevelopmentStatus;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
-import org.talend.dq.analysis.parameters.ConnectionParameter.EParameterType;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -117,14 +116,10 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
     }
 
     public void fillMetadataToCWMResource(ModelElement cwmElement) {
-        TaggedValueHelper.setDevStatus(cwmElement, DevelopmentStatus.get(getParameter().getStatus()));
-        TaggedValueHelper.setAuthor(cwmElement, getParameter().getAuthor());
-        TaggedValueHelper.setPurpose(getParameter().getPurpose(), cwmElement);
-        TaggedValueHelper.setDescription(getParameter().getDescription(), cwmElement);
-
-        if (getParameter().getParamType() == EParameterType.PATTERN) {
-            TaggedValueHelper.setValidStatus(true, cwmElement);
-        }
+        MetadataHelper.setDevStatus(cwmElement, DevelopmentStatus.get(getParameter().getStatus()));
+        MetadataHelper.setAuthor(cwmElement, getParameter().getAuthor());
+        MetadataHelper.setPurpose(getParameter().getPurpose(), cwmElement);
+        MetadataHelper.setDescription(getParameter().getDescription(), cwmElement);
     }
 
     protected abstract ResourceFileMap getResourceFileMap();

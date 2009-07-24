@@ -15,6 +15,7 @@ package org.talend.dq.helper.resourcehelper;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.utils.security.CryptoHelper;
@@ -45,7 +46,6 @@ public class PasswordHelper extends CryptoHelper { // MOD scorreia 2008-01-08 ex
     public PasswordHelper() {
         super(PASSPHRASE);
     }
-
 
     /**
      * @deprecated TODO hcheng remove this method
@@ -80,7 +80,7 @@ public class PasswordHelper extends CryptoHelper { // MOD scorreia 2008-01-08 ex
                             if (elTV != null) {
                                 for (int j = 0; j < elTV.size(); ++j) {
                                     TaggedValue tv = (TaggedValue) elTV.get(j);
-                                    if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(tv.getTag())) {
+                                    if (TaggedValueHelper.PASSWORD.equals(tv.getTag())) {
                                         String val = tv.getValue();
                                         switch (type) {
                                         case ENCRYPT:
@@ -101,7 +101,7 @@ public class PasswordHelper extends CryptoHelper { // MOD scorreia 2008-01-08 ex
                     if (el2 != null) {
                         for (int j = 0; j < el2.size(); ++j) {
                             TaggedValue tv = (TaggedValue) el2.get(j);
-                            if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(tv.getTag())) {
+                            if (TaggedValueHelper.PASSWORD.equals(tv.getTag())) {
                                 String val = tv.getValue();
                                 switch (type) {
                                 case ENCRYPT:
@@ -130,7 +130,7 @@ public class PasswordHelper extends CryptoHelper { // MOD scorreia 2008-01-08 ex
                 Object dpObj = dpList.get(j);
                 if (dpObj != null) {
                     TaggedValue dp = (TaggedValue) dpObj;
-                    if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(dp.getTag())) {
+                    if (TaggedValueHelper.PASSWORD.equals(dp.getTag())) {
                         dp.setValue(CryptoHelper.getCryptoHelper().encrypt(dp.getValue()));
                     }
                 }
@@ -150,7 +150,7 @@ public class PasswordHelper extends CryptoHelper { // MOD scorreia 2008-01-08 ex
                         Object tvObj = tvList.get(j);
                         if (tvObj != null) {
                             TaggedValue tv = (TaggedValue) tvObj;
-                            if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(tv.getTag())) {
+                            if (TaggedValueHelper.PASSWORD.equals(tv.getTag())) {
                                 tv.setValue(CryptoHelper.getCryptoHelper().encrypt(tv.getValue()));
                             }
                         }

@@ -20,9 +20,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
@@ -120,11 +120,11 @@ public class ViewFolderNode extends NamedColumnSetFolderNode<TdView> {
     @Override
     protected List<TdView> getColumnSetsWithFilter(TdCatalog catalog, TdSchema schema) {
         if (catalog != null) {
-            String viewFilter = TaggedValueHelper.getValue(TaggedValueHelper.VIEW_FILTER, catalog.getTaggedValue());
+            String viewFilter = ColumnSetHelper.getViewFilter(catalog);
             return filterColumnSets(CatalogHelper.getViews(catalog), viewFilter);
         }
         if (schema != null) {
-            String viewFilter = TaggedValueHelper.getValue(TaggedValueHelper.VIEW_FILTER, schema.getTaggedValue());
+            String viewFilter = ColumnSetHelper.getViewFilter(schema);
             return filterColumnSets(SchemaHelper.getViews(schema), viewFilter);
         }
         return Collections.emptyList();

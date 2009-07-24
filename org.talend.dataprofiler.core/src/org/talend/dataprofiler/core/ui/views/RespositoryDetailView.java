@@ -36,10 +36,10 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
@@ -54,10 +54,10 @@ import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
-import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -409,7 +409,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private void createNameCommentDetail(ModelElement element) {
         createName(element);
-        String purpose = TaggedValueHelper.getComment(element);
+        String purpose = ColumnHelper.getComment(element);
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.remarks"), purpose); //$NON-NLS-1$
     }
 
@@ -445,12 +445,12 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createDescription(ModelElement dataProvider) {
-        String description = TaggedValueHelper.getDescription(dataProvider);
+        String description = MetadataHelper.getDescription(dataProvider);
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.description"), description); //$NON-NLS-1$
     }
 
     private void createPurpose(ModelElement dataProvider) {
-        String purpose = TaggedValueHelper.getPurpose(dataProvider);
+        String purpose = MetadataHelper.getPurpose(dataProvider);
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.purpose"), purpose); //$NON-NLS-1$
     }
 

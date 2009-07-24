@@ -31,13 +31,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.utils.ColumnIndicatorRule;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
@@ -315,7 +315,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                 }
                 IndicatorDefinition indicatorDefinition = ((IIndicatorNode) item.getData(INDICATORITEM)).getIndicatorInstance()
                         .getIndicatorDefinition();
-                String description = TaggedValueHelper.getDescription(indicatorDefinition);
+                String description = MetadataHelper.getDescription(indicatorDefinition);
                 return description.equals(PluginConstant.EMPTY_STRING) ? item.getText() : description;
             }
 
@@ -337,8 +337,8 @@ public class IndicatorSelectDialog extends TrayDialog {
                 }
                 Indicator indicator = indicatorNode.getIndicatorInstance();
                 IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-                purposeLabel.setText(PURPOSE + TaggedValueHelper.getPurpose(indicatorDefinition));
-                String description = DESCRIPTION + TaggedValueHelper.getDescription(indicatorDefinition);
+                purposeLabel.setText(PURPOSE + MetadataHelper.getPurpose(indicatorDefinition));
+                String description = DESCRIPTION + MetadataHelper.getDescription(indicatorDefinition);
                 description = splitLongString(description);
                 descriptionLabel.setText(description);
             }

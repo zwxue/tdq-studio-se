@@ -26,6 +26,7 @@ import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.PrimaryKey;
@@ -227,5 +228,45 @@ public final class ColumnHelper {
             columnSets.add(columnSetOwner);
         }
         return columnSets.size() == 1;
+    }
+
+    /**
+     * DOC bZhou Comment method "getColumnFilter".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getColumnFilter(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.COLUMN_FILTER, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setColumnFilter".
+     * 
+     * @param filter
+     * @param element
+     */
+    public static void setColumnFilter(String filter, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.COLUMN_FILTER, filter);
+    }
+
+    /**
+     * DOC bZhou Comment method "getComment".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getComment(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.COMMENT, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setComment".
+     * 
+     * @param comment
+     * @param element
+     */
+    public static void setComment(String comment, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.COMMENT, comment);
     }
 }

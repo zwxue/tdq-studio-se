@@ -14,9 +14,8 @@ package org.talend.dataprofiler.core.ui.wizard.database;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -27,7 +26,6 @@ import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -92,20 +90,17 @@ public class TableViewFilterWizard extends AbstractWizard {
 
     @Override
     public boolean performFinish() {
-        EList<TaggedValue> tvs = this.packageObj.getTaggedValue();
         boolean needSave = false;
 
         String tableFilter = this.tableViewFilterWizardPage.getTableFilterText().getText();
         if (!this.getOldTableFilter().equals(tableFilter)) {
-            clearTaggedValue(tvs, TaggedValueHelper.TABLE_FILTER);
-            addTaggedValue(tvs, TaggedValueHelper.TABLE_FILTER, tableFilter);
+            ColumnSetHelper.setTableFilter(tableFilter, packageObj);
             needSave = true;
         }
 
         String viewFilter = this.tableViewFilterWizardPage.getViewFilterText().getText();
         if (!this.getOldViewFilter().equals(viewFilter)) {
-            clearTaggedValue(tvs, TaggedValueHelper.VIEW_FILTER);
-            addTaggedValue(tvs, TaggedValueHelper.VIEW_FILTER, viewFilter);
+            ColumnSetHelper.setViewFilter(viewFilter, packageObj);
             needSave = true;
         }
 
@@ -113,24 +108,6 @@ public class TableViewFilterWizard extends AbstractWizard {
             return PrvResourceFileHelper.getInstance().save(tdDataProvider).isOk();
         }
         return true;
-    }
-
-    private void addTaggedValue(EList<TaggedValue> taggedValues, String tag, String value) {
-        if (value != null && !"".equals(value)) {
-            taggedValues.add(TaggedValueHelper.createTaggedValue(tag, value));
-        }
-    }
-
-    private void clearTaggedValue(EList<TaggedValue> taggedValues, String tag) {
-        int size = taggedValues.size();
-        for (int i = 0; i < size; i++) {
-            TaggedValue tv = taggedValues.get(i);
-            if (tv.getTag().equals(tag)) {
-                taggedValues.remove(tv);
-                i--;
-                size--;
-            }
-        }
     }
 
     @Override
@@ -166,9 +143,7 @@ public class TableViewFilterWizard extends AbstractWizard {
     private void initAction(Package packageObj) {
         this.packageObj = packageObj;
         this.tdDataProvider = DataProviderHelper.getTdDataProvider(this.packageObj);
-        this.oldTableFilter = TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, this.packageObj.getTaggedValue()) == null ? ""
-                : TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, this.packageObj.getTaggedValue());
-        this.oldViewFilter = TaggedValueHelper.getValue(TaggedValueHelper.VIEW_FILTER, this.packageObj.getTaggedValue()) == null ? ""
-                : TaggedValueHelper.getValue(TaggedValueHelper.VIEW_FILTER, this.packageObj.getTaggedValue());
+        this.oldTableFilter = ColumnSetHelper.getTableFilter(packageObj);
+        this.oldViewFilter = ColumnSetHelper.getViewFilter(packageObj);
     }
 }

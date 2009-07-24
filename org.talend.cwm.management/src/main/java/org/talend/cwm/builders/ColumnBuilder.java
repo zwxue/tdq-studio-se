@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
@@ -84,7 +83,7 @@ public class ColumnBuilder extends CwmBuilder {
 
             // get column description (comment)
             String colComment = getComment(colName, columns);
-            TaggedValueHelper.setComment(colComment, column);
+            ColumnHelper.setComment(colComment, column);
 
             // --- create and set type of column
             // TODO scorreia get type of column on demand, not on creation of column

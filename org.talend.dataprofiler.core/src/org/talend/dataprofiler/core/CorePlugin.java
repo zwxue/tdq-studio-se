@@ -60,351 +60,319 @@ import orgomg.cwm.foundation.softwaredeployment.DataProvider;
  */
 public class CorePlugin extends AbstractUIPlugin {
 
-	protected static Logger log = Logger.getLogger(CorePlugin.class);
+    protected static Logger log = Logger.getLogger(CorePlugin.class);
 
-	private DQRespositoryView respositoryView;
+    private DQRespositoryView respositoryView;
 
-	/**
-	 * Getter for respositoryView.
-	 * 
-	 * @return the respositoryView
-	 */
-	public DQRespositoryView getRespositoryView() {
-		return this.respositoryView;
-	}
+    /**
+     * Getter for respositoryView.
+     * 
+     * @return the respositoryView
+     */
+    public DQRespositoryView getRespositoryView() {
+        return this.respositoryView;
+    }
 
-	/**
-	 * Sets the respositoryView.
-	 * 
-	 * @param respositoryView
-	 *            the respositoryView to set
-	 */
-	public void setRespositoryView(DQRespositoryView respositoryView) {
-		this.respositoryView = respositoryView;
-	}
+    /**
+     * Sets the respositoryView.
+     * 
+     * @param respositoryView the respositoryView to set
+     */
+    public void setRespositoryView(DQRespositoryView respositoryView) {
+        this.respositoryView = respositoryView;
+    }
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.talend.dataprofiler.core"; //$NON-NLS-1$
+    // The plug-in ID
+    public static final String PLUGIN_ID = "org.talend.dataprofiler.core"; //$NON-NLS-1$
 
-	// The shared instance
-	private static CorePlugin plugin;
+    // The shared instance
+    private static CorePlugin plugin;
 
-	private RefreshAction refreshAction;
+    private RefreshAction refreshAction;
 
-	/**
-	 * The constructor.
-	 */
-	public CorePlugin() {
-	}
+    /**
+     * The constructor.
+     */
+    public CorePlugin() {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-		getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
-		try {
-			for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
-				BaseHelpSystem.getBookmarkManager().addBookmark(
-						bookMark.getHref(), bookMark.getLabel());
-			}
-		} catch (Exception e) {
-			log.error(e, e);
-		}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
+     */
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        plugin = this;
+        getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
+        try {
+            for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
+                BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
+            }
+        } catch (Exception e) {
+            log.error(e, e);
+        }
 
-		SQLExplorerPlugin.getDefault().setRootProject(
-				ReponsitoryContextBridge.getRootProject());
-	}
+        SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-	 * )
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-		// save();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
+     */
+    public void stop(BundleContext context) throws Exception {
+        plugin = null;
+        super.stop(context);
+        // save();
+    }
 
-	/**
-	 * Returns the shared instance.
-	 * 
-	 * @return the shared instance
-	 */
-	public static CorePlugin getDefault() {
-		return plugin;
-	}
+    /**
+     * Returns the shared instance.
+     * 
+     * @return the shared instance
+     */
+    public static CorePlugin getDefault() {
+        return plugin;
+    }
 
-	// public void save() {
-	// NeedSaveDataProviderHelper.saveAllDataProvider();
-	// }
+    // public void save() {
+    // NeedSaveDataProviderHelper.saveAllDataProvider();
+    // }
 
-	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path.
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
-	}
+    /**
+     * Returns an image descriptor for the image file at the given plug-in relative path.
+     * 
+     * @param path the path
+     * @return the image descriptor
+     */
+    public static ImageDescriptor getImageDescriptor(String path) {
+        return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
 
-	// public void loadExternalDriver(String driverPaths, String driverName,
-	// String url) {
-	// String[] driverJarPath = driverPaths.split(";");
-	// LinkedList<String> driverFile = new LinkedList<String>();
-	// for (String driverpath : driverJarPath) {
-	// driverFile.add(driverpath);
-	// }
-	// ManagedDriver driver = new
-	// ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel
-	// ().createUniqueId());
-	// driver.setJars(driverFile);
-	// driver.setDriverClassName(driverName);
-	// driver.setUrl(url);
-	// SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
-	// }
+    // public void loadExternalDriver(String driverPaths, String driverName,
+    // String url) {
+    // String[] driverJarPath = driverPaths.split(";");
+    // LinkedList<String> driverFile = new LinkedList<String>();
+    // for (String driverpath : driverJarPath) {
+    // driverFile.add(driverpath);
+    // }
+    // ManagedDriver driver = new
+    // ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel
+    // ().createUniqueId());
+    // driver.setJars(driverFile);
+    // driver.setDriverClassName(driverName);
+    // driver.setUrl(url);
+    // SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
+    // }
 
-	/**
-	 * DOC Zqin Comment method "getCurrentActiveEditor".
-	 * 
-	 * @return the current active editor;
-	 */
-	public IEditorPart getCurrentActiveEditor() {
-		return getWorkbench().getActiveWorkbenchWindow().getActivePage()
-				.getActiveEditor();
-	}
+    /**
+     * DOC Zqin Comment method "getCurrentActiveEditor".
+     * 
+     * @return the current active editor;
+     */
+    public IEditorPart getCurrentActiveEditor() {
+        return getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+    }
 
-	/**
-	 * DOC Zqin Comment method "runInDQViewer". this method open DQ responsitory
-	 * view and run the specified query.
-	 * 
-	 * @param tdDataProvider
-	 * @param query
-	 */
-	public void runInDQViewer(TdDataProvider tdDataProvider, String query,
-			String editorName) {
-		SQLEditor sqlEditor = openInSqlEditor(tdDataProvider, query, editorName);
-		if (sqlEditor != null) {
-			new ExecSQLAction(sqlEditor).run();
-		}
-	}
+    /**
+     * DOC Zqin Comment method "runInDQViewer". this method open DQ responsitory view and run the specified query.
+     * 
+     * @param tdDataProvider
+     * @param query
+     */
+    public void runInDQViewer(TdDataProvider tdDataProvider, String query, String editorName) {
+        SQLEditor sqlEditor = openInSqlEditor(tdDataProvider, query, editorName);
+        if (sqlEditor != null) {
+            new ExecSQLAction(sqlEditor).run();
+        }
+    }
 
-	/**
-	 * DOC bZhou Comment method "openInSqlEditor".
-	 * 
-	 * @param tdDataProvider
-	 * @param query
-	 * @param editorName
-	 * @return the specified sql editor.
-	 */
-	public SQLEditor openInSqlEditor(TdDataProvider tdDataProvider,
-			String query, String editorName) {
-		if (editorName == null) {
-			editorName = String.valueOf(SQLExplorerPlugin.getDefault()
-					.getEditorSerialNo());
-		}
+    /**
+     * DOC bZhou Comment method "openInSqlEditor".
+     * 
+     * @param tdDataProvider
+     * @param query
+     * @param editorName
+     * @return the specified sql editor.
+     */
+    public SQLEditor openInSqlEditor(TdDataProvider tdDataProvider, String query, String editorName) {
+        if (editorName == null) {
+            editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
+        }
 
-		SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-		AliasManager aliasManager = sqlPlugin.getAliasManager();
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        AliasManager aliasManager = sqlPlugin.getAliasManager();
 
-		Alias alias = aliasManager.getAlias(tdDataProvider.getName());
+        Alias alias = aliasManager.getAlias(tdDataProvider.getName());
 
-		if (alias == null) {
-			List<TdDataProvider> allDataProviders = PrvResourceFileHelper
-					.getInstance().getAllDataProviders(
-							ResourceManager.getMetadataFolder());
-			for (TdDataProvider dataProvider : allDataProviders) {
-				if (dataProvider == tdDataProvider) {
-					addConnetionAliasToSQLPlugin(dataProvider);
-					openInSqlEditor(tdDataProvider, query, editorName);
-				}
-			}
-		} else {
-			try {
-				SQLEditorInput input = new SQLEditorInput(
-						"SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
-				input.setUser(alias.getDefaultUser());
-				IWorkbenchPage page = SQLExplorerPlugin.getDefault()
-						.getActivePage();
-				SQLEditor editorPart = (SQLEditor) page.openEditor(
-						(IEditorInput) input, SQLEditor.class.getName());
-				editorPart.setText(query);
-				return editorPart;
-			} catch (PartInitException e) {
-				log.error(e, e);
-			}
-		}
+        if (alias == null) {
+            List<TdDataProvider> allDataProviders = PrvResourceFileHelper.getInstance().getAllDataProviders(
+                    ResourceManager.getMetadataFolder());
+            for (TdDataProvider dataProvider : allDataProviders) {
+                if (dataProvider == tdDataProvider) {
+                    addConnetionAliasToSQLPlugin(dataProvider);
+                    openInSqlEditor(tdDataProvider, query, editorName);
+                }
+            }
+        } else {
+            try {
+                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
+                input.setUser(alias.getDefaultUser());
+                IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
+                SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+                editorPart.setText(query);
+                return editorPart;
+            } catch (PartInitException e) {
+                log.error(e, e);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * DOC bZhou Comment method "addConnetionAliasToSQLPlugin".
-	 * 
-	 * @param dataproviders
-	 */
-	public void addConnetionAliasToSQLPlugin(DataProvider... dataproviders) {
-		SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-		AliasManager aliasManager = sqlPlugin.getAliasManager();
+    /**
+     * DOC bZhou Comment method "addConnetionAliasToSQLPlugin".
+     * 
+     * @param dataproviders
+     */
+    public void addConnetionAliasToSQLPlugin(DataProvider... dataproviders) {
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        AliasManager aliasManager = sqlPlugin.getAliasManager();
 
-		for (DataProvider dataProvider : dataproviders) {
-			try {
-				TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper
-						.getTdProviderConnection(dataProvider);
-				TdProviderConnection providerConnection = tdPc.getObject();
+        for (DataProvider dataProvider : dataproviders) {
+            try {
+                TypedReturnCode<TdProviderConnection> tdPc = DataProviderHelper.getTdProviderConnection(dataProvider);
+                TdProviderConnection providerConnection = tdPc.getObject();
 
-				Alias alias = new Alias(dataProvider.getName());
+                Alias alias = new Alias(dataProvider.getName());
 
-				String clearTextUser = DataProviderHelper
-						.getClearTextUser(providerConnection);
-				String user = "".equals(clearTextUser) ? "root" : clearTextUser;
-				String password = DataProviderHelper
-						.getClearTextPassword(providerConnection);
+                String clearTextUser = DataProviderHelper.getUser(providerConnection);
+                String user = "".equals(clearTextUser) ? "root" : clearTextUser;
+                String password = DataProviderHelper.getClearTextPassword(providerConnection);
 
-				String url = providerConnection.getConnectionString();
+                String url = providerConnection.getConnectionString();
 
-				User previousUser = new User(user, password);
-				alias.setDefaultUser(previousUser);
+                User previousUser = new User(user, password);
+                alias.setDefaultUser(previousUser);
 
-				alias.setAutoLogon(false);
-				alias.setConnectAtStartup(true);
-				alias.setUrl(url);
-				ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
-						EDriverName.getId(providerConnection
-								.getDriverClassName()));
-				alias.setDriver(manDr);
-				aliasManager.addAlias(alias);
+                alias.setAutoLogon(false);
+                alias.setConnectAtStartup(true);
+                alias.setUrl(url);
+                ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
+                        EDriverName.getId(providerConnection.getDriverClassName()));
+                alias.setDriver(manDr);
+                aliasManager.addAlias(alias);
 
-			} catch (ExplorerException e) {
-				log.error(e, e);
-			}
-		}
+            } catch (ExplorerException e) {
+                log.error(e, e);
+            }
+        }
 
-		aliasManager.modelChanged();
-	}
+        aliasManager.modelChanged();
+    }
 
-	/**
-	 * DOC bZhou Comment method "removeConnetionAliasFromSQLPlugin".
-	 * 
-	 * @param dataproviders
-	 */
-	public void removeConnetionAliasFromSQLPlugin(DataProvider... dataproviders) {
-		SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
-		AliasManager aliasManager = sqlPlugin.getAliasManager();
+    /**
+     * DOC bZhou Comment method "removeConnetionAliasFromSQLPlugin".
+     * 
+     * @param dataproviders
+     */
+    public void removeConnetionAliasFromSQLPlugin(DataProvider... dataproviders) {
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        AliasManager aliasManager = sqlPlugin.getAliasManager();
 
-		for (DataProvider dataProvider : dataproviders) {
-			try {
-				String aliasName = dataProvider.getName();
-				Alias alias = aliasManager.getAlias(aliasName);
+        for (DataProvider dataProvider : dataproviders) {
+            try {
+                String aliasName = dataProvider.getName();
+                Alias alias = aliasManager.getAlias(aliasName);
 
-				for (IEditorReference editorRef : sqlPlugin.getActivePage()
-						.getEditorReferences()) {
-					IEditorPart editor = editorRef.getEditor(false);
-					if (editor instanceof SQLEditor) {
-						SQLEditor sqlEditor = (SQLEditor) editor;
-						if (sqlEditor.getSession().getUser().getAlias() == alias) {
-							sqlPlugin.getActivePage().closeEditor(sqlEditor,
-									true);
-						}
-					}
-				}
+                for (IEditorReference editorRef : sqlPlugin.getActivePage().getEditorReferences()) {
+                    IEditorPart editor = editorRef.getEditor(false);
+                    if (editor instanceof SQLEditor) {
+                        SQLEditor sqlEditor = (SQLEditor) editor;
+                        if (sqlEditor.getSession().getUser().getAlias() == alias) {
+                            sqlPlugin.getActivePage().closeEditor(sqlEditor, true);
+                        }
+                    }
+                }
 
-				if (alias != null) {
-					aliasManager.removeAlias(aliasName);
-				}
-			} catch (Exception e) {
-				log.error(e, e);
-			}
-		}
-	}
+                if (alias != null) {
+                    aliasManager.removeAlias(aliasName);
+                }
+            } catch (Exception e) {
+                log.error(e, e);
+            }
+        }
+    }
 
-	/**
-	 * DOC bZhou Comment method "openEditor".
-	 * 
-	 * @param file
-	 * @param editorId
-	 * @return
-	 */
-	public IEditorPart openEditor(IFile file, String editorId) {
-		FileEditorInput input = new FileEditorInput(file);
-		// input.setUser(alias.getDefaultUser());
-		try {
+    /**
+     * DOC bZhou Comment method "openEditor".
+     * 
+     * @param file
+     * @param editorId
+     * @return
+     */
+    public IEditorPart openEditor(IFile file, String editorId) {
+        FileEditorInput input = new FileEditorInput(file);
+        // input.setUser(alias.getDefaultUser());
+        try {
 
-			return this.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().openEditor(input, editorId);
-		} catch (PartInitException e) {
-			ExceptionHandler.process(e);
-			return null;
-		}
-	}
+            return this.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input, editorId);
+        } catch (PartInitException e) {
+            ExceptionHandler.process(e);
+            return null;
+        }
+    }
 
-	/**
-	 * Get viewPart with special partId. If the active page doesn't exsit, the
-	 * method will return null; Else, it will get the viewPart and focus it. if
-	 * the viewPart closed, it will be opened.
-	 * 
-	 * @param viewId
-	 *            the identifier of viewPart
-	 * @return
-	 */
-	public IViewPart findView(String viewId) {
-		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow == null) {
-			return null;
-		}
-		IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
-		if (page == null) {
-			return null;
-		}
-		IViewPart part = page.findView(viewId);
-		if (part == null) {
-			try {
-				part = page.showView(viewId);
-			} catch (Exception e) {
-				ExceptionHandler.process(e, Level.ERROR);
-			}
-		} else {
-			page.bringToTop(part);
-		}
-		return part;
-	}
+    /**
+     * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
+     * get the viewPart and focus it. if the viewPart closed, it will be opened.
+     * 
+     * @param viewId the identifier of viewPart
+     * @return
+     */
+    public IViewPart findView(String viewId) {
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow == null) {
+            return null;
+        }
+        IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
+        if (page == null) {
+            return null;
+        }
+        IViewPart part = page.findView(viewId);
+        if (part == null) {
+            try {
+                part = page.showView(viewId);
+            } catch (Exception e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
+        } else {
+            page.bringToTop(part);
+        }
+        return part;
+    }
 
-	public void refreshWorkSpace() {
-		if (refreshAction == null) {
-			refreshAction = new RefreshAction(PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow());
+    public void refreshWorkSpace() {
+        if (refreshAction == null) {
+            refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 
-		}
-		refreshAction.run();
-	}
+        }
+        refreshAction.run();
+    }
 
-	public void refreshDQView() {
-		((DQRespositoryView) findView(DQRespositoryView.ID)).getCommonViewer()
-				.refresh();
-	}
+    public void refreshDQView() {
+        ((DQRespositoryView) findView(DQRespositoryView.ID)).getCommonViewer().refresh();
+    }
 
-	/**
-	 * DOC bzhou Comment method "getProductVersion".
-	 * 
-	 * @return
-	 */
-	public ProductVersion getProductVersion() {
-		Object obj = plugin.getBundle().getHeaders().get(
-				org.osgi.framework.Constants.BUNDLE_VERSION);
-		ProductVersion currentVersion = ProductVersion.fromString(obj
-				.toString());
-		return currentVersion;
-	}
+    /**
+     * DOC bzhou Comment method "getProductVersion".
+     * 
+     * @return
+     */
+    public ProductVersion getProductVersion() {
+        Object obj = plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
+        ProductVersion currentVersion = ProductVersion.fromString(obj.toString());
+        return currentVersion;
+    }
 }

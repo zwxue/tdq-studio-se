@@ -20,11 +20,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
@@ -33,6 +36,7 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -145,6 +149,31 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     @Override
     protected ResourceFileMap getResourceFileMap() {
         return PrvResourceFileHelper.getInstance();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.talend.dataprofiler.core.ui.wizard.AbstractWizard#fillMetadataToCWMResource(orgomg.cwm.objectmodel.core.
+     * ModelElement)
+     */
+    @Override
+    public void fillMetadataToCWMResource(ModelElement cwmElement) {
+        super.fillMetadataToCWMResource(cwmElement);
+        if (cwmElement instanceof DataProvider) {
+
+            DataProvider dataProvider = (DataProvider) cwmElement;
+            TypedReturnCode<TdProviderConnection> rc = DataProviderHelper.getTdProviderConnection(dataProvider);
+            if (rc.getObject() != null) {
+                TdProviderConnection connection = rc.getObject();
+                DataProviderHelper.setHost(getParameter().getHost(), connection);
+                DataProviderHelper.setPort(getParameter().getPort(), connection);
+                DataProviderHelper.setDBType(getParameter().getSqlTypeName(), connection);
+                DataProviderHelper.setDBName(getParameter().getDbName(), connection);
+            } else {
+                MessageUI.openError(rc.getMessage());
+            }
+        }
     }
 
     private void storeInfoToPerference(TdDataProvider dataProvider) {

@@ -21,9 +21,9 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -89,10 +89,10 @@ public final class ConnectionService {
             TdDataProvider dataProvider = TalendCwmFactory.createDataProvider(connector);
             String connectionName = connectionParameters.getName();
             dataProvider.setName(connectionName);
-            TaggedValueHelper.setDescription(connectionParameters.getDescription(), dataProvider);
-            TaggedValueHelper.setPurpose(connectionParameters.getPurpose(), dataProvider);
-            TaggedValueHelper.setDevStatus(dataProvider, DevelopmentStatus.get(connectionParameters.getStatus()));
-            TaggedValueHelper.setAuthor(dataProvider, connectionParameters.getAuthor());
+            MetadataHelper.setDescription(connectionParameters.getDescription(), dataProvider);
+            MetadataHelper.setPurpose(connectionParameters.getPurpose(), dataProvider);
+            MetadataHelper.setDevStatus(dataProvider, DevelopmentStatus.get(connectionParameters.getStatus()));
+            MetadataHelper.setAuthor(dataProvider, connectionParameters.getAuthor());
             rc.setObject(dataProvider);
             return rc;
         } catch (SQLException e) {

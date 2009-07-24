@@ -17,10 +17,10 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.exception.TalendException;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -39,6 +39,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * 
  */
 public class ColumnFolderNode extends AbstractDatabaseFolderNode {
+
+    public static final int COLUMN_MAX = 2500; //$NON-NLS-1$
 
     /**
      * @param name
@@ -63,16 +65,15 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         if (columnSet != null) {
             List<TdColumn> columnList = null;
             if (FILTER_FLAG) {
-                String columnFilter = TaggedValueHelper.getValue(TaggedValueHelper.COLUMN_FILTER, columnSet.getTaggedValue());
+                String columnFilter = ColumnHelper.getColumnFilter(columnSet);
                 columnList = filterColumns(ColumnSetHelper.getColumns(columnSet), columnFilter);
             } else {
                 columnList = ColumnSetHelper.getColumns(columnSet);
             }
             if (columnList.size() > 0) {
-                if (columnList.size() > TaggedValueHelper.COLUMN_MAX) {
+                if (columnList.size() > COLUMN_MAX) {
                     this.setChildren(null);
-                    MessageUI
-                            .openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", TaggedValueHelper.COLUMN_MAX));
+                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", COLUMN_MAX));
                 } else {
                     this.setChildren(columnList.toArray());
                 }
@@ -95,10 +96,9 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             }
             try {
                 columnList = DqRepositoryViewService.getColumns(provider, columnSet, null, true);
-                if (columnList.size() > TaggedValueHelper.COLUMN_MAX) {
+                if (columnList.size() > COLUMN_MAX) {
                     this.setChildren(null);
-                    MessageUI
-                            .openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", TaggedValueHelper.COLUMN_MAX));
+                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", COLUMN_MAX));
                     return;
                 }
             } catch (TalendException e) {
@@ -152,7 +152,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                 if (t.getName().matches(regex)) {
                     retColumns.add(t);
                     size++;
-                    if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
+                    if (size > COLUMN_MAX) {
                         return retColumns;
                     }
                     break;

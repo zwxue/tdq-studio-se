@@ -43,10 +43,6 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public final class DataProviderHelper {
 
-    public static final String USER = "user";
-
-    public static final String PASSWORD = "password"; //$NON-NLS-1$
-
     public static final String PASSPHRASE = "99ZwBDt1L9yMX2ApJx fnv94o99OeHbCGuIHTy22 V9O6cZ2i374fVjdV76VX9g49DG1r3n90hT5c1"; //$NON-NLS-1$
 
     private DataProviderHelper() {
@@ -72,7 +68,17 @@ public final class DataProviderHelper {
      * @return true if the technical name was not set before.
      */
     public static boolean setTechnicalName(TdDataProvider dataProvider, String technicalName) {
-        return TaggedValueHelper.setTechnicalName(dataProvider, technicalName);
+        return TaggedValueHelper.setTaggedValue(dataProvider, TaggedValueHelper.TECH_NAME_TAGGED_VAL, technicalName);
+    }
+
+    /**
+     * Method "getTechnicalName".
+     * 
+     * @param element a cwm element
+     * @return the technical name of the element (or null if none)
+     */
+    public static String getTechnicalName(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.TECH_NAME_TAGGED_VAL, element);
     }
 
     /**
@@ -83,7 +89,8 @@ public final class DataProviderHelper {
      * @return true if the value was not set before.
      */
     public static boolean setIdentifierQuoteString(String identifierQuoteString, TdDataProvider dataProvider) {
-        return TaggedValueHelper.setIdentifierQuoteString(identifierQuoteString, dataProvider);
+        return TaggedValueHelper
+                .setTaggedValue(dataProvider, TaggedValueHelper.DB_IDENTIFIER_QUOTE_STRING, identifierQuoteString);
     }
 
     /**
@@ -93,7 +100,7 @@ public final class DataProviderHelper {
      * @return the identifier quote string
      */
     public static String getIdentifierQuoteString(TdDataProvider dataProvider) {
-        return TaggedValueHelper.getIdentifierQuoteString(dataProvider);
+        return TaggedValueHelper.getValue(TaggedValueHelper.DB_IDENTIFIER_QUOTE_STRING, dataProvider);
     }
 
     /**
@@ -358,27 +365,12 @@ public final class DataProviderHelper {
      * @return the password in clear text or null
      */
     public static String getClearTextPassword(TdProviderConnection provConnection) {
-        String encryptedPassword = TaggedValueHelper.getValue(PASSWORD, provConnection);
+        String encryptedPassword = TaggedValueHelper.getValue(TaggedValueHelper.PASSWORD, provConnection);
         if (encryptedPassword == null) {
             return null;
         }
         CryptoHelper cryptoHelper = new CryptoHelper(PASSPHRASE);
         return cryptoHelper.decrypt(encryptedPassword);
-    }
-
-    public static String getClearTextUser(DataProvider dataProvider) {
-        TypedReturnCode<TdProviderConnection> rc = getTdProviderConnection(dataProvider);
-        return rc.isOk() ? getClearTextUser(rc.getObject()) : null;
-    }
-
-    /**
-     * DOC bZhou Comment method "getClearTextUser".
-     * 
-     * @param provConnection
-     * @return
-     */
-    public static String getClearTextUser(TdProviderConnection provConnection) {
-        return TaggedValueHelper.getValue(USER, provConnection);
     }
 
     /**
@@ -404,6 +396,126 @@ public final class DataProviderHelper {
     public static boolean encryptAndSetPassword(TdProviderConnection provConnection, String clearTextPassword) {
         CryptoHelper cryptoHelper = new CryptoHelper(PASSPHRASE);
         String encryptedPassword = clearTextPassword != null ? cryptoHelper.encrypt(clearTextPassword) : null;
-        return TaggedValueHelper.setTaggedValue(provConnection, PASSWORD, encryptedPassword);
+        return TaggedValueHelper.setTaggedValue(provConnection, TaggedValueHelper.PASSWORD, encryptedPassword);
+    }
+
+    /**
+     * DOC bZhou Comment method "getUser".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getUser(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.USER, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setUser".
+     * 
+     * @param user
+     * @param element
+     */
+    public static void setUser(String user, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.USER, user);
+    }
+
+    /**
+     * DOC bZhou Comment method "getPassword".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getPassword(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.PASSWORD, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setPassword".
+     * 
+     * @param password
+     * @param element
+     */
+    public static void setPassword(String password, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PASSWORD, password);
+    }
+
+    /**
+     * DOC bZhou Comment method "getHost".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getHost(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.HOST, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setHost".
+     * 
+     * @param host
+     * @param element
+     */
+    public static void setHost(String host, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.HOST, host);
+    }
+
+    /**
+     * DOC bZhou Comment method "getPort".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getPort(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.PORT, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setPort".
+     * 
+     * @param port
+     * @param element
+     */
+    public static void setPort(String port, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.PORT, port);
+    }
+
+    /**
+     * DOC bZhou Comment method "getDBType".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getDBType(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.DBTYPE, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setDBType".
+     * 
+     * @param dbType
+     * @param element
+     */
+    public static void setDBType(String dbType, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.DBTYPE, dbType);
+    }
+
+    /**
+     * DOC bZhou Comment method "getDBName".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getDBName(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.DBNAME, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setDBName".
+     * 
+     * @param dbname
+     * @param element
+     */
+    public static void setDBName(String dbname, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.DBNAME, dbname);
     }
 }

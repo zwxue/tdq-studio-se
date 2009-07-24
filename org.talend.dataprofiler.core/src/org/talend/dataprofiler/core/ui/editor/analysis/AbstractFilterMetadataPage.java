@@ -411,7 +411,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        labelContent = TaggedValueHelper.getValue(org.talend.dataquality.PluginConstant.USER_PROPERTY, providerConnection);
+        labelContent = TaggedValueHelper.getValue(TaggedValueHelper.USER, providerConnection);
         leftLabel
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());

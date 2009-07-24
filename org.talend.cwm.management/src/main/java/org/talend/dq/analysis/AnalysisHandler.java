@@ -17,10 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalPackage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
@@ -70,50 +68,6 @@ public class AnalysisHandler {
     public void setName(String name) {
         assert analysis != null;
         this.analysis.setName(name);
-    }
-
-    public String getPurpose() {
-        assert analysis != null;
-        return TaggedValueHelper.getPurpose(analysis);
-    }
-
-    public void setPurpose(String purpose) {
-        assert analysis != null;
-        TaggedValueHelper.setPurpose(purpose, analysis);
-    }
-
-    public String getDescription() {
-        assert analysis != null;
-        return TaggedValueHelper.getDescription(analysis);
-    }
-
-    public void setDescription(String description) {
-        assert analysis != null;
-        TaggedValueHelper.setDescription(description, analysis);
-    }
-
-    public String getAuthor() {
-
-        assert analysis != null;
-        return TaggedValueHelper.getAuthor(analysis);
-    }
-
-    public void setAuthor(String anthor) {
-
-        assert analysis != null;
-        TaggedValueHelper.setAuthor(analysis, anthor);
-    }
-
-    public String getStatus() {
-
-        assert analysis != null;
-        return TaggedValueHelper.getDevStatus(analysis).getLiteral();
-    }
-
-    public void setStatus(String status) {
-
-        assert analysis != null;
-        TaggedValueHelper.setDevStatus(analysis, DevelopmentStatus.get(status));
     }
 
     public void clearAnalysis() {

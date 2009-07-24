@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.sql.metadata.constants.GetTable;
@@ -124,7 +123,7 @@ public abstract class AbstractTableBuilder<T extends NamedColumnSet> extends Cwm
         // --- create a table and add columns
         T table = createTable();
         table.setName(tableName);
-        TaggedValueHelper.setComment(tableComment, table);
+        ColumnSetHelper.setComment(tableComment, table);
         if (columnsRequested) {
             ColumnBuilder colBuild = new ColumnBuilder(connection);
             List<TdColumn> columns = colBuild.getColumns(catalogName, schemaPattern, tableName, null);

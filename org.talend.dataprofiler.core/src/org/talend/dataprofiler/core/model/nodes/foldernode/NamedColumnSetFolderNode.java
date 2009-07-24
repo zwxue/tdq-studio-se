@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -36,6 +35,8 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> extends AbstractDatabaseFolderNode {
 
     private static Logger log = Logger.getLogger(NamedColumnSetFolderNode.class);
+
+    public static final int TABLE_VIEW_MAX = 2000; //$NON-NLS-1$
 
     private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences().getBoolean(
             PluginConstant.FILTER_TABLE_VIEW_COLUMN);
@@ -57,11 +58,10 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
             columnSets.addAll(getColumnSets(catalog, schema));
         }
         if (columnSets.size() > 0) {
-            if (FILTER_FLAG && columnSets.size() > TaggedValueHelper.TABLE_VIEW_MAX) {
+            if (FILTER_FLAG && columnSets.size() > TABLE_VIEW_MAX) {
                 columnSets.clear();
                 this.setChildren(null);
-                MessageUI.openWarning(DefaultMessagesImpl.getString("NamedColumnSetFolderNode.warnMsg",
-                        TaggedValueHelper.TABLE_VIEW_MAX));
+                MessageUI.openWarning(DefaultMessagesImpl.getString("NamedColumnSetFolderNode.warnMsg", TABLE_VIEW_MAX));
             } else {
                 this.setChildren(columnSets.toArray());
             }
@@ -148,7 +148,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
                 if (t.getName().matches(regex)) {
                     retColumnSets.add(t);
                     size++;
-                    if (size > TaggedValueHelper.TABLE_VIEW_MAX) {
+                    if (size > TABLE_VIEW_MAX) {
                         return retColumnSets;
                     }
                     break;

@@ -264,6 +264,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             hostNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             if (compositeEnable) {
                 hostNameText.setText(dbType.getHostName());
+                connectionParam.setHost(dbType.getHostName());
             }
             label.setEnabled(compositeEnable);
             hostNameText.setEnabled(compositeEnable);
@@ -275,6 +276,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             portText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             if (compositeEnable) {
                 portText.setText(dbType.getPort());
+                connectionParam.setPort(dbType.getPort());
             }
             label.setEnabled(compositeEnable);
             portText.setEnabled(compositeEnable);
@@ -357,9 +359,11 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             hostNameText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent event) {
-                    setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(),
-                            portText.getText(), databaseNameText.getText(), dataSourceText.getText(), parameterText.getText()));
+                    String host = hostNameText.getText();
+                    setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), host, portText.getText(),
+                            databaseNameText.getText(), dataSourceText.getText(), parameterText.getText()));
                     urlText.setText(getConnectionURL());
+                    connectionParam.setHost(host);
                 }
             });
 
@@ -367,9 +371,11 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
                 public void modifyText(ModifyEvent event) {
 
-                    setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(),
-                            portText.getText(), databaseNameText.getText(), dataSourceText.getText(), parameterText.getText()));
+                    String port = portText.getText();
+                    setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(), port,
+                            databaseNameText.getText(), dataSourceText.getText(), parameterText.getText()));
                     urlText.setText(getConnectionURL());
+                    connectionParam.setPort(port);
                 }
             });
             portText.addKeyListener(new KeyAdapter() {
@@ -390,10 +396,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             databaseNameText.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent event) {
+                    String dbName = databaseNameText.getText();
                     setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(),
-                            portText.getText(), databaseNameText.getText(), dataSourceText.getText(), parameterText.getText()));
+                            portText.getText(), dbName, dataSourceText.getText(), parameterText.getText()));
                     urlText.setText(getConnectionURL());
-                    SupportDBUrlStore.getInstance().changeAllDBNmae(databaseNameText.getText());
+                    SupportDBUrlStore.getInstance().changeAllDBNmae(dbName);
+                    connectionParam.setDbName(dbName);
                 }
             });
 

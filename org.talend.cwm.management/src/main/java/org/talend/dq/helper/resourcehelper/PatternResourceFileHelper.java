@@ -27,11 +27,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.constants.DevelopmentStatus;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
+import org.talend.dataquality.helpers.MetadataHelper;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -159,10 +159,10 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
     public Pattern createPattern(String name, String author, String description, String purpose, String status) {
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         pattern.setName(name);
-        TaggedValueHelper.setAuthor(pattern, author == null ? "" : author); //$NON-NLS-1$
-        TaggedValueHelper.setDescription(description == null ? "" : description, pattern); //$NON-NLS-1$
-        TaggedValueHelper.setPurpose(purpose == null ? "" : purpose, pattern); //$NON-NLS-1$
-        TaggedValueHelper.setDevStatus(pattern, DevelopmentStatus.get(status == null ? "" : status)); //$NON-NLS-1$
+        MetadataHelper.setAuthor(pattern, author == null ? "" : author); //$NON-NLS-1$
+        MetadataHelper.setDescription(description == null ? "" : description, pattern); //$NON-NLS-1$
+        MetadataHelper.setPurpose(purpose == null ? "" : purpose, pattern); //$NON-NLS-1$
+        MetadataHelper.setDevStatus(pattern, DevelopmentStatus.get(status == null ? "" : status)); //$NON-NLS-1$
 
         return pattern;
     }

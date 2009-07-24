@@ -294,7 +294,7 @@ public final class DatabaseContentRetriever {
 
                 // MOD scorreia 2009-01-09 skip password properties because it is not used and would result in a
                 // security hole
-                if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(prop.name)) {
+                if (TaggedValueHelper.PASSWORD.equals(prop.name)) {
                     continue;
                 }
 
@@ -303,8 +303,8 @@ public final class DatabaseContentRetriever {
                     log.debug(prop.name + "=" + prop.value);
                 }
 
-                TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(prop.name, prop.value);
-                provider.getTaggedValue().add(taggedValue);
+                // TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(prop.name, prop.value);
+                // provider.getTaggedValue().add(taggedValue);
 
                 if (log.isDebugEnabled()) {
                     if (prop.choices != null) {
@@ -334,7 +334,7 @@ public final class DatabaseContentRetriever {
             String key = propertyNames.nextElement().toString();
             // hcheng encode password here
             String property = props.getProperty(key);
-            if (org.talend.dq.PluginConstant.PASSWORD_PROPERTY.equals(key)) {
+            if (TaggedValueHelper.PASSWORD.equals(key)) {
                 DataProviderHelper.encryptAndSetPassword(prov, property);
             } else {
                 TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(key, property);

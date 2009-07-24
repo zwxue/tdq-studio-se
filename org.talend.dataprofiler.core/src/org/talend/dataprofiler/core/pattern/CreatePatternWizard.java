@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.pattern;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
@@ -122,6 +123,18 @@ public class CreatePatternWizard extends AbstractWizard {
             return pattern;
         }
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.talend.dataprofiler.core.ui.wizard.AbstractWizard#fillMetadataToCWMResource(orgomg.cwm.objectmodel.core.
+     * ModelElement)
+     */
+    @Override
+    public void fillMetadataToCWMResource(ModelElement cwmElement) {
+        super.fillMetadataToCWMResource(cwmElement);
+        TaggedValueHelper.setValidStatus(true, cwmElement);
     }
 
     /**

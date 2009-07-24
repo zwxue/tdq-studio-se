@@ -261,4 +261,64 @@ public final class ColumnSetHelper {
 
         return container.size() == 1;
     }
+
+    /**
+     * DOC bZhou Comment method "getTableFilter".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getTableFilter(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setTableFilter".
+     * 
+     * @param filter
+     * @param element
+     */
+    public static void setTableFilter(String filter, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.TABLE_FILTER, filter);
+    }
+
+    /**
+     * DOC bZhou Comment method "getViewFilter".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getViewFilter(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.VIEW_FILTER, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setViewFilter".
+     * 
+     * @param filter
+     * @param element
+     */
+    public static void setViewFilter(String filter, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.VIEW_FILTER, filter);
+    }
+
+    /**
+     * DOC bZhou Comment method "getComment".
+     * 
+     * @param element
+     * @return
+     */
+    public static String getComment(ModelElement element) {
+        return TaggedValueHelper.getValue(TaggedValueHelper.COMMENT, element);
+    }
+
+    /**
+     * DOC bZhou Comment method "setComment".
+     * 
+     * @param comment
+     * @param element
+     */
+    public static void setComment(String comment, ModelElement element) {
+        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.COMMENT, comment);
+    }
 }

@@ -208,6 +208,26 @@ public final class SupportDBUrlStore {
     }
 
     /**
+     * DOC bZhou Comment method "findDBTypeByName".
+     * 
+     * @param dbName
+     * @return
+     */
+    public SupportDBUrlType findDBTypeByName(String dbName) {
+        if (supportDBUrlMap == null || supportDBUrlMap.isEmpty() || dbName == null) {
+            return null;
+        }
+
+        for (String key : supportDBUrlMap.keySet()) {
+            if (dbName.equalsIgnoreCase(key)) {
+                return supportDBUrlMap.get(key);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param args
      */
     public static void main(String[] args) {

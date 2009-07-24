@@ -12,17 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.service;
 
-import org.eclipse.core.resources.IProject;
-
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public interface IProjectAdapterService extends IService {
+public interface IJobService extends IService {
 
-    /**
-     * DOC bZhou Comment method "getRootProject".
-     * 
-     * @return the root project
-     */
-    public IProject getRootProject();
+    public void executeJob();
 }
