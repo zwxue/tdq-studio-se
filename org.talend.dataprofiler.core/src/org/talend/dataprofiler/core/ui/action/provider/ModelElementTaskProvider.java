@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
@@ -50,8 +51,18 @@ public class ModelElementTaskProvider extends CommonActionProvider {
     @Override
     public void fillContextMenu(IMenuManager menu) {
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
+        // MOD by hcheng 07-28-2009,for 8273,Remove the "add task" menu on the system indicators.
+        TreePath[] treePath = currentSelection.getPaths();
+        for (TreePath paths : treePath) {
+            Object path = paths.getSegment(1);
+            if (path.toString().endsWith("Indicators")) {
+                return;
+            } else {
+                addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), currentSelection.getFirstElement());
+                menu.add(addTaskAction);
+            }
 
-        addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), currentSelection.getFirstElement());
-        menu.add(addTaskAction);
+        }
+
     }
 }
