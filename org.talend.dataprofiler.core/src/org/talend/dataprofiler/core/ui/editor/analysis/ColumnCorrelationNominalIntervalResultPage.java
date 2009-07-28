@@ -50,6 +50,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.Plot;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.cwm.relational.TdColumn;
@@ -349,7 +351,37 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         JFreeChart chart = TopChartFactory.createBarChart(DefaultMessagesImpl
                 .getString("ColumnCorrelationNominalIntervalResultPage.SimpleSatistics"), dataset, true); //$NON-NLS-1$
 
-        ChartDecorator.decorate(chart);
+        
+        
+     // MOD mzhao 2009-07-28 Bind the indicator with specific color.
+		if (chart != null) {
+			Plot plot = chart.getPlot();
+			if (plot instanceof CategoryPlot) {
+				ChartDecorator.decorateCategoryPlot(chart);
+				// Row Count
+					((CategoryPlot) plot).getRenderer().setSeriesPaint(0,
+						ChartDecorator.IndiBindColor.INDICATOR_ROW_COUNT
+								.getColor());
+				// Distinct Count
+				((CategoryPlot) plot).getRenderer().setSeriesPaint(
+						1,
+						ChartDecorator.IndiBindColor.INDICATOR_DISTINCT_COUNT
+								.getColor());
+				// Unique Count
+				((CategoryPlot) plot).getRenderer().setSeriesPaint(
+						2,
+						ChartDecorator.IndiBindColor.INDICATOR_UNIQUE_COUNT
+								.getColor());
+				// Duplicate Count
+				((CategoryPlot) plot).getRenderer().setSeriesPaint(
+						3,
+						ChartDecorator.IndiBindColor.INDICATOR_DUPLICATE_COUNT
+								.getColor());
+
+			}
+		}
+        
+        
         ChartComposite chartComp = new ChartComposite(composite, SWT.NONE, chart);
         chartComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         // ChartUtils.createAWTSWTComp(composite, new GridData(GridData.FILL_BOTH), chart);
