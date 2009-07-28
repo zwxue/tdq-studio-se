@@ -242,8 +242,7 @@ public final class DQStructureComparer {
         String urlString = tdProviderConnection.getObject().getConnectionString();
         String driverClassName = tdProviderConnection.getObject().getDriverClassName();
         Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.USER, TaggedValueHelper.getValue(TaggedValueHelper.USER, tdProviderConnection
-                .getObject()));
+        properties.setProperty(TaggedValueHelper.USER, DataProviderHelper.getUser(tdProviderConnection.getObject()));
         properties.setProperty(TaggedValueHelper.PASSWORD, DataProviderHelper.getClearTextPassword(prevDataProvider));
         DBConnectionParameter connectionParameters = new DBConnectionParameter();
 

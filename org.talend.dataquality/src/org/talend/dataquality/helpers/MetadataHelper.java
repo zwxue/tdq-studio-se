@@ -104,23 +104,28 @@ public final class MetadataHelper {
     }
 
     /**
-     * Method "getDescription".
+     * DOC bZhou Comment method "getDescription".
      * 
-     * @param element a CWM element
-     * @return the description of the element or null
+     * @param element
+     * @return
      */
     public static String getDescription(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.DESCRIPTION, element.getTaggedValue());
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DESCRIPTION, element.getTaggedValue());
+        if (tv == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return tv.getValue();
     }
 
     /**
-     * Method "setDescription".
+     * DOC bZhou Comment method "setDescription".
      * 
-     * @param description the functional description to set or create
-     * @param element a CWM element
+     * @param description
+     * @param element
+     * @return
      */
-    public static void setDescription(String description, ModelElement element) {
-        TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.DESCRIPTION, description);
+    public static boolean setDescription(String description, ModelElement element) {
+        return TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.DESCRIPTION, description);
     }
 
     /**
@@ -168,7 +173,11 @@ public final class MetadataHelper {
      * @return the purpose or null
      */
     public static String getPurpose(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.PURPOSE, element);
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PURPOSE, element.getTaggedValue());
+        if (tv == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return tv.getValue();
     }
 
     /**
@@ -189,7 +198,11 @@ public final class MetadataHelper {
      * @param element
      * @return the version of the element
      */
-    public static Boolean getVersion(ModelElement element) {
-        return Boolean.valueOf(TaggedValueHelper.getValue(TaggedValueHelper.VERSION, element));
+    public static String getVersion(ModelElement element) {
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VERSION, element.getTaggedValue());
+        if (tv == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return tv.getValue();
     }
 }

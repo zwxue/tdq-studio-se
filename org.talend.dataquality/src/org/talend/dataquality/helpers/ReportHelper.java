@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -32,6 +33,8 @@ import org.talend.utils.dates.DateUtils;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
+import orgomg.cwm.objectmodel.core.TaggedValue;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -386,5 +389,110 @@ public final class ReportHelper {
             }
         }
         return jrxmlSource;
+    }
+
+    /**
+     * DOC bZhou Comment method "setOutputType".
+     * 
+     * @param outputType
+     * @param report
+     * @return
+     */
+    public static boolean setOutputType(String outputType, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.OUTPUT_TYPE_TAG, outputType);
+    }
+
+    /**
+     * DOC bZhou Comment method "getOutputType".
+     * 
+     * @param tag
+     * @param element
+     * @return
+     */
+    public static String getOutputType(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.OUTPUT_TYPE_TAG, report.getTaggedValue());
+        if (taggedValue == null) {
+            return "pdf";
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC bZhou Comment method "setSingleGenReport".
+     * 
+     * @param single
+     * @param report
+     * @return
+     */
+    public static boolean setSingleGenReport(Boolean single, Report report) {
+        String statusStr = String.valueOf(single);
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.GEN_SINGLE_REPORT, statusStr);
+    }
+
+    /**
+     * DOC bZhou Comment method "getSingleGenReport".
+     * 
+     * @param report
+     * @return
+     */
+    public static Boolean getSingleGenReport(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.GEN_SINGLE_REPORT, report.getTaggedValue());
+        if (taggedValue == null) {
+            return false;
+        }
+        return Boolean.valueOf(taggedValue.getValue());
+    }
+
+    /**
+     * DOC bZhou Comment method "setOutputFileName".
+     * 
+     * @param fileName
+     * @param report
+     * @return
+     */
+    public static boolean setOutputFileName(String fileName, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.OUTPUT_FILENAME_TAG, fileName);
+    }
+
+    /**
+     * DOC bZhou Comment method "getOutputFileName".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getOutputFileName(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper
+                .getTaggedValue(TaggedValueHelper.OUTPUT_FILENAME_TAG, report.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC bZhou Comment method "setOutputFolderName".
+     * 
+     * @param folderName
+     * @param report
+     * @return
+     */
+    public static boolean setOutputFolderName(String folderName, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.OUTPUT_FOLDER_TAG, folderName);
+    }
+
+    /**
+     * DOC bZhou Comment method "getOutputFolderName".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getOutputFolderName(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.OUTPUT_FOLDER_TAG, report.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+
+        return taggedValue.getValue();
     }
 }

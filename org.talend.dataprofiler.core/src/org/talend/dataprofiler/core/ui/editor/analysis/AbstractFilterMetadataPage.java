@@ -58,7 +58,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -411,7 +410,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        labelContent = TaggedValueHelper.getValue(TaggedValueHelper.USER, providerConnection);
+        labelContent = DataProviderHelper.getUser(providerConnection);
         leftLabel
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());

@@ -27,6 +27,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.PrimaryKey;
@@ -237,7 +238,11 @@ public final class ColumnHelper {
      * @return
      */
     public static String getColumnFilter(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.COLUMN_FILTER, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.COLUMN_FILTER, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -257,7 +262,11 @@ public final class ColumnHelper {
      * @return
      */
     public static String getComment(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.COMMENT, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.COMMENT, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**

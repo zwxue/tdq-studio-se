@@ -18,7 +18,6 @@ import org.eclipse.emf.common.util.EList;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
-import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * @author scorreia
@@ -32,20 +31,10 @@ public final class TaggedValueHelper {
      */
     public static final String DATA_CONTENT_TYPE_TAGGED_VAL = "Content Type"; //$NON-NLS-1$
 
-    /**
-     * The tag used when setting the development status of an object such as analysis, connection...
-     */
-
-    private static final String EMPTY_STRING = ""; //$NON-NLS-1$
-
-    private static final String DEFAULT_FORMAT = "pdf"; //$NON-NLS-1$
-
-    public static final String GEN_SINGLE_REPORT = "Single output"; //$NON-NLS-1$
-
-    /**
-     * A status to tell that the object is valid or invalid.
-     */
+    // pattern tagged values
     public static final String VALID_STATUS = "Validation_Status"; //$NON-NLS-1$
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // metadata tagged values
 
@@ -88,60 +77,23 @@ public final class TaggedValueHelper {
     public static final String DB_IDENTIFIER_QUOTE_STRING = "DB IdentifierQuoteString"; //$NON-NLS-1$
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // report tagged values
+    public static final String GEN_SINGLE_REPORT = "Single output";
+
+    public static final String OUTPUT_TYPE_TAG = "OutputType";
+
+    public static final String OUTPUT_FILENAME_TAG = "OutputFileName";
+
+    public static final String OUTPUT_FOLDER_TAG = "OutputFolder";
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~
     /**
      * The tag used for setting a technical name.
      */
     public static final String TECH_NAME_TAGGED_VAL = "Technical Name"; //$NON-NLS-1$
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
-    /**
-     * Method "setSingleGenReport".
-     * 
-     * @param single true if the generated report must overwrite the existing report
-     * @param report a report
-     * @return true if the value was not set before.
-     */
-    public static boolean setSingleGenReport(Boolean single, Report report) {
-        String statusStr = String.valueOf(single);
-        return setTaggedValue(report, GEN_SINGLE_REPORT, statusStr);
-    }
-
-    /**
-     * Method "getSingleGenReport".
-     * 
-     * @param report
-     * @return true when a single generated file must be used. False when the generated file must not overwrite the
-     * existing generated files.
-     */
-    public static Boolean getSingleGenReport(Report report) {
-        final String value = getValue(GEN_SINGLE_REPORT, report);
-        if (value == null || value.trim().length() == 0) {
-            return false;
-        }
-        return Boolean.valueOf(value);
-    }
-
-    /**
-     * Method "setValidStatus" sets the status on the given element.
-     * 
-     * @param status the status to set
-     * @param element the element
-     * @return true if the value was not set before.
-     */
-    public static boolean setValidStatus(Boolean status, ModelElement element) {
-        String statusStr = String.valueOf(status);
-        return setTaggedValue(element, VALID_STATUS, statusStr);
-    }
-
-    /**
-     * Method "getValidStatus".
-     * 
-     * @param element
-     * @return the validation status of the element
-     */
-    public static Boolean getValidStatus(ModelElement element) {
-        return Boolean.valueOf(getValue(VALID_STATUS, element));
-    }
 
     private TaggedValueHelper() {
     }
@@ -158,21 +110,6 @@ public final class TaggedValueHelper {
         taggedValue.setTag(tag);
         taggedValue.setValue(value);
         return taggedValue;
-    }
-
-    /**
-     * Method "getValue" retrieves the value corresponding to the first matching tag.
-     * 
-     * @param tag the tag to match
-     * @param taggedValues the tagged values in which to search for the given tag
-     * @return the value (if found) or null
-     */
-    public static String getValue(String tag, Collection<TaggedValue> taggedValues) {
-        TaggedValue taggedValue = getTaggedValue(tag, taggedValues);
-        if (taggedValue == null) {
-            return null;
-        }
-        return taggedValue.getValue();
     }
 
     /**
@@ -219,28 +156,28 @@ public final class TaggedValueHelper {
     }
 
     /**
-     * Method "getValue".
+     * Method "setValidStatus" sets the status on the given element.
      * 
-     * @param tag the key to find the value
-     * @param element the element
-     * @return the value of the tagged valued of the element or the empty string
+     * @param status the status to set
+     * @param pattern the element
+     * @return true if the value was not set before.
      */
-    public static String getValue(String tag, ModelElement element) {
-        TaggedValue tv = getTaggedValue(tag, element.getTaggedValue());
-        if (tv == null) {
-            return EMPTY_STRING;
-        }
-        return tv.getValue();
+    public static boolean setValidStatus(Boolean status, ModelElement element) {
+        String statusStr = String.valueOf(status);
+        return TaggedValueHelper.setTaggedValue(element, TaggedValueHelper.VALID_STATUS, statusStr);
     }
 
-    public static String getFileValue(String tag, ModelElement element) {
-        TaggedValue tv = getTaggedValue(tag, element.getTaggedValue());
-        if (tv == null) {
-            return DEFAULT_FORMAT;
+    /**
+     * Method "getValidStatus".
+     * 
+     * @param element
+     * @return the validation status of the element
+     */
+    public static Boolean getValidStatus(ModelElement element) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VALID_STATUS, element.getTaggedValue());
+        if (taggedValue == null) {
+            return false;
         }
-        return tv.getValue();
+        return Boolean.valueOf(taggedValue.getValue());
     }
-
-    // database tagged values
-
 }

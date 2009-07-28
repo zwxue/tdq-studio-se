@@ -30,6 +30,7 @@ import org.talend.cwm.relational.util.RelationalSwitch;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.QueryColumnSet;
@@ -269,7 +270,11 @@ public final class ColumnSetHelper {
      * @return
      */
     public static String getTableFilter(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.TABLE_FILTER, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TABLE_FILTER, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -289,7 +294,11 @@ public final class ColumnSetHelper {
      * @return
      */
     public static String getViewFilter(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.VIEW_FILTER, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VIEW_FILTER, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -309,7 +318,11 @@ public final class ColumnSetHelper {
      * @return
      */
     public static String getComment(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.COMMENT, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.COMMENT, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**

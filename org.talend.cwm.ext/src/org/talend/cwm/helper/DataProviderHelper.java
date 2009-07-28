@@ -33,6 +33,7 @@ import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Column;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -78,7 +79,12 @@ public final class DataProviderHelper {
      * @return the technical name of the element (or null if none)
      */
     public static String getTechnicalName(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.TECH_NAME_TAGGED_VAL, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.TECH_NAME_TAGGED_VAL, element
+                .getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -100,7 +106,12 @@ public final class DataProviderHelper {
      * @return the identifier quote string
      */
     public static String getIdentifierQuoteString(TdDataProvider dataProvider) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.DB_IDENTIFIER_QUOTE_STRING, dataProvider);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_IDENTIFIER_QUOTE_STRING, dataProvider
+                .getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -365,7 +376,7 @@ public final class DataProviderHelper {
      * @return the password in clear text or null
      */
     public static String getClearTextPassword(TdProviderConnection provConnection) {
-        String encryptedPassword = TaggedValueHelper.getValue(TaggedValueHelper.PASSWORD, provConnection);
+        String encryptedPassword = getPassword(provConnection);
         if (encryptedPassword == null) {
             return null;
         }
@@ -406,7 +417,11 @@ public final class DataProviderHelper {
      * @return
      */
     public static String getUser(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.USER, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.USER, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -426,7 +441,11 @@ public final class DataProviderHelper {
      * @return
      */
     public static String getPassword(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.PASSWORD, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PASSWORD, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -446,7 +465,11 @@ public final class DataProviderHelper {
      * @return
      */
     public static String getHost(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.HOST, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.HOST, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -466,7 +489,11 @@ public final class DataProviderHelper {
      * @return
      */
     public static String getPort(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.PORT, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PORT, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -486,7 +513,11 @@ public final class DataProviderHelper {
      * @return
      */
     public static String getDBType(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.DBTYPE, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBTYPE, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
@@ -506,7 +537,11 @@ public final class DataProviderHelper {
      * @return
      */
     public static String getDBName(ModelElement element) {
-        return TaggedValueHelper.getValue(TaggedValueHelper.DBNAME, element);
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DBNAME, element.getTaggedValue());
+        if (taggedValue == null) {
+            return "";
+        }
+        return taggedValue.getValue();
     }
 
     /**
