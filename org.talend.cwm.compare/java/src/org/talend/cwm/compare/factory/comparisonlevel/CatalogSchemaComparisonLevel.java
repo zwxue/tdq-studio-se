@@ -259,7 +259,27 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
      */
     @Override
     protected void handleUpdateElement(UpdateAttribute updateAttribute) {
-        // TODO Auto-generated method stub
+       // MOD mzhao 2009-07-28 bug 8225
+		EObject leftElement = updateAttribute.getLeftElement();
+		// If columnSet name change.
+		ColumnSet columnSetSwitchLeft = SwitchHelpers.COLUMN_SET_SWITCH
+				.doSwitch(leftElement);
+		// If columnSet attribute change.
+		if (columnSetSwitchLeft == null) {
+			columnSetSwitchLeft = (ColumnSet) leftElement
+					.eContainer();
+		}
+		EObject rightElement = updateAttribute.getRightElement();
+		ColumnSet columnSetSwitchRight = SwitchHelpers.COLUMN_SET_SWITCH
+				.doSwitch(rightElement);
+		if (columnSetSwitchRight == null) {
+			columnSetSwitchRight = (ColumnSet) rightElement.eContainer();
+		}
+		if (columnSetSwitchLeft != null && columnSetSwitchRight != null) {
+			Package pack = (Package) selectedObj;
+			PackageHelper.removeColumnSet(columnSetSwitchLeft, pack);
+			PackageHelper.addColumnSet(columnSetSwitchRight, pack);
+		}
 
     }
 
