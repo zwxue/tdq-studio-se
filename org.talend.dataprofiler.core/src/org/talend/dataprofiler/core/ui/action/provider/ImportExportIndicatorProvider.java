@@ -14,8 +14,6 @@ package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.navigator.CommonActionProvider;
-import org.talend.dataprofiler.core.ui.action.actions.ExportIndicatorDefinitionAction;
-import org.talend.dataprofiler.core.ui.action.actions.ImportIndicatorDefinitionAction;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -29,7 +27,7 @@ public class ImportExportIndicatorProvider extends CommonActionProvider {
      */
     @Override
     public void fillContextMenu(IMenuManager menu) {
-        menu.add(new ImportIndicatorDefinitionAction());
-        menu.add(new ExportIndicatorDefinitionAction());
+        // menu.add(new ImportIndicatorDefinitionAction());
+        // menu.add(new ExportIndicatorDefinitionAction());
     }
 }
