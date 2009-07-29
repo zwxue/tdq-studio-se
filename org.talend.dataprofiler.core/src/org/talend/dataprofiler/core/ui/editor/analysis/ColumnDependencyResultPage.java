@@ -188,6 +188,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
      * @return
      */
     private DefaultCategoryDataset initDataset() {
+        
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
         Analysis analysis =  this.getAnalysisHandler().getAnalysis();
@@ -196,11 +197,11 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
        for (Iterator iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
            ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
            String label = getRowLabel(indicator);
-           dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label);
-           dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
+           if(getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0){
+               dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label);
+               dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
+           }
        }
-        
-       
         return dataset;
     }
 

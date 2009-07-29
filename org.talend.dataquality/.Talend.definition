@@ -28,6 +28,11 @@
     <sqlGenericExpression xmi:id="_H3q6QMtNEd2CMtoJzSqU8Q" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount > 1) AS myquery" language="Teradata"/>
     <sqlGenericExpression xmi:id="_Oid8IBILEd6Zsu-w7oQdJw" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) myquery" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
+   <indicatorDefinitions xmi:id="_YqcX0XHpEd6udst2R2sgpA" name="Functional Dependency" label="Functional Dependency">
+    <taggedValue xmi:id="_Yqc-4HHpEd6udst2R2sgpA" tag="Description" value="Reports the extent to which the values in one column (the dependent column) depend on the values in another column or set of columns (the determinant column)"/>
+    <taggedValue xmi:id="_Yqc-4XHpEd6udst2R2sgpA" tag="Purpose" value=""/>
+    <sqlGenericExpression xmi:id="_Yqc-4nHpEd6udst2R2sgpA" body="SELECT COUNT(A) AS NB, COUNT(DISTINCT A) AS NBDISTINCT FROM (SELECT DISTINCT &lt;%=__COLUMN_NAME_A__%> AS A , &lt;%=__COLUMN_NAME_B__%> AS B FROM  &lt;%=__TABLE_NAME__%> C  ) T" language="SQL"/>
+  </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccHq0xF2Ed2PKb6nEJEvhw" name="Blank Count" categories="_ccKHEBF2Ed2PKb6nEJEvhw" label="Blank Count">
     <taggedValue xmi:id="_ybsFADh8Ed2XmO7pl5Yuyg" tag="Description" value="counts the number of blank rows. A blank is a non null textual data that contains only white spaces (or nothing). Note that Oracle does not distinguish between the empty string and the null value"/>
     <taggedValue xmi:id="_ybsFATh8Ed2XmO7pl5Yuyg" tag="Purpose" value="evaluates the number of blank records"/>

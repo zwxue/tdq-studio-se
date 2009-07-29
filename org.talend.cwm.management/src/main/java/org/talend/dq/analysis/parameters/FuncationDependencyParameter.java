@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis.parameters;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.dq.analysis.parameters.ConnectionParameter.EParameterType;
 
 
@@ -20,4 +21,10 @@ import org.talend.dq.analysis.parameters.ConnectionParameter.EParameterType;
  */
 public class FuncationDependencyParameter extends AnalysisParameter {
 
+    @Override
+    public String getName() {
+       return StringUtils.isBlank(super.getName())?"":super.getName();
+    }
+
+    
 }

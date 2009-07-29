@@ -111,13 +111,14 @@ public class ColumnDependencyMasterDetailsPage extends
         columnsComparisonSection = anaColumnCompareViewer
                 .getColumnsComparisonSection();
         anaColumnCompareViewer.addPropertyChangeListener(this);
-
-
+        
         currentEditor
-                .registerSections(new Section[] { columnsComparisonSection });
+        .registerSections(new Section[] { columnsComparisonSection });
     }
 	
-	
+	public ScrolledForm getScrolledForm() {
+        return form;
+    }
 
     /**
 	 * @param editor
