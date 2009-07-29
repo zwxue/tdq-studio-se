@@ -128,8 +128,13 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
         return " DATALENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
     
+  
+    /* (non-Javadoc)
+     * @see org.talend.dq.dbms.DbmsLanguage#createGenericSqlWithRegexFunction(java.lang.String)
+     */
     @Override
     public String createGenericSqlWithRegexFunction(String function){
+        
          return "SELECT COUNT(CASE WHEN " + function + "(" + GenericSQLHandler.COLUMN_NAMES + "," + GenericSQLHandler.PATTERN_EXPRESSION //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         + ") = 1 THEN 1 END), COUNT(*) FROM " + GenericSQLHandler.TABLE_NAME + " " + GenericSQLHandler.WHERE_CLAUSE; //$NON-NLS-1$ //$NON-NLS-2$
     }

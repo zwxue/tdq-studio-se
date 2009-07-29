@@ -936,6 +936,12 @@ public class DbmsLanguage {
         return (columnA != null) ? ColumnHelper.getColumnSetFullName(columnA) : null;
     }
     
+    /**
+     * DOC jet adapt to {@link GenericSQLHandler}("").createGenericSqlWithRegexFunction() method<p>
+     * @see GenericSQLHandler
+     * @param function UDF function name.
+     * @return special sql statement
+     */
     public String createGenericSqlWithRegexFunction(String function){
         return new GenericSQLHandler("").createGenericSqlWithRegexFunction(function);
     }

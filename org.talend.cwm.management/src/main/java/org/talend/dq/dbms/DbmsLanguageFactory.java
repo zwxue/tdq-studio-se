@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.dburl.SupportDBUrlStore;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
@@ -42,6 +44,7 @@ public final class DbmsLanguageFactory {
         // avoid instantiation
     }
 
+    
     /**
      * Method "createDbmsLanguage".
      * 
@@ -112,6 +115,48 @@ public final class DbmsLanguageFactory {
         }
         // TODO other supported databases here
         return new DbmsLanguage(dbmsSubtype, dbVersion);
+    }
+    
+    public static DbmsLanguage createDbmsLanguage(String dataType){
+        SupportDBUrlType dbType = SupportDBUrlStore.getInstance().getDBUrlType(dataType);
+        return createDbmsLanguage(dbType);
+    }
+    
+    /**
+     * DOC jet Comment method "getDbmsLanguage".
+     * @param dbType
+     * @return
+     */
+    public static DbmsLanguage createDbmsLanguage(SupportDBUrlType dbType) {
+        
+        DbmsLanguage result = null;
+        
+        if(dbType == null){
+            return new DbmsLanguage();
+        }
+        switch (dbType) {
+            case DB2ZOSDEFAULTURL:
+                result = new DB2DbmsLanguage();
+                break;
+                
+            case ORACLEWITHSERVICENAMEDEFAULTURL:
+            case ORACLEWITHSIDDEFAULTURL:
+                result = new OracleDbmsLanguage();
+                break;
+                
+            case SYBASEDEFAULTURL:
+                result = new SybaseASEDbmsLanguage();
+                break;
+                
+            case MSSQLDEFAULTURL:
+                result = new MSSqlDbmsLanguage();
+                break;
+                
+            case MYSQLDEFAULTURL:
+            default:
+                result = new DbmsLanguage();
+        }
+        return result;
     }
 
     /**
