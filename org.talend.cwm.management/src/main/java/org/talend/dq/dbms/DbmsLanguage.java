@@ -935,5 +935,9 @@ public class DbmsLanguage {
         TdColumn columnA = colA != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(colA) : null;
         return (columnA != null) ? ColumnHelper.getColumnSetFullName(columnA) : null;
     }
+    
+    public String createGenericSqlWithRegexFunction(String function){
+        return new GenericSQLHandler("").createGenericSqlWithRegexFunction(function);
+    }
 
 }

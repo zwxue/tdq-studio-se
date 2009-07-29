@@ -25,13 +25,13 @@ public class GenericSQLHandler {
 
     private static final String TABLE_NAME2 = "<%=__TABLE_NAME_2__%>"; //$NON-NLS-1$
 
-    private static final String COLUMN_NAMES = "<%=__COLUMN_NAMES__%>"; //$NON-NLS-1$
+    public static final String COLUMN_NAMES = "<%=__COLUMN_NAMES__%>"; //$NON-NLS-1$
 
     private static final String GROUP_BY_ALIAS = "<%=__GROUP_BY_ALIAS__%>"; //$NON-NLS-1$
 
     private static final String LIMIT_ROW = "<%=__LIMIT_ROW__%>"; //$NON-NLS-1$
 
-    private static final String PATTERN_EXPRESSION = "<%=__PATTERN_EXPR__%>"; //$NON-NLS-1$
+    public static final String PATTERN_EXPRESSION = "<%=__PATTERN_EXPR__%>"; //$NON-NLS-1$
 
     public static final String JOIN_CLAUSE = "<%=__JOIN_CLAUSE__%>"; //$NON-NLS-1$
 

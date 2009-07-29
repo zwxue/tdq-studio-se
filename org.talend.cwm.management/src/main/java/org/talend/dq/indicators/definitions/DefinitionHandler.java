@@ -76,6 +76,8 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
+import org.talend.dq.dbms.DbmsFactory;
+import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.GenericSQLHandler;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -341,7 +343,8 @@ public final class DefinitionHandler {
      * @return
      */
     private String getGenericSQL(String dbmsName, String regexpFunction) {
-        return new GenericSQLHandler("").createGenericSqlWithRegexFunction(regexpFunction); //$NON-NLS-1$
+        DbmsLanguage dbmsLanguage = DbmsFactory.instance.getDbmsLanguage(dbmsName);
+        return dbmsLanguage.createGenericSqlWithRegexFunction(regexpFunction);
     }
 
     /**
