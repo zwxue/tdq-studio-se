@@ -27,6 +27,8 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
@@ -145,17 +147,18 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
-
+        
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            instantiateQuery(indicator);
+            instantiateQuery(indicator,dbmsLanguage);
         }
 
         // no query to return, here we only instantiate several SQL queries
         return ""; //$NON-NLS-1$
     }
 
-    private boolean instantiateQuery(Indicator indicator) {
+    private boolean instantiateQuery(Indicator indicator,DbmsLanguage dbmsLanguage) {
         // (but is not need, hence we keep it commented)
 
         if (ColumnsetPackage.eINSTANCE.getColumnDependencyIndicator().equals(indicator.eClass())) {
@@ -166,9 +169,9 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
             Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
-            boolean useNulls = false; // TODO scorreia create an indicator for each option
-
-            Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnA, columnB);
+       
+            
+            Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnA, columnB,dbmsLanguage);
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
@@ -181,17 +184,19 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
      * @param sqlGenericExpression
      * @param columnA
      * @param columnB
+     * @param dbmsLanguage 
      * @param useNulls
      * @return
      */
-    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, Column columnA, Column columnB) {
+    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, Column columnA, Column columnB, DbmsLanguage dbmsLanguage) {
         assert columnA != null;
         assert columnB != null;
 
         String genericSQL = sqlGenericExpression.getBody();
         GenericSQLHandler sqlHandler = new GenericSQLHandler(genericSQL);
-        sqlHandler.replaceColumnA(columnA.getName()).replaceColumnB(columnB.getName()).replaceTable(
-                getTableNameFromColumn(columnA));
+       
+        sqlHandler.replaceColumnA(dbmsLanguage.quote(columnA.getName())).replaceColumnB(dbmsLanguage.quote(columnB.getName())).replaceTable(
+                dbmsLanguage.quote(getTableNameFromColumn(columnA)));
         Expression instantiatedExpression = CoreFactory.eINSTANCE.createExpression();
         instantiatedExpression.setLanguage(sqlGenericExpression.getLanguage());
         String instantiatedSQL = sqlHandler.getSqlString();
