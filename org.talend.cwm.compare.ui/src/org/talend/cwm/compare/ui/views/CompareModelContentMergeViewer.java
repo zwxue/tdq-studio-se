@@ -13,7 +13,6 @@
 
 package org.talend.cwm.compare.ui.views;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -125,60 +124,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 						manager.add(subEleCompTableAction);
 						manager.add(subEleCompViewAction);
 					} else if (selectedElement instanceof ColumnSet) {
-						SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(
-								"compare the list of columns", diffTabLeft,
-								selectedOjbect,
-								SubelementCompareAction.COLUMN_COMPARE);
-						manager.add(subEleCompColumnAction);
-
-						List<ColumnSet> changedColumnSetList = new ArrayList<ColumnSet>();
-						List<DiffElement> diffElementList = new ArrayList<DiffElement>();
-						// recursive to add diff element.
-						DiffModel diffModel = ((ModelCompareInput) getInput())
-								.getDiff();
-						EList<DiffElement> diffElements = diffModel
-								.getOwnedElements();
-						for (DiffElement diffEle : diffElements) {
-							getDiffElements(diffEle, diffElementList);
-						}
-
-						for (DiffElement diffEle : diffElementList) {
-							if (diffEle instanceof AddModelElement) {
-								changedColumnSetList
-										.add((ColumnSet) ((AddModelElement) diffEle)
-												.getRightElement());
-							} else if (diffEle instanceof UpdateAttribute) {
-								changedColumnSetList
-										.add((ColumnSet) ((UpdateAttribute) diffEle)
-												.getRightElement());
-							}
-						}
-
-						// Add rename element action.
-						for (DiffElement diffEle : diffElementList) {
-							if (diffEle instanceof UpdateAttribute) {
-								if (((UpdateAttribute) diffEle)
-										.getLeftElement() == selectedElement) {
-									// Add action menu
-									RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
-											(IFolderNode) selectedOjbect,
-											(ColumnSet) selectedElement,
-											changedColumnSetList);
-									manager.add(renameComparedElementAction);
-								}
-							} else if (diffEle instanceof RemoveModelElement) {
-								if (((RemoveModelElement) diffEle)
-										.getLeftElement() == selectedElement) {
-									// Add action menu
-									RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
-											(IFolderNode) selectedOjbect,
-											(ColumnSet) selectedElement,
-											changedColumnSetList);
-									manager.add(renameComparedElementAction);
-								}
-							}
-						}
-
+						addMenuForColumnset(manager, selectedElement);
 					}
 
 				}
@@ -196,6 +142,69 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 		diffTabLeft.getTree().addMouseListener(new CompareMouseListener());
 	}
 
+	private List<DiffElement> getDiffElementList() {
+		List<DiffElement> diffElementList = new ArrayList<DiffElement>();
+		// recursive to add diff element.
+		DiffModel diffModel = ((ModelCompareInput) getInput()).getDiff();
+		EList<DiffElement> diffElements = diffModel.getOwnedElements();
+		for (DiffElement diffEle : diffElements) {
+			getDiffElements(diffEle, diffElementList);
+		}
+		return diffElementList;
+	}
+
+	private List<ColumnSet> getChangedColumnSetList() {
+		List<ColumnSet> changedColumnSetList = new ArrayList<ColumnSet>();
+		List<DiffElement> diffElementList = getDiffElementList();
+		for (DiffElement diffEle : diffElementList) {
+			if (diffEle instanceof AddModelElement) {
+				changedColumnSetList
+						.add((ColumnSet) ((AddModelElement) diffEle)
+								.getRightElement());
+			} else if (diffEle instanceof UpdateAttribute) {
+				changedColumnSetList
+						.add((ColumnSet) ((UpdateAttribute) diffEle)
+								.getRightElement());
+			}
+		}
+		return changedColumnSetList;
+	}
+
+	private void addMenuForColumnset(IMenuManager manager,
+			EObject selectedElement) {
+
+		List<ColumnSet> changedColumnSetList = getChangedColumnSetList();
+		List<DiffElement> diffElementList = getDiffElementList();
+		// Add rename element action.
+		for (DiffElement diffEle : diffElementList) {
+			if (diffEle instanceof UpdateAttribute) {
+				if (((UpdateAttribute) diffEle).getLeftElement() == selectedElement) {
+					// Add action menu
+					RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
+							(IFolderNode) selectedOjbect,
+							(ColumnSet) selectedElement, changedColumnSetList);
+					manager.add(renameComparedElementAction);
+					return;
+				}
+			} else if (diffEle instanceof RemoveModelElement) {
+				if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
+					// Add action menu
+					RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
+							(IFolderNode) selectedOjbect,
+							(ColumnSet) selectedElement, changedColumnSetList);
+					manager.add(renameComparedElementAction);
+					return;
+				}
+			}
+		}
+
+		SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(
+				"compare the list of columns", diffTabLeft, selectedOjbect,
+				SubelementCompareAction.COLUMN_COMPARE);
+		manager.add(subEleCompColumnAction);
+
+	}
+
 	/**
 	 * 
 	 * DOC mzhao CompareModelContentMergeViewer class global comment. Detailled
@@ -211,29 +220,23 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 			}
 			switch (e.keyCode) {
 			case KEY_CODE_T:
-				if (selectedElement != null
-						&& selectedElement instanceof Package) {
-					new SubelementCompareAction("compare the list of tables",
-							diffTabLeft, selectedOjbect,
-							SubelementCompareAction.TABLE_COMPARE).run();
+				if (selectedElement != null) {
+					performCompareAction(selectedElement,
+							SubelementCompareAction.TABLE_COMPARE);
 				}
 
 				break;
 			case KEY_CODE_V:
-				if (selectedElement != null
-						&& selectedElement instanceof Package) {
-					new SubelementCompareAction("compare the list of tables",
-							diffTabLeft, selectedOjbect,
-							SubelementCompareAction.VIEW_COMPARE).run();
+				if (selectedElement != null) {
+					performCompareAction(selectedElement,
+							SubelementCompareAction.VIEW_COMPARE);
 				}
 
 				break;
 			case KEY_CODE_C:
-				if (selectedElement != null
-						&& selectedElement instanceof ColumnSet) {
-					new SubelementCompareAction("compare the list of tables",
-							diffTabLeft, selectedOjbect,
-							SubelementCompareAction.COLUMN_COMPARE).run();
+				if (selectedElement != null) {
+					performCompareAction(selectedElement,
+							SubelementCompareAction.COLUMN_COMPARE);
 				}
 				break;
 			default:
@@ -245,6 +248,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 		public void keyReleased(KeyEvent e) {
 		}
 	}
+
 	/**
 	 * 
 	 * DOC mzhao CompareModelContentMergeViewer class global comment. Detailled
@@ -258,16 +262,9 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 			EObject selectedElement = null;
 			if (selection.toList().size() == 1) {
 				selectedElement = (EObject) selection.getFirstElement();
-				if (selectedElement != null
-						&& selectedElement instanceof Package) {
-					new SubelementCompareAction("compare the list of tables",
-							diffTabLeft, selectedOjbect,
-							SubelementCompareAction.TABLE_COMPARE).run();
-				} else if (selectedElement != null
-						&& selectedElement instanceof ColumnSet) {
-					new SubelementCompareAction("compare the list of tables",
-							diffTabLeft, selectedOjbect,
-							SubelementCompareAction.COLUMN_COMPARE).run();
+				if (selectedElement != null) {
+					performCompareAction(selectedElement,
+							SubelementCompareAction.TABLE_COMPARE);
 				}
 			}
 		}
@@ -280,7 +277,39 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
 		}
 
+	}
 
+	private void performCompareAction(EObject selectedElement,
+			int tableOrViewCompare) {
+		List<DiffElement> diffElementList = getDiffElementList();
+		for (DiffElement diffEle : diffElementList) {
+			if (diffEle instanceof UpdateAttribute) {
+				if (((UpdateAttribute) diffEle).getLeftElement() == selectedElement) {
+					return;
+				}
+
+			} else if (diffEle instanceof RemoveModelElement) {
+				if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
+					return;
+				}
+
+			}
+		}
+
+		SubelementCompareAction subEleCompColumnAction = null;
+		if (selectedElement instanceof Package) {
+			subEleCompColumnAction = new SubelementCompareAction(
+					tableOrViewCompare == SubelementCompareAction.TABLE_COMPARE ? "compare the list of tables"
+							: "compare the list of views", diffTabLeft,
+					selectedOjbect, tableOrViewCompare);
+		} else if (selectedElement instanceof ColumnSet) {
+			subEleCompColumnAction = new SubelementCompareAction(
+					"compare the list of columns", diffTabLeft, selectedOjbect,
+					SubelementCompareAction.COLUMN_COMPARE);
+		}
+		if (subEleCompColumnAction != null) {
+			subEleCompColumnAction.run();
+		}
 
 	}
 
