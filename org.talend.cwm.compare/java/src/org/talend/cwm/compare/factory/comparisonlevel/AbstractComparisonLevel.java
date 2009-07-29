@@ -12,17 +12,12 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -36,10 +31,7 @@ import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -48,16 +40,10 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.util.RelationalSwitch;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisContext;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.connection.DataProviderWriter;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.objectmodel.core.Dependency;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -163,43 +149,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 			saveReloadResult();
 		}
 
-		// MOD mzhao 2009-07-13 bug 7454 Impact existing analysis.
+		
 
-		EList<Dependency> clientDependencies = oldDataProvider
-				.getSupplierDependency();
-		for (Dependency dep : clientDependencies) {
-			for (ModelElement mod : dep.getClient()) {
-				Analysis analysis = (Analysis) mod;
-				// Reload.
-				EMFSharedResources.getInstance().unloadResource(
-						analysis.eResource().getURI().toString());
-
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				Path path = new Path(analysis.getFileName());
-				IFile file = root.getFile(path);
-				analysis = AnaResourceFileHelper.getInstance().readFromFile(
-						file);
-				Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer
-						.find(analysis.eResource());
-				Iterator<EObject> it = referenceMaps.keySet().iterator();
-				ModelElement eobj = null;
-				while (it.hasNext()) {
-					eobj = (ModelElement) it.next();
-					Collection<Setting> settings = referenceMaps.get(eobj);
-					for (Setting setting : settings) {
-						if (setting.getEObject() instanceof AnalysisContext) {
-							analysis.getContext().getAnalysedElements().remove(
-									eobj);
-						} else if (setting.getEObject() instanceof Indicator) {
-							analysis.getResults().getIndicators().remove(
-									setting.getEObject());
-						}
-					}
-
-				}
-				AnaResourceFileHelper.getInstance().save(analysis);
-			}
-		}
 		return oldDataProvider;
 	}
 
