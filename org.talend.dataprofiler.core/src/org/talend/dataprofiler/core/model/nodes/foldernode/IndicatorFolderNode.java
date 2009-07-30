@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.nodes.foldernode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -46,7 +49,16 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
     public void loadChildren() {
         EList<IndicatorDefinition> indicatorDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions()
                 .getIndicatorDefinitions();
-        setChildren(indicatorDefinitions.toArray(new IndicatorDefinition[indicatorDefinitions.size()]));
+
+        List<IndicatorDefinition> tempList = new ArrayList<IndicatorDefinition>();
+
+        for (IndicatorDefinition definition : indicatorDefinitions) {
+            if (!definition.getSqlGenericExpression().isEmpty()) {
+                tempList.add(definition);
+            }
+        }
+
+        setChildren(tempList.toArray(new IndicatorDefinition[tempList.size()]));
     }
 
     /*
