@@ -88,17 +88,20 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         body.setLayout(new GridLayout());
 
         topComp = toolkit.createComposite(body);
-        GridData anasisData = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
+        GridData anasisData = new GridData(GridData.FILL_BOTH);
 
         topComp.setLayoutData(anasisData);
-        topComp.setLayout(new GridLayout(1, false));
+        topComp.setLayout(new GridLayout());
         metadataSection = creatMetadataSection(form, topComp);
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
         currentEditor.registerSections(new Section[] { metadataSection });
     }
     
     public String getCurrentModelName(){
-        return getCurrentModelElement(getEditor()).getName();
+        if(currentModelElement == null){
+            currentModelElement = getCurrentModelElement(getEditor());
+        }
+        return currentModelElement.getName();
     }
     
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);

@@ -115,7 +115,11 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
         FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+        
         this.pattern = PatternResourceFileHelper.getInstance().findPattern(input.getFile());
+        
+        this.currentModelElement = pattern;
+        
         return pattern;
     }
 
