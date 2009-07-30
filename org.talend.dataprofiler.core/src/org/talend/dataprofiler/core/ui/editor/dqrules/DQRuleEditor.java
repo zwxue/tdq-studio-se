@@ -38,7 +38,9 @@ public class DQRuleEditor extends CommonFormEditor {
         masterPage = new DQRuleMasterDetailsPage(
                 this,
                 DefaultMessagesImpl.getString("DQRuleEditor.masterPage"), DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-        setPartName(DefaultMessagesImpl.getString("DQRuleEditor.dqRuleEditor")); //$NON-NLS-1$
+        
+        setPartName(((DQRuleMasterDetailsPage)masterPage).getCurrentModelName()); //$NON-NLS-1$
+       
         try {
             addPage(masterPage);
         } catch (PartInitException e) {

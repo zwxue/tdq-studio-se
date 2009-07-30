@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
@@ -67,13 +68,16 @@ public class AnalysisEditor extends CommonFormEditor {
      * 
      */
     public AnalysisEditor() {
+        
+       
     }
 
     protected void addPages() {
+       
         switch (analysisType) {
+        
         case COLUMN_CORRELATION:
             masterPage = new ColumnCorrelationNominalAndIntervalMasterPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.columnAnalysisEditor")); //$NON-NLS-1$
             resultPage = new ColumnCorrelationNominalIntervalResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
@@ -84,7 +88,6 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case MULTIPLE_COLUMN:
             masterPage = new ColumnMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.columnAnalysisEditor")); //$NON-NLS-1$
             resultPage = new ColumnAnalysisResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
@@ -95,7 +98,6 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case CONNECTION:
             masterPage = new ConnectionMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.connectionAnalysisEditor")); //$NON-NLS-1$
             try {
                 addPage(masterPage);
             } catch (PartInitException e) {
@@ -104,7 +106,6 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case CATALOG:
             masterPage = new CatalogMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.CatalogAnalysisEditor")); //$NON-NLS-1$
             try {
                 addPage(masterPage);
             } catch (PartInitException e) {
@@ -113,7 +114,6 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case SCHEMA:
             masterPage = new SchemaAnalysisMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.SchemaAnalysisEditor")); //$NON-NLS-1$
             try {
                 addPage(masterPage);
             } catch (PartInitException e) {
@@ -123,7 +123,6 @@ public class AnalysisEditor extends CommonFormEditor {
         case COLUMNS_COMPARISON:
             masterPage = new ColumnsComparisonMasterDetailsPage(this, MASTER_PAGE, DefaultMessagesImpl
                     .getString("AnalysisEditor.analysisSetting")); //$NON-NLS-1$
-            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.column")); //$NON-NLS-1$
             resultPage = new ColumnsComparisonAnalysisResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
@@ -134,7 +133,6 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case TABLE:
             masterPage = new TableMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.TableAnalysisEditor")); //$NON-NLS-1$
             resultPage = new TableAnalysisResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
@@ -145,7 +143,7 @@ public class AnalysisEditor extends CommonFormEditor {
             break;
         case TABLE_FUNCTIONAL_DEPENDENCY:
             masterPage = new ColumnDependencyMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
-            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.ColumnDependencyAnalysisEditor")); //$NON-NLS-1$
+//            setPartName(DefaultMessagesImpl.getString("AnalysisEditor.ColumnDependencyAnalysisEditor")); //$NON-NLS-1$
             resultPage = new ColumnDependencyResultPage(this, SECOND_PAGE, ANALYSIS_RESULTS);
             try {
                 addPage(masterPage);
@@ -167,6 +165,11 @@ public class AnalysisEditor extends CommonFormEditor {
             toolbar.addActions(saveAction, runAction, refreshAction);
             // ~
         }
+        if(masterPage.getAnalysis() != null){
+            setPartName(masterPage.getCurrentModelName());
+        }else{
+            setPartName(getEditorInput().getName());
+        }
 
     }
 
@@ -176,6 +179,13 @@ public class AnalysisEditor extends CommonFormEditor {
         }
 
         super.doSave(monitor);
+    }
+
+    
+    @Override
+    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+        super.init(site, input);
+      
     }
 
     protected void firePropertyChange(final int propertyId) {

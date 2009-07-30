@@ -73,8 +73,11 @@ public abstract class AbstractAnalysisMetadataPage extends
 	@Override
 	protected ModelElement getCurrentModelElement(FormEditor editor) {
 		FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-		analysis = AnaResourceFileHelper.getInstance().findAnalysis(
+		
+		currentModelElement = AnaResourceFileHelper.getInstance().findAnalysis(
 				input.getFile());
+		analysis = (Analysis) currentModelElement;
+		
 		return analysis;
 	}
 

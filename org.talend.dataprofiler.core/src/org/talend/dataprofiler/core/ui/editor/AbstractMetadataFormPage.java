@@ -96,7 +96,11 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // MOD 2009-01-10 mzhao, for register sections that would be collapse or expand later.
         currentEditor.registerSections(new Section[] { metadataSection });
     }
-
+    
+    public String getCurrentModelName(){
+        return getCurrentModelElement(getEditor()).getName();
+    }
+    
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {

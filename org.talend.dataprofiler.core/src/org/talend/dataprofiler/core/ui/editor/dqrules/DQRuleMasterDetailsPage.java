@@ -114,7 +114,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
         FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-        this.whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(input.getFile());
+        this.currentModelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(input.getFile());
+        whereRule = (WhereRule) this.currentModelElement;
         return whereRule;
     }
 

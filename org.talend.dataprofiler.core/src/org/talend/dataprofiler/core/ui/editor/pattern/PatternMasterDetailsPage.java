@@ -64,6 +64,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class PatternMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
+
     private static final String SQL = "SQL"; //$NON-NLS-1$
 
     private Pattern pattern;
@@ -354,4 +355,6 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         return true;
 
     }
+    
+    
 }

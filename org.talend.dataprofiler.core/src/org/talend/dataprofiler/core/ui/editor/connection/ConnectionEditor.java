@@ -40,6 +40,7 @@ public class ConnectionEditor extends CommonFormEditor {
         } catch (PartInitException e) {
             MessageBoxExceptionHandler.process(e);
         }
+        setPartName(((ConnectionInfoPage)masterPage).getCurrentModelName()); //$NON-NLS-1$
     }
 
     public void doSave(IProgressMonitor monitor) {
@@ -60,7 +61,7 @@ public class ConnectionEditor extends CommonFormEditor {
      */
     protected void setInput(IEditorInput input) {
         super.setInput(input);
-        setPartName(DefaultMessagesImpl.getString("ConnectionEditor.connectionEditor")); //$NON-NLS-1$
+       
     }
 
 }

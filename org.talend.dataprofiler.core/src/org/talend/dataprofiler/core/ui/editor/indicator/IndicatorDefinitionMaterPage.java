@@ -107,18 +107,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        setFormTitle("Indicator Definition");
-        setMetadataTitle("Indicator Metadata");
+        setFormTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.FormTitle")); //$NON-NLS-1$
+        setMetadataTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.FormDescript")); //$NON-NLS-1$
         super.createFormContent(managedForm);
 
         creatDefinitionSection(topComp);
     }
 
     private void creatDefinitionSection(Composite topCmp) {
-        Section definitionSection = createSection(form, topCmp, "Indicator Definition", false, null);
+        Section definitionSection = createSection(form, topCmp, DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Definition"), false, null); //$NON-NLS-1$
 
         Label label = new Label(definitionSection, SWT.WRAP);
-        label.setText("This section is for indicator definition.");
+        label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.decription")); //$NON-NLS-1$
         definitionSection.setDescriptionControl(label);
 
         definitionComp = createDefinitionComp(definitionSection);
@@ -290,7 +290,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         expressiones.clear();
 
         for (Expression expression : tempExpression) {
-            if (expression.getBody() != null && !"".equals(expression.getBody())) {
+            if (expression.getBody() != null && !"".equals(expression.getBody())) { //$NON-NLS-1$
                 expressiones.add(expression);
             }
         }

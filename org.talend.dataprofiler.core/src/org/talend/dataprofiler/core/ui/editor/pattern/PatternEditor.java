@@ -36,7 +36,7 @@ public class PatternEditor extends CommonFormEditor {
 
     protected void addPages() {
         masterPage = new PatternMasterDetailsPage(this, DefaultMessagesImpl.getString("PatternEditor.masterPage"), DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ //$NON-NLS-2$
-        setPartName(DefaultMessagesImpl.getString("PatternEditor.patternEditor")); //$NON-NLS-1$
+        setPartName(((PatternMasterDetailsPage)masterPage).getCurrentModelName()); //$NON-NLS-1$
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
