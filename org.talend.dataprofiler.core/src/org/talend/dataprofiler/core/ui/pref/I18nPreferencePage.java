@@ -52,7 +52,9 @@ import org.talend.dataquality.exception.ExceptionHandler;
  */
 public class I18nPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-    private boolean updateCompleted;
+
+
+	private boolean updateCompleted;
 
     private CCombo execCombo;
 
@@ -142,6 +144,12 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
 
         return mainComposite;
     }
+    @Override
+	protected void performDefaults() {
+    	execCombo.deselectAll();
+    	getPreferenceStore().setValue(header.getText(), execCombo.getText());
+		super.performDefaults();
+	}
 
     public void runProgressMonitorDialog(final boolean validated, final String language) {
         updateCompleted = false;
