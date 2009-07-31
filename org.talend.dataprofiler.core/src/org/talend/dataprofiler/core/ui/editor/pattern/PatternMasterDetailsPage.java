@@ -28,6 +28,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -170,7 +171,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
         componentsComp = new Composite(newComp, SWT.NONE);
         componentsComp.setLayout(new GridLayout());
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(componentsComp);
+      
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(componentsComp);
         EList<PatternComponent> components = this.pattern.getComponents();
         for (int i = 0; i < components.size(); i++) {
             RegularExpression regularExpress = (RegularExpression) components.get(i);
@@ -241,7 +243,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         } else {
             combo.setText(PatternLanguageType.findNameByLanguage(language));
         }
+        
         GridDataFactory.fillDefaults().span(2, 1).grab(false, false).applyTo(combo);
+        
         combo.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -252,8 +256,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         });
         final Text patternText = new Text(expressComp, SWT.BORDER);
         patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
-        GridDataFactory.fillDefaults().span(6, 1).grab(true, false).applyTo(patternText);
-        ((GridData) patternText.getLayoutData()).widthHint = 600;
+        GridDataFactory.fillDefaults().span(6, 1).grab(true, true).applyTo(patternText);
         patternText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
