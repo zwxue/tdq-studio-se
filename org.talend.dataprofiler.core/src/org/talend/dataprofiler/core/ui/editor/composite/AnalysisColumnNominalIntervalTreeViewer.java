@@ -367,11 +367,11 @@ public class AnalysisColumnNominalIntervalTreeViewer extends
 		this.tree.dispose();
 		this.tree = createTree(this.parentComp);
 		tree.setData(this);
-		// MOD mzhao bug 8507 2009-7-31 Clear column cache.
+		// MOD mzhao bug 8282 2009-7-31 Clear column cache.
 		columnSetMultiValueList.clear();
 		addItemElements((List<Column>) columns, 0);
 		// addItemElements(columns);
-		// MOD mzhao 2005-05-05 bug 6587.
+		// MOD mzhao 2009-05-05 bug 6587.
 		updateBindConnection(masterPage, tree);
 	}
 
