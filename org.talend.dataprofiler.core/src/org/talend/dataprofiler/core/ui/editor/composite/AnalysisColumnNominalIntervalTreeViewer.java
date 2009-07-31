@@ -70,7 +70,6 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
-
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -368,6 +367,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends
 		this.tree.dispose();
 		this.tree = createTree(this.parentComp);
 		tree.setData(this);
+		// MOD mzhao bug 8507 2009-7-31 Clear column cache.
+		columnSetMultiValueList.clear();
 		addItemElements((List<Column>) columns, 0);
 		// addItemElements(columns);
 		// MOD mzhao 2005-05-05 bug 6587.
