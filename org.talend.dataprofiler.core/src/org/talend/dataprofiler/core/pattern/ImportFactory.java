@@ -34,16 +34,22 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.emf.EMFSharedResources;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.indicators.UDIndicatorWriter;
 
 import com.csvreader.CsvReader;
 
@@ -243,7 +249,6 @@ public final class ImportFactory {
         return name.substring(index + 1);
     }
 
-
     /**
      * DOC zqin ImportFactory class global comment. Detailled comment
      */
@@ -272,6 +277,80 @@ public final class ImportFactory {
             status = DevelopmentStatus.DRAFT.getLiteral();
             relativePath = ""; //$NON-NLS-1$
             regex = new HashMap<String, String>();
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "importIndicatorToStucture".
+     * 
+     * @param importFile
+     * @param selectionFolder
+     * @param skip
+     * @param rename
+     */
+    public static void importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip, boolean rename) {
+        String fileExtName = getFileExtName(importFile);
+        if ("zip".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+            Set<String> names = UDIUtils.getAllIndicatorNames(selectionFolder);
+            File tempFile = null, copyFile = null;
+            try {
+                tempFile = new File(importFile.getAbsolutePath() + "." + System.currentTimeMillis());
+                int tempCount = 0;
+                while (tempFile.exists() || tempCount > 100) {
+                    tempFile = new File(importFile.getAbsolutePath() + "." + System.currentTimeMillis());
+                    tempCount++;
+                }
+                if (tempFile.mkdirs()) {
+                    FilesUtils.unzip(importFile.getAbsolutePath(), tempFile.getAbsolutePath());
+                    File[] listFiles = tempFile.listFiles();
+                    for (int i = 0; i < listFiles.length; ++i) {
+                        File file = listFiles[i];
+                        String fileExt = getFileExtName(file);
+                        if (FactoriesUtil.UDI.equalsIgnoreCase(fileExt)) {
+                            String fname = DqRepositoryViewService.createFilename(file.getName(), FactoriesUtil.UDI);
+                            copyFile = new File(selectionFolder.getLocation().toOSString() + "/" + fname);
+                            FilesUtils.copyFile(file, copyFile);
+                            if (copyFile.exists()) {
+                                IndicatorDefinition id = UDIResourceFileHelper.getInstance().findUDI(
+                                        selectionFolder.getFile(fname));
+                                String name = id.getName();
+                                if (names.contains(name)) {
+                                    if (skip) {
+                                        deleteFiles(copyFile);
+                                        continue;
+                                    }
+                                    if (rename) {
+                                        java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat(
+                                                "yyyyMMddHHmmssSSS");
+                                        name += "(" + simpleDateFormat.format(new Date()) + Math.random() + ")";
+                                        id.setName(name);
+                                        names.add(name);
+                                    }
+                                }
+                                UDIndicatorWriter.getInstance().createUDIndicatorFile(id, selectionFolder);
+                                deleteFiles(copyFile);
+                            }
+                        }
+                    }
+                    deleteFiles(tempFile);
+                }
+            } catch (Exception e) {
+                deleteFiles(copyFile, tempFile);
+                log.error(e, e);
+            }
+        }
+    }
+
+    private static void deleteFiles(File... files) {
+        for (File file : files) {
+            if (file != null && file.exists()) {
+                if (file.isDirectory()) {
+                    for (File tempFile : file.listFiles()) {
+                        deleteFiles(tempFile);
+                    }
+                }
+                file.delete();
+            }
         }
     }
 }

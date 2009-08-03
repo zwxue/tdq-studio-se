@@ -87,5 +87,15 @@
          <param name="path" value="TimeColumnCorrelationAnalysis_cheat.xml">
          </param>
       </task>
+      <task kind="cheatsheet" name="UserDefinedIndicator" skip="false">
+         <intro>
+            This tutorial guides you through the creation of a user defined indicator.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="UDI_cheat.xml">
+         </param>
+      </task>
    </taskGroup>
 </compositeCheatsheet>

@@ -18,11 +18,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.exception.ExceptionHandler;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -50,7 +52,22 @@ public class IndicatorEditor extends CommonFormEditor {
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         setSite(site);
         setInputWithNotify(input);
-        setPartName(input.getName());
+        setPartName(getName(input));
+    }
+
+    /**
+     * DOC xqliu Comment method "getName".
+     * 
+     * @param input
+     * @return
+     */
+    private String getName(IEditorInput input) {
+        if (input instanceof IndicatorEditorInput) {
+            return input.getName();
+        } else if (input instanceof FileEditorInput) {
+            return UDIResourceFileHelper.getInstance().findUDI(((FileEditorInput) input).getFile()).getName();
+        }
+        return "Indicator Editor";
     }
 
     /*
@@ -61,7 +78,7 @@ public class IndicatorEditor extends CommonFormEditor {
     @Override
     protected void addPages() {
 
-        masterPage = new IndicatorDefinitionMaterPage(this, "Master Page", getPartName());
+        masterPage = new IndicatorDefinitionMaterPage(this, "Master Page", "Indicator Definition");
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
@@ -72,6 +89,7 @@ public class IndicatorEditor extends CommonFormEditor {
         if (toolbar != null && masterPage != null) {
             saveAction = new DefaultSaveAction(this);
             toolbar.addActions(saveAction);
+            setSaveActionButtonState(false);
         }
         // super.addPages();
     }

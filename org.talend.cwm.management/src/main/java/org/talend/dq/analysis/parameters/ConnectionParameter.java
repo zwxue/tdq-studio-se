@@ -118,7 +118,8 @@ public class ConnectionParameter {
         REPORT,
         PATTERN,
         DBCONNECTON,
-        DQRULE;
+        DQRULE,
+        UDINDICATOR;
     }
 
 }

@@ -13,6 +13,8 @@
 package org.talend.dq.indicators.definitions;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -100,9 +102,37 @@ public final class DefinitionHandler {
 
     private static final String DQ_RULE_CATEGORY = "_8i9eQBI5Ed6TWL6NwMMHzQ";
 
+    private static final String USER_DEFINED_COUNT_CATEGORY = "_b5F7QHqTEd67hM2eKD3QgQ";
+
+    private static final String USER_DEFINED_MATCH_CATEGORY = "_Ba7OYXsXEd63r-VLO3_0OQ";
+
+    private static final String USER_DEFINED_FREQUENCY_CATEGORY = "_Frd2gHsXEd63r-VLO3_0OQ";
+
+    private static final String USER_DEFINED_COMPARISON_CATEGORY = "_yQJQ0HsXEd63r-VLO3_0OQ";
+
+    private static final String USER_DEFINED_NOMINAL_CORRELATION_CATEGORY = "_1mapEHsXEd63r-VLO3_0OQ";
+
+    private static final String USER_DEFINED_INTERVAL_CORRELATION_CATEGORY = "_6giZsHsXEd63r-VLO3_0OQ";
+
+    private static final String USER_DEFINED_TIME_CORRELATION_CATEGORY = "_-fpTkHsXEd63r-VLO3_0OQ";
+
+    private static final String USER_DEFINED_COUNT_CATEGORY_LABEL = "User Defined Count";
+
+    private static final String USER_DEFINED_MATCH_CATEGORY_LABEL = "User Defined Match";
+
+    private static final String USER_DEFINED_FREQUENCY_CATEGORY_LABEL = "User Defined Frequency";
+
+    private static final String USER_DEFINED_COMPARISON_CATEGORY_LABEL = "User Defined Comparison";
+
+    private static final String USER_DEFINED_NOMINAL_CORRELATION_CATEGORY_LABEL = "User Defined Nominal Correlation";
+
+    private static final String USER_DEFINED_INTERVAL_CORRELATION_CATEGORY_LABEL = "User Defined Interval Correlation";
+
+    private static final String USER_DEFINED_TIME_CORRELATION_CATEGORY_LABEL = "User Defined Time Correlation";
+
     private static final String DQ_RULE_DEFINITION = "_UUIyoCOMEd6YB57jaCfKaA";
-    
-    private static final String FD_RULE_DEFINITION="_YqcX0XHpEd6udst2R2sgpA";
+
+    private static final String FD_RULE_DEFINITION = "_YqcX0XHpEd6udst2R2sgpA";
 
     private IndicatorsDefinitions indicatorDefinitions;
 
@@ -780,12 +810,7 @@ public final class DefinitionHandler {
      * @return the category of the DQ Rule indicators
      */
     public IndicatorCategory getDQRuleIndicatorCategory() {
-        CwmResource resource = (CwmResource) this.indicatorDefinitions.eResource();
-        EObject object = resource.getEObject(DQ_RULE_CATEGORY);
-        if (object != null && DefinitionPackage.eINSTANCE.getIndicatorCategory().equals(object.eClass())) {
-            return (IndicatorCategory) object;
-        }
-        return null;
+        return getIndicatorCategory(DQ_RULE_CATEGORY);
     }
 
     /**
@@ -794,22 +819,22 @@ public final class DefinitionHandler {
      * @return the default indicator definition of the DQ rule.
      */
     public IndicatorDefinition getDQRuleDefaultIndicatorDefinition() {
+        return getDefaultIndicatorDefinition(DQ_RULE_DEFINITION);
+    }
+
+    public IndicatorDefinition getFDRuleDefaultIndicatorDefinition() {
+        return getDefaultIndicatorDefinition(FD_RULE_DEFINITION);
+    }
+
+    private IndicatorDefinition getDefaultIndicatorDefinition(String definitionId) {
         CwmResource resource = (CwmResource) this.indicatorDefinitions.eResource();
-        EObject object = resource.getEObject(DQ_RULE_DEFINITION);
+        EObject object = resource.getEObject(definitionId);
         if (object != null && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(object.eClass())) {
             return (IndicatorDefinition) object;
         }
         return null;
     }
 
-    public IndicatorDefinition getFDRuleDefaultIndicatorDefinition() {
-        CwmResource resource = (CwmResource) this.indicatorDefinitions.eResource();
-        EObject object = resource.getEObject(FD_RULE_DEFINITION);
-        if (object != null && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(object.eClass())) {
-            return (IndicatorDefinition) object;
-        }
-        return null;
-    }
     /**
      * Sets the needCopy.
      * 
@@ -817,5 +842,74 @@ public final class DefinitionHandler {
      */
     public void setNeedCopy(boolean needCopy) {
         this.needCopy = needCopy;
+    }
+
+    public IndicatorCategory getUserDefinedCountIndicatorCategory() {
+        return getIndicatorCategory(USER_DEFINED_COUNT_CATEGORY);
+    }
+
+    public IndicatorCategory getUserDefinedMatchIndicatorCategory() {
+        return getIndicatorCategory(USER_DEFINED_MATCH_CATEGORY);
+    }
+
+    public IndicatorCategory getUserDefinedFrequencyIndicatorCategory() {
+        return getIndicatorCategory(USER_DEFINED_FREQUENCY_CATEGORY);
+    }
+
+    public IndicatorCategory getUserDefinedComparisonIndicatorCategory() {
+        return getIndicatorCategory(USER_DEFINED_COMPARISON_CATEGORY);
+    }
+
+    public IndicatorCategory getUserDefinedNominalCorrelationIndicatorCategory() {
+        return getIndicatorCategory(USER_DEFINED_NOMINAL_CORRELATION_CATEGORY);
+    }
+
+    public IndicatorCategory getUserDefinedIntervalCorrelationIndicatorCategory() {
+        return getIndicatorCategory(USER_DEFINED_INTERVAL_CORRELATION_CATEGORY);
+    }
+
+    public IndicatorCategory getUserDefinedTimeCorrelationIndicatorCategory() {
+        return getIndicatorCategory(USER_DEFINED_TIME_CORRELATION_CATEGORY);
+    }
+
+    private IndicatorCategory getIndicatorCategory(String categoryId) {
+        CwmResource resource = (CwmResource) this.indicatorDefinitions.eResource();
+        EObject object = resource.getEObject(categoryId);
+        if (object != null && DefinitionPackage.eINSTANCE.getIndicatorCategory().equals(object.eClass())) {
+            return (IndicatorCategory) object;
+        }
+        return null;
+    }
+
+    public List<IndicatorCategory> getAllUserDefinedIndicatorCategory() {
+        List<IndicatorCategory> categoryList = new ArrayList<IndicatorCategory>();
+        categoryList.add(getUserDefinedCountIndicatorCategory());
+        categoryList.add(getUserDefinedFrequencyIndicatorCategory());
+        categoryList.add(getUserDefinedMatchIndicatorCategory());
+        // categoryList.add(getUserDefinedComparisonIndicatorCategory());
+        // categoryList.add(getUserDefinedIntervalCorrelationIndicatorCategory());
+        // categoryList.add(getUserDefinedNominalCorrelationIndicatorCategory());
+        // categoryList.add(getUserDefinedTimeCorrelationIndicatorCategory());
+        return categoryList;
+    }
+
+    public IndicatorCategory getIndicatorCategoryByLabel(String label) {
+        if (USER_DEFINED_COUNT_CATEGORY_LABEL.equals(label)) {
+            return getIndicatorCategory(USER_DEFINED_COUNT_CATEGORY);
+        } else if (USER_DEFINED_MATCH_CATEGORY_LABEL.equals(label)) {
+            return getIndicatorCategory(USER_DEFINED_MATCH_CATEGORY);
+        } else if (USER_DEFINED_FREQUENCY_CATEGORY_LABEL.equals(label)) {
+            return getIndicatorCategory(USER_DEFINED_FREQUENCY_CATEGORY);
+        } else if (USER_DEFINED_COMPARISON_CATEGORY_LABEL.equals(label)) {
+            return getIndicatorCategory(USER_DEFINED_COMPARISON_CATEGORY);
+        } else if (USER_DEFINED_NOMINAL_CORRELATION_CATEGORY_LABEL.equals(label)) {
+            return getIndicatorCategory(USER_DEFINED_NOMINAL_CORRELATION_CATEGORY);
+        } else if (USER_DEFINED_INTERVAL_CORRELATION_CATEGORY_LABEL.equals(label)) {
+            return getIndicatorCategory(USER_DEFINED_INTERVAL_CORRELATION_CATEGORY);
+        } else if (USER_DEFINED_TIME_CORRELATION_CATEGORY_LABEL.equals(label)) {
+            return getIndicatorCategory(USER_DEFINED_TIME_CORRELATION_CATEGORY);
+        } else {
+            return null;
+        }
     }
 }

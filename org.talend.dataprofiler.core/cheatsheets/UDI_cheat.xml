@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Create a new User Defined Indicator">
+   <intro>
+      <description>
+         This tutorial guides you through the creation of a user defined indicator.
+      </description>
+   </intro>
+   <item
+         title="Create the User Defined Indicator">
+      <description>
+         This step opens the &quot;New Indicator&quot; wizard.  <b>Right click on the folder &quot;Libraries/Indicators&quot;</b> and select the menu &quot;New Indicator&quot;.
+
+This wizard creates a User Defined Indicator.
+      </description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateUDIAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      </action>
+   </item>
+   <item
+         href="http://en.wikipedia.org/wiki/Database_management_system"
+         title="Content of the User Defined Indicator">
+      <description>
+         Please select the Language and input the SQL Template in the Wizard. These keywords can be use here: 
+&lt;%=__AND_WHERE_CLAUSE__%&gt;, 
+&lt;%=__WHERE_CLAUSE__%&gt;, 
+&lt;%=__TABLE_NAME__%&gt;, 
+&lt;%=__TABLE_NAME_2__%&gt;, 
+&lt;%=__COLUMN_NAMES__%&gt;, 
+&lt;%=__GROUP_BY_ALIAS__%&gt;, 
+&lt;%=__LIMIT_ROW__%&gt;, 
+&lt;%=__PATTERN_EXPR__%&gt;, 
+&lt;%=__JOIN_CLAUSE__%&gt;, 
+&lt;%=__LIMIT_OFFSET__%&gt;, 
+&lt;%=__LIMIT_ROW_PLUS_OFFSET__%&gt;, 
+&lt;%=__COLUMN_NAME_A__%&gt;, 
+&lt;%=__COLUMN_NAME_B__%&gt;. 
+When you complete the User Defined Indicator, the Editor will open, the default category of User Defined Indicator is &quot;User Defined Count&quot;.
+      </description>
+   </item>
+</cheatsheet>

@@ -167,8 +167,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // --- create select statement
         // get indicator's sql columnS (generate the real SQL statement from its definition)
 
-//        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-        IndicatorDefinition indicatorDefinition =  DefinitionHandler.getInstance().getIndicatorDefinition(indicator.getIndicatorDefinition().getLabel());
+        IndicatorDefinition indicatorDefinition;
+        String label = indicator.getIndicatorDefinition().getLabel();
+        if (label == null || "".equals(label)) {
+            indicatorDefinition = indicator.getIndicatorDefinition();
+        } else {
+            indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
+        }
+
         if (indicatorDefinition == null) {
             return traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
                     + ". Please, report a bug at http://talendforge.org/bugs/");

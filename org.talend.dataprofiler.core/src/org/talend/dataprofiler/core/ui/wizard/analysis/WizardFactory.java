@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.table.FunctionDependencyW
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizard;
 import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
+import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -40,6 +41,7 @@ import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.analysis.parameters.PatternParameter;
 import org.talend.dq.analysis.parameters.SqlFileParameter;
+import org.talend.dq.analysis.parameters.UDIndicatorParameter;
 
 /**
  * @author zqin
@@ -138,6 +140,10 @@ public final class WizardFactory {
      */
     public static NewDQRulesWizard createNewDQRuleWizard(DQRulesParameter parameter) {
         return new NewDQRulesWizard(parameter);
+    }
+
+    public static NewUDIndicatorWizard createNewUDIWizard(UDIndicatorParameter parameter) {
+        return new NewUDIndicatorWizard(parameter);
     }
 
     public static Wizard createSqlFileWizard(IFolder folder) {

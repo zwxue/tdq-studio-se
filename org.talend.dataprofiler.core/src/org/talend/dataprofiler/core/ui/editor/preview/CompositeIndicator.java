@@ -17,8 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.TableIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
@@ -103,8 +106,8 @@ public final class CompositeIndicator {
         for (IndicatorUnit unit : indicatorUnits) {
             tempList.add(unit);
             if (unit.getChildren() != null) {
-                               initChildIndicatorUnits(tempList, unit.getChildren());
-            } 
+                initChildIndicatorUnits(tempList, unit.getChildren());
+            }
         }
 
         return tempList.toArray(new IndicatorUnit[tempList.size()]);
@@ -173,6 +176,20 @@ public final class CompositeIndicator {
                 modelIndicatorList.add(one);
                 break;
 
+            case UserDefinedIndicatorEnum:
+                if (DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().getLabel().equals(
+                        getUDICategoryLabel(one))) {
+                    simpleList.add(one);
+
+                } else if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().getLabel().equals(
+                        getUDICategoryLabel(one))) {
+                    patternList.add(one);
+                } else if (DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory().getLabel().equals(
+                        getUDICategoryLabel(one))) {
+                    frequencyList.add(one);
+                }
+                break;
+
             default:
             }
         }
@@ -191,6 +208,14 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.MODE_INDICATOR, modelIndicatorList);
 
         return separatedMap;
+    }
+
+    private Object getUDICategoryLabel(IndicatorUnit unit) {
+        EList<IndicatorCategory> categories = unit.getIndicator().getIndicatorDefinition().getCategories();
+        if (categories != null && categories.size() > 0) {
+            return categories.get(0).getLabel();
+        }
+        return null;
     }
 
     public Map<EIndicatorChartType, List<TableIndicatorUnit>> getTableIndicatorComposite(TableIndicator tableIndicator) {

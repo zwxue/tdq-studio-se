@@ -139,7 +139,12 @@ public enum IndicatorEnum {
                            IndicatorSqlPackage.WHERE_RULE_INDICATOR,
                            IndicatorSqlPackage.Literals.WHERE_RULE_INDICATOR,
                            "where rule", //$NON-NLS-1$
-                           null);
+                           null),
+    UserDefinedIndicatorEnum(
+                             IndicatorSqlPackage.USER_DEF_INDICATOR,
+                             IndicatorSqlPackage.Literals.USER_DEF_INDICATOR,
+                             "User Defined Indicator", //$NON-NLS-1$
+                             null);
 
     private EClass indicatorType;
 
@@ -289,6 +294,8 @@ public enum IndicatorEnum {
             returnEnum = WhereRuleIndicatorEnum;
         } else if (indicatorType == DefValueCountIndicatorEnum.getIndicatorType()) {
             returnEnum = DefValueCountIndicatorEnum;
+        } else if (indicatorType == UserDefinedIndicatorEnum.getIndicatorType()) {
+            returnEnum = UserDefinedIndicatorEnum;
         }
 
         return returnEnum;

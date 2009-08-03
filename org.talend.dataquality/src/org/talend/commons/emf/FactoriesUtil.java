@@ -73,6 +73,11 @@ public final class FactoriesUtil {
     public static final String SQL = "sql"; //$NON-NLS-1$
 
     /**
+     * Extension used for the files in which the User Defined Indicators are serialized.
+     */
+    public static final String UDI = "definition"; //$NON-NLS-1$
+
+    /**
      * Extension used for the files in which the pattern are serialized.
      */
     public static final String PATTERN = PatternPackage.eNAME;
@@ -149,7 +154,6 @@ public final class FactoriesUtil {
         extensions.add(REP);
         extensions.add(PATTERN);
         extensions.add(DQRULE);
-        
 
         // --- CWM generated packages
         extensions.add(CorePackage.eNAME);

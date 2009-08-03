@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -36,13 +37,17 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -54,6 +59,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private Composite definitionComp;
 
+    private Composite categoryComp;
+
     private List<String> allDBTypeList;
 
     private List<String> remainDBTypeList;
@@ -61,6 +68,20 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private List<Expression> tempExpression;
 
     private Composite expressionComp;
+
+    private Combo comboCategory;
+
+    private String category;
+
+    private boolean systemIndicator;
+
+    public boolean isSystemIndicator() {
+        return systemIndicator;
+    }
+
+    public void setSystemIndicator(boolean systemIndicator) {
+        this.systemIndicator = systemIndicator;
+    }
 
     /**
      * DOC bZhou IndicatorDefinitionMaterPage constructor comment.
@@ -96,6 +117,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             tempExpression.clear();
         }
+
+        // initialize user defined indicator category
+        IndicatorDefinition definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
+        if (definition != null && definition.getCategories().size() > 0) {
+            category = definition.getCategories().get(0).getLabel();
+        } else {
+            category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().getLabel();
+        }
+
+        // initialize indicator type
+        systemIndicator = this.getEditor().getEditorInput() instanceof IndicatorEditorInput;
     }
 
     /*
@@ -112,10 +144,76 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         super.createFormContent(managedForm);
 
         creatDefinitionSection(topComp);
+
+        if (!this.isSystemIndicator()) {
+            createCategorySection(topComp);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "createCategorySection".
+     * 
+     * @param topComp
+     */
+    private void createCategorySection(Composite topComp) {
+        Section categorySection = createSection(form, topComp, "Indicator Category", false, null);
+
+        Label label = new Label(categorySection, SWT.WRAP);
+        label.setText("This section is for indicator category.");
+        categorySection.setDescriptionControl(label);
+
+        categoryComp = createCategoryComp(categorySection);
+
+        categorySection.setClient(categoryComp);
+    }
+
+    /**
+     * DOC xqliu Comment method "createCategoryComp".
+     * 
+     * @param categorySection
+     * @return
+     */
+    private Composite createCategoryComp(Section categorySection) {
+        Composite composite = toolkit.createComposite(categorySection);
+        composite.setLayout(new GridLayout());
+
+        String[] categories = getAllUserDefinedIndicatorCategories();
+        comboCategory = new Combo(composite, SWT.READ_ONLY);
+        comboCategory.setItems(categories);
+        if (categories.length > 0 && category == null) {
+            category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().getLabel();
+        }
+        comboCategory.setText(category);
+        comboCategory.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                setDirty(true);
+                setUDICategory(comboCategory.getText());
+            }
+
+        });
+
+        return composite;
+    }
+
+    /**
+     * DOC xqliu Comment method "setUDICategory".
+     * 
+     * @param text
+     */
+    protected void setUDICategory(String text) {
+        IndicatorDefinition definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
+        EList<IndicatorCategory> categories = definition.getCategories();
+        IndicatorCategory indicatorCategory = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(text);
+        if (categories != null && indicatorCategory != null) {
+            categories.clear();
+            categories.add(indicatorCategory);
+        }
     }
 
     private void creatDefinitionSection(Composite topCmp) {
-        Section definitionSection = createSection(form, topCmp, DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Definition"), false, null); //$NON-NLS-1$
+        Section definitionSection = createSection(form, topCmp, DefaultMessagesImpl
+                .getString("IndicatorDefinitionMaterPage.Definition"), false, null); //$NON-NLS-1$
 
         Label label = new Label(definitionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.decription")); //$NON-NLS-1$
@@ -251,6 +349,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (editor.getEditorInput() instanceof IndicatorEditorInput) {
             IndicatorEditorInput editorInput = (IndicatorEditorInput) editor.getEditorInput();
             return editorInput.getIndicatorDefinition();
+        } else if (editor.getEditorInput() instanceof FileEditorInput) {
+            FileEditorInput editorInput = (FileEditorInput) editor.getEditorInput();
+            return UDIResourceFileHelper.getInstance().findUDI(editorInput.getFile());
         } else {
             return null;
         }
@@ -278,28 +379,33 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        // IndicatorDefinition definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
-        // if (definition != null) {
-        // EMFUtil.saveSingleResource(definition.eResource());
-        // }
-
+        super.doSave(monitor);
         IndicatorDefinition definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
 
         EList<Expression> expressiones = definition.getSqlGenericExpression();
-
         expressiones.clear();
-
         for (Expression expression : tempExpression) {
             if (expression.getBody() != null && !"".equals(expression.getBody())) { //$NON-NLS-1$
                 expressiones.add(expression);
             }
         }
 
-        DefinitionHandler.getInstance().saveResource();
-
-        super.doSave(monitor);
-
+        EMFUtil.saveSingleResource(definition.eResource());
         this.isDirty = false;
     }
 
+    private String[] getAllUserDefinedIndicatorCategories() {
+        List<IndicatorCategory> allUserDefinedIndicatorCategory = DefinitionHandler.getInstance()
+                .getAllUserDefinedIndicatorCategory();
+        if (allUserDefinedIndicatorCategory != null && allUserDefinedIndicatorCategory.size() > 0) {
+            int size = allUserDefinedIndicatorCategory.size();
+            String[] result = new String[size];
+            for (int i = 0; i < size; ++i) {
+                result[i] = allUserDefinedIndicatorCategory.get(i).getLabel();
+            }
+            return result;
+        } else {
+            return new String[0];
+        }
+    }
 }

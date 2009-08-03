@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -39,9 +40,12 @@ import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionPro
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import orgomg.cwm.resource.relational.Column;
 
 /**
@@ -82,7 +86,11 @@ public class ColumnViewerDND {
                 IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
                 Object object = selection.getFirstElement();
                 if (object instanceof IFile) {
-                    receiver = new PatternReceiver();
+                    if (FactoriesUtil.UDI.equals(((IFile) object).getFileExtension())) {
+                        receiver = new UDIReceiver();
+                    } else {
+                        receiver = new PatternReceiver();
+                    }
                 }
 
                 if (object instanceof TdColumn) {
@@ -257,5 +265,60 @@ public class ColumnViewerDND {
             }
             localSelection = null;
         }
+    }
+
+    /**
+     * DOC xqliu ColumnViewerDND class global comment. Detailled comment
+     */
+    static class UDIReceiver implements ISelectionReceiver {
+
+        // @Override
+        public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
+            if (event.detail != DND.DROP_NONE) {
+                lastValidOperation = event.detail;
+            }
+
+            boolean is = true;
+            Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
+            if (firstElement instanceof IFile) {
+                IFile fe = (IFile) firstElement;
+                if (FactoriesUtil.UDI.equals(fe.getFileExtension())) {
+                    IndicatorDefinition udi = UDIResourceFileHelper.getInstance().findUDI(fe);
+                    if (udi != null) {
+                        is = false;
+                    }
+                }
+            }
+
+            if (event.item == null || is) {
+                event.detail = DND.DROP_NONE;
+            } else {
+                Object data = event.item.getData(AnalysisColumnTreeViewer.INDICATOR_UNIT_KEY);
+                if (data != null) {
+                    event.detail = DND.DROP_NONE;
+                } else {
+                    event.detail = lastValidOperation;
+                }
+            }
+        }
+
+        // @Override
+        public void drop(DropTargetEvent event, CommonViewer commonViewer, int index) {
+            IFile fe = (IFile) ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
+            TreeItem item = (TreeItem) event.item;
+            ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.COLUMN_INDICATOR_KEY);
+            AnalysisColumnTreeViewer viewer = (AnalysisColumnTreeViewer) item.getParent().getData(
+                    AnalysisColumnTreeViewer.VIEWER_KEY);
+            Analysis analysis = viewer.getAnalysis();
+
+            IndicatorUnit[] addIndicatorUnits = UDIUtils.createIndicatorUnit(fe, data, analysis);
+            if (addIndicatorUnits != null && addIndicatorUnits.length > 0) {
+                for (IndicatorUnit unit : addIndicatorUnits) {
+                    viewer.createOneUnit(item, unit);
+                }
+                viewer.setDirty(true);
+            }
+        }
+
     }
 }

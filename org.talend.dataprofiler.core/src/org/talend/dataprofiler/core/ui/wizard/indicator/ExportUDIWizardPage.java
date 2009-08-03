@@ -1,0 +1,193 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2009 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dataprofiler.core.ui.wizard.indicator;
+
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
+import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider;
+
+/**
+ * DOC xqliu class global comment. Detailled comment
+ */
+public class ExportUDIWizardPage extends WizardPage {
+
+    protected static Logger log = Logger.getLogger(ExportUDIWizardPage.class);
+
+    private IFolder folder;
+
+    private Text fileText;
+
+    private ProgressBar progressBar;
+
+    private CheckboxTreeViewer selectedTree;
+
+    public ExportUDIWizardPage(IFolder folder) {
+        super(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIWizardPage")); //$NON-NLS-1$
+        setTitle(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIToZIPFile")); //$NON-NLS-1$
+        setDescription(DefaultMessagesImpl.getString("ExportUDIWizardPage.chooseFolderToExportIndicators")); //$NON-NLS-1$
+        this.folder = folder;
+    }
+
+    public void createControl(Composite parent) {
+        Composite container = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        GridData gridData = new GridData(GridData.FILL_BOTH);
+        container.setLayout(layout);
+        container.setLayoutData(gridData);
+
+        Composite fileComp = new Composite(container, SWT.NONE);
+        layout = new GridLayout(3, false);
+        gridData = new GridData(GridData.FILL_HORIZONTAL);
+        fileComp.setLayout(layout);
+        fileComp.setLayoutData(gridData);
+        Label label = new Label(fileComp, SWT.NONE);
+        label.setText(DefaultMessagesImpl.getString("ExportUDIWizardPage.selectFolder")); //$NON-NLS-1$
+        fileText = new Text(fileComp, SWT.BORDER);
+        gridData = new GridData(GridData.FILL_HORIZONTAL);
+        fileText.setLayoutData(gridData);
+        fileText.setEditable(false);
+
+        Button button = new Button(fileComp, SWT.PUSH);
+        button.setText(DefaultMessagesImpl.getString("ExportUDIWizardPage.browse")); //$NON-NLS-1$
+        button.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                DirectoryDialog dialog = new DirectoryDialog(Display.getDefault().getActiveShell());
+                if (fileText.getText() != null) {
+                    dialog.setFilterPath(fileText.getText());
+                }
+                String path = dialog.open();
+                if (path != null) {
+                    fileText.setText(path);
+                }
+            }
+        });
+
+        Group group = new Group(container, SWT.NONE);
+        group.setText(DefaultMessagesImpl.getString("ExportUDIWizardPage.selectIndicators")); //$NON-NLS-1$
+        group.setLayout(new GridLayout());
+        group.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        selectedTree = new ContainerCheckedTreeViewer(group);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedTree.getTree());
+
+        selectedTree.setLabelProvider(new ResourceViewLabelProvider());
+        selectedTree.setContentProvider(new WorkbenchContentProvider() {
+
+            @Override
+            public boolean hasChildren(Object element) {
+                if (element instanceof IFile) {
+                    return false;
+                }
+                return super.hasChildren(element);
+            }
+
+        });
+
+        selectedTree.setInput(this.folder);
+
+        try {
+            selectedTree.setCheckedElements(folder.members());
+        } catch (CoreException e1) {
+            log.error(e1, e1);
+        }
+
+        Control buttonComposite = createSelectionButtons(container);
+        Composite monitorComp = new Composite(container, SWT.NONE);
+        monitorComp.setLayout(new GridLayout());
+        monitorComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        ProgressBar bar = new ProgressBar(monitorComp, SWT.NONE);
+        bar.setLayoutData(new GridData(GridData.FILL_BOTH));
+        bar.setVisible(false);
+
+        setControl(container);
+    }
+
+    protected Composite createSelectionButtons(Composite composite) {
+        Composite buttonComposite = new Composite(composite, SWT.RIGHT);
+        GridLayout layout = new GridLayout(2, false);
+        buttonComposite.setLayout(layout);
+        buttonComposite.setFont(composite.getFont());
+        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL);
+        data.grabExcessHorizontalSpace = true;
+        composite.setData(data);
+
+        Button selectButton = new Button(buttonComposite, SWT.PUSH);
+        selectButton.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.selectAll"));
+
+        Button deselectButton = new Button(buttonComposite, SWT.PUSH);
+        deselectButton.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.deselectAll"));
+
+        addSelectionButtonListener(selectButton, deselectButton);
+        return buttonComposite;
+    }
+
+    protected void addSelectionButtonListener(Button selectButton, Button deselectButton) {
+        SelectionListener listener = new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                try {
+                    selectedTree.setCheckedElements(folder.members());
+                } catch (CoreException e1) {
+                    log.error(e1, e1);
+                }
+            }
+        };
+        selectButton.addSelectionListener(listener);
+
+        listener = new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                selectedTree.setCheckedElements(new Object[0]);
+            }
+        };
+        deselectButton.addSelectionListener(listener);
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public CheckboxTreeViewer getSelectedPatternsTree() {
+        return selectedTree;
+    }
+
+    public String getTargetFile() {
+        return fileText.getText();
+    }
+}

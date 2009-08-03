@@ -18,18 +18,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.DecorationOverlayIcon;
-import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -42,7 +34,6 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -52,19 +43,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
-import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -358,51 +344,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
                     IFolder libProject = ResourceManager.getLibrariesFolder();
 
-                    CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
-                            new WorkbenchContentProvider());
-                    dialog.setInput(libProject);
-                    dialog.setValidator(new ISelectionStatusValidator() {
-
-                        public IStatus validate(Object[] selection) {
-                            IStatus status = Status.OK_STATUS;
-                            for (Object patte : selection) {
-                                if (patte instanceof IFile) {
-                                    IFile file = (IFile) patte;
-                                    if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
-                                        Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                                        boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
-                                        if (!validStatus) {
-                                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
-                                                    .getString("AnalysisColumnTreeViewer.chooseValidPatterns")); //$NON-NLS-1$
-                                        }
-                                    }
-                                }
-                            }
-                            return status;
-                        }
-
-                    });
-                    dialog.addFilter(new ViewerFilter() {
-
-                        @Override
-                        public boolean select(Viewer viewer, Object parentElement, Object element) {
-                            if (element instanceof IFile) {
-                                IFile file = (IFile) element;
-                                if (FactoriesUtil.PATTERN.equals(file.getFileExtension())) {
-                                    return true;
-                                }
-                            } else if (element instanceof IFolder) {
-                                IFolder folder = (IFolder) element;
-                                return PatternUtilities.isLibraiesSubfolder(folder, DQStructureManager.PATTERNS,
-                                        DQStructureManager.SQL_PATTERNS);
-                            }
-                            return false;
-                        }
-                    });
-                    dialog.setContainerMode(true);
-                    dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patternSelector")); //$NON-NLS-1$
-                    dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patterns")); //$NON-NLS-1$
-                    dialog.setSize(80, 30);
+                    CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(libProject);
 
                     // IFile[] selectedFiles =
                     // PatternUtilities.getPatternFileByIndicator(clmIndicator);
@@ -425,7 +367,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         }
                     }
                 }
-
             });
             addPatternEditor.minimumWidth = addPatternLabl.getImage().getBounds().width;
             addPatternEditor.setEditor(addPatternLabl, treeItem, 2);
@@ -902,52 +843,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
 
         return null;
-    }
-
-    /**
-     * DOC zqin AnalysisColumnTreeViewer class global comment. Detailled comment
-     */
-    class PatternLabelProvider extends LabelProvider {
-
-        @Override
-        public Image getImage(Object element) {
-            if (element instanceof IFolder) {
-                return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-            }
-
-            if (element instanceof IFile) {
-                Pattern findPattern = PatternResourceFileHelper.getInstance().findPattern((IFile) element);
-                boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
-                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
-                if (!validStatus) {
-                    ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-                            ISharedImages.IMG_OBJS_WARN_TSK);
-                    DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
-                            IDecoration.BOTTOM_RIGHT);
-                    imageDescriptor = icon;
-                }
-                return imageDescriptor.createImage();
-            }
-
-            return null;
-        }
-
-        @Override
-        public String getText(Object element) {
-            if (element instanceof IFile) {
-                IFile file = (IFile) element;
-                Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                if (pattern != null) {
-                    return pattern.getName();
-                }
-            }
-
-            if (element instanceof IFolder) {
-                return ((IFolder) element).getName();
-            }
-
-            return ""; //$NON-NLS-1$
-        }
     }
 
     /**

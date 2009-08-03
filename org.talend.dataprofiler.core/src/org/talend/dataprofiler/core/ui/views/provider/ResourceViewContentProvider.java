@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.views.provider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +33,6 @@ import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionPro
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
-import org.talend.dataprofiler.ecos.service.EcosystemService;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -46,9 +46,6 @@ import org.talend.resource.ResourceManager;
 public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
-
-    // private static Logger log =
-    // Logger.getLogger(ResourceViewContentProvider.class);
 
     private List<IContainer> needSortContainers;
 
@@ -114,22 +111,39 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 return regularExp;
             }
         } else if (element instanceof IFolder) {
-        	//
+            //
             IFolder folder = (IFolder) element;
             if (folder.getName().equals(DQStructureManager.EXCHANGE)) {
-            	//Mod gyichao 2009-07-07, feature 8109
-            	return ComponentSearcher.getAvailableCategory(CorePlugin.getDefault().getProductVersion().toString()).toArray();
-                
+                // Mod gyichao 2009-07-07, feature 8109
+                return ComponentSearcher.getAvailableCategory(CorePlugin.getDefault().getProductVersion().toString()).toArray();
+
             } else if (folder.getName().equals(DQStructureManager.INDICATORS)) {
-                return new Object[] { new IndicatorFolderNode("System") };
+                // MOD xqliu 2009-07-27 bug 7810
+                return getIndicatorsChildren(folder);
             }
-        }else if(element instanceof IEcosCategory){
-        	return ((IEcosCategory)element).getComponent().toArray();
+        } else if (element instanceof IEcosCategory) {
+            return ((IEcosCategory) element).getComponent().toArray();
         }
         if (needSortContainers.contains(element)) {
             return sort(super.getChildren(element));
         }
         return super.getChildren(element);
+    }
+
+    /**
+     * DOC xqliu Comment method "getIndicatorChildren".
+     * 
+     * @return
+     */
+    private Object[] getIndicatorsChildren(IFolder folder) {
+        List<Object> list = new ArrayList<Object>();
+        list.add(new IndicatorFolderNode("System"));
+        try {
+            list.addAll(Arrays.asList(folder.members()));
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+        return list.toArray();
     }
 
     /**
@@ -158,14 +172,13 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         return list.toArray();
     }
 
-	@Override
-	public boolean hasChildren(Object element) {
+    @Override
+    public boolean hasChildren(Object element) {
 
-		if(element instanceof IEcosCategory){
-			return true;
-		}
-		return super.hasChildren(element);
-	}
-    
-    
+        if (element instanceof IEcosCategory) {
+            return true;
+        }
+        return super.hasChildren(element);
+    }
+
 }

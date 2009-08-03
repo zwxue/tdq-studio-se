@@ -643,6 +643,23 @@
             </or>
          </enablement>
       </actionProvider>
+       <actionProvider
+             class="org.talend.dataprofiler.core.ui.action.provider.UDIActionProvider"
+             id="org.talend.dataprofiler.core.ui.action.provider.UserDefinedIndicatorsActionProvider">
+          <enablement>
+             <or>
+                <adapt
+                      type="org.eclipse.core.resources.IResource">
+                </adapt>
+                <adapt
+                      type="java.util.Collection">
+                   <count
+                         value="0">
+                   </count>
+                </adapt>
+             </or>
+          </enablement>
+       </actionProvider>
   </extension>
     
       
@@ -821,6 +838,12 @@
            id="org.talend.dataprofiler.core.cheatsheet.timeCorrelationColumnAnalysis.analysis"
            name="Time Column Correlation Analysis Creation">
      </cheatsheet>
+          <cheatsheet
+                category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.userdefinedindicator"
+                contentFile="cheatsheets/UDI_cheat.xml"
+                id="org.talend.dataprofiler.core.userdefinedindicator"
+                name="User Defined Inciator Creation">
+          </cheatsheet>
   </extension>
    
    <extension

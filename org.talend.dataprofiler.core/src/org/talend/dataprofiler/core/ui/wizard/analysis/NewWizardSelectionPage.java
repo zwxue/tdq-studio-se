@@ -138,7 +138,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     AnalysisParameter parameter = null;
 
                     AnalysisType type = AnalysisType.get(literal);
-                    
+
                     AnalysisType currentType = AnalysisType.get(node.getLiteral());
 
                     FolderProvider currentFolderProvider = ((CreateNewAnalysisWizard) getWizard()).getCurrentFolderProvider();
@@ -182,14 +182,14 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         href = relatedTopics[2].getHref();
                         break;
                     case TABLE:
-                       if(currentType == AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY){
-                           FuncationDependencyParameter funcationDependency = new FuncationDependencyParameter();
-                           funcationDependency.setFolderProvider(currentFolderProvider);
-                           parameter = funcationDependency;
-                           href = relatedTopics[7].getHref();
-                           type = currentType;
-                           break;
-                       }
+                        if (currentType == AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY) {
+                            FuncationDependencyParameter funcationDependency = new FuncationDependencyParameter();
+                            funcationDependency.setFolderProvider(currentFolderProvider);
+                            parameter = funcationDependency;
+                            href = relatedTopics[7].getHref();
+                            type = currentType;
+                            break;
+                        }
                         NamedColumnSetAnalysisParameter tableParam = new NamedColumnSetAnalysisParameter();
                         tableParam.setFolderProvider(currentFolderProvider);
                         parameter = tableParam;

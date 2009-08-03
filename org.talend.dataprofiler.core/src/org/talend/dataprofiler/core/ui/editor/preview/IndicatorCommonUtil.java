@@ -169,8 +169,14 @@ public final class IndicatorCommonUtil {
                 patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());
                 tempObject = patternExt;
                 break;
+
             case ModeIndicatorEnum:
                 tempObject = ((ModeIndicator) indicator).getMode();
+                break;
+
+            case UserDefinedIndicatorEnum:
+                tempObject = indicator.getCount();
+                break;
 
             default:
 
