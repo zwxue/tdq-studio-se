@@ -17,15 +17,16 @@ import org.talend.dataquality.indicators.UpperQuartileIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements UpperQuartileIndicator {
 
     private static Logger log = Logger.getLogger(UpperQuartileIndicatorImpl.class);
-    
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected UpperQuartileIndicatorImpl() {
@@ -34,6 +35,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -56,6 +58,7 @@ public class UpperQuartileIndicatorImpl extends MaxValueIndicatorImpl implements
 
         // get the correct type of result from the analyzed element
         int javaType = this.getColumnType();
+        this.setDatatype(javaType);
 
         if (objects.size() == 1) { // case when 1 row is returned
             String med = String.valueOf(objects.get(0)[0]);

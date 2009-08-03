@@ -12,15 +12,16 @@ import org.talend.dataquality.indicators.LowerQuartileIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements LowerQuartileIndicator {
 
     private static Logger log = Logger.getLogger(LowerQuartileIndicatorImpl.class);
-    
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected LowerQuartileIndicatorImpl() {
@@ -29,6 +30,7 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -51,6 +53,7 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
 
         // get the correct type of result from the analyzed element
         int javaType = this.getColumnType();
+        this.setDatatype(javaType);
 
         if (objects.size() == 1) { // case when 1 row is returned
             String med = String.valueOf(objects.get(0)[0]);
