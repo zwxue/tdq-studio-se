@@ -61,6 +61,7 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
@@ -166,7 +167,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // --- create select statement
         // get indicator's sql columnS (generate the real SQL statement from its definition)
 
-        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+//        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+        IndicatorDefinition indicatorDefinition =  DefinitionHandler.getInstance().getIndicatorDefinition(indicator.getIndicatorDefinition().getLabel());
         if (indicatorDefinition == null) {
             return traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
                     + ". Please, report a bug at http://talendforge.org/bugs/");

@@ -239,6 +239,10 @@ public class UDFPreferencePage extends PreferencePage implements IWorkbenchPrefe
         tableViewer.refresh();
 
         ResourcesPlugin.getPlugin().getPluginPreferences().setValue(entity.getLanguage(), ""); //$NON-NLS-1$
+        
+        //also need remove this item from .Talend.definite file.
+        DefinitionHandler.getInstance().removeRegexFunction(entity.getLanguage());
+        
     }
 
     /**

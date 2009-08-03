@@ -14,6 +14,7 @@ package org.talend.dq.indicators.definitions;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -299,7 +300,7 @@ public final class DefinitionHandler {
      * @param label the label of the definition to get
      * @return the definition with the given label
      */
-    private IndicatorDefinition getIndicatorDefinition(String label) {
+    public IndicatorDefinition getIndicatorDefinition(String label) {
         return this.getIndicatorDefinition(indicatorDefinitions, label);
     }
 
@@ -314,11 +315,35 @@ public final class DefinitionHandler {
         return null;
     }
 
+    /**
+     * DOC jet Comment method "removeRegexFunction".
+     * <p>Just remove a UDF from .Talend.definition File.
+     * @param dbmsName
+     * @return
+     */
+    public boolean removeRegexFunction(String dbmsName){
+        
+        IndicatorDefinition regexIndDef = this.getIndicatorDefinition(REGULAR_EXPRESSION_MATCHING);
+        EList<Expression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
+        for (Expression expression : sqlGenericExpression) {
+                if (dbmsName.equals(expression.getLanguage())) {
+                    sqlGenericExpression.remove(expression);
+                    DefinitionHandler.getInstance().saveResource();
+                    return true;
+                }
+        }
+        
+        return false;
+    }
+    
     public boolean updateRegex(String dbmsName, String regexpFunction) {
         boolean ok = true;
         boolean replaced = false;
         IndicatorDefinition regexIndDef = this.getIndicatorDefinition(REGULAR_EXPRESSION_MATCHING);
         EList<Expression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
+        
+      
+        
         for (Expression expression : sqlGenericExpression) {
             if (dbmsName.equals(expression.getLanguage())) {
                 // FIXME scorreia this comparison should be made by
