@@ -324,11 +324,11 @@ public final class ImportFactory {
                                                 "yyyyMMddHHmmssSSS");
                                         name += "(" + simpleDateFormat.format(new Date()) + Math.random() + ")";
                                         id.setName(name);
-                                        names.add(name);
                                     }
                                 }
                                 UDIndicatorWriter.getInstance().createUDIndicatorFile(id, selectionFolder);
                                 deleteFiles(copyFile);
+                                names.add(name);
                             }
                         }
                     }
