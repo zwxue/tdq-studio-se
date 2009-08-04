@@ -52,16 +52,17 @@ public class ModelElementTaskProvider extends CommonActionProvider {
     public void fillContextMenu(IMenuManager menu) {
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         // MOD by hcheng 07-28-2009,for 8273,Remove the "add task" menu on the system indicators.
+        boolean showMenu = true;
         TreePath[] treePath = currentSelection.getPaths();
         for (TreePath paths : treePath) {
             Object path = paths.getSegment(1);
             if (path.toString().endsWith("Indicators")) {
-                return;
-            } else {
-                addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), currentSelection.getFirstElement());
-                menu.add(addTaskAction);
+                showMenu = false;
             }
-
+        }
+        if (showMenu) {
+            addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), currentSelection.getFirstElement());
+            menu.add(addTaskAction);
         }
 
     }
