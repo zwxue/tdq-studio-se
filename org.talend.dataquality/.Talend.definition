@@ -343,4 +343,32 @@
     <taggedValue xmi:id="_ghhXUBI6Ed6TWL6NwMMHzQ" tag="Description" value="contains user defined DQ rules in SQL"/>
     <taggedValue xmi:id="_kkFN0BI6Ed6TWL6NwMMHzQ" tag="Purpose" value="evaluates number of records for the given rules"/>
   </categories>
+  <categories xmi:id="_b5F7QHqTEd67hM2eKD3QgQ" name="User Defined Count" label="User Defined Count">
+    <taggedValue xmi:id="_chxE0HqTEd67hM2eKD3QgQ" tag="Description" value="contains several count indicators"/>
+    <taggedValue xmi:id="_iPcZUHqTEd67hM2eKD3QgQ" tag="Purpose" value="analyze the quantity of records"/>
+  </categories>
+  <categories xmi:id="_Ba7OYXsXEd63r-VLO3_0OQ" name="User Defined Match" label="User Defined Match">
+    <taggedValue xmi:id="_C-wYoHsXEd63r-VLO3_0OQ" tag="Description" value=""/>
+    <taggedValue xmi:id="_Ddm30HsXEd63r-VLO3_0OQ" tag="Purpose" value=""/>
+  </categories>
+  <categories xmi:id="_Frd2gHsXEd63r-VLO3_0OQ" name="User Defined Frequency" label="User Defined Frequency">
+    <taggedValue xmi:id="_GzSaMHsXEd63r-VLO3_0OQ" tag="Description" value=""/>
+    <taggedValue xmi:id="_H4bdUHsXEd63r-VLO3_0OQ" tag="Purpose" value=""/>
+  </categories>
+  <categories xmi:id="_yQJQ0HsXEd63r-VLO3_0OQ" name="User Defined Comparison" label="User Defined Comparison">
+    <taggedValue xmi:id="_zQEcwHsXEd63r-VLO3_0OQ" tag="Description" value=""/>
+    <taggedValue xmi:id="_0Vga0HsXEd63r-VLO3_0OQ" tag="Purpose" value=""/>
+  </categories>
+  <categories xmi:id="_1mapEHsXEd63r-VLO3_0OQ" name="User Defined Nominal Correlation" label="User Defined Nominal Correlation">
+    <taggedValue xmi:id="_2lKJQHsXEd63r-VLO3_0OQ" tag="Description" value=""/>
+    <taggedValue xmi:id="_3i_qgHsXEd63r-VLO3_0OQ" tag="Purpose" value=""/>
+  </categories>
+  <categories xmi:id="_6giZsHsXEd63r-VLO3_0OQ" name="User Defined Interval Correlation" label="User Defined Interval Correlation">
+    <taggedValue xmi:id="_71xHQHsXEd63r-VLO3_0OQ" tag="Description" value=""/>
+    <taggedValue xmi:id="_8lTt0HsXEd63r-VLO3_0OQ" tag="Purpose" value=""/>
+  </categories>
+  <categories xmi:id="_-fpTkHsXEd63r-VLO3_0OQ" name="User Defined Time Correlation" label="User Defined Time Correlation">
+    <taggedValue xmi:id="__dyW0HsXEd63r-VLO3_0OQ" tag="Description" value=""/>
+    <taggedValue xmi:id="_A0qDIHsYEd63r-VLO3_0OQ" tag="Purpose" value=""/>
+  </categories>
 </dataquality.indicators.definition:IndicatorsDefinitions>
