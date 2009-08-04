@@ -58,10 +58,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     protected Map<ModelElement, Package> schemata = new HashMap<ModelElement, Package>();
 
-    private DbmsLanguage dbmsLanguage;
-
-    protected Analysis cachedAnalysis;
-
     protected boolean isAccessWith(TdDataProvider dp) {
         if (dataprovider == null) {
             dataprovider = dp;
@@ -288,32 +284,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         return true;
     }
 
-    /**
-     * Method "dbms".
-     * 
-     * @return the DBMS language (not null)
-     */
-    protected DbmsLanguage dbms() {
-        if (this.dbmsLanguage == null) {
-            this.dbmsLanguage = createDbmsLanguage();
-        }
-        return this.dbmsLanguage;
-    }
-
-    private DbmsLanguage createDbmsLanguage() {
-        DataManager connection = this.cachedAnalysis.getContext().getConnection();
-        return DbmsLanguageFactory.createDbmsLanguage(connection);
-    }
-
-    /**
-     * Method "quote".
-     * 
-     * @param input
-     * @return the given string between quotes (for SQL)
-     */
-    protected String quote(String input) {
-        return dbms().quote(input);
-    }
+ 
 
     /**
      * Method "getQuotedColumnName".

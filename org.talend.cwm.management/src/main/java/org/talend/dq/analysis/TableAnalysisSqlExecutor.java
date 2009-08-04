@@ -72,7 +72,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     private DbmsLanguage dbmsLanguage;
 
-    protected Analysis cachedAnalysis;
+//    protected Analysis cachedAnalysis;
 
 
     @Override
@@ -171,7 +171,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
 
         String schemaName = getQuotedSchemaName(tdTable);
-        String table = quote(tdTable.getName());
+       
 
         // --- normalize table name
         String catalogName = getQuotedCatalogName(tdTable);
@@ -182,7 +182,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
 
-        table = dbms().toQualifiedName(catalogName, schemaName, table);
+        tableName = dbms().toQualifiedName(catalogName, schemaName, tableName);
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
@@ -209,9 +209,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return false;
     }
 
-    private String quote(String input) {
-        return dbms().quote(input);
-    }
+    
 
     protected boolean belongToSameSchemata(final TdTable tdTable) {
         assert tdTable != null;
@@ -235,20 +233,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return this.dbmsLanguage;
     }
 
-    private DbmsLanguage createDbmsLanguage() {
-        DataManager connection = this.cachedAnalysis.getContext().getConnection();
-        return DbmsLanguageFactory.createDbmsLanguage(connection);
-    }
-
-    private String getQuotedSchemaName(ColumnSet columnSetOwner) {
-        final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-        return (parentSchema == null) ? null : quote(parentSchema.getName());
-    }
-
-    private String getQuotedCatalogName(ModelElement analyzedElement) {
-        final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
-        return parentCatalog == null ? null : quote(parentCatalog.getName());
-    }
+  
 
     private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString) throws ParseException {
         return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions);

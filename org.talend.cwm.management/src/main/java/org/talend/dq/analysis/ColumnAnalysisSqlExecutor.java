@@ -414,17 +414,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "getSchemaName".
-     * 
-     * @param columnSetOwner
-     * @return
-     */
-    private String getQuotedSchemaName(ColumnSet columnSetOwner) {
-        final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-        return (parentSchema == null) ? null : quote(parentSchema.getName());
-    }
-
-    /**
      * DOC scorreia Comment method "getTopN".
      * 
      * @param indicator
@@ -1070,17 +1059,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         }
         return schema.getName();
-    }
-
-    /**
-     * Method "getCatalogName".
-     * 
-     * @param analyzedElement
-     * @return the catalog or schema quoted name
-     */
-    private String getQuotedCatalogName(ModelElement analyzedElement) {
-        final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
-        return parentCatalog == null ? null : quote(parentCatalog.getName());
     }
 
     /**

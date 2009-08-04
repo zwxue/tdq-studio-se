@@ -17,17 +17,25 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -37,6 +45,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     private static Logger log = Logger.getLogger(AnalysisExecutor.class);
 
     protected String errorMessage;
+    
+    DbmsLanguage dbmsLanguage;
+    
+    protected Analysis cachedAnalysis;
 
     /*
      * (non-Javadoc)
@@ -192,4 +204,55 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
         return ret;
     }
+
+    /**
+     * Method "getCatalogName".
+     * 
+     * @param analyzedElement
+     * @return the catalog or schema quoted name
+     */
+    protected String getQuotedCatalogName(ModelElement analyzedElement) {
+        final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
+        return parentCatalog == null ? null : quote(parentCatalog.getName());
+    }
+
+    /**
+     * DOC scorreia Comment method "getSchemaName".
+     * 
+     * @param columnSetOwner
+     * @return
+     */
+    protected String getQuotedSchemaName(ColumnSet columnSetOwner) {
+        final TdSchema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
+        return (parentSchema == null) ? null : quote(parentSchema.getName());
+    }
+
+    /**
+     * Method "dbms".
+     * 
+     * @return the DBMS language (not null)
+     */
+    protected DbmsLanguage dbms() {
+        if (this.dbmsLanguage == null) {
+            this.dbmsLanguage = createDbmsLanguage();
+        }
+        return this.dbmsLanguage;
+    }
+    
+    DbmsLanguage createDbmsLanguage() {
+        DataManager connection = this.cachedAnalysis.getContext().getConnection();
+        return DbmsLanguageFactory.createDbmsLanguage(connection);
+    }
+    
+
+    /**
+     * Method "quote".
+     * 
+     * @param input
+     * @return the given string between quotes (for SQL)
+     */
+    protected String quote(String input) {
+        return dbms().quote(input);
+    }
+
 }

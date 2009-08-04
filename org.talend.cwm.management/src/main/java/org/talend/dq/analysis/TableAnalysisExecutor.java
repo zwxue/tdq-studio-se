@@ -20,10 +20,14 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdCatalog;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.dataquality.analysis.Analysis;
@@ -61,6 +65,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
 
     @Override
     protected String createSqlStatement(Analysis analysis) {
+        this.cachedAnalysis = analysis;
         CwmZQuery query = new CwmZQuery();
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
@@ -111,6 +116,20 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
                 return false;
             }
             String tableName = tdTable.getName();
+            
+         // --- normalize table name
+            String schemaName = getQuotedSchemaName(tdTable);
+            String catalogName = getQuotedCatalogName(tdTable);
+            if (catalogName == null && schemaName != null) {
+                // try to get catalog above schema
+                final TdSchema parentSchema = SchemaHelper.getParentSchema(tdTable);
+                final TdCatalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
+                catalogName = parentCatalog != null ? parentCatalog.getName() : null;
+            }
+
+            tableName = dbms().toQualifiedName(catalogName, schemaName, tableName);
+
+            
             eval.storeIndicator(tableName, indicator);
         }
 
