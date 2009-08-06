@@ -15,8 +15,10 @@ package org.talend.dataprofiler.core.pattern;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.helper.UDIHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -171,7 +174,7 @@ public final class ExportFactory {
             idMap.put(PatternToExcelEnum.Author, MetadataHelper.getAuthor(indicatorDefinition));
             idMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
             idMap.put(PatternToExcelEnum.Category, UDIHelper.getUDICategory(indicatorDefinition).getLabel());
-            
+
             for (PatternLanguageType languagetype : PatternLanguageType.values()) {
                 for (Expression expression : indicatorDefinition.getSqlGenericExpression()) {
                     if (expression != null && expression.getLanguage().equalsIgnoreCase(languagetype.getLiteral())) {
@@ -232,5 +235,24 @@ public final class ExportFactory {
         }
 
         return patternMap;
+    }
+
+    /**
+     * DOC xqliu Comment method "exportFile".
+     * 
+     * @param exportFile
+     * @param sourceFile
+     * @throws IOException
+     */
+    public static void exportFile(File exportFile, IFile sourceFile) throws IOException {
+        if (exportFile != null && sourceFile != null) {
+            File file = new File(sourceFile.getRawLocation().toOSString());
+            if (exportFile.exists()) {
+                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
+                File bakFile = new File(exportFile.getAbsolutePath() + "." + simpleDateFormat.format(new Date()) + ".bak");
+                FilesUtils.copyFile(exportFile, bakFile);
+            }
+            FilesUtils.copyFile(file, exportFile);
+        }
     }
 }

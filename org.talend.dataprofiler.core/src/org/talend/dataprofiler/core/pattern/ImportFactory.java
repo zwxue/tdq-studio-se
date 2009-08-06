@@ -35,6 +35,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -453,5 +454,24 @@ public final class ImportFactory {
 
         EMFSharedResources.getInstance().addEObjectToResourceSet(pfile.getFullPath().toString(), id);
         EMFSharedResources.getInstance().saveLastResource();
+    }
+
+    /**
+     * DOC xqliu Comment method "importFile".
+     * 
+     * @param importFile
+     * @param targetFile
+     * @throws IOException
+     */
+    public static void importFile(File importFile, IFile targetFile) throws IOException {
+        if (importFile != null && targetFile != null) {
+            File file = new File(targetFile.getRawLocation().toOSString());
+            if (file.exists()) {
+                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
+                File bakFile = new File(file.getAbsolutePath() + "." + simpleDateFormat.format(new Date()) + ".bak");
+                FilesUtils.copyFile(file, bakFile);
+            }
+            FilesUtils.copyFile(importFile, file);
+        }
     }
 }

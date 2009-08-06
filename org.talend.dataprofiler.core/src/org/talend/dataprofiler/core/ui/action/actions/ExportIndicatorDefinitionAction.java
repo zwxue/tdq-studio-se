@@ -12,28 +12,30 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.ui.wizard.indicator.ExportIndicatorDefinitionWizard;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class ExportIndicatorDefinitionAction extends Action {
 
+    protected static Logger log = Logger.getLogger(ExportIndicatorDefinitionAction.class);
+
     public ExportIndicatorDefinitionAction() {
         super("Export");
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.Action#run()
-     */
     @Override
     public void run() {
-        // TODO Auto-generated method stub
-        super.run();
+        ExportIndicatorDefinitionWizard wizard = new ExportIndicatorDefinitionWizard();
+        WizardDialog dialog = new WizardDialog(null, wizard);
+        wizard.setWindowTitle(getText());
+        dialog.open();
     }
 }

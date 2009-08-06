@@ -13,8 +13,10 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.ui.wizard.indicator.ImportIndicatorDefinitionWizard;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -26,14 +28,11 @@ public class ImportIndicatorDefinitionAction extends Action {
         setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.action.Action#run()
-     */
     @Override
     public void run() {
-        // TODO Auto-generated method stub
-        super.run();
+        ImportIndicatorDefinitionWizard wizard = new ImportIndicatorDefinitionWizard();
+        WizardDialog dialog = new WizardDialog(null, wizard);
+        wizard.setWindowTitle(getText());
+        dialog.open();
     }
 }

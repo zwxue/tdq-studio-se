@@ -16,8 +16,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -81,7 +81,7 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -911,5 +911,9 @@ public final class DefinitionHandler {
         } else {
             return null;
         }
+    }
+    
+    public IFile getTalendDefinitionFile() {
+        return ResourceManager.getLibrariesFolder().getFile(FILENAME);
     }
 }
