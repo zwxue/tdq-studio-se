@@ -84,7 +84,7 @@ public class ImportUDIWizardPage extends WizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
-                dialog.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
+                dialog.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
                 if (fileText.getText() != null) {
                     dialog.setFileName(fileText.getText());
                 }

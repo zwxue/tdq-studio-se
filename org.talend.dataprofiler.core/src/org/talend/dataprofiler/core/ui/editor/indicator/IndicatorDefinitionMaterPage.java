@@ -139,9 +139,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        setFormTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.FormTitle")); //$NON-NLS-1$
-        setMetadataTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.FormDescript")); //$NON-NLS-1$
+        setFormTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formTitle")); //$NON-NLS-1$
+        
+        setMetadataTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formMedata")); //$NON-NLS-1$
+
         super.createFormContent(managedForm);
+
+        metadataSection.setDescription(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formDescript")); //$NON-NLS-1$
 
         creatDefinitionSection(topComp);
 
@@ -213,10 +217,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private void creatDefinitionSection(Composite topCmp) {
         Section definitionSection = createSection(form, topCmp, DefaultMessagesImpl
-                .getString("IndicatorDefinitionMaterPage.Definition"), false, null); //$NON-NLS-1$
+                .getString("IndicatorDefinitionMaterPage.definition"), false, null); //$NON-NLS-1$
 
         Label label = new Label(definitionSection, SWT.WRAP);
-        label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.decription")); //$NON-NLS-1$
+        label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definitionDecription")); //$NON-NLS-1$
         definitionSection.setDescriptionControl(label);
 
         definitionComp = createDefinitionComp(definitionSection);

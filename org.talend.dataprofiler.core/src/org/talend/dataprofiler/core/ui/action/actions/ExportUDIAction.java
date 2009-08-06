@@ -31,15 +31,23 @@ public class ExportUDIAction extends Action {
 
     private IFolder folder;
 
-    public ExportUDIAction(IFolder folder) {
-        setText(DefaultMessagesImpl.getString("UserDefinedIndicatorsActionProvider.exportUDI")); //$NON-NLS-1$
+    private boolean isForExchange;
+
+    public ExportUDIAction(IFolder folder, boolean isForExchange) {
+        if (isForExchange) {
+            setText("Export for Talend Exchange");
+        } else {
+            setText(DefaultMessagesImpl.getString("UserDefinedIndicatorsActionProvider.exportUDI")); //$NON-NLS-1$
+        }
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION));
+        
         this.folder = folder;
+        this.isForExchange = isForExchange;
     }
 
     @Override
     public void run() {
-        ExportUDIWizard wizard = new ExportUDIWizard(folder);
+        ExportUDIWizard wizard = new ExportUDIWizard(folder, isForExchange);
         WizardDialog dialog = new WizardDialog(null, wizard);
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {

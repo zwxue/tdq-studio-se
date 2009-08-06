@@ -44,7 +44,7 @@ public final class UDIFactory {
     }
 
     public static Indicator createIndicator(IndicatorDefinition indicatorDefinition) {
-        IndicatorCategory category = UDIHelper.getInstance().getUDICategory(indicatorDefinition);
+        IndicatorCategory category = UDIHelper.getUDICategory(indicatorDefinition);
         Indicator indicator = null;
         if (category != null) {
             if (category.getLabel().equals(DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().getLabel())) {

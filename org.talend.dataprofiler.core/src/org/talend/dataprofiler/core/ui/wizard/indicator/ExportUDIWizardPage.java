@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -54,14 +55,26 @@ public class ExportUDIWizardPage extends WizardPage {
 
     private CheckboxTreeViewer selectedTree;
 
-    public ExportUDIWizardPage(IFolder folder) {
+    private boolean isForExchange;
+
+    public ExportUDIWizardPage(IFolder folder, boolean isForExchange) {
+
         super(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIWizardPage")); //$NON-NLS-1$
-        setTitle(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIToZIPFile")); //$NON-NLS-1$
-        setDescription(DefaultMessagesImpl.getString("ExportUDIWizardPage.chooseFolderToExportIndicators")); //$NON-NLS-1$
+
+        if (isForExchange) {
+            setTitle("Export indicatorts for Talend Exchange");
+            setDescription("Choose a folder where to export the indicators.");
+        } else {
+            setTitle(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIToCSVFile")); //$NON-NLS-1$
+            setDescription(DefaultMessagesImpl.getString("ExportUDIWizardPage.chooseFolderToExportIndicators")); //$NON-NLS-1$
+        }
+
         this.folder = folder;
+        this.isForExchange = isForExchange;
     }
 
     public void createControl(Composite parent) {
+
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         GridData gridData = new GridData(GridData.FILL_BOTH);
@@ -74,7 +87,11 @@ public class ExportUDIWizardPage extends WizardPage {
         fileComp.setLayout(layout);
         fileComp.setLayoutData(gridData);
         Label label = new Label(fileComp, SWT.NONE);
-        label.setText(DefaultMessagesImpl.getString("ExportUDIWizardPage.selectFolder")); //$NON-NLS-1$
+        if (isForExchange) {
+            label.setText("Select a folder:");
+        } else {
+            label.setText(DefaultMessagesImpl.getString("ExportPatternsWizardPage.selectFile")); //$NON-NLS-1$
+        }
         fileText = new Text(fileComp, SWT.BORDER);
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         fileText.setLayoutData(gridData);
@@ -86,11 +103,27 @@ public class ExportUDIWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                DirectoryDialog dialog = new DirectoryDialog(Display.getDefault().getActiveShell());
-                if (fileText.getText() != null) {
-                    dialog.setFilterPath(fileText.getText());
+                String path = "";
+
+                if (isForExchange) {
+                    DirectoryDialog dialog = new DirectoryDialog(Display.getDefault().getActiveShell());
+                    if (fileText.getText() != null) {
+                        dialog.setFilterPath(fileText.getText());
+                    }
+                    path = dialog.open();
+                } else {
+                    FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell());
+                    dialog.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
+                    if (fileText.getText() != null) {
+                        dialog.setFileName(fileText.getText());
+                    }
+
+                    path = dialog.open();
+                    if (path != null && !path.endsWith(".csv")) { //$NON-NLS-1$
+                        path = path + ".csv"; //$NON-NLS-1$
+                    }
                 }
-                String path = dialog.open();
+
                 if (path != null) {
                     fileText.setText(path);
                 }
@@ -183,7 +216,7 @@ public class ExportUDIWizardPage extends WizardPage {
         return progressBar;
     }
 
-    public CheckboxTreeViewer getSelectedPatternsTree() {
+    public CheckboxTreeViewer getSelectedTree() {
         return selectedTree;
     }
 

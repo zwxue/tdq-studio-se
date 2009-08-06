@@ -7,9 +7,9 @@
       </description>
    </intro>
    <item
-         title="Create the User Defined Indicator">
+         title="Create the User Defined Indicator" dialog="true" skip="false">
       <description>
-         This step opens the &quot;New Indicator&quot; wizard.  <b>Right click on the folder &quot;Libraries/Indicators&quot;</b> and select the menu &quot;New Indicator&quot;.
+         This step opens the &quot;New Indicator&quot; wizard.  <b>Right click on the folder &quot;Libraries/Indicators/User Defined Indicators&quot;</b> and select the menu &quot;New Indicator&quot;.
 
 This wizard creates a User Defined Indicator.
       </description>

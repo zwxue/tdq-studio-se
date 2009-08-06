@@ -21,8 +21,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ExportFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
@@ -39,14 +41,18 @@ public class ExportUDIWizard extends Wizard {
 
     private ExportUDIWizardPage page;
 
-    public ExportUDIWizard(IFolder folder) {
+    private boolean isForExchange;
+
+    public ExportUDIWizard(IFolder folder, boolean isForExchange) {
         this.folder = folder;
+        this.isForExchange = isForExchange;
     }
 
     @Override
     public boolean performFinish() {
+
         String targetFile = page.getTargetFile();
-        Object[] elements = page.getSelectedPatternsTree().getCheckedElements();
+        Object[] elements = page.getSelectedTree().getCheckedElements();
 
         List<IndicatorDefinition> seletedIndicators = new ArrayList<IndicatorDefinition>();
         for (Object element : elements) {
@@ -63,26 +69,49 @@ public class ExportUDIWizard extends Wizard {
             return false;
         } else {
             File resource = new File(targetFile);
-            ExportFactory.export(resource, seletedIndicators.toArray(new IndicatorDefinition[seletedIndicators.size()]));
-            for (Iterator iterator = seletedIndicators.iterator(); iterator.hasNext();) {
-                IndicatorDefinition indicator = (IndicatorDefinition) iterator.next();
-                File indicatorFile = new File(resource, indicator.getName() + "." + FactoriesUtil.UDI);
-                if (indicatorFile.isFile() && indicatorFile.exists()) {
-                    try {
-                        FilesUtils.zip(indicatorFile, indicatorFile.getPath() + ".zip");
-                        indicatorFile.delete();
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
+
+            if (isForExchange) {
+                ExportFactory.export(resource, folder, seletedIndicators
+                        .toArray(new IndicatorDefinition[seletedIndicators.size()]));
+
+                for (Iterator iterator = seletedIndicators.iterator(); iterator.hasNext();) {
+                    IndicatorDefinition id = (IndicatorDefinition) iterator.next();
+                    File idFile = new File(resource, id.getName() + ".csv");
+                    if (idFile.isFile() && idFile.exists()) {
+                        try {
+                            FilesUtils.zip(idFile, idFile.getPath() + ".zip");
+                            idFile.delete();
+
+                        } catch (Exception e) {
+                            log.error(e.getMessage(), e);
+                        }
                     }
                 }
+
+                return true;
+            } else {
+
+                boolean isContinue = true;
+                if (resource.exists()) {
+                    isContinue = MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl
+                            .getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ExportPatternsWizard.fileAlreadyExist")); //$NON-NLS-1$
+                }
+
+                if (isContinue) {
+                    ExportFactory.export(resource, folder, seletedIndicators.toArray(new IndicatorDefinition[seletedIndicators
+                            .size()]));
+                    return true;
+                }
+
+                return false;
             }
-            return true;
         }
     }
 
     @Override
     public void addPages() {
-        page = new ExportUDIWizardPage(folder);
+        page = new ExportUDIWizardPage(folder, isForExchange);
         addPage(page);
     }
 

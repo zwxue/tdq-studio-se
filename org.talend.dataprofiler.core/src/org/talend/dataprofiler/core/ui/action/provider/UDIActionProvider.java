@@ -48,10 +48,11 @@ public class UDIActionProvider extends CommonActionProvider {
                 try {
                     IFolder folder = (IFolder) obj;
                     String persistentProperty = folder.getPersistentProperty(DQStructureManager.FOLDER_CLASSIFY_KEY);
-                    if (DQStructureManager.INDICATORS_FOLDER_PROPERTY.equals(persistentProperty)) {
+                    if (DQStructureManager.UDI_FOLDER_PROPERTY.equals(persistentProperty)) {
                         menu.add(new CreateUDIAction(folder));
                         menu.add(new ImportUDIAction(folder));
-                        menu.add(new ExportUDIAction(folder));
+                        menu.add(new ExportUDIAction(folder, false));
+                        menu.add(new ExportUDIAction(folder, true));
                     }
                 } catch (Exception e) {
                     log.error(e, e);

@@ -47,7 +47,7 @@ public class CreateUDIAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
         if (this.folder == null) {
-            this.folder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.INDICATORS);
+            this.folder = ResourceManager.getLibrariesFolder().getFolder(DQStructureManager.USER_DEFINED_INDICATORS);
         }
         UDIndicatorParameter parameter = new UDIndicatorParameter();
         FolderProvider folderProvider = new FolderProvider();

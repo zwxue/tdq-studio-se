@@ -86,6 +86,9 @@ public final class DQStructureManager {
 
     public static final String INDICATORS = "Indicators"; //$NON-NLS-1$
 
+    public static final String USER_DEFINED_INDICATORS = DefaultMessagesImpl
+            .getString("DQStructureManager.userDefinedIndicators"); //$NON-NLS-1$
+
     // MOD xqliu 2009-02-14 bug 6015
     public static final String DQ_RULES = DefaultMessagesImpl.getString("DQStructureManager.dqRules"); //$NON-NLS-1$
 
@@ -102,6 +105,8 @@ public final class DQStructureManager {
     public static final String EXCHANGE_FOLDER_PROPERTY = "FOLDER_EXCHANGE_PROPERTY"; //$NON-NLS-1$
 
     public static final String INDICATORS_FOLDER_PROPERTY = "INDICATORS_FOLDER_PROPERTY"; //$NON-NLS-1$
+
+    public static final String UDI_FOLDER_PROPERTY = "UDI_FOLDER_PROPERTY"; //$NON-NLS-1$
 
     public static final String SQLPATTERNS_FOLDER_PROPERTY = "SQLPATTERNS_FOLDER_PROPERTY"; //$NON-NLS-1$
 
@@ -219,6 +224,10 @@ public final class DQStructureManager {
             createNewFoler = this.createNewFoler(librariesFoler, INDICATORS);
             createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, INDICATORS_FOLDER_PROPERTY);
             createNewFoler.setPersistentProperty(DQStructureManager.NO_SUBFOLDER_KEY, DQStructureManager.NO_SUBFOLDER_PROPERTY);
+
+            // create user defined indicators folder
+            createNewFoler = this.createNewFoler(librariesFoler.getFolder(INDICATORS), USER_DEFINED_INDICATORS);
+            createNewFoler.setPersistentProperty(FOLDER_CLASSIFY_KEY, UDI_FOLDER_PROPERTY);
 
             // MOD mzhao 2009-04-07, create jrxml folder.
             checkJRXMLFolderExist();
