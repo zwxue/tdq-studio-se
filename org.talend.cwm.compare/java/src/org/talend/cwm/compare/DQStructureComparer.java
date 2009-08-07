@@ -128,7 +128,9 @@ public final class DQStructureComparer {
     private static IFile iterateGetNotExistFile(String fileName) {
         IFile file = getFile(fileName);
         if (file.exists()) {
-            return iterateGetNotExistFile("c" + fileName);
+            return iterateGetNotExistFile(fileName.substring(0, fileName
+					.lastIndexOf("."))
+					+ "c" + fileName.substring(fileName.lastIndexOf(".")));
         } else {
             return file;
         }
@@ -166,13 +168,12 @@ public final class DQStructureComparer {
      * 
      * @return true if temporary file ".refresh.prv" has been deleted (or did not exist)
      */
-    public static boolean deleteCopiedResourceFile() {
-        return deleteFile(getTempRefreshFile());
-    }
-
-    public static boolean deleteNeedReloadElementFile() {
-        return deleteFile(getNeedReloadElementsFile());
-    }
+	// public static boolean deleteCopiedResourceFile() {
+	// return deleteFile(getTempRefreshFile());
+	// }
+	// public static boolean deleteNeedReloadElementFile() {
+	// return deleteFile(getNeedReloadElementsFile());
+	// }
 
     /**
      * 

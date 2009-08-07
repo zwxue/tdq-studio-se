@@ -133,7 +133,6 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         if (!isValid()) {
             return null;
         }
-        DQStructureComparer.deleteCopiedResourceFile();
         oldDataProvider = findDataProvider();
         if (oldDataProvider == null) {
             return null;
@@ -174,7 +173,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     }
 
-    private void createCopyedProvider() {
+    protected void createCopyedProvider() {
         IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(oldDataProvider);
         IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
