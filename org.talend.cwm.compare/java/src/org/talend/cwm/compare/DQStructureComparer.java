@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.cwm.compare;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
@@ -120,12 +121,21 @@ public final class DQStructureComparer {
     }
 
     public static IFile getTempRefreshFile() {
-        IFile file = getFile(TEMP_REFRESH_FILE);
+        IFile file = iterateGetNotExistFile(TEMP_REFRESH_FILE);
         return file;
     }
 
+    private static IFile iterateGetNotExistFile(String fileName) {
+        IFile file = getFile(fileName);
+        if (file.exists()) {
+            return iterateGetNotExistFile("c" + fileName);
+        } else {
+            return file;
+        }
+    }
+
     public static IFile getNeedReloadElementsFile() {
-        IFile file = getFile(NEED_RELOAD_ELEMENTS_PRV);
+        IFile file = iterateGetNotExistFile(NEED_RELOAD_ELEMENTS_PRV);
         return file;
     }
 
@@ -185,7 +195,18 @@ public final class DQStructureComparer {
     }
 
     public static IFile getDiffResourceFile() {
-        IFile file = getFile(RESULT_EMFDIFF_FILE);
+        IFile file = iterateGetNotExistFile(RESULT_EMFDIFF_FILE);
+        try {
+            File f = new File(file.getRawLocation().toOSString());
+            if (!f.exists()) {
+                f.createNewFile();
+            }
+            file.createLink(f.toURI(), 0, null);
+        } catch (CoreException e) {
+            log.error(e, e);
+        } catch (IOException e) {
+            log.error(e, e);
+        }
         return file;
     }
 
