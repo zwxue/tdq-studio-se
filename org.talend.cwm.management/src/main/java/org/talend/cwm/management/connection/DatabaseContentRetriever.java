@@ -90,7 +90,7 @@ public final class DatabaseContentRetriever {
         int columnCount = metaData.getColumnCount();
         for (int i = 1; i <= columnCount; i++) {
             String columnName = metaData.getColumnName(i);
-            String columnClassName = metaData.getColumnClassName(i);
+            // String columnClassName = metaData.getColumnClassName(i);
             // TODO add other informations
             Column column = ColumnHelper.createColumn(columnName);
             ColumnSetHelper.addColumn(column, columnSet);
@@ -109,7 +109,12 @@ public final class DatabaseContentRetriever {
      */
     public static Map<String, List<TdSchema>> getSchemas(Connection connection) throws SQLException {
         Map<String, List<TdSchema>> catalogName2schemas = new HashMap<String, List<TdSchema>>();
-        ResultSet schemas = getConnectionMetadata(connection).getSchemas();
+        ResultSet schemas = null;
+        try {
+            schemas = getConnectionMetadata(connection).getSchemas();
+        } catch (Exception e1) {
+            log.warn("Cannot get Schemas from the JDBC driver's metadata", e1);
+        }
         try {
             if (schemas != null) {
 
@@ -189,7 +194,7 @@ public final class DatabaseContentRetriever {
                     }
                 }
             } catch (SQLException e) {
-                throw e;
+                log.warn("Cannot retrieve catalogs", e);
             } finally {
                 // --- release the result set.
                 if (catalogSet != null) {

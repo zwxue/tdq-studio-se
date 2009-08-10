@@ -85,19 +85,24 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
      */
     public List<PrimaryKey> getPrimaryKeys(String catalogName, String schemaPattern, String tableName) throws SQLException {
         List<PrimaryKey> pks = new ArrayList<PrimaryKey>();
-        // MOD xqliu 2009-07-13 bug 7888
-        ResultSet primaryKeys = ConnectionUtils.getConnectionMetadata(connection).getPrimaryKeys(catalogName,
-                schemaPattern, tableName);
-        // ~
+        ResultSet primaryKeys = null;
         try {
-            while (primaryKeys.next()) {
-                PrimaryKey pk = createPrimaryKey(primaryKeys);
-                pks.add(pk);
+            // MOD xqliu 2009-07-13 bug 7888
+            primaryKeys = ConnectionUtils.getConnectionMetadata(connection).getPrimaryKeys(catalogName,
+                schemaPattern, tableName);
+            // ~
+            try {
+                while (primaryKeys.next()) {
+                    PrimaryKey pk = createPrimaryKey(primaryKeys);
+                    pks.add(pk);
+                }
+            } catch (SQLException e) {
+                throw e;
+            } finally {
+                primaryKeys.close();
             }
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            primaryKeys.close();
+        } catch (Exception e1) {
+            log.warn("Cannot get primary keys with this database driver.", e1);
         }
         return pks;
     }
@@ -126,14 +131,10 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
 
     public List<ForeignKey> getForeignKeys(String catalogName, String schemaPattern, String tableName) throws SQLException {
         List<ForeignKey> pks = new ArrayList<ForeignKey>();
-        // MOD xqliu 2009-05-26 bug 5669: the method getImportedKeys() not yet implemented in SQLiteJDBC
-        // MOD xqliu 2009-07-13 bug 7888
-        String driverName = ConnectionUtils.getConnectionMetadata(connection).getDriverName();
-        // ~
-        String dbLanguage = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
-        if (!driverName.toLowerCase().contains(dbLanguage.toLowerCase())) {
+        ResultSet foreignKeys = null;
+        try {
             // MOD xqliu 2009-07-13 bug 7888
-            ResultSet foreignKeys = ConnectionUtils.getConnectionMetadata(connection).getImportedKeys(catalogName,
+            foreignKeys = ConnectionUtils.getConnectionMetadata(connection).getImportedKeys(catalogName,
                     schemaPattern, tableName);
             // ~
             try {
@@ -146,6 +147,8 @@ public class TableBuilder extends AbstractTableBuilder<TdTable> {
             } finally {
                 foreignKeys.close();
             }
+        } catch (Exception e1) {
+            log.warn("Cannot get foreign key with this database driver.", e1);
         }
         // ~
         return pks;

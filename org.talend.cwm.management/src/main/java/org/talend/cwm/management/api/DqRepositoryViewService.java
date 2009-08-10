@@ -52,6 +52,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdCatalog;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSchema;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -473,7 +474,11 @@ public final class DqRepositoryViewService {
         ColumnBuilder colBuilder = new ColumnBuilder(connection);
 
         String catalogName = getName(CatalogHelper.getParentCatalog(table));
-        String schemaPattern = getName(SchemaHelper.getParentSchema(table));
+        TdSchema schema = SchemaHelper.getParentSchema(table);
+        if (catalogName == null && schema != null) {
+            catalogName = getName(CatalogHelper.getParentCatalog(schema));
+        }
+        String schemaPattern = getName(schema);
         String tablePattern = getName(table);
 
         try {

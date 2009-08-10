@@ -177,13 +177,24 @@ public class CatalogBuilder extends CwmBuilder {
     }
 
     private void initializeCatalogLow() throws SQLException {
-        ResultSet catalogNames = getConnectionMetadata(connection).getCatalogs();
+        ResultSet catalogNames = null;
+        try {
+            catalogNames = getConnectionMetadata(connection).getCatalogs();
+        } catch (Exception e) {
+            log.warn("JDBC getCatalogs() method is not available with this driver.", e);
+        }
         if (catalogNames == null) {
-            String currentCatalogName = connection.getCatalog();
+            String currentCatalogName = null;
+            try {
+                currentCatalogName = connection.getCatalog();
+            } catch (Exception e) {
+                log.warn("JDBC error: no current catalog can be found", e);
+            }
             if (currentCatalogName == null) {
                 if (log.isInfoEnabled()) {
                     log.info("No catalog found in connection " + getConnectionInformations(connection));
                 }
+                // -- continue without creating any catalog
             } else { // got the current catalog name, create a Catalog
                 TdCatalog catalog = createOrUpdateCatalog(currentCatalogName);
                 name2catalog.put(currentCatalogName, catalog);
