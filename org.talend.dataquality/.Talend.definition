@@ -28,7 +28,7 @@
     <sqlGenericExpression xmi:id="_H3q6QMtNEd2CMtoJzSqU8Q" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING mycount > 1) AS myquery" language="Teradata"/>
     <sqlGenericExpression xmi:id="_Oid8IBILEd6Zsu-w7oQdJw" body="SELECT COUNT(*) FROM (SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM &lt;%=__TABLE_NAME__%>  m &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) myquery" language="Microsoft SQL Server"/>
   </indicatorDefinitions>
-   <indicatorDefinitions xmi:id="_YqcX0XHpEd6udst2R2sgpA" name="Functional Dependency" label="Functional Dependency">
+  <indicatorDefinitions xmi:id="_YqcX0XHpEd6udst2R2sgpA" name="Functional Dependency" label="Functional Dependency">
     <taggedValue xmi:id="_Yqc-4HHpEd6udst2R2sgpA" tag="Description" value="Reports the extent to which the values in one column (the dependent column) depend on the values in another column or set of columns (the determinant column)"/>
     <taggedValue xmi:id="_Yqc-4XHpEd6udst2R2sgpA" tag="Purpose" value=""/>
     <sqlGenericExpression xmi:id="_Yqc-4nHpEd6udst2R2sgpA" body="SELECT COUNT(A) AS NB, COUNT(DISTINCT A) AS NBDISTINCT FROM (SELECT DISTINCT &lt;%=__COLUMN_NAME_A__%> AS A , &lt;%=__COLUMN_NAME_B__%> AS B FROM  &lt;%=__TABLE_NAME__%> C  ) T" language="SQL"/>
@@ -106,6 +106,7 @@
     <sqlGenericExpression xmi:id="_ybzZwzh8Ed2XmO7pl5Yuyg" body="SELECT SUM(&lt;%=__COLUMN_NAMES__%>), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="MySQL"/>
     <sqlGenericExpression xmi:id="_yb0A0Dh8Ed2XmO7pl5Yuyg" body="SELECT SUM(&lt;%=__COLUMN_NAMES__%>), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
     <sqlGenericExpression xmi:id="_VO37sGOhEd2-SIyfZ_Vx6A" body="SELECT SUM(&lt;%=__COLUMN_NAMES__%>), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="PostgreSQL"/>
+    <sqlGenericExpression xmi:id="_UjnhIIaJEd6N1ZHEYZ2keg" body="SELECT SUM(CAST (&lt;%=__COLUMN_NAMES__%> AS REAL)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Teradata"/>
   </indicatorDefinitions>
   <indicatorDefinitions xmi:id="_ccI48hF2Ed2PKb6nEJEvhw" name="Median" categories="_ccKuIBF2Ed2PKb6nEJEvhw" label="Median">
     <taggedValue xmi:id="_yb0A0Th8Ed2XmO7pl5Yuyg" tag="Description" value="The median is the value separating the higher half of a sample, a population or a probability distribution from the lower half"/>
