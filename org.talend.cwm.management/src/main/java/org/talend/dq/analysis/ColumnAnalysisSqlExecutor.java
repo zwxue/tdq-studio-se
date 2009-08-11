@@ -81,6 +81,8 @@ import Zql.ParseException;
  */
 public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
+    protected boolean parallel = true;
+
     private static final String ALIAS = "(\\w*)\\."; //$NON-NLS-1$
 
     /**
@@ -921,32 +923,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
             // execute the sql statement for each indicator
             Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
-            for (Indicator indicator : indicators) {
-                // skip composite indicators that do not require a sql execution
-                if (indicator instanceof CompositeIndicator) {
-                    // options of composite indicators are handled elsewhere
-                    continue;
-                }
-                // set the connection's catalog
-                String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
-                if (catalogName != null) { // check whether null argument can be given
-                    changeCatalog(catalogName, connection);
-                }
-
-                Expression query = dbms().getInstantiatedExpression(indicator);
-                if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
-                } else {
-                    // set computation done
-                    indicator.setComputed(true);
-                }
-
-                // add mapping of analyzed elements to their indicators
-                MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
-
+            // MOD xqliu 2009-08-07 bug 6194
+            if (parallel) {
+                ok = runAnalysisIndicatorsParallel(connection, elementToIndicator, indicators);
+            } else {
+                ok = runAnalysisIndicators(connection, elementToIndicator, indicators);
             }
-
+            // ~
             connection.close();
 
             // --- finalize indicators by setting the row count and null when they exist.
@@ -959,6 +942,85 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } finally {
             ConnectionUtils.closeConnection(connection);
         }
+        return ok;
+    }
+
+    /**
+     * DOC xqliu Comment method "runAnalysisIndicators".
+     * 
+     * @param connection
+     * @param elementToIndicator
+     * @param indicators
+     * @return
+     * @throws SQLException
+     */
+    private boolean runAnalysisIndicators(Connection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
+            Collection<Indicator> indicators) throws SQLException {
+        boolean ok = true;
+        for (Indicator indicator : indicators) {
+            // skip composite indicators that do not require a sql execution
+            if (indicator instanceof CompositeIndicator) {
+                // options of composite indicators are handled elsewhere
+                continue;
+            }
+            // set the connection's catalog
+            String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());
+            if (catalogName != null) { // check whether null argument can be given
+                changeCatalog(catalogName, connection);
+            }
+
+            Expression query = dbms().getInstantiatedExpression(indicator);
+            if (query == null || !executeQuery(indicator, connection, query.getBody())) {
+                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
+                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+            } else {
+                // set computation done
+                indicator.setComputed(true);
+            }
+
+            // add mapping of analyzed elements to their indicators
+            MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
+        }
+        return ok;
+    }
+
+    /**
+     * DOC xqliu Comment method "runAnalysisIndicatorsParallel".
+     * 
+     * @param connection
+     * @param elementToIndicator
+     * @param indicators
+     * @return
+     * @throws SQLException
+     */
+    private boolean runAnalysisIndicatorsParallel(Connection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
+            Collection<Indicator> indicators) throws SQLException {
+        boolean ok = true;
+        List<Thread> runners = new ArrayList<Thread>();
+        try {
+            for (Indicator indicator : indicators) {
+                ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(this,
+                        connection, elementToIndicator, indicator);
+                Thread thread = new Thread(columnSqlParallel);
+                runners.add(thread);
+                thread.start();
+            }
+            while (true) {
+                boolean stop = true;
+                for (Thread thread : runners) {
+                    if (thread.isAlive()) {
+                        stop = false;
+                        Thread.sleep(1000);
+                    }
+                }
+                if (stop) {
+                    break;
+                }
+            }
+        } catch (InterruptedException e) {
+            log.error(e, e);
+        }
+        runners = null;
         return ok;
     }
 
@@ -1072,7 +1134,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return
      * @throws SQLException
      */
-    private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
+    protected boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
             log.info("Computing indicator: " + indicator.getName());
