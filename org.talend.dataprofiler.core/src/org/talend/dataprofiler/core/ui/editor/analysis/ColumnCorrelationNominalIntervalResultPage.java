@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -58,6 +59,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
@@ -351,37 +353,27 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         JFreeChart chart = TopChartFactory.createBarChart(DefaultMessagesImpl
                 .getString("ColumnCorrelationNominalIntervalResultPage.SimpleSatistics"), dataset, true); //$NON-NLS-1$
 
-        
-        
-     // MOD mzhao 2009-07-28 Bind the indicator with specific color.
-		if (chart != null) {
-			Plot plot = chart.getPlot();
-			if (plot instanceof CategoryPlot) {
-				ChartDecorator.decorateCategoryPlot(chart);
-				// Row Count
-					((CategoryPlot) plot).getRenderer().setSeriesPaint(0,
-						ChartDecorator.IndiBindColor.INDICATOR_ROW_COUNT
-								.getColor());
-				// Distinct Count
-				((CategoryPlot) plot).getRenderer().setSeriesPaint(
-						1,
-						ChartDecorator.IndiBindColor.INDICATOR_DISTINCT_COUNT
-								.getColor());
-				// Unique Count
-				((CategoryPlot) plot).getRenderer().setSeriesPaint(
-						2,
-						ChartDecorator.IndiBindColor.INDICATOR_UNIQUE_COUNT
-								.getColor());
-				// Duplicate Count
-				((CategoryPlot) plot).getRenderer().setSeriesPaint(
-						3,
-						ChartDecorator.IndiBindColor.INDICATOR_DUPLICATE_COUNT
-								.getColor());
+        // MOD mzhao 2009-07-28 Bind the indicator with specific color.
+        if (chart != null) {
+            Plot plot = chart.getPlot();
+            if (plot instanceof CategoryPlot) {
+                ChartDecorator.decorateCategoryPlot(chart);
+                // Row Count
+                ((CategoryPlot) plot).getRenderer()
+                        .setSeriesPaint(0, ChartDecorator.IndiBindColor.INDICATOR_ROW_COUNT.getColor());
+                // Distinct Count
+                ((CategoryPlot) plot).getRenderer().setSeriesPaint(1,
+                        ChartDecorator.IndiBindColor.INDICATOR_DISTINCT_COUNT.getColor());
+                // Unique Count
+                ((CategoryPlot) plot).getRenderer().setSeriesPaint(2,
+                        ChartDecorator.IndiBindColor.INDICATOR_UNIQUE_COUNT.getColor());
+                // Duplicate Count
+                ((CategoryPlot) plot).getRenderer().setSeriesPaint(3,
+                        ChartDecorator.IndiBindColor.INDICATOR_DUPLICATE_COUNT.getColor());
 
-			}
-		}
-        
-        
+            }
+        }
+
         ChartComposite chartComp = new ChartComposite(composite, SWT.NONE, chart);
         chartComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         // ChartUtils.createAWTSWTComp(composite, new GridData(GridData.FILL_BOTH), chart);
@@ -414,8 +406,23 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             table.getColumn(i).pack();
         }
         columnSetElementSection.setClient(sectionTableComp);
-        return columnSetElementSection;
 
+        addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
+        return columnSetElementSection;
+    }
+
+    /**
+     * 
+     * DOC hcheng Comment method "addColumnSorters".For 8267.
+     * 
+     * @param tableViewer
+     * @param tableColumns
+     * @param sorters
+     */
+    protected void addColumnSorters(TableViewer tableViewer, TableColumn[] tableColumns, ViewerSorter[][] sorters) {
+        for (int i = 0; i < tableColumns.length; ++i) {
+            tableColumns[i].addSelectionListener(new ColumnSortListener(tableColumns, i, tableViewer, sorters));
+        }
     }
 
     private Color bg = new Color(null, 249, 139, 121);
@@ -542,5 +549,19 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             bg.dispose();
         }
         super.dispose();
+    }
+
+    private CorrelationDataSorter[][] buildSorter(List<Object[]> tableRows) {
+        CorrelationDataSorter[][] result = null;
+        if (tableRows != null && tableRows.size() > 0) {
+            Object[] objs = tableRows.get(0);
+            int length = objs.length;
+            result = new CorrelationDataSorter[length][2];
+            for (int i = 0; i < length; ++i) {
+                result[i][0] = new CorrelationDataSorter(i + 1);
+                result[i][1] = new CorrelationDataSorter(-(i + 1));
+            }
+        }
+        return result;
     }
 }
