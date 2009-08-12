@@ -57,6 +57,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
+    private Section definitionSection;
+
     private Composite definitionComp;
 
     private Composite categoryComp;
@@ -140,7 +142,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         setFormTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formTitle")); //$NON-NLS-1$
-        
+
         setMetadataTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formMedata")); //$NON-NLS-1$
 
         super.createFormContent(managedForm);
@@ -216,8 +218,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     private void creatDefinitionSection(Composite topCmp) {
-        Section definitionSection = createSection(form, topCmp, DefaultMessagesImpl
-                .getString("IndicatorDefinitionMaterPage.definition"), false, null); //$NON-NLS-1$
+        definitionSection = createSection(form, topCmp,
+                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definition"), false, null); //$NON-NLS-1$
 
         Label label = new Label(definitionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definitionDecription")); //$NON-NLS-1$
@@ -335,7 +337,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 Expression expression = BooleanExpressionHelper.createExpression(language, null);
                 creatNewExpressLine(expression);
                 tempExpression.add(expression);
-                form.reflow(true);
+                definitionSection.setExpanded(true);
                 setDirty(true);
             }
         });

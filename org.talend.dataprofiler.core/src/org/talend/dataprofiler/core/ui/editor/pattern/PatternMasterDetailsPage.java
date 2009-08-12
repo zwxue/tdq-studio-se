@@ -28,7 +28,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -64,7 +63,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC rli class global comment. Detailled comment
  */
 public class PatternMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
-
 
     private static final String SQL = "SQL"; //$NON-NLS-1$
 
@@ -116,11 +114,11 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
         FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-        
+
         this.pattern = PatternResourceFileHelper.getInstance().findPattern(input.getFile());
-        
+
         this.currentModelElement = pattern;
-        
+
         return pattern;
     }
 
@@ -171,7 +169,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
         componentsComp = new Composite(newComp, SWT.NONE);
         componentsComp.setLayout(new GridLayout());
-      
+
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(componentsComp);
         EList<PatternComponent> components = this.pattern.getComponents();
         for (int i = 0; i < components.size(); i++) {
@@ -222,7 +220,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                 newRegularExpress.setExpressionType(expressionType);
                 creatNewExpressLine(newRegularExpress);
                 tempPatternComponents.add(newRegularExpress);
-                form.reflow(true);
+                patternDefinitionSection.setExpanded(true);
                 setDirty(true);
             }
         });
@@ -243,9 +241,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         } else {
             combo.setText(PatternLanguageType.findNameByLanguage(language));
         }
-        
+
         GridDataFactory.fillDefaults().span(2, 1).grab(false, false).applyTo(combo);
-        
+
         combo.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -362,6 +360,5 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         return true;
 
     }
-    
-    
+
 }

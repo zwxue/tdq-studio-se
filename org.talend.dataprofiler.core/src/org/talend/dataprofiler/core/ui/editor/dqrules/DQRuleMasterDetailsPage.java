@@ -143,12 +143,12 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
         metadataSection.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.DQRuleMetadata")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.setProperties")); //$NON-NLS-1$
-        
+
         resetJoinElements();
 
         createDQRuleDefinitionSection(topComp);
         createJoinConditionSection(topComp);
-        
+
         // MOD xqliu 2009-06-23 bug 7481
         foldingSections(new Section[] { metadataSection, dqRuleDefinitionSection, joinConditionSection });
         // ~
@@ -322,8 +322,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
      * @param comp
      */
     private void createJoinConditionSection(Composite comp) {
-        joinConditionSection = createSection(form, comp, DefaultMessagesImpl
-                .getString("DQRuleMasterDetailsPage.joinCondition"), false, null); //$NON-NLS-1$
+        joinConditionSection = createSection(form, comp,
+                DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.joinCondition"), false, null); //$NON-NLS-1$
 
         Label label = new Label(joinConditionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.textJoinCondition")); //$NON-NLS-1$
@@ -374,7 +374,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
                 newJoinElement.setOperator(DEFAULT_OPERATOR);
                 creatNewJoinElementLine(newJoinElement);
                 tempJoinElements.add(newJoinElement);
-                form.reflow(true);
+                joinConditionSection.setExpanded(true);
                 setDirty(true);
             }
         });
