@@ -444,8 +444,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             public void widgetSelected(SelectionEvent e) {
                 tempJoinElements.remove(fje);
                 expressComp.dispose();
-                joinElementComp.layout();
-                form.reflow(true);
+                joinConditionSection.setExpanded(true);
                 setDirty(true);
             }
         });

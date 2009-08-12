@@ -272,8 +272,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             public void widgetSelected(SelectionEvent e) {
                 tempPatternComponents.remove(finalRegExpress);
                 expressComp.dispose();
-                patternDefinitionSectionComp.layout();
-                form.reflow(true);
+                patternDefinitionSection.setExpanded(true);
                 setDirty(true);
             }
         });
