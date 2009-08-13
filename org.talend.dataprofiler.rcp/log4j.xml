@@ -27,9 +27,9 @@
  
 
 	<root>
-	   <priority value ="warn" />
+	   <priority value ="debug" />
            <!-- scorreia: put here your appenders -->
-   	   <!-- appender-ref ref="STDOUT" /  -->
+   	   <appender-ref ref="STDOUT" />
    	   <appender-ref ref="RCPAppender" />
 	</root>
 	

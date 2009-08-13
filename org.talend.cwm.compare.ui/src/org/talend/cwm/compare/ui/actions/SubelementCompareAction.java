@@ -98,10 +98,12 @@ public class SubelementCompareAction extends Action {
 				List<TdSchema> schemas = CatalogHelper
 						.getSchemas((TdCatalog) selectedElement);
 				if (schemas != null && schemas.size() > 0) {
-					for (TdSchema sch : schemas) {
-						folderNode = getTableOrViewFolder(sch);
-						openComparisonEditor(folderNode);
-					}
+					TdDataProvider dataProvider = PrvResourceFileHelper
+							.getInstance().findProvider((IFile) selectedOjbect)
+							.getObject();
+					popCompUIAction.setSelectedObject(findMatchedModelElement(
+							dataProvider, selectedElement));
+					popCompUIAction.run();
 				} else {
 					folderNode = getTableOrViewFolder(selectedElement);
 					openComparisonEditor(folderNode);
@@ -135,8 +137,14 @@ public class SubelementCompareAction extends Action {
 
 	private IFolderNode getTableOrViewFolder(EObject selectedElement) {
 		IFolderNode folderNode = null;
-		TdDataProvider dataProvider = PrvResourceFileHelper.getInstance()
-				.findProvider((IFile) selectedOjbect).getObject();
+		TdDataProvider dataProvider = null;
+		if (selectedOjbect instanceof TdCatalog) {
+			dataProvider = DataProviderHelper
+					.getTdDataProvider(((TdCatalog) selectedOjbect));
+		} else {
+			dataProvider = PrvResourceFileHelper.getInstance().findProvider(
+					(IFile) selectedOjbect).getObject();
+		}
 		// ((Package) selectedElement).getDataManager().add(dataProvider);
 		ModelElement matchedElement = findMatchedModelElement(dataProvider,
 				selectedElement);
@@ -151,18 +159,11 @@ public class SubelementCompareAction extends Action {
 
 	private ModelElement findMatchedModelElement(EObject parent,
 			EObject similarElement) {
-		if (parent instanceof TdDataProvider) {
-			List<TdCatalog> catalogs = DataProviderHelper
-					.getTdCatalogs((DataProvider) parent);
-			for (TdCatalog catalog : catalogs) {
-				// MOD mzhao bug 8581 2009-08-05 (Case of MS SQL Server)
-				TdCatalog ctl = CatalogHelper
-						.getParentCatalog((ModelElement) similarElement);
-				if (ctl == null
-						|| !ctl.getName().equalsIgnoreCase(catalog.getName())) {
-					continue;
-				}
-				List<TdSchema> schemas = CatalogHelper.getSchemas(catalog);
+		if (parent instanceof TdDataProvider) {						
+			if (similarElement instanceof TdSchema) {
+				// Case of MS SQL Server.
+				List<TdSchema> schemas = CatalogHelper
+					.getSchemas((TdCatalog) selectedOjbect);
 				if (schemas != null && schemas.size() > 0) {
 					for (TdSchema tdSchema : schemas) {
 						if (tdSchema.getName().equalsIgnoreCase(
@@ -171,25 +172,30 @@ public class SubelementCompareAction extends Action {
 						}
 					}
 				}
+				// Case of Oracle
+				List<TdSchema> schames = DataProviderHelper
+						.getTdSchema((DataProvider) parent);
+				for (TdSchema schame : schames) {
+					if (schame.getName().equalsIgnoreCase(
+							((TdSchema) similarElement).getName())) {
+						return schame;
+					}
+				}
 			}
-
+							
 			// Case of Mysql
-			for (TdCatalog catalog : catalogs) {
-				if (catalog.getName().equalsIgnoreCase(
-						((TdCatalog) similarElement).getName())) {
-					return catalog;
+			if (similarElement instanceof TdCatalog) {
+				List<TdCatalog> catalogs = DataProviderHelper
+						.getTdCatalogs((DataProvider) parent);	
+				for (TdCatalog catalog : catalogs) {
+					if (catalog.getName().equalsIgnoreCase(
+							((TdCatalog) similarElement).getName())) {
+						return catalog;
+					}
 				}
 			}
 
-			// Case of Oracle
-			List<TdSchema> schames = DataProviderHelper
-					.getTdSchema((DataProvider) parent);
-			for (TdSchema schame : schames) {
-				if (schame.getName().equalsIgnoreCase(
-						((TdSchema) similarElement).getName())) {
-					return schame;
-				}
-			}
+
 		} else if (parent instanceof Package) {
 			// MOD mzhao bug 8581 2009-08-05
 			List<ColumnSet> columnSets = new ArrayList<ColumnSet>();

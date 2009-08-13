@@ -14,11 +14,13 @@ package org.talend.cwm.compare.factory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.cwm.compare.factory.comparisonlevel.CatalogComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogSchemaComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.DataProviderComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.SelectedLocalComparison;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdCatalog;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -52,7 +54,12 @@ public final class ComparisonLevelFactory {
 
         } else if (selectedObject instanceof IFile) {
             comparisonLevel = new DataProviderComparisonLevel(selectedObject);
-        } else {
+        } else if (selectedObject instanceof TdCatalog) {
+        	// MOD mzhao 2009-08-12 If compare the schemas of one catalog for MS
+			// SQL Server.
+			comparisonLevel = new CatalogComparisonLevel(
+					(TdCatalog) selectedObject);
+		} else {
             comparisonLevel = null;
         }
 
