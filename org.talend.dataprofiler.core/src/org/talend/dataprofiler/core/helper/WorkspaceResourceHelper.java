@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -23,7 +24,10 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * 
  * DOC mzhao class global comment. Detailled comment
  */
-public class WorkspaceResourceHelper {
+public final class WorkspaceResourceHelper {
+
+    private WorkspaceResourceHelper() {
+    }
 
     /**
      * 
@@ -57,5 +61,23 @@ public class WorkspaceResourceHelper {
      */
     public static IPath getModelElementPath(ModelElement me) {
         return getModelElementResource(me).getFullPath();
+    }
+
+    /**
+     * DOC bZhou Comment method "getInstallPath".
+     * 
+     * @return the install path for the current release.
+     */
+    public static String getInstallPath() {
+        return Platform.getInstallLocation().getURL().getPath().substring(1);
+    }
+
+    /**
+     * DOC bZhou Comment method "getLocationPath".
+     * 
+     * @return
+     */
+    public static String getLocationPath() {
+        return Platform.getInstanceLocation().getURL().getPath().substring(1);
     }
 }
