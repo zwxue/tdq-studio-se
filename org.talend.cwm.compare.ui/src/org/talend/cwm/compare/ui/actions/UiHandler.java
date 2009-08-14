@@ -38,9 +38,13 @@ public class UiHandler implements IUIHandler {
 	 * .core.runtime.IPath)
 	 */
 	public void popComparisonUI(final IPath diffResourcePath, String dbName,
-			Object selectedObject) throws ReloadCompareException {
-		new ModelElementCompareEditorLauncher(dbName, selectedObject)
-				.open(diffResourcePath);
+			Object selectedObject, boolean compareEachOther)
+			throws ReloadCompareException {
+			new ModelElementCompareEditorLauncher(dbName, selectedObject,
+				compareEachOther)
+					.open(
+				diffResourcePath);
+		
 	}
 
 	/*
