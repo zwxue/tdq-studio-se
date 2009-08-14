@@ -61,6 +61,7 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.collections.MultiMapHelper;
@@ -266,7 +267,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // --- handle case when frequency indicator
         if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
                 || IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator())) {
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator()) || UDIHelper.isFrequency(indicator)) {
             // TODO scorreia test type of column and cast when needed
             // with ranges (frequencies of numerical intervals)
 
@@ -309,7 +310,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } else
 
         // --- handle case of matching pattern count
-        if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)) {
+        if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)
+                || UDIHelper.isMatching(indicator)) {
             List<String> patterns = getPatterns(indicator);
             if (patterns.isEmpty()) {
                 return traceError("No pattern found for database type: " + language + " for indicator " + indicator.getName());

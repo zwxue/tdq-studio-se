@@ -39,7 +39,9 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
@@ -112,30 +114,7 @@ public final class IndicatorCommonUtil {
             case PatternLowFreqIndicatorEnum:
             case SoundexIndicatorEnum:
             case SoundexLowIndicatorEnum:
-                FrequencyIndicator frequency = (FrequencyIndicator) indicator;
-                Set<Object> valueSet = frequency.getDistinctValues();
-                if (valueSet == null) {
-                    break;
-                }
-
-                FrequencyExt[] frequencyExt = new FrequencyExt[valueSet.size()];
-
-                int i = 0;
-                for (Object o : valueSet) {
-                    frequencyExt[i] = new FrequencyExt();
-                    frequencyExt[i].setKey(o);
-                    if (IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator().equals(frequency.eClass())
-                            || IndicatorsPackage.eINSTANCE.getSoundexLowFreqIndicator().equals(frequency.eClass())) {
-                        // MOD scorreia 2009-03-23 display distinct count when working with Soundex
-                        frequencyExt[i].setValue(((SoundexFreqIndicator) frequency).getDistinctCount(o));
-                    } else {
-                        frequencyExt[i].setValue(frequency.getCount(o));
-                    }
-                    frequencyExt[i].setFrequency(frequency.getFrequency(o));
-                    i++;
-                }
-
-                tempObject = frequencyExt;
+                tempObject = handleFrequency(indicator);
                 break;
 
             case MeanIndicatorEnum:
@@ -164,10 +143,7 @@ public final class IndicatorCommonUtil {
 
             case RegexpMatchingIndicatorEnum:
             case SqlPatternMatchingIndicatorEnum:
-                PatternMatchingExt patternExt = new PatternMatchingExt();
-                patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());
-                patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());
-                tempObject = patternExt;
+                tempObject = handleMatchingValue(indicator);
                 break;
 
             case ModeIndicatorEnum:
@@ -175,7 +151,7 @@ public final class IndicatorCommonUtil {
                 break;
 
             case UserDefinedIndicatorEnum:
-                tempObject = indicator.getCount();
+                tempObject = handleUDIValue(indicator);
                 break;
 
             default:
@@ -184,6 +160,97 @@ public final class IndicatorCommonUtil {
 
             indicatorUnit.setValue(tempObject);
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "handleFrequency".
+     * 
+     * @param indicator
+     * @return
+     */
+    private static Object handleFrequency(Indicator indicator) {
+        FrequencyExt[] frequencyExt = null;
+        if (UDIHelper.isUDI(indicator)) {
+            UserDefIndicator udi = (UserDefIndicator) indicator;
+            Set<Object> valueSet = udi.getDistinctValues();
+            if (valueSet == null) {
+                return null;
+            }
+
+            frequencyExt = new FrequencyExt[valueSet.size()];
+
+            int i = 0;
+            for (Object o : valueSet) {
+                frequencyExt[i] = new FrequencyExt();
+                frequencyExt[i].setKey(o);
+                frequencyExt[i].setValue(udi.getCount(o));
+                frequencyExt[i].setFrequency(udi.getFrequency(o));
+                i++;
+            }
+        } else {
+            FrequencyIndicator frequency = (FrequencyIndicator) indicator;
+            Set<Object> valueSet = frequency.getDistinctValues();
+            if (valueSet == null) {
+                return null;
+            }
+
+            frequencyExt = new FrequencyExt[valueSet.size()];
+
+            int i = 0;
+            for (Object o : valueSet) {
+                frequencyExt[i] = new FrequencyExt();
+                frequencyExt[i].setKey(o);
+                if (IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator().equals(frequency.eClass())
+                        || IndicatorsPackage.eINSTANCE.getSoundexLowFreqIndicator().equals(frequency.eClass())) {
+                    // MOD scorreia 2009-03-23 display distinct count when working with Soundex
+                    frequencyExt[i].setValue(((SoundexFreqIndicator) frequency).getDistinctCount(o));
+                } else {
+                    frequencyExt[i].setValue(frequency.getCount(o));
+                }
+                frequencyExt[i].setFrequency(frequency.getFrequency(o));
+                i++;
+            }
+        }
+
+        return frequencyExt;
+    }
+
+    /**
+     * DOC xqliu Comment method "handleMatchingValue".
+     * 
+     * @param indicator
+     * @return
+     */
+    private static Object handleMatchingValue(Indicator indicator) {
+        Object tempObject;
+        PatternMatchingExt patternExt = new PatternMatchingExt();
+        if (UDIHelper.isUDI(indicator)) {
+            patternExt.setMatchingValueCount(((UserDefIndicator) indicator).getMatchingValueCount());
+            patternExt.setNotMatchingValueCount(((UserDefIndicator) indicator).getNotMatchingValueCount());
+        } else {
+            patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());
+            patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());
+        }
+        tempObject = patternExt;
+        return tempObject;
+    }
+
+    /**
+     * DOC xqliu Comment method "handleUDIValue".
+     * 
+     * @param indicator
+     * @return
+     */
+    private static Object handleUDIValue(Indicator indicator) {
+        Object object = null;
+        if (UDIHelper.isCount(indicator)) {
+            object = ((UserDefIndicator) indicator).getUserCount();
+        } else if (UDIHelper.isFrequency(indicator)) {
+            object = handleFrequency(indicator);
+        } else if (UDIHelper.isMatching(indicator)) {
+            object = handleMatchingValue(indicator);
+        }
+        return object;
     }
 
     public static void getIndicatorValue(TableIndicatorUnit indicatorUnit) {

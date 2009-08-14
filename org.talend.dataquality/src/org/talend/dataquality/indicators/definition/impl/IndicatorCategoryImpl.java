@@ -7,14 +7,10 @@
 package org.talend.dataquality.indicators.definition.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
-
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**
@@ -163,6 +159,14 @@ public class IndicatorCategoryImpl extends ModelElementImpl implements Indicator
         result.append(label);
         result.append(')');
         return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof IndicatorCategory) {
+            return this.getLabel().equals(((IndicatorCategory) obj).getLabel());
+        }
+        return false;
     }
 
 } //IndicatorCategoryImpl

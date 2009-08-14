@@ -17,9 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.common.util.EList;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.TableIndicator;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -42,7 +42,7 @@ public final class CompositeIndicator {
 
     private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, soundexFrequencyList,
             soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, summaryList, patternList, sqlPatternList,
-            modelIndicatorList;
+            modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList;
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
@@ -80,6 +80,10 @@ public final class CompositeIndicator {
         tableSimpleList = new ArrayList<TableIndicatorUnit>();
         tableWhereRuleList = new ArrayList<TableIndicatorUnit>();
         tableSeparatedMap = new HashMap<EIndicatorChartType, List<TableIndicatorUnit>>();
+        // ~
+        udiCountList = new ArrayList<IndicatorUnit>();
+        udiFrequencyList = new ArrayList<IndicatorUnit>();
+        udiMatchingList = new ArrayList<IndicatorUnit>();
     }
 
     private void clear() {
@@ -100,6 +104,10 @@ public final class CompositeIndicator {
         tableSimpleList.clear();
         tableWhereRuleList.clear();
         tableSeparatedMap.clear();
+        // ~
+        udiCountList.clear();
+        udiFrequencyList.clear();
+        udiMatchingList.clear();
     }
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
@@ -177,16 +185,13 @@ public final class CompositeIndicator {
                 break;
 
             case UserDefinedIndicatorEnum:
-                if (DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().getLabel().equals(
-                        getUDICategoryLabel(one))) {
-                    simpleList.add(one);
-
-                } else if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().getLabel().equals(
-                        getUDICategoryLabel(one))) {
-                    patternList.add(one);
-                } else if (DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory().getLabel().equals(
-                        getUDICategoryLabel(one))) {
-                    frequencyList.add(one);
+                IndicatorCategory ic = UDIUtils.getUDICategory(one);
+                if (DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().equals(ic)) {
+                    udiCountList.add(one);
+                } else if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(ic)) {
+                    udiMatchingList.add(one);
+                } else if (DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory().equals(ic)) {
+                    udiFrequencyList.add(one);
                 }
                 break;
 
@@ -206,16 +211,11 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.PATTERN_MATCHING, patternList);
         separatedMap.put(EIndicatorChartType.SQL_PATTERN_MATCHING, sqlPatternList);
         separatedMap.put(EIndicatorChartType.MODE_INDICATOR, modelIndicatorList);
+        separatedMap.put(EIndicatorChartType.UDI_COUNT, udiCountList);
+        separatedMap.put(EIndicatorChartType.UDI_FREQUENCY, udiFrequencyList);
+        separatedMap.put(EIndicatorChartType.UDI_MATCHING, udiMatchingList);
 
         return separatedMap;
-    }
-
-    private Object getUDICategoryLabel(IndicatorUnit unit) {
-        EList<IndicatorCategory> categories = unit.getIndicator().getIndicatorDefinition().getCategories();
-        if (categories != null && categories.size() > 0) {
-            return categories.get(0).getLabel();
-        }
-        return null;
     }
 
     public Map<EIndicatorChartType, List<TableIndicatorUnit>> getTableIndicatorComposite(TableIndicator tableIndicator) {

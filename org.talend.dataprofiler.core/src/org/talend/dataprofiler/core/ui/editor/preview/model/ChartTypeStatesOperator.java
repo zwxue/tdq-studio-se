@@ -45,6 +45,7 @@ public final class ChartTypeStatesOperator {
     public static IChartTypeStates getChartState(EIndicatorChartType type, List<IndicatorUnit> units) {
         switch (type) {
         case SIMPLE_STATISTICS:
+        case UDI_COUNT:
             return new SimpleStatisticsState(units);
 
         case TEXT_STATISTICS:
@@ -54,6 +55,7 @@ public final class ChartTypeStatesOperator {
             return new ModeStatisticsState(units);
 
         case FREQUENCE_STATISTICS:
+        case UDI_FREQUENCY:
             return new FrequencyStatisticsState(units);
 
         case LOW_FREQUENCE_STATISTICS:
@@ -66,6 +68,7 @@ public final class ChartTypeStatesOperator {
             return new PatternLowFrequencyStatisticsState(units);
 
         case PATTERN_MATCHING:
+        case UDI_MATCHING:
             return new REGEXPatternStatisticsState(units);
 
         case SQL_PATTERN_MATCHING:

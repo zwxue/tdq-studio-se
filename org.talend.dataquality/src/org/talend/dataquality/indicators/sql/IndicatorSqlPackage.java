@@ -333,13 +333,76 @@ public interface IndicatorSqlPackage extends EPackage {
     int USER_DEF_INDICATOR__USER_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__MATCHING_VALUE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 2;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__UNIQUE_VALUES = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 3;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 4;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 5;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 6;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__VALUE_TO_FREQ = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 7;
+
+    /**
      * The number of structural features of the '<em>User Def Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int USER_DEF_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 1;
+    int USER_DEF_INDICATOR_FEATURE_COUNT = IndicatorsPackage.INDICATOR_FEATURE_COUNT + 8;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl <em>Where Rule Indicator</em>}' class.
@@ -613,6 +676,69 @@ public interface IndicatorSqlPackage extends EPackage {
     int WHERE_RULE_INDICATOR__USER_COUNT = USER_DEF_INDICATOR__USER_COUNT;
 
     /**
+     * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__MATCHING_VALUE_COUNT = USER_DEF_INDICATOR__MATCHING_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Not Matching Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__NOT_MATCHING_VALUE_COUNT = USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__UNIQUE_VALUES = USER_DEF_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__DISTINCT_VALUE_COUNT = USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__UNIQUE_VALUE_COUNT = USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__DUPLICATE_VALUE_COUNT = USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__VALUE_TO_FREQ = USER_DEF_INDICATOR__VALUE_TO_FREQ;
+
+    /**
      * The number of structural features of the '<em>Where Rule Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -642,6 +768,83 @@ public interface IndicatorSqlPackage extends EPackage {
      * @generated
      */
     EAttribute getUserDefIndicator_UserCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getMatchingValueCount <em>Matching Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Matching Value Count</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getMatchingValueCount()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_MatchingValueCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getNotMatchingValueCount <em>Not Matching Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Not Matching Value Count</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getNotMatchingValueCount()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_NotMatchingValueCount();
+
+    /**
+     * Returns the meta object for the attribute list '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getUniqueValues <em>Unique Values</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute list '<em>Unique Values</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getUniqueValues()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_UniqueValues();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getDistinctValueCount <em>Distinct Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Distinct Value Count</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getDistinctValueCount()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_DistinctValueCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getUniqueValueCount <em>Unique Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Unique Value Count</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getUniqueValueCount()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_UniqueValueCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getDuplicateValueCount <em>Duplicate Value Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Duplicate Value Count</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getDuplicateValueCount()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_DuplicateValueCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.sql.UserDefIndicator#getValueToFreq <em>Value To Freq</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Value To Freq</em>'.
+     * @see org.talend.dataquality.indicators.sql.UserDefIndicator#getValueToFreq()
+     * @see #getUserDefIndicator()
+     * @generated
+     */
+    EAttribute getUserDefIndicator_ValueToFreq();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.sql.WhereRuleIndicator <em>Where Rule Indicator</em>}'.
@@ -692,6 +895,62 @@ public interface IndicatorSqlPackage extends EPackage {
          * @generated
          */
         EAttribute USER_DEF_INDICATOR__USER_COUNT = eINSTANCE.getUserDefIndicator_UserCount();
+
+        /**
+         * The meta object literal for the '<em><b>Matching Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__MATCHING_VALUE_COUNT = eINSTANCE.getUserDefIndicator_MatchingValueCount();
+
+        /**
+         * The meta object literal for the '<em><b>Not Matching Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__NOT_MATCHING_VALUE_COUNT = eINSTANCE.getUserDefIndicator_NotMatchingValueCount();
+
+        /**
+         * The meta object literal for the '<em><b>Unique Values</b></em>' attribute list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__UNIQUE_VALUES = eINSTANCE.getUserDefIndicator_UniqueValues();
+
+        /**
+         * The meta object literal for the '<em><b>Distinct Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__DISTINCT_VALUE_COUNT = eINSTANCE.getUserDefIndicator_DistinctValueCount();
+
+        /**
+         * The meta object literal for the '<em><b>Unique Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__UNIQUE_VALUE_COUNT = eINSTANCE.getUserDefIndicator_UniqueValueCount();
+
+        /**
+         * The meta object literal for the '<em><b>Duplicate Value Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__DUPLICATE_VALUE_COUNT = eINSTANCE.getUserDefIndicator_DuplicateValueCount();
+
+        /**
+         * The meta object literal for the '<em><b>Value To Freq</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute USER_DEF_INDICATOR__VALUE_TO_FREQ = eINSTANCE.getUserDefIndicator_ValueToFreq();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl <em>Where Rule Indicator</em>}' class.

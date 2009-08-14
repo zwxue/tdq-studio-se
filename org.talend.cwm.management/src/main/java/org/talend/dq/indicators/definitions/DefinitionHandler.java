@@ -14,7 +14,10 @@ package org.talend.dq.indicators.definitions;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -27,6 +30,7 @@ import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
@@ -102,37 +106,25 @@ public final class DefinitionHandler {
 
     private static final String DQ_RULE_CATEGORY = "_8i9eQBI5Ed6TWL6NwMMHzQ";
 
-    private static final String USER_DEFINED_COUNT_CATEGORY = "_b5F7QHqTEd67hM2eKD3QgQ";
+    private static final String USER_DEFINED_COUNT_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_COUNT_CATEGORY;
 
-    private static final String USER_DEFINED_MATCH_CATEGORY = "_Ba7OYXsXEd63r-VLO3_0OQ";
+    private static final String USER_DEFINED_FREQUENCY_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_FREQUENCY_CATEGORY;
 
-    private static final String USER_DEFINED_FREQUENCY_CATEGORY = "_Frd2gHsXEd63r-VLO3_0OQ";
+    private static final String USER_DEFINED_MATCH_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_MATCH_CATEGORY;
+    
+    private static final String USER_DEFINED_COMPARISON_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_COMPARISON_CATEGORY;
 
-    private static final String USER_DEFINED_COMPARISON_CATEGORY = "_yQJQ0HsXEd63r-VLO3_0OQ";
+    private static final String USER_DEFINED_NOMINAL_CORRELATION_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_NOMINAL_CORRELATION_CATEGORY;
 
-    private static final String USER_DEFINED_NOMINAL_CORRELATION_CATEGORY = "_1mapEHsXEd63r-VLO3_0OQ";
+    private static final String USER_DEFINED_INTERVAL_CORRELATION_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_INTERVAL_CORRELATION_CATEGORY;
 
-    private static final String USER_DEFINED_INTERVAL_CORRELATION_CATEGORY = "_6giZsHsXEd63r-VLO3_0OQ";
-
-    private static final String USER_DEFINED_TIME_CORRELATION_CATEGORY = "_-fpTkHsXEd63r-VLO3_0OQ";
-
-    private static final String USER_DEFINED_COUNT_CATEGORY_LABEL = "User Defined Count";
-
-    private static final String USER_DEFINED_MATCH_CATEGORY_LABEL = "User Defined Match";
-
-    private static final String USER_DEFINED_FREQUENCY_CATEGORY_LABEL = "User Defined Frequency";
-
-    private static final String USER_DEFINED_COMPARISON_CATEGORY_LABEL = "User Defined Comparison";
-
-    private static final String USER_DEFINED_NOMINAL_CORRELATION_CATEGORY_LABEL = "User Defined Nominal Correlation";
-
-    private static final String USER_DEFINED_INTERVAL_CORRELATION_CATEGORY_LABEL = "User Defined Interval Correlation";
-
-    private static final String USER_DEFINED_TIME_CORRELATION_CATEGORY_LABEL = "User Defined Time Correlation";
+    private static final String USER_DEFINED_TIME_CORRELATION_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_TIME_CORRELATION_CATEGORY;
 
     private static final String DQ_RULE_DEFINITION = "_UUIyoCOMEd6YB57jaCfKaA";
 
     private static final String FD_RULE_DEFINITION = "_YqcX0XHpEd6udst2R2sgpA";
+    
+    private static Map<String, IndicatorCategory> userDefinedIndicatorCategoryMap;
 
     private IndicatorsDefinitions indicatorDefinitions;
 
@@ -347,33 +339,33 @@ public final class DefinitionHandler {
 
     /**
      * DOC jet Comment method "removeRegexFunction".
-     * <p>Just remove a UDF from .Talend.definition File.
+     * <p>
+     * Just remove a UDF from .Talend.definition File.
+     * 
      * @param dbmsName
      * @return
      */
-    public boolean removeRegexFunction(String dbmsName){
-        
+    public boolean removeRegexFunction(String dbmsName) {
+
         IndicatorDefinition regexIndDef = this.getIndicatorDefinition(REGULAR_EXPRESSION_MATCHING);
         EList<Expression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
         for (Expression expression : sqlGenericExpression) {
-                if (dbmsName.equals(expression.getLanguage())) {
-                    sqlGenericExpression.remove(expression);
-                    DefinitionHandler.getInstance().saveResource();
-                    return true;
-                }
+            if (dbmsName.equals(expression.getLanguage())) {
+                sqlGenericExpression.remove(expression);
+                DefinitionHandler.getInstance().saveResource();
+                return true;
+            }
         }
-        
+
         return false;
     }
-    
+
     public boolean updateRegex(String dbmsName, String regexpFunction) {
         boolean ok = true;
         boolean replaced = false;
         IndicatorDefinition regexIndDef = this.getIndicatorDefinition(REGULAR_EXPRESSION_MATCHING);
         EList<Expression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
-        
-      
-        
+
         for (Expression expression : sqlGenericExpression) {
             if (dbmsName.equals(expression.getLanguage())) {
                 // FIXME scorreia this comparison should be made by
@@ -881,38 +873,41 @@ public final class DefinitionHandler {
         return null;
     }
 
-    public List<IndicatorCategory> getAllUserDefinedIndicatorCategory() {
-        List<IndicatorCategory> categoryList = new ArrayList<IndicatorCategory>();
-        categoryList.add(getUserDefinedCountIndicatorCategory());
-        categoryList.add(getUserDefinedFrequencyIndicatorCategory());
-        categoryList.add(getUserDefinedMatchIndicatorCategory());
-        // categoryList.add(getUserDefinedComparisonIndicatorCategory());
-        // categoryList.add(getUserDefinedIntervalCorrelationIndicatorCategory());
-        // categoryList.add(getUserDefinedNominalCorrelationIndicatorCategory());
-        // categoryList.add(getUserDefinedTimeCorrelationIndicatorCategory());
-        return categoryList;
+    public Map<String, IndicatorCategory> getUserDefinedIndicatorCategoryMap() {
+        if (userDefinedIndicatorCategoryMap == null) {
+            userDefinedIndicatorCategoryMap = new HashMap<String, IndicatorCategory>();
+            
+            // init user defined indicator categories
+            List<IndicatorCategory> categoryList = new ArrayList<IndicatorCategory>();
+            categoryList.add(getUserDefinedCountIndicatorCategory());
+            categoryList.add(getUserDefinedFrequencyIndicatorCategory());
+            categoryList.add(getUserDefinedMatchIndicatorCategory());
+            // categoryList.add(getUserDefinedComparisonIndicatorCategory());
+            // categoryList.add(getUserDefinedIntervalCorrelationIndicatorCategory());
+            // categoryList.add(getUserDefinedNominalCorrelationIndicatorCategory());
+            // categoryList.add(getUserDefinedTimeCorrelationIndicatorCategory());
+
+            for (IndicatorCategory category : categoryList) {
+                userDefinedIndicatorCategoryMap.put(category.getLabel(), category);
+            }
+            
+            categoryList = null;
+        }
+        return userDefinedIndicatorCategoryMap;
+    }
+
+    public Collection<String> getUserDefinedIndicatorCategoryLabels() {
+        return getUserDefinedIndicatorCategoryMap().keySet();
+    }
+
+    public Collection<IndicatorCategory> getUserDefinedIndicatorCategoryList() {
+        return getUserDefinedIndicatorCategoryMap().values();
     }
 
     public IndicatorCategory getIndicatorCategoryByLabel(String label) {
-        if (USER_DEFINED_COUNT_CATEGORY_LABEL.equals(label)) {
-            return getIndicatorCategory(USER_DEFINED_COUNT_CATEGORY);
-        } else if (USER_DEFINED_MATCH_CATEGORY_LABEL.equals(label)) {
-            return getIndicatorCategory(USER_DEFINED_MATCH_CATEGORY);
-        } else if (USER_DEFINED_FREQUENCY_CATEGORY_LABEL.equals(label)) {
-            return getIndicatorCategory(USER_DEFINED_FREQUENCY_CATEGORY);
-        } else if (USER_DEFINED_COMPARISON_CATEGORY_LABEL.equals(label)) {
-            return getIndicatorCategory(USER_DEFINED_COMPARISON_CATEGORY);
-        } else if (USER_DEFINED_NOMINAL_CORRELATION_CATEGORY_LABEL.equals(label)) {
-            return getIndicatorCategory(USER_DEFINED_NOMINAL_CORRELATION_CATEGORY);
-        } else if (USER_DEFINED_INTERVAL_CORRELATION_CATEGORY_LABEL.equals(label)) {
-            return getIndicatorCategory(USER_DEFINED_INTERVAL_CORRELATION_CATEGORY);
-        } else if (USER_DEFINED_TIME_CORRELATION_CATEGORY_LABEL.equals(label)) {
-            return getIndicatorCategory(USER_DEFINED_TIME_CORRELATION_CATEGORY);
-        } else {
-            return null;
-        }
+        return getUserDefinedIndicatorCategoryMap().get(label);
     }
-    
+
     public IFile getTalendDefinitionFile() {
         return ResourceManager.getLibrariesFolder().getFile(FILENAME);
     }

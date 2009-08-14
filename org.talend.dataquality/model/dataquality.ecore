@@ -707,11 +707,37 @@
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
           <details key="documentation" value="Indicator defined by the user. "/>
         </eAnnotations>
+        <eOperations name="getFrequency" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDoubleObject">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="returns the frequency (between 0 and 1)"/>
+          </eAnnotations>
+          <eParameters name="dataValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+        </eOperations>
+        <eOperations name="getDistinctValues" eType="#//indicators/JavaSet"/>
+        <eOperations name="getCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="returns the number of apparition of the given data."/>
+          </eAnnotations>
+          <eParameters name="dataValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+        </eOperations>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="userCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject">
           <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
             <details key="documentation" value="The count value associated to this user defined indicator"/>
           </eAnnotations>
         </eStructuralFeatures>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="matchingValueCount"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="notMatchingValueCount"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="uniqueValues" upperBound="-1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="distinctValueCount"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="uniqueValueCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="duplicateValueCount"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+            changeable="false" volatile="true" transient="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueToFreq" eType="#//indicators/JavaHashMap"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="WhereRuleIndicator" eSuperTypes="#//indicators/sql/UserDefIndicator">
         <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

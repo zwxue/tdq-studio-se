@@ -12,9 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import org.talend.dataprofiler.core.helper.UDIHelper;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
@@ -22,6 +22,7 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
@@ -36,24 +37,21 @@ public final class UDIFactory {
     public static Indicator createUserDefIndicator(IndicatorDefinition indicatorDefinition) {
         UserDefIndicator userDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
         IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-        Domain validData = DomainFactory.eINSTANCE.createDomain();
-        indicParams.setDataValidDomain(validData);
         userDefIndicator.setParameters(indicParams);
         userDefIndicator.setName(indicatorDefinition.getName());
         return userDefIndicator;
     }
 
+    @Deprecated
     public static Indicator createIndicator(IndicatorDefinition indicatorDefinition) {
         IndicatorCategory category = UDIHelper.getUDICategory(indicatorDefinition);
         Indicator indicator = null;
         if (category != null) {
-            if (category.getLabel().equals(DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().getLabel())) {
+            if (category.equals(DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory())) {
                 indicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
-            } else if (category.getLabel().equals(
-                    DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().getLabel())) {
+            } else if (category.equals(DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory())) {
                 indicator = IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator();
-            } else if (category.getLabel().equals(
-                    DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory().getLabel())) {
+            } else if (category.equals(DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory())) {
                 indicator = IndicatorsFactory.eINSTANCE.createFrequencyIndicator();
             }
 
@@ -66,4 +64,22 @@ public final class UDIFactory {
         return indicator;
     }
 
+    /**
+     * DOC xqliu Comment method "createUserDefIndicator".
+     * 
+     * @param indicatorDefinition
+     * @param pattern
+     * @return
+     */
+    public static Indicator createUserDefIndicator(IndicatorDefinition indicatorDefinition, Pattern pattern) {
+        UserDefIndicator indicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
+        IndicatorParameters indicParams = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        Domain validData = DomainFactory.eINSTANCE.createDomain();
+        validData.getPatterns().add(pattern);
+        indicParams.setDataValidDomain(validData);
+        indicator.setParameters(indicParams);
+        indicator.setName(UDIHelper.getMatchingIndicatorName(indicatorDefinition, pattern));
+        return indicator;
+    }
+    
 }

@@ -43,7 +43,10 @@ public enum EIndicatorChartType {
     // MOD mzhao 2009-03-23,Soundex frequency.
     SOUNDEX_FREQUENCY_TABLE(Messages.getString("EIndicatorChartType.SoundexFrequencyTable"), new SoundexFrequencyExplorer()), //$NON-NLS-1$
     SOUNDEX_LOW_FREQUENCY_TABLE(
-                                Messages.getString("EIndicatorChartType.SoundexLowFrequencyTable"), new SoundexFrequencyExplorer());//$NON-NLS-1$
+                                Messages.getString("EIndicatorChartType.SoundexLowFrequencyTable"), new SoundexFrequencyExplorer()), //$NON-NLS-1$
+    UDI_COUNT(Messages.getString("EIndicatorChartType.UserDefinedCount"), new SimpleStatisticsExplorer()), //$NON-NLS-1$
+    UDI_FREQUENCY(Messages.getString("EIndicatorChartType.UserDefinedFrequency"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    UDI_MATCHING(Messages.getString("EIndicatorChartType.UserDefinedMatching"), new PatternExplorer()); //$NON-NLS-1$
 
     private String literal;
 

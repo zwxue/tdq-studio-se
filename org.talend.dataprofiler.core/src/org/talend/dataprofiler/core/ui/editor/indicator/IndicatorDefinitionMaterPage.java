@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.indicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,8 +46,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
-import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -183,10 +184,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Composite composite = toolkit.createComposite(categorySection);
         composite.setLayout(new GridLayout());
 
-        String[] categories = getAllUserDefinedIndicatorCategories();
+        Collection<String> categories = DefinitionHandler.getInstance().getUserDefinedIndicatorCategoryLabels();
         comboCategory = new Combo(composite, SWT.READ_ONLY);
-        comboCategory.setItems(categories);
-        if (categories.length > 0 && category == null) {
+        comboCategory.setItems(categories.toArray(new String[categories.size()]));
+        if (categories.size() > 0 && category == null) {
             category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().getLabel();
         }
         comboCategory.setText(category);
@@ -194,27 +195,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                setUDICategory(comboCategory.getText());
+                IndicatorDefinition definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
+                UDIHelper.setUDICategory(definition, comboCategory.getText());
             }
 
         });
 
         return composite;
-    }
-
-    /**
-     * DOC xqliu Comment method "setUDICategory".
-     * 
-     * @param text
-     */
-    protected void setUDICategory(String text) {
-        IndicatorDefinition definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
-        EList<IndicatorCategory> categories = definition.getCategories();
-        IndicatorCategory indicatorCategory = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(text);
-        if (categories != null && indicatorCategory != null) {
-            categories.clear();
-            categories.add(indicatorCategory);
-        }
     }
 
     private void creatDefinitionSection(Composite topCmp) {
@@ -398,20 +385,5 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         EMFUtil.saveSingleResource(definition.eResource());
         this.isDirty = false;
-    }
-
-    private String[] getAllUserDefinedIndicatorCategories() {
-        List<IndicatorCategory> allUserDefinedIndicatorCategory = DefinitionHandler.getInstance()
-                .getAllUserDefinedIndicatorCategory();
-        if (allUserDefinedIndicatorCategory != null && allUserDefinedIndicatorCategory.size() > 0) {
-            int size = allUserDefinedIndicatorCategory.size();
-            String[] result = new String[size];
-            for (int i = 0; i < size; ++i) {
-                result[i] = allUserDefinedIndicatorCategory.get(i).getLabel();
-            }
-            return result;
-        } else {
-            return new String[0];
-        }
     }
 }

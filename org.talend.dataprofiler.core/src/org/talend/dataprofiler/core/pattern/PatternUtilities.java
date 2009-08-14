@@ -57,6 +57,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.UDIFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -69,6 +70,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -149,7 +151,7 @@ public final class PatternUtilities {
      * @param pfile
      * @param columnIndicator
      * @param analysis
-     * @param indicatorDefinition
+     * @param indicatorDefinition user defined indicator
      * @return
      */
     public static IndicatorUnit createIndicatorUnit(IFile pfile, ColumnIndicator columnIndicator, Analysis analysis,
@@ -157,9 +159,11 @@ public final class PatternUtilities {
         Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(pfile);
 
         for (Indicator indicator : columnIndicator.getIndicators()) {
-            if (pattern.getName().equals(indicator.getName())) {
+            // MOD xqliu 2009-08-12 bug 7810
+            if (UDIHelper.getMatchingIndicatorName(indicatorDefinition, pattern).equals(indicator.getName())) {
                 return null;
             }
+            // ~
         }
 
         // MOD scorreia 2009-01-06: when expression type is not set (version
@@ -171,10 +175,17 @@ public final class PatternUtilities {
         // folder where the pattern is stored. The method
         // DomainHelper.getExpressionType(pattern) tries to find the type
         // of pattern.
+        Indicator patternMatchingIndicator = null;
+
         String expressionType = DomainHelper.getExpressionType(pattern);
         boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
-        PatternMatchingIndicator patternMatchingIndicator = isSQLPattern ? PatternIndicatorFactory
-                .createSqlPatternMatchingIndicator(pattern) : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
+        
+        if (indicatorDefinition != null) {
+            patternMatchingIndicator = UDIFactory.createUserDefIndicator(indicatorDefinition, pattern);
+        } else {
+            patternMatchingIndicator = isSQLPattern ? PatternIndicatorFactory.createSqlPatternMatchingIndicator(pattern)
+                    : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
+        }
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && dbmsLanguage.getRegexp(pattern) == null) {

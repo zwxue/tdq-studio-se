@@ -14,15 +14,16 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.talend.dataprofiler.core.helper.UDIHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.UDIndicatorBuilder;
 import org.talend.dq.indicators.UDIndicatorWriter;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -65,7 +66,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
         IndicatorDefinition indicatorDefinition = (IndicatorDefinition) cwmElement;
         indicatorDefinition.getSqlGenericExpression().add(getExpression());
-        UDIHelper.setUDICategory(indicatorDefinition, null);
+        UDIHelper.setUDICategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
         IFolder folder = parameter.getFolderProvider().getFolderResource();
         return UDIndicatorWriter.getInstance().createUDIndicatorFile(indicatorDefinition, folder);
     }

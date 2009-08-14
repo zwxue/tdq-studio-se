@@ -34,6 +34,7 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -89,7 +90,9 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -414,6 +417,31 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
+     * DOC xqliu Comment method "getIndicatorIamge".
+     * 
+     * @param indicatorUnit
+     * @return
+     */
+    private Image getIndicatorIamge(IndicatorUnit indicatorUnit) {
+        IndicatorEnum indicatorType = indicatorUnit.getType();
+        if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
+                || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
+            return ImageLib.getImage(ImageLib.PATTERN_REG);
+        } else if (indicatorType == IndicatorEnum.UserDefinedIndicatorEnum) {
+            // TODO use different image for user defined indicator
+            if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(
+                    UDIHelper.getUDICategory(indicatorUnit.getIndicator().getIndicatorDefinition()))) {
+                return ImageLib.getImage(ImageLib.PATTERN_REG);
+            }
+            else {
+                return ImageLib.getImage(ImageLib.IND_DEFINITION);
+            }
+            // ~
+        }
+        return ImageLib.getImage(ImageLib.IND_DEFINITION);
+    }
+
+    /**
      * DOC qzhang Comment method "createOneUnit".
      * 
      * @param treeItem
@@ -428,12 +456,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         indicatorItem.setData(INDICATOR_UNIT_KEY, unit);
         indicatorItem.setData(VIEWER_KEY, this);
 
-        if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
-                || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
-            indicatorItem.setImage(0, ImageLib.getImage(ImageLib.PATTERN_REG));
-        } else {
-            indicatorItem.setImage(0, ImageLib.getImage(ImageLib.IND_DEFINITION));
-        }
+        indicatorItem.setImage(0, getIndicatorIamge(unit));
 
         String label = indicatorUnit.getIndicatorName();
         indicatorItem.setText(0, label);
