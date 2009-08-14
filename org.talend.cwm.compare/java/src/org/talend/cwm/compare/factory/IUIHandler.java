@@ -30,7 +30,9 @@ public interface IUIHandler {
      * @param diffResourcePath the path to the difference file
      * @throws ReloadCompareException
      */
-    public void popComparisonUI(final IPath diffResourcePath, String dbName, Object selectedObject) throws ReloadCompareException;
+    public void popComparisonUI(final IPath diffResourcePath, String dbName,
+			Object selectedObject, boolean compareEachOther)
+			throws ReloadCompareException;
 
     /**
      * Method "popRemoveElement" pops-up a dialog to display the impacts of a change in the data provider.

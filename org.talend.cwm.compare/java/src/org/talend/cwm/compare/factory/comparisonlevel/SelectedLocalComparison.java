@@ -97,7 +97,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
 		DQStructureComparer.openDiffCompareEditor(getResource(LEFT_RESOURCE),
 				getResource(RIGHT_RESOURCE), options, uiHandler,
 				DQStructureComparer.getLocalDiffResourceFile(),
-				firstSelectedDataProvider.getName(), firstSelectedObj);
+				firstSelectedDataProvider.getName(), firstSelectedObj, true);
 
 	}
 
