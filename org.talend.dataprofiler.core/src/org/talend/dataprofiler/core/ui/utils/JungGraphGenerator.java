@@ -33,7 +33,6 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -78,6 +77,7 @@ import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.SatelliteVisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
+import edu.uci.ics.jung.visualization.control.ModalGraphMouse.Mode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -255,7 +255,23 @@ public class JungGraphGenerator {
         });
 
         // set mode seleciton box
-        JComboBox modeBox = ((DefaultModalGraphMouse) graphMouse).getModeComboBox();
+        final JCheckBox checkBox = new JCheckBox("Picking");
+        checkBox.addActionListener(new ActionListener() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+             */
+            public void actionPerformed(ActionEvent e) {
+                DefaultModalGraphMouse modalGraphMouse = (DefaultModalGraphMouse) graphMouse;
+                if (checkBox.isSelected()) {
+                    modalGraphMouse.setMode(Mode.PICKING);
+                } else {
+                    modalGraphMouse.setMode(Mode.TRANSFORMING);
+                }
+            }
+        });
 
         JButton persist = new JButton("Save Layout");
         persist.addActionListener(new ActionListener() {
@@ -306,7 +322,7 @@ public class JungGraphGenerator {
         JPanel jp2 = new JPanel();
         jp2.setLayout(new java.awt.GridLayout(2, 1));
         jp2.add(inverse);
-        jp2.add(modeBox);
+        jp2.add(checkBox);
 
         JPanel jp3 = new JPanel();
         jp3.setLayout(new java.awt.GridLayout(2, 1));
