@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -95,7 +96,9 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected Resource getLeftResource() throws ReloadCompareException {
         DQStructureComparer.clearSubNode(copyedDataProvider);
-        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(copyedDataProvider);
+        List<Package> packages = new ArrayList<Package>();
+		packages.addAll(DataProviderHelper.getTdCatalogs(copyedDataProvider));
+		packages.addAll(DataProviderHelper.getTdSchema(copyedDataProvider));
         // URI uri =
         // URI.createPlatformResourceURI(copyedFile.getFullPath().toString(),
         // false);
@@ -112,7 +115,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         // copyedDataProvider.eResource().getURI());
         // }
         leftResource.getContents().clear();
-        for (TdCatalog catalog : tdCatalogs) {
+        for (Package catalog : packages) {
             catalog.getDataManager().clear();
             leftResource.getContents().add(catalog);
         }
@@ -123,7 +126,9 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected Resource getRightResource() throws ReloadCompareException {
-        List<TdCatalog> tdCatalogs = DataProviderHelper.getTdCatalogs(tempReloadProvider);
+        List<Package> packages = new ArrayList<Package>();
+		packages.addAll(DataProviderHelper.getTdCatalogs(tempReloadProvider));
+		packages.addAll(DataProviderHelper.getTdSchema(tempReloadProvider));
         // URI uri = tempReloadProvider.eResource().getURI();
         Resource reloadResource = null;
         reloadResource = tempReloadProvider.eResource();
@@ -135,7 +140,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         // ReloadCompareException("No factory has been found for URI: " + uri);
         // }
         reloadResource.getContents().clear();
-        for (TdCatalog catalog : tdCatalogs) {
+        for (Package catalog : packages) {
             catalog.getDataManager().clear();
             reloadResource.getContents().add(catalog);
         }

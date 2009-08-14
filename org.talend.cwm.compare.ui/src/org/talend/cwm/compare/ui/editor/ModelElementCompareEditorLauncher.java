@@ -40,10 +40,14 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
 	private String connectionName = "";
 
 	private Object selectedObject = null;
+	
+	private boolean compareEachOther;
 
-	public ModelElementCompareEditorLauncher(String connName, Object selObj) {
+	public ModelElementCompareEditorLauncher(String connName, Object selObj,
+			boolean ce) {
 		connectionName = connName;
 		selectedObject = selObj;
+		compareEachOther = ce;
 	}
 
 	public void open(IPath file) {
@@ -69,8 +73,12 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
 							}
 
 							public String getLeftLabel(Object input) {
-								return "Local Structure: \"" + connectionName
-										+ "\"";
+								String showLabel = "Local Structure: \""
+										+ connectionName + "\"";
+								if (compareEachOther) {
+									showLabel = "First element";
+								}
+								return showLabel;
 							}
 
 							public Image getRightImage(Object input) {
@@ -78,7 +86,11 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
 							}
 
 							public String getRightLabel(Object input) {
-								return "Distant Structure";
+								String showLabel = "Distant Structure";
+								if (compareEachOther) {
+									showLabel = "Second element";
+								}
+								return showLabel;
 							}
 
 							public Image getImage(Object element) {
@@ -130,7 +142,9 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
 				compEditorInput.setTitle(editorTitle);
 				CompareUI.openCompareEditor(compEditorInput);
 				// MOD mzhao feature 8227
-				compEditorInput.hookLeftPanelContextMenu();
+				if (!compareEachOther) {
+					compEditorInput.hookLeftPanelContextMenu();
+				}
 
 			}
 		} catch (IOException e) {

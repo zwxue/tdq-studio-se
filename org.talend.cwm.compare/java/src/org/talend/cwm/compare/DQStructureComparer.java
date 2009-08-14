@@ -481,7 +481,9 @@ public final class DQStructureComparer {
      * @throws ReloadCompareException
      */
     public static DiffModel openDiffCompareEditor(Resource leftResource, Resource rightResource, Map<String, Object> opt,
-            IUIHandler guiHandler, IFile efmDiffResultFile, String dbName, Object selectedObject) throws ReloadCompareException {
+            IUIHandler guiHandler, IFile efmDiffResultFile, String dbName,
+			Object selectedObject, boolean compareEachOther)
+			throws ReloadCompareException {
 
         MatchModel match = null;
         try {
@@ -504,7 +506,8 @@ public final class DQStructureComparer {
             throw new ReloadCompareException(e);
         }
         if (guiHandler != null) {
-            guiHandler.popComparisonUI(createDiffResourceFile.getLocation(), dbName, selectedObject);
+            guiHandler.popComparisonUI(createDiffResourceFile.getLocation(),
+					dbName, selectedObject, compareEachOther);
         }
         return diff;
     }

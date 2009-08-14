@@ -167,7 +167,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
         Object needReloadObject = dbFolderNode == null ? selectedObj : dbFolderNode;
         DQStructureComparer.openDiffCompareEditor(getLeftResource(), getRightResource(), options, guiHandler, DQStructureComparer
-                .getDiffResourceFile(), oldDataProvider.getName(), needReloadObject);
+                .getDiffResourceFile(), oldDataProvider.getName(),
+				needReloadObject, false);
 
         // testInit();
 

@@ -159,16 +159,18 @@ public class SubelementCompareAction extends Action {
 
 	private ModelElement findMatchedModelElement(EObject parent,
 			EObject similarElement) {
-		if (parent instanceof TdDataProvider) {						
+		if (parent instanceof TdDataProvider) {
 			if (similarElement instanceof TdSchema) {
 				// Case of MS SQL Server.
-				List<TdSchema> schemas = CatalogHelper
-					.getSchemas((TdCatalog) selectedOjbect);
-				if (schemas != null && schemas.size() > 0) {
-					for (TdSchema tdSchema : schemas) {
-						if (tdSchema.getName().equalsIgnoreCase(
-								((TdSchema) similarElement).getName())) {
-							return tdSchema;
+				if (selectedOjbect instanceof TdCatalog) {
+					List<TdSchema> schemas = CatalogHelper
+							.getSchemas((TdCatalog) selectedOjbect);
+					if (schemas != null && schemas.size() > 0) {
+						for (TdSchema tdSchema : schemas) {
+							if (tdSchema.getName().equalsIgnoreCase(
+									((TdSchema) similarElement).getName())) {
+								return tdSchema;
+							}
 						}
 					}
 				}
@@ -182,11 +184,11 @@ public class SubelementCompareAction extends Action {
 					}
 				}
 			}
-							
+
 			// Case of Mysql
 			if (similarElement instanceof TdCatalog) {
 				List<TdCatalog> catalogs = DataProviderHelper
-						.getTdCatalogs((DataProvider) parent);	
+						.getTdCatalogs((DataProvider) parent);
 				for (TdCatalog catalog : catalogs) {
 					if (catalog.getName().equalsIgnoreCase(
 							((TdCatalog) similarElement).getName())) {
@@ -194,7 +196,6 @@ public class SubelementCompareAction extends Action {
 					}
 				}
 			}
-
 
 		} else if (parent instanceof Package) {
 			// MOD mzhao bug 8581 2009-08-05
