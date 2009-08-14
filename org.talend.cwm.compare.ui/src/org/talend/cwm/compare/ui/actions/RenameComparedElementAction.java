@@ -73,345 +73,316 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * DOC mzhao class global comment. Detailled comment
  */
 public class RenameComparedElementAction extends Action {
-	private static Logger log = Logger
-			.getLogger(RenameComparedElementAction.class);
-	private ColumnSet theSelectedElement = null;
 
-	private Package originCompareElement = null;
-	private IFolderNode selectedFolderNode = null;
+    private static Logger log = Logger.getLogger(RenameComparedElementAction.class);
 
-	private Map<String, Object> options = null;
-	private List<ColumnSet> newAddedColumnSet = null;
+    private ColumnSet theSelectedElement = null;
 
-	public RenameComparedElementAction(IFolderNode selectedFolderNode,
-			ColumnSet theSelectedElement, List<ColumnSet> addElementList) {
-		this.selectedFolderNode = selectedFolderNode;
-		this.originCompareElement = (Package) selectedFolderNode.getParent();
-		this.theSelectedElement = theSelectedElement;
+    private Package originCompareElement = null;
 
-		this.newAddedColumnSet = addElementList;
-		options = new HashMap<String, Object>();
-		options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-	}
+    private IFolderNode selectedFolderNode = null;
 
-	@Override
-	public String getText() {
-		return "Renamed element";
-	}
+    private Map<String, Object> options = null;
 
-	@Override
-	public void run() {
-		// Open the add element model dialog
+    private List<ColumnSet> newAddedColumnSet = null;
 
-		if (newAddedColumnSet == null || newAddedColumnSet.size() == 0) {
-			MessageDialog
-					.openConfirm(null, "",
-							"There is no newly added element on right side to be propagated!");
-			return;
-		}
+    public RenameComparedElementAction(IFolderNode selectedFolderNode, ColumnSet theSelectedElement,
+            List<ColumnSet> addElementList) {
+        this.selectedFolderNode = selectedFolderNode;
+        this.originCompareElement = (Package) selectedFolderNode.getParent();
+        this.theSelectedElement = theSelectedElement;
 
-		RightPanelAddedElementsDialog addedEleDialog = new RightPanelAddedElementsDialog(
-				null, newAddedColumnSet);
-		if (addedEleDialog.open() != Window.OK) {
-			return;
-		}
-		// Propagate the changes
+        this.newAddedColumnSet = addElementList;
+        options = new HashMap<String, Object>();
+        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+    }
 
-		theSelectedElement.setNamespace(originCompareElement);
-		ColumnSet checkedColumnSet = addedEleDialog.getCheckedColumnSet();
-		checkedColumnSet.setNamespace(originCompareElement);
+    @Override
+    public String getText() {
+        return "Renamed element";
+    }
 
-		// Check if the sub structure is the same.
-		List<DiffElement> diffElementList = checkSubStructure(checkedColumnSet);
-		originCompareElement.getOwnedElement().remove(theSelectedElement);
-		originCompareElement.getOwnedElement().remove(checkedColumnSet);
+    @Override
+    public void run() {
+        // Open the add element model dialog
 
-		if (diffElementList != null && diffElementList.size() != 0) {
-			if (!MessageDialog.openConfirm(null, "",
-					"The substructure changed, Propagate or not?")) {
-				refreshEditor();
-				return;
-			}
-		}
-		// Save to the copied resource.
-		refreshReposigoryTree(checkedColumnSet);
-		refreshEditor();
-	}
+        if (newAddedColumnSet == null || newAddedColumnSet.size() == 0) {
+            MessageDialog.openConfirm(null, "", "There is no newly added element on right side to be propagated!");
+            return;
+        }
 
-	public void refreshEditor() {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage();
-		activePage.closeEditor(activePage.getActiveEditor(), false);
-		new PopComparisonUIAction(selectedFolderNode, "Compare").run();
-	}
+        RightPanelAddedElementsDialog addedEleDialog = new RightPanelAddedElementsDialog(null, newAddedColumnSet);
+        if (addedEleDialog.open() != Window.OK) {
+            return;
+        }
+        // Propagate the changes
 
-	private void refreshReposigoryTree(ColumnSet checkedColumnSet) {
-		// ~ Save to the original resource.
+        theSelectedElement.setNamespace(originCompareElement);
+        ColumnSet checkedColumnSet = addedEleDialog.getCheckedColumnSet();
+        checkedColumnSet.setNamespace(originCompareElement);
 
-		// Remove theSelectedElement by iteratively comparing its name.
-		// Because theSelectedElement in compare editor is not the same
-		// instance with that of in repository tree.
-		for (Iterator<ModelElement> it = originCompareElement.getOwnedElement()
-				.iterator(); it.hasNext();) {
-			if (it.next().getName().equalsIgnoreCase(
-					theSelectedElement.getName())) {
-				it.remove();
-				break;
-			}
+        // Check if the sub structure is the same.
+        List<DiffElement> diffElementList = checkSubStructure(checkedColumnSet);
+        originCompareElement.getOwnedElement().remove(theSelectedElement);
+        originCompareElement.getOwnedElement().remove(checkedColumnSet);
 
-		}
-		originCompareElement.getOwnedElement().add(checkedColumnSet);
-		EMFSharedResources.getInstance().saveResource(
-				originCompareElement.eResource());
-		// ~
-	}
+        if (diffElementList != null && diffElementList.size() != 0) {
+            if (!MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "",
+                    "The substructure changed, Propagate or not?")) {
+                refreshEditor();
+                return;
+            }
+        }
+        // Save to the copied resource.
+        refreshReposigoryTree(checkedColumnSet);
+        refreshEditor();
+    }
 
-	private List<DiffElement> checkSubStructure(ColumnSet checkedColumnSet) {
-		MatchModel match = null;
+    public void refreshEditor() {
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        activePage.closeEditor(activePage.getActiveEditor(), false);
+        new PopComparisonUIAction(selectedFolderNode, "Compare").run();
+    }
 
-		try {
-			match = MatchService.doResourceMatch(getLeftResource(),
-					getRightResource(checkedColumnSet), options);
+    private void refreshReposigoryTree(ColumnSet checkedColumnSet) {
+        // ~ Save to the original resource.
 
-		} catch (InterruptedException e) {
-			log.error(e, e);
-		} catch (ReloadCompareException e) {
-			log.error(e, e);
-		}
-		List<DiffElement> subDeffElements = new ArrayList<DiffElement>();
-		final DiffModel diff = DiffService.doDiff(match);
-		if (diff.getOwnedElements() != null
-				&& diff.getOwnedElements().size() > 0) {
-			for (DiffElement diffEle : diff.getOwnedElements()) {
-				getDiffElements(diffEle, subDeffElements);
-			}
-		}
-		return subDeffElements;
-	}
+        // Remove theSelectedElement by iteratively comparing its name.
+        // Because theSelectedElement in compare editor is not the same
+        // instance with that of in repository tree.
+        for (Iterator<ModelElement> it = originCompareElement.getOwnedElement().iterator(); it.hasNext();) {
+            if (it.next().getName().equalsIgnoreCase(theSelectedElement.getName())) {
+                it.remove();
+                break;
+            }
 
-	private void getDiffElements(DiffElement diffEle,
-			List<DiffElement> diffElementList) {
-		if (diffEle instanceof DiffGroup) {
-			for (DiffElement subDiffEle : ((DiffGroup) diffEle)
-					.getSubDiffElements()) {
-				getDiffElements(subDiffEle, diffElementList);
-			}
-		} else {
-			diffElementList.add(diffEle);
-		}
-	}
+        }
+        originCompareElement.getOwnedElement().add(checkedColumnSet);
+        EMFSharedResources.getInstance().saveResource(originCompareElement.eResource());
+        // ~
+    }
 
-	private Resource getLeftResource() throws ReloadCompareException {
-		ColumnSet selectedColumnSet = theSelectedElement;
-		TdDataProvider copyedDataProvider = createCopyedProvider();
-		ColumnSet findMatchedColumnSet = DQStructureComparer
-				.findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
-		List<TdColumn> columnList = new ArrayList<TdColumn>();
-		columnList.addAll(ColumnSetHelper.getColumns(findMatchedColumnSet));
+    private List<DiffElement> checkSubStructure(ColumnSet checkedColumnSet) {
+        MatchModel match = null;
 
-		// URI uri =
-		// URI.createPlatformResourceURI(copyedFile.getFullPath().toString(),
-		// false);
-		Resource leftResource = copyedDataProvider.eResource();
-		// leftResource = EMFSharedResources.getInstance().getResource(uri,
-		// true);
-		// if (leftResource == null) {
-		// throw new
-		// ReloadCompareException("No factory has been found for URI: " + uri);
-		// }
+        try {
+            match = MatchService.doResourceMatch(getLeftResource(), getRightResource(checkedColumnSet), options);
 
-		leftResource.getContents().clear();
-		for (TdColumn column : columnList) {
-			DQStructureComparer.clearSubNode(column);
-			leftResource.getContents().add(column);
-		}
-		EMFSharedResources.getInstance().saveResource(leftResource);
-		return leftResource;
-	}
+        } catch (InterruptedException e) {
+            log.error(e, e);
+        } catch (ReloadCompareException e) {
+            log.error(e, e);
+        }
+        List<DiffElement> subDeffElements = new ArrayList<DiffElement>();
+        final DiffModel diff = DiffService.doDiff(match);
+        if (diff.getOwnedElements() != null && diff.getOwnedElements().size() > 0) {
+            for (DiffElement diffEle : diff.getOwnedElements()) {
+                getDiffElements(diffEle, subDeffElements);
+            }
+        }
+        return subDeffElements;
+    }
 
-	private TdDataProvider createCopyedProvider() {
-		IFile selectedFile = PrvResourceFileHelper.getInstance()
-				.findCorrespondingFile(
-						(TdDataProvider) originCompareElement.getDataManager()
-								.get(0));
-		IFile createNeedReloadElementsFile = DQStructureComparer
-				.getFirstComparisonLocalFile();
-		IFile copyedFile = DQStructureComparer.copyedToDestinationFile(
-				selectedFile, createNeedReloadElementsFile);
-		TypedReturnCode<TdDataProvider> returnValue = DqRepositoryViewService
-				.readFromFile(copyedFile);
-		return returnValue.getObject();
+    private void getDiffElements(DiffElement diffEle, List<DiffElement> diffElementList) {
+        if (diffEle instanceof DiffGroup) {
+            for (DiffElement subDiffEle : ((DiffGroup) diffEle).getSubDiffElements()) {
+                getDiffElements(subDiffEle, diffElementList);
+            }
+        } else {
+            diffElementList.add(diffEle);
+        }
+    }
 
-	}
+    private Resource getLeftResource() throws ReloadCompareException {
+        ColumnSet selectedColumnSet = theSelectedElement;
+        TdDataProvider copyedDataProvider = createCopyedProvider();
+        ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
+        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        columnList.addAll(ColumnSetHelper.getColumns(findMatchedColumnSet));
 
-	private Resource getRightResource(ColumnSet selectedColumnSet)
-			throws ReloadCompareException {
-		TdDataProvider tempReloadProvider = createTempConnectionFile();
-		Package matchedPackage = DQStructureComparer.findMatchedPackage(
-				originCompareElement, tempReloadProvider);
-		IFolderNode columnSetFolderNode = FolderNodeHelper.getFolderNode(
-				matchedPackage, selectedColumnSet);
-		columnSetFolderNode.loadChildren();
+        // URI uri =
+        // URI.createPlatformResourceURI(copyedFile.getFullPath().toString(),
+        // false);
+        Resource leftResource = copyedDataProvider.eResource();
+        // leftResource = EMFSharedResources.getInstance().getResource(uri,
+        // true);
+        // if (leftResource == null) {
+        // throw new
+        // ReloadCompareException("No factory has been found for URI: " + uri);
+        // }
 
-		ColumnSet findMatchedColumnSet = DQStructureComparer
-				.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
-		List<TdColumn> columns = null;
-		try {
-			columns = DqRepositoryViewService.getColumns(tempReloadProvider,
-					findMatchedColumnSet, null, true);
-		} catch (TalendException e1) {
-			throw new ReloadCompareException(e1);
-		}
+        leftResource.getContents().clear();
+        for (TdColumn column : columnList) {
+            DQStructureComparer.clearSubNode(column);
+            leftResource.getContents().add(column);
+        }
+        EMFSharedResources.getInstance().saveResource(leftResource);
+        return leftResource;
+    }
 
-		URI uri = tempReloadProvider.eResource().getURI();
-		Resource rightResource = null;
-		rightResource = EMFSharedResources.getInstance().getResource(uri, true);
-		if (rightResource == null) {
-			throw new ReloadCompareException(
-					"NoFactoryFoundForURI" + uri.toFileString()); //$NON-NLS-1$
-		}
-		rightResource.getContents().clear();
-		for (TdColumn column : columns) {
-			DQStructureComparer.clearSubNode(column);
-			rightResource.getContents().add(column);
-		}
-		EMFSharedResources.getInstance().saveResource(rightResource);
-		return rightResource;
-	}
+    private TdDataProvider createCopyedProvider() {
+        IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
+                (TdDataProvider) originCompareElement.getDataManager().get(0));
+        IFile createNeedReloadElementsFile = DQStructureComparer.getFirstComparisonLocalFile();
+        IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
+        TypedReturnCode<TdDataProvider> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
+        return returnValue.getObject();
 
-	private TdDataProvider createTempConnectionFile()
-			throws ReloadCompareException {
-		TdDataProvider oldDataProvider = (TdDataProvider) originCompareElement
-				.getDataManager().get(0);
-		IFile tempConnectionFile = DQStructureComparer
-				.getSecondComparisonLocalFile();
-		// MOD mzhao ,Extract method getRefreshedDataProvider to class
-		// DQStructureComparer for common use.
-		TypedReturnCode<TdDataProvider> returnProvider = DQStructureComparer
-				.getRefreshedDataProvider(oldDataProvider);
-		if (!returnProvider.isOk()) {
-			throw new ReloadCompareException(returnProvider.getMessage());
-		}
-		TdDataProvider tempReloadProvider = returnProvider.getObject();
-		tempReloadProvider.setComponent(oldDataProvider.getComponent());
-		DataProviderWriter.getInstance().saveDataProviderResource(
-				tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
-				tempConnectionFile);
-		tempReloadProvider.setComponent(null);
-		oldDataProvider.getComponent();
-		return tempReloadProvider;
-	}
+    }
 
-	/**
-	 * 
-	 * DOC mzhao RenameComparedElementAction class global comment. Detailled
-	 * comment
-	 */
-	private class RightPanelAddedElementsDialog extends Dialog {
+    private Resource getRightResource(ColumnSet selectedColumnSet) throws ReloadCompareException {
+        TdDataProvider tempReloadProvider = createTempConnectionFile();
+        Package matchedPackage = DQStructureComparer.findMatchedPackage(originCompareElement, tempReloadProvider);
+        IFolderNode columnSetFolderNode = FolderNodeHelper.getFolderNode(matchedPackage, selectedColumnSet);
+        columnSetFolderNode.loadChildren();
 
-		private CheckboxTableViewer tableViewer = null;
-		private List<ColumnSet> newAddedColumnSet;
+        ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
+        List<TdColumn> columns = null;
+        try {
+            columns = DqRepositoryViewService.getColumns(tempReloadProvider, findMatchedColumnSet, null, true);
+        } catch (TalendException e1) {
+            throw new ReloadCompareException(e1);
+        }
 
-		private ColumnSet checkedColumnSet = null;
+        URI uri = tempReloadProvider.eResource().getURI();
+        Resource rightResource = null;
+        rightResource = EMFSharedResources.getInstance().getResource(uri, true);
+        if (rightResource == null) {
+            throw new ReloadCompareException("NoFactoryFoundForURI" + uri.toFileString()); //$NON-NLS-1$
+        }
+        rightResource.getContents().clear();
+        for (TdColumn column : columns) {
+            DQStructureComparer.clearSubNode(column);
+            rightResource.getContents().add(column);
+        }
+        EMFSharedResources.getInstance().saveResource(rightResource);
+        return rightResource;
+    }
 
+    private TdDataProvider createTempConnectionFile() throws ReloadCompareException {
+        TdDataProvider oldDataProvider = (TdDataProvider) originCompareElement.getDataManager().get(0);
+        IFile tempConnectionFile = DQStructureComparer.getSecondComparisonLocalFile();
+        // MOD mzhao ,Extract method getRefreshedDataProvider to class
+        // DQStructureComparer for common use.
+        TypedReturnCode<TdDataProvider> returnProvider = DQStructureComparer.getRefreshedDataProvider(oldDataProvider);
+        if (!returnProvider.isOk()) {
+            throw new ReloadCompareException(returnProvider.getMessage());
+        }
+        TdDataProvider tempReloadProvider = returnProvider.getObject();
+        tempReloadProvider.setComponent(oldDataProvider.getComponent());
+        DataProviderWriter.getInstance().saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
+                tempConnectionFile);
+        tempReloadProvider.setComponent(null);
+        oldDataProvider.getComponent();
+        return tempReloadProvider;
+    }
 
-		protected RightPanelAddedElementsDialog(Shell parentShell,
-				List<ColumnSet> newAddedColumnSet) {
-			super(parentShell);
-			this.newAddedColumnSet = newAddedColumnSet;
-		}
-		public ColumnSet getCheckedColumnSet() {
-			return checkedColumnSet;
-		}
+    /**
+     * 
+     * DOC mzhao RenameComparedElementAction class global comment. Detailled comment
+     */
+    private class RightPanelAddedElementsDialog extends Dialog {
 
-		@Override
-		protected boolean isResizable() {
-			return true;
-		}
+        private CheckboxTableViewer tableViewer = null;
 
-		/*
-		 * @see
-		 * org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets
-		 * .Shell)
-		 */
-		protected void configureShell(Shell newShell) {
-			super.configureShell(newShell);
-			newShell.setText("New name of the element");
-		}
-	    protected Point getInitialSize() {
-	        return new Point(455, 340);
-	    }
-		@Override
-		protected void okPressed() {
-			if (tableViewer.getCheckedElements().length > 0) {
-				checkedColumnSet = (ColumnSet) tableViewer.getCheckedElements()[0];
-			}
+        private List<ColumnSet> newAddedColumnSet;
 
-			super.okPressed();
-		}
+        private ColumnSet checkedColumnSet = null;
 
-		@Override
-		protected Control createDialogArea(Composite parent) {
-			Composite composite = (Composite) super.createDialogArea(parent);
-			composite.setLayout(new FillLayout());
-			tableViewer = CheckboxTableViewer.newCheckList(composite,
-					SWT.SINGLE);
-			tableViewer.setContentProvider(new IStructuredContentProvider() {
+        protected RightPanelAddedElementsDialog(Shell parentShell, List<ColumnSet> newAddedColumnSet) {
+            super(parentShell);
+            this.newAddedColumnSet = newAddedColumnSet;
+        }
 
-				public Object[] getElements(Object inputElement) {
-					if (inputElement instanceof List) {
-						return ((List<?>) inputElement).toArray();
-					}
-					return new Object[] { inputElement };
-				}
+        public ColumnSet getCheckedColumnSet() {
+            return checkedColumnSet;
+        }
 
-				public void dispose() {
-				}
+        @Override
+        protected boolean isResizable() {
+            return true;
+        }
 
-				public void inputChanged(Viewer viewer, Object oldInput,
-						Object newInput) {
-				}
+        /*
+         * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets .Shell)
+         */
+        protected void configureShell(Shell newShell) {
+            super.configureShell(newShell);
+            newShell.setText("New name of the element");
+        }
 
-			});
+        protected Point getInitialSize() {
+            return new Point(455, 340);
+        }
 
-			tableViewer.setLabelProvider(new ILabelProvider() {
+        @Override
+        protected void okPressed() {
+            if (tableViewer.getCheckedElements().length > 0) {
+                checkedColumnSet = (ColumnSet) tableViewer.getCheckedElements()[0];
+            }
 
-				public Image getImage(Object element) {
-					return null;
-				}
+            super.okPressed();
+        }
 
-				public String getText(Object element) {
-					ColumnSet columnSet = (ColumnSet) element;
-					return columnSet.getName();
-				}
+        @Override
+        protected Control createDialogArea(Composite parent) {
+            Composite composite = (Composite) super.createDialogArea(parent);
+            composite.setLayout(new FillLayout());
+            tableViewer = CheckboxTableViewer.newCheckList(composite, SWT.SINGLE);
+            tableViewer.setContentProvider(new IStructuredContentProvider() {
 
-				public void addListener(ILabelProviderListener listener) {
+                public Object[] getElements(Object inputElement) {
+                    if (inputElement instanceof List) {
+                        return ((List<?>) inputElement).toArray();
+                    }
+                    return new Object[] { inputElement };
+                }
 
-				}
+                public void dispose() {
+                }
 
-				public void dispose() {
-				}
+                public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+                }
 
-				public boolean isLabelProperty(Object element, String property) {
-					return false;
-				}
+            });
 
-				public void removeListener(ILabelProviderListener listener) {
+            tableViewer.setLabelProvider(new ILabelProvider() {
 
-				}
-			});
-			tableViewer.setInput(newAddedColumnSet);
-			tableViewer.addCheckStateListener(new ICheckStateListener() {
+                public Image getImage(Object element) {
+                    return null;
+                }
 
-				public void checkStateChanged(CheckStateChangedEvent event) {
-					tableViewer.setAllChecked(false);
-					tableViewer.setChecked(event.getElement(), event
-							.getChecked());
-				}
+                public String getText(Object element) {
+                    ColumnSet columnSet = (ColumnSet) element;
+                    return columnSet.getName();
+                }
 
-			});
-			return composite;
-		}
-	}
+                public void addListener(ILabelProviderListener listener) {
+
+                }
+
+                public void dispose() {
+                }
+
+                public boolean isLabelProperty(Object element, String property) {
+                    return false;
+                }
+
+                public void removeListener(ILabelProviderListener listener) {
+
+                }
+            });
+            tableViewer.setInput(newAddedColumnSet);
+            tableViewer.addCheckStateListener(new ICheckStateListener() {
+
+                public void checkStateChanged(CheckStateChangedEvent event) {
+                    tableViewer.setAllChecked(false);
+                    tableViewer.setChecked(event.getElement(), event.getChecked());
+                }
+
+            });
+            return composite;
+        }
+    }
 
 }
