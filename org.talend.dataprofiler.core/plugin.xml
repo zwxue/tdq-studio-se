@@ -968,6 +968,12 @@
            id="org.talend.dataprofiler.core.migration.impl.ReorderingLibraryFoldersTask"
            name="Reordering library folders"
            version="3.2.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.CreateUserDefIndicatorFolderTask"
+           id="org.talend.dataprofiler.core.migration.impl.CreateUserDefIndicatorFolderTask"
+           name="Create User Defined Indicator Folder"
+           version="3.2.0">
      </workspacetask>     
   </extension>
   <extension
