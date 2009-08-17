@@ -12,8 +12,9 @@
 // ============================================================================
 package org.talend.cwm.compare;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -199,17 +200,15 @@ public final class DQStructureComparer {
 
     public static IFile getDiffResourceFile() {
         IFile file = iterateGetNotExistFile(RESULT_EMFDIFF_FILE);
-        try {
-            File f = new File(file.getRawLocation().toOSString());
-            if (!f.exists()) {
-                f.createNewFile();
-            }
-            file.createLink(f.toURI(), 0, null);
-        } catch (CoreException e) {
-            log.error(e, e);
-        } catch (IOException e) {
-            log.error(e, e);
-        }
+		 try {
+			InputStream inputStream = new ByteArrayInputStream("".getBytes());
+			file.create(inputStream, true, new NullProgressMonitor());
+			inputStream.close();
+		} catch (CoreException e) {
+			log.error(e, e);
+		} catch (IOException e) {
+			log.error(e, e);
+		}
         return file;
     }
 
