@@ -78,378 +78,337 @@ import orgomg.cwm.resource.relational.ColumnSet;
 @SuppressWarnings("restriction")
 public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
-	private static final int KEY_CODE_C = 99;
-	private static final int KEY_CODE_T = 116;
-	private static final int KEY_CODE_V = 118;
-	private static Logger log = Logger
-			.getLogger(CompareModelContentMergeViewer.class);
+    private static final int KEY_CODE_C = 99;
 
-	private Object selectedOjbect = null;
-	private ModelContentMergeDiffTab diffTabLeft = null;
-	private ModelContentMergeDiffTab diffTabRight = null;
+    private static final int KEY_CODE_T = 116;
 
-	public CompareModelContentMergeViewer(Composite parent,
-			CompareConfiguration config, Object selObj) {
-		super(parent, config);
-		selectedOjbect = selObj;
-		// MOD mzhao feature 8227
-		diffTabLeft = (ModelContentMergeDiffTab) leftPart.getTreePart();
-		diffTabRight = (ModelContentMergeDiffTab) rightPart.getTreePart();
-		diffTabLeft.setComparator(new ViewerComparator());
-		diffTabRight.setComparator(new ViewerComparator());
-	}
+    private static final int KEY_CODE_V = 118;
 
-	public void hookContextMenu() {
+    private static Logger log = Logger.getLogger(CompareModelContentMergeViewer.class);
 
-		MenuManager menuMgr = new MenuManager("#PopupMenu", "contextMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				manager.add(new GroupMarker(
-						IWorkbenchActionConstants.MB_ADDITIONS));
-				IStructuredSelection selection = (IStructuredSelection) diffTabLeft
-						.getSelection();
-				EObject selectedElement = null;
-				if (selection.toList().size() == 1) {
-					selectedElement = (EObject) selection.getFirstElement();
-					if (selectedElement instanceof Package) {
-						SubelementCompareAction subEleCompTableAction = new SubelementCompareAction(
-								"compare the list of tables", diffTabLeft,
-								selectedOjbect,
-								SubelementCompareAction.TABLE_COMPARE);
-						SubelementCompareAction subEleCompViewAction = new SubelementCompareAction(
-								"compare the list of views", diffTabLeft,
-								selectedOjbect,
-								SubelementCompareAction.VIEW_COMPARE);
-						manager.add(subEleCompTableAction);
-						manager.add(subEleCompViewAction);
-					} else if (selectedElement instanceof ColumnSet) {
-						addMenuForColumnset(manager, selectedElement);
-					}
+    private Object selectedOjbect = null;
 
-				}
+    private ModelContentMergeDiffTab diffTabLeft = null;
 
-			}
-		});
+    private ModelContentMergeDiffTab diffTabRight = null;
 
-		Menu menu = menuMgr.createContextMenu(diffTabLeft.getControl());
-		diffTabLeft.getControl().setMenu(menu);
-		CompareUIPlugin.getActiveWorkbenchWindow().getActivePage()
-				.getActiveEditor().getSite().registerContextMenu(menuMgr,
-						diffTabLeft);
-		// Add key shortcut
-		diffTabLeft.getTree().addKeyListener(new CompareKeyListener());
-		diffTabLeft.getTree().addMouseListener(new CompareMouseListener());
-	}
+    public CompareModelContentMergeViewer(Composite parent, CompareConfiguration config, Object selObj) {
+        super(parent, config);
+        selectedOjbect = selObj;
+        // MOD mzhao feature 8227
+        diffTabLeft = (ModelContentMergeDiffTab) leftPart.getTreePart();
+        diffTabRight = (ModelContentMergeDiffTab) rightPart.getTreePart();
+        diffTabLeft.setComparator(new ViewerComparator());
+        diffTabRight.setComparator(new ViewerComparator());
+    }
 
-	private List<DiffElement> getDiffElementList() {
-		List<DiffElement> diffElementList = new ArrayList<DiffElement>();
-		// recursive to add diff element.
-		DiffModel diffModel = ((ModelCompareInput) getInput()).getDiff();
-		EList<DiffElement> diffElements = diffModel.getOwnedElements();
-		for (DiffElement diffEle : diffElements) {
-			getDiffElements(diffEle, diffElementList);
-		}
-		return diffElementList;
-	}
+    public void hookContextMenu() {
 
-	private List<ColumnSet> getChangedColumnSetList() {
-		List<ColumnSet> changedColumnSetList = new ArrayList<ColumnSet>();
-		List<DiffElement> diffElementList = getDiffElementList();
-		for (DiffElement diffEle : diffElementList) {
-			if (diffEle instanceof AddModelElement) {
-				changedColumnSetList
-						.add((ColumnSet) ((AddModelElement) diffEle)
-								.getRightElement());
-			} else if (diffEle instanceof UpdateAttribute) {
-				changedColumnSetList
-						.add((ColumnSet) ((UpdateAttribute) diffEle)
-								.getRightElement());
-			}
-		}
-		return changedColumnSetList;
-	}
+        MenuManager menuMgr = new MenuManager("#PopupMenu", "contextMenu");
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(new IMenuListener() {
 
-	private void addMenuForColumnset(IMenuManager manager,
-			EObject selectedElement) {
+            public void menuAboutToShow(IMenuManager manager) {
+                manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+                IStructuredSelection selection = (IStructuredSelection) diffTabLeft.getSelection();
+                EObject selectedElement = null;
+                if (selection.toList().size() == 1) {
+                    selectedElement = (EObject) selection.getFirstElement();
+                    if (selectedElement instanceof Package) {
+                        SubelementCompareAction subEleCompTableAction = new SubelementCompareAction("compare the list of tables",
+                                diffTabLeft, selectedOjbect, SubelementCompareAction.TABLE_COMPARE);
+                        SubelementCompareAction subEleCompViewAction = new SubelementCompareAction("compare the list of views",
+                                diffTabLeft, selectedOjbect, SubelementCompareAction.VIEW_COMPARE);
+                        manager.add(subEleCompTableAction);
+                        manager.add(subEleCompViewAction);
+                    } else if (selectedElement instanceof ColumnSet) {
+                        addMenuForColumnset(manager, selectedElement);
+                    }
 
-		List<ColumnSet> changedColumnSetList = getChangedColumnSetList();
-		List<DiffElement> diffElementList = getDiffElementList();
-		// Add rename element action.
-		for (DiffElement diffEle : diffElementList) {
-			if (diffEle instanceof UpdateAttribute) {
-				if (((UpdateAttribute) diffEle).getLeftElement() == selectedElement) {
-					// Add action menu
-					RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
-							(IFolderNode) selectedOjbect,
-							(ColumnSet) selectedElement, changedColumnSetList);
-					manager.add(renameComparedElementAction);
-					return;
-				}
-			} else if (diffEle instanceof RemoveModelElement) {
-				if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
-					// Add action menu
-					RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
-							(IFolderNode) selectedOjbect,
-							(ColumnSet) selectedElement, changedColumnSetList);
-					manager.add(renameComparedElementAction);
-					return;
-				}
-			}
-		}
+                }
 
-		SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction(
-				"compare the list of columns", diffTabLeft, selectedOjbect,
-				SubelementCompareAction.COLUMN_COMPARE);
-		manager.add(subEleCompColumnAction);
+            }
+        });
 
-	}
+        Menu menu = menuMgr.createContextMenu(diffTabLeft.getControl());
+        diffTabLeft.getControl().setMenu(menu);
+        CompareUIPlugin.getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite().registerContextMenu(menuMgr,
+                diffTabLeft);
+        // Add key shortcut
+        diffTabLeft.getTree().addKeyListener(new CompareKeyListener());
+        diffTabLeft.getTree().addMouseListener(new CompareMouseListener());
+    }
 
-	/**
-	 * 
-	 * DOC mzhao CompareModelContentMergeViewer class global comment. Detailled
-	 * comment
-	 */
-	private class CompareKeyListener implements KeyListener {
-		public void keyPressed(KeyEvent e) {
-			IStructuredSelection selection = (IStructuredSelection) diffTabLeft
-					.getSelection();
-			EObject selectedElement = null;
-			if (selection.toList().size() == 1) {
-				selectedElement = (EObject) selection.getFirstElement();
-			}
-			switch (e.keyCode) {
-			case KEY_CODE_T:
-				if (selectedElement != null) {
-					performCompareAction(selectedElement,
-							SubelementCompareAction.TABLE_COMPARE);
-				}
+    private List<DiffElement> getDiffElementList() {
+        List<DiffElement> diffElementList = new ArrayList<DiffElement>();
+        // recursive to add diff element.
+        DiffModel diffModel = ((ModelCompareInput) getInput()).getDiff();
+        EList<DiffElement> diffElements = diffModel.getOwnedElements();
+        for (DiffElement diffEle : diffElements) {
+            getDiffElements(diffEle, diffElementList);
+        }
+        return diffElementList;
+    }
 
-				break;
-			case KEY_CODE_V:
-				if (selectedElement != null) {
-					performCompareAction(selectedElement,
-							SubelementCompareAction.VIEW_COMPARE);
-				}
+    private List<ColumnSet> getChangedColumnSetList() {
+        List<ColumnSet> changedColumnSetList = new ArrayList<ColumnSet>();
+        List<DiffElement> diffElementList = getDiffElementList();
+        for (DiffElement diffEle : diffElementList) {
+            if (diffEle instanceof AddModelElement) {
+                changedColumnSetList.add((ColumnSet) ((AddModelElement) diffEle).getRightElement());
+            } else if (diffEle instanceof UpdateAttribute) {
+                changedColumnSetList.add((ColumnSet) ((UpdateAttribute) diffEle).getRightElement());
+            }
+        }
+        return changedColumnSetList;
+    }
 
-				break;
-			case KEY_CODE_C:
-				if (selectedElement != null) {
-					performCompareAction(selectedElement,
-							SubelementCompareAction.COLUMN_COMPARE);
-				}
-				break;
-			default:
-				break;
-			}
+    private void addMenuForColumnset(IMenuManager manager, EObject selectedElement) {
 
-		}
+        List<ColumnSet> changedColumnSetList = getChangedColumnSetList();
+        List<DiffElement> diffElementList = getDiffElementList();
+        // Add rename element action.
+        for (DiffElement diffEle : diffElementList) {
+            if (diffEle instanceof UpdateAttribute) {
+                if (((UpdateAttribute) diffEle).getLeftElement() == selectedElement) {
+                    // Add action menu
+                    RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
+                            (IFolderNode) selectedOjbect, (ColumnSet) selectedElement, changedColumnSetList);
+                    manager.add(renameComparedElementAction);
+                    return;
+                }
+            } else if (diffEle instanceof RemoveModelElement) {
+                if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
+                    // Add action menu
+                    RenameComparedElementAction renameComparedElementAction = new RenameComparedElementAction(
+                            (IFolderNode) selectedOjbect, (ColumnSet) selectedElement, changedColumnSetList);
+                    manager.add(renameComparedElementAction);
+                    return;
+                }
+            }
+        }
 
-		public void keyReleased(KeyEvent e) {
-		}
-	}
+        SubelementCompareAction subEleCompColumnAction = new SubelementCompareAction("compare the list of columns", diffTabLeft,
+                selectedOjbect, SubelementCompareAction.COLUMN_COMPARE);
+        manager.add(subEleCompColumnAction);
 
-	/**
-	 * 
-	 * DOC mzhao CompareModelContentMergeViewer class global comment. Detailled
-	 * comment
-	 */
-	private class CompareMouseListener implements MouseListener {
+    }
 
-		public void mouseDoubleClick(MouseEvent e) {
-			IStructuredSelection selection = (IStructuredSelection) diffTabLeft
-					.getSelection();
-			EObject selectedElement = null;
-			if (selection.toList().size() == 1) {
-				selectedElement = (EObject) selection.getFirstElement();
-				if (selectedElement != null) {
-					performCompareAction(selectedElement,
-							SubelementCompareAction.TABLE_COMPARE);
-				}
-			}
-		}
+    /**
+     * 
+     * DOC mzhao CompareModelContentMergeViewer class global comment. Detailled comment
+     */
+    private class CompareKeyListener implements KeyListener {
 
-		public void mouseDown(MouseEvent e) {
+        public void keyPressed(KeyEvent e) {
+            IStructuredSelection selection = (IStructuredSelection) diffTabLeft.getSelection();
+            EObject selectedElement = null;
+            if (selection.toList().size() == 1) {
+                selectedElement = (EObject) selection.getFirstElement();
+            }
+            switch (e.keyCode) {
+            case KEY_CODE_T:
+                if (selectedElement != null && selectedElement instanceof Package) {
+                    performCompareAction(selectedElement, SubelementCompareAction.TABLE_COMPARE);
+                }
 
-		}
+                break;
+            case KEY_CODE_V:
+                if (selectedElement != null && selectedElement instanceof Package) {
+                    performCompareAction(selectedElement, SubelementCompareAction.VIEW_COMPARE);
+                }
 
-		public void mouseUp(MouseEvent e) {
+                break;
+            case KEY_CODE_C:
+                if (selectedElement != null && selectedElement instanceof ColumnSet) {
+                    performCompareAction(selectedElement, SubelementCompareAction.COLUMN_COMPARE);
+                }
+                break;
+            default:
+                break;
+            }
 
-		}
+        }
 
-	}
+        public void keyReleased(KeyEvent e) {
+        }
+    }
 
-	private void performCompareAction(EObject selectedElement,
-			int tableOrViewCompare) {
-		List<DiffElement> diffElementList = getDiffElementList();
-		for (DiffElement diffEle : diffElementList) {
-			if (diffEle instanceof UpdateAttribute) {
-				if (((UpdateAttribute) diffEle).getLeftElement() == selectedElement) {
-					return;
-				}
+    /**
+     * 
+     * DOC mzhao CompareModelContentMergeViewer class global comment. Detailled comment
+     */
+    private class CompareMouseListener implements MouseListener {
 
-			} else if (diffEle instanceof RemoveModelElement) {
-				if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
-					return;
-				}
+        public void mouseDoubleClick(MouseEvent e) {
+            IStructuredSelection selection = (IStructuredSelection) diffTabLeft.getSelection();
+            EObject selectedElement = null;
+            if (selection.toList().size() == 1) {
+                selectedElement = (EObject) selection.getFirstElement();
+                if (selectedElement != null) {
+                    performCompareAction(selectedElement, SubelementCompareAction.TABLE_COMPARE);
+                }
+            }
+        }
 
-			}
-		}
+        public void mouseDown(MouseEvent e) {
 
-		SubelementCompareAction subEleCompColumnAction = null;
-		if (selectedElement instanceof Package) {
-			subEleCompColumnAction = new SubelementCompareAction(
-					tableOrViewCompare == SubelementCompareAction.TABLE_COMPARE ? "compare the list of tables"
-							: "compare the list of views", diffTabLeft,
-					selectedOjbect, tableOrViewCompare);
-		} else if (selectedElement instanceof ColumnSet) {
-			subEleCompColumnAction = new SubelementCompareAction(
-					"compare the list of columns", diffTabLeft, selectedOjbect,
-					SubelementCompareAction.COLUMN_COMPARE);
-		}
-		if (subEleCompColumnAction != null) {
-			subEleCompColumnAction.run();
-		}
+        }
 
-	}
+        public void mouseUp(MouseEvent e) {
 
-	private void getDiffElements(DiffElement diffEle,
-			List<DiffElement> diffElementList) {
-		if (diffEle instanceof DiffGroup) {
-			for (DiffElement subDiffEle : ((DiffGroup) diffEle)
-					.getSubDiffElements()) {
-				getDiffElements(subDiffEle, diffElementList);
-			}
-		} else {
-			diffElementList.add(diffEle);
-		}
-	}
+        }
 
-	@Override
-	protected void createToolItems(ToolBarManager tbm) {
+    }
 
-		// NEXT DIFF
-		final Action nextDiff = new AbstractCompareAction(ResourceBundle
-				.getBundle(BUNDLE_NAME), "action.NextDiff.") { //$NON-NLS-1$
+    private void performCompareAction(EObject selectedElement, int tableOrViewCompare) {
+        List<DiffElement> diffElementList = getDiffElementList();
+        for (DiffElement diffEle : diffElementList) {
+            if (diffEle instanceof UpdateAttribute) {
+                if (((UpdateAttribute) diffEle).getLeftElement() == selectedElement) {
+                    return;
+                }
 
-			@Override
-			public void run() {
-				navigate(true);
-			}
-		};
-		final ActionContributionItem nextDiffContribution = new ActionContributionItem(
-				nextDiff);
-		nextDiffContribution.setVisible(true);
-		tbm.appendToGroup("navigation", nextDiffContribution); //$NON-NLS-1$
-		// PREVIOUS DIFF
-		final Action previousDiff = new AbstractCompareAction(ResourceBundle
-				.getBundle(BUNDLE_NAME), "action.PrevDiff.") { //$NON-NLS-1$
+            } else if (diffEle instanceof RemoveModelElement) {
+                if (((RemoveModelElement) diffEle).getLeftElement() == selectedElement) {
+                    return;
+                }
 
-			@Override
-			public void run() {
-				navigate(false);
-			}
-		};
-		final ActionContributionItem previousDiffContribution = new ActionContributionItem(
-				previousDiff);
-		previousDiffContribution.setVisible(true);
-		tbm.appendToGroup("navigation", previousDiffContribution); //$NON-NLS-1$
+            }
+        }
 
-		// ~ MOD mzhao 2009-03-09 remove no necessity actions.
-		IContributionItem[] icItems = tbm.getItems();
-		for (IContributionItem conbItem : icItems) {
+        SubelementCompareAction subEleCompColumnAction = null;
+        if (selectedElement instanceof Package) {
+            subEleCompColumnAction = new SubelementCompareAction(
+                    tableOrViewCompare == SubelementCompareAction.TABLE_COMPARE ? "compare the list of tables"
+                            : "compare the list of views", diffTabLeft, selectedOjbect, tableOrViewCompare);
+        } else if (selectedElement instanceof ColumnSet) {
+            subEleCompColumnAction = new SubelementCompareAction("compare the list of columns", diffTabLeft, selectedOjbect,
+                    SubelementCompareAction.COLUMN_COMPARE);
+        }
+        if (subEleCompColumnAction != null) {
+            subEleCompColumnAction.run();
+        }
 
-			if (conbItem instanceof ActionContributionItem) {
-				// ChangePropertyAction
-				IAction a = ((ActionContributionItem) conbItem).getAction();
-				if (a != null && a instanceof ChangePropertyAction) {
-					tbm.remove(conbItem);
-					conbItem.dispose();
-					continue;
-				}
-				// Action
-				if (((ActionContributionItem) conbItem).getAction() != null
-						&& ((ActionContributionItem) conbItem).getAction()
-								.getActionDefinitionId() != null) {
-					if (((ActionContributionItem) conbItem).getAction()
-							.getActionDefinitionId().equals(
-									COPY_LEFT_TO_RIGHT_ID)) {
-						tbm.remove(conbItem);
-						conbItem.dispose();
-					}
-				}
-			}
+    }
 
-		}
-		tbm.update(true);
-		// ~
+    private void getDiffElements(DiffElement diffEle, List<DiffElement> diffElementList) {
+        if (diffEle instanceof DiffGroup) {
+            for (DiffElement subDiffEle : ((DiffGroup) diffEle).getSubDiffElements()) {
+                getDiffElements(subDiffEle, diffElementList);
+            }
+        } else {
+            diffElementList.add(diffEle);
+        }
+    }
 
-	}
+    @Override
+    protected void createToolItems(ToolBarManager tbm) {
 
-	@Override
-	protected void copy(boolean leftToRight) {
-		// First check dependencies.
-		ModelElement modelElement = null;
-		IFile resourceFile = null;
-		// File
-		if (selectedOjbect instanceof IFile) {
-			TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper
-					.getInstance().findProvider((IFile) selectedOjbect);
-			modelElement = returnValue.getObject();
-		} else {
-			// Folder
-			Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH
-					.doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect)
-							.getParent());
+        // NEXT DIFF
+        final Action nextDiff = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME), "action.NextDiff.") { //$NON-NLS-1$
 
-			if (ctatlogSwtich != null) {
-				resourceFile = PrvResourceFileHelper.getInstance()
-						.findCorrespondingFile(
-								DataProviderHelper
-										.getTdDataProvider(ctatlogSwtich));
-				modelElement = DataProviderHelper
-						.getTdDataProvider(ctatlogSwtich);
-			}
-			ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
-					.doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect)
-							.getParent());
-			if (columnSet != null) {
-				resourceFile = PrvResourceFileHelper.getInstance()
-						.findCorrespondingFile(
-								DataProviderHelper.getDataProvider(columnSet));
-				modelElement = DataProviderHelper.getDataProvider(columnSet);
-			}
-		}
-		if (modelElement != null && resourceFile != null) {
-			String titleMessage = DefaultMessagesImpl
-					.getString("CompareModelContentMergeViewer.ImpactAnalyses");
+            @Override
+            public void run() {
+                navigate(true);
+            }
+        };
+        final ActionContributionItem nextDiffContribution = new ActionContributionItem(nextDiff);
+        nextDiffContribution.setVisible(true);
+        tbm.appendToGroup("navigation", nextDiffContribution); //$NON-NLS-1$
+        // PREVIOUS DIFF
+        final Action previousDiff = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME), "action.PrevDiff.") { //$NON-NLS-1$
 
-			int showDialog = DeleteModelElementConfirmDialog
-					.showElementImpactDialog(null,
-							new ModelElement[] { modelElement }, titleMessage,
-							titleMessage);
-			if (showDialog == Window.OK) {
-				EObjectHelper
-						.removeDependencys(new IResource[] { resourceFile });
-			} else {
-				return;
-			}
-		}
+            @Override
+            public void run() {
+                navigate(false);
+            }
+        };
+        final ActionContributionItem previousDiffContribution = new ActionContributionItem(previousDiff);
+        previousDiffContribution.setVisible(true);
+        tbm.appendToGroup("navigation", previousDiffContribution); //$NON-NLS-1$
 
-		int diffItemsCount = ((ModelCompareInput) getInput()).getDiffAsList()
-				.size();
-		try {
-			super.copy(leftToRight);
-			// MOD mzhao 2009-03-11 copy from right to left.need reload the
-			// currently selected element.
-			if (!leftToRight && diffItemsCount > 0) {
-				new ReloadDatabaseAction(selectedOjbect, null).run();
-			}
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-		}
+        // ~ MOD mzhao 2009-03-09 remove no necessity actions.
+        IContributionItem[] icItems = tbm.getItems();
+        for (IContributionItem conbItem : icItems) {
 
-	}
+            if (conbItem instanceof ActionContributionItem) {
+                // ChangePropertyAction
+                IAction a = ((ActionContributionItem) conbItem).getAction();
+                if (a != null && a instanceof ChangePropertyAction) {
+                    tbm.remove(conbItem);
+                    conbItem.dispose();
+                    continue;
+                }
+                // Action
+                if (((ActionContributionItem) conbItem).getAction() != null
+                        && ((ActionContributionItem) conbItem).getAction().getActionDefinitionId() != null) {
+                    if (((ActionContributionItem) conbItem).getAction().getActionDefinitionId().equals(COPY_LEFT_TO_RIGHT_ID)) {
+                        tbm.remove(conbItem);
+                        conbItem.dispose();
+                    }
+                }
+            }
 
-	private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight";
+        }
+        tbm.update(true);
+        // ~
+
+    }
+
+    @Override
+    protected void copy(boolean leftToRight) {
+        // First check dependencies.
+        ModelElement modelElement = null;
+        IFile resourceFile = null;
+        // File
+        if (selectedOjbect instanceof IFile) {
+            TypedReturnCode<TdDataProvider> returnValue = PrvResourceFileHelper.getInstance()
+                    .findProvider((IFile) selectedOjbect);
+            modelElement = returnValue.getObject();
+        } else {
+            // Folder
+            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect)
+                    .getParent());
+
+            if (ctatlogSwtich != null) {
+                resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
+                        DataProviderHelper.getTdDataProvider(ctatlogSwtich));
+                modelElement = DataProviderHelper.getTdDataProvider(ctatlogSwtich);
+            }
+            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
+                    .doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect).getParent());
+            if (columnSet != null) {
+                resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
+                        DataProviderHelper.getDataProvider(columnSet));
+                modelElement = DataProviderHelper.getDataProvider(columnSet);
+            }
+        }
+        if (modelElement != null && resourceFile != null) {
+            String titleMessage = DefaultMessagesImpl.getString("CompareModelContentMergeViewer.ImpactAnalyses");
+
+            int showDialog = DeleteModelElementConfirmDialog.showElementImpactDialog(null, new ModelElement[] { modelElement },
+                    titleMessage, titleMessage);
+            if (showDialog == Window.OK) {
+                EObjectHelper.removeDependencys(new IResource[] { resourceFile });
+            } else {
+                return;
+            }
+        }
+
+        int diffItemsCount = ((ModelCompareInput) getInput()).getDiffAsList().size();
+        try {
+            super.copy(leftToRight);
+            // MOD mzhao 2009-03-11 copy from right to left.need reload the
+            // currently selected element.
+            if (!leftToRight && diffItemsCount > 0) {
+                new ReloadDatabaseAction(selectedOjbect, null).run();
+            }
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
+        }
+
+    }
+
+    private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight";
 }

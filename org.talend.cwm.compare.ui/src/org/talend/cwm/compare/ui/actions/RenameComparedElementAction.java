@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -46,6 +47,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -66,7 +68,9 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * 
@@ -221,13 +225,24 @@ public class RenameComparedElementAction extends Action {
     }
 
     private TdDataProvider createCopyedProvider() {
+        Package catalogOrSchema = getTopLevelPackage();
         IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
-                (TdDataProvider) originCompareElement.getDataManager().get(0));
+                (TdDataProvider) catalogOrSchema.getDataManager().get(0));
         IFile createNeedReloadElementsFile = DQStructureComparer.getFirstComparisonLocalFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
         TypedReturnCode<TdDataProvider> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
         return returnValue.getObject();
 
+    }
+
+    private Package getTopLevelPackage() {
+        Package catalogOrSchema = originCompareElement;
+        if (originCompareElement instanceof Schema) {
+            if (originCompareElement.eContainer() != null && originCompareElement.eContainer() instanceof Catalog) {
+                catalogOrSchema = (Package) originCompareElement.eContainer();
+            }
+        }
+        return catalogOrSchema;
     }
 
     private Resource getRightResource(ColumnSet selectedColumnSet) throws ReloadCompareException {
@@ -260,7 +275,8 @@ public class RenameComparedElementAction extends Action {
     }
 
     private TdDataProvider createTempConnectionFile() throws ReloadCompareException {
-        TdDataProvider oldDataProvider = (TdDataProvider) originCompareElement.getDataManager().get(0);
+        Package catalogOrSchema = getTopLevelPackage();
+        TdDataProvider oldDataProvider = (TdDataProvider) catalogOrSchema.getDataManager().get(0);
         IFile tempConnectionFile = DQStructureComparer.getSecondComparisonLocalFile();
         // MOD mzhao ,Extract method getRefreshedDataProvider to class
         // DQStructureComparer for common use.
@@ -301,6 +317,14 @@ public class RenameComparedElementAction extends Action {
         @Override
         protected boolean isResizable() {
             return true;
+        }
+
+        @Override
+        protected void createButtonsForButtonBar(Composite parent) {
+            // create OK and Cancel buttons by default
+            Button okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+            okButton.setEnabled(false);
+            createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
         }
 
         /*
@@ -378,6 +402,7 @@ public class RenameComparedElementAction extends Action {
                 public void checkStateChanged(CheckStateChangedEvent event) {
                     tableViewer.setAllChecked(false);
                     tableViewer.setChecked(event.getElement(), event.getChecked());
+                    getButton(IDialogConstants.OK_ID).setEnabled(tableViewer.getCheckedElements().length > 0);
                 }
 
             });
