@@ -25,9 +25,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.reports.util.ReportsSwitch;
 import org.talend.dq.analysis.ReportWriter;
+import org.talend.dq.writer.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -77,11 +79,15 @@ public final class RepResourceFileHelper extends ResourceFileMap {
     }
 
     public TdReport findReport(IFile file) {
-        TdReport report = allRepMap.get(file);
-        if (report != null) {
-            return report;
+        if (file != null && file.getFileExtension().equals(FactoriesUtil.REP)) {
+            TdReport report = allRepMap.get(file);
+            if (report != null) {
+                return report;
+            }
+            return readFromFile(file);
         }
-        return readFromFile(file);
+
+        return null;
     }
 
     private TdReport readFromFile(IFile file) {
@@ -143,7 +149,7 @@ public final class RepResourceFileHelper extends ResourceFileMap {
     }
 
     public ReturnCode save(TdReport report) {
-        ReportWriter writer = new ReportWriter();
+        ReportWriter writer = ElementWriterFactory.getInstance().createReportWriter();
         ReturnCode saved = writer.save(report);
         return saved;
     }

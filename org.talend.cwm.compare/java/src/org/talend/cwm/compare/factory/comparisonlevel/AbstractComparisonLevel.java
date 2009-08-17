@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -40,9 +39,9 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.util.RelationalSwitch;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
-import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
+import org.talend.dq.writer.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -198,8 +197,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         }
         tempReloadProvider = returnProvider.getObject();
         tempReloadProvider.setComponent(oldDataProvider.getComponent());
-        DataProviderWriter.getInstance().saveDataProviderResource(tempReloadProvider, (IFolder) tempConnectionFile.getParent(),
-                tempConnectionFile);
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(tempReloadProvider, tempConnectionFile);
         tempReloadProvider.setComponent(null);
         oldDataProvider.getComponent();
     }

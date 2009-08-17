@@ -22,7 +22,7 @@ import org.talend.dq.analysis.parameters.UDIndicatorParameter;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.UDIndicatorBuilder;
-import org.talend.dq.indicators.UDIndicatorWriter;
+import org.talend.dq.writer.ElementWriterFactory;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
@@ -68,7 +68,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         indicatorDefinition.getSqlGenericExpression().add(getExpression());
         UDIHelper.setUDICategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
         IFolder folder = parameter.getFolderProvider().getFolderResource();
-        return UDIndicatorWriter.getInstance().createUDIndicatorFile(indicatorDefinition, folder);
+        return ElementWriterFactory.getInstance().createPatternWriter().create(indicatorDefinition, folder);
     }
 
     public ModelElement initCWMResourceBuilder() {

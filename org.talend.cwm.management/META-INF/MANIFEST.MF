@@ -3,30 +3,31 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Management Plug-in
 Bundle-SymbolicName: org.talend.cwm.management;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.talend.libraries.apache,
- org.talend.libraries.jdbc.mysql;resolution:=optional,
- org.talend.utils,
+Require-Bundle: org.talend.dataquality;visibility:=reexport,
+ org.talend.cwm.ext;visibility:=reexport,
  org.eclipse.emf.ecore.xmi,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.apache.log4j;bundle-version="1.2.13",
  org.junit4;resolution:=optional,
- org.talend.dataquality;visibility:=reexport,
  org.talend.sqltools,
+ org.talend.utils,
+ net.sourceforge.sqlexplorer,
+ org.talend.model,
+ org.talend.commons,
+ org.talend.libraries.apache,
+ org.talend.libraries.jung;resolution:=optional,
  org.talend.libraries.jdbc.jtds;resolution:=optional,
  org.talend.libraries.jdbc.oracle;resolution:=optional,
  org.talend.libraries.jdbc.db2;resolution:=optional,
  org.talend.libraries.jdbc.postgresql;resolution:=optional,
  org.talend.libraries.jdbc.sybase;resolution:=optional,
  org.talend.libraries.jdbc.hsql;resolution:=optional,
- org.eclipse.core.resources,
- org.eclipse.core.runtime,
- org.talend.cwm.ext;visibility:=reexport,
- org.apache.log4j;bundle-version="1.2.13",
- net.sourceforge.sqlexplorer,
+ org.talend.libraries.jdbc.mysql;resolution:=optional,
  org.talend.libraries.jdbc.ingres;resolution:=optional,
  org.talend.libraries.jdbc.informix;resolution:=optional,
  org.talend.libraries.jdbc.sqlite3;resolution:=optional,
  org.talend.libraries.jdbc.teradata;resolution:=optional,
- org.talend.libraries.jung,
- org.talend.commons,
  org.talend.libraries.jdbc.as400;resolution:=optional
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.cwm.db.connection,
@@ -55,7 +56,8 @@ Export-Package: org.talend.cwm.db.connection,
  org.talend.dq.nodes.foldernode,
  org.talend.dq.nodes.indicator,
  org.talend.dq.nodes.indicator.type,
- org.talend.dq.pattern
+ org.talend.dq.pattern,
+ org.talend.dq.writer
 Bundle-ClassPath: .
 Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

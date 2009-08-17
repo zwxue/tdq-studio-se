@@ -40,12 +40,12 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.dq.indicators.graph.tests.MyFirstTest;
 import org.talend.dq.sql.converters.CwmZExpression;
+import org.talend.dq.writer.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.Java2SqlType;
@@ -133,7 +133,7 @@ public class TestMultiNominalColAnalysis {
         Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk());
 
         // save data provider
-        DataProviderWriter.getInstance().saveDataProviderAndStructure(dataManager, folderProvider);
+        ElementWriterFactory.getInstance().createDataProviderWriter().create(dataManager, folderProvider.getFolderResource());
 
         return indicator;
         // Need workspace context

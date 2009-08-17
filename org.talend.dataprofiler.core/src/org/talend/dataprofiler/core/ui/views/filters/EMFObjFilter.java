@@ -16,8 +16,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.util.CoreSwitch;
@@ -68,6 +68,10 @@ public class EMFObjFilter extends AbstractViewerFilter {
         } else if (element instanceof IFile) {
             IFile file = (IFile) element;
             if (file.getName().indexOf(".") == 0) { //$NON-NLS-1$
+                return false;
+            }
+            if (file.getFileExtension().equals(FactoriesUtil.ITEM_EXTENSION)
+                    || file.getFileExtension().equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                 return false;
             }
             return file.getFileExtension() != null;

@@ -31,9 +31,9 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
-import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.writer.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -95,7 +95,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         TdDataProvider dataProvider = (TdDataProvider) cwmElement;
 
         IFolder folder = connectionParam.getFolderProvider().getFolderResource();
-        TypedReturnCode<IFile> save = DataProviderWriter.getInstance().createDataProviderFile(dataProvider, folder);
+        TypedReturnCode<IFile> save = ElementWriterFactory.getInstance().createDataProviderWriter().create(dataProvider, folder);
         if (save.isOk()) {
             if (driver != null) {
                 storeInfoToPerference(dataProvider);

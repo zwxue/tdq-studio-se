@@ -44,10 +44,10 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.connection.DataProviderWriter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.sql.converters.CwmZExpression;
+import org.talend.dq.writer.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sugars.ReturnCode;
@@ -146,7 +146,7 @@ public class TestAnalysisCreation {
         Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk());
 
         // save data provider
-        DataProviderWriter.getInstance().saveDataProviderAndStructure(dataManager, folderProvider);
+        ElementWriterFactory.getInstance().createDataProviderWriter().create(dataManager, folderProvider.getFolderResource());
 
         // Need workspace context
         // AnalysisWriter writer = new AnalysisWriter();

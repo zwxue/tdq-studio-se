@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dq.analysis.AnalysisWriter;
@@ -76,8 +77,9 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
                 continue;
             }
             IFile file = (IFile) resource;
-            findAnalysis(file);
-
+            if (file.getFileExtension().equals(FactoriesUtil.ANA)) {
+                findAnalysis(file);
+            }
         }
     }
 

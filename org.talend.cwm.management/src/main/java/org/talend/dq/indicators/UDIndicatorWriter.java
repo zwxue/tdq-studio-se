@@ -13,52 +13,46 @@
 package org.talend.dq.indicators;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.talend.commons.emf.EMFSharedResources;
-import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.utils.sugars.TypedReturnCode;
+import org.talend.dq.writer.AElementPersistance;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class UDIndicatorWriter {
+public class UDIndicatorWriter extends AElementPersistance {
 
     static Logger log = Logger.getLogger(UDIndicatorWriter.class);
 
-    private static UDIndicatorWriter instance;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected void addDependencies(ModelElement element) {
+        // TODO Auto-generated method stub
 
-    private UDIndicatorWriter() {
     }
 
-    public static UDIndicatorWriter getInstance() {
-        if (instance == null) {
-            instance = new UDIndicatorWriter();
-        }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#addResourceContent(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected void addResourceContent(ModelElement element) {
+        // TODO Auto-generated method stub
 
-        return instance;
     }
 
-    public TypedReturnCode<IFile> createUDIndicatorFile(IndicatorDefinition indicatorDefinition, IFolder folder) {
-        assert indicatorDefinition != null;
-
-        TypedReturnCode<IFile> trc = new TypedReturnCode<IFile>();
-
-        String fname = DqRepositoryViewService.createFilename(indicatorDefinition.getName(), FactoriesUtil.UDI);
-        IFile file = folder.getFile(fname);
-
-        if (file.exists()) {
-            log.error("Failed to create user defined indicator file from " + indicatorDefinition.getName());
-            trc.setOk(false);
-        } else {
-            EMFSharedResources.getInstance().addEObjectToResourceSet(file.getFullPath().toString(), indicatorDefinition);
-            EMFSharedResources.getInstance().saveLastResource();
-            trc.setObject(file);
-            trc.setOk(true);
-        }
-
-        return trc;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#getFileExtension()
+     */
+    @Override
+    protected String getFileExtension() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

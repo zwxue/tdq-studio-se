@@ -25,6 +25,7 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.writer.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -56,11 +57,12 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
     }
 
     public TypedReturnCode<IFile> createAndSaveCWMFile(ModelElement cwmElement) {
-        AnalysisWriter writer = new AnalysisWriter();
         Analysis analysis = (Analysis) cwmElement;
+        IFolder folder = parameter.getFolderProvider().getFolderResource();
 
-        IFolder folderResource = parameter.getFolderProvider().getFolderResource();
-        return writer.createAnalysisFile(analysis, folderResource);
+        AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
+
+        return analysisWriter.create(analysis, folder);
     }
 
     @Override

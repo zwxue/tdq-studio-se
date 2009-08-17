@@ -67,6 +67,10 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public final class DQStructureComparer {
 
+    public static final String COMPARE_FILE_EXTENSION = "comp";
+
+    public static final String RESULT_EMFDIFF_FILE_EXTENSION = "emfdiff";
+
     private static final String NEED_RELOAD_ELEMENTS_PRV = ".needReloadElements.comp"; //$NON-NLS-1$
 
     private static final String RESULT_EMFDIFF_FILE = ".result.emfdiff"; //$NON-NLS-1$
@@ -128,9 +132,8 @@ public final class DQStructureComparer {
     private static IFile iterateGetNotExistFile(String fileName) {
         IFile file = getFile(fileName);
         if (file.exists()) {
-            return iterateGetNotExistFile(fileName.substring(0, fileName
-					.lastIndexOf("."))
-					+ "c" + fileName.substring(fileName.lastIndexOf(".")));
+            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + "c"
+                    + fileName.substring(fileName.lastIndexOf(".")));
         } else {
             return file;
         }
@@ -168,13 +171,12 @@ public final class DQStructureComparer {
      * 
      * @return true if temporary file ".refresh.prv" has been deleted (or did not exist)
      */
-	// public static boolean deleteCopiedResourceFile() {
-	// return deleteFile(getTempRefreshFile());
-	// }
-	// public static boolean deleteNeedReloadElementFile() {
-	// return deleteFile(getNeedReloadElementsFile());
-	// }
-
+    // public static boolean deleteCopiedResourceFile() {
+    // return deleteFile(getTempRefreshFile());
+    // }
+    // public static boolean deleteNeedReloadElementFile() {
+    // return deleteFile(getNeedReloadElementsFile());
+    // }
     /**
      * 
      * DOC mzhao Delete first selected resource tmp file.
