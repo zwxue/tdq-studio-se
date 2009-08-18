@@ -411,6 +411,12 @@
          <enablement>
                <adapt
                      type="org.eclipse.core.resources.IFolder">
+                  <not>
+                     <test
+                           property="org.eclipse.core.resources.name"
+                           value="Patterns">
+                     </test>
+                  </not>
                </adapt>
          </enablement>
       </actionProvider>
