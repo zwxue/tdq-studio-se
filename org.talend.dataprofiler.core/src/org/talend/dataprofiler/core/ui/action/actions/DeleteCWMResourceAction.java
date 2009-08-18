@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,6 +102,16 @@ public class DeleteCWMResourceAction extends Action {
         // refresh the parent resource in order to avoid unsynchronized resources
         for (IResource res : resources) {
             try {
+                if (res.isLinked()) {
+                    File file = new File(res.getRawLocation().toOSString());
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    // res.delete(IResource.FORCE, null);
+                }
+                // else {
+                // res.delete(true, new NullProgressMonitor());
+                // }
                 res.delete(true, new NullProgressMonitor());
                 res.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {

@@ -19,6 +19,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -42,6 +45,8 @@ import orgomg.cwmx.analysis.informationreporting.Report;
 public final class ReportHelper {
 
     private static Logger log = Logger.getLogger(ReportHelper.class);
+
+    public static final String DOT_MARK = "."; //$NON-NLS-1$
 
     // ~ADD mzhao 2009-02-05
 
@@ -487,7 +492,7 @@ public final class ReportHelper {
      * @param report
      * @return
      */
-    public static String getOutputFolderName(Report report) {
+    public static String getOutputFolderNameAssinged(Report report) {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.OUTPUT_FOLDER_TAG, report.getTaggedValue());
         if (taggedValue == null) {
             return "";
@@ -495,4 +500,37 @@ public final class ReportHelper {
 
         return taggedValue.getValue();
     }
+
+    /**
+     * DOC xqliu Comment method "getOutputName".
+     * 
+     * @param reportContainer
+     * @param simpleName
+     * @return
+     */
+    public static String getOutputFolderNameDefault(IFolder reportContainer, String simpleName) {
+        return ResourcesPlugin.getWorkspace().getRoot().getRawLocation().toOSString()
+                + reportContainer.getFolder("." + simpleName).getFullPath().toOSString();
+    }
+
+    /**
+     * DOC xqliu Comment method "getOutputFolder".
+     * 
+     * @param reportFile
+     * @return
+     */
+    public static IFolder getOutputFolder(IFile reportFile) {
+        IFolder reportContainer = (IFolder) reportFile.getParent();
+        String fileName = reportFile.getName();
+        String simpleName = null;
+        int indexOf = fileName.indexOf(DOT_MARK);
+        if (indexOf != -1) {
+            simpleName = fileName.substring(0, indexOf);
+        } else {
+            log.error("The current report file name: " + reportFile.getFullPath() + " is a illegal name."); //$NON-NLS-1$ //$NON-NLS-2$
+            return null;
+        }
+        return reportContainer.getFolder(DOT_MARK + simpleName);
+    }
+
 }
