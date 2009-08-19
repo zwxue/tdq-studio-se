@@ -13,6 +13,7 @@
 package org.talend.dq.indicators;
 
 import org.apache.log4j.Logger;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dq.writer.AElementPersistance;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -52,7 +53,6 @@ public class UDIndicatorWriter extends AElementPersistance {
      */
     @Override
     protected String getFileExtension() {
-        // TODO Auto-generated method stub
-        return null;
+        return FactoriesUtil.UDI;
     }
 }
