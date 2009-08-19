@@ -265,6 +265,10 @@
                 <test
                       property="org.eclipse.core.resources.name"
                       value="*.pattern">
+                </test>
+                <test
+                      property="org.eclipse.core.resources.name"
+                      value="*.definition">
                 </test>	
             	</or>            
 	        </and>

@@ -13,7 +13,6 @@
 package org.talend.dq.helper.resourcehelper;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -89,7 +88,15 @@ public class UDIResourceFileHelper extends ResourceFileMap {
     }
 
     public Collection<IndicatorDefinition> getAllUDIs(IFolder patternFodler) {
-        return Collections.EMPTY_LIST;
+        if (resourcesNumberChanged) {
+            try {
+                searchAllUDIs(patternFodler);
+            } catch (CoreException e) {
+                log.error(e, e);
+            }
+            resourcesNumberChanged = false;
+        }
+        return idsMap.values();
     }
 
     public IFile getUDIFile(IndicatorDefinition id, IFolder[] folders) {
@@ -130,7 +137,6 @@ public class UDIResourceFileHelper extends ResourceFileMap {
             }
             IFile file = (IFile) resource;
             findUDI(file);
-
         }
     }
 }

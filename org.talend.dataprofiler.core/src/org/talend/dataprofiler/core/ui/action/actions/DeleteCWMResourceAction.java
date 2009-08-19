@@ -42,12 +42,14 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -107,11 +109,7 @@ public class DeleteCWMResourceAction extends Action {
                     if (file.exists()) {
                         file.delete();
                     }
-                    // res.delete(IResource.FORCE, null);
                 }
-                // else {
-                // res.delete(true, new NullProgressMonitor());
-                // }
                 res.delete(true, new NullProgressMonitor());
                 res.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {
@@ -152,6 +150,10 @@ public class DeleteCWMResourceAction extends Action {
             } else if (FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension())) {
                 Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                 modelElementList.add(pattern);
+                anaMessageFlag = true;
+            } else if (FactoriesUtil.UDI.equalsIgnoreCase(file.getFileExtension())) {
+                IndicatorDefinition id = UDIResourceFileHelper.getInstance().findUDI(file);
+                modelElementList.add(id);
                 anaMessageFlag = true;
             } else {
                 otherFilesExistFlag = true;
