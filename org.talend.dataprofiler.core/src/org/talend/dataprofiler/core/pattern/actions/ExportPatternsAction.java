@@ -65,7 +65,11 @@ public class ExportPatternsAction extends Action {
             String href = relatedTopics[3].getHref();
             dialog = new OpeningHelpWizardDialog(null, wizard, href);
         } else {
-            dialog = new WizardDialog(null, wizard);
+            // MOD yyi 2009-08-20,for 8689.Add help in "export pattern" wizard.
+            IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getPatternHelpContextID());
+            IHelpResource[] relatedTopics = context.getRelatedTopics();
+            String href = relatedTopics[4].getHref();
+            dialog = new OpeningHelpWizardDialog(null, wizard, href);
         }
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
