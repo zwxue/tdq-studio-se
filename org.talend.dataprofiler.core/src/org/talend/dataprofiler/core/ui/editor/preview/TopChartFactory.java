@@ -168,7 +168,7 @@ public final class TopChartFactory {
                     transRange += diag / 100;
 
                     Ellipse2D circle = null;
-                    
+
                     // ADD xqliu 2009-07-06 bug 8035
                     transDomain *= zSize;
                     transRange *= zSize;
@@ -218,8 +218,8 @@ public final class TopChartFactory {
              * @return
              */
             private double getBubbleSize(double z) {
-                 if (z > 0 && z <= 10) {
-                     return 2;
+                if (z > 0 && z <= 10) {
+                    return 2;
                 } else if (z > 10 && z <= 100) {
                     return 3;
                 } else if (z > 100) {
@@ -412,7 +412,7 @@ public final class TopChartFactory {
     }
 
     /**
-     * DOC Zqin Comment method "createStacked3DBarChart".
+     * DOC Zqin Comment method "createStackedBarChart".
      * 
      * @param titile
      * @param dataset
@@ -420,33 +420,12 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createStackedBarChart(String titile, CategoryDataset dataset, PlotOrientation orientation) {
-
-        JFreeChart chart = ChartFactory.createStackedBarChart(null, null,
-                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, orientation, true, false, false); //$NON-NLS-1$
-
-        CategoryPlot plot = chart.getCategoryPlot();
-        plot.setRangeGridlinesVisible(true);
-
-        // MOD by hcheng for 6965,Use 2D bar charts instead of 3D bar charts
-        StackedBarRenderer renderer = (StackedBarRenderer) plot.getRenderer();
-        renderer.setSeriesPaint(0, Color.GREEN);
-        renderer.setSeriesPaint(1, Color.RED);
-        renderer.setBaseItemLabelsVisible(true);
-        renderer.setRenderAsPercentages(true);
-        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(), //$NON-NLS-1$
-                new DecimalFormat("0.00%"))); //$NON-NLS-1$
-        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
-
-        NumberAxis axis = (NumberAxis) plot.getRangeAxis();
-        axis.setNumberFormatOverride(NumberFormat.getPercentInstance());
-        axis.setUpperMargin(0.05f);
-        axis.setLowerMargin(0.01f);
-
-        return chart;
+        return createStackedBarChart(null, null, DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, orientation,
+                true, false, false);
     }
 
     /**
-     * DOC xqliu Comment method "createBarChart".
+     * DOC xqliu Comment method "createStackedBarChart".
      * 
      * @param title
      * @param dataset
@@ -454,16 +433,46 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createStackedBarChart(String title, CategoryDataset dataset, boolean showLegend) {
-        final JFreeChart chart = ChartFactory.createStackedBarChart(null, title, DefaultMessagesImpl
-                .getString("TopChartFactory.value"), dataset, PlotOrientation.VERTICAL, //$NON-NLS-1$
-                showLegend, false, false);
+        return createStackedBarChart(null, title, DefaultMessagesImpl.getString("TopChartFactory.value"), dataset,
+                PlotOrientation.VERTICAL, showLegend, false, false);
+    }
+
+    /**
+     * DOC xqliu Comment method "createStackedBarChart".
+     * 
+     * @param title
+     * @param dataset
+     * @param orientation
+     * @param showLegend
+     * @return
+     */
+    public static JFreeChart createStackedBarChart(String title, CategoryDataset dataset, PlotOrientation orientation,
+            boolean showLegend) {
+        return createStackedBarChart(null, null, title, dataset, orientation, showLegend, false, false);
+    }
+
+    /**
+     * DOC xqliu Comment method "createStackedBarChart".
+     * 
+     * @param title
+     * @param domainAxisLabel
+     * @param rangeAxisLabel
+     * @param dataset
+     * @param orientation
+     * @param legend
+     * @param tooltips
+     * @param urls
+     * @return
+     */
+    public static JFreeChart createStackedBarChart(String title, String domainAxisLabel, String rangeAxisLabel,
+            CategoryDataset dataset, PlotOrientation orientation, boolean legend, boolean tooltips, boolean urls) {
+        final JFreeChart chart = ChartFactory.createStackedBarChart(title, domainAxisLabel, rangeAxisLabel, dataset, orientation,
+                legend, tooltips, urls);
 
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setRangeGridlinesVisible(true);
 
         StackedBarRenderer sbr = (StackedBarRenderer) plot.getRenderer();
-        sbr.setSeriesPaint(0, Color.RED);
-        sbr.setSeriesPaint(1, Color.GREEN);
         sbr.setBaseItemLabelsVisible(true);
         sbr.setRenderAsPercentages(true);
         sbr.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(), //$NON-NLS-1$

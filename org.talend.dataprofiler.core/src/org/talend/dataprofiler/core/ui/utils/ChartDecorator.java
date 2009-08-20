@@ -83,11 +83,24 @@ public final class ChartDecorator {
 		}
 	}
 
-	/**
-	 * DOC bZhou Comment method "decorateCategoryPlot".
-	 * 
-	 * @param chart
-	 */
+    /**
+     * DOC xqliu Comment method "decorateColumnDependency".
+     * 
+     * @param chart
+     */
+    public static void decorateColumnDependency(JFreeChart chart) {
+        decorate(chart);
+        CategoryItemRenderer renderer = ((CategoryPlot) chart.getPlot()).getRenderer();
+        renderer.setSeriesPaint(0, colorList.get(1));
+        renderer.setSeriesPaint(1, colorList.get(0));
+        
+    }
+
+    /**
+     * DOC bZhou Comment method "decorateCategoryPlot".
+     * 
+     * @param chart
+     */
 	public static void decorateCategoryPlot(JFreeChart chart) {
 
 		Font font = null;

@@ -14,64 +14,49 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
-import org.talend.cwm.helper.ColumnHelper;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnsComparisonAnalysisResultPage.ColumnPairsViewerProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
+import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.utils.ChartDecorator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
-import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
-
+import org.talend.utils.format.StringFormatUtil;
 
 /**
- * DOC jet  class global comment. Detailled comment
+ * DOC jet class global comment. Detailled comment
  */
 public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
-    private static Logger log = Logger
-    .getLogger(ColumnDependencyResultPage.class);
-    
     private Composite analyzedColumnSetsComp;
 
     private Composite analysisResultsComp;
-    
+
     private Section resultSection = null;
-    
-    private Section columnSetSection = null;
-    
+
     private ColumnDependencyMasterDetailsPage masterPage;
 
     private ColumnDependencyIndicator columnDependencyIndicator;
-    
-    JFreeChart chart = null;
 
     /**
      * DOC jet ColumnDependencyResultPage constructor comment.
+     * 
      * @param editor
      * @param id
      * @param title
@@ -82,9 +67,9 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         this.masterPage = (ColumnDependencyMasterDetailsPage) analysisEditor.getMasterPage();
     }
 
-  
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#getAnalysisHandler()
      */
     @Override
@@ -93,8 +78,12 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         return this.masterPage.getAnalysisHandler();
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
+     * .ui.editor.analysis.AbstractAnalysisMetadataPage)
      */
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
@@ -106,22 +95,22 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         createFormContent(getManagedForm());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
     public void setDirty(boolean isDirty) {
 
     }
-    
-   
-    
+
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
-        
-        Analysis analysis =  this.getAnalysisHandler().getAnalysis();
-        
+
+        Analysis analysis = this.getAnalysisHandler().getAnalysis();
+
         analyzedColumnSetsComp = toolkit.createComposite(topComposite);
         analyzedColumnSetsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
         analyzedColumnSetsComp.setLayout(new GridLayout());
@@ -134,9 +123,9 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         form.reflow(true);
 
         foldingSections(new Section[] { summarySection });
- 
+
     }
-    
+
     @Override
     protected void createResultSection(Composite parent) {
         resultSection = createSection(form, parent, DefaultMessagesImpl
@@ -148,77 +137,128 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
         Analysis analysis = this.masterPage.getAnalysisHandler().getAnalysis();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
-        if(indicators.size() > 0){
-              columnDependencyIndicator = (ColumnDependencyIndicator) indicators.get(0);
+        if (indicators.size() > 0) {
+            columnDependencyIndicator = (ColumnDependencyIndicator) indicators.get(0);
         }
 
+        createTable(sectionClient);
+        
         creatChart(sectionClient, analysis);
 
         resultSection.layout();
     }
 
-
-
     /**
-     * DOC jet create result chart. <p>
-     * the chart must include 
+     * DOC jet create result chart.
+     * <p>
+     * the chart must include
+     * 
      * @param sectionClient
      * @param analysis
      */
     private void creatChart(Composite sectionClient, Analysis analysis) {
         DefaultCategoryDataset dataset = initDataset();
-            
-        JFreeChart chart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
-                PlotOrientation.HORIZONTAL);
-        ChartDecorator.decorate(chart);
+
+        JFreeChart createChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
+                .getString("ColumnDependencyResultPage.dependencyStrength"), dataset, PlotOrientation.HORIZONTAL, false);
+        ChartDecorator.decorateColumnDependency(createChart);
+
         GridData gd = new GridData();
         gd.heightHint = 180;
         gd.widthHint = 450;
-        
-        final ChartComposite chartComp = new ChartComposite(sectionClient, SWT.NONE, chart);
+
+        final ChartComposite chartComp = new ChartComposite(sectionClient, SWT.NONE, createChart);
         chartComp.setLayoutData(gd);
-    
+
     }
 
+    /**
+     * DOC xqliu Comment method "createTable".
+     * 
+     * @param composite
+     */
+    private void createTable(Composite composite) {
+        Table resultTable = new Table(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        resultTable.setLinesVisible(true);
+        resultTable.setHeaderVisible(true);
+        // create table headers
+        TableStructureEntity tableStructure = getTableStructure();
+        String[] fieldNames = tableStructure.getFieldNames();
+        Integer[] fieldWidths = tableStructure.getFieldWidths();
+        for (int i = 0; i < fieldNames.length; ++i) {
+            TableColumn columnHeader = new TableColumn(resultTable, SWT.LEFT);
+            columnHeader.setText(fieldNames[i]);
+            columnHeader.setWidth(fieldWidths[i]);
+        }
+        // create table items
+        DefaultCategoryDataset dataset = initDataset();
+        for (int i = 0; i < dataset.getColumnCount(); ++i) {
+            TableItem item = new TableItem(resultTable, SWT.NULL);
 
+            Number match = dataset.getValue(0, i);
+            Number notMatch = dataset.getValue(1, i);
+            Number row = match.intValue() + notMatch.intValue();
+
+            item.setText(0, dataset.getColumnKey(i).toString());
+            item.setText(1, String.valueOf(match.intValue()));
+            item.setText(2, StringFormatUtil.format(String.valueOf(match.doubleValue() / row.doubleValue()),
+                    StringFormatUtil.PERCENT).toString());
+            item.setText(3, String.valueOf(row));
+        }
+        
+        GridData gd = new GridData();
+        gd.heightHint = 180;
+        gd.widthHint = 450;
+
+        resultTable.setLayoutData(gd);
+    }
 
     /**
      * DOC jet according to current analysis generator chart dataset "initDataset".
+     * 
      * @return
      */
     private DefaultCategoryDataset initDataset() {
-        
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        
-        Analysis analysis =  this.getAnalysisHandler().getAnalysis();
-        
-        
-       for (Iterator iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
-           ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
-           String label = getRowLabel(indicator);
-           if(getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0){
-               dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label);
-               dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
-           }
-       }
+
+        Analysis analysis = this.getAnalysisHandler().getAnalysis();
+
+        for (Iterator iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
+            ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
+            String label = getRowLabel(indicator);
+            if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
+                dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label);
+                dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
+            }
+        }
         return dataset;
     }
 
-
-
     /**
      * DOC jet Comment method "getRowLabel".
-     * <p>according to ColumnDependencyIndicator get chart label.<p>
+     * <p>
+     * according to ColumnDependencyIndicator get chart label.
+     * <p>
      * value is columnA.getName() -> columnB.getName()
+     * 
      * @param indicator
      * @return
      */
     private String getRowLabel(ColumnDependencyIndicator indicator) {
         assert indicator.getColumnA() != null;
         assert indicator.getColumnB() != null;
-        
+
         return indicator.getColumnA().getName() + "-->" + indicator.getColumnB().getName();
+    }
+
+    private TableStructureEntity getTableStructure() {
+        TableStructureEntity entity = new TableStructureEntity();
+        entity
+                .setFieldNames(new String[] {
+                        DefaultMessagesImpl.getString("ColumnDependencyState.Label"), DefaultMessagesImpl.getString("ColumnDependencyState.Match"), DefaultMessagesImpl.getString("ColumnDependencyState.%Match"), DefaultMessagesImpl.getString("ColumnDependencyState.rows") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        entity.setFieldWidths(new Integer[] { 200, 85, 85, 85 });
+        return entity;
     }
 
 }
