@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2006 Davy Vanherbergen
- * dvanherbergen@users.sourceforge.net
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2006 Davy Vanherbergen dvanherbergen@users.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package net.sourceforge.sqlexplorer.dbstructure.nodes;
 
@@ -29,6 +25,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.TextUtil;
 import net.sourceforge.squirrel_sql.fw.sql.SQLDatabaseMetaData;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -36,12 +33,13 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
 /**
- * Root node for a database. ChildNodes can be filtered based on expressions in
- * the alias.
+ * Root node for a database. ChildNodes can be filtered based on expressions in the alias.
  * 
  * @author Davy Vanherbergen
  */
 public class DatabaseNode extends AbstractNode {
+
+    protected static Logger log = Logger.getLogger(DatabaseNode.class);
 
     private List _childNames = new ArrayList();
 
@@ -54,7 +52,6 @@ public class DatabaseNode extends AbstractNode {
     private boolean _supportsSchemas = false;
 
     private String _databaseVersion = "";
-    
 
     /**
      * Create a new database node with the given name
@@ -63,9 +60,9 @@ public class DatabaseNode extends AbstractNode {
      * @param alias
      */
     public DatabaseNode(String name, MetaDataSession session) throws SQLException {
-    	super(name, session);
-    	setImageKey("Images.DatabaseIcon");
-        
+        super(name, session);
+        setImageKey("Images.DatabaseIcon");
+
         try {
             SQLDatabaseMetaData metadata = _session.getMetaData();
 
@@ -78,18 +75,21 @@ public class DatabaseNode extends AbstractNode {
             _databaseProductName = metadata.getDatabaseProductName();
             try { // MOD scorreia 2008-10-23 surround with try/catch to caught error when the getDatabaseMajorVersion()
                 // method is not implemented by the driver (e.g. for sybase).
-                _databaseVersion = " [v" + metadata.getJDBCMetaData().getDatabaseMajorVersion() + "." 
-                    + metadata.getJDBCMetaData().getDatabaseMinorVersion() + "]";
+                _databaseVersion = " [v" + metadata.getJDBCMetaData().getDatabaseMajorVersion() + "."
+                        + metadata.getJDBCMetaData().getDatabaseMinorVersion() + "]";
             } catch (Exception e) {
-                SQLExplorerPlugin.error("Cannot get database version", e);
+                if (e.getMessage().toLowerCase().indexOf("sybase") > -1) {
+                    log.warn(e.getMessage());
+                } else {
+                    SQLExplorerPlugin.error("Cannot get database version", e);
+                }
                 _databaseVersion = " undefined ";
             }
-            
+
         } catch (AbstractMethodError e) {
             SQLExplorerPlugin.error("Error loading database product name.", e);
         }
     }
-
 
     /**
      * @return List of catalog nodes
@@ -109,7 +109,6 @@ public class DatabaseNode extends AbstractNode {
         return catalogs;
     }
 
-
     public String[] getChildNames() {
 
         if (_childNames.size() == 0) {
@@ -118,12 +117,10 @@ public class DatabaseNode extends AbstractNode {
         return (String[]) _childNames.toArray(new String[] {});
     }
 
-
     public String getDatabaseProductName() {
 
         return _databaseProductName;
     }
-
 
     /*
      * (non-Javadoc)
@@ -133,12 +130,12 @@ public class DatabaseNode extends AbstractNode {
     public String getLabelText() {
 
         if (_session.getUser().getAlias().isFiltered()) {
-            return _databaseProductName + " " + _databaseVersion + " " + Messages.getString("DatabaseStructureView.filteredPostfix");
+            return _databaseProductName + " " + _databaseVersion + " "
+                    + Messages.getString("DatabaseStructureView.filteredPostfix");
         } else {
             return _databaseProductName + " " + _databaseVersion;
         }
     }
-
 
     /**
      * @return List of all database schemas
@@ -158,7 +155,6 @@ public class DatabaseNode extends AbstractNode {
         return schemas;
     }
 
-
     /**
      * Returns "database" as the type for this node.
      * 
@@ -169,7 +165,6 @@ public class DatabaseNode extends AbstractNode {
         return "database";
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -179,7 +174,6 @@ public class DatabaseNode extends AbstractNode {
 
         return getQualifiedName();
     }
-
 
     /**
      * Checks if a node name should be filtered.
@@ -211,11 +205,9 @@ public class DatabaseNode extends AbstractNode {
 
     }
 
-
     /**
-     * Loads childnodes, filtered to a subset of schemas/databases depending on
-     * whether a comma separated list of regular expression filters has been
-     * set.
+     * Loads childnodes, filtered to a subset of schemas/databases depending on whether a comma separated list of
+     * regular expression filters has been set.
      */
     public void loadChildren() {
 
@@ -235,16 +227,16 @@ public class DatabaseNode extends AbstractNode {
 
                 final String[] catalogs = metadata.getCatalogs();
                 if (catalogs == null || catalogs.length == 0) {
-                	if (_supportsSchemas)
-                		_supportsCatalogs = false;
+                    if (_supportsSchemas)
+                        _supportsCatalogs = false;
                 } else {
-                	_supportsSchemas = false;
-	                for (int i = 0; i < catalogs.length; ++i) {
-	                    _childNames.add(catalogs[i]);
-	                    if (!isExcludedByFilter(catalogs[i])) {
-	                        addChildNode(new CatalogNode(this, catalogs[i], _session));
-	                    }
-	                }
+                    _supportsSchemas = false;
+                    for (int i = 0; i < catalogs.length; ++i) {
+                        _childNames.add(catalogs[i]);
+                        if (!isExcludedByFilter(catalogs[i])) {
+                            addChildNode(new CatalogNode(this, catalogs[i], _session));
+                        }
+                    }
                 }
 
             }
@@ -258,7 +250,7 @@ public class DatabaseNode extends AbstractNode {
                     }
                 }
 
-            } 
+            }
             if (!_supportsCatalogs && !_supportsSchemas) {
 
                 addChildNode(new CatalogNode(this, Messages.getString("NoCatalog_2"), _session));
@@ -337,7 +329,6 @@ public class DatabaseNode extends AbstractNode {
 
     }
 
-
     /**
      * @return true if this database supports catalogs
      */
@@ -345,7 +336,6 @@ public class DatabaseNode extends AbstractNode {
 
         return _supportsCatalogs;
     }
-
 
     /**
      * @return true if this database supports schemas
