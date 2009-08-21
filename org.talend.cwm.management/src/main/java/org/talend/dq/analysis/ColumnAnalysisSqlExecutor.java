@@ -117,7 +117,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             for (Indicator indicator : leafIndicators) {
                 if (!createSqlQuery(stringDataFilter, indicator)) {
                     log.error("Error when creating query with indicator " + indicator.getName());
-                    return null;
+                    // return null;
                 }
             }
         } catch (ParseException e) {
@@ -260,8 +260,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getUpperQuartileIndicator())) {
             // TODO scorreia test type of column and cast when needed
             completedSqlString = getCompletedStringForQuantiles(indicator, sqlGenericExpression, colName, table, whereExpression);
-            whereExpression = duplicateForCrossJoin(completedSqlString, whereExpression, tdColumn);
-            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+            if (completedSqlString != null) {
+                whereExpression = duplicateForCrossJoin(completedSqlString, whereExpression, tdColumn);
+                completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+            }
         } else
 
         // --- handle case when frequency indicator
@@ -342,9 +344,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // completedSqlString is the final query
         String finalQuery = completedSqlString;
 
-        Expression instantiateSqlExpression = BooleanExpressionHelper.createExpression(language, finalQuery);
-        indicator.setInstantiatedExpression(instantiateSqlExpression);
-        return true;
+        if (finalQuery != null) {
+            Expression instantiateSqlExpression = BooleanExpressionHelper.createExpression(language, finalQuery);
+            indicator.setInstantiatedExpression(instantiateSqlExpression);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -738,14 +744,18 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String catalogOrSchema = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         long count = getCount(cachedAnalysis, colName, table, catalogOrSchema, whereExpression);
         if (count == -1) {
-            throw new AnalysisExecutionException(Messages.getString("ColumnAnalysisSqlExecutor.GotInvalidResultSet", //$NON-NLS-1$
-                    dbms().toQualifiedName(catalogOrSchema, null, colName)));
+            this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.GotInvalidResultSet", //$NON-NLS-1$
+                    dbms().toQualifiedName(catalogOrSchema, null, colName));
+            return null;
+            //            throw new AnalysisExecutionException(Messages.getString("ColumnAnalysisSqlExecutor.GotInvalidResultSet", //$NON-NLS-1$
+            // dbms().toQualifiedName(catalogOrSchema, null, colName)));
         }
 
         if (count == 0) {
             this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.CannotComputeQuantile",//$NON-NLS-1$
                     dbms().toQualifiedName(catalogOrSchema, null, colName));
-            throw new AnalysisExecutionException(errorMessage);
+            return null;
+            // throw new AnalysisExecutionException(errorMessage);
         }
 
         Long midleCount = getOffsetInLimit(indicator, count);

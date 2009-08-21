@@ -45,9 +45,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     private static Logger log = Logger.getLogger(AnalysisExecutor.class);
 
     protected String errorMessage;
-    
+
     DbmsLanguage dbmsLanguage;
-    
+
     protected Analysis cachedAnalysis;
 
     /*
@@ -95,7 +95,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // --- compute execution duration
         long endtime = System.currentTimeMillis();
         resultMetadata.setExecutionDuration((int) (endtime - startime));
-        return getReturnCode(ok);
+        return new ReturnCode(this.errorMessage, ok);
     }
 
     /**
@@ -238,12 +238,11 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
         return this.dbmsLanguage;
     }
-    
+
     DbmsLanguage createDbmsLanguage() {
         DataManager connection = this.cachedAnalysis.getContext().getConnection();
         return DbmsLanguageFactory.createDbmsLanguage(connection);
     }
-    
 
     /**
      * Method "quote".

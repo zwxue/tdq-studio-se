@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.FrequencyExt;
 import org.talend.dataprofiler.core.ui.editor.preview.ext.PatternMatchingExt;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
@@ -52,6 +53,8 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  */
 public final class IndicatorCommonUtil {
 
+    private static Logger log = Logger.getLogger(IndicatorCommonUtil.class);
+
     private IndicatorCommonUtil() {
 
     }
@@ -63,102 +66,107 @@ public final class IndicatorCommonUtil {
         IndicatorEnum type = indicatorUnit.getType();
         Indicator indicator = indicatorUnit.getIndicator();
 
-        if (type == IndicatorEnum.RangeIndicatorEnum || type == IndicatorEnum.IQRIndicatorEnum) {
-            indicatorUnit.setValue(((RangeIndicator) indicator).getRange());
-        } else if (indicatorUnit.isExcuted()) {
+        try {
+            if (type == IndicatorEnum.RangeIndicatorEnum || type == IndicatorEnum.IQRIndicatorEnum) {
+                indicatorUnit.setValue(((RangeIndicator) indicator).getRange());
+            } else if (indicatorUnit.isExcuted()) {
 
-            switch (type) {
-            case RowCountIndicatorEnum:
-                tempObject = ((RowCountIndicator) indicator).getCount();
-                break;
+                switch (type) {
+                case RowCountIndicatorEnum:
+                    tempObject = ((RowCountIndicator) indicator).getCount();
+                    break;
 
-            case NullCountIndicatorEnum:
-                tempObject = ((NullCountIndicator) indicator).getNullCount();
-                break;
+                case NullCountIndicatorEnum:
+                    tempObject = ((NullCountIndicator) indicator).getNullCount();
+                    break;
 
-            case DistinctCountIndicatorEnum:
-                tempObject = ((DistinctCountIndicator) indicator).getDistinctValueCount();
-                break;
+                case DistinctCountIndicatorEnum:
+                    tempObject = ((DistinctCountIndicator) indicator).getDistinctValueCount();
+                    break;
 
-            case UniqueIndicatorEnum:
-                tempObject = (((UniqueCountIndicator) indicator).getUniqueValueCount());
-                break;
+                case UniqueIndicatorEnum:
+                    tempObject = (((UniqueCountIndicator) indicator).getUniqueValueCount());
+                    break;
 
-            case DuplicateCountIndicatorEnum:
-                tempObject = ((DuplicateCountIndicator) indicator).getDuplicateValueCount();
-                break;
+                case DuplicateCountIndicatorEnum:
+                    tempObject = ((DuplicateCountIndicator) indicator).getDuplicateValueCount();
+                    break;
 
-            case BlankCountIndicatorEnum:
-                tempObject = ((BlankCountIndicator) indicator).getBlankCount();
-                break;
+                case BlankCountIndicatorEnum:
+                    tempObject = ((BlankCountIndicator) indicator).getBlankCount();
+                    break;
 
-            case DefValueCountIndicatorEnum:
-                tempObject = ((DefValueCountIndicator) indicator).getDefaultValCount();
-                break;
+                case DefValueCountIndicatorEnum:
+                    tempObject = ((DefValueCountIndicator) indicator).getDefaultValCount();
+                    break;
 
-            case MinLengthIndicatorEnum:
-                tempObject = ((MinLengthIndicator) indicator).getLength();
-                break;
+                case MinLengthIndicatorEnum:
+                    tempObject = ((MinLengthIndicator) indicator).getLength();
+                    break;
 
-            case MaxLengthIndicatorEnum:
-                tempObject = ((MaxLengthIndicator) indicator).getLength();
-                break;
+                case MaxLengthIndicatorEnum:
+                    tempObject = ((MaxLengthIndicator) indicator).getLength();
+                    break;
 
-            case AverageLengthIndicatorEnum:
-                tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
-                break;
+                case AverageLengthIndicatorEnum:
+                    tempObject = ((AverageLengthIndicator) indicator).getAverageLength();
+                    break;
 
-            case FrequencyIndicatorEnum:
-            case LowFrequencyIndicatorEnum:
-            case PatternFreqIndicatorEnum:
-            case PatternLowFreqIndicatorEnum:
-            case SoundexIndicatorEnum:
-            case SoundexLowIndicatorEnum:
-                tempObject = handleFrequency(indicator);
-                break;
+                case FrequencyIndicatorEnum:
+                case LowFrequencyIndicatorEnum:
+                case PatternFreqIndicatorEnum:
+                case PatternLowFreqIndicatorEnum:
+                case SoundexIndicatorEnum:
+                case SoundexLowIndicatorEnum:
+                    tempObject = handleFrequency(indicator);
+                    break;
 
-            case MeanIndicatorEnum:
-                tempObject = ((MeanIndicator) indicator).getMean();
-                break;
+                case MeanIndicatorEnum:
+                    tempObject = ((MeanIndicator) indicator).getMean();
+                    break;
 
-            case MedianIndicatorEnum:
-                tempObject = ((MedianIndicator) indicator).getMedian();
-                break;
+                case MedianIndicatorEnum:
+                    tempObject = ((MedianIndicator) indicator).getMedian();
+                    break;
 
-            case MinValueIndicatorEnum:
-                tempObject = ((MinValueIndicator) indicator).getValue();
-                break;
+                case MinValueIndicatorEnum:
+                    tempObject = ((MinValueIndicator) indicator).getValue();
+                    break;
 
-            case MaxValueIndicatorEnum:
-                tempObject = ((MaxValueIndicator) indicator).getValue();
-                break;
+                case MaxValueIndicatorEnum:
+                    tempObject = ((MaxValueIndicator) indicator).getValue();
+                    break;
 
-            case LowerQuartileIndicatorEnum:
-                tempObject = ((LowerQuartileIndicator) indicator).getValue();
-                break;
+                case LowerQuartileIndicatorEnum:
+                    tempObject = ((LowerQuartileIndicator) indicator).getValue();
+                    break;
 
-            case UpperQuartileIndicatorEnum:
-                tempObject = ((UpperQuartileIndicator) indicator).getValue();
-                break;
+                case UpperQuartileIndicatorEnum:
+                    tempObject = ((UpperQuartileIndicator) indicator).getValue();
+                    break;
 
-            case RegexpMatchingIndicatorEnum:
-            case SqlPatternMatchingIndicatorEnum:
-                tempObject = handleMatchingValue(indicator);
-                break;
+                case RegexpMatchingIndicatorEnum:
+                case SqlPatternMatchingIndicatorEnum:
+                    tempObject = handleMatchingValue(indicator);
+                    break;
 
-            case ModeIndicatorEnum:
-                tempObject = ((ModeIndicator) indicator).getMode();
-                break;
+                case ModeIndicatorEnum:
+                    tempObject = ((ModeIndicator) indicator).getMode();
+                    break;
 
-            case UserDefinedIndicatorEnum:
-                tempObject = handleUDIValue(indicator);
-                break;
+                case UserDefinedIndicatorEnum:
+                    tempObject = handleUDIValue(indicator);
+                    break;
 
-            default:
+                default:
 
+                }
+
+                indicatorUnit.setValue(tempObject);
             }
-
-            indicatorUnit.setValue(tempObject);
+        } catch (Exception e) {
+            String msg = "Get result error: " + indicator.getName() + "[" + e.getMessage() + "]";
+            log.error(msg);
         }
     }
 

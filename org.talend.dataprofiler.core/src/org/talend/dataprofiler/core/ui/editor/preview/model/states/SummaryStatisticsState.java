@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
@@ -42,6 +43,8 @@ import org.talend.utils.sql.Java2SqlType;
  * DOC Zqin class global comment. Detailled comment
  */
 public class SummaryStatisticsState extends AbstractChartTypeStates {
+
+    private static Logger log = Logger.getLogger(SummaryStatisticsState.class);
 
     public static final int FULL_FLAG = 8;
 
@@ -79,7 +82,11 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
                 // MOD xqliu 2009-06-29 bug 7068
                 String value = unit.getValue() == null ? "0" : unit.getValue().toString();
                 // ~
-                map.put(unit.getType(), Double.parseDouble(value));
+                try {
+                    map.put(unit.getType(), Double.parseDouble(value));
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }
 
             ChartDataEntity entity = new ChartDataEntity();

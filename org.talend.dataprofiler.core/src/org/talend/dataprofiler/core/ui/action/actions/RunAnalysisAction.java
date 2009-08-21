@@ -179,7 +179,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                 });
 
-                return getResultStatus(executed);
+                displayResultStatus(executed);
+
+                return Status.OK_STATUS;
             }
 
         };
@@ -210,21 +212,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         run();
     }
 
-    private IStatus getResultStatus(final ReturnCode executed) {
-        if (executed.isOk()) {
-            if (log.isInfoEnabled()) {
-                int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-                log.info("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                        + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s."); //$NON-NLS-1$
-            }
-            return Status.OK_STATUS;
-        } else {
+    private void displayResultStatus(final ReturnCode executed) {
+        if (log.isInfoEnabled()) {
             int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-            log
-                    .warn(DefaultMessagesImpl
-                            .getString(
-                                    "RunAnalysisAction.analysis", analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            // open error dialog
+            log.info("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s."); //$NON-NLS-1$
+        }
+
+        if (executed.getMessage() != null) {
             Display.getDefault().syncExec(new Runnable() {
 
                 public void run() {
@@ -234,8 +229,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                     DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             });
-
-            return Status.CANCEL_STATUS;
         }
+
     }
 }
