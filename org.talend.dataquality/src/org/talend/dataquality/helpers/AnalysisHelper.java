@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -21,10 +24,15 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -307,5 +315,42 @@ public final class AnalysisHelper {
         BooleanExpressionNode expressionNode = BooleanExpressionHelper.createBooleanExpressionNode(datafilterString);
         rangeRestriction.setExpressions(expressionNode);
         return domain;
+    }
+
+    public static List<IndicatorDefinition> getUserDefinedIndicators(Analysis analysis) {
+        List<IndicatorDefinition> rets = new ArrayList<IndicatorDefinition>();
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        for (Indicator indicator : indicators) {
+            if (indicator instanceof UserDefIndicator) {
+                rets.add(indicator.getIndicatorDefinition());
+            }
+        }
+        return rets;
+    }
+
+    public static List<Pattern> getPatterns(Analysis analysis) {
+        List<Pattern> rets = new ArrayList<Pattern>();
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        for (Indicator indicator : indicators) {
+            if (indicator instanceof PatternMatchingIndicator) {
+                rets.addAll(((PatternMatchingIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
+            } else if (indicator instanceof UserDefIndicator) {
+                if (IndicatorCategoryHelper.isMatching(getIndicatorCategory(indicator.getIndicatorDefinition()))) {
+                    rets.addAll(((UserDefIndicator) indicator).getParameters().getDataValidDomain().getPatterns());
+                }
+            }
+        }
+        return rets;
+    }
+
+    private static IndicatorCategory getIndicatorCategory(IndicatorDefinition indicatorDefinition) {
+        IndicatorCategory category = null;
+        if (indicatorDefinition != null) {
+            EList<IndicatorCategory> categories = indicatorDefinition.getCategories();
+            if (categories != null && categories.size() > 0) {
+                category = categories.get(0);
+            }
+        }
+        return category;
     }
 }

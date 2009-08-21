@@ -24,6 +24,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -314,6 +315,14 @@ public final class DependenciesHandler {
 
     public TypedReturnCode<Dependency> setDependencyOn(Indicator indicator, Pattern pattern) {
         return setUsageDependencyOn(indicator, pattern);
+    }
+
+    public TypedReturnCode<Dependency> setDependencyOn(Analysis analysis, Pattern pattern) {
+        return setUsageDependencyOn(analysis, pattern);
+    }
+
+    public TypedReturnCode<Dependency> setDependencyOn(Analysis analysis, IndicatorDefinition indicatorDefinition) {
+        return setUsageDependencyOn(analysis, indicatorDefinition);
     }
 
     // /**

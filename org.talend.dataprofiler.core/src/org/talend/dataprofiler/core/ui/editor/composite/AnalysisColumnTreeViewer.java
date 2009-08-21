@@ -51,6 +51,8 @@ import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -79,6 +81,7 @@ import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
@@ -88,6 +91,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.UDIHelper;
@@ -527,6 +531,29 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
+     * DOC xqliu Comment method "removeDependency".
+     * 
+     * @param analysis
+     * @param unit
+     */
+    protected void removeDependency(Analysis analysis, IndicatorUnit unit) {
+        List<ModelElement> reomveElements = new ArrayList<ModelElement>();
+        Indicator indicator = unit.getIndicator();
+        if (indicator instanceof UserDefIndicator) {
+            reomveElements.add(indicator.getIndicatorDefinition());
+            if (IndicatorCategoryHelper.isMatching(UDIHelper.getUDICategory(indicator))) {
+                reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
+            }
+        } else if (indicator instanceof PatternMatchingIndicator) {
+            reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
+        }
+        DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, reomveElements);
+        for (ModelElement me : reomveElements) {
+            EMFUtil.saveSingleResource(me.eResource());
+        }
+    }
+
+    /**
      * DOC qzhang Comment method "createIndicatorParameters".
      * 
      * @param indicatorItem
@@ -629,6 +656,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      */
     private void deleteIndicatorItems(ColumnIndicator columnIndicator, IndicatorUnit inidicatorUnit) {
         columnIndicator.removeIndicatorUnit(inidicatorUnit);
+        // remove dependency
+        removeDependency(getAnalysis(), inidicatorUnit);
     }
 
     /**
