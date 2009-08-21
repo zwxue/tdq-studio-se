@@ -71,12 +71,14 @@ public final class ImportFactory {
 
     }
 
-    public static void importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
+    public static String importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
             boolean rename) {
 
+        String information = "Patterns imported in the \"Patterns\" folder";
         Set<String> names = PatternUtilities.getAllPatternNames(selectionFolder);
 
         String fileExtName = getFileExtName(importFile);
+        String name = "";
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
 
@@ -90,10 +92,11 @@ public final class ImportFactory {
                 reader.readHeaders();
 
                 while (reader.readRecord()) {
-                    String name = reader.get(PatternToExcelEnum.Label.getLiteral());
+                    name = reader.get(PatternToExcelEnum.Label.getLiteral());
 
                     if (names.contains(name)) {
                         if (skip) {
+                            information = "Pattern \"" + name + "\" has already imported";
                             continue;
                         }
                         if (rename) {
@@ -116,20 +119,17 @@ public final class ImportFactory {
                     }
 
                     createAndStorePattern(patternParameters, selectionFolder, type);
-
                     names.add(name);
+
+                    information = "Pattern \"" + name + "\" imported in the \"" + "\"Patterns/" + patternParameters.relativePath
+                            + "\" folder";
                 }
 
                 reader.close();
 
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    public void run() {
-                        MessageDialog.openInformation(null, "Information", "Patterns imported in the \"Patterns\" folder");
-                    }
-                });
             } catch (Exception e) {
                 log.error(e, e);
+                information = "Pattern \"" + name + "\" import failed";
             }
         }
 
@@ -194,6 +194,7 @@ public final class ImportFactory {
                 log.error(e, e);
             }
         }
+        return information;
     }
 
     private static void createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
@@ -423,8 +424,8 @@ public final class ImportFactory {
 
     private static void createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
 
-        IndicatorDefinition id = UDIHelper.createUDI(parameters.name, parameters.auther,
-                parameters.description, parameters.purpose, parameters.status, parameters.category);
+        IndicatorDefinition id = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,
+                parameters.purpose, parameters.status, parameters.category);
 
         for (String key : parameters.regex.keySet()) {
             Expression expression = BooleanExpressionHelper.createExpression(key, parameters.regex.get(key));
