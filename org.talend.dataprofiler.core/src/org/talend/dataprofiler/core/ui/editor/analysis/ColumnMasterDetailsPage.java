@@ -61,6 +61,7 @@ import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -68,6 +69,7 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.analysis.ColumnAnalysisHandler;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -526,15 +528,44 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
         execCombo.setText(executionLanguage.getLiteral());
+        // ADD xqliu 2009-08-24 bug 8776
+        treeViewer.setLanguage(ExecutionLanguage.get(executionLanguage.getLiteral()));
+        // ~
         execCombo.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setDirty(true);
+                // MOD xqliu 2009-08-24 bug 8776
                 execLang = execCombo.getText();
+                if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang)) && includeUDI()) {
+                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.UDIWarning"));
+                    execCombo.setText(ExecutionLanguage.SQL.getLiteral());
+                    return;
+                }
+                setDirty(true);
+                treeViewer.setLanguage(ExecutionLanguage.get(execLang));
+                // ~
             }
 
         });
         analysisParamSection.setClient(sectionClient);
+    }
+
+    /**
+     * ADD xqliu 2009-08-24 bug 8776.
+     * 
+     * @return
+     */
+    protected boolean includeUDI() {
+        ColumnIndicator[] columnIndicators = this.getTreeViewer().getColumnIndicator();
+        for (ColumnIndicator columnIndicator : columnIndicators) {
+            Indicator[] indicators = columnIndicator.getIndicators();
+            for (Indicator indicator : indicators) {
+                if (indicator instanceof UserDefIndicator) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

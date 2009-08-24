@@ -79,6 +79,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
@@ -135,6 +136,18 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     private ColumnMasterDetailsPage masterPage;
 
+    // ADD xqliu 2009-08-24 bug 8776
+    private ExecutionLanguage language;
+    
+    public ExecutionLanguage getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(ExecutionLanguage language) {
+        this.language = language;
+    }
+    // ~
+    
     public AnalysisColumnTreeViewer(Composite parent) {
         parentComp = parent;
         this.tree = createTree(parent);
