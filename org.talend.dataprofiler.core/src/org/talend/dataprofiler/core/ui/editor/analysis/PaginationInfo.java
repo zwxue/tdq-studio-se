@@ -62,7 +62,7 @@ public abstract class PaginationInfo {
         IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("Analysising...", columnIndicatores.size());
+                monitor.beginTask("Loading page...", columnIndicatores.size());
                 uiPagination.notifyPageNavigator();
                 render();
                 uiPagination.updatePageInfoLabel();
