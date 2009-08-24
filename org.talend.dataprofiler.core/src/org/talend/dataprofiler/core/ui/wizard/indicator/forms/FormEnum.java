@@ -171,20 +171,21 @@ public enum FormEnum {
             break;
         case MeanIndicatorEnum:
         case MedianIndicatorEnum:
+            forms = new FormEnum[] { IndicatorThresholdsForm };
+
+            break;
         case LowerQuartileIndicatorEnum:
         case UpperQuartileIndicatorEnum:
         case MinValueIndicatorEnum:
         case MaxValueIndicatorEnum:
-            forms = new FormEnum[] { IndicatorThresholdsForm };
+            forms = new FormEnum[] { IndicatorThresholdsForm, DataThresholdsForm };
 
             break;
-
         case RegexpMatchingIndicatorEnum:
         case SqlPatternMatchingIndicatorEnum:
             forms = new FormEnum[] { IndicatorThresholdsForm };
 
             break;
-
         case SoundexIndicatorEnum:
         case SoundexLowIndicatorEnum:
             forms = new FormEnum[] { NumbericNominalForm };
