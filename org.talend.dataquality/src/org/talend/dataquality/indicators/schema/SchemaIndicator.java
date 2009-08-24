@@ -8,7 +8,6 @@ package org.talend.dataquality.indicators.schema;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.indicators.CompositeIndicator;
-import org.talend.dataquality.indicators.Indicator;
 
 /**
  * <!-- begin-user-doc -->

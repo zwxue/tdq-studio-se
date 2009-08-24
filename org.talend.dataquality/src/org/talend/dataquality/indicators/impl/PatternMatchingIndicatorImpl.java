@@ -7,9 +7,7 @@ package org.talend.dataquality.indicators.impl;
 
 import java.util.List;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;

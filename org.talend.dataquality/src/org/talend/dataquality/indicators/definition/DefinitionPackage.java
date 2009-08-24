@@ -10,7 +10,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
 
 /**
@@ -162,13 +161,13 @@ public interface DefinitionPackage extends EPackage {
     int INDICATORS_DEFINITIONS__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDICATORS_DEFINITIONS__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int INDICATORS_DEFINITIONS__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -370,13 +369,13 @@ public interface DefinitionPackage extends EPackage {
     int INDICATOR_DEFINITION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDICATOR_DEFINITION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int INDICATOR_DEFINITION__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -623,13 +622,13 @@ public interface DefinitionPackage extends EPackage {
     int INDICATOR_CATEGORY__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDICATOR_CATEGORY__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int INDICATOR_CATEGORY__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

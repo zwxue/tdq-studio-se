@@ -7,9 +7,7 @@
 package org.talend.dataquality.analysis.category;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.analysis.AnalysisType;
 
 /**

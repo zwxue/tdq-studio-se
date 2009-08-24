@@ -12,7 +12,7 @@ import org.talend.dataquality.indicators.LowerQuartileIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements LowerQuartileIndicator {
@@ -21,7 +21,6 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected LowerQuartileIndicatorImpl() {
@@ -30,7 +29,6 @@ public class LowerQuartileIndicatorImpl extends MinValueIndicatorImpl implements
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

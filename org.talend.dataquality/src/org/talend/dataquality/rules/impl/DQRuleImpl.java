@@ -9,20 +9,13 @@ package org.talend.dataquality.rules.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
 import org.talend.dataquality.indicators.definition.impl.IndicatorDefinitionImpl;
-
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.RulesPackage;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -131,7 +124,7 @@ public class DQRuleImpl extends IndicatorDefinitionImpl implements DQRule {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
-                return getCriticalityLevel();
+                return new Integer(getCriticalityLevel());
             case RulesPackage.DQ_RULE__ELEMENTS:
                 return getElements();
         }
@@ -148,7 +141,7 @@ public class DQRuleImpl extends IndicatorDefinitionImpl implements DQRule {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case RulesPackage.DQ_RULE__CRITICALITY_LEVEL:
-                setCriticalityLevel((Integer)newValue);
+                setCriticalityLevel(((Integer)newValue).intValue());
                 return;
             case RulesPackage.DQ_RULE__ELEMENTS:
                 getElements().clear();

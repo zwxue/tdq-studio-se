@@ -10,13 +10,19 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.MatchingIndicator;
-
 import org.talend.dataquality.indicators.columnset.*;
-
+import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
+import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
+import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

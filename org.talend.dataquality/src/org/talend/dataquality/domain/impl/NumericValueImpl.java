@@ -7,7 +7,6 @@
 package org.talend.dataquality.domain.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.NumericValue;
 

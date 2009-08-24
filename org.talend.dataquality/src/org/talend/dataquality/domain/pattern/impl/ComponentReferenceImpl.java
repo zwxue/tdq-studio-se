@@ -7,12 +7,9 @@
 package org.talend.dataquality.domain.pattern.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.domain.pattern.ComponentReference;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternPackage;

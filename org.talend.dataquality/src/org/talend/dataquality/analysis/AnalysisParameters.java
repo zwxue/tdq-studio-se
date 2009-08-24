@@ -7,9 +7,6 @@
 package org.talend.dataquality.analysis;
 
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwmx.analysis.informationreporting.ReportGroup;

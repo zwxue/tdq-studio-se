@@ -10,118 +10,66 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
+import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
-
 import org.talend.dataquality.analysis.category.CategoryPackage;
-
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;
-
 import org.talend.dataquality.analysis.impl.AnalysisPackageImpl;
-
 import org.talend.dataquality.domain.DomainPackage;
-
 import org.talend.dataquality.domain.impl.DomainPackageImpl;
-
 import org.talend.dataquality.domain.pattern.PatternPackage;
-
 import org.talend.dataquality.domain.pattern.impl.PatternPackageImpl;
-
 import org.talend.dataquality.domain.sql.SQLPackage;
-
 import org.talend.dataquality.domain.sql.impl.SQLPackageImpl;
-
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
-
 import org.talend.dataquality.indicators.IndicatorsPackage;
-
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
-
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
-
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
-
 import org.talend.dataquality.indicators.schema.SchemaPackage;
-
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
-
-import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
-import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
+import org.talend.dataquality.indicators.sql.SqlFactory;
+import org.talend.dataquality.indicators.sql.SqlPackage;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
-import org.talend.dataquality.indicators.sql.SqlIndicator;
-
+import org.talend.dataquality.properties.impl.PropertiesPackageImpl;
 import org.talend.dataquality.reports.ReportsPackage;
-
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
-
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.impl.RulesPackageImpl;
 import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
-
 import orgomg.cwm.analysis.datamining.DataminingPackage;
-
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
-
 import orgomg.cwm.analysis.olap.OlapPackage;
-
 import orgomg.cwm.analysis.transformation.TransformationPackage;
-
 import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
-
 import orgomg.cwm.foundation.datatypes.DatatypesPackage;
-
 import orgomg.cwm.foundation.expressions.ExpressionsPackage;
-
 import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
-
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
-
 import orgomg.cwm.foundation.typemapping.TypemappingPackage;
-
 import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
-
 import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
-
 import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
-
 import orgomg.cwm.objectmodel.core.CorePackage;
-
 import orgomg.cwm.objectmodel.instance.InstancePackage;
-
 import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
-
 import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
-
 import orgomg.cwm.resource.record.RecordPackage;
-
 import orgomg.cwm.resource.relational.RelationalPackage;
-
 import orgomg.cwm.resource.xml.XmlPackage;
-
 import orgomg.cwmmip.CwmmipPackage;
-
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
-
 import orgomg.cwmx.analysis.informationset.InformationsetPackage;
-
 import orgomg.cwmx.foundation.er.ErPackage;
-
 import orgomg.cwmx.resource.coboldata.CoboldataPackage;
-
 import orgomg.cwmx.resource.dmsii.DmsiiPackage;
-
 import orgomg.cwmx.resource.essbase.EssbasePackage;
-
 import orgomg.cwmx.resource.express.ExpressPackage;
-
 import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
-
 import orgomg.mof.model.ModelPackage;
 
 /**
@@ -130,19 +78,21 @@ import orgomg.mof.model.ModelPackage;
  * <!-- end-user-doc -->
  * @generated
  */
-public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSqlPackage {
+public class SqlPackageImpl extends EPackageImpl implements SqlPackage {
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     private EClass userDefIndicatorEClass = null;
+
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     private EClass whereRuleIndicatorEClass = null;
+
     /**
      * Creates an instance of the model <b>Package</b>, registered with
      * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
@@ -154,12 +104,12 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see org.eclipse.emf.ecore.EPackage.Registry
-     * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#eNS_URI
+     * @see org.talend.dataquality.indicators.sql.SqlPackage#eNS_URI
      * @see #init()
      * @generated
      */
-    private IndicatorSqlPackageImpl() {
-        super(eNS_URI, IndicatorSqlFactory.eINSTANCE);
+    private SqlPackageImpl() {
+        super(eNS_URI, SqlFactory.eINSTANCE);
     }
 
     /**
@@ -191,11 +141,11 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * @see #initializePackageContents()
      * @generated
      */
-    public static IndicatorSqlPackage init() {
-        if (isInited) return (IndicatorSqlPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI);
+    public static SqlPackage init() {
+        if (isInited) return (SqlPackage)EPackage.Registry.INSTANCE.getEPackage(SqlPackage.eNS_URI);
 
         // Obtain or create and register package
-        IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new IndicatorSqlPackageImpl());
+        SqlPackageImpl theSqlPackage = (SqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof SqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new SqlPackageImpl());
 
         isInited = true;
 
@@ -231,6 +181,7 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         InformationreportingPackage.eINSTANCE.eClass();
         CwmmipPackage.eINSTANCE.eClass();
         ModelPackage.eINSTANCE.eClass();
+        PropertiesPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
         AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
@@ -245,9 +196,10 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
         SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
         RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
+        PropertiesPackageImpl thePropertiesPackage_1 = (PropertiesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.properties.PropertiesPackage.eNS_URI) instanceof PropertiesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(org.talend.dataquality.properties.PropertiesPackage.eNS_URI) : org.talend.dataquality.properties.PropertiesPackage.eINSTANCE);
 
         // Create package meta-data objects
-        theIndicatorSqlPackage.createPackageContents();
+        theSqlPackage.createPackageContents();
         theAnalysisPackage.createPackageContents();
         theCategoryPackage.createPackageContents();
         theReportsPackage.createPackageContents();
@@ -260,9 +212,10 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         thePatternPackage.createPackageContents();
         theSQLPackage.createPackageContents();
         theRulesPackage.createPackageContents();
+        thePropertiesPackage_1.createPackageContents();
 
         // Initialize created meta-data
-        theIndicatorSqlPackage.initializePackageContents();
+        theSqlPackage.initializePackageContents();
         theAnalysisPackage.initializePackageContents();
         theCategoryPackage.initializePackageContents();
         theReportsPackage.initializePackageContents();
@@ -275,11 +228,12 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         thePatternPackage.initializePackageContents();
         theSQLPackage.initializePackageContents();
         theRulesPackage.initializePackageContents();
+        thePropertiesPackage_1.initializePackageContents();
 
         // Mark meta-data to indicate it can't be changed
-        theIndicatorSqlPackage.freeze();
+        theSqlPackage.freeze();
 
-        return theIndicatorSqlPackage;
+        return theSqlPackage;
     }
 
     /**
@@ -377,8 +331,8 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
      * <!-- end-user-doc -->
      * @generated
      */
-    public IndicatorSqlFactory getIndicatorSqlFactory() {
-        return (IndicatorSqlFactory)getEFactoryInstance();
+    public SqlFactory getSqlFactory() {
+        return (SqlFactory)getEFactoryInstance();
     }
 
     /**
@@ -469,4 +423,4 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
         initEClass(whereRuleIndicatorEClass, WhereRuleIndicator.class, "WhereRuleIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     }
 
-} //IndicatorSqlPackageImpl
+} //SqlPackageImpl

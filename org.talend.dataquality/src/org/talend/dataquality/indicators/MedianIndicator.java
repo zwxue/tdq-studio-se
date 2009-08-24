@@ -6,7 +6,6 @@
 package org.talend.dataquality.indicators;
 
 import java.util.Date;
-import java.math.BigDecimal;
 import java.util.TreeMap;
 
 /**

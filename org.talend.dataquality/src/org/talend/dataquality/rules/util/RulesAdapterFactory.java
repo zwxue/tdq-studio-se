@@ -8,15 +8,16 @@ package org.talend.dataquality.rules.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-
 import org.talend.dataquality.rules.*;
-
+import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.InferredDQRule;
+import org.talend.dataquality.rules.JoinElement;
+import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dataquality.rules.SpecifiedDQRule;
+import org.talend.dataquality.rules.WhereRule;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.domain.Domain;
 
 /**

@@ -9,12 +9,12 @@ package org.talend.dataquality.expressions.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.expressions.*;
+import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.dataquality.expressions.ExpressionsFactory;
+import org.talend.dataquality.expressions.ExpressionsPackage;
 
 /**
  * <!-- begin-user-doc -->

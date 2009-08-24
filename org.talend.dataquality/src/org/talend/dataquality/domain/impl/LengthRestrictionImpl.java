@@ -7,12 +7,9 @@
 package org.talend.dataquality.domain.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.LengthRestriction;
 
@@ -141,9 +138,9 @@ public class LengthRestrictionImpl extends EObjectImpl implements LengthRestrict
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
-                return getMaximum();
+                return new Integer(getMaximum());
             case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
-                return getMinimum();
+                return new Integer(getMinimum());
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -157,10 +154,10 @@ public class LengthRestrictionImpl extends EObjectImpl implements LengthRestrict
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DomainPackage.LENGTH_RESTRICTION__MAXIMUM:
-                setMaximum((Integer)newValue);
+                setMaximum(((Integer)newValue).intValue());
                 return;
             case DomainPackage.LENGTH_RESTRICTION__MINIMUM:
-                setMinimum((Integer)newValue);
+                setMinimum(((Integer)newValue).intValue());
                 return;
         }
         super.eSet(featureID, newValue);

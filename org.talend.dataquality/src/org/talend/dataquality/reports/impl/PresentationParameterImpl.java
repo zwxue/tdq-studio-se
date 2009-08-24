@@ -7,15 +7,10 @@
 package org.talend.dataquality.reports.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.talend.dataquality.indicators.Indicator;
-
 import org.talend.dataquality.reports.PresentationParameter;
 import org.talend.dataquality.reports.ReportsPackage;
 import orgomg.cwm.analysis.informationvisualization.impl.RenderingImpl;

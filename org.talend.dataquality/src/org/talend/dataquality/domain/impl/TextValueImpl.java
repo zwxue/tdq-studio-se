@@ -7,11 +7,8 @@
 package org.talend.dataquality.domain.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.TextValue;
 

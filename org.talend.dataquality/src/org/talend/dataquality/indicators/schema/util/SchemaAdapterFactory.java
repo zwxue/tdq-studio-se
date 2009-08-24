@@ -8,15 +8,18 @@ package org.talend.dataquality.indicators.schema.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
-
 import org.talend.dataquality.indicators.schema.*;
+import org.talend.dataquality.indicators.schema.AbstractTableIndicator;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
+import org.talend.dataquality.indicators.schema.ConnectionIndicator;
+import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dataquality.indicators.schema.SchemaPackage;
+import org.talend.dataquality.indicators.schema.TableIndicator;
+import org.talend.dataquality.indicators.schema.ViewIndicator;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

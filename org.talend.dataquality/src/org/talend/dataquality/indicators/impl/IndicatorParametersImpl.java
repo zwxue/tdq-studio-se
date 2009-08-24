@@ -6,18 +6,14 @@
 package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.talend.dataquality.domain.Domain;
-
-import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.TextParameters;
@@ -400,7 +396,7 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
             case IndicatorsPackage.INDICATOR_PARAMETERS__DATE_PARAMETERS:
                 return getDateParameters();
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
-                return getTopN();
+                return new Integer(getTopN());
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -428,7 +424,7 @@ public class IndicatorParametersImpl extends EObjectImpl implements IndicatorPar
                 setDateParameters((DateParameters)newValue);
                 return;
             case IndicatorsPackage.INDICATOR_PARAMETERS__TOP_N:
-                setTopN((Integer)newValue);
+                setTopN(((Integer)newValue).intValue());
                 return;
         }
         super.eSet(featureID, newValue);

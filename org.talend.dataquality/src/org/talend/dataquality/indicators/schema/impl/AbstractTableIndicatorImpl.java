@@ -130,7 +130,7 @@ public class AbstractTableIndicatorImpl extends IndicatorImpl implements Abstrac
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case SchemaPackage.ABSTRACT_TABLE_INDICATOR__ROW_COUNT:
-                return getRowCount();
+                return new Long(getRowCount());
             case SchemaPackage.ABSTRACT_TABLE_INDICATOR__TABLE_NAME:
                 return getTableName();
         }
@@ -145,7 +145,7 @@ public class AbstractTableIndicatorImpl extends IndicatorImpl implements Abstrac
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case SchemaPackage.ABSTRACT_TABLE_INDICATOR__ROW_COUNT:
-                setRowCount((Long)newValue);
+                setRowCount(((Long)newValue).longValue());
                 return;
             case SchemaPackage.ABSTRACT_TABLE_INDICATOR__TABLE_NAME:
                 setTableName((String)newValue);

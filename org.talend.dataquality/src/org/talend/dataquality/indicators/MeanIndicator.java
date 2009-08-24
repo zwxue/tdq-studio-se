@@ -1,7 +1,5 @@
 package org.talend.dataquality.indicators;
 
-import java.math.BigDecimal;
-import org.eclipse.emf.ecore.EObject;
 
 
 /**

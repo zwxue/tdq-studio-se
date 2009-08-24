@@ -10,11 +10,10 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.expressions.*;
-
+import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.dataquality.expressions.ExpressionsPackage;
 import orgomg.cwm.foundation.expressions.ExpressionNode;
-
 import orgomg.cwm.objectmodel.core.Element;
 
 /**

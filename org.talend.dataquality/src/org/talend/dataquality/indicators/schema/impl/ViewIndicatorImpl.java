@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.schema.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 

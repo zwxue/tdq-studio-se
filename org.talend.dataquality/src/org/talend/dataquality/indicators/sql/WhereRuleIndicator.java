@@ -17,7 +17,7 @@ package org.talend.dataquality.indicators.sql;
  * <!-- end-model-doc -->
  *
  *
- * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage#getWhereRuleIndicator()
+ * @see org.talend.dataquality.indicators.sql.SqlPackage#getWhereRuleIndicator()
  * @model
  * @generated
  */

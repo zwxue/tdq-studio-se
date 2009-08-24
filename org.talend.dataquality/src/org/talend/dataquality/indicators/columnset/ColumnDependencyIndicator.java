@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.columnset;
 
 import org.talend.dataquality.indicators.Indicator;
-
 import orgomg.cwm.resource.relational.Column;
 
 /**

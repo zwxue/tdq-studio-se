@@ -7,12 +7,9 @@
 package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MatchingAlgorithm;
 import org.talend.dataquality.indicators.TextParameters;
@@ -310,13 +307,13 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
-                return isUseBlank();
+                return isUseBlank() ? Boolean.TRUE : Boolean.FALSE;
             case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
                 return getMatchingAlgorithm();
             case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
-                return isIgnoreCase();
+                return isIgnoreCase() ? Boolean.TRUE : Boolean.FALSE;
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
-                return isUseNulls();
+                return isUseNulls() ? Boolean.TRUE : Boolean.FALSE;
             case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
                 return getCharactersToReplace();
             case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
@@ -334,16 +331,16 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case IndicatorsPackage.TEXT_PARAMETERS__USE_BLANK:
-                setUseBlank((Boolean)newValue);
+                setUseBlank(((Boolean)newValue).booleanValue());
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__MATCHING_ALGORITHM:
                 setMatchingAlgorithm((MatchingAlgorithm)newValue);
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__IGNORE_CASE:
-                setIgnoreCase((Boolean)newValue);
+                setIgnoreCase(((Boolean)newValue).booleanValue());
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__USE_NULLS:
-                setUseNulls((Boolean)newValue);
+                setUseNulls(((Boolean)newValue).booleanValue());
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__CHARACTERS_TO_REPLACE:
                 setCharactersToReplace((String)newValue);

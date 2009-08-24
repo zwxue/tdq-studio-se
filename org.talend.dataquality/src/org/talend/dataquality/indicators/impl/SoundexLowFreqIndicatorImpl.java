@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.SoundexLowFreqIndicator;
 

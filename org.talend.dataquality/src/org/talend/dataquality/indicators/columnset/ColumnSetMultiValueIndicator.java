@@ -10,11 +10,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.indicators.CompositeIndicator;
-import org.talend.dataquality.indicators.DistinctCountIndicator;
-import org.talend.dataquality.indicators.DuplicateCountIndicator;
-import org.talend.dataquality.indicators.RowCountIndicator;
-import org.talend.dataquality.indicators.UniqueCountIndicator;
-import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwm.resource.relational.Column;
 
 /**

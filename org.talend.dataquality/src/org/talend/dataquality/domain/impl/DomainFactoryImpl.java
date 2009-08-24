@@ -9,12 +9,21 @@ package org.talend.dataquality.domain.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.domain.*;
+import org.talend.dataquality.domain.DateValue;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.DomainFactory;
+import org.talend.dataquality.domain.DomainPackage;
+import org.talend.dataquality.domain.EnumerationRule;
+import org.talend.dataquality.domain.IntegerValue;
+import org.talend.dataquality.domain.LengthRestriction;
+import org.talend.dataquality.domain.LiteralValue;
+import org.talend.dataquality.domain.NumericValue;
+import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.domain.RealNumberValue;
+import org.talend.dataquality.domain.TextValue;
 
 /**
  * <!-- begin-user-doc -->

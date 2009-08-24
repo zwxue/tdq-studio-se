@@ -7,9 +7,7 @@
 package org.talend.dataquality.indicators.columnset;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.talend.dataquality.indicators.MatchingIndicator;
-
 import orgomg.cwm.resource.relational.Column;
 
 /**

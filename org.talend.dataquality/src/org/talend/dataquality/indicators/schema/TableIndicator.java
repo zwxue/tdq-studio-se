@@ -6,7 +6,6 @@
  */
 package org.talend.dataquality.indicators.schema;
 
-import org.talend.dataquality.indicators.CompositeIndicator;
 
 /**
  * <!-- begin-user-doc -->

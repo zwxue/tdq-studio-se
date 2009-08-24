@@ -7,9 +7,7 @@
 package org.talend.dataquality.domain.pattern;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->

@@ -8,20 +8,20 @@ package org.talend.dataquality.analysis.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.analysis.*;
-
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisPackage;
+import org.talend.dataquality.analysis.AnalysisParameters;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.analysis.ExecutionInformations;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
-
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;
-
 import orgomg.cwmx.analysis.informationreporting.ReportGroup;
 
 /**

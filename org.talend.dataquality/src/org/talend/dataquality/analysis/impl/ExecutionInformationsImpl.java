@@ -9,12 +9,9 @@ package org.talend.dataquality.analysis.impl;
 import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.ExecutionInformations;
 
@@ -313,15 +310,15 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_DATE:
                 return getExecutionDate();
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_DURATION:
-                return getExecutionDuration();
+                return new Integer(getExecutionDuration());
             case AnalysisPackage.EXECUTION_INFORMATIONS__MESSAGE:
                 return getMessage();
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_NUMBER:
-                return getExecutionNumber();
+                return new Integer(getExecutionNumber());
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_RUN_OK:
-                return isLastRunOk();
+                return isLastRunOk() ? Boolean.TRUE : Boolean.FALSE;
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
-                return getLastExecutionNumberOk();
+                return new Integer(getLastExecutionNumberOk());
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -338,19 +335,19 @@ public class ExecutionInformationsImpl extends EObjectImpl implements ExecutionI
                 setExecutionDate((Date)newValue);
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_DURATION:
-                setExecutionDuration((Integer)newValue);
+                setExecutionDuration(((Integer)newValue).intValue());
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__MESSAGE:
                 setMessage((String)newValue);
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__EXECUTION_NUMBER:
-                setExecutionNumber((Integer)newValue);
+                setExecutionNumber(((Integer)newValue).intValue());
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_RUN_OK:
-                setLastRunOk((Boolean)newValue);
+                setLastRunOk(((Boolean)newValue).booleanValue());
                 return;
             case AnalysisPackage.EXECUTION_INFORMATIONS__LAST_EXECUTION_NUMBER_OK:
-                setLastExecutionNumberOk((Integer)newValue);
+                setLastExecutionNumberOk(((Integer)newValue).intValue());
                 return;
         }
         super.eSet(featureID, newValue);

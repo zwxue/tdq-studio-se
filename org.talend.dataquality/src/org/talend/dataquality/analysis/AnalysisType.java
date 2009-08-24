@@ -4,6 +4,7 @@ package org.talend.dataquality.analysis;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.emf.common.util.Enumerator;
 
 /**

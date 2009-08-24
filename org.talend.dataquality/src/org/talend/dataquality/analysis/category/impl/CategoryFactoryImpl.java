@@ -9,12 +9,13 @@ package org.talend.dataquality.analysis.category.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.analysis.category.*;
+import org.talend.dataquality.analysis.category.AnalysisCategories;
+import org.talend.dataquality.analysis.category.AnalysisCategory;
+import org.talend.dataquality.analysis.category.CategoryFactory;
+import org.talend.dataquality.analysis.category.CategoryPackage;
 
 /**
  * <!-- begin-user-doc -->

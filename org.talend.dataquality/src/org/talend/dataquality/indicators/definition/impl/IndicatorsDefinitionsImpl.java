@@ -9,20 +9,15 @@ package org.talend.dataquality.indicators.definition.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
-
 import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
 
 /**

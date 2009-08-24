@@ -10,11 +10,11 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.Indicator;
-
 import org.talend.dataquality.indicators.sql.*;
-
+import org.talend.dataquality.indicators.sql.SqlPackage;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -28,17 +28,17 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage
+ * @see org.talend.dataquality.indicators.sql.SqlPackage
  * @generated
  */
-public class IndicatorSqlSwitch<T> {
+public class SqlSwitch<T> {
     /**
      * The cached model package
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected static IndicatorSqlPackage modelPackage;
+    protected static SqlPackage modelPackage;
 
     /**
      * Creates an instance of the switch.
@@ -46,9 +46,9 @@ public class IndicatorSqlSwitch<T> {
      * <!-- end-user-doc -->
      * @generated
      */
-    public IndicatorSqlSwitch() {
+    public SqlSwitch() {
         if (modelPackage == null) {
-            modelPackage = IndicatorSqlPackage.eINSTANCE;
+            modelPackage = SqlPackage.eINSTANCE;
         }
     }
 
@@ -92,7 +92,7 @@ public class IndicatorSqlSwitch<T> {
      */
     protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-            case IndicatorSqlPackage.USER_DEF_INDICATOR: {
+            case SqlPackage.USER_DEF_INDICATOR: {
                 UserDefIndicator userDefIndicator = (UserDefIndicator)theEObject;
                 T result = caseUserDefIndicator(userDefIndicator);
                 if (result == null) result = caseIndicator(userDefIndicator);
@@ -101,7 +101,7 @@ public class IndicatorSqlSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
-            case IndicatorSqlPackage.WHERE_RULE_INDICATOR: {
+            case SqlPackage.WHERE_RULE_INDICATOR: {
                 WhereRuleIndicator whereRuleIndicator = (WhereRuleIndicator)theEObject;
                 T result = caseWhereRuleIndicator(whereRuleIndicator);
                 if (result == null) result = caseUserDefIndicator(whereRuleIndicator);
@@ -205,4 +205,4 @@ public class IndicatorSqlSwitch<T> {
         return null;
     }
 
-} //IndicatorSqlSwitch
+} //SqlSwitch

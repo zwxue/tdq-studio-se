@@ -7,20 +7,15 @@
 package org.talend.dataquality.analysis.impl;
 
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisPackage;
@@ -102,7 +97,7 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      * @generated
      */
     public Analysis getAnalysis() {
-        if (eContainerFeatureID() != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS) return null;
+        if (eContainerFeatureID != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS) return null;
         return (Analysis)eContainer();
     }
 
@@ -122,7 +117,7 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      * @generated
      */
     public void setAnalysis(Analysis newAnalysis) {
-        if (newAnalysis != eInternalContainer() || (eContainerFeatureID() != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS && newAnalysis != null)) {
+        if (newAnalysis != eInternalContainer() || (eContainerFeatureID != AnalysisPackage.ANALYSIS_RESULT__ANALYSIS && newAnalysis != null)) {
             if (EcoreUtil.isAncestor(this, newAnalysis))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -247,7 +242,7 @@ public class AnalysisResultImpl extends ReportGroupImpl implements AnalysisResul
      */
     @Override
     public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID()) {
+        switch (eContainerFeatureID) {
             case AnalysisPackage.ANALYSIS_RESULT__ANALYSIS:
                 return eInternalContainer().eInverseRemove(this, AnalysisPackage.ANALYSIS__RESULTS, Analysis.class, msgs);
         }

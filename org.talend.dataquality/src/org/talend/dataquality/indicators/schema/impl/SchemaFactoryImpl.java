@@ -9,12 +9,17 @@ package org.talend.dataquality.indicators.schema.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.indicators.schema.*;
+import org.talend.dataquality.indicators.schema.AbstractTableIndicator;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
+import org.talend.dataquality.indicators.schema.ConnectionIndicator;
+import org.talend.dataquality.indicators.schema.SchemaFactory;
+import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dataquality.indicators.schema.SchemaPackage;
+import org.talend.dataquality.indicators.schema.TableIndicator;
+import org.talend.dataquality.indicators.schema.ViewIndicator;
 
 /**
  * <!-- begin-user-doc -->

@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 
 /**
@@ -173,13 +172,13 @@ public interface RulesPackage extends EPackage {
     int DQ_RULE__DOCUMENT = DefinitionPackage.INDICATOR_DEFINITION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DQ_RULE__DESCRIPTION = DefinitionPackage.INDICATOR_DEFINITION__DESCRIPTION;
+    int DQ_RULE__DESCRIPTIONS = DefinitionPackage.INDICATOR_DEFINITION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -444,13 +443,13 @@ public interface RulesPackage extends EPackage {
     int SPECIFIED_DQ_RULE__DOCUMENT = DQ_RULE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SPECIFIED_DQ_RULE__DESCRIPTION = DQ_RULE__DESCRIPTION;
+    int SPECIFIED_DQ_RULE__DESCRIPTIONS = DQ_RULE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -715,13 +714,13 @@ public interface RulesPackage extends EPackage {
     int INFERRED_DQ_RULE__DOCUMENT = DQ_RULE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INFERRED_DQ_RULE__DESCRIPTION = DQ_RULE__DESCRIPTION;
+    int INFERRED_DQ_RULE__DESCRIPTIONS = DQ_RULE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -986,13 +985,13 @@ public interface RulesPackage extends EPackage {
     int WHERE_RULE__DOCUMENT = SPECIFIED_DQ_RULE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WHERE_RULE__DESCRIPTION = SPECIFIED_DQ_RULE__DESCRIPTION;
+    int WHERE_RULE__DESCRIPTIONS = SPECIFIED_DQ_RULE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

@@ -10,17 +10,50 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.*;
-
-import orgomg.cwm.analysis.informationvisualization.RenderedObject;
-
-import orgomg.cwm.objectmodel.core.Classifier;
+import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.BlankCountIndicator;
+import org.talend.dataquality.indicators.BoxIndicator;
+import org.talend.dataquality.indicators.CompositeIndicator;
+import org.talend.dataquality.indicators.CountsIndicator;
+import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.DefValueCountIndicator;
+import org.talend.dataquality.indicators.DistinctCountIndicator;
+import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.FrequencyIndicator;
+import org.talend.dataquality.indicators.IQRIndicator;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.LengthIndicator;
+import org.talend.dataquality.indicators.LowFrequencyIndicator;
+import org.talend.dataquality.indicators.LowerQuartileIndicator;
+import org.talend.dataquality.indicators.MatchingIndicator;
+import org.talend.dataquality.indicators.MaxLengthIndicator;
+import org.talend.dataquality.indicators.MaxValueIndicator;
+import org.talend.dataquality.indicators.MeanIndicator;
+import org.talend.dataquality.indicators.MedianIndicator;
+import org.talend.dataquality.indicators.MinLengthIndicator;
+import org.talend.dataquality.indicators.MinValueIndicator;
+import org.talend.dataquality.indicators.ModeIndicator;
+import org.talend.dataquality.indicators.NullCountIndicator;
+import org.talend.dataquality.indicators.PatternFreqIndicator;
+import org.talend.dataquality.indicators.PatternLowFreqIndicator;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.RangeIndicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.SoundexFreqIndicator;
+import org.talend.dataquality.indicators.SoundexLowFreqIndicator;
+import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
+import org.talend.dataquality.indicators.SumIndicator;
+import org.talend.dataquality.indicators.TextIndicator;
+import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.ValueIndicator;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.Namespace;
-
-import orgomg.cwmx.analysis.informationreporting.ReportField;
 
 /**
  * <!-- begin-user-doc -->

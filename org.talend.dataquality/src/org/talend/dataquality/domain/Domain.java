@@ -7,14 +7,9 @@
 package org.talend.dataquality.domain;
 
 import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.domain.pattern.Pattern;
-
 import orgomg.cwm.objectmodel.core.DataType;
 import orgomg.cwm.objectmodel.core.Namespace;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * <!-- begin-user-doc -->

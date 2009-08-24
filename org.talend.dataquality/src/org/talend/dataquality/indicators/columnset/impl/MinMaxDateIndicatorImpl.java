@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.columnset.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
 

@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
 
 /**
@@ -163,13 +162,13 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS__DOCUMENT = InformationreportingPackage.REPORT_GROUP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS__DESCRIPTION = InformationreportingPackage.REPORT_GROUP__DESCRIPTION;
+    int ANALYSIS__DESCRIPTIONS = InformationreportingPackage.REPORT_GROUP__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -650,13 +649,13 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS_CONTEXT__DOCUMENT = InformationreportingPackage.REPORT_GROUP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_CONTEXT__DESCRIPTION = InformationreportingPackage.REPORT_GROUP__DESCRIPTION;
+    int ANALYSIS_CONTEXT__DESCRIPTIONS = InformationreportingPackage.REPORT_GROUP__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1119,13 +1118,13 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS_PARAMETERS__DOCUMENT = InformationreportingPackage.REPORT_GROUP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_PARAMETERS__DESCRIPTION = InformationreportingPackage.REPORT_GROUP__DESCRIPTION;
+    int ANALYSIS_PARAMETERS__DESCRIPTIONS = InformationreportingPackage.REPORT_GROUP__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1625,13 +1624,13 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS_RESULT__DOCUMENT = InformationreportingPackage.REPORT_GROUP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_RESULT__DESCRIPTION = InformationreportingPackage.REPORT_GROUP__DESCRIPTION;
+    int ANALYSIS_RESULT__DESCRIPTIONS = InformationreportingPackage.REPORT_GROUP__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

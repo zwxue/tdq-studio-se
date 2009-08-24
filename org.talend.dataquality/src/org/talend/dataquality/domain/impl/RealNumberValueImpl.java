@@ -7,11 +7,8 @@
 package org.talend.dataquality.domain.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.RealNumberValue;
 
@@ -98,7 +95,7 @@ public class RealNumberValueImpl extends NumericValueImpl implements RealNumberV
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DomainPackage.REAL_NUMBER_VALUE__VALUE:
-                return getValue();
+                return new Double(getValue());
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -112,7 +109,7 @@ public class RealNumberValueImpl extends NumericValueImpl implements RealNumberV
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DomainPackage.REAL_NUMBER_VALUE__VALUE:
-                setValue((Double)newValue);
+                setValue(((Double)newValue).doubleValue());
                 return;
         }
         super.eSet(featureID, newValue);

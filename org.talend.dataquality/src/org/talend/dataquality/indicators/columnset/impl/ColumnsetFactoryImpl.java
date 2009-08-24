@@ -7,16 +7,23 @@
 package org.talend.dataquality.indicators.columnset.impl;
 
 import java.util.List;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.indicators.columnset.*;
+import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
+import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
+import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 
 /**
  * <!-- begin-user-doc -->

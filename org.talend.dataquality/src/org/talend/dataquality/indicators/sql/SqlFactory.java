@@ -13,17 +13,17 @@ import org.eclipse.emf.ecore.EFactory;
  * The <b>Factory</b> for the model.
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
- * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage
+ * @see org.talend.dataquality.indicators.sql.SqlPackage
  * @generated
  */
-public interface IndicatorSqlFactory extends EFactory {
+public interface SqlFactory extends EFactory {
     /**
      * The singleton instance of the factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    IndicatorSqlFactory eINSTANCE = org.talend.dataquality.indicators.sql.impl.IndicatorSqlFactoryImpl.init();
+    SqlFactory eINSTANCE = org.talend.dataquality.indicators.sql.impl.SqlFactoryImpl.init();
 
     /**
      * Returns a new object of class '<em>User Def Indicator</em>'.
@@ -50,6 +50,6 @@ public interface IndicatorSqlFactory extends EFactory {
      * @return the package supported by this factory.
      * @generated
      */
-    IndicatorSqlPackage getIndicatorSqlPackage();
+    SqlPackage getSqlPackage();
 
-} //IndicatorSqlFactory
+} //SqlFactory

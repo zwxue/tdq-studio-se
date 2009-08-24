@@ -18,9 +18,7 @@
 package org.talend.dataquality.rules;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

@@ -9,18 +9,12 @@ package org.talend.dataquality.indicators.columnset.impl;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
-
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
-
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Column;
 

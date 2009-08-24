@@ -7,7 +7,6 @@
 package org.talend.dataquality.rules.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.talend.dataquality.rules.InferredDQRule;
 import org.talend.dataquality.rules.RulesPackage;
 

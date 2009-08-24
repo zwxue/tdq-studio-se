@@ -6,8 +6,6 @@
  */
 package org.talend.dataquality.indicators;
 
-import java.math.BigInteger;
-import java.math.BigDecimal;
 
 
 /**

@@ -7,11 +7,8 @@
 package org.talend.dataquality.domain.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.IntegerValue;
 
@@ -98,7 +95,7 @@ public class IntegerValueImpl extends NumericValueImpl implements IntegerValue {
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case DomainPackage.INTEGER_VALUE__VALUE:
-                return getValue();
+                return new Integer(getValue());
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -112,7 +109,7 @@ public class IntegerValueImpl extends NumericValueImpl implements IntegerValue {
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case DomainPackage.INTEGER_VALUE__VALUE:
-                setValue((Integer)newValue);
+                setValue(((Integer)newValue).intValue());
                 return;
         }
         super.eSet(featureID, newValue);

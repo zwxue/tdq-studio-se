@@ -8,15 +8,13 @@ package org.talend.dataquality.indicators.sql.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.Indicator;
-
 import org.talend.dataquality.indicators.sql.*;
-
+import org.talend.dataquality.indicators.sql.SqlPackage;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -25,17 +23,17 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see org.talend.dataquality.indicators.sql.IndicatorSqlPackage
+ * @see org.talend.dataquality.indicators.sql.SqlPackage
  * @generated
  */
-public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
+public class SqlAdapterFactory extends AdapterFactoryImpl {
     /**
      * The cached model package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected static IndicatorSqlPackage modelPackage;
+    protected static SqlPackage modelPackage;
 
     /**
      * Creates an instance of the adapter factory.
@@ -43,9 +41,9 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
      * <!-- end-user-doc -->
      * @generated
      */
-    public IndicatorSqlAdapterFactory() {
+    public SqlAdapterFactory() {
         if (modelPackage == null) {
-            modelPackage = IndicatorSqlPackage.eINSTANCE;
+            modelPackage = SqlPackage.eINSTANCE;
         }
     }
 
@@ -74,8 +72,8 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected IndicatorSqlSwitch<Adapter> modelSwitch =
-        new IndicatorSqlSwitch<Adapter>() {
+    protected SqlSwitch<Adapter> modelSwitch =
+        new SqlSwitch<Adapter>() {
             @Override
             public Adapter caseUserDefIndicator(UserDefIndicator object) {
                 return createUserDefIndicatorAdapter();
@@ -198,4 +196,4 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
         return null;
     }
 
-} //IndicatorSqlAdapterFactory
+} //SqlAdapterFactory

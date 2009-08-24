@@ -9,26 +9,14 @@ package org.talend.dataquality.analysis.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisPackage;
-import org.talend.dataquality.analysis.AnalysisParameters;
-
-import org.talend.dataquality.indicators.Indicator;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
 

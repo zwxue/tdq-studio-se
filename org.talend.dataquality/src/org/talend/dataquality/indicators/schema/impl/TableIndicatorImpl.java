@@ -131,9 +131,9 @@ public class TableIndicatorImpl extends AbstractTableIndicatorImpl implements Ta
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
             case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
-                return getKeyCount();
+                return new Integer(getKeyCount());
             case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
-                return getIndexCount();
+                return new Integer(getIndexCount());
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -146,10 +146,10 @@ public class TableIndicatorImpl extends AbstractTableIndicatorImpl implements Ta
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case SchemaPackage.TABLE_INDICATOR__KEY_COUNT:
-                setKeyCount((Integer)newValue);
+                setKeyCount(((Integer)newValue).intValue());
                 return;
             case SchemaPackage.TABLE_INDICATOR__INDEX_COUNT:
-                setIndexCount((Integer)newValue);
+                setIndexCount(((Integer)newValue).intValue());
                 return;
         }
         super.eSet(featureID, newValue);

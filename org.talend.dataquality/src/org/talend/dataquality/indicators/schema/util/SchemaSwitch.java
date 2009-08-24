@@ -10,11 +10,16 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
-
 import org.talend.dataquality.indicators.schema.*;
+import org.talend.dataquality.indicators.schema.AbstractTableIndicator;
+import org.talend.dataquality.indicators.schema.CatalogIndicator;
+import org.talend.dataquality.indicators.schema.ConnectionIndicator;
+import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dataquality.indicators.schema.SchemaPackage;
+import org.talend.dataquality.indicators.schema.TableIndicator;
+import org.talend.dataquality.indicators.schema.ViewIndicator;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

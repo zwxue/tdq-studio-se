@@ -302,7 +302,7 @@
           containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="upperValue" eType="#//indicators/MaxValueIndicator"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="datatype" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="datatype" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EIntegerObject"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="range" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
           changeable="false" volatile="true" transient="true" defaultValueLiteral=""/>
     </eClassifiers>
@@ -976,5 +976,14 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnAliasA" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnAliasB" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="properties" nsURI="http://dataquality.properties" nsPrefix="dataquality.properties">
+    <eClassifiers xsi:type="ecore:EClass" name="TdqProperty" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement ../../org.talend.model/model/properties.ecore#//Property"/>
+    <eClassifiers xsi:type="ecore:EClass" name="TdqItem" eSuperTypes="../../org.talend.model/model/properties.ecore#//Item ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TdqUser" eSuperTypes="../../org.talend.model/model/properties.ecore#//User ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="TdqItemState" eSuperTypes="../../org.talend.model/model/properties.ecore#//ItemState ../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MockModelElement" eSuperTypes="../../org.talend.cwm.mip/model/CWM.ecore#//cwm/objectmodel/core/ModelElement"/>
   </eSubpackages>
 </ecore:EPackage>

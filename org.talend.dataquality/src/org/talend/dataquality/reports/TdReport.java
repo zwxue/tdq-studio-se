@@ -7,6 +7,7 @@
 package org.talend.dataquality.reports;
 
 import java.util.Date;
+
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;

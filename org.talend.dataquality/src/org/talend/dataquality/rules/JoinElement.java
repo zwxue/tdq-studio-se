@@ -7,7 +7,6 @@
 package org.talend.dataquality.rules;
 
 import org.eclipse.emf.ecore.EObject;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

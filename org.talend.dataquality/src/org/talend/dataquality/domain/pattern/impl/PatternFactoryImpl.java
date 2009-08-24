@@ -10,12 +10,17 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.domain.pattern.*;
+import org.talend.dataquality.domain.pattern.AttributeReference;
+import org.talend.dataquality.domain.pattern.ComponentReference;
+import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
+import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.domain.pattern.PatternPackage;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 
 /**
  * <!-- begin-user-doc -->

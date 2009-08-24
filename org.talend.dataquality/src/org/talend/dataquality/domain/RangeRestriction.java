@@ -6,8 +6,6 @@
  */
 package org.talend.dataquality.domain;
 
-import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 

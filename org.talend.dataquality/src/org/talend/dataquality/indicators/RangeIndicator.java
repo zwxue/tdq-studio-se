@@ -88,12 +88,12 @@ public interface RangeIndicator extends CompositeIndicator {
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Datatype</em>' attribute.
-     * @see #setDatatype(int)
+     * @see #setDatatype(Integer)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getRangeIndicator_Datatype()
      * @model
      * @generated
      */
-    int getDatatype();
+    Integer getDatatype();
 
     /**
      * Sets the value of the '{@link org.talend.dataquality.indicators.RangeIndicator#getDatatype <em>Datatype</em>}' attribute.
@@ -103,7 +103,7 @@ public interface RangeIndicator extends CompositeIndicator {
      * @see #getDatatype()
      * @generated
      */
-    void setDatatype(int value);
+    void setDatatype(Integer value);
 
     /**
      * Returns the value of the '<em><b>Range</b></em>' attribute.

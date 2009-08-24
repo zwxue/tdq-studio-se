@@ -9,12 +9,16 @@ package org.talend.dataquality.rules.impl;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.rules.*;
+import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.InferredDQRule;
+import org.talend.dataquality.rules.JoinElement;
+import org.talend.dataquality.rules.RulesFactory;
+import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dataquality.rules.SpecifiedDQRule;
+import org.talend.dataquality.rules.WhereRule;
 
 /**
  * <!-- begin-user-doc -->

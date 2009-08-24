@@ -10,8 +10,18 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.domain.*;
+import org.talend.dataquality.domain.DateValue;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.DomainPackage;
+import org.talend.dataquality.domain.EnumerationRule;
+import org.talend.dataquality.domain.IntegerValue;
+import org.talend.dataquality.domain.LengthRestriction;
+import org.talend.dataquality.domain.LiteralValue;
+import org.talend.dataquality.domain.NumericValue;
+import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.domain.RealNumberValue;
+import org.talend.dataquality.domain.TextValue;
 import orgomg.cwm.objectmodel.core.Element;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Namespace;

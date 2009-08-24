@@ -10,12 +10,18 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-
 import org.talend.dataquality.analysis.*;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisFactory;
+import org.talend.dataquality.analysis.AnalysisPackage;
+import org.talend.dataquality.analysis.AnalysisParameters;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 
 /**
  * <!-- begin-user-doc -->

@@ -7,7 +7,6 @@
 package org.talend.dataquality.reports;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.analysis.Analysis;
 
 /**

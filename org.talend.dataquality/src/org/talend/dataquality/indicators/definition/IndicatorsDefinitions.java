@@ -7,7 +7,6 @@
 package org.talend.dataquality.indicators.definition;
 
 import org.eclipse.emf.common.util.EList;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

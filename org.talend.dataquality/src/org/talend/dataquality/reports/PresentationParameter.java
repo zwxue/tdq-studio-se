@@ -6,8 +6,6 @@
  */
 package org.talend.dataquality.reports;
 
-import org.eclipse.emf.ecore.EObject;
-
 import org.talend.dataquality.indicators.Indicator;
 import orgomg.cwm.analysis.informationvisualization.Rendering;
 

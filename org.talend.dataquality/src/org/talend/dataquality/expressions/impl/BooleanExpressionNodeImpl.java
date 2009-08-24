@@ -7,10 +7,8 @@
 package org.talend.dataquality.expressions.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.expressions.ExpressionsPackage;
-
 import orgomg.cwm.foundation.expressions.impl.ExpressionNodeImpl;
 
 /**

@@ -7,15 +7,11 @@
 package org.talend.dataquality.reports.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.talend.dataquality.analysis.Analysis;
-
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.ReportsPackage;
 
@@ -238,7 +234,7 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
                 if (resolve) return getAnalysis();
                 return basicGetAnalysis();
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
-                return isMustRefresh();
+                return isMustRefresh() ? Boolean.TRUE : Boolean.FALSE;
             case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
                 return getReportType();
             case ReportsPackage.ANALYSIS_MAP__JRXML_SOURCE:
@@ -259,7 +255,7 @@ public class AnalysisMapImpl extends EObjectImpl implements AnalysisMap {
                 setAnalysis((Analysis)newValue);
                 return;
             case ReportsPackage.ANALYSIS_MAP__MUST_REFRESH:
-                setMustRefresh((Boolean)newValue);
+                setMustRefresh(((Boolean)newValue).booleanValue());
                 return;
             case ReportsPackage.ANALYSIS_MAP__REPORT_TYPE:
                 setReportType((String)newValue);

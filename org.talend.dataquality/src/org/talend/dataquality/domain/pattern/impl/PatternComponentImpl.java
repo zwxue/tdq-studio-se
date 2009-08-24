@@ -7,9 +7,7 @@
 package org.talend.dataquality.domain.pattern.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 
