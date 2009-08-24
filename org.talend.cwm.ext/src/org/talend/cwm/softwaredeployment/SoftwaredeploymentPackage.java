@@ -159,13 +159,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int TD_PROVIDER_CONNECTION__DOCUMENT = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.PROVIDER_CONNECTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_PROVIDER_CONNECTION__DESCRIPTION = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.PROVIDER_CONNECTION__DESCRIPTION;
+    int TD_PROVIDER_CONNECTION__DESCRIPTIONS = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.PROVIDER_CONNECTION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -412,13 +412,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int TD_DATA_MANAGER__DOCUMENT = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.DATA_MANAGER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_DATA_MANAGER__DESCRIPTION = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.DATA_MANAGER__DESCRIPTION;
+    int TD_DATA_MANAGER__DESCRIPTIONS = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.DATA_MANAGER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -692,13 +692,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int TD_DATA_PROVIDER__DOCUMENT = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.DATA_PROVIDER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_DATA_PROVIDER__DESCRIPTION = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.DATA_PROVIDER__DESCRIPTION;
+    int TD_DATA_PROVIDER__DESCRIPTIONS = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.DATA_PROVIDER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -982,13 +982,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int TD_SOFTWARE_SYSTEM__DOCUMENT = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.SOFTWARE_SYSTEM__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_SOFTWARE_SYSTEM__DESCRIPTION = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.SOFTWARE_SYSTEM__DESCRIPTION;
+    int TD_SOFTWARE_SYSTEM__DESCRIPTIONS = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.SOFTWARE_SYSTEM__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1389,13 +1389,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int TD_MACHINE__DOCUMENT = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.MACHINE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_MACHINE__DESCRIPTION = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.MACHINE__DESCRIPTION;
+    int TD_MACHINE__DESCRIPTIONS = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage.MACHINE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

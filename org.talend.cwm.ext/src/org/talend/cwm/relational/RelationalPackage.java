@@ -160,13 +160,13 @@ public interface RelationalPackage extends EPackage {
     int TD_TABLE__DOCUMENT = orgomg.cwm.resource.relational.RelationalPackage.TABLE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_TABLE__DESCRIPTION = orgomg.cwm.resource.relational.RelationalPackage.TABLE__DESCRIPTION;
+    int TD_TABLE__DESCRIPTIONS = orgomg.cwm.resource.relational.RelationalPackage.TABLE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -566,13 +566,13 @@ public interface RelationalPackage extends EPackage {
     int TD_VIEW__DOCUMENT = orgomg.cwm.resource.relational.RelationalPackage.VIEW__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_VIEW__DESCRIPTION = orgomg.cwm.resource.relational.RelationalPackage.VIEW__DESCRIPTION;
+    int TD_VIEW__DESCRIPTIONS = orgomg.cwm.resource.relational.RelationalPackage.VIEW__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -963,13 +963,13 @@ public interface RelationalPackage extends EPackage {
     int TD_CATALOG__DOCUMENT = orgomg.cwm.resource.relational.RelationalPackage.CATALOG__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_CATALOG__DESCRIPTION = orgomg.cwm.resource.relational.RelationalPackage.CATALOG__DESCRIPTION;
+    int TD_CATALOG__DESCRIPTIONS = orgomg.cwm.resource.relational.RelationalPackage.CATALOG__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1198,13 +1198,13 @@ public interface RelationalPackage extends EPackage {
     int TD_SCHEMA__DOCUMENT = orgomg.cwm.resource.relational.RelationalPackage.SCHEMA__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_SCHEMA__DESCRIPTION = orgomg.cwm.resource.relational.RelationalPackage.SCHEMA__DESCRIPTION;
+    int TD_SCHEMA__DESCRIPTIONS = orgomg.cwm.resource.relational.RelationalPackage.SCHEMA__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1415,13 +1415,13 @@ public interface RelationalPackage extends EPackage {
     int TD_COLUMN__DOCUMENT = orgomg.cwm.resource.relational.RelationalPackage.COLUMN__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_COLUMN__DESCRIPTION = orgomg.cwm.resource.relational.RelationalPackage.COLUMN__DESCRIPTION;
+    int TD_COLUMN__DESCRIPTIONS = orgomg.cwm.resource.relational.RelationalPackage.COLUMN__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1858,13 +1858,13 @@ public interface RelationalPackage extends EPackage {
     int TD_SQL_DATA_TYPE__DOCUMENT = orgomg.cwm.resource.relational.RelationalPackage.SQL_SIMPLE_TYPE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_SQL_DATA_TYPE__DESCRIPTION = orgomg.cwm.resource.relational.RelationalPackage.SQL_SIMPLE_TYPE__DESCRIPTION;
+    int TD_SQL_DATA_TYPE__DESCRIPTIONS = orgomg.cwm.resource.relational.RelationalPackage.SQL_SIMPLE_TYPE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2328,13 +2328,13 @@ public interface RelationalPackage extends EPackage {
     int TD_TRIGGER__DOCUMENT = orgomg.cwm.resource.relational.RelationalPackage.TRIGGER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_TRIGGER__DESCRIPTION = orgomg.cwm.resource.relational.RelationalPackage.TRIGGER__DESCRIPTION;
+    int TD_TRIGGER__DESCRIPTIONS = orgomg.cwm.resource.relational.RelationalPackage.TRIGGER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2599,13 +2599,13 @@ public interface RelationalPackage extends EPackage {
     int TD_PROCEDURE__DOCUMENT = orgomg.cwm.resource.relational.RelationalPackage.PROCEDURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TD_PROCEDURE__DESCRIPTION = orgomg.cwm.resource.relational.RelationalPackage.PROCEDURE__DESCRIPTION;
+    int TD_PROCEDURE__DESCRIPTIONS = orgomg.cwm.resource.relational.RelationalPackage.PROCEDURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
