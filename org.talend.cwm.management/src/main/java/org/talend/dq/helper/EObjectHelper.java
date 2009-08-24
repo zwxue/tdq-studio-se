@@ -90,6 +90,7 @@ public final class EObjectHelper {
 
     public static void removeDependencys(IResource[] resources) {
         for (IResource selectedObj : resources) {
+            
             IFile file = ((IFile) selectedObj);
             // String fileName = file.getName();
             if (file.getFileExtension() == null) {
@@ -103,6 +104,7 @@ public final class EObjectHelper {
                 for (Resource resource : modifiedResources) {
                     EMFUtil.saveSingleResource(resource);
                 }
+                
             }
         }
     }

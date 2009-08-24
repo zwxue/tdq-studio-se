@@ -15,10 +15,10 @@ package org.talend.dq.dqrule;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**

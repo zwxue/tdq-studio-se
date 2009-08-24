@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,6 +30,8 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TdqItem;
+import org.talend.dataquality.properties.TdqProperty;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -40,6 +47,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public final class DependenciesHandler {
 
+    private static Logger log = Logger.getLogger(DependenciesHandler.class);
     /**
      * As specified in CWM document at p. 67, the dependency kind can be of two types "Usage" or "Abstraction", but can
      * also be of other types.
@@ -90,6 +98,22 @@ public final class DependenciesHandler {
             // get the resource of each client
             for (ModelElement modelElement : client) {
                 Resource clientResource = modelElement.eResource();
+                // ~MOD mzhao 2009-08-21 feature 7488 , If the resource is "Property" or "Item", Delete it from disk.
+                if (isTDQElementProperties(modelElement)) {
+                    String platformString = clientResource.getURI().toPlatformString(true);
+                    IResource toDelFile = ResourcesPlugin.getWorkspace().getRoot().findMember(platformString);
+                    if (toDelFile != null && toDelFile.exists()) {
+                        try {
+                            toDelFile.delete(true, new NullProgressMonitor());
+                        } catch (CoreException e) {
+                            log.error(e, e);
+                        }
+                    }
+                    continue;
+                }
+                // ~
+                
+                
                 if (clientResource != null) {
                     modifiedResources.add(clientResource);
                 }
@@ -101,6 +125,13 @@ public final class DependenciesHandler {
             client.clear();
         }
         return modifiedResources;
+    }
+    
+    public static boolean isTDQElementProperties(ModelElement modelElement) {
+        if (modelElement instanceof TdqProperty || modelElement instanceof TdqItem) {
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -22,7 +22,6 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.DataProviderBuilder;
@@ -34,6 +33,7 @@ import org.talend.cwm.softwaredeployment.TdDataProvider;
 import org.talend.cwm.softwaredeployment.TdProviderConnection;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.typemapping.TypeSystem;
 

@@ -33,7 +33,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.builders.AbstractTableBuilder;
@@ -61,6 +60,7 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.expressions.BooleanExpressionNode;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -305,8 +305,7 @@ public final class DqRepositoryViewService {
      */
     public static boolean saveSoftwareSystem(TdSoftwareSystem softwareSystem) {
         EMFSharedResources util = EMFSharedResources.getInstance();
-        util.getSoftwareDeploymentResource().getContents().add(softwareSystem);
-        return util.saveSoftwareDeploymentResource();
+        return util.saveSoftwareDeploymentResource(softwareSystem);
     }
 
     /**

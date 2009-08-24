@@ -34,6 +34,7 @@ public class DataProviderWriter extends AElementPersistance {
 
     static Logger log = Logger.getLogger(DataProviderWriter.class);
 
+
     /*
      * (non-Javadoc)
      * 
@@ -43,7 +44,7 @@ public class DataProviderWriter extends AElementPersistance {
     protected void addDependencies(ModelElement element) {
         TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem((TdDataProvider) element);
         if (softwareSystem != null) {
-            DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
+            DqRepositoryViewService.saveSoftwareSystem(softwareSystem);            
         }
     }
 

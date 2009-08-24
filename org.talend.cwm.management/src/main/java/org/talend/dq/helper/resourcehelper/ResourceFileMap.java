@@ -18,7 +18,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.EMFSharedResources;
+import org.talend.dq.writer.EMFSharedResources;
 
 /**
  * DOC rli class global comment. Detailled comment

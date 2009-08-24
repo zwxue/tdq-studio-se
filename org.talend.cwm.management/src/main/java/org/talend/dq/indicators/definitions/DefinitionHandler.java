@@ -21,6 +21,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -85,8 +87,11 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.writer.AElementPersistance;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
@@ -111,7 +116,7 @@ public final class DefinitionHandler {
     private static final String USER_DEFINED_FREQUENCY_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_FREQUENCY_CATEGORY;
 
     private static final String USER_DEFINED_MATCH_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_MATCH_CATEGORY;
-    
+
     private static final String USER_DEFINED_COMPARISON_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_COMPARISON_CATEGORY;
 
     private static final String USER_DEFINED_NOMINAL_CORRELATION_CATEGORY = IndicatorCategoryHelper.USER_DEFINED_NOMINAL_CORRELATION_CATEGORY;
@@ -123,7 +128,7 @@ public final class DefinitionHandler {
     private static final String DQ_RULE_DEFINITION = "_UUIyoCOMEd6YB57jaCfKaA";
 
     private static final String FD_RULE_DEFINITION = "_YqcX0XHpEd6udst2R2sgpA";
-    
+
     private static Map<String, IndicatorCategory> userDefinedIndicatorCategoryMap;
 
     private IndicatorsDefinitions indicatorDefinitions;
@@ -133,10 +138,12 @@ public final class DefinitionHandler {
      */
     private boolean needCopy = false;
 
+    private static final String DEFINITION_EXT = "definition"; //$NON-NLS-1$
     /**
      * plugin relative path to the default file.
      */
-    private static final String FILENAME = ".Talend.definition"; //$NON-NLS-1$
+    private static final String FILENAME = ".Talend." + DEFINITION_EXT; //$NON-NLS-1$
+    
 
     private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME; //$NON-NLS-1$
 
@@ -274,8 +281,36 @@ public final class DefinitionHandler {
 
     public Resource copyDefinitionsIntoFolder(URI destinationUri) {
         Resource resource = getIndicatorsDefinitions().eResource();
-        EMFUtil.changeUri(resource, destinationUri);
-        if (EMFUtil.saveResource(resource)) {
+        URI newURI = EMFUtil.changeUri(resource, destinationUri);
+        // MOD mzhao feature 7488 Add TDQ Elements property and item. 2009-08-21
+        // Create properties.
+        AElementPersistance elePersistance = new AElementPersistance() {
+
+            @Override
+            protected void addDependencies(ModelElement element) {
+
+            }
+
+            @Override
+            protected void addResourceContent(ModelElement element) {
+
+            }
+
+            @Override
+            protected String getFileExtension() {
+                return DEFINITION_EXT;
+            }
+
+        };
+
+        String platformString = newURI.toPlatformString(true);
+        String platformStringPath = platformString.substring(0, platformString.lastIndexOf(FILENAME));
+        IFolder fileFolder = (IFolder) ResourcesPlugin.getWorkspace().getRoot().findMember(platformStringPath);
+        
+        ReturnCode retCode = elePersistance.save(getIndicatorsDefinitions(), fileFolder.getFile(FILENAME));
+
+
+        if (retCode.isOk()) {
             if (log.isInfoEnabled()) {
                 log.info("Indicator default definitions correctly saved in " + resource.getURI());
             }
@@ -283,6 +318,7 @@ public final class DefinitionHandler {
             log.error("Failed to save default indicator definitions in " + resource.getURI());
 
         }
+
         return resource;
     }
 
@@ -876,7 +912,7 @@ public final class DefinitionHandler {
     public Map<String, IndicatorCategory> getUserDefinedIndicatorCategoryMap() {
         if (userDefinedIndicatorCategoryMap == null) {
             userDefinedIndicatorCategoryMap = new HashMap<String, IndicatorCategory>();
-            
+
             // init user defined indicator categories
             List<IndicatorCategory> categoryList = new ArrayList<IndicatorCategory>();
             categoryList.add(getUserDefinedCountIndicatorCategory());
@@ -890,7 +926,7 @@ public final class DefinitionHandler {
             for (IndicatorCategory category : categoryList) {
                 userDefinedIndicatorCategoryMap.put(category.getLabel(), category);
             }
-            
+
             categoryList = null;
         }
         return userDefinedIndicatorCategoryMap;

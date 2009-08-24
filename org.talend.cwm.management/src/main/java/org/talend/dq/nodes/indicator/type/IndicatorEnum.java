@@ -14,7 +14,7 @@ package org.talend.dq.nodes.indicator.type;
 
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
+import org.talend.dataquality.indicators.sql.SqlPackage;
 
 /**
  * @author rli
@@ -136,13 +136,11 @@ public enum IndicatorEnum {
     BoxIIndicatorEnum(IndicatorsPackage.BOX_INDICATOR, IndicatorsPackage.Literals.BOX_INDICATOR, "Summary Statistics", //$NON-NLS-1$
                       new IndicatorEnum[] { MeanIndicatorEnum, MedianIndicatorEnum, IQRIndicatorEnum, RangeIndicatorEnum }),
     WhereRuleIndicatorEnum(
-                           IndicatorSqlPackage.WHERE_RULE_INDICATOR,
-                           IndicatorSqlPackage.Literals.WHERE_RULE_INDICATOR,
+                           SqlPackage.WHERE_RULE_INDICATOR, SqlPackage.Literals.WHERE_RULE_INDICATOR,
                            "where rule", //$NON-NLS-1$
                            null),
     UserDefinedIndicatorEnum(
-                             IndicatorSqlPackage.USER_DEF_INDICATOR,
-                             IndicatorSqlPackage.Literals.USER_DEF_INDICATOR,
+                             SqlPackage.USER_DEF_INDICATOR, SqlPackage.Literals.USER_DEF_INDICATOR,
                              "User Defined Indicator", //$NON-NLS-1$
                              null);
 
