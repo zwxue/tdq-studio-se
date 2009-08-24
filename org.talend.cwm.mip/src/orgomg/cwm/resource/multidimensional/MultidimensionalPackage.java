@@ -212,13 +212,13 @@ public interface MultidimensionalPackage extends EPackage {
     int DIMENSION__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DIMENSION__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
+    int DIMENSION__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -600,13 +600,13 @@ public interface MultidimensionalPackage extends EPackage {
     int DIMENSIONED_OBJECT__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DIMENSIONED_OBJECT__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
+    int DIMENSIONED_OBJECT__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -970,13 +970,13 @@ public interface MultidimensionalPackage extends EPackage {
     int MEMBER__DOCUMENT = InstancePackage.OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEMBER__DESCRIPTION = InstancePackage.OBJECT__DESCRIPTION;
+    int MEMBER__DESCRIPTIONS = InstancePackage.OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1187,13 +1187,13 @@ public interface MultidimensionalPackage extends EPackage {
     int MEMBER_SET__DOCUMENT = InstancePackage.EXTENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEMBER_SET__DESCRIPTION = InstancePackage.EXTENT__DESCRIPTION;
+    int MEMBER_SET__DESCRIPTIONS = InstancePackage.EXTENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1413,13 +1413,13 @@ public interface MultidimensionalPackage extends EPackage {
     int MEMBER_VALUE__DOCUMENT = InstancePackage.DATA_VALUE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MEMBER_VALUE__DESCRIPTION = InstancePackage.DATA_VALUE__DESCRIPTION;
+    int MEMBER_VALUE__DESCRIPTIONS = InstancePackage.DATA_VALUE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1630,13 +1630,13 @@ public interface MultidimensionalPackage extends EPackage {
     int SCHEMA__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEMA__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int SCHEMA__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

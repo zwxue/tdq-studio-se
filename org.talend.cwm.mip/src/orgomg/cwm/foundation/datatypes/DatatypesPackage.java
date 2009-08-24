@@ -181,13 +181,13 @@ public interface DatatypesPackage extends EPackage {
     int ENUMERATION__DOCUMENT = CorePackage.DATA_TYPE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ENUMERATION__DESCRIPTION = CorePackage.DATA_TYPE__DESCRIPTION;
+    int ENUMERATION__DESCRIPTIONS = CorePackage.DATA_TYPE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -533,13 +533,13 @@ public interface DatatypesPackage extends EPackage {
     int ENUMERATION_LITERAL__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ENUMERATION_LITERAL__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int ENUMERATION_LITERAL__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -787,13 +787,13 @@ public interface DatatypesPackage extends EPackage {
     int TYPE_ALIAS__DOCUMENT = CorePackage.DATA_TYPE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TYPE_ALIAS__DESCRIPTION = CorePackage.DATA_TYPE__DESCRIPTION;
+    int TYPE_ALIAS__DESCRIPTIONS = CorePackage.DATA_TYPE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1130,13 +1130,13 @@ public interface DatatypesPackage extends EPackage {
     int UNION__DOCUMENT = CorePackage.CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int UNION__DESCRIPTION = CorePackage.CLASSIFIER__DESCRIPTION;
+    int UNION__DESCRIPTIONS = CorePackage.CLASSIFIER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1473,13 +1473,13 @@ public interface DatatypesPackage extends EPackage {
     int UNION_MEMBER__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int UNION_MEMBER__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
+    int UNION_MEMBER__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

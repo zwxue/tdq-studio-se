@@ -213,13 +213,13 @@ public interface InformationvisualizationPackage extends EPackage {
     int RENDERED_OBJECT__DOCUMENT = CorePackage.CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RENDERED_OBJECT__DESCRIPTION = CorePackage.CLASSIFIER__DESCRIPTION;
+    int RENDERED_OBJECT__DESCRIPTIONS = CorePackage.CLASSIFIER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -646,13 +646,13 @@ public interface InformationvisualizationPackage extends EPackage {
     int RENDERED_OBJECT_SET__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RENDERED_OBJECT_SET__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int RENDERED_OBJECT_SET__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -872,13 +872,13 @@ public interface InformationvisualizationPackage extends EPackage {
     int RENDERING__DOCUMENT = CorePackage.FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RENDERING__DESCRIPTION = CorePackage.FEATURE__DESCRIPTION;
+    int RENDERING__DESCRIPTIONS = CorePackage.FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1170,13 +1170,13 @@ public interface InformationvisualizationPackage extends EPackage {
     int XSL_RENDERING__DOCUMENT = RENDERING__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int XSL_RENDERING__DESCRIPTION = RENDERING__DESCRIPTION;
+    int XSL_RENDERING__DESCRIPTIONS = RENDERING__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

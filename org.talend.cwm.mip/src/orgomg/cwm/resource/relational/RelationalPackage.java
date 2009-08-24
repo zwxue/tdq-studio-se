@@ -201,13 +201,13 @@ public interface RelationalPackage extends EPackage {
     int CATALOG__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CATALOG__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int CATALOG__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -436,13 +436,13 @@ public interface RelationalPackage extends EPackage {
     int SCHEMA__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SCHEMA__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int SCHEMA__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -653,13 +653,13 @@ public interface RelationalPackage extends EPackage {
     int COLUMN_SET__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COLUMN_SET__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
+    int COLUMN_SET__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -996,13 +996,13 @@ public interface RelationalPackage extends EPackage {
     int NAMED_COLUMN_SET__DOCUMENT = COLUMN_SET__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int NAMED_COLUMN_SET__DESCRIPTION = COLUMN_SET__DESCRIPTION;
+    int NAMED_COLUMN_SET__DESCRIPTIONS = COLUMN_SET__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1366,13 +1366,13 @@ public interface RelationalPackage extends EPackage {
     int TABLE__DOCUMENT = NAMED_COLUMN_SET__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TABLE__DESCRIPTION = NAMED_COLUMN_SET__DESCRIPTION;
+    int TABLE__DESCRIPTIONS = NAMED_COLUMN_SET__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1772,13 +1772,13 @@ public interface RelationalPackage extends EPackage {
     int VIEW__DOCUMENT = NAMED_COLUMN_SET__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VIEW__DESCRIPTION = NAMED_COLUMN_SET__DESCRIPTION;
+    int VIEW__DESCRIPTIONS = NAMED_COLUMN_SET__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2169,13 +2169,13 @@ public interface RelationalPackage extends EPackage {
     int QUERY_COLUMN_SET__DOCUMENT = COLUMN_SET__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int QUERY_COLUMN_SET__DESCRIPTION = COLUMN_SET__DESCRIPTION;
+    int QUERY_COLUMN_SET__DESCRIPTIONS = COLUMN_SET__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2521,13 +2521,13 @@ public interface RelationalPackage extends EPackage {
     int SQL_DATA_TYPE__DOCUMENT = CorePackage.CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_DATA_TYPE__DESCRIPTION = CorePackage.CLASSIFIER__DESCRIPTION;
+    int SQL_DATA_TYPE__DESCRIPTIONS = CorePackage.CLASSIFIER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2864,13 +2864,13 @@ public interface RelationalPackage extends EPackage {
     int SQL_DISTINCT_TYPE__DOCUMENT = SQL_DATA_TYPE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_DISTINCT_TYPE__DESCRIPTION = SQL_DATA_TYPE__DESCRIPTION;
+    int SQL_DISTINCT_TYPE__DESCRIPTIONS = SQL_DATA_TYPE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3252,13 +3252,13 @@ public interface RelationalPackage extends EPackage {
     int SQL_SIMPLE_TYPE__DOCUMENT = SQL_DATA_TYPE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_SIMPLE_TYPE__DESCRIPTION = SQL_DATA_TYPE__DESCRIPTION;
+    int SQL_SIMPLE_TYPE__DESCRIPTIONS = SQL_DATA_TYPE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3658,13 +3658,13 @@ public interface RelationalPackage extends EPackage {
     int SQL_STRUCTURED_TYPE__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_STRUCTURED_TYPE__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
+    int SQL_STRUCTURED_TYPE__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4028,13 +4028,13 @@ public interface RelationalPackage extends EPackage {
     int COLUMN__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COLUMN__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
+    int COLUMN__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4452,13 +4452,13 @@ public interface RelationalPackage extends EPackage {
     int PROCEDURE__DOCUMENT = BehavioralPackage.METHOD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PROCEDURE__DESCRIPTION = BehavioralPackage.METHOD__DESCRIPTION;
+    int PROCEDURE__DESCRIPTIONS = BehavioralPackage.METHOD__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4732,13 +4732,13 @@ public interface RelationalPackage extends EPackage {
     int TRIGGER__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRIGGER__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int TRIGGER__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5003,13 +5003,13 @@ public interface RelationalPackage extends EPackage {
     int SQL_INDEX__DOCUMENT = KeysindexesPackage.INDEX__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_INDEX__DESCRIPTION = KeysindexesPackage.INDEX__DESCRIPTION;
+    int SQL_INDEX__DESCRIPTIONS = KeysindexesPackage.INDEX__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5265,13 +5265,13 @@ public interface RelationalPackage extends EPackage {
     int UNIQUE_CONSTRAINT__DOCUMENT = KeysindexesPackage.UNIQUE_KEY__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int UNIQUE_CONSTRAINT__DESCRIPTION = KeysindexesPackage.UNIQUE_KEY__DESCRIPTION;
+    int UNIQUE_CONSTRAINT__DESCRIPTIONS = KeysindexesPackage.UNIQUE_KEY__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5482,13 +5482,13 @@ public interface RelationalPackage extends EPackage {
     int FOREIGN_KEY__DOCUMENT = KeysindexesPackage.KEY_RELATIONSHIP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FOREIGN_KEY__DESCRIPTION = KeysindexesPackage.KEY_RELATIONSHIP__DESCRIPTION;
+    int FOREIGN_KEY__DESCRIPTIONS = KeysindexesPackage.KEY_RELATIONSHIP__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5717,13 +5717,13 @@ public interface RelationalPackage extends EPackage {
     int SQL_INDEX_COLUMN__DOCUMENT = KeysindexesPackage.INDEXED_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_INDEX_COLUMN__DESCRIPTION = KeysindexesPackage.INDEXED_FEATURE__DESCRIPTION;
+    int SQL_INDEX_COLUMN__DESCRIPTIONS = KeysindexesPackage.INDEXED_FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5934,13 +5934,13 @@ public interface RelationalPackage extends EPackage {
     int PRIMARY_KEY__DOCUMENT = UNIQUE_CONSTRAINT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PRIMARY_KEY__DESCRIPTION = UNIQUE_CONSTRAINT__DESCRIPTION;
+    int PRIMARY_KEY__DESCRIPTIONS = UNIQUE_CONSTRAINT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6151,13 +6151,13 @@ public interface RelationalPackage extends EPackage {
     int ROW__DOCUMENT = InstancePackage.OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ROW__DESCRIPTION = InstancePackage.OBJECT__DESCRIPTION;
+    int ROW__DESCRIPTIONS = InstancePackage.OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6368,13 +6368,13 @@ public interface RelationalPackage extends EPackage {
     int COLUMN_VALUE__DOCUMENT = InstancePackage.DATA_VALUE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COLUMN_VALUE__DESCRIPTION = InstancePackage.DATA_VALUE__DESCRIPTION;
+    int COLUMN_VALUE__DESCRIPTIONS = InstancePackage.DATA_VALUE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6585,13 +6585,13 @@ public interface RelationalPackage extends EPackage {
     int CHECK_CONSTRAINT__DOCUMENT = CorePackage.CONSTRAINT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CHECK_CONSTRAINT__DESCRIPTION = CorePackage.CONSTRAINT__DESCRIPTION;
+    int CHECK_CONSTRAINT__DESCRIPTIONS = CorePackage.CONSTRAINT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6811,13 +6811,13 @@ public interface RelationalPackage extends EPackage {
     int ROW_SET__DOCUMENT = InstancePackage.EXTENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ROW_SET__DESCRIPTION = InstancePackage.EXTENT__DESCRIPTION;
+    int ROW_SET__DESCRIPTIONS = InstancePackage.EXTENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7028,13 +7028,13 @@ public interface RelationalPackage extends EPackage {
     int SQL_PARAMETER__DOCUMENT = BehavioralPackage.PARAMETER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SQL_PARAMETER__DESCRIPTION = BehavioralPackage.PARAMETER__DESCRIPTION;
+    int SQL_PARAMETER__DESCRIPTIONS = BehavioralPackage.PARAMETER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

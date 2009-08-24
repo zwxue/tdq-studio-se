@@ -73,7 +73,7 @@ import orgomg.cwmx.resource.dmsii.DmsiiPackage;
  *   <li>{@link orgomg.cwm.objectmodel.core.impl.ModelElementImpl#getStereotype <em>Stereotype</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.impl.ModelElementImpl#getTaggedValue <em>Tagged Value</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.impl.ModelElementImpl#getDocument <em>Document</em>}</li>
- *   <li>{@link orgomg.cwm.objectmodel.core.impl.ModelElementImpl#getDescription <em>Description</em>}</li>
+ *   <li>{@link orgomg.cwm.objectmodel.core.impl.ModelElementImpl#getDescriptions <em>Descriptions</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.impl.ModelElementImpl#getResponsibleParty <em>Responsible Party</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.impl.ModelElementImpl#getElementNode <em>Element Node</em>}</li>
  *   <li>{@link orgomg.cwm.objectmodel.core.impl.ModelElementImpl#getSet <em>Set</em>}</li>
@@ -199,14 +199,14 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
     protected EList<Document> document;
 
     /**
-     * The cached value of the '{@link #getDescription() <em>Description</em>}' reference list.
+     * The cached value of the '{@link #getDescriptions() <em>Descriptions</em>}' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getDescription()
+     * @see #getDescriptions()
      * @generated
      * @ordered
      */
-    protected EList<Description> description;
+    protected EList<Description> descriptions;
 
     /**
      * The cached value of the '{@link #getResponsibleParty() <em>Responsible Party</em>}' reference list.
@@ -527,11 +527,11 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList<Description> getDescription() {
-        if (description == null) {
-            description = new EObjectWithInverseResolvingEList.ManyInverse<Description>(Description.class, this, CorePackage.MODEL_ELEMENT__DESCRIPTION, BusinessinformationPackage.DESCRIPTION__MODEL_ELEMENT);
+    public EList<Description> getDescriptions() {
+        if (descriptions == null) {
+            descriptions = new EObjectWithInverseResolvingEList.ManyInverse<Description>(Description.class, this, CorePackage.MODEL_ELEMENT__DESCRIPTIONS, BusinessinformationPackage.DESCRIPTION__MODEL_ELEMENT);
         }
-        return description;
+        return descriptions;
     }
 
     /**
@@ -659,8 +659,8 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
                 return ((InternalEList<InternalEObject>)(InternalEList<?>)getTaggedValue()).basicAdd(otherEnd, msgs);
             case CorePackage.MODEL_ELEMENT__DOCUMENT:
                 return ((InternalEList<InternalEObject>)(InternalEList<?>)getDocument()).basicAdd(otherEnd, msgs);
-            case CorePackage.MODEL_ELEMENT__DESCRIPTION:
-                return ((InternalEList<InternalEObject>)(InternalEList<?>)getDescription()).basicAdd(otherEnd, msgs);
+            case CorePackage.MODEL_ELEMENT__DESCRIPTIONS:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getDescriptions()).basicAdd(otherEnd, msgs);
             case CorePackage.MODEL_ELEMENT__RESPONSIBLE_PARTY:
                 return ((InternalEList<InternalEObject>)(InternalEList<?>)getResponsibleParty()).basicAdd(otherEnd, msgs);
             case CorePackage.MODEL_ELEMENT__ELEMENT_NODE:
@@ -705,8 +705,8 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
                 return ((InternalEList<?>)getTaggedValue()).basicRemove(otherEnd, msgs);
             case CorePackage.MODEL_ELEMENT__DOCUMENT:
                 return ((InternalEList<?>)getDocument()).basicRemove(otherEnd, msgs);
-            case CorePackage.MODEL_ELEMENT__DESCRIPTION:
-                return ((InternalEList<?>)getDescription()).basicRemove(otherEnd, msgs);
+            case CorePackage.MODEL_ELEMENT__DESCRIPTIONS:
+                return ((InternalEList<?>)getDescriptions()).basicRemove(otherEnd, msgs);
             case CorePackage.MODEL_ELEMENT__RESPONSIBLE_PARTY:
                 return ((InternalEList<?>)getResponsibleParty()).basicRemove(otherEnd, msgs);
             case CorePackage.MODEL_ELEMENT__ELEMENT_NODE:
@@ -770,8 +770,8 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
                 return getTaggedValue();
             case CorePackage.MODEL_ELEMENT__DOCUMENT:
                 return getDocument();
-            case CorePackage.MODEL_ELEMENT__DESCRIPTION:
-                return getDescription();
+            case CorePackage.MODEL_ELEMENT__DESCRIPTIONS:
+                return getDescriptions();
             case CorePackage.MODEL_ELEMENT__RESPONSIBLE_PARTY:
                 return getResponsibleParty();
             case CorePackage.MODEL_ELEMENT__ELEMENT_NODE:
@@ -837,9 +837,9 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
                 getDocument().clear();
                 getDocument().addAll((Collection<? extends Document>)newValue);
                 return;
-            case CorePackage.MODEL_ELEMENT__DESCRIPTION:
-                getDescription().clear();
-                getDescription().addAll((Collection<? extends Description>)newValue);
+            case CorePackage.MODEL_ELEMENT__DESCRIPTIONS:
+                getDescriptions().clear();
+                getDescriptions().addAll((Collection<? extends Description>)newValue);
                 return;
             case CorePackage.MODEL_ELEMENT__RESPONSIBLE_PARTY:
                 getResponsibleParty().clear();
@@ -915,8 +915,8 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
             case CorePackage.MODEL_ELEMENT__DOCUMENT:
                 getDocument().clear();
                 return;
-            case CorePackage.MODEL_ELEMENT__DESCRIPTION:
-                getDescription().clear();
+            case CorePackage.MODEL_ELEMENT__DESCRIPTIONS:
+                getDescriptions().clear();
                 return;
             case CorePackage.MODEL_ELEMENT__RESPONSIBLE_PARTY:
                 getResponsibleParty().clear();
@@ -974,8 +974,8 @@ public abstract class ModelElementImpl extends ElementImpl implements ModelEleme
                 return taggedValue != null && !taggedValue.isEmpty();
             case CorePackage.MODEL_ELEMENT__DOCUMENT:
                 return document != null && !document.isEmpty();
-            case CorePackage.MODEL_ELEMENT__DESCRIPTION:
-                return description != null && !description.isEmpty();
+            case CorePackage.MODEL_ELEMENT__DESCRIPTIONS:
+                return descriptions != null && !descriptions.isEmpty();
             case CorePackage.MODEL_ELEMENT__RESPONSIBLE_PARTY:
                 return responsibleParty != null && !responsibleParty.isEmpty();
             case CorePackage.MODEL_ELEMENT__ELEMENT_NODE:

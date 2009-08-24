@@ -206,13 +206,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int SITE__DOCUMENT = BusinessinformationPackage.LOCATION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SITE__DESCRIPTION = BusinessinformationPackage.LOCATION__DESCRIPTION;
+    int SITE__DESCRIPTIONS = BusinessinformationPackage.LOCATION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -486,13 +486,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int MACHINE__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MACHINE__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
+    int MACHINE__DESCRIPTIONS = CorePackage.NAMESPACE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -730,13 +730,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int SOFTWARE_SYSTEM__DOCUMENT = CorePackage.SUBSYSTEM__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SOFTWARE_SYSTEM__DESCRIPTION = CorePackage.SUBSYSTEM__DESCRIPTION;
+    int SOFTWARE_SYSTEM__DESCRIPTIONS = CorePackage.SUBSYSTEM__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1136,13 +1136,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int DEPLOYED_COMPONENT__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DEPLOYED_COMPONENT__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int DEPLOYED_COMPONENT__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1389,13 +1389,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int DEPLOYED_SOFTWARE_SYSTEM__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DEPLOYED_SOFTWARE_SYSTEM__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int DEPLOYED_SOFTWARE_SYSTEM__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1624,13 +1624,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int DATA_MANAGER__DOCUMENT = DEPLOYED_COMPONENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATA_MANAGER__DESCRIPTION = DEPLOYED_COMPONENT__DESCRIPTION;
+    int DATA_MANAGER__DESCRIPTIONS = DEPLOYED_COMPONENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1904,13 +1904,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int DATA_PROVIDER__DOCUMENT = DATA_MANAGER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATA_PROVIDER__DESCRIPTION = DATA_MANAGER__DESCRIPTION;
+    int DATA_PROVIDER__DESCRIPTIONS = DATA_MANAGER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2193,13 +2193,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int PROVIDER_CONNECTION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PROVIDER_CONNECTION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int PROVIDER_CONNECTION__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2410,13 +2410,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int COMPONENT__DOCUMENT = CorePackage.CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COMPONENT__DESCRIPTION = CorePackage.CLASSIFIER__DESCRIPTION;
+    int COMPONENT__DESCRIPTIONS = CorePackage.CLASSIFIER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2753,13 +2753,13 @@ public interface SoftwaredeploymentPackage extends EPackage {
     int PACKAGE_USAGE__DOCUMENT = CorePackage.DEPENDENCY__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PACKAGE_USAGE__DESCRIPTION = CorePackage.DEPENDENCY__DESCRIPTION;
+    int PACKAGE_USAGE__DESCRIPTIONS = CorePackage.DEPENDENCY__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

@@ -204,13 +204,13 @@ public interface InformationreportingPackage extends EPackage {
     int REPORT__DOCUMENT = InformationvisualizationPackage.RENDERED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REPORT__DESCRIPTION = InformationvisualizationPackage.RENDERED_OBJECT__DESCRIPTION;
+    int REPORT__DESCRIPTIONS = InformationvisualizationPackage.RENDERED_OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -637,13 +637,13 @@ public interface InformationreportingPackage extends EPackage {
     int REPORT_ATTRIBUTE__DOCUMENT = CorePackage.ATTRIBUTE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REPORT_ATTRIBUTE__DESCRIPTION = CorePackage.ATTRIBUTE__DESCRIPTION;
+    int REPORT_ATTRIBUTE__DESCRIPTIONS = CorePackage.ATTRIBUTE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -989,13 +989,13 @@ public interface InformationreportingPackage extends EPackage {
     int REPORT_EXECUTION__DOCUMENT = TransformationPackage.TRANSFORMATION_MAP__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REPORT_EXECUTION__DESCRIPTION = TransformationPackage.TRANSFORMATION_MAP__DESCRIPTION;
+    int REPORT_EXECUTION__DESCRIPTIONS = TransformationPackage.TRANSFORMATION_MAP__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1242,13 +1242,13 @@ public interface InformationreportingPackage extends EPackage {
     int REPORT_FIELD__DOCUMENT = InformationvisualizationPackage.RENDERED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REPORT_FIELD__DESCRIPTION = InformationvisualizationPackage.RENDERED_OBJECT__DESCRIPTION;
+    int REPORT_FIELD__DESCRIPTIONS = InformationvisualizationPackage.RENDERED_OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1675,13 +1675,13 @@ public interface InformationreportingPackage extends EPackage {
     int REPORT_GROUP__DOCUMENT = InformationvisualizationPackage.RENDERED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REPORT_GROUP__DESCRIPTION = InformationvisualizationPackage.RENDERED_OBJECT__DESCRIPTION;
+    int REPORT_GROUP__DESCRIPTIONS = InformationvisualizationPackage.RENDERED_OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2126,13 +2126,13 @@ public interface InformationreportingPackage extends EPackage {
     int REPORT_PACKAGE__DOCUMENT = InformationvisualizationPackage.RENDERED_OBJECT_SET__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REPORT_PACKAGE__DESCRIPTION = InformationvisualizationPackage.RENDERED_OBJECT_SET__DESCRIPTION;
+    int REPORT_PACKAGE__DESCRIPTIONS = InformationvisualizationPackage.RENDERED_OBJECT_SET__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

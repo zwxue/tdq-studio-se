@@ -226,13 +226,13 @@ public interface BusinessnomenclaturePackage extends EPackage {
     int VOCABULARY_ELEMENT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VOCABULARY_ELEMENT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int VOCABULARY_ELEMENT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -470,13 +470,13 @@ public interface BusinessnomenclaturePackage extends EPackage {
     int NOMENCLATURE__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int NOMENCLATURE__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int NOMENCLATURE__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -705,13 +705,13 @@ public interface BusinessnomenclaturePackage extends EPackage {
     int TAXONOMY__DOCUMENT = NOMENCLATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TAXONOMY__DESCRIPTION = NOMENCLATURE__DESCRIPTION;
+    int TAXONOMY__DESCRIPTIONS = NOMENCLATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -949,13 +949,13 @@ public interface BusinessnomenclaturePackage extends EPackage {
     int GLOSSARY__DOCUMENT = NOMENCLATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int GLOSSARY__DESCRIPTION = NOMENCLATURE__DESCRIPTION;
+    int GLOSSARY__DESCRIPTIONS = NOMENCLATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1202,13 +1202,13 @@ public interface BusinessnomenclaturePackage extends EPackage {
     int BUSINESS_DOMAIN__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int BUSINESS_DOMAIN__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int BUSINESS_DOMAIN__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1419,13 +1419,13 @@ public interface BusinessnomenclaturePackage extends EPackage {
     int CONCEPT__DOCUMENT = VOCABULARY_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONCEPT__DESCRIPTION = VOCABULARY_ELEMENT__DESCRIPTION;
+    int CONCEPT__DESCRIPTIONS = VOCABULARY_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1690,13 +1690,13 @@ public interface BusinessnomenclaturePackage extends EPackage {
     int TERM__DOCUMENT = VOCABULARY_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TERM__DESCRIPTION = VOCABULARY_ELEMENT__DESCRIPTION;
+    int TERM__DESCRIPTIONS = VOCABULARY_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

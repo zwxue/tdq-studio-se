@@ -205,7 +205,7 @@ public class DescriptionImpl extends NamespaceImpl implements Description {
      */
     public EList<ModelElement> getModelElement() {
         if (modelElement == null) {
-            modelElement = new EObjectWithInverseResolvingEList.ManyInverse<ModelElement>(ModelElement.class, this, BusinessinformationPackage.DESCRIPTION__MODEL_ELEMENT, CorePackage.MODEL_ELEMENT__DESCRIPTION);
+            modelElement = new EObjectWithInverseResolvingEList.ManyInverse<ModelElement>(ModelElement.class, this, BusinessinformationPackage.DESCRIPTION__MODEL_ELEMENT, CorePackage.MODEL_ELEMENT__DESCRIPTIONS);
         }
         return modelElement;
     }

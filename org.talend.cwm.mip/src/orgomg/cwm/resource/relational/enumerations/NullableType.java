@@ -22,8 +22,8 @@ import org.eclipse.emf.common.util.Enumerator;
  */
 public enum NullableType implements Enumerator {
     /**
-     * The '<em><b>Column No Nulls</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * The '<em><b>Column No Nulls</b></em>' literal object.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #COLUMN_NO_NULLS_VALUE
      * @generated
      * @ordered
@@ -31,8 +31,8 @@ public enum NullableType implements Enumerator {
     COLUMN_NO_NULLS(0, "columnNoNulls", "columnNoNulls"),
 
     /**
-     * The '<em><b>Column Nullable</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * The '<em><b>Column Nullable</b></em>' literal object.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #COLUMN_NULLABLE_VALUE
      * @generated
      * @ordered
@@ -40,8 +40,8 @@ public enum NullableType implements Enumerator {
     COLUMN_NULLABLE(1, "columnNullable", "columnNullable"),
 
     /**
-     * The '<em><b>Column Nullable Unknown</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * The '<em><b>Column Nullable Unknown</b></em>' literal object.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #COLUMN_NULLABLE_UNKNOWN_VALUE
      * @generated
      * @ordered
@@ -71,9 +71,11 @@ public enum NullableType implements Enumerator {
     public static final int COLUMN_NULLABLE_VALUE = 1;
 
     /**
-     * The '<em><b>Column Nullable Unknown</b></em>' literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * <!-- begin-model-doc --> It is not known whether null values are allowed or not. <!-- end-model-doc -->
-     * 
+     * The '<em><b>Column Nullable Unknown</b></em>' literal value.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * It is not known whether null values are allowed or not. 
+     * <!-- end-model-doc -->
      * @see #COLUMN_NULLABLE_UNKNOWN
      * @model name="columnNullableUnknown"
      * @generated
@@ -87,21 +89,24 @@ public enum NullableType implements Enumerator {
      * 
      * @generated
      */
-    private static final NullableType[] VALUES_ARRAY = new NullableType[] { COLUMN_NO_NULLS, COLUMN_NULLABLE,
-            COLUMN_NULLABLE_UNKNOWN, };
+    private static final NullableType[] VALUES_ARRAY = new NullableType[] {
+            COLUMN_NO_NULLS,
+            COLUMN_NULLABLE,
+            COLUMN_NULLABLE_UNKNOWN,
+        };
 
     /**
-     * A public read-only list of all the '<em><b>Nullable Type</b></em>' enumerators. <!-- begin-user-doc --> <!--
+     * A public read-only list of all the '<em><b>Nullable Type</b></em>' enumerators.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @generated
      */
     public static final List<NullableType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
     /**
-     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified literal value. <!-- begin-user-doc
+     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified literal value.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public static NullableType get(String literal) {
@@ -115,9 +120,9 @@ public enum NullableType implements Enumerator {
     }
 
     /**
-     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified name. <!-- begin-user-doc --> <!--
+     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified name.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @generated
      */
     public static NullableType getByName(String name) {
@@ -131,47 +136,41 @@ public enum NullableType implements Enumerator {
     }
 
     /**
-     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified integer value. <!-- begin-user-doc
+     * Returns the '<em><b>Nullable Type</b></em>' literal with the specified integer value.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public static NullableType get(int value) {
         switch (value) {
-        case COLUMN_NO_NULLS_VALUE:
-            return COLUMN_NO_NULLS;
-        case COLUMN_NULLABLE_VALUE:
-            return COLUMN_NULLABLE;
-        case COLUMN_NULLABLE_UNKNOWN_VALUE:
-            return COLUMN_NULLABLE_UNKNOWN;
+            case COLUMN_NO_NULLS_VALUE: return COLUMN_NO_NULLS;
+            case COLUMN_NULLABLE_VALUE: return COLUMN_NULLABLE;
+            case COLUMN_NULLABLE_UNKNOWN_VALUE: return COLUMN_NULLABLE_UNKNOWN;
         }
         return null;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private final int value;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private final String name;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private final String literal;
 
     /**
-     * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * Only this class can construct instances.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     private NullableType(int value, String name, String literal) {
@@ -182,29 +181,26 @@ public enum NullableType implements Enumerator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public int getValue() {
-        return value;
+      return value;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public String getName() {
-        return name;
+      return name;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public String getLiteral() {
-        return literal;
+      return literal;
     }
 
     // ADDED scorreia 20080728 isNullable() in order to remain compatible with 1.0.0 version of xmi files (otherwise, I
@@ -227,9 +223,9 @@ public enum NullableType implements Enumerator {
     }
 
     /**
-     * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc --> <!--
+     * Returns the literal value of the enumerator, which is its string representation.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @generated
      */
     @Override

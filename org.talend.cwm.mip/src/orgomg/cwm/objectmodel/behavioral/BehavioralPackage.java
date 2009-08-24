@@ -223,13 +223,13 @@ public interface BehavioralPackage extends EPackage {
     int ARGUMENT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ARGUMENT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int ARGUMENT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -431,13 +431,13 @@ public interface BehavioralPackage extends EPackage {
     int BEHAVIORAL_FEATURE__DOCUMENT = CorePackage.FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int BEHAVIORAL_FEATURE__DESCRIPTION = CorePackage.FEATURE__DESCRIPTION;
+    int BEHAVIORAL_FEATURE__DESCRIPTIONS = CorePackage.FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -684,13 +684,13 @@ public interface BehavioralPackage extends EPackage {
     int CALL_ACTION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CALL_ACTION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int CALL_ACTION__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -901,13 +901,13 @@ public interface BehavioralPackage extends EPackage {
     int EVENT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int EVENT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int EVENT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1100,13 +1100,13 @@ public interface BehavioralPackage extends EPackage {
     int INTERFACE__DOCUMENT = CorePackage.CLASSIFIER__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INTERFACE__DESCRIPTION = CorePackage.CLASSIFIER__DESCRIPTION;
+    int INTERFACE__DESCRIPTIONS = CorePackage.CLASSIFIER__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1434,13 +1434,13 @@ public interface BehavioralPackage extends EPackage {
     int METHOD__DOCUMENT = BEHAVIORAL_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int METHOD__DESCRIPTION = BEHAVIORAL_FEATURE__DESCRIPTION;
+    int METHOD__DESCRIPTIONS = BEHAVIORAL_FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1705,13 +1705,13 @@ public interface BehavioralPackage extends EPackage {
     int OPERATION__DOCUMENT = BEHAVIORAL_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int OPERATION__DESCRIPTION = BEHAVIORAL_FEATURE__DESCRIPTION;
+    int OPERATION__DESCRIPTIONS = BEHAVIORAL_FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1985,13 +1985,13 @@ public interface BehavioralPackage extends EPackage {
     int PARAMETER__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PARAMETER__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int PARAMETER__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

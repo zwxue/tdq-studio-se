@@ -244,13 +244,13 @@ public interface TransformationPackage extends EPackage {
     int TRANSFORMATION__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSFORMATION__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
+    int TRANSFORMATION__DESCRIPTIONS = CorePackage.NAMESPACE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -497,13 +497,13 @@ public interface TransformationPackage extends EPackage {
     int DATA_OBJECT_SET__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATA_OBJECT_SET__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int DATA_OBJECT_SET__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -714,13 +714,13 @@ public interface TransformationPackage extends EPackage {
     int TRANSFORMATION_TASK__DOCUMENT = SoftwaredeploymentPackage.COMPONENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSFORMATION_TASK__DESCRIPTION = SoftwaredeploymentPackage.COMPONENT__DESCRIPTION;
+    int TRANSFORMATION_TASK__DESCRIPTIONS = SoftwaredeploymentPackage.COMPONENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1093,13 +1093,13 @@ public interface TransformationPackage extends EPackage {
     int TRANSFORMATION_STEP__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSFORMATION_STEP__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int TRANSFORMATION_STEP__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1310,13 +1310,13 @@ public interface TransformationPackage extends EPackage {
     int TRANSFORMATION_ACTIVITY__DOCUMENT = CorePackage.SUBSYSTEM__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSFORMATION_ACTIVITY__DESCRIPTION = CorePackage.SUBSYSTEM__DESCRIPTION;
+    int TRANSFORMATION_ACTIVITY__DESCRIPTIONS = CorePackage.SUBSYSTEM__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1689,13 +1689,13 @@ public interface TransformationPackage extends EPackage {
     int PRECEDENCE_CONSTRAINT__DOCUMENT = CorePackage.CONSTRAINT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PRECEDENCE_CONSTRAINT__DESCRIPTION = CorePackage.CONSTRAINT__DESCRIPTION;
+    int PRECEDENCE_CONSTRAINT__DESCRIPTIONS = CorePackage.CONSTRAINT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1906,13 +1906,13 @@ public interface TransformationPackage extends EPackage {
     int TRANSFORMATION_USE__DOCUMENT = CorePackage.DEPENDENCY__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSFORMATION_USE__DESCRIPTION = CorePackage.DEPENDENCY__DESCRIPTION;
+    int TRANSFORMATION_USE__DESCRIPTIONS = CorePackage.DEPENDENCY__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2132,13 +2132,13 @@ public interface TransformationPackage extends EPackage {
     int TRANSFORMATION_MAP__DOCUMENT = TRANSFORMATION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSFORMATION_MAP__DESCRIPTION = TRANSFORMATION__DESCRIPTION;
+    int TRANSFORMATION_MAP__DESCRIPTIONS = TRANSFORMATION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2385,13 +2385,13 @@ public interface TransformationPackage extends EPackage {
     int TRANSFORMATION_TREE__DOCUMENT = TRANSFORMATION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TRANSFORMATION_TREE__DESCRIPTION = TRANSFORMATION__DESCRIPTION;
+    int TRANSFORMATION_TREE__DESCRIPTIONS = TRANSFORMATION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2656,13 +2656,13 @@ public interface TransformationPackage extends EPackage {
     int CLASSIFIER_MAP__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CLASSIFIER_MAP__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
+    int CLASSIFIER_MAP__DESCRIPTIONS = CorePackage.NAMESPACE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2900,13 +2900,13 @@ public interface TransformationPackage extends EPackage {
     int FEATURE_MAP__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FEATURE_MAP__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int FEATURE_MAP__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3126,13 +3126,13 @@ public interface TransformationPackage extends EPackage {
     int STEP_PRECEDENCE__DOCUMENT = CorePackage.DEPENDENCY__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int STEP_PRECEDENCE__DESCRIPTION = CorePackage.DEPENDENCY__DESCRIPTION;
+    int STEP_PRECEDENCE__DESCRIPTIONS = CorePackage.DEPENDENCY__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3343,13 +3343,13 @@ public interface TransformationPackage extends EPackage {
     int CLASSIFIER_FEATURE_MAP__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CLASSIFIER_FEATURE_MAP__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int CLASSIFIER_FEATURE_MAP__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

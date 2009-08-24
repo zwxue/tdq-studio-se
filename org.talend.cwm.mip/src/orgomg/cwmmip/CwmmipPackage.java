@@ -162,13 +162,13 @@ public interface CwmmipPackage extends EPackage {
     int UNIT_OF_INTERCHANGE__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int UNIT_OF_INTERCHANGE__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
+    int UNIT_OF_INTERCHANGE__DESCRIPTIONS = CorePackage.NAMESPACE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

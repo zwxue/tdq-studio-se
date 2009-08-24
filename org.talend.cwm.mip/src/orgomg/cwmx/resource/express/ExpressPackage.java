@@ -200,13 +200,13 @@ public interface ExpressPackage extends EPackage {
     int DIMENSION__DOCUMENT = MultidimensionalPackage.DIMENSION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DIMENSION__DESCRIPTION = MultidimensionalPackage.DIMENSION__DESCRIPTION;
+    int DIMENSION__DESCRIPTIONS = MultidimensionalPackage.DIMENSION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -633,13 +633,13 @@ public interface ExpressPackage extends EPackage {
     int DATABASE__DOCUMENT = MultidimensionalPackage.SCHEMA__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATABASE__DESCRIPTION = MultidimensionalPackage.SCHEMA__DESCRIPTION;
+    int DATABASE__DESCRIPTIONS = MultidimensionalPackage.SCHEMA__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -868,13 +868,13 @@ public interface ExpressPackage extends EPackage {
     int CONJOINT__DOCUMENT = DIMENSION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONJOINT__DESCRIPTION = DIMENSION__DESCRIPTION;
+    int CONJOINT__DESCRIPTIONS = DIMENSION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1319,13 +1319,13 @@ public interface ExpressPackage extends EPackage {
     int PROGRAM__DOCUMENT = SoftwaredeploymentPackage.COMPONENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PROGRAM__DESCRIPTION = SoftwaredeploymentPackage.COMPONENT__DESCRIPTION;
+    int PROGRAM__DESCRIPTIONS = SoftwaredeploymentPackage.COMPONENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1680,13 +1680,13 @@ public interface ExpressPackage extends EPackage {
     int MODEL__DOCUMENT = SoftwaredeploymentPackage.COMPONENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MODEL__DESCRIPTION = SoftwaredeploymentPackage.COMPONENT__DESCRIPTION;
+    int MODEL__DESCRIPTIONS = SoftwaredeploymentPackage.COMPONENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2032,13 +2032,13 @@ public interface ExpressPackage extends EPackage {
     int VARIABLE__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VARIABLE__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
+    int VARIABLE__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2429,13 +2429,13 @@ public interface ExpressPackage extends EPackage {
     int FORMULA__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FORMULA__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
+    int FORMULA__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2808,13 +2808,13 @@ public interface ExpressPackage extends EPackage {
     int VALUE_SET__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VALUE_SET__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
+    int VALUE_SET__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3196,13 +3196,13 @@ public interface ExpressPackage extends EPackage {
     int RELATION__DOCUMENT = MultidimensionalPackage.DIMENSIONED_OBJECT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RELATION__DESCRIPTION = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTION;
+    int RELATION__DESCRIPTIONS = MultidimensionalPackage.DIMENSIONED_OBJECT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3602,13 +3602,13 @@ public interface ExpressPackage extends EPackage {
     int WORKSHEET__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WORKSHEET__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
+    int WORKSHEET__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3972,13 +3972,13 @@ public interface ExpressPackage extends EPackage {
     int COMPOSITE__DOCUMENT = DIMENSION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int COMPOSITE__DESCRIPTION = DIMENSION__DESCRIPTION;
+    int COMPOSITE__DESCRIPTIONS = DIMENSION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4423,13 +4423,13 @@ public interface ExpressPackage extends EPackage {
     int SIMPLE_DIMENSION__DOCUMENT = DIMENSION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SIMPLE_DIMENSION__DESCRIPTION = DIMENSION__DESCRIPTION;
+    int SIMPLE_DIMENSION__DESCRIPTIONS = DIMENSION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4937,13 +4937,13 @@ public interface ExpressPackage extends EPackage {
     int ALIAS_DIMENSION__DOCUMENT = DIMENSION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ALIAS_DIMENSION__DESCRIPTION = DIMENSION__DESCRIPTION;
+    int ALIAS_DIMENSION__DESCRIPTIONS = DIMENSION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5379,13 +5379,13 @@ public interface ExpressPackage extends EPackage {
     int AGG_MAP__DOCUMENT = CorePackage.CLASS__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int AGG_MAP__DESCRIPTION = CorePackage.CLASS__DESCRIPTION;
+    int AGG_MAP__DESCRIPTIONS = CorePackage.CLASS__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5731,13 +5731,13 @@ public interface ExpressPackage extends EPackage {
     int AGG_MAP_COMPONENT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int AGG_MAP_COMPONENT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int AGG_MAP_COMPONENT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5966,13 +5966,13 @@ public interface ExpressPackage extends EPackage {
     int PRE_COMPUTE_CLAUSE__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PRE_COMPUTE_CLAUSE__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int PRE_COMPUTE_CLAUSE__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

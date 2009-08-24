@@ -118,7 +118,7 @@ public interface Description extends Namespace {
     /**
      * Returns the value of the '<em><b>Model Element</b></em>' reference list.
      * The list contents are of type {@link orgomg.cwm.objectmodel.core.ModelElement}.
-     * It is bidirectional and its opposite is '{@link orgomg.cwm.objectmodel.core.ModelElement#getDescription <em>Description</em>}'.
+     * It is bidirectional and its opposite is '{@link orgomg.cwm.objectmodel.core.ModelElement#getDescriptions <em>Descriptions</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
@@ -126,8 +126,8 @@ public interface Description extends Namespace {
      * <!-- end-model-doc -->
      * @return the value of the '<em>Model Element</em>' reference list.
      * @see orgomg.cwm.foundation.businessinformation.BusinessinformationPackage#getDescription_ModelElement()
-     * @see orgomg.cwm.objectmodel.core.ModelElement#getDescription
-     * @model opposite="description"
+     * @see orgomg.cwm.objectmodel.core.ModelElement#getDescriptions
+     * @model opposite="descriptions"
      * @generated
      */
     EList<ModelElement> getModelElement();

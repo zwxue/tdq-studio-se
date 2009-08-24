@@ -344,13 +344,13 @@ public interface DmsiiPackage extends EPackage {
     int DATABASE__DOCUMENT = CorePackage.STRUCTURAL_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATABASE__DESCRIPTION = CorePackage.STRUCTURAL_FEATURE__DESCRIPTION;
+    int DATABASE__DESCRIPTIONS = CorePackage.STRUCTURAL_FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -741,13 +741,13 @@ public interface DmsiiPackage extends EPackage {
     int REMAP__DOCUMENT = RecordPackage.RECORD_DEF__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REMAP__DESCRIPTION = RecordPackage.RECORD_DEF__DESCRIPTION;
+    int REMAP__DESCRIPTIONS = RecordPackage.RECORD_DEF__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1174,13 +1174,13 @@ public interface DmsiiPackage extends EPackage {
     int DATA_SET__DOCUMENT = RecordPackage.RECORD_DEF__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATA_SET__DESCRIPTION = RecordPackage.RECORD_DEF__DESCRIPTION;
+    int DATA_SET__DESCRIPTIONS = RecordPackage.RECORD_DEF__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1607,13 +1607,13 @@ public interface DmsiiPackage extends EPackage {
     int DATA_ITEM__DOCUMENT = RecordPackage.FIELD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATA_ITEM__DESCRIPTION = RecordPackage.FIELD__DESCRIPTION;
+    int DATA_ITEM__DESCRIPTIONS = RecordPackage.FIELD__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2193,13 +2193,13 @@ public interface DmsiiPackage extends EPackage {
     int VARIABLE_FORMAT_PART__DOCUMENT = RecordPackage.RECORD_DEF__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int VARIABLE_FORMAT_PART__DESCRIPTION = RecordPackage.RECORD_DEF__DESCRIPTION;
+    int VARIABLE_FORMAT_PART__DESCRIPTIONS = RecordPackage.RECORD_DEF__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2599,13 +2599,13 @@ public interface DmsiiPackage extends EPackage {
     int SET_STRUCTURE__DOCUMENT = CorePackage.STRUCTURAL_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SET_STRUCTURE__DESCRIPTION = CorePackage.STRUCTURAL_FEATURE__DESCRIPTION;
+    int SET_STRUCTURE__DESCRIPTIONS = CorePackage.STRUCTURAL_FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -2951,13 +2951,13 @@ public interface DmsiiPackage extends EPackage {
     int SET__DOCUMENT = SET_STRUCTURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SET__DESCRIPTION = SET_STRUCTURE__DESCRIPTION;
+    int SET__DESCRIPTIONS = SET_STRUCTURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3357,13 +3357,13 @@ public interface DmsiiPackage extends EPackage {
     int ACCESS__DOCUMENT = SET_STRUCTURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ACCESS__DESCRIPTION = SET_STRUCTURE__DESCRIPTION;
+    int ACCESS__DESCRIPTIONS = SET_STRUCTURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -3709,13 +3709,13 @@ public interface DmsiiPackage extends EPackage {
     int SUBSET__DOCUMENT = SET__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SUBSET__DESCRIPTION = SET__DESCRIPTION;
+    int SUBSET__DESCRIPTIONS = SET__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4115,13 +4115,13 @@ public interface DmsiiPackage extends EPackage {
     int AUTOMATIC_SUBSET__DOCUMENT = SUBSET__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int AUTOMATIC_SUBSET__DESCRIPTION = SUBSET__DESCRIPTION;
+    int AUTOMATIC_SUBSET__DESCRIPTIONS = SUBSET__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4530,13 +4530,13 @@ public interface DmsiiPackage extends EPackage {
     int KEY_ITEM__DOCUMENT = KeysindexesPackage.INDEXED_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int KEY_ITEM__DESCRIPTION = KeysindexesPackage.INDEXED_FEATURE__DESCRIPTION;
+    int KEY_ITEM__DESCRIPTIONS = KeysindexesPackage.INDEXED_FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4756,13 +4756,13 @@ public interface DmsiiPackage extends EPackage {
     int REMAP_ITEM__DOCUMENT = RecordPackage.FIELD__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REMAP_ITEM__DESCRIPTION = RecordPackage.FIELD__DESCRIPTION;
+    int REMAP_ITEM__DESCRIPTIONS = RecordPackage.FIELD__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5198,13 +5198,13 @@ public interface DmsiiPackage extends EPackage {
     int FIELD_BIT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int FIELD_BIT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int FIELD_BIT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5397,13 +5397,13 @@ public interface DmsiiPackage extends EPackage {
     int REMARK__DOCUMENT = CorePackage.STRUCTURAL_FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int REMARK__DESCRIPTION = CorePackage.STRUCTURAL_FEATURE__DESCRIPTION;
+    int REMARK__DESCRIPTIONS = CorePackage.STRUCTURAL_FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5749,13 +5749,13 @@ public interface DmsiiPackage extends EPackage {
     int PHYSICAL_DATABASE__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PHYSICAL_DATABASE__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int PHYSICAL_DATABASE__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -5966,13 +5966,13 @@ public interface DmsiiPackage extends EPackage {
     int PHYSICAL_DATA_SET__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PHYSICAL_DATA_SET__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int PHYSICAL_DATA_SET__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6156,13 +6156,13 @@ public interface DmsiiPackage extends EPackage {
     int DASDL_COMMENT__DOCUMENT = BusinessinformationPackage.DESCRIPTION__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DASDL_COMMENT__DESCRIPTION = BusinessinformationPackage.DESCRIPTION__DESCRIPTION;
+    int DASDL_COMMENT__DESCRIPTIONS = BusinessinformationPackage.DESCRIPTION__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6391,13 +6391,13 @@ public interface DmsiiPackage extends EPackage {
     int PHYSICAL_SET__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PHYSICAL_SET__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int PHYSICAL_SET__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6581,13 +6581,13 @@ public interface DmsiiPackage extends EPackage {
     int PHYSICAL_DATA_SET_OVERRIDE__DOCUMENT = CorePackage.FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PHYSICAL_DATA_SET_OVERRIDE__DESCRIPTION = CorePackage.FEATURE__DESCRIPTION;
+    int PHYSICAL_DATA_SET_OVERRIDE__DESCRIPTIONS = CorePackage.FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -6816,13 +6816,13 @@ public interface DmsiiPackage extends EPackage {
     int PHYSICAL_SET_OVERRIDE__DOCUMENT = CorePackage.FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PHYSICAL_SET_OVERRIDE__DESCRIPTION = CorePackage.FEATURE__DESCRIPTION;
+    int PHYSICAL_SET_OVERRIDE__DESCRIPTIONS = CorePackage.FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7051,13 +7051,13 @@ public interface DmsiiPackage extends EPackage {
     int PHYSICAL_ACCESS_OVERRIDE__DOCUMENT = CorePackage.FEATURE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PHYSICAL_ACCESS_OVERRIDE__DESCRIPTION = CorePackage.FEATURE__DESCRIPTION;
+    int PHYSICAL_ACCESS_OVERRIDE__DESCRIPTIONS = CorePackage.FEATURE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -7286,13 +7286,13 @@ public interface DmsiiPackage extends EPackage {
     int DASDL_PROPERTY__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DASDL_PROPERTY__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int DASDL_PROPERTY__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

@@ -201,13 +201,13 @@ public interface InstancePackage extends EPackage {
     int INSTANCE__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INSTANCE__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int INSTANCE__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -409,13 +409,13 @@ public interface InstancePackage extends EPackage {
     int SLOT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SLOT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int SLOT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -626,13 +626,13 @@ public interface InstancePackage extends EPackage {
     int DATA_VALUE__DOCUMENT = INSTANCE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DATA_VALUE__DESCRIPTION = INSTANCE__DESCRIPTION;
+    int DATA_VALUE__DESCRIPTIONS = INSTANCE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -843,13 +843,13 @@ public interface InstancePackage extends EPackage {
     int OBJECT__DOCUMENT = INSTANCE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int OBJECT__DESCRIPTION = INSTANCE__DESCRIPTION;
+    int OBJECT__DESCRIPTIONS = INSTANCE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1060,13 +1060,13 @@ public interface InstancePackage extends EPackage {
     int EXTENT__DOCUMENT = CorePackage.PACKAGE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int EXTENT__DESCRIPTION = CorePackage.PACKAGE__DESCRIPTION;
+    int EXTENT__DESCRIPTIONS = CorePackage.PACKAGE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.

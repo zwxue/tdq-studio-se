@@ -195,13 +195,13 @@ public interface BusinessinformationPackage extends EPackage {
     int RESPONSIBLE_PARTY__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RESPONSIBLE_PARTY__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
+    int RESPONSIBLE_PARTY__DESCRIPTIONS = CorePackage.NAMESPACE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -412,13 +412,13 @@ public interface BusinessinformationPackage extends EPackage {
     int TELEPHONE__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TELEPHONE__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int TELEPHONE__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -629,13 +629,13 @@ public interface BusinessinformationPackage extends EPackage {
     int EMAIL__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int EMAIL__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int EMAIL__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -846,13 +846,13 @@ public interface BusinessinformationPackage extends EPackage {
     int LOCATION__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int LOCATION__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int LOCATION__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1099,13 +1099,13 @@ public interface BusinessinformationPackage extends EPackage {
     int CONTACT__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int CONTACT__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int CONTACT__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1325,13 +1325,13 @@ public interface BusinessinformationPackage extends EPackage {
     int DESCRIPTION__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DESCRIPTION__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
+    int DESCRIPTION__DESCRIPTIONS = CorePackage.NAMESPACE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1560,13 +1560,13 @@ public interface BusinessinformationPackage extends EPackage {
     int DOCUMENT__DOCUMENT = CorePackage.NAMESPACE__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOCUMENT__DESCRIPTION = CorePackage.NAMESPACE__DESCRIPTION;
+    int DOCUMENT__DESCRIPTIONS = CorePackage.NAMESPACE__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -1786,13 +1786,13 @@ public interface BusinessinformationPackage extends EPackage {
     int RESOURCE_LOCATOR__DOCUMENT = CorePackage.MODEL_ELEMENT__DOCUMENT;
 
     /**
-     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * The feature id for the '<em><b>Descriptions</b></em>' reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int RESOURCE_LOCATOR__DESCRIPTION = CorePackage.MODEL_ELEMENT__DESCRIPTION;
+    int RESOURCE_LOCATOR__DESCRIPTIONS = CorePackage.MODEL_ELEMENT__DESCRIPTIONS;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
