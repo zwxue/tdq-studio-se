@@ -186,7 +186,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(joinConditions) : "";
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(tdTable, joinConditions) : "";
 
         completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), tableName, joinclause);
         // ~

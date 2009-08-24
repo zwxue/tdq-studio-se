@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
@@ -844,13 +845,14 @@ public class DbmsLanguage {
         return false;
     }
     
-    public String createJoinConditionAsString(List<JoinElement> joinElements) {
+    public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements) {
         if (joinElements.isEmpty()) {
             return "";
         }
         // else
         StringBuilder builder = new StringBuilder();
         for (JoinElement joinElement : joinElements) {
+
             ModelElement colA = joinElement.getColA();
             String tableA = getTableName(colA);
             String tableAliasA = joinElement.getTableAliasA();
@@ -874,27 +876,71 @@ public class DbmsLanguage {
 
             String operator = joinElement.getOperator();
 
-            // tableA tableAliasA JOIN
-            // builder.append(surroundWithSpaces(quote(tableA)));
-            if (hasTableAliasA) {
-                builder.append(surroundWithSpaces(tableAliasA));
+            if (joinClauseStartsWithWrongTable(leftTable, getTable(colB)) && !hasTableAliasA && !hasTableAliasB) {
+                // // we need to exchange the table names otherwise we could get "tableA join tableA" which would cause
+                // an
+                // // SQL exception.
+                buildJoinClause(builder, tableB, tableAliasB, columnBName, columnAliasB, hasTableAliasB, hasColumnAliasB, tableA,
+                        tableAliasA, columnAName, columnAliasA, hasTableAliasA, hasColumnAliasA, operator);
+            } else {
+                buildJoinClause(builder, tableA, tableAliasA, columnAName, columnAliasA, hasTableAliasA, hasColumnAliasA, tableB,
+                        tableAliasB, columnBName, columnAliasB, hasTableAliasB, hasColumnAliasB, operator);
             }
-            builder.append(" JOIN ");
-
-            // tableB tableAliasB ON
-            builder.append(surroundWithSpaces(quote(tableB)));
-            if (hasTableAliasB) {
-                builder.append(surroundWithSpaces(tableAliasB));
-            }
-            builder.append(" ON ");
-
-            String tA = hasTableAliasA ? null : quote(tableA);
-            String tB = hasTableAliasB ? null : quote(tableB);
-            String cA = hasColumnAliasA ? columnAliasA : quote(columnAName);
-            String cB = hasColumnAliasB ? columnAliasB : quote(columnBName);
-            createJoinClause(builder, tA, cA, tB, cB, operator);
         }
         return builder.toString();
+    }
+
+    /**
+     * DOC scorreia Comment method "fillBuffer".
+     * @param builder
+     * @param tableA
+     * @param tableAliasA
+     * @param columnAName
+     * @param columnAliasA
+     * @param hasTableAliasA
+     * @param hasColumnAliasA
+     * @param tableB
+     * @param tableAliasB
+     * @param columnBName
+     * @param columnAliasB
+     * @param hasTableAliasB
+     * @param hasColumnAliasB
+     * @param operator
+     */
+    private void buildJoinClause(StringBuilder builder, String tableA, String tableAliasA, String columnAName, String columnAliasA,
+            boolean hasTableAliasA, boolean hasColumnAliasA, String tableB, String tableAliasB, String columnBName,
+            String columnAliasB, boolean hasTableAliasB, boolean hasColumnAliasB, String operator) {
+        // begin of query is built ouside this method and should be:
+        // SELECT count(*) FROM leftTableName
+        // tableAliasA JOIN
+        if (hasTableAliasA) {
+            builder.append(surroundWithSpaces(tableAliasA));
+        }
+        builder.append(" JOIN ");
+
+        // tableB tableAliasB ON
+        builder.append(surroundWithSpaces(quote(tableB)));
+        if (hasTableAliasB) {
+            builder.append(surroundWithSpaces(tableAliasB));
+        }
+        builder.append(" ON ");
+
+        String tA = hasTableAliasA ? null : quote(tableA);
+        String tB = hasTableAliasB ? null : quote(tableB);
+        String cA = hasColumnAliasA ? columnAliasA : quote(columnAName);
+        String cB = hasColumnAliasB ? columnAliasB : quote(columnBName);
+        createJoinClause(builder, tA, cA, tB, cB, operator);
+    }
+
+    /**
+     * DOC scorreia Comment method "joinClauseStartsWithWrongTable".
+     * 
+     * @param leftTable
+     * @param table
+     * @return
+     */
+    private boolean joinClauseStartsWithWrongTable(ModelElement leftTable, ModelElement table) {
+        return ResourceHelper.areSame(leftTable, table);
     }
 
     /**
@@ -926,16 +972,21 @@ public class DbmsLanguage {
         builder.append(')');
     }
     
-    private String getColumnName(ModelElement colA) {
-        TdColumn columnA = colA != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(colA) : null;
-        return columnA != null ? columnA.getName() : null;
+    private String getColumnName(ModelElement col) {
+        TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
+        return column != null ? column.getName() : null;
     }
 
-    private String getTableName(ModelElement colA) {
-        TdColumn columnA = colA != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(colA) : null;
-        return (columnA != null) ? ColumnHelper.getColumnSetFullName(columnA) : null;
+    private String getTableName(ModelElement col) {
+        TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
+        return (column != null) ? ColumnHelper.getColumnSetFullName(column) : null;
     }
-    
+
+    private ModelElement getTable(ModelElement col) {
+        TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
+        return (column != null) ? ColumnHelper.getColumnSetOwner(column) : null;
+    }
+
     /**
      * DOC jet adapt to {@link GenericSQLHandler}("").createGenericSqlWithRegexFunction() method<p>
      * @see GenericSQLHandler
