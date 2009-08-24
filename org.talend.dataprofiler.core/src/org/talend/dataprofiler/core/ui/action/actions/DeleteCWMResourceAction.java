@@ -31,7 +31,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.jfree.util.Log;
-import org.talend.commons.emf.EMFSharedResources;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.softwaredeployment.TdDataProvider;
@@ -50,6 +49,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.UDIResourceFileHelper;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -205,7 +205,8 @@ public class DeleteCWMResourceAction extends Action {
                 TypedReturnCode<TdDataProvider> findProvider = PrvResourceFileHelper.getInstance().findProvider(
                         (IFile) selectedResource);
                 TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(findProvider.getObject());
-                EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(softwareSystem);
+                EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(
+                        softwareSystem);
                 EMFSharedResources.getInstance().saveSoftwareDeploymentResource();
 
                 // remove the alias from SQL Plugin

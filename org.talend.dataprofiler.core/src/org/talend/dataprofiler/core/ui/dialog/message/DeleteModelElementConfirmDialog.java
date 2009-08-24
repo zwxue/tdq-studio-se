@@ -131,6 +131,11 @@ public class DeleteModelElementConfirmDialog {
             for (Dependency dependency : supplierDependencies) {
                 EList<ModelElement> clients = dependency.getClient();
                 for (ModelElement client : clients) {
+                    // ~MOD mzhao feature 7488 2009-08-21.
+                    if (DependenciesHandler.isTDQElementProperties(client)) {
+                        continue;
+                    }
+                    // ~
                     impactNode = new ImpactNode(client);
                     int index = impactNodes.indexOf(impactNode);
                     if (index == -1) {
